@@ -11,6 +11,7 @@ library(tibble)
 library(lazyeval)
 library(byname)
 library(testthat)
+library(qgraph)
 
 ###########################################################
 context("small example")
@@ -25,16 +26,16 @@ test_that("small example works as expected", {
   names <- c("p_ind_1", "p_prod_1", "pf_ind_1", "f_prod_1", "fd_ind_1")
   g <- qgraph(matrix(c(0, 10, 0, 0, 0,
                        0,  0, 9, 0, 0,
-                       0,  0, 0, 8, 0, 
-                       0,  0, 0, 0, 7, 
+                       0,  0, 0, 8, 0,
+                       0,  0, 0, 0, 7,
                        0,  0, 0, 0, 0),
                      nrow = 5, byrow = TRUE,
-                     dimnames = list(names, names)), 
+                     dimnames = list(names, names)),
               DoNotPlot = TRUE)
-  calc_ecc_layout(g, 
-                  p_industries = p_ind, 
-                  p_products = p_prod,
-                  pf_industries = pf_ind,
-                  f_products = f_prod,
-                  fd_industries = fd_ind)
+  ecc_layout(g,
+             p_industries = p_ind,
+             p_products = p_prod,
+             pf_industries = pf_ind,
+             f_products = f_prod,
+             fd_industries = fd_ind)
 })

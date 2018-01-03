@@ -1,6 +1,6 @@
 Package: Recca
 Type: Package
-Title: Energy Conversion Chain analysis in R
+Title: R Energy Conversion Chain Analysis
 Version: 0.1.0
 Author: Matthew Kuperus Heun
 Maintainer: Matthew Kuperus Heun <matthew.heun@me.com>
