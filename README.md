@@ -1,2 +1,2 @@
-# Recc
-Use R for Energy Conversion Chain analysis
+# Recca
+Use R for energy eonversion chain analysis
