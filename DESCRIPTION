@@ -1,0 +1,26 @@
+Package: Recc
+Type: Package
+Title: Energy Conversion Chain analysis in R
+Version: 0.1.0
+Author: Matthew Kuperus Heun
+Maintainer: Matthew Kuperus Heun <matthew.heun@me.com>
+Description: Provides functions to analyze energy conversion chains using a 
+    physical supply use table (PSUT) approach.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+Depends: R (>= 2.10)
+Imports:
+    dplyr,
+    magrittr,
+    qgraph, 
+    rlang,
+    tibble,
+    tidyr
+Suggests:
+    knitr, 
+    rmarkdown,
+    testthat
+VignetteBuilder: 
+    knitr
