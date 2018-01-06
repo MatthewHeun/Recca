@@ -53,8 +53,7 @@ array
 The
 \code{\link[Recca:Recca-package]{Recca}}
 package relies upon several other packages, including
-\code{\link[qgraph:qgraph-package]{qgraph}},
-\code{\link[igraph:igraph-package]{igraph}},
+\code{qgraph},
 \code{\link[matsindf:matsindf-package]{matsindf}},
 and
 \code{\link[byname:byname-package]{byname}}.
@@ -63,6 +62,5 @@ and
 library(magrittr)
 library(dplyr)
 library(qgraph)
-library(igraph)
 # TODO Add more here!
 }

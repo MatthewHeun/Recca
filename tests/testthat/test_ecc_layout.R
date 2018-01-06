@@ -29,6 +29,14 @@ test_that("small example works as expected", {
     Stage = c("Primary", "Final"),
     stringsAsFactors = FALSE
   )
-  ecc_layout(Industries = Industry_meta, Products = Product_meta)
+  layout <- ecc_layout(Industries = Industry_meta, Products = Product_meta)
+
+  layout_named <- layout %>% column_to_rownames(var = "Node_name")
+  expect_equal(layout_named["p_ind_1", "x"], 1)
+  expect_equal(layout_named["p_prod_1", "x"], 2)
+  expect_equal(layout_named["pf_ind_1", "x"], 3)
+  expect_equal(layout_named["f_prod_1", "x"], 4)
+  expect_equal(layout_named["fd_ind_1", "x"], 5)
+  expect_equal(layout_named["Stock changes", "x"], 3)
 
 })

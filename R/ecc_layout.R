@@ -34,34 +34,57 @@
 #' \code{stage_colname} is 1-based, i.e., the leftmost product stage should be stage 1;
 #' the second product stage should be stage 2, and the rightmost stage
 #' should have the highest number.
-#' @param industry_name the name of the column in \code{Industries} containing
+#' @param industry_colname the name of the column in \code{Industries} containing
 #'        names of industries (a string).
 #'        Default is "Industries".
-#' @param industry_stage_number the name of the column in \code{Industries} containing
-#'        the left-to-right position of each stage (a string).
-#' @param industry_group the name of an optional column in \code{Industries} containing
-#'        names of groups for industries (a string).
-#'        The top-to-bottom order of groups at a given stage in the in the graph
-#'        is determined by the top-to-bottom
-#'        order in which group names appear in the \code{Industries} data frame.
-#' @param product_name the name of the column in \code{Products} containing
+#' @param product_colname the name of the column in \code{Products} containing
 #'        names of products (a string).
 #'        Default is "Products".
-#' @param product_stage_number the name of the column in \code{product_stages} containing
-#'        the left-to-right position of each stage (a string).
-#' @param product_group
+#' @param stage_colname the name of the columns in \code{Industries} and \code{Products}
+#'        containing names of stages (a string).
+#'        The left-to-right order of stages in the network layout
+#'        is determined by the top-to-bottom
+#'        order in which stage names appear in the
+#'        \code{Industries} and \code{Products} data frames.
+#' @param storage_stagename the name of the stage in \code{stage_colname} of \code{Industries}
+#'        that identifies a "storage" industry (a string).
+#'        Default is "Storage".
+#' @param group_colname the name of the column in \code{Industries} and \code{Products}
+#'        containing industries and products that should be grouped together vertically
+#'        at a stage (a string).
+#'        The top-to-bottom order of groups at a stage is give by the order of appearance
+#'        in \code{group_colname}.
+#' @param node_name_colnames the name of the output column containing node names
+#'        (industries and products).
+#' @param x_colname the name of the output column containing x coordinates for each node.
+#' @param y_colname the name of the output column containing y coordinates for each node.
 #'
-#' @return
+#' @return a data frame with three columns.
+#'         The first column contains node names and is named \code{node_name_colname}.
+#'         The second column contains x coordinates for the nodes and is named \code{x_colname}.
+#'         The third column contains y coordinates for the nodes and is named \code{y_colname}.
+#'
+#' @importFrom rlang :=
+#' @importFrom magrittr %>%
+#' @importFrom dplyr mutate
+#' @importFrom dplyr filter
+#' @importFrom dplyr select
+#' @importFrom dplyr rename
+#' @importFrom dplyr arrange
+#' @importFrom tibble rownames_to_column
+#'
 #' @export
-#'
-#' @examples
 ecc_layout <- function(Industries,
                        Products,
                        industry_colname = "Industry",
                        product_colname = "Product",
                        stage_colname = "Stage",
                        storage_stagename = "Storage",
-                       group_colname = "Group"){
+                       group_colname = "Group",
+                       # Output columns
+                       node_name_colnames = "Node_name",
+                       x_colname = "x",
+                       y_colname = "y"){
   # Extract storage industries from the Industries data frame.
   Storage <- Industries %>%
     filter((!!as.name(stage_colname)) == storage_stagename)
@@ -113,25 +136,28 @@ ecc_layout <- function(Industries,
   x_first_storage <- x_center - (N_storage - 1) / 2
   Storage_stage_order <- data.frame(temp = stor) %>%
     mutate(
-      x = seq(x_first_storage, by = 1, length.out = N_storage)
+      !!as.name(x_colname) := seq(x_first_storage, by = 1, length.out = N_storage)
     )
 
   # Join these data frames
-  indprodname <- paste0(stage_colname, "_name")
   Stage_coords <- rbind(Industry_stage_order %>%
-                          rename(!!as.name(indprodname) := !!as.name(industry_colname)),
+                          rename(!!as.name(node_name_colnames) := !!as.name(industry_colname)),
                         Product_stage_order %>%
-                          rename(!!as.name(indprodname) := !!as.name(product_colname))
+                          rename(!!as.name(node_name_colnames) := !!as.name(product_colname))
   ) %>%
     arrange(!!as.name(i_stage_colname)) %>%
     mutate(
-      x = !!as.name(i_stage_colname),
+      !!as.name(x_colname) := !!as.name(i_stage_colname),
       !!as.name(i_stage_colname) := NULL
     ) %>%
     rbind(
       Storage_stage_order %>%
-        rename(!!as.name(indprodname) := !!as.name(industry_colname))
+        rename(!!as.name(node_name_colnames) := !!as.name(industry_colname))
     )
 
 
+
+
+
+  return(Stage_coords)
 }

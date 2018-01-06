@@ -1,4 +1,4 @@
 library(testthat)
-library(Recc)
+library(Recca)
 
-test_check("Recc")
+test_check("Recca")
