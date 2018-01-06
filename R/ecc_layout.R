@@ -82,47 +82,61 @@ ecc_layout <- function(Industries,
                        storage_stagename = "Storage",
                        group_colname = "Group",
                        # Output columns
-                       node_name_colnames = "Node_name",
+                       node_name_colname = "Node_name",
                        x_colname = "x",
                        y_colname = "y"){
   # Extract storage industries from the Industries data frame.
   Storage <- Industries %>%
     filter((!!as.name(stage_colname)) == storage_stagename)
+  Industries_less_Storage <- Industries %>%
+    filter((!!as.name(stage_colname)) != storage_stagename)
+  # Ensure that the number of industry stages (less storage)
+  # is one more than the number of product stages.
+  N_industry_stages <- Industries_less_Storage %>%
+    select(!!as.name(stage_colname)) %>%
+    unique() %>%
+    nrow()
+  N_product_stages <- Products %>%
+    select(!!as.name(stage_colname)) %>%
+    unique() %>%
+    nrow()
+  stopifnot(N_industry_stages - N_product_stages == 1)
   # Get the names of industries and products.
   # Left-to-right order across the network is taken from the order of appearance
   # in the respective data frames.
-  inds <- Industries %>%
-    filter((!!as.name(stage_colname)) != storage_stagename) %>%
-    select(!!as.name(industry_colname)) %>%
-    unique()
-  prods <- Products %>%
-    select(!!as.name(product_colname)) %>%
-    unique()
-  # Expect one more Industry than Products
-  stopifnot(nrow(inds) == nrow(prods) + 1)
-  stor <- Storage %>%
-    select(!!as.name(industry_colname)) %>%
-    unique()
+  inds <- Industries_less_Storage %>% select(!!as.name(industry_colname)) %>% unique()
+  prods <- Products %>% select(!!as.name(product_colname)) %>% unique()
+  stor <- Storage %>% select(!!as.name(industry_colname)) %>% unique()
   # Remove levels. Order is specified by order of appearance.
   levels(inds) <- NULL
   levels(prods) <- NULL
   levels(stor) <- NULL
   # Make data frames of stage numbers.
   # This process is easy for industries and products
-  # but takes more calculations for storage industries (later).
+  # but takes additional calculations for storage industries (later).
   i_stage_colname <- paste0("i_", stage_colname)
-  Industry_stage_order <- data.frame(temp = inds) %>%
+  Industry_stage_order <- data.frame(temp = Industries_less_Storage %>%
+                                       select(!!as.name(stage_colname)) %>%
+                                       unique()) %>%
     rownames_to_column(var = i_stage_colname) %>%
     mutate(
       !!as.name(i_stage_colname) := as.numeric(!!as.name(i_stage_colname)),
       !!as.name(i_stage_colname) := 2 * (!!as.name(i_stage_colname)) - 1
     )
-  Product_stage_order <- data.frame(temp = prods) %>%
+  Product_stage_order <- data.frame(temp = Products %>%
+                                      select(!!as.name(stage_colname)) %>%
+                                      unique()) %>%
     rownames_to_column(var = i_stage_colname) %>%
     mutate(
       !!as.name(i_stage_colname) := as.numeric(!!as.name(i_stage_colname)),
       !!as.name(i_stage_colname) := 2 * (!!as.name(i_stage_colname))
     )
+  # Join these *_stage_order data frames
+  Stage_coords <- rbind(Industry_stage_order %>%
+                          rename(!!as.name(x_colname) := !!as.name(i_stage_colname)),
+                        Product_stage_order %>%
+                          rename(!!as.name(x_colname) := !!as.name(i_stage_colname))) %>%
+    arrange(!!as.name(x_colname))
   # Now work on storage industries.
   # Figure out where to place them in x dimension.
   x_max <- max(Industry_stage_order[[i_stage_colname]], Product_stage_order[[i_stage_colname]])
@@ -134,30 +148,41 @@ ecc_layout <- function(Industries,
   N_storage <- nrow(stor)
   # Find x coordinate of first Storage industry
   x_first_storage <- x_center - (N_storage - 1) / 2
-  Storage_stage_order <- data.frame(temp = stor) %>%
+  # Storage_stage_order <- data.frame(temp = stor) %>%
+  #   mutate(
+  #     !!as.name(x_colname) := seq(x_first_storage, by = 1, length.out = N_storage)
+  #   )
+  # Join with list of storage industries
+  Storage_coords <- data.frame(temp = Storage %>%
+                                 select(!!as.name(industry_colname)) %>%
+                                 unique()) %>%
     mutate(
-      !!as.name(x_colname) := seq(x_first_storage, by = 1, length.out = N_storage)
-    )
-
-  # Join these data frames
-  Stage_coords <- rbind(Industry_stage_order %>%
-                          rename(!!as.name(node_name_colnames) := !!as.name(industry_colname)),
-                        Product_stage_order %>%
-                          rename(!!as.name(node_name_colnames) := !!as.name(product_colname))
-  ) %>%
-    arrange(!!as.name(i_stage_colname)) %>%
-    mutate(
-      !!as.name(x_colname) := !!as.name(i_stage_colname),
-      !!as.name(i_stage_colname) := NULL
+      !!as.name(x_colname) := seq(from = x_first_storage,
+                                  to = x_first_storage - 1 + N_storage,
+                                  by = 1)
     ) %>%
-    rbind(
-      Storage_stage_order %>%
-        rename(!!as.name(node_name_colnames) := !!as.name(industry_colname))
+    left_join(Storage, by = industry_colname) %>%
+    rename(
+      !!as.name(node_name_colname) := !!as.name(industry_colname)
     )
 
+  # Join Stage_coords to a list of nodes
+  Node_coords <- rbind(
+    Industries_less_Storage %>% rename(!!as.name(node_name_colname) := !!as.name(industry_colname)),
+    Products %>% rename(!!as.name(node_name_colname) := !!as.name(product_colname))
+  ) %>%
+    left_join(Stage_coords, by = stage_colname) %>%
+    arrange(!!as.name(x_colname)) %>%
+    # rbind with storage nodes
+    rbind(Storage_coords) %>%
+    arrange(!!as.name(x_colname))
+
+  # At this point, all x coordinates have been decided are are in the Node_coords data frame.
+  # Now work on y coordinates.
 
 
 
 
-  return(Stage_coords)
+
+  return(Node_coords)
 }
