@@ -4,23 +4,31 @@
 \alias{ecc_layout}
 \title{Layout for graph representation of an energy conversion chain}
 \usage{
-ecc_layout(industry_stages, product_stages, fd_stage, scbsd_stage,
+ecc_layout(Industry_stages, Product_stages, FD_stage, ScBSD_stage,
   industry_stage_names_colname = "Industries",
-  industry_stage_colname = "Stage", industry_group_colname = "Groups",
-  product_stage_names_colname = "Products", product_stage_colname = "Stage",
-  product_group_colname = "Groups")
+  product_stage_names_colname = "Products", stage_colname = "Stage",
+  group_colname = "Group")
 }
 \arguments{
-\item{industry_stage_name}{the column in \code{industry_stages} containing names of industries
-(a string)}
+\item{industry_stage_name}{the name of the column in \code{industry_stages} containing
+names of industries (a string).
+Default is "Industries".}
 
-\item{industry_stage_number}{the column in \code{industry_stages} containing the left-to-right
-position of this stage (a string)}
+\item{industry_stage_number}{the name of the column in \code{industry_stages} containing
+the left-to-right position of each stage (a string).}
 
 \item{industry_group}{the name of an optional column in \code{industry_stages} containing
 names of groups for industries (a string).
-The order of groups in the graph is determined by the top-to-bottom
+The top-to-bottom order of groups at a given stage in the in the graph
+is determined by the top-to-bottom
 order in which group names appear in the \code{industry_stages} data frame.}
+
+\item{product_stage_name}{the name of the column in \code{product_stages} containing
+names of products (a string).
+Default is "Products".}
+
+\item{product_stage_number}{the name of the column in \code{product_stages} containing
+the left-to-right position of each stage (a string).}
 
 \item{product_group}{}
 }

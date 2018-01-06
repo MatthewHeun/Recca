@@ -20,13 +20,15 @@ context("small example")
 test_that("small example works as expected", {
 
   Industry_meta <- data.frame(
-    Industries = c("p_ind_1", "pf_ind_1", "fd_ind_1"),
-    Stage = c("Primary", "Primary --> Final", "Final demand")
+    Industry = c("Stock changes", "p_ind_1", "pf_ind_1", "fd_ind_1"),
+    Stage = c("Storage", "Primary", "Primary --> Final", "Final demand"),
+    stringsAsFactors = FALSE
   )
   Product_meta <- data.frame(
-    Products = c("p_prod_1", "f_prod_1"),
-    Stage = c("Primary", "Final")
+    Product = c("p_prod_1", "f_prod_1"),
+    Stage = c("Primary", "Final"),
+    stringsAsFactors = FALSE
   )
-  ecc_layout(Industry_meta, Product_meta)
+  ecc_layout(Industries = Industry_meta, Products = Product_meta)
 
 })
