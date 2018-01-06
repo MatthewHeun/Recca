@@ -4,65 +4,31 @@
 \alias{ecc_layout}
 \title{Layout for graph representation of an energy conversion chain}
 \usage{
-ecc_layout(.qgraph, p_industries, p_products, pf_industries, f_products,
-  fu_industries, u_products, us_industries, s_products, fd_industries,
-  scbsd_industries)
+ecc_layout(industry_stages, product_stages, fd_stage, scbsd_stage,
+  industry_stage_names_colname = "Industries",
+  industry_stage_colname = "Stage", industry_group_colname = "Groups",
+  product_stage_names_colname = "Products", product_stage_colname = "Stage",
+  product_group_colname = "Groups")
 }
 \arguments{
-\item{.qgraph}{a qgraph object}
+\item{industry_stage_name}{the column in \code{industry_stages} containing names of industries
+(a string)}
 
-\item{p_industries}{production industries (named list of string vectors)}
+\item{industry_stage_number}{the column in \code{industry_stages} containing the left-to-right
+position of this stage (a string)}
 
-\item{p_products}{primary products (named list of string vectors)}
+\item{industry_group}{the name of an optional column in \code{industry_stages} containing
+names of groups for industries (a string).
+The order of groups in the graph is determined by the top-to-bottom
+order in which group names appear in the \code{industry_stages} data frame.}
 
-\item{pf_industries}{primary-to-final industries (named list of string vectors)}
-
-\item{f_products}{final products (named list of string vectors)}
-
-\item{fu_industries}{final-to-useful industries (named list of string vectors)}
-
-\item{u_products}{useful products (named list of string vectors)}
-
-\item{us_industries}{useful-to-services industries (named list of string vectors)}
-
-\item{s_products}{services products (named list of string vectors)}
-
-\item{fd_industries}{final demand industries (named list of string vectors)}
-
-\item{scbsd_industries}{stock change, bunker, and statistical differences
-industries (named list of string vectors)}
+\item{product_group}{}
 }
 \description{
-The layout flows left-to-right, with
-primary industries and products on the left and
-services and final demand industries on the right.
-Left-to-right order is same as arguments
-from <code>p_industries</code> to <code>fd_industries</code>.
-<code>scbsd_industries</code> are arranged at the top,
-in left-to-right order as they appear in the list argument.
-Each of the <code>_industries</code> and <code>_products</code>
-arguments may be a named list of character vectors, where
-names provide groupings for the layout.
-}
-\examples{
-p_ind <- "p_ind_1"
-p_prod <- "p_prod_1"
-pf_ind <- "pf_ind_1"
-f_prod <- "f_prod_1"
-fd_ind <- "fd_ind_1"
-names <- c("p_ind_1", "p_prod_1", "pf_ind_1", "f_prod_1", "fd_ind_1")
-g <- qgraph(matrix(c(0, 10, 0, 0, 0,
-                     0,  0, 9, 0, 0,
-                     0,  0, 0, 8, 0,
-                     0,  0, 0, 0, 7,
-                     0,  0, 0, 0, 0),
-              nrow = 5, byrow = TRUE,
-              dimnames = list(names, names)),
-            DoNotPlot = TRUE)
-calc_ecc_layout(g,
-                p_industries = p_ind,
-                p_products = p_prod,
-                pf_industries = pf_ind,
-                f_products = f_prod,
-                fd_industries = fd_ind)
+Information for the layout is provided by the following arguments:
+\code{industry_stages},
+\code{product_stages},
+\code{fd_stage}, and
+\code{scbsd_stage},
+all of which are data frames.
 }
