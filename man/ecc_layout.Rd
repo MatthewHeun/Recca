@@ -66,12 +66,12 @@ at a stage (a string).
 The top-to-bottom order of groups at a stage is give by the order of appearance
 in \code{group_colname}.}
 
+\item{node_name_colname}{the name of the output column containing node names
+(industries and products).}
+
 \item{x_colname}{the name of the output column containing x coordinates for each node.}
 
 \item{y_colname}{the name of the output column containing y coordinates for each node.}
-
-\item{node_name_colnames}{the name of the output column containing node names
-(industries and products).}
 }
 \value{
 a data frame with three columns.

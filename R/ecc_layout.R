@@ -54,7 +54,7 @@
 #'        at a stage (a string).
 #'        The top-to-bottom order of groups at a stage is give by the order of appearance
 #'        in \code{group_colname}.
-#' @param node_name_colnames the name of the output column containing node names
+#' @param node_name_colname the name of the output column containing node names
 #'        (industries and products).
 #' @param x_colname the name of the output column containing x coordinates for each node.
 #' @param y_colname the name of the output column containing y coordinates for each node.
@@ -65,12 +65,17 @@
 #'         The third column contains y coordinates for the nodes and is named \code{y_colname}.
 #'
 #' @importFrom rlang :=
+#' @importFrom rlang .data
 #' @importFrom magrittr %>%
+#' @importFrom magrittr set_rownames
 #' @importFrom dplyr mutate
 #' @importFrom dplyr filter
 #' @importFrom dplyr select
 #' @importFrom dplyr rename
 #' @importFrom dplyr arrange
+#' @importFrom dplyr left_join
+#' @importFrom dplyr group_by
+#' @importFrom dplyr count
 #' @importFrom tibble rownames_to_column
 #'
 #' @export
@@ -107,10 +112,23 @@ ecc_layout <- function(Industries,
   inds <- Industries_less_Storage %>% select(!!as.name(industry_colname)) %>% unique()
   prods <- Products %>% select(!!as.name(product_colname)) %>% unique()
   stor <- Storage %>% select(!!as.name(industry_colname)) %>% unique()
-  # Remove levels. Order is specified by order of appearance.
-  levels(inds) <- NULL
-  levels(prods) <- NULL
-  levels(stor) <- NULL
+  grps <- rbind(Industries_less_Storage %>% select(!!as.name(group_colname)),
+                Products %>% select(!!as.name(group_colname))) %>%
+    filter(!is.na(!!as.name(group_colname))) %>%
+    unique()
+  grps <- set_rownames(grps, 1:nrow(grps))
+
+  # Set levels for groups in order of their appearance.
+  # These levels will be used later for calculating the y coordinates for the nodes.
+  Industries <- Industries %>%
+    mutate(
+      !!as.name(group_colname) := factor(!!as.name(group_colname), levels = grps[[group_colname]])
+    )
+  Products <- Products %>%
+    mutate(
+      !!as.name(group_colname) := factor(!!as.name(group_colname), levels = grps[[group_colname]])
+    )
+
   # Make data frames of stage numbers.
   # This process is easy for industries and products
   # but takes additional calculations for storage industries (later).
@@ -148,10 +166,6 @@ ecc_layout <- function(Industries,
   N_storage <- nrow(stor)
   # Find x coordinate of first Storage industry
   x_first_storage <- x_center - (N_storage - 1) / 2
-  # Storage_stage_order <- data.frame(temp = stor) %>%
-  #   mutate(
-  #     !!as.name(x_colname) := seq(x_first_storage, by = 1, length.out = N_storage)
-  #   )
   # Join with list of storage industries
   Storage_coords <- data.frame(temp = Storage %>%
                                  select(!!as.name(industry_colname)) %>%
@@ -166,22 +180,45 @@ ecc_layout <- function(Industries,
       !!as.name(node_name_colname) := !!as.name(industry_colname)
     )
 
-  # Join Stage_coords to a list of nodes
+  # Join Stage_coords to create the list of nodes
   Node_coords <- rbind(
     Industries_less_Storage %>% rename(!!as.name(node_name_colname) := !!as.name(industry_colname)),
     Products %>% rename(!!as.name(node_name_colname) := !!as.name(product_colname))
   ) %>%
     left_join(Stage_coords, by = stage_colname) %>%
-    arrange(!!as.name(x_colname)) %>%
-    # rbind with storage nodes
-    rbind(Storage_coords) %>%
     arrange(!!as.name(x_colname))
 
   # At this point, all x coordinates have been decided are are in the Node_coords data frame.
   # Now work on y coordinates.
+  # Figure out the number of nodes in each stage
+  N_nodes <- Node_coords %>%
+    group_by(!!as.name(stage_colname)) %>%
+    count()
+  y_max <- max(N_nodes$n)
+
+  # Use do to make y coordinates
+  Node_coords <- Node_coords %>%
+    group_by(!!as.name(x_colname), !!as.name(group_colname)) %>%
+    arrange(!!as.name(x_colname), !!as.name(group_colname))
 
 
 
+
+
+  # # When we know y_max, we can put the Storage industries one level higher
+  # Storage_coords <- Storage_coords %>%
+  #   mutate(
+  #     y = y_max + 1
+  #   )
+  #
+  #
+  #
+  #
+  #
+  # # rbind with coordinates for storage nodes
+  # rbind(Storage_coords) %>%
+  #
+  #
 
 
   return(Node_coords)
