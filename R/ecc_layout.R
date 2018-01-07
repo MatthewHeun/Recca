@@ -185,18 +185,46 @@ ecc_layout <- function(Industries,
   ) %>%
     left_join(Stage_coords, by = stage_colname) %>%
     group_by(!!as.name(x_colname), !!as.name(group_colname)) %>%
+    # Put nodes in correct order.
+    # First group on stage (x coordinate) followed by
+    # the Group within each stage.
     arrange(!!as.name(x_colname), !!as.name(group_colname))
 
-
   # At this point, all x coordinates have been decided and are in the Node_coords data frame.
-  # Now work on y coordinates.
+  # Furthermore, the Node_coords data frame is in the correct order for y coordinates.
+  # So work on y coordinates.
   # Figure out the number of nodes in each stage
   N_nodes <- Node_coords %>%
     group_by(!!as.name(stage_colname)) %>%
     count()
   y_max <- max(N_nodes$n)
+  y_center <- (y_max + 1) / 2
 
-  # Use do to make y coordinates
+  # Use dplyr::do to make y coordinates
+  Node_coords2 <- Node_coords %>%
+    # Re-group according to x_colname only,
+    # thereby ensuring that we apply y coords to each stage independently.
+    group_by(!!as.name(x_colname)) %>%
+    mutate(
+      # Add a column for the row number in each group.
+      i_group = row_number()
+    ) %>%
+    # Add a column (n) that gives the number of nodes in each stage
+    left_join(N_nodes, by = stage_colname) %>%
+    mutate(
+      # Calculate the column of y coordinates
+      # using the number within each group (i_group) and
+      # the total number of nodes in the group (n)
+      !!as.name(y_colname) := y_center + (i_group - n)
+    )
+    # Figure out y coordinate for each stage independently.
+    do(
+      !!as.name(y_colname) := .data %>%
+        remove_rownames() %>%
+        rownames() %>%
+        unlist() %>%
+        print()
+    )
 
 
 
