@@ -99,21 +99,14 @@ ecc_layout <- function(Industries,
     filter((!!as.name(stage_colname)) != storage_stagename)
   # Ensure that the number of industry stages (less storage)
   # is one more than the number of product stages.
-  N_industry_stages <- Industries_less_Storage %>%
-    select(!!as.name(stage_colname)) %>%
-    unique() %>%
-    nrow()
-  N_product_stages <- Products %>%
-    select(!!as.name(stage_colname)) %>%
-    unique() %>%
-    nrow()
-  stopifnot(N_industry_stages - N_product_stages == 1)
+  stopifnot(Industries_less_Storage %>%
+              select(!!as.name(stage_colname)) %>% unique() %>% nrow() -
+              Products %>% select(!!as.name(stage_colname)) %>% unique() %>% nrow() == 1)
   # Set groups for the Group variable based on order of appearance.
   # These groups will be used later for ordering the y coordinates of nodes.
   grps <- rbind(Industries_less_Storage %>% select(!!as.name(group_colname)),
                 Products %>% select(!!as.name(group_colname))) %>%
-    filter(!is.na(!!as.name(group_colname))) %>%
-    unique()
+    filter(!is.na(!!as.name(group_colname))) %>% unique()
   grps <- set_rownames(grps, 1:nrow(grps))
   # Set levels for groups in order of their appearance.
   # These levels will be used later for calculating the y coordinates for the nodes.
@@ -133,13 +126,10 @@ ecc_layout <- function(Industries,
     mutate(
       !!as.name(group_colname) := factor(!!as.name(group_colname), levels = grps[[group_colname]])
     )
+  # Make data frames of stage numbers.
   # Left-to-right order across the network is taken from the order of appearance
   # in the respective data frames.
-  inds <- Industries_less_Storage %>% select(!!as.name(industry_colname)) %>% unique()
-  prods <- Products %>% select(!!as.name(product_colname)) %>% unique()
-  stor <- Storage %>% select(!!as.name(industry_colname)) %>% unique()
-  # Make data frames of stage numbers.
-  # This process is easy for industries and products
+  # This process is simpler for industries and products
   # but takes additional calculations for storage industries (later).
   i_stage_colname <- paste0("i_", stage_colname)
   Industry_stage_order <- data.frame(temp = Industries_less_Storage %>%
@@ -195,7 +185,7 @@ ecc_layout <- function(Industries,
 
   # Calculate y coordinates
   i_group_colname <- ".i_group"
-  Node_coords2 <- Node_coords %>%
+  Node_coords <- Node_coords %>%
     # Re-group according to x_colname only,
     # thereby ensuring that we apply y coords to each stage independently.
     group_by(!!as.name(x_colname)) %>%
@@ -222,7 +212,7 @@ ecc_layout <- function(Industries,
   # Calculate the center of the x dimension.
   x_center <- (x_max + 1) / 2
   # Find out how many storage industries we have.
-  N_storage <- nrow(stor)
+  N_storage <- nrow(Storage)
   # Find x coordinate of first Storage industry
   x_first_storage <- x_center - (N_storage - 1) / 2
   # Join with list of storage industries
@@ -246,5 +236,5 @@ ecc_layout <- function(Industries,
     select(!!as.name(node_name_colname), !!as.name(x_colname), !!as.name(y_colname))
 
   # Finally, rbind Node_coords and Storage_coords and return
-  rbind(as.data.frame(Node_coords2), Storage_coords)
+  rbind(as.data.frame(Node_coords), Storage_coords)
 }

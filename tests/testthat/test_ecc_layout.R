@@ -20,12 +20,10 @@ context("small example")
 test_that("small example works as expected", {
 
   Industry_meta <- data.frame(
-    Industry = c("Stock changes", "p_ind_1", "pf_ind_1", "fd_ind_1", "p_ind_2", "p_ind_3"),
-    Stage = c("Storage", "Primary industry",
-              "Primary --> Final",
-              "Final demand",
-              "Primary industry", "Primary industry"),
-    Group = c(NA, "Oil", NA, NA, "Oil", "Coal"),
+    Industry = c("Stock changes", "p_ind_1", "pf_ind_1", "fd_ind_1", "p_ind_2", "p_ind_3", "Bunker"),
+    Stage = c("Storage", "Primary industry", "Primary --> Final", "Final demand",
+              "Primary industry", "Primary industry", "Storage"),
+    Group = c(NA, "Oil", NA, NA, "Oil", "Coal", NA),
     stringsAsFactors = FALSE
   )
   Product_meta <- data.frame(
@@ -51,6 +49,8 @@ test_that("small example works as expected", {
   expect_equal(layout_named["pf_ind_1", "y"], 2)
   expect_equal(layout_named["f_prod_1", "y"], 2)
   expect_equal(layout_named["fd_ind_1", "y"], 2)
-  expect_equal(layout_named["Stock changes", "x"], 3)
+  expect_equal(layout_named["Stock changes", "x"], 2.5)
+  expect_equal(layout_named["Bunker", "x"], 3.5)
   expect_equal(layout_named["Stock changes", "y"], 4)
+  expect_equal(layout_named["Bunker", "y"], 4)
 })
