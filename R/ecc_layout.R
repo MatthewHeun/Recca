@@ -69,14 +69,15 @@
 #' @importFrom rlang .data
 #' @importFrom magrittr %>%
 #' @importFrom magrittr set_rownames
-#' @importFrom dplyr mutate
-#' @importFrom dplyr filter
-#' @importFrom dplyr select
-#' @importFrom dplyr rename
 #' @importFrom dplyr arrange
-#' @importFrom dplyr left_join
-#' @importFrom dplyr group_by
 #' @importFrom dplyr count
+#' @importFrom dplyr filter
+#' @importFrom dplyr group_by
+#' @importFrom dplyr left_join
+#' @importFrom dplyr mutate
+#' @importFrom dplyr rename
+#' @importFrom dplyr row_number
+#' @importFrom dplyr select
 #' @importFrom tibble rownames_to_column
 #'
 #' @export
@@ -183,17 +184,24 @@ ecc_layout <- function(Industries,
   N_nodes <- Node_coords %>%
     group_by(!!as.name(stage_colname)) %>%
     count()
-  y_max <- max(N_nodes$n)
+  # The count function automatically creates a column named "n".
+  # We need this name later, so declare it here.
+  n_colname <- "n"
+  y_max <- max(N_nodes[[n_colname]])
+  # y_center is the y coordinate that gives a horizontal line
+  # that serves as the vertical center of the network layout
+  # (not including storage nodes).
   y_center <- (y_max + 1) / 2
 
   # Calculate y coordinates
+  i_group_colname <- ".i_group"
   Node_coords2 <- Node_coords %>%
     # Re-group according to x_colname only,
     # thereby ensuring that we apply y coords to each stage independently.
     group_by(!!as.name(x_colname)) %>%
     mutate(
-      # Add a column for the row number in each group.
-      i_group = row_number()
+      # Add a column for the row number (i) within each group (_group).
+      !!as.name(i_group_colname) := row_number()
     ) %>%
     # Add a column (n) that gives the number of nodes in each stage
     left_join(N_nodes, by = stage_colname) %>%
@@ -201,7 +209,8 @@ ecc_layout <- function(Industries,
       # Calculate the column of y coordinates
       # using the index within each group (i_group) and
       # the total number of nodes in the group (n)
-      !!as.name(y_colname) := (y_max + 1) - (y_center + i_group - (n + 1)/2)
+      !!as.name(y_colname) := (y_max + 1) -
+                              (y_center + (!!as.name(i_group_colname)) - ((!!as.name(n_colname)) + 1)/2)
     ) %>%
     # select only relevant columns
     select(!!as.name(node_name_colname), !!as.name(x_colname), !!as.name(y_colname))
