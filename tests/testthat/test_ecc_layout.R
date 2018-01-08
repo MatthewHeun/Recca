@@ -51,7 +51,6 @@ test_that("small example works as expected", {
   expect_equal(layout_named["pf_ind_1", "y"], 2)
   expect_equal(layout_named["f_prod_1", "y"], 2)
   expect_equal(layout_named["fd_ind_1", "y"], 2)
-
-
-  # expect_equal(layout_named["Stock changes", "x"], 3)
+  expect_equal(layout_named["Stock changes", "x"], 3)
+  expect_equal(layout_named["Stock changes", "y"], 4)
 })

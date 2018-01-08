@@ -34,18 +34,19 @@ except that \code{product_colname} takes the place of \code{industry_colname}.}
 
 \item{industry_colname}{the name of the column in \code{Industries} containing
 names of industries (a string).
-Default is "Industries".}
+Default is "Industry".}
 
 \item{product_colname}{the name of the column in \code{Products} containing
 names of products (a string).
-Default is "Products".}
+Default is "Product".}
 
 \item{stage_colname}{the name of the columns in \code{Industries} and \code{Products}
 containing names of stages (a string).
 The left-to-right order of stages in the network layout
 is determined by the top-to-bottom
 order in which stage names appear in the
-\code{Industries} and \code{Products} data frames.}
+\code{Industries} and \code{Products} data frames.
+Default is "Stage".}
 
 \item{storage_stagename}{the name of the stage in \code{stage_colname} of \code{Industries}
 that identifies a "storage" industry (a string).
@@ -55,14 +56,20 @@ Default is "Storage".}
 containing industries and products that should be grouped together vertically
 at a stage (a string).
 The top-to-bottom order of groups at a stage is give by the order of appearance
-in \code{group_colname}.}
+in \code{group_colname}.
+Default is "Group".}
 
 \item{node_name_colname}{the name of the output column containing node names
-(industries and products).}
+(industries and products).
+Node names are taken from the \code{industry_colname} of \code{Industries}
+and the \code{product_colname} of \code{Products}.
+Default is "Node_name".}
 
-\item{x_colname}{the name of the output column containing x coordinates for each node.}
+\item{x_colname}{the name of the output column containing x coordinates for each node.
+Default is Default is "x".}
 
-\item{y_colname}{the name of the output column containing y coordinates for each node.}
+\item{y_colname}{the name of the output column containing y coordinates for each node.
+Default is Default is "y".}
 }
 \value{
 a data frame with three columns.

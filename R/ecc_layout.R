@@ -27,28 +27,35 @@
 #'        except that \code{product_colname} takes the place of \code{industry_colname}.
 #' @param industry_colname the name of the column in \code{Industries} containing
 #'        names of industries (a string).
-#'        Default is "Industries".
+#'        Default is "Industry".
 #' @param product_colname the name of the column in \code{Products} containing
 #'        names of products (a string).
-#'        Default is "Products".
+#'        Default is "Product".
 #' @param stage_colname the name of the columns in \code{Industries} and \code{Products}
 #'        containing names of stages (a string).
 #'        The left-to-right order of stages in the network layout
 #'        is determined by the top-to-bottom
 #'        order in which stage names appear in the
 #'        \code{Industries} and \code{Products} data frames.
+#'        Default is "Stage".
 #' @param group_colname the name of the column in \code{Industries} and \code{Products}
 #'        containing industries and products that should be grouped together vertically
 #'        at a stage (a string).
 #'        The top-to-bottom order of groups at a stage is give by the order of appearance
 #'        in \code{group_colname}.
+#'        Default is "Group".
 #' @param storage_stagename the name of the stage in \code{stage_colname} of \code{Industries}
 #'        that identifies a "storage" industry (a string).
 #'        Default is "Storage".
 #' @param node_name_colname the name of the output column containing node names
 #'        (industries and products).
+#'        Node names are taken from the \code{industry_colname} of \code{Industries}
+#'        and the \code{product_colname} of \code{Products}.
+#'        Default is "Node_name".
 #' @param x_colname the name of the output column containing x coordinates for each node.
+#'        Default is Default is "x".
 #' @param y_colname the name of the output column containing y coordinates for each node.
+#'        Default is Default is "y".
 #'
 #' @return a data frame with three columns.
 #'         The first column contains node names and is named \code{node_name_colname}.
@@ -153,30 +160,6 @@ ecc_layout <- function(Industries,
                         Product_stage_order %>%
                           rename(!!as.name(x_colname) := !!as.name(i_stage_colname))) %>%
     arrange(!!as.name(x_colname))
-  # Now work on storage industries.
-  # Figure out where to place them in x dimension.
-  x_max <- max(Industry_stage_order[[i_stage_colname]], Product_stage_order[[i_stage_colname]])
-  # 1-based coordinate system for stages.
-  # Align storage industries with other industries.
-  # Doing so will avoid vertical flows from products to storage.
-  x_center <- (x_max + 1) / 2
-  # Find out how many storage industries we have.
-  N_storage <- nrow(stor)
-  # Find x coordinate of first Storage industry
-  x_first_storage <- x_center - (N_storage - 1) / 2
-  # Join with list of storage industries
-  Storage_coords <- data.frame(temp = Storage %>%
-                                 select(!!as.name(industry_colname)) %>%
-                                 unique()) %>%
-    mutate(
-      !!as.name(x_colname) := seq(from = x_first_storage,
-                                  to = x_first_storage - 1 + N_storage,
-                                  by = 1)
-    ) %>%
-    left_join(Storage, by = industry_colname) %>%
-    rename(
-      !!as.name(node_name_colname) := !!as.name(industry_colname)
-    )
 
   # Join Stage_coords to a list of industries and products to create the list of nodes.
   Node_coords <- rbind(
@@ -200,7 +183,7 @@ ecc_layout <- function(Industries,
   y_max <- max(N_nodes$n)
   y_center <- (y_max + 1) / 2
 
-  # Use dplyr::do to make y coordinates
+  # Calculate y coordinates
   Node_coords2 <- Node_coords %>%
     # Re-group according to x_colname only,
     # thereby ensuring that we apply y coords to each stage independently.
@@ -213,12 +196,43 @@ ecc_layout <- function(Industries,
     left_join(N_nodes, by = stage_colname) %>%
     mutate(
       # Calculate the column of y coordinates
-      # using the number within each group (i_group) and
+      # using the index within each group (i_group) and
       # the total number of nodes in the group (n)
-      # !!as.name(y_colname) := y_center + (i_group - n)
-      # !!as.name(y_colname) := y_center + i_group - (n + 1) / 2
-      # !!as.name(y_colname) := y_center + (n - i_group) - (n + 1) / 2
       !!as.name(y_colname) := (y_max + 1) - (y_center + i_group - (n + 1)/2)
-    )
-  return(Node_coords2)
+    ) %>%
+    # select only relevant columns
+    select(!!as.name(node_name_colname), !!as.name(x_colname), !!as.name(y_colname))
+
+  # Figure out where to place storage in x dimension.
+  # Align storage industries with other industries.
+  # Doing so will avoid vertical flows from products to storage.
+  x_max <- max(Industry_stage_order[[i_stage_colname]], Product_stage_order[[i_stage_colname]])
+  # Calculate the center of the x dimension.
+  x_center <- (x_max + 1) / 2
+  # Find out how many storage industries we have.
+  N_storage <- nrow(stor)
+  # Find x coordinate of first Storage industry
+  x_first_storage <- x_center - (N_storage - 1) / 2
+  # Join with list of storage industries
+  Storage_coords <- data.frame(temp = Storage %>%
+                                 select(!!as.name(industry_colname)) %>%
+                                 unique()) %>%
+    mutate(
+      !!as.name(x_colname) := seq(from = x_first_storage,
+                                  to = x_first_storage - 1 + N_storage,
+                                  by = 1)
+    ) %>%
+    left_join(Storage, by = industry_colname) %>%
+    rename(
+      !!as.name(node_name_colname) := !!as.name(industry_colname)
+    ) %>%
+    mutate(
+      # Add the y coordinate
+      !!as.name(y_colname) := y_max + 1
+    ) %>%
+    # Select only columns that we want in output
+    select(!!as.name(node_name_colname), !!as.name(x_colname), !!as.name(y_colname))
+
+  # Finally, rbind Node_coords and Storage_coords and return
+  rbind(as.data.frame(Node_coords2), Storage_coords)
 }
