@@ -2,7 +2,7 @@
 % Please edit documentation in R/ecc_layout.R
 \name{ecc_layout}
 \alias{ecc_layout}
-\title{Layout for graph representation of an energy conversion chain}
+\title{Layout for network representation of an energy conversion chain}
 \usage{
 ecc_layout(Industries, Products, industry_colname = "Industry",
   product_colname = "Product", stage_colname = "Stage",
@@ -30,15 +30,17 @@ at each stage. The top-to-bottom order of groups is taken from the appearance or
 in \code{group_colname}.}
 
 \item{Products}{a data frame consisting of same columns as \code{Industries},
-except that \code{product_colname} takes the place of \code{industry_colname}.}
+except that \code{product_colname} takes the place of \code{industry_colname}.
+Note that the number of stages in \code{Products} must be one less than then
+number of stages in \code{Industries}, not counting storage industries.}
 
 \item{industry_colname}{the name of the column in \code{Industries} containing
 names of industries (a string).
-Default is "Industry".}
+Default is "\code{Industry}".}
 
 \item{product_colname}{the name of the column in \code{Products} containing
 names of products (a string).
-Default is "Product".}
+Default is "\code{Product}".}
 
 \item{stage_colname}{the name of the columns in \code{Industries} and \code{Products}
 containing names of stages (a string).
@@ -46,30 +48,30 @@ The left-to-right order of stages in the network layout
 is determined by the top-to-bottom
 order in which stage names appear in the
 \code{Industries} and \code{Products} data frames.
-Default is "Stage".}
+Default is "\code{Stage}".}
 
 \item{storage_stagename}{the name of the stage in \code{stage_colname} of \code{Industries}
 that identifies a "storage" industry (a string).
-Default is "Storage".}
+Default is "\code{Storage}".}
 
 \item{group_colname}{the name of the column in \code{Industries} and \code{Products}
 containing industries and products that should be grouped together vertically
 at a stage (a string).
 The top-to-bottom order of groups at a stage is give by the order of appearance
 in \code{group_colname}.
-Default is "Group".}
+Default is "\code{Group}".}
 
 \item{node_name_colname}{the name of the output column containing node names
 (industries and products).
 Node names are taken from the \code{industry_colname} of \code{Industries}
 and the \code{product_colname} of \code{Products}.
-Default is "Node_name".}
+Default is "\code{Node_name}".}
 
 \item{x_colname}{the name of the output column containing x coordinates for each node.
-Default is Default is "x".}
+Default is Default is "\code{x}".}
 
 \item{y_colname}{the name of the output column containing y coordinates for each node.
-Default is Default is "y".}
+Default is Default is "\code{y}".}
 }
 \value{
 a data frame with three columns.
@@ -82,4 +84,5 @@ Industries and products are interleaved from left to right,
 starting with the first industry, followed by the first product.
 Industries and products alternate until all products are exhausted.
 Finally, the last industry (which should be final demand) is placed at the far right.
+Storage industries are arranged across the top of the network.
 }
