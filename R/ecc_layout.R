@@ -215,36 +215,10 @@ ecc_layout <- function(Industries,
       # Calculate the column of y coordinates
       # using the number within each group (i_group) and
       # the total number of nodes in the group (n)
-      !!as.name(y_colname) := y_center + (i_group - n)
+      # !!as.name(y_colname) := y_center + (i_group - n)
+      # !!as.name(y_colname) := y_center + i_group - (n + 1) / 2
+      # !!as.name(y_colname) := y_center + (n - i_group) - (n + 1) / 2
+      !!as.name(y_colname) := (y_max + 1) - (y_center + i_group - (n + 1)/2)
     )
-    # Figure out y coordinate for each stage independently.
-    do(
-      !!as.name(y_colname) := .data %>%
-        remove_rownames() %>%
-        rownames() %>%
-        unlist() %>%
-        print()
-    )
-
-
-
-
-
-  # # When we know y_max, we can put the Storage industries one level higher
-  # Storage_coords <- Storage_coords %>%
-  #   mutate(
-  #     y = y_max + 1
-  #   )
-  #
-  #
-  #
-  #
-  #
-  # # rbind with coordinates for storage nodes
-  # rbind(Storage_coords) %>%
-  #
-  #
-
-
-  return(Node_coords)
+  return(Node_coords2)
 }
