@@ -12,13 +12,13 @@ library(lazyeval)
 library(byname)
 library(testthat)
 library(qgraph)
+library(matsindf)
 
 ###########################################################
 context("small example")
 ###########################################################
 
 test_that("small example works as expected", {
-
   Industry_meta <- data.frame(
     Industry = c("Stock changes", "p_ind_1", "pf_ind_1", "fd_ind_1", "p_ind_2", "p_ind_3", "Bunker"),
     Stage = c("Storage", "Primary industry", "Primary --> Final", "Final demand",
@@ -53,4 +53,46 @@ test_that("small example works as expected", {
   expect_equal(layout_named["Bunker", "x"], 3.5)
   expect_equal(layout_named["Stock changes", "y"], 4)
   expect_equal(layout_named["Bunker", "y"], 4)
+})
+
+
+###########################################################
+context("UKEnergy2000")
+###########################################################
+
+test_that("UKEnergy2000 works as expected", {
+  # Use the UKEnergy2000 data from the matsindf package as an example.
+  UVY <- UKEnergy2000 %>%
+    # Add metadata
+    add_matnames() %>%
+    add_row_col_meta() %>%
+    # Group correctly
+    group_by(Country, Year, matname) %>%
+    # Ensure all entries are positive numbers, as they should be in PSUT framework.
+    mutate(
+      E.ktoe = abs(E.ktoe)
+    ) %>%
+    # Make matrices
+    collapse_to_matrices(matnames = "matname", values = "E.ktoe",
+                         rownames = "rowname", colnames = "colname",
+                         rowtypes = "rowtype", coltypes = "coltype") %>%
+    rename(
+      matrix = E.ktoe
+    ) %>%
+    # Spread so we can add all matrices
+    spread(key = matname, value = matrix) %>%
+    # Sum all matrices to make one big matrix with "from" or "source" nodes in rows
+    # and "to" or "destination" nodes in columns
+    mutate(
+      # First, set row and column types so they can be summed.
+      U = U %>% setrowtype("Source") %>% setcoltype("Destination"),
+      V = V %>% setrowtype("Source") %>% setcoltype("Destination"),
+      Y = Y %>% setrowtype("Source") %>% setcoltype("Destination"),
+      # Do the sum.
+      big_mat = sum_byname(U, V) %>% sum_byname(Y)
+    )
+
+
+
+
 })
