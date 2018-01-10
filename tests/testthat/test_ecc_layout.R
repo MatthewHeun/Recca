@@ -62,7 +62,7 @@ context("UKEnergy2000")
 
 test_that("UKEnergy2000 works as expected", {
   # Use the UKEnergy2000 data from the matsindf package as an example.
-  UVY <- UKEnergy2000 %>%
+  bigmat <- UKEnergy2000 %>%
     # Add metadata
     add_matnames() %>%
     add_row_col_meta() %>%
@@ -89,8 +89,40 @@ test_that("UKEnergy2000 works as expected", {
       V = V %>% setrowtype("Source") %>% setcoltype("Destination"),
       Y = Y %>% setrowtype("Source") %>% setcoltype("Destination"),
       # Do the sum.
-      big_mat = sum_byname(U, V) %>% sum_byname(Y)
-    )
+      bigsum = sum_byname(U, V) %>% sum_byname(Y)
+    ) %>%
+    # Next 2 lines are like saying .$bigsum[[1]]
+    use_series(bigsum) %>%
+    extract2(1) %>%
+    # If we don't complete_and_sort(), qgraph mis-interprets the data.
+    # qgraph does not work "byname."
+    complete_and_sort()
+
+  # Make data frames with information about stages and groups.
+  Industries <- data.frame(Industry = c("Resources - NG", "Gas wells & proc.",
+                                        "NG dist.", "Power plants", "Elect. grid",
+                                        "Residential",
+                                        "Resources - Crude", "Oil fields",
+                                        "Crude dist.", "Oil refineries", "Diesel dist.", "Petrol dist.",
+                                        "Transport"),
+                           Stage = c("Resources", "Extraction",
+                                     "Primary dist.", "Primary --> Final", "Final dist.",
+                                     "Final demand",
+                                     "Resources", "Extraction",
+                                     "Primary dist.", "Primary --> Final", "Final dist.", "Final dist.",
+                                     "Final demand"))
+  Products <- data.frame(Product = c("NG", "NG - Wells", "NG - dist.",
+                                     "Elect.", "Elect. - Grid",
+                                     "Crude", "Crude - Fields", "Crude - dist.",
+                                     "Diesel", "Petrol", "Diesel - dist.", "Petrol - dist."),
+                         Stage = c("Primary", "Primary extracted", "Primary distributed",
+                                   "Final", "Final distributed",
+                                   "Primary", "Primary extracted", "Primary distributed",
+                                   "Final", "Final", "Final distributed", "Final distributed"))
+  # Create layout for qgraph
+  layout = ecc_layout(Industries = Industries, Products = Products)
+  # Make a qgraph network.
+  g <- qgraph(bigmat, DoNotPlot = TRUE)
 
 
 
