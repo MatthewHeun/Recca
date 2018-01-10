@@ -122,9 +122,5 @@ test_that("UKEnergy2000 works as expected", {
   # Create layout for qgraph
   layout = ecc_layout(Industries = Industries, Products = Products)
   # Make a qgraph network.
-  g <- qgraph(bigmat, DoNotPlot = TRUE)
-
-
-
-
+  g <- qgraph(bigmat, layout = layout)
 })
