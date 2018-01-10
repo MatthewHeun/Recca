@@ -61,7 +61,7 @@
 #' @param y_colname the name of the output column containing y coordinates for each node.
 #'        Default is Default is "\code{y}".
 #'
-#' @return a data frame with three columns.
+#' @return a matrix with three columns.
 #'         The first column contains node names and is named \code{node_name_colname}.
 #'         The second column contains x coordinates for the nodes and is named \code{x_colname}.
 #'         The third column contains y coordinates for the nodes and is named \code{y_colname}.
@@ -235,7 +235,7 @@ ecc_layout <- function(Industries,
   x_first_storage <- x_center - (N_storage - 1) / 2
   # If we have no Storage industries, we're done and can return Node_coords now.
   if (nrow(Storage) == 0) {
-    return(Node_coords)
+    return(Node_coords %>% as.matrix())
   }
   # We have some Storage nodes.
   # Calculate coordinates for storage nodes.
@@ -259,5 +259,6 @@ ecc_layout <- function(Industries,
     # Select only columns that we want in output
     select(!!as.name(node_name_colname), !!as.name(x_colname), !!as.name(y_colname))
   # Finally, rbind Node_coords and Storage_coords and return
-  rbind(as.data.frame(Node_coords), Storage_coords)
+  rbind(as.data.frame(Node_coords), Storage_coords) %>%
+    as.matrix()
 }

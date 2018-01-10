@@ -75,7 +75,7 @@ Default is Default is "\code{x}".}
 Default is Default is "\code{y}".}
 }
 \value{
-a data frame with three columns.
+a matrix with three columns.
         The first column contains node names and is named \code{node_name_colname}.
         The second column contains x coordinates for the nodes and is named \code{x_colname}.
         The third column contains y coordinates for the nodes and is named \code{y_colname}.
