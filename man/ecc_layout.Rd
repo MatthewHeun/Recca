@@ -4,12 +4,14 @@
 \alias{ecc_layout}
 \title{Layout for network representation of an energy conversion chain}
 \usage{
-ecc_layout(Industries, Products, industry_colname = "Industry",
+ecc_layout(g, Industries, Products, industry_colname = "Industry",
   product_colname = "Product", stage_colname = "Stage",
   storage_stagename = "Storage", group_colname = "Group",
   node_name_colname = "Node_name", x_colname = "x", y_colname = "y")
 }
 \arguments{
+\item{g}{a qgraph object from which the order of node names is extracted.}
+
 \item{Industries}{a data frame consisting of columns named
 \code{industry_colname}, \code{stage_colname}, and \code{group_colname}.
 Entries in \code{industry_colname} must be names of industries.
