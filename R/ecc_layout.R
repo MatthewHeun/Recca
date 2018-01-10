@@ -6,6 +6,8 @@
 #' Finally, the last industry (which should be final demand) is placed at the far right.
 #' Storage industries are arranged across the top of the network.
 #'
+#' @param g a qgraph object from which the order of node names is extracted.
+#'
 #' @param Industries a data frame consisting of columns named
 #'        \code{industry_colname}, \code{stage_colname}, and \code{group_colname}.
 #'        Entries in \code{industry_colname} must be names of industries.
@@ -82,7 +84,8 @@
 #' @importFrom tibble rownames_to_column
 #'
 #' @export
-ecc_layout <- function(Industries,
+ecc_layout <- function(g,
+                       Industries,
                        Products,
                        industry_colname = "Industry",
                        product_colname = "Product",
@@ -93,6 +96,9 @@ ecc_layout <- function(Industries,
                        node_name_colname = "Node_name",
                        x_colname = "x",
                        y_colname = "y"){
+  # First step is to eliminate factors in the incoming data frames
+  Industries <- Industries %>% mutate_if(is.factor, as.character)
+  Products <- Products %>% mutate_if(is.factor, as.character)
   # The group_colname is optional.
   # If the column is not present, add and fill with a single group (group_colname).
   if (!(group_colname %in% names(Industries))) {
@@ -166,7 +172,7 @@ ecc_layout <- function(Industries,
       !!as.name(i_stage_colname) := as.numeric(!!as.name(i_stage_colname)),
       !!as.name(i_stage_colname) := 2 * (!!as.name(i_stage_colname))
     )
-  # Join these *_stage_order data frames
+  # rbind these *_stage_order data frames
   Stage_coords <- rbind(Industry_stage_order %>%
                           rename(!!as.name(x_colname) := !!as.name(i_stage_colname)),
                         Product_stage_order %>%
@@ -235,30 +241,64 @@ ecc_layout <- function(Industries,
   x_first_storage <- x_center - (N_storage - 1) / 2
   # If we have no Storage industries, we're done and can return Node_coords now.
   if (nrow(Storage) == 0) {
-    return(Node_coords %>% as.matrix())
+    out <- Node_coords
+  } else {
+    # We have some Storage nodes.
+    # Calculate coordinates for storage nodes.
+    Storage_coords <- data.frame(temp = Storage %>%
+                                   select(!!as.name(industry_colname)) %>%
+                                   unique()) %>%
+      mutate(
+        # !!as.name(x_colname) := seq(from = x_first_storage,
+        #                             to = x_first_storage - 1 + N_storage,
+        #                             by = 1)
+        !!as.name(x_colname) := x_first_storage:(x_first_storage - 1 + N_storage)
+      ) %>%
+      left_join(Storage, by = industry_colname) %>%
+      rename(
+        !!as.name(node_name_colname) := !!as.name(industry_colname)
+      ) %>%
+      mutate(
+        # Add the y coordinate
+        !!as.name(y_colname) := y_max + 1
+      ) %>%
+      # Select only columns that we want in output
+      select(!!as.name(node_name_colname), !!as.name(x_colname), !!as.name(y_colname))
+    # Finally, rbind Node_coords and Storage_coords and return
+    out <- rbind(as.data.frame(Node_coords), Storage_coords)
   }
-  # We have some Storage nodes.
-  # Calculate coordinates for storage nodes.
-  Storage_coords <- data.frame(temp = Storage %>%
-                                 select(!!as.name(industry_colname)) %>%
-                                 unique()) %>%
-    mutate(
-      # !!as.name(x_colname) := seq(from = x_first_storage,
-      #                             to = x_first_storage - 1 + N_storage,
-      #                             by = 1)
-      !!as.name(x_colname) := x_first_storage:(x_first_storage - 1 + N_storage)
-    ) %>%
-    left_join(Storage, by = industry_colname) %>%
-    rename(
-      !!as.name(node_name_colname) := !!as.name(industry_colname)
-    ) %>%
-    mutate(
-      # Add the y coordinate
-      !!as.name(y_colname) := y_max + 1
-    ) %>%
-    # Select only columns that we want in output
-    select(!!as.name(node_name_colname), !!as.name(x_colname), !!as.name(y_colname))
-  # Finally, rbind Node_coords and Storage_coords and return
-  rbind(as.data.frame(Node_coords), Storage_coords) %>%
+  # When supplying a layout, qgraph respects the order, but not the names, of nodes.
+  # So, we need to re-order the rows of out to match the order of rows in g.
+  # First, get the node names (in qgraph order) from the qgraph object (g).
+  node_names_from_graph <- data.frame(short.names = g$graphAttributes$Nodes$names,
+                                      stringsAsFactors = FALSE) %>%
+    # Add a column for the long names of the nodes.
+    rownames_to_column(node_name_colname)
+  # By left_join-ing here, we keep the row order of node_names_from_graph
+  # while we add the x and y coordinates for the nodes in this layout.
+  new_out <- left_join(node_names_from_graph, out, by = node_name_colname) %>%
+    # Select only the columns that we want to return
+    select(!!as.name(x_colname), !!as.name(y_colname), !!as.name(node_name_colname))
+  # Ensure that we have x and y values for each row.
+  # If any are missing, we didn't have a matching set of node names
+  # among g, Industries, and Products.
+  err <- new_out %>%
+    filter(
+      is.na((!!as.name(x_colname))) |
+        is.na((!!as.name(y_colname)))
+    )
+  # Check for errors.
+  if (nrow(err) > 0) {
+    # We have a problem. Print the data frame and stop.
+    print(err)
+    stop("Mismatched names among g, Industries, and Products in ecc_layout() where NA is present.")
+  }
+  # Everything is good.
+  # Return a matrix.
+  new_out %>%
+    # Move the node names to rownames ...
+    column_to_rownames(node_name_colname) %>%
+    # ... which allows the as.matrix function to create numeric columns for x and y.
+    # This matrix can be used by qgraph for its layout argument.
     as.matrix()
 }
