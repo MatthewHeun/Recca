@@ -47,6 +47,7 @@
 #'        The top-to-bottom order of groups at a stage is give by the order of appearance
 #'        in \code{group_colname}.
 #'        Default is "\code{Group}".
+#'        \code{group_colname} is optional.
 #' @param storage_stagename the name of the stage in \code{stage_colname} of \code{Industries}
 #'        that identifies a "storage" industry (a string).
 #'        Default is "\code{Storage}".
@@ -92,6 +93,18 @@ ecc_layout <- function(Industries,
                        node_name_colname = "Node_name",
                        x_colname = "x",
                        y_colname = "y"){
+  # The group_colname is optional.
+  # If the column is not present, add and fill with a single group (group_colname).
+  if (!(group_colname %in% names(Industries))) {
+    Industries <- Industries %>% mutate(
+      !!as.name(group_colname) := group_colname
+    )
+  }
+  if (!(group_colname %in% names(Products))) {
+    Products <- Products %>% mutate(
+      !!as.name(group_colname) := group_colname
+    )
+  }
   # Extract storage industries from the Industries data frame.
   Storage <- Industries %>%
     filter((!!as.name(stage_colname)) == storage_stagename)
@@ -99,9 +112,14 @@ ecc_layout <- function(Industries,
     filter((!!as.name(stage_colname)) != storage_stagename)
   # Ensure that the number of industry stages (less storage)
   # is one more than the number of product stages.
-  stopifnot(Industries_less_Storage %>%
-              select(!!as.name(stage_colname)) %>% unique() %>% nrow() -
-              Products %>% select(!!as.name(stage_colname)) %>% unique() %>% nrow() == 1)
+  N_industry_stages <- Industries_less_Storage %>% select(!!as.name(stage_colname)) %>% unique() %>% nrow()
+  N_product_stages <- Products %>% select(!!as.name(stage_colname)) %>% unique() %>% nrow()
+  if (N_industry_stages - N_product_stages != 1) {
+    stop(paste0("N_industry_stages = ", N_industry_stages,
+                ". N_product_stages = ", N_product_stages, ". ",
+                "There should be one more industry stages than product stages. "),
+         call. = FALSE)
+  }
   # Set groups for the Group variable based on order of appearance.
   # These groups will be used later for ordering the y coordinates of nodes.
   grps <- rbind(Industries_less_Storage %>% select(!!as.name(group_colname)),
@@ -215,14 +233,20 @@ ecc_layout <- function(Industries,
   N_storage <- nrow(Storage)
   # Find x coordinate of first Storage industry
   x_first_storage <- x_center - (N_storage - 1) / 2
-  # Join with list of storage industries
+  # If we have no Storage industries, we're done and can return Node_coords now.
+  if (nrow(Storage) == 0) {
+    return(Node_coords)
+  }
+  # We have some Storage nodes.
+  # Calculate coordinates for storage nodes.
   Storage_coords <- data.frame(temp = Storage %>%
                                  select(!!as.name(industry_colname)) %>%
                                  unique()) %>%
     mutate(
-      !!as.name(x_colname) := seq(from = x_first_storage,
-                                  to = x_first_storage - 1 + N_storage,
-                                  by = 1)
+      # !!as.name(x_colname) := seq(from = x_first_storage,
+      #                             to = x_first_storage - 1 + N_storage,
+      #                             by = 1)
+      !!as.name(x_colname) := x_first_storage:(x_first_storage - 1 + N_storage)
     ) %>%
     left_join(Storage, by = industry_colname) %>%
     rename(
@@ -234,7 +258,6 @@ ecc_layout <- function(Industries,
     ) %>%
     # Select only columns that we want in output
     select(!!as.name(node_name_colname), !!as.name(x_colname), !!as.name(y_colname))
-
   # Finally, rbind Node_coords and Storage_coords and return
   rbind(as.data.frame(Node_coords), Storage_coords)
 }

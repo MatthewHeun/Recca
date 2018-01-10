@@ -59,7 +59,8 @@ containing industries and products that should be grouped together vertically
 at a stage (a string).
 The top-to-bottom order of groups at a stage is give by the order of appearance
 in \code{group_colname}.
-Default is "\code{Group}".}
+Default is "\code{Group}".
+\code{group_colname} is optional.}
 
 \item{node_name_colname}{the name of the output column containing node names
 (industries and products).
