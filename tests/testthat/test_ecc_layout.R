@@ -111,16 +111,19 @@ test_that("UKEnergy2000 works as expected", {
                                      "Resources", "Extraction",
                                      "Primary dist.", "Primary --> Final", "Final dist.", "Final dist.",
                                      "Final demand"))
-  Products <- data.frame(Product = c("NG", "NG - Wells", "NG - dist.",
-                                     "Elect.", "Elect. - Grid",
-                                     "Crude", "Crude - Fields", "Crude - dist.",
-                                     "Diesel", "Petrol", "Diesel - dist.", "Petrol - dist."),
+  Products <- data.frame(Product = c("NG", "NG - Wells", "NG - Dist.",
+                                     "Elect", "Elect - Grid",
+                                     "Crude", "Crude - Fields", "Crude - Dist.",
+                                     "Diesel", "Petrol", "Diesel - Dist.", "Petrol - Dist."),
                          Stage = c("Primary", "Primary extracted", "Primary distributed",
                                    "Final", "Final distributed",
                                    "Primary", "Primary extracted", "Primary distributed",
                                    "Final", "Final", "Final distributed", "Final distributed"))
   # Create layout for qgraph
-  layout = ecc_layout(Industries = Industries, Products = Products)
+  layout = ecc_layout(g = qgraph(bigmat, DoNotPlot = TRUE),
+                      Industries = Industries, Products = Products)
   # Make a qgraph network.
-  g <- qgraph(bigmat, layout = layout)
+  qgraph(bigmat, layout = layout, cut = 70, curveAll = TRUE, curve = 1)
+
 })
+
