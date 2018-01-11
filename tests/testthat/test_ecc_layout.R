@@ -40,7 +40,6 @@ test_that("small example works as expected", {
     data.frame(from = "pf_ind_1", to = "f_prod_1", weight = 14),
     data.frame(from = "f_prod_1", to = "fd_ind_1", weight = 14),
     data.frame(from = "Stock changes", to = "p_prod_1", weight = 6),
-    data.frame(from = "pf_ind_1", to = "fd_ind_1", weight = 14),
     data.frame(from = "f_prod_1", to = "Bunker", weight = 14)
   ))
 
