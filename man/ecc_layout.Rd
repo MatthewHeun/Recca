@@ -2,16 +2,14 @@
 % Please edit documentation in R/ecc_layout.R
 \name{ecc_layout}
 \alias{ecc_layout}
-\title{Layout for network representation of an energy conversion chain}
+\title{Layout for a \code{qgraph} network representation of an energy conversion chain}
 \usage{
-ecc_layout(g, Industries, Products, industry_colname = "Industry",
+ecc_layout(Industries, Products, industry_colname = "Industry",
   product_colname = "Product", stage_colname = "Stage",
-  storage_stagename = "Storage", group_colname = "Group",
+  storage_stagename = "Storage", g, group_colname = "Group",
   node_name_colname = "Node_name", x_colname = "x", y_colname = "y")
 }
 \arguments{
-\item{g}{a qgraph object from which the order of node names is extracted.}
-
 \item{Industries}{a data frame consisting of columns named
 \code{industry_colname}, \code{stage_colname}, and \code{group_colname}.
 Entries in \code{industry_colname} must be names of industries.
@@ -33,7 +31,7 @@ in \code{group_colname}.}
 
 \item{Products}{a data frame consisting of same columns as \code{Industries},
 except that \code{product_colname} takes the place of \code{industry_colname}.
-Note that the number of stages in \code{Products} must be one less than then
+Note that the number of stages in \code{Products} must be one less than than
 number of stages in \code{Industries}, not counting storage industries.}
 
 \item{industry_colname}{the name of the column in \code{Industries} containing
@@ -54,7 +52,20 @@ Default is "\code{Stage}".}
 
 \item{storage_stagename}{the name of the stage in \code{stage_colname} of \code{Industries}
 that identifies a "storage" industry (a string).
-Default is "\code{Storage}".}
+Default is "\code{Storage}".
+Typical storage industries are bunkers, stock changes, and statistical differences.
+This layout puts storage industries across the top of the ECC graph.}
+
+\item{g}{an optional \code{qgraph} object from which the order of node names is extracted,
+if present.
+It is assumed that the layout calculated by this function will be applied to \code{g},
+so the row order of the outgoing layout is set to the row order expected by \code{g}.
+Furthermore, additional error checking is performed:
+if the names of nodes in \code{Industries} and \code{Products}
+don't exactly match the names of nodes that \code{g} expects,
+a data frame of mismatching names is printed and execution is halted.
+An easy way to obtain a \code{qgraph} object for this argument is to call
+\code{g <- qgraph(somedata, DoNotPlot = TRUE)}.}
 
 \item{group_colname}{the name of the column in \code{Industries} and \code{Products}
 containing industries and products that should be grouped together vertically
@@ -62,25 +73,29 @@ at a stage (a string).
 The top-to-bottom order of groups at a stage is give by the order of appearance
 in \code{group_colname}.
 Default is "\code{Group}".
-\code{group_colname} is optional.}
+\code{group_colname} is optional in \code{Industries} and \code{Products}.
+If \code{group_colname} is missing, a column named "\code{group_colname}"
+will be created and filled with "\code{group_colname}".}
 
-\item{node_name_colname}{the name of the output column containing node names
-(industries and products).
+\item{node_name_colname}{the name of the output column containing names of nodes
+representing industries and products (a string).
 Node names are taken from the \code{industry_colname} of \code{Industries}
 and the \code{product_colname} of \code{Products}.
 Default is "\code{Node_name}".}
 
-\item{x_colname}{the name of the output column containing x coordinates for each node.
-Default is Default is "\code{x}".}
+\item{x_colname}{the name of the output column containing x coordinates for each node
+(a string).
+Default is "\code{x}".}
 
-\item{y_colname}{the name of the output column containing y coordinates for each node.
-Default is Default is "\code{y}".}
+\item{y_colname}{the name of the output column containing y coordinates for each node
+(a string).
+Default is "\code{y}".}
 }
 \value{
-a matrix with three columns.
-        The first column contains node names and is named \code{node_name_colname}.
-        The second column contains x coordinates for the nodes and is named \code{x_colname}.
-        The third column contains y coordinates for the nodes and is named \code{y_colname}.
+a matrix with two columns.
+        The first column contains x coordinates for the nodes and is named \code{x_colname}.
+        The second column contains y coordinates for the nodes and is named \code{y_colname}.
+        Node names are the row names for the outgoing matrix.
 }
 \description{
 Industries and products are interleaved from left to right,

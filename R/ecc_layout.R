@@ -1,12 +1,10 @@
-#' Layout for network representation of an energy conversion chain
+#' Layout for a \code{qgraph} network representation of an energy conversion chain
 #'
 #' Industries and products are interleaved from left to right,
 #' starting with the first industry, followed by the first product.
 #' Industries and products alternate until all products are exhausted.
 #' Finally, the last industry (which should be final demand) is placed at the far right.
 #' Storage industries are arranged across the top of the network.
-#'
-#' @param g a qgraph object from which the order of node names is extracted.
 #'
 #' @param Industries a data frame consisting of columns named
 #'        \code{industry_colname}, \code{stage_colname}, and \code{group_colname}.
@@ -28,7 +26,7 @@
 #'        in \code{group_colname}.
 #' @param Products a data frame consisting of same columns as \code{Industries},
 #'        except that \code{product_colname} takes the place of \code{industry_colname}.
-#'        Note that the number of stages in \code{Products} must be one less than then
+#'        Note that the number of stages in \code{Products} must be one less than than
 #'        number of stages in \code{Industries}, not counting storage industries.
 #' @param industry_colname the name of the column in \code{Industries} containing
 #'        names of industries (a string).
@@ -43,30 +41,46 @@
 #'        order in which stage names appear in the
 #'        \code{Industries} and \code{Products} data frames.
 #'        Default is "\code{Stage}".
+#' @param g an optional \code{qgraph} object from which the order of node names is extracted,
+#'        if present.
+#'        It is assumed that the layout calculated by this function will be applied to \code{g},
+#'        so the row order of the outgoing layout is set to the row order expected by \code{g}.
+#'        Furthermore, additional error checking is performed:
+#'        if the names of nodes in \code{Industries} and \code{Products}
+#'        don't exactly match the names of nodes that \code{g} expects,
+#'        a data frame of mismatching names is printed and execution is halted.
+#'        An easy way to obtain a \code{qgraph} object for this argument is to call
+#'        \code{g <- qgraph(somedata, DoNotPlot = TRUE)}.
 #' @param group_colname the name of the column in \code{Industries} and \code{Products}
 #'        containing industries and products that should be grouped together vertically
 #'        at a stage (a string).
 #'        The top-to-bottom order of groups at a stage is give by the order of appearance
 #'        in \code{group_colname}.
 #'        Default is "\code{Group}".
-#'        \code{group_colname} is optional.
+#'        \code{group_colname} is optional in \code{Industries} and \code{Products}.
+#'        If \code{group_colname} is missing, a column named "\code{group_colname}"
+#'        will be created and filled with "\code{group_colname}".
 #' @param storage_stagename the name of the stage in \code{stage_colname} of \code{Industries}
 #'        that identifies a "storage" industry (a string).
 #'        Default is "\code{Storage}".
-#' @param node_name_colname the name of the output column containing node names
-#'        (industries and products).
+#'        Typical storage industries are bunkers, stock changes, and statistical differences.
+#'        This layout puts storage industries across the top of the ECC graph.
+#' @param node_name_colname the name of the output column containing names of nodes
+#'        representing industries and products (a string).
 #'        Node names are taken from the \code{industry_colname} of \code{Industries}
 #'        and the \code{product_colname} of \code{Products}.
 #'        Default is "\code{Node_name}".
-#' @param x_colname the name of the output column containing x coordinates for each node.
-#'        Default is Default is "\code{x}".
-#' @param y_colname the name of the output column containing y coordinates for each node.
-#'        Default is Default is "\code{y}".
+#' @param x_colname the name of the output column containing x coordinates for each node
+#'        (a string).
+#'        Default is "\code{x}".
+#' @param y_colname the name of the output column containing y coordinates for each node
+#'        (a string).
+#'        Default is "\code{y}".
 #'
-#' @return a matrix with three columns.
-#'         The first column contains node names and is named \code{node_name_colname}.
-#'         The second column contains x coordinates for the nodes and is named \code{x_colname}.
-#'         The third column contains y coordinates for the nodes and is named \code{y_colname}.
+#' @return a matrix with two columns.
+#'         The first column contains x coordinates for the nodes and is named \code{x_colname}.
+#'         The second column contains y coordinates for the nodes and is named \code{y_colname}.
+#'         Node names are the row names for the outgoing matrix.
 #'
 #' @importFrom rlang :=
 #' @importFrom rlang .data
@@ -78,19 +92,21 @@
 #' @importFrom dplyr group_by
 #' @importFrom dplyr left_join
 #' @importFrom dplyr mutate
+#' @importFrom dplyr mutate_if
 #' @importFrom dplyr rename
 #' @importFrom dplyr row_number
 #' @importFrom dplyr select
+#' @importFrom tibble column_to_rownames
 #' @importFrom tibble rownames_to_column
 #'
 #' @export
-ecc_layout <- function(g,
-                       Industries,
+ecc_layout <- function(Industries,
                        Products,
                        industry_colname = "Industry",
                        product_colname = "Product",
                        stage_colname = "Stage",
                        storage_stagename = "Storage",
+                       g,
                        group_colname = "Group",
                        # Output columns
                        node_name_colname = "Node_name",
@@ -266,6 +282,11 @@ ecc_layout <- function(g,
       select(!!as.name(node_name_colname), !!as.name(x_colname), !!as.name(y_colname))
     # Finally, rbind Node_coords and Storage_coords and return
     out <- rbind(as.data.frame(Node_coords), Storage_coords)
+  }
+  if (missing(g)) {
+    # Return out right now. No need to sort the order of rows
+    # to match the order that g will expect.
+    return(out)
   }
   # When supplying a layout, qgraph respects the order, but not the names, of nodes.
   # So, we need to re-order the rows of out to match the order of rows in g.

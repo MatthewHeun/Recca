@@ -122,8 +122,114 @@ test_that("UKEnergy2000 works as expected", {
   # Create layout for qgraph
   layout = ecc_layout(g = qgraph(bigmat, DoNotPlot = TRUE),
                       Industries = Industries, Products = Products)
-  # Make a qgraph network.
-  qgraph(bigmat, layout = layout, cut = 70, curveAll = TRUE, curve = 1)
+
+  # Convert to a data frame for easier testing
+  layout_df <- as.data.frame(layout)
+
+  expect_equal(layout_df["Crude", "x"], 2)
+  expect_equal(layout_df["Crude", "y"], 1.5)
+
+  expect_equal(layout_df["Crude - Dist.", "x"], 6)
+  expect_equal(layout_df["Crude - Dist.", "y"], 1.5)
+
+  expect_equal(layout_df["Crude - Fields", "x"], 4)
+  expect_equal(layout_df["Crude - Fields", "y"], 1.5)
+
+  expect_equal(layout_df["Crude dist.", "x"], 5)
+  expect_equal(layout_df["Crude dist.", "y"], 1.5)
+
+  expect_equal(layout_df["Diesel", "x"], 8)
+  expect_equal(layout_df["Diesel", "y"], 2)
+
+  expect_equal(layout_df["Diesel - Dist.", "x"], 10)
+  expect_equal(layout_df["Diesel - Dist.", "y"], 2)
+
+  expect_equal(layout_df["Diesel dist.", "x"], 9)
+  expect_equal(layout_df["Diesel dist.", "y"], 2)
+
+  expect_equal(layout_df["Elect", "x"], 8)
+  expect_equal(layout_df["Elect", "y"], 3)
+
+  expect_equal(layout_df["Elect - Grid", "x"], 10)
+  expect_equal(layout_df["Elect - Grid", "y"], 3)
+
+  expect_equal(layout_df["Elect. grid", "x"], 9)
+  expect_equal(layout_df["Elect. grid", "y"], 3)
+
+  expect_equal(layout_df["Gas wells & proc.", "x"], 3)
+  expect_equal(layout_df["Gas wells & proc.", "y"], 2.5)
+
+  expect_equal(layout_df["NG", "x"], 2)
+  expect_equal(layout_df["NG", "y"], 2.5)
+
+  expect_equal(layout_df["NG - Dist.", "x"], 6)
+  expect_equal(layout_df["NG - Dist.", "y"], 2.5)
+
+  expect_equal(layout_df["NG - Wells", "x"], 4)
+  expect_equal(layout_df["NG - Wells", "y"], 2.5)
+
+  expect_equal(layout_df["NG dist.", "x"], 5)
+  expect_equal(layout_df["NG dist.", "y"], 2.5)
+
+  expect_equal(layout_df["Oil fields", "x"], 3)
+  expect_equal(layout_df["Oil fields", "y"], 1.5)
+
+  expect_equal(layout_df["Oil refineries", "x"], 7)
+  expect_equal(layout_df["Oil refineries", "y"], 1.5)
+
+  expect_equal(layout_df["Petrol", "x"], 8)
+  expect_equal(layout_df["Petrol", "y"], 1)
+
+  expect_equal(layout_df["Petrol - Dist.", "x"], 10)
+  expect_equal(layout_df["Petrol - Dist.", "y"], 1)
+
+  expect_equal(layout_df["Petrol dist.", "x"], 9)
+  expect_equal(layout_df["Petrol dist.", "y"], 1)
+
+  expect_equal(layout_df["Power plants", "x"], 7)
+  expect_equal(layout_df["Power plants", "y"], 2.5)
+
+  expect_equal(layout_df["Residential", "x"], 11)
+  expect_equal(layout_df["Residential", "y"], 2.5)
+
+  expect_equal(layout_df["Resources - Crude", "x"], 1)
+  expect_equal(layout_df["Resources - Crude", "y"], 1.5)
+
+  expect_equal(layout_df["Resources - NG", "x"], 1)
+  expect_equal(layout_df["Resources - NG", "y"], 2.5)
+
+  expect_equal(layout_df["Transport", "x"], 11)
+  expect_equal(layout_df["Transport", "y"], 1.5)
+
+  # Check that the order is correct
+  expect_equal(rownames(layout_df), c("Crude",
+                                   "Crude - Dist.",
+                                   "Crude - Fields",
+                                   "Crude dist.",
+                                   "Diesel",
+                                   "Diesel - Dist.",
+                                   "Diesel dist.",
+                                   "Elect",
+                                   "Elect - Grid",
+                                   "Elect. grid",
+                                   "Gas wells & proc.",
+                                   "NG",
+                                   "NG - Dist.",
+                                   "NG - Wells",
+                                   "NG dist.",
+                                   "Oil fields",
+                                   "Oil refineries",
+                                   "Petrol",
+                                   "Petrol - Dist.",
+                                   "Petrol dist.",
+                                   "Power plants",
+                                   "Residential",
+                                   "Resources - Crude",
+                                   "Resources - NG",
+                                   "Transport"))
+
+  # Make a qgraph network plot.
+  # qgraph(bigmat, layout = layout, cut = 70, curveAll = TRUE, curve = 1)
 
 })
 
