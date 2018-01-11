@@ -282,13 +282,26 @@ ecc_layout <- function(Industries,
     out <- rbind(as.data.frame(Node_coords), Storage_coords)
   }
   if (!missing(g)) {
-    # When supplying a layout, qgraph respects the order, but not the names, of nodes.
+    # When using a layout, qgraph respects the order, but not the names,
+    # of nodes in the layout argument.
     # So, we need to re-order the rows of out to match the order of rows in g.
     # First, get the node names (in qgraph order) from the qgraph object (g).
-    node_names_from_graph <- data.frame(short.names = g$graphAttributes$Nodes$names,
-                                        stringsAsFactors = FALSE) %>%
-      # Add a column for the long names of the nodes.
-      rownames_to_column(node_name_colname)
+    qgraph_node_names <- g$graphAttributes$Nodes$names
+    if (is.null(names(qgraph_node_names))) {
+      # If the graph is specified by an edge list, g has an unnamed list of full node names
+      node_names_from_graph <- data.frame(.name = qgraph_node_names, stringsAsFactors = FALSE) %>%
+        rename(
+          !!as.name(node_name_colname) := .name
+        )
+    } else {
+      # If the graph is specified from a matrix, g has a named list of abbreviated node names.
+      # The list itself comprises abbreviated names.
+      # But the names of the items in the list comprise the actual node names.
+      node_names_from_graph <- data.frame(.name = names(qgraph_node_names), stringsAsFactors = FALSE) %>%
+        rename(
+          !!as.name(node_name_colname) := .name
+        )
+    }
     # By left_join-ing here, we keep the row order of node_names_from_graph
     # while we add the x and y coordinates for the nodes in this layout.
     out <- left_join(node_names_from_graph, out, by = node_name_colname) %>%
