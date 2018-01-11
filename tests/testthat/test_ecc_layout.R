@@ -68,7 +68,7 @@ test_that("small example works as expected", {
   expect_equal(layout_df["Bunker", "y"], 4)
 
   # Make a qgraph network plot.
-  # qgraph(edge_list, layout = layout)
+  # qgraph(edge_list, layout = layout, edge.labels = TRUE)
 
 })
 
