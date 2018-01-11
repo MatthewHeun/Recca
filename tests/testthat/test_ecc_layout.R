@@ -32,7 +32,21 @@ test_that("small example works as expected", {
     Group = c(NA, "Oil"),
     stringsAsFactors = FALSE
   )
-  layout <- ecc_layout(Industries = Industry_meta, Products = Product_meta)
+  edge_list <- do.call(rbind, list(
+    data.frame(from = "p_ind_1", to = "p_prod_1", weight = 10),
+    data.frame(from = "p_ind_2", to = "p_prod_1", weight = 12),
+    data.frame(from = "p_ind_3", to = "p_prod_1", weight = 14),
+    data.frame(from = "p_prod_1", to = "pf_ind_1", weight = 14),
+    data.frame(from = "pf_ind_1", to = "f_prod_1", weight = 14),
+    data.frame(from = "f_prod_1", to = "fd_ind_1", weight = 14),
+    data.frame(from = "Stock changes", to = "p_prod_1", weight = 6),
+    data.frame(from = "pf_ind_1", to = "fd_ind_1", weight = 14),
+    data.frame(from = "f_prod_1", to = "Bunker", weight = 14)
+  ))
+
+  layout <- ecc_layout(Industries = Industry_meta,
+                       Products = Product_meta,
+                       g = qgraph(edge_list, DoNotPlot = TRUE))
 
   layout_df <- data.frame(layout)
   expect_equal(layout_df["p_ind_1", "x"], 1)
@@ -53,6 +67,10 @@ test_that("small example works as expected", {
   expect_equal(layout_df["Bunker", "x"], 3.5)
   expect_equal(layout_df["Stock changes", "y"], 4)
   expect_equal(layout_df["Bunker", "y"], 4)
+
+  # Make a qgraph network plot.
+  # qgraph(edge_list, layout = layout)
+
 })
 
 
@@ -230,6 +248,5 @@ test_that("UKEnergy2000 works as expected", {
 
   # Make a qgraph network plot.
   # qgraph(bigmat, layout = layout, cut = 70, curveAll = TRUE, curve = 1)
-
 })
 
