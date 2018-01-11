@@ -27,7 +27,8 @@
 #' @param Products a data frame consisting of same columns as \code{Industries},
 #'        except that \code{product_colname} takes the place of \code{industry_colname}.
 #'        Note that the number of stages in \code{Products} must be one less than than
-#'        number of stages in \code{Industries}, not counting storage industries.
+#'        number of stages in \code{Industries}, not counting industries in stage
+#'        \code{storage_stagename}.
 #' @param industry_colname the name of the column in \code{Industries} containing
 #'        names of industries (a string).
 #'        Default is "\code{Industry}".
@@ -49,27 +50,23 @@
 #'        if the names of nodes in \code{Industries} and \code{Products}
 #'        don't exactly match the names of nodes that \code{g} expects,
 #'        a data frame of mismatching names is printed and execution is halted.
-#'        An easy way to obtain a \code{qgraph} object for this argument is to call
+#'        An easy way to obtain a \code{qgraph} object for the \code{g} argument is to call
 #'        \code{g <- qgraph(somedata, DoNotPlot = TRUE)}.
 #' @param group_colname the name of the column in \code{Industries} and \code{Products}
 #'        containing industries and products that should be grouped together vertically
 #'        at a stage (a string).
-#'        The top-to-bottom order of groups at a stage is give by the order of appearance
-#'        in \code{group_colname}.
+#'        The top-to-bottom order of groups at a stage is given by the top-to-bottom
+#'        order of appearance in \code{group_colname}.
 #'        Default is "\code{Group}".
 #'        \code{group_colname} is optional in \code{Industries} and \code{Products}.
 #'        If \code{group_colname} is missing, a column named "\code{group_colname}"
-#'        will be created and filled with "\code{group_colname}".
+#'        will be created and filled with "\code{group_colname}",
+#'        thereby creating a single group for all industries or products.
 #' @param storage_stagename the name of the stage in \code{stage_colname} of \code{Industries}
 #'        that identifies a "storage" industry (a string).
 #'        Default is "\code{Storage}".
 #'        Typical storage industries are bunkers, stock changes, and statistical differences.
 #'        This layout puts storage industries across the top of the ECC graph.
-#' @param node_name_colname the name of the output column containing names of nodes
-#'        representing industries and products (a string).
-#'        Node names are taken from the \code{industry_colname} of \code{Industries}
-#'        and the \code{product_colname} of \code{Products}.
-#'        Default is "\code{Node_name}".
 #' @param x_colname the name of the output column containing x coordinates for each node
 #'        (a string).
 #'        Default is "\code{x}".
@@ -109,9 +106,10 @@ ecc_layout <- function(Industries,
                        g,
                        group_colname = "Group",
                        # Output columns
-                       node_name_colname = "Node_name",
                        x_colname = "x",
                        y_colname = "y"){
+  # Set a name for the node name columsn that will be used throughout this function.
+  node_name_colname <- ".Node_name"
   # First step is to eliminate factors in the incoming data frames
   Industries <- Industries %>% mutate_if(is.factor, as.character)
   Products <- Products %>% mutate_if(is.factor, as.character)
@@ -283,40 +281,36 @@ ecc_layout <- function(Industries,
     # Finally, rbind Node_coords and Storage_coords and return
     out <- rbind(as.data.frame(Node_coords), Storage_coords)
   }
-  if (missing(g)) {
-    # Return out right now. No need to sort the order of rows
-    # to match the order that g will expect.
-    return(out)
+  if (!missing(g)) {
+    # When supplying a layout, qgraph respects the order, but not the names, of nodes.
+    # So, we need to re-order the rows of out to match the order of rows in g.
+    # First, get the node names (in qgraph order) from the qgraph object (g).
+    node_names_from_graph <- data.frame(short.names = g$graphAttributes$Nodes$names,
+                                        stringsAsFactors = FALSE) %>%
+      # Add a column for the long names of the nodes.
+      rownames_to_column(node_name_colname)
+    # By left_join-ing here, we keep the row order of node_names_from_graph
+    # while we add the x and y coordinates for the nodes in this layout.
+    out <- left_join(node_names_from_graph, out, by = node_name_colname) %>%
+      # Select only the columns that we want to return
+      select(!!as.name(x_colname), !!as.name(y_colname), !!as.name(node_name_colname))
+    # Ensure that we have x and y values for each row.
+    # If any are missing, we didn't have a matching set of node names
+    # among g, Industries, and Products.
+    err <- out %>%
+      filter(
+        is.na((!!as.name(x_colname))) |
+          is.na((!!as.name(y_colname)))
+      )
+    # Check for errors.
+    if (nrow(err) > 0) {
+      # We have a problem. Print the data frame and stop.
+      print(err)
+      stop("Mismatched names among g, Industries, and Products in ecc_layout() where NA is present.")
+    }
   }
-  # When supplying a layout, qgraph respects the order, but not the names, of nodes.
-  # So, we need to re-order the rows of out to match the order of rows in g.
-  # First, get the node names (in qgraph order) from the qgraph object (g).
-  node_names_from_graph <- data.frame(short.names = g$graphAttributes$Nodes$names,
-                                      stringsAsFactors = FALSE) %>%
-    # Add a column for the long names of the nodes.
-    rownames_to_column(node_name_colname)
-  # By left_join-ing here, we keep the row order of node_names_from_graph
-  # while we add the x and y coordinates for the nodes in this layout.
-  new_out <- left_join(node_names_from_graph, out, by = node_name_colname) %>%
-    # Select only the columns that we want to return
-    select(!!as.name(x_colname), !!as.name(y_colname), !!as.name(node_name_colname))
-  # Ensure that we have x and y values for each row.
-  # If any are missing, we didn't have a matching set of node names
-  # among g, Industries, and Products.
-  err <- new_out %>%
-    filter(
-      is.na((!!as.name(x_colname))) |
-        is.na((!!as.name(y_colname)))
-    )
-  # Check for errors.
-  if (nrow(err) > 0) {
-    # We have a problem. Print the data frame and stop.
-    print(err)
-    stop("Mismatched names among g, Industries, and Products in ecc_layout() where NA is present.")
-  }
-  # Everything is good.
   # Return a matrix.
-  new_out %>%
+  out %>%
     # Move the node names to rownames ...
     column_to_rownames(node_name_colname) %>%
     # ... which allows the as.matrix function to create numeric columns for x and y.
