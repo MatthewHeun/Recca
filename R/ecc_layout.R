@@ -263,9 +263,6 @@ ecc_layout <- function(Industries,
                                    select(!!as.name(industry_colname)) %>%
                                    unique()) %>%
       mutate(
-        # !!as.name(x_colname) := seq(from = x_first_storage,
-        #                             to = x_first_storage - 1 + N_storage,
-        #                             by = 1)
         !!as.name(x_colname) := x_first_storage:(x_first_storage - 1 + N_storage)
       ) %>%
       left_join(Storage, by = industry_colname) %>%
