@@ -32,7 +32,7 @@ test_that("small example works as expected", {
     Group = c(NA, "Oil"),
     stringsAsFactors = FALSE
   )
-  edge_list <- do.call(rbind, list(
+  Edge_list <- do.call(rbind, list(
     data.frame(from = "p_ind_1", to = "p_prod_1", weight = 10),
     data.frame(from = "p_ind_2", to = "p_prod_1", weight = 12),
     data.frame(from = "p_ind_3", to = "p_prod_1", weight = 14),
@@ -45,7 +45,7 @@ test_that("small example works as expected", {
 
   layout <- ecc_layout(Industries = Industry_meta,
                        Products = Product_meta,
-                       g = qgraph(edge_list, DoNotPlot = TRUE))
+                       g = qgraph(Edge_list, DoNotPlot = TRUE))
 
   layout_df <- data.frame(layout)
   expect_equal(layout_df["p_ind_1", "x"], 1)
@@ -71,6 +71,31 @@ test_that("small example works as expected", {
   # qgraph(edge_list, layout = layout, edge.labels = TRUE)
 
 })
+
+
+test_that("second small example works as expected", {
+  # In this small example, we give an industry name that is hyphenated
+  # and test that it is picked up appriately.
+  # Industry hyphenation is of the form "Industry - Product",
+  # where product is one of the Products made by Industry.
+  Industries <- data.frame(Industry = c("Production", "Power plants", "Households"),
+                           Stage = c("Primary industry", "P-->F industry", "Final demand"))
+  Products <- data.frame(Product = c("Coal", "Electricity"),
+                         Stage = c("Primary product", "Final product"))
+  # Now make an edgelist for these industries.
+  # Note that "Production - Coal" is a hyphenated industry.
+  # ecc_layout needs to handle that correctly.
+  Edge_list <- do.call(rbind, list(
+    data.frame(from = "Production - Coal", to = "Coal", weight = 10),
+    data.frame(from = "Coal", to = "Power plants", weight = 12),
+    data.frame(from = "Power plants", to = "Electricity", weight = 14),
+    data.frame(from = "Electricity", to = "Final demand", weight = 14)
+  ))
+  layout <- ecc_layout(Industries = Industries, Products = Products, g = qgraph(Edge_list), )
+
+
+})
+
 
 
 ###########################################################
@@ -137,8 +162,8 @@ test_that("UKEnergy2000 works as expected", {
                                    "Primary", "Primary extracted", "Primary distributed",
                                    "Final", "Final", "Final distributed", "Final distributed"))
   # Create layout for qgraph
-  layout = ecc_layout(g = qgraph(bigmat, DoNotPlot = TRUE),
-                      Industries = Industries, Products = Products)
+  layout = ecc_layout(Industries = Industries, Products = Products,
+                      g = qgraph(bigmat, DoNotPlot = TRUE))
 
   # Convert to a data frame for easier testing
   layout_df <- as.data.frame(layout)
