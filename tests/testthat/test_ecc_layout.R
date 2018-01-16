@@ -91,7 +91,9 @@ test_that("second small example works as expected", {
     data.frame(from = "Power plants", to = "Electricity", weight = 14),
     data.frame(from = "Electricity", to = "Final demand", weight = 14)
   ))
-  layout <- ecc_layout(Industries = Industries, Products = Products, g = qgraph(Edge_list), )
+  layout <- ecc_layout(Industries = Industries,
+                       Products = Products,
+                       g = qgraph(Edge_list, DoNotPlot = TRUE))
 
 
 })
@@ -106,8 +108,8 @@ test_that("UKEnergy2000 works as expected", {
   # Use the UKEnergy2000 data from the matsindf package as an example.
   bigmat <- UKEnergy2000 %>%
     # Add metadata
-    add_matnames() %>%
-    add_row_col_meta() %>%
+    matsindf:::add_UKEnergy2000_matnames(.) %>%
+    matsindf:::add_UKEnergy2000_row_col_meta(.) %>%
     # Group correctly
     group_by(Country, Year, matname) %>%
     # Ensure all entries are positive numbers, as they should be in PSUT framework.
