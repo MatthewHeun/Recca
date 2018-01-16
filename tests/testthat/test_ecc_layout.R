@@ -89,7 +89,7 @@ test_that("second small example works as expected", {
     data.frame(from = "Production - Coal", to = "Coal", weight = 10),
     data.frame(from = "Coal", to = "Power plants", weight = 12),
     data.frame(from = "Power plants", to = "Electricity", weight = 14),
-    data.frame(from = "Electricity", to = "Final demand", weight = 14)
+    data.frame(from = "Electricity", to = "Households", weight = 14)
   ))
   layout <- ecc_layout(Industries = Industries,
                        Products = Products,
