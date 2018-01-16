@@ -74,11 +74,12 @@ test_that("small example works as expected", {
 
 
 test_that("second small example works as expected", {
-  # In this small example, we give an industry name that is hyphenated
-  # and test that it is picked up appriately.
+  # In this small example, we have an Industries data frame that doesn't have hyphenated
+  # industry names, but we have an industry name that is hyphenated.
+  # The test assesses whether this situation is handled appropriately.
   # Industry hyphenation is of the form "Industry - Product",
   # where product is one of the Products made by Industry.
-  Industries <- data.frame(Industry = c("Production", "Power plants", "Households"),
+  Industries <- data.frame(Industry = c("Production - Coal", "Power plants", "Households"),
                            Stage = c("Primary industry", "P-->F industry", "Final demand"))
   Products <- data.frame(Product = c("Coal", "Electricity"),
                          Stage = c("Primary product", "Final product"))
@@ -94,8 +95,21 @@ test_that("second small example works as expected", {
   layout <- ecc_layout(Industries = Industries,
                        Products = Products,
                        g = qgraph(Edge_list, DoNotPlot = TRUE))
+  layout_df <- as.data.frame(layout)
+  expect_equal(layout_df["Production - Coal", "x"], 1)
+  expect_equal(layout_df["Coal", "x"], 2)
+  expect_equal(layout_df["Power plants", "x"], 3)
+  expect_equal(layout_df["Electricity", "x"], 4)
+  expect_equal(layout_df["Households", "x"], 5)
 
+  expect_equal(layout_df["Production - Coal", "y"], 1)
+  expect_equal(layout_df["Coal", "y"], 1)
+  expect_equal(layout_df["Power plants", "y"], 1)
+  expect_equal(layout_df["Electricity", "y"], 1)
+  expect_equal(layout_df["Households", "y"], 1)
 
+  # Make a qgraph
+  # qgraph(Edge_list, layout = layout)
 })
 
 
