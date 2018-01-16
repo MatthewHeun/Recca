@@ -42,16 +42,6 @@
 #'        order in which stage names appear in the
 #'        \code{Industries} and \code{Products} data frames.
 #'        Default is "\code{Stage}".
-#' @param g an optional \code{qgraph} object from which the order of node names is extracted,
-#'        if present.
-#'        It is assumed that the layout calculated by this function will be applied to \code{g},
-#'        so the row order of the outgoing layout is set to the row order expected by \code{g}.
-#'        Furthermore, additional error checking is performed:
-#'        if the names of nodes in \code{Industries} and \code{Products}
-#'        don't exactly match the names of nodes that \code{g} expects,
-#'        a data frame of mismatching names is printed and execution is halted.
-#'        An easy way to obtain a \code{qgraph} object for the \code{g} argument is to call
-#'        \code{g <- qgraph(somedata, DoNotPlot = TRUE)}.
 #' @param group_colname the name of the column in \code{Industries} and \code{Products}
 #'        containing industries and products that should be grouped together vertically
 #'        at a stage (a string).
@@ -62,6 +52,16 @@
 #'        If \code{group_colname} is missing, a column named "\code{group_colname}"
 #'        will be created and filled with "\code{group_colname}",
 #'        thereby creating a single group for all industries or products.
+#' @param g an optional \code{qgraph} object from which the order of node names is extracted,
+#'        if present.
+#'        It is assumed that the layout calculated by this function will be applied to \code{g},
+#'        so the row order of the outgoing layout is set to the row order expected by \code{g}.
+#'        Furthermore, additional error checking is performed:
+#'        if the names of nodes in \code{Industries} and \code{Products}
+#'        don't exactly match the names of nodes that \code{g} expects,
+#'        a data frame of mismatching names is printed and execution is halted.
+#'        An easy way to obtain a \code{qgraph} object for the \code{g} argument is to call
+#'        \code{g <- qgraph(somedata, DoNotPlot = TRUE)}.
 #' @param storage_stagename the name of the stage in \code{stage_colname} of \code{Industries}
 #'        that identifies a "storage" industry (a string).
 #'        Default is "\code{Storage}".
@@ -103,8 +103,8 @@ ecc_layout <- function(Industries,
                        product_colname = "Product",
                        stage_colname = "Stage",
                        storage_stagename = "Storage",
-                       g,
                        group_colname = "Group",
+                       g,
                        # Output columns
                        x_colname = "x",
                        y_colname = "y"){
@@ -208,7 +208,7 @@ ecc_layout <- function(Industries,
   # At this point, all x coordinates have been decided and are in the Node_coords data frame.
   # Furthermore, the Node_coords data frame is in the correct order for y coordinates.
   # So work on y coordinates.
-  # Figure out the number of nodes in each stage
+  # Figure out the number of nodes in each stage.
   N_nodes <- Node_coords %>%
     group_by(!!as.name(stage_colname)) %>%
     count()
@@ -243,7 +243,7 @@ ecc_layout <- function(Industries,
     # select only relevant columns
     select(!!as.name(node_name_colname), !!as.name(x_colname), !!as.name(y_colname))
 
-  # Figure out where to place storage in x dimension.
+  # Figure out where to place Storage nodes in x dimension.
   # Align storage industries with other industries.
   # Doing so will avoid vertical flows from products to storage.
   x_max <- max(Industry_stage_order[[i_stage_colname]], Product_stage_order[[i_stage_colname]])
