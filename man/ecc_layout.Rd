@@ -6,7 +6,7 @@
 \usage{
 ecc_layout(Industries, Products, industry_colname = "Industry",
   product_colname = "Product", stage_colname = "Stage",
-  storage_stagename = "Storage", g, group_colname = "Group",
+  group_colname = "Group", storage_stagename = "Storage", g,
   x_colname = "x", y_colname = "y")
 }
 \arguments{
@@ -51,6 +51,17 @@ order in which stage names appear in the
 \code{Industries} and \code{Products} data frames.
 Default is "\code{Stage}".}
 
+\item{group_colname}{the name of the column in \code{Industries} and \code{Products}
+containing industries and products that should be grouped together vertically
+at a stage (a string).
+The top-to-bottom order of groups at a stage is given by the top-to-bottom
+order of appearance in \code{group_colname}.
+Default is "\code{Group}".
+\code{group_colname} is optional in \code{Industries} and \code{Products}.
+If \code{group_colname} is missing, a column named "\code{group_colname}"
+will be created and filled with "\code{group_colname}",
+thereby creating a single group for all industries or products.}
+
 \item{storage_stagename}{the name of the stage in \code{stage_colname} of \code{Industries}
 that identifies a "storage" industry (a string).
 Default is "\code{Storage}".
@@ -67,17 +78,6 @@ don't exactly match the names of nodes that \code{g} expects,
 a data frame of mismatching names is printed and execution is halted.
 An easy way to obtain a \code{qgraph} object for the \code{g} argument is to call
 \code{g <- qgraph(somedata, DoNotPlot = TRUE)}.}
-
-\item{group_colname}{the name of the column in \code{Industries} and \code{Products}
-containing industries and products that should be grouped together vertically
-at a stage (a string).
-The top-to-bottom order of groups at a stage is given by the top-to-bottom
-order of appearance in \code{group_colname}.
-Default is "\code{Group}".
-\code{group_colname} is optional in \code{Industries} and \code{Products}.
-If \code{group_colname} is missing, a column named "\code{group_colname}"
-will be created and filled with "\code{group_colname}",
-thereby creating a single group for all industries or products.}
 
 \item{x_colname}{the name of the output column containing x coordinates for each node
 (a string).

@@ -52,6 +52,11 @@
 #'        If \code{group_colname} is missing, a column named "\code{group_colname}"
 #'        will be created and filled with "\code{group_colname}",
 #'        thereby creating a single group for all industries or products.
+#' @param storage_stagename the name of the stage in \code{stage_colname} of \code{Industries}
+#'        that identifies a "storage" industry (a string).
+#'        Default is "\code{Storage}".
+#'        Typical storage industries are bunkers, stock changes, and statistical differences.
+#'        This layout puts storage industries across the top of the ECC graph.
 #' @param g an optional \code{qgraph} object from which the order of node names is extracted,
 #'        if present.
 #'        It is assumed that the layout calculated by this function will be applied to \code{g},
@@ -62,11 +67,6 @@
 #'        a data frame of mismatching names is printed and execution is halted.
 #'        An easy way to obtain a \code{qgraph} object for the \code{g} argument is to call
 #'        \code{g <- qgraph(somedata, DoNotPlot = TRUE)}.
-#' @param storage_stagename the name of the stage in \code{stage_colname} of \code{Industries}
-#'        that identifies a "storage" industry (a string).
-#'        Default is "\code{Storage}".
-#'        Typical storage industries are bunkers, stock changes, and statistical differences.
-#'        This layout puts storage industries across the top of the ECC graph.
 #' @param x_colname the name of the output column containing x coordinates for each node
 #'        (a string).
 #'        Default is "\code{x}".
@@ -102,8 +102,8 @@ ecc_layout <- function(Industries,
                        industry_colname = "Industry",
                        product_colname = "Product",
                        stage_colname = "Stage",
-                       storage_stagename = "Storage",
                        group_colname = "Group",
+                       storage_stagename = "Storage",
                        g,
                        # Output columns
                        x_colname = "x",
@@ -312,7 +312,7 @@ ecc_layout <- function(Industries,
     if (nrow(err) > 0) {
       # We have a problem. Print the data frame and stop.
       print(err)
-      stop("Mismatched names among g, Industries, and Products in ecc_layout() where NA is present.")
+      stop("Where NA appears, mismatched names among g, Industries, and Products in ecc_layout().")
     }
   }
   # Return a matrix.
