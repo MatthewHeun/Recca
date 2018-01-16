@@ -35,3 +35,6 @@ vignettes/*.pdf
 
 # macOS files
 *.DS_Store
+
+# Plots created during testing
+Rplots.pdf
