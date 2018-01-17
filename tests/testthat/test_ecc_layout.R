@@ -290,3 +290,25 @@ test_that("UKEnergy2000 works as expected", {
   # qgraph(bigmat, layout = layout, cut = 70, curveAll = TRUE, curve = 1)
 })
 
+
+###########################################################
+context("identify industry stages")
+###########################################################
+
+test_that("identify_industry_stages works as expected", {
+  # Make Industry data frames.
+  GeneralIndustries <- data.frame(Industry = c("Production", "Plants", "Cars"),
+                                  Stage = c("Primary industry", "p-->f industry", "f-->u industry"),
+                                  stringsAsFactors = FALSE)
+  SpecificIndustries <- data.frame(Industry = c("Production - Coal", "Production - Hydro",
+                                                "Plants - Electric", "Plants - refinery",
+                                                "Cars - Electric", "Cars - Petrol"),
+                                   stringsAsFactors = FALSE)
+  # Get the matched industries
+  result <- identify_industry_stages(GeneralIndustries = GeneralIndustries,
+                                     SpecificIndustries = SpecificIndustries)
+  # Make sure it works.
+  expect_equal(result$Stage, c("Primary industry", "Primary industry",
+                               "p-->f industry", "p-->f industry",
+                               "f-->u industry", "f-->u industry"))
+})
