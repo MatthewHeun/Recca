@@ -297,16 +297,18 @@ context("identify industry stages")
 
 test_that("identify_industry_stages works as expected", {
   # Make Industry data frames.
-  GeneralIndustries <- data.frame(Industry = c("Production", "Plants", "Cars"),
+  GeneralIndustries <- data.frame(G.Industry = c("Production", "Plants", "Cars"),
                                   Stage = c("Primary industry", "p-->f industry", "f-->u industry"),
                                   stringsAsFactors = FALSE)
-  SpecificIndustries <- data.frame(Industry = c("Production - Coal", "Production - Hydro",
-                                                "Plants - Electric", "Plants - refinery",
-                                                "Cars - Electric", "Cars - Petrol"),
+  SpecificIndustries <- data.frame(S.Industry = c("Production - Coal", "Production - Hydro",
+                                                  "Plants - Electric", "Plants - refinery",
+                                                  "Cars - Electric", "Cars - Petrol"),
                                    stringsAsFactors = FALSE)
   # Get the matched industries
   result <- identify_industry_stages(GeneralIndustries = GeneralIndustries,
-                                     SpecificIndustries = SpecificIndustries)
+                                     SpecificIndustries = SpecificIndustries,
+                                     general_industry_colname = "G.Industry",
+                                     specific_industry_colname = "S.Industry")
   # Make sure it works.
   expect_equal(result$Stage, c("Primary industry", "Primary industry",
                                "p-->f industry", "p-->f industry",

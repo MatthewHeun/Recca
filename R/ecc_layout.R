@@ -389,6 +389,11 @@ identify_industry_stages <- function(GeneralIndustries,
                       startsWith(s.ind, g.ind)
                     }
     ) %>%
-    select(!!as.name(paste0(specific_industry_colname, ".x")), !!as.name(stage_colname)) %>%
-    rename(!!as.name(specific_industry_colname) := !!as.name(paste0(specific_industry_colname, ".x")))
+    # Return only the specific industries (column 1) and the stages (column 3).
+    # It would be nice to select these by name instead of position,
+    # but when specific_industry_colname and general_industry_colname are the same,
+    # fuzzy_left_join renames the columns with a ".x" and a ".y" suffix.
+    # Because we can't know ahead of time how the columns will be named,
+    # we select by position.
+    select(c(1,3))
 }
