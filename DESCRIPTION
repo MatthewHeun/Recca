@@ -2,7 +2,9 @@ Package: Recca
 Type: Package
 Title: R Energy Conversion Chain Analysis
 Version: 0.1.0
-Author: Matthew Kuperus Heun
+Authors@R: c(person("Matthew", "Heun", role = c("aut", "cre"),
+                     email = "matthew.heun@me.com"))
+Author: Matthew Heun [aut, cre]
 Maintainer: Matthew Kuperus Heun <matthew.heun@me.com>
 Description: Provides functions to analyze energy conversion chains using a 
     physical supply use table (PSUT) approach.
