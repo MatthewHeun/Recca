@@ -122,8 +122,8 @@ test_that("UKEnergy2000 works as expected", {
   # Use the UKEnergy2000 data from the matsindf package as an example.
   bigmat <- UKEnergy2000 %>%
     # Add metadata
-    matsindf:::add_UKEnergy2000_matnames(.) %>%
-    matsindf:::add_UKEnergy2000_row_col_meta(.) %>%
+    Recca:::add_UKEnergy2000_matnames(.) %>%
+    Recca:::add_UKEnergy2000_row_col_meta(.) %>%
     # Group correctly
     group_by(Country, Year, matname) %>%
     # Ensure all entries are positive numbers, as they should be in PSUT framework.
