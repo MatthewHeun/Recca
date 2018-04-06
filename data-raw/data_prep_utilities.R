@@ -21,7 +21,8 @@
 #' @importFrom dplyr case_when
 #'
 #' @examples
-#' add_UKEnergy2000_matnames(UKEnergy2000raw)
+#' UKEnergy2000raw %>%
+#'   add_UKEnergy2000_matnames()
 add_UKEnergy2000_matnames <- function(.DF,
                                       # Input columns
                                       ledger_side = "Ledger.side",
@@ -89,7 +90,7 @@ add_UKEnergy2000_matnames <- function(.DF,
 #'
 #' @examples
 #' library(magrittr)
-#' UKEnergy2000 %>%
+#' UKEnergy2000raw %>%
 #'   add_UKEnergy2000_matnames() %>%
 #'   add_UKEnergy2000_row_col_meta()
 add_UKEnergy2000_row_col_meta <- function(.DF,

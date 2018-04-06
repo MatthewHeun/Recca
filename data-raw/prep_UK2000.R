@@ -12,12 +12,13 @@ library(devtools)
 source(file.path("data-raw", "data_prep_utilities.R"))
 
 # Load the raw data from the .csv file
-UKEnergy2000raw <- read.csv(system.file("extdata", "UKEnergy2000raw", "UKEnergy2000raw.csv",
-                                        package = "Recca", mustWork = TRUE),
-                            stringsAsFactors = FALSE)
+UKEnergy2000tidy <- read.csv(system.file("extdata", "UKEnergy2000raw", "UKEnergy2000raw.csv",
+                                         package = "Recca", mustWork = TRUE),
+                             stringsAsFactors = FALSE)
+use_data(UKEnergy2000tidy, overwrite = TRUE)
 
 # Add metadata columns
-UKEnergy2000mats <- UKEnergy2000raw %>%
+UKEnergy2000mats <- UKEnergy2000tidy %>%
   # Add a column indicating the matrix in which this entry belongs (U, V, or Y).
   add_UKEnergy2000_matnames() %>%
   # Add columns for row names, column names, row types, and column types.
