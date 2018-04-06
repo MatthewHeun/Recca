@@ -139,34 +139,3 @@ add_UKEnergy2000_row_col_meta <- function(.DF,
       )
     )
 }
-
-
-
-
-# .DF %>%
-#   mutate(
-#     !!as.name(rowname_colname) := case_when(
-#       (!!as.name(matname_colname)) == U_name ~ !!as.name(product_colname),
-#       (!!as.name(matname_colname)) == V_name ~ !!as.name(flow_colname),
-#       (!!as.name(matname_colname)) == Y_name ~ !!as.name(product_colname),
-#       TRUE ~ NA_character_
-#     ),
-
-# !!as.name(colname_colname) := case_when(
-#   (!!as.name(matname_colname)) == U_name ~ !!as.name(flow_colname),
-#   (!!as.name(matname_colname)) == V_name ~ !!as.name(product_colname),
-#   (!!as.name(matname_colname)) == Y_name ~ !!as.name(flow_colname),
-#   TRUE ~ NA_character_
-# ),
-# !!as.name(rowtype_colname) := case_when(
-#   (!!as.name(matname_colname)) == U_name ~ product_type,
-#   (!!as.name(matname_colname)) == V_name ~ industry_type,
-#   (!!as.name(matname_colname)) == Y_name ~ product_type,
-#   TRUE ~ NA_character_
-# ),
-# !!as.name(coltype_colname) := case_when(
-#   (!!as.name(matname_colname)) == U_name ~ industry_type,
-#   (!!as.name(matname_colname)) == V_name ~ product_type,
-#   (!!as.name(matname_colname)) == Y_name ~ sector_type,
-#   TRUE ~ NA_character_
-# )
