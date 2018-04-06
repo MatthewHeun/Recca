@@ -1,19 +1,19 @@
 #' Add a column of matrix names to tidy data frame
 #'
 #' @param .data a data frame with \code{ledger_side_colname} and \code{energy_colname}.
-#' @param ledger_side_colname the name of the column in \code{.data} that contains ledger side
+#' @param ledger_side the name of the column in \code{.DF} that contains ledger side
 #'        (a string). Default is "\code{Ledger.side}".
-#' @param energy_colname the name of the column in \code{.data} that contains energy values
-#'        (a string). Default is "\code{E.ktoe}".
+#' @param energy_colname the name of the column in \code{.DF} that contains energy and exergy values
+#'        (a string). Default is "\code{EX.ktoe}".
 #' @param supply_side the identifier for items on the supply side of the ledger (a string).
 #'        Default is "\code{Supply}".
 #' @param consumption_side the identifier for items on the consumption side
 #'        of the ledger (a string). Default is "\code{Consumption}".
-#' @param matname_colname the name of the output column containing the name of the matrix
-#'        in which this row belongs (a string). Default is "\code{UVY}".
-#' @param U_name the name for the use matrix (a string). Default is "\code{U}".
-#' @param V_name the name for the make matrix (a string). Default is "\code{V}".
-#' @param Y_name the name for the final demand matrix (a string). Default is "\code{Y}".
+#' @param matname the name of the output column containing the name of the matrix
+#'        in which this row belongs (a string). Default is "\code{matname}".
+#' @param U the name for the use matrix (a string). Default is "\code{U}".
+#' @param V the name for the make matrix (a string). Default is "\code{V}".
+#' @param Y the name for the final demand matrix (a string). Default is "\code{Y}".
 #'
 #' @return \code{.data} with an added column, \code{UVY_colname}.
 #'
@@ -21,29 +21,33 @@
 #' @importFrom dplyr case_when
 #'
 #' @examples
-#' matsindf:::add_UKEnergy2000_matnames(UKEnergy2000)
-add_UKEnergy2000_matnames <- function(.data,
+#' add_UKEnergy2000_matnames(UKEnergy2000raw)
+add_UKEnergy2000_matnames <- function(.DF,
                                       # Input columns
-                                      ledger_side_colname = "Ledger.side",
-                                      energy_colname = "E.ktoe",
+                                      ledger_side = "Ledger.side",
+                                      energy = "EX.ktoe",
                                       # Input identifiers for supply and consumption
                                       supply_side = "Supply",
                                       consumption_side = "Consumption",
                                       # Output column
-                                      matname_colname = "matname",
+                                      matname = "matname",
                                       # Ouput identifiers for use, make, and final demand matrices
-                                      U_name = "U",
-                                      V_name = "V",
-                                      Y_name = "Y"){
-  .data %>% mutate(
+                                      U = "U",
+                                      V = "V",
+                                      Y = "Y"){
+  matname <- as.name(matname)
+  ledger_side <- as.name(ledger_side)
+  energy <- as.name(energy)
+
+  .DF %>% mutate(
     # Add a column that indicates the matrix in which this entry belongs.
-    !!as.name(matname_colname) := case_when(
+    !!matname := case_when(
       # All negative values on the Supply side of the ledger belong in the use (U) matrix.
-      (!!as.name(ledger_side_colname)) == supply_side & (!!as.name(energy_colname)) <= 0 ~ U_name,
+      !!ledger_side == supply_side & !!energy <= 0 ~ U,
       # All positive values on the Supply side of the ledger belong in the make (V) matrix.
-      (!!as.name(ledger_side_colname)) == supply_side & (!!as.name(energy_colname)) > 0 ~ V_name,
+      !!ledger_side == supply_side & (!!as.name(energy)) > 0 ~ V,
       # All Consumption items belong in the final demand (Y) matrix.
-      (!!as.name(ledger_side_colname)) == consumption_side ~ Y_name,
+      !!ledger_side == consumption_side ~ Y,
       # Identify any places where our logic is faulty.
       TRUE ~ NA_character_
     )
@@ -52,7 +56,7 @@ add_UKEnergy2000_matnames <- function(.data,
 
 #' Add row, column, row type, and column type metadata
 #'
-#' @param .data a data frame containing \code{matname_colname}.
+#' @param .DF a data frame containing \code{matname_colname}.
 #' @param matname_colname the name of the column in \code{.data} that contains names of matrices
 #'        (a string).  Default is "\code{matname}".
 #' @param U_name the name for use matrices (a string). Default is "\code{U}".
@@ -86,43 +90,82 @@ add_UKEnergy2000_matnames <- function(.data,
 #' @examples
 #' library(magrittr)
 #' UKEnergy2000 %>%
-#'   matsindf:::add_UKEnergy2000_matnames(.) %>%
-#'   matsindf:::add_UKEnergy2000_row_col_meta(.)
-add_UKEnergy2000_row_col_meta <- function(.data,
+#'   add_UKEnergy2000_matnames() %>%
+#'   add_UKEnergy2000_row_col_meta()
+add_UKEnergy2000_row_col_meta <- function(.DF,
                                           # Input column containing matrix names
-                                          matname_colname = "matname",
+                                          matname = "matname",
                                           U_name = "U", V_name = "V", Y_name = "Y",
-                                          product_colname = "Product", flow_colname = "Flow",
+                                          product = "Product", flow = "Flow",
                                           industry_type = "Industry", product_type = "Product",
-                                          sector_type = "Sector",
+                                          sector_type = "Industry",
                                           # Output columns
-                                          rowname_colname = "rowname", colname_colname = "colname",
-                                          rowtype_colname = "rowtype", coltype_colname = "coltype"){
-  .data %>%
+                                          rowname = "rowname", colname = "colname",
+                                          rowtype = "rowtype", coltype = "coltype"){
+  matname <- as.name(matname)
+  Product <- as.name(product)
+  Flow    <- as.name(flow)
+  rowname <- as.name(rowname)
+  colname <- as.name(colname)
+  rowtype <- as.name(rowtype)
+  coltype <- as.name(coltype)
+
+  .DF %>%
     mutate(
-      !!as.name(rowname_colname) := case_when(
-        (!!as.name(matname_colname)) == U_name ~ !!as.name(product_colname),
-        (!!as.name(matname_colname)) == V_name ~ !!as.name(flow_colname),
-        (!!as.name(matname_colname)) == Y_name ~ !!as.name(product_colname),
+      rowname = case_when(
+        !!matname == U_name ~ !!Product,
+        !!matname == V_name ~ !!Flow,
+        !!matname == Y_name ~ !!Product,
         TRUE ~ NA_character_
       ),
-      !!as.name(colname_colname) := case_when(
-        (!!as.name(matname_colname)) == U_name ~ !!as.name(flow_colname),
-        (!!as.name(matname_colname)) == V_name ~ !!as.name(product_colname),
-        (!!as.name(matname_colname)) == Y_name ~ !!as.name(flow_colname),
+      !!colname := case_when(
+        !!matname == U_name ~ !!Flow,
+        !!matname == V_name ~ !!Product,
+        !!matname == Y_name ~ !!Flow,
         TRUE ~ NA_character_
       ),
-      !!as.name(rowtype_colname) := case_when(
-        (!!as.name(matname_colname)) == U_name ~ product_type,
-        (!!as.name(matname_colname)) == V_name ~ industry_type,
-        (!!as.name(matname_colname)) == Y_name ~ product_type,
+      !!rowtype := case_when(
+        !!matname == U_name ~ product_type,
+        !!matname == V_name ~ industry_type,
+        !!matname == Y_name ~ product_type,
         TRUE ~ NA_character_
       ),
-      !!as.name(coltype_colname) := case_when(
-        (!!as.name(matname_colname)) == U_name ~ industry_type,
-        (!!as.name(matname_colname)) == V_name ~ product_type,
-        (!!as.name(matname_colname)) == Y_name ~ sector_type,
+      !!coltype := case_when(
+        !!matname == U_name ~ industry_type,
+        !!matname == V_name ~ product_type,
+        !!matname == Y_name ~ sector_type,
         TRUE ~ NA_character_
       )
     )
 }
+
+
+
+
+# .DF %>%
+#   mutate(
+#     !!as.name(rowname_colname) := case_when(
+#       (!!as.name(matname_colname)) == U_name ~ !!as.name(product_colname),
+#       (!!as.name(matname_colname)) == V_name ~ !!as.name(flow_colname),
+#       (!!as.name(matname_colname)) == Y_name ~ !!as.name(product_colname),
+#       TRUE ~ NA_character_
+#     ),
+
+# !!as.name(colname_colname) := case_when(
+#   (!!as.name(matname_colname)) == U_name ~ !!as.name(flow_colname),
+#   (!!as.name(matname_colname)) == V_name ~ !!as.name(product_colname),
+#   (!!as.name(matname_colname)) == Y_name ~ !!as.name(flow_colname),
+#   TRUE ~ NA_character_
+# ),
+# !!as.name(rowtype_colname) := case_when(
+#   (!!as.name(matname_colname)) == U_name ~ product_type,
+#   (!!as.name(matname_colname)) == V_name ~ industry_type,
+#   (!!as.name(matname_colname)) == Y_name ~ product_type,
+#   TRUE ~ NA_character_
+# ),
+# !!as.name(coltype_colname) := case_when(
+#   (!!as.name(matname_colname)) == U_name ~ industry_type,
+#   (!!as.name(matname_colname)) == V_name ~ product_type,
+#   (!!as.name(matname_colname)) == Y_name ~ sector_type,
+#   TRUE ~ NA_character_
+# )
