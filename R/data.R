@@ -3,7 +3,7 @@
 #' A dataset containing approximations to
 #' some of the energy flows in the UK in the year 2000.
 #' These data first appeared as the example in
-#' Figures 3 and 4 of
+#' Figures 3, 4, 6, 7, 10, 11, B.1, and B.2 of
 #' M.K. Heun, A. Owen, and P.E. Brockway.
 #' A physical supply-use table framework for energy analysis on the energy conversion chain.
 #' Sustainability Research Institute Paper 111,
@@ -37,7 +37,7 @@
 #' A dataset containing approximations to
 #' some of the energy flows in the UK in the year 2000.
 #' These data first appeared as the example in
-#' Figures 3 and 4 of
+#' Figures 3, 4, 6, 7, 10, 11, B.1, and B.2 of
 #' M.K. Heun, A. Owen, and P.E. Brockway.
 #' A physical supply-use table framework for energy analysis on the energy conversion chain.
 #' Sustainability Research Institute Paper 111,
