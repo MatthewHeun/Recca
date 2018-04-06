@@ -38,3 +38,6 @@ vignettes/*.pdf
 
 # Plots created during testing
 Rplots.pdf
+
+# Stupid ~ files from Excel
+*/~$*.xlsx
