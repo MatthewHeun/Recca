@@ -54,17 +54,6 @@ test_that("primary aggregates of SUT data work as expected", {
                      file.path(expec_path, "expected_primary_flow_aggregates_sut.rds"),
                      update = FALSE)
 
-  #
-  #
-  #
-  #
-  # final_total_aggregates_sut <- UKEnergy2000mats %>%
-  #   spread(key = matrix.name, value = matrix) %>%
-  #   finaldemand_aggregates(p_industries = p_industries, aggregate_primary_colname = "EX_agg.ktoe",
-  #                      keep_cols = c("Country", "Year", "Energy.type", "Last.stage"))
-  # expect_equal(final_total_aggregates_sut$EX_agg.ktoe, c(93000, 93000, 93000, 98220))
-
-
   if (is_testing()) {
     # Restore the previous working directory.
     setwd(cwd)
