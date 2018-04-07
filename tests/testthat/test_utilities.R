@@ -12,7 +12,7 @@ test_that("saving and loading expectations works as expected", {
 
   # Save the current working directory, to be restored later
   cwd <- getwd()
-  # Move the working directory up two levels, the top level of this project.
+  # Move the working directory up two levels, to the top level of this project.
   setwd(file.path("..", ".."))
 
 
