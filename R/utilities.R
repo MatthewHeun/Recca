@@ -1,3 +1,8 @@
+#
+# This file contains utilities useful for unit testing.
+#
+
+
 #' Save an object for testing
 #'
 #' When developing tests,
@@ -19,31 +24,56 @@
 #' @param obj an object to be used for testing
 #' @param dir the directory in which to save expectation objects.
 #'        Default is file.path("tests", "expectations")
+#' @param prefix the prefix to the file name.  Default is \code{expected_}.
 #'
 #' @return This function is called for its side effect of saving data into the \code{tests/expectations} directory.
 #'
 #' @export
 #'
 #' @examples
-#' a <- 5
-#' use_expected_data(a)
-use_expected_data <- function(obj, dir = file.path("tests", "expectations")){
+#' afortesting <- 5
+#' use_expected_data(afortesting)
+use_expected_data <- function(obj,
+                              dir = file.path("tests", "expectations"),
+                              prefix = "expected_",
+                              overwrite = FALSE){
   # Get the name of the object as a string.
   # From https://stackoverflow.com/questions/10520772/in-r-how-to-get-an-objects-name-after-it-is-sent-to-a-function
   name <- deparse(substitute(obj))
-  # Build the new name for the object as well as the file name and file path.
-  newname <- paste0("expected_", name)
-  filename <- paste0(newname, ".rda")
-  filepath <- file.path("tests", "expectations", filename)
-  # Save obj under its new file name
-  assign(newname, obj)
-  # Remove obj, as it is now saved under its new name
-  rm(obj)
-  # Save the newname to disk
-  save(list = newname, file = filepath)
+  path <- file.path(dir, paste0(prefix, name, ".rds"))
+  if (!overwrite & file.exists(path)) {
+    stop(paste("file", path, "already exists. Use 'overwrite = TRUE' to save anyway."))
+  }
+  # Save obj to disk under its new file name
+  saveRDS(obj, file = file.path(dir, paste0(prefix, name, ".rds")))
 }
 
 
-load_expectation <- function(expectation_name){
-
+#' Load expected results
+#'
+#' Loads an expected result for a test.
+#' Use \link[Recca]{use_expected_data} to save the expectation to disk.
+#'
+#' The default directory for expectatations is \code{tests/expectations}.
+#'
+#' @param expectation_name the name of the object for which you want to load an expected result.
+#'        Do not include the "\code{expected_}" prefix.
+#' @param dir the directory in which to look for expected results.
+#'        Default is \code{file.path("tests", "expectations")}
+#' @param prefix the prefix to the file name.  Default is "\code{expected_}".
+#'
+#' @return the R object contained in the file named \code{<prefix><expectation_name>.rds}
+#'         loaded from the directory at \code{path}.
+#'
+#' @export
+#'
+#' @examples
+#' afortesting <- 5
+#' use_expected_data(afortesting)
+#' load_expected_data("afortesting")
+load_expected_data <- function(expectation_name,
+                               dir = file.path("tests", "expectations"),
+                               prefix = "expected_"){
+  # Load the expected result and return it
+  readRDS(file.path(dir, paste0(prefix, expectation_name, ".rds")))
 }

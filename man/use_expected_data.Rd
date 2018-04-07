@@ -4,13 +4,16 @@
 \alias{use_expected_data}
 \title{Save an object for testing}
 \usage{
-use_expected_data(obj, dir = file.path("tests", "expectations"))
+use_expected_data(obj, dir = file.path("tests", "expectations"),
+  prefix = "expected_", overwrite = FALSE)
 }
 \arguments{
 \item{obj}{an object to be used for testing}
 
 \item{dir}{the directory in which to save expectation objects.
 Default is file.path("tests", "expectations")}
+
+\item{prefix}{the prefix to the file name.  Default is \code{expected_}.}
 }
 \value{
 This function is called for its side effect of saving data into the \code{tests/expectations} directory.
@@ -33,6 +36,6 @@ Because the \code{testthat.R} file loads all previously-saved expectation object
 they will be available for testing.
 }
 \examples{
-a <- 5
-use_expected_data(a)
+afortesting <- 5
+use_expected_data(afortesting)
 }
