@@ -12,6 +12,16 @@ library(devtools)
 # Pull in functions to assist with cleaning the data
 source(file.path("data-raw", "data_prep_utilities.R"))
 
+# Load S_unit matrix
+S_units_temp <- read.csv(system.file("extdata", "UKEnergy2000raw", "S_units_tidy.csv",
+                                     package = "Recca", mustWork = TRUE),
+                         stringsAsFactors = FALSE) %>%
+  collapse_to_matrices(matnames = "matname", values = "value",
+                       rownames = "rowname", colnames = "colname",
+                       rowtypes = "rowtype", coltypes = "coltype")
+S_units <- S_units_temp$value[[1]]
+rm(S_units_temp)
+
 # Load the raw data from the .csv file
 UKEnergy2000tidy <- read.csv(system.file("extdata", "UKEnergy2000raw", "UKEnergy2000raw.csv",
                                          package = "Recca", mustWork = TRUE),
@@ -40,8 +50,11 @@ UKEnergy2000mats <- UKEnergy2000tidy %>%
                        rownames = "rowname", colnames = "colname",
                        rowtypes = "rowtype", coltypes = "coltype") %>%
   rename(matrix.name = matname, matrix = EX.ktoe) %>%
-  spread(key = matrix.name, value = matrix)
+  spread(key = matrix.name, value = matrix) %>%
+
+  # Add unit information
+  mutate(
+    S_units = make_list(S_units, 4)
+  )
 
 use_data(UKEnergy2000mats, overwrite = TRUE)
-
-

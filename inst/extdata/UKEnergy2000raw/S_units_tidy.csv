@@ -1,0 +1,21 @@
+﻿matname,rowname,colname,rowtype,coltype,value
+S_units,Crude,ktoe/yr,Product,Unit,1
+S_units,Crude - Fields,ktoe/yr,Product,Unit,1
+S_units,Crude - Dist.,ktoe/yr,Product,Unit,1
+S_units,NG,ktoe/yr,Product,Unit,1
+S_units,NG - Wells,ktoe/yr,Product,Unit,1
+S_units,NG - Dist.,ktoe/yr,Product,Unit,1
+S_units,Diesel,ktoe/yr,Product,Unit,1
+S_units,Diesel - Dist.,ktoe/yr,Product,Unit,1
+S_units,Elect,ktoe/yr,Product,Unit,1
+S_units,Elect - Grid,ktoe/yr,Product,Unit,1
+S_units,Petrol,ktoe/yr,Product,Unit,1
+S_units,Petrol - Dist.,ktoe/yr,Product,Unit,1
+S_units,Light,ktoe/yr,Product,Unit,1
+S_units,LTH,ktoe/yr,Product,Unit,1
+S_units,MD - Car engines,ktoe/yr,Product,Unit,1
+S_units,MD - Truck engines,ktoe/yr,Product,Unit,1
+S_units,Freight [tonne-km/year],tes-km/yr,Product,Unit,1
+S_units,Illumination [lumen-hrs/yr],lumen-hrs/yr,Product,Unit,1
+S_units,Passenger [passenger-km/yr],pass-km/yr,Product,Unit,1
+S_units,Space heating [m3-K],m3-K,Product,Unit,1
