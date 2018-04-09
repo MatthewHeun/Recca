@@ -57,12 +57,11 @@ GB,2000,Supply,Transformation processes,E.ktoe,useful,Oil refineries,Crude - Dis
 GB,2000,Supply,Transformation processes,E.ktoe,useful,Gas wells & proc.,NG,-43000
 GB,2000,Supply,Transformation processes,E.ktoe,useful,NG dist.,NG - Wells,-41000
 GB,2000,Supply,Transformation processes,E.ktoe,useful,Power plants,NG - Dist.,-16000
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Furnaces,NG - Dist.,-25000
 GB,2000,Supply,Transformation processes,E.ktoe,useful,Diesel dist.,Diesel,-15500
 GB,2000,Supply,Energy industry own use,E.ktoe,useful,Gas wells & proc.,Diesel - Dist.,-50
 GB,2000,Supply,Energy industry own use,E.ktoe,useful,Oil fields,Diesel - Dist.,-50
-GB,2000,Supply,Energy industry own use,E.ktoe,useful,Crude dist.,Diesel - Dist.,-25
-GB,2000,Supply,Energy industry own use,E.ktoe,useful,NG dist.,Diesel - Dist.,-25
-GB,2000,Supply,Energy industry own use,E.ktoe,useful,Petrol dist.,Diesel - Dist.,-250
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Truck engines,Diesel - Dist.,-15050
 GB,2000,Supply,Transformation processes,E.ktoe,useful,Elect. grid,Elect,-6400
 GB,2000,Supply,Energy industry own use,E.ktoe,useful,Gas wells & proc.,Elect - Grid,-25
 GB,2000,Supply,Energy industry own use,E.ktoe,useful,Oil fields,Elect - Grid,-25
@@ -70,7 +69,9 @@ GB,2000,Supply,Energy industry own use,E.ktoe,useful,Crude dist.,Elect - Grid,-2
 GB,2000,Supply,Energy industry own use,E.ktoe,useful,NG dist.,Elect - Grid,-25
 GB,2000,Supply,Energy industry own use,E.ktoe,useful,Oil refineries,Elect - Grid,-75
 GB,2000,Supply,Energy industry own use,E.ktoe,useful,Power plants,Elect - Grid,-100
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Light fixtures,Elect - Grid,-6000
 GB,2000,Supply,Transformation processes,E.ktoe,useful,Petrol dist.,Petrol,-26500
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Car engines,Petrol - Dist.,-26000
 GB,2000,Supply,Energy industry own use,E.ktoe,useful,Crude dist.,MD-Truck engines,-20
 GB,2000,Supply,Energy industry own use,E.ktoe,useful,NG dist.,MD-Truck engines,-20
 GB,2000,Supply,Energy industry own use,E.ktoe,useful,Diesel dist.,MD-Truck engines,-17.9998

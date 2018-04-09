@@ -19,8 +19,10 @@ Imports:
     magrittr,
     qgraph, 
     rlang,
+    lazyeval,
     tibble,
-    tidyr
+    tidyr,
+    matsbyname
 Suggests:
     knitr, 
     rmarkdown,

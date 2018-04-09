@@ -4,6 +4,7 @@
 
 library(magrittr)
 library(dplyr)
+library(tidyr)
 library(matsindf)
 library(devtools)
 
@@ -38,7 +39,8 @@ UKEnergy2000mats <- UKEnergy2000tidy %>%
   collapse_to_matrices(matnames = "matname", values = "EX.ktoe",
                        rownames = "rowname", colnames = "colname",
                        rowtypes = "rowtype", coltypes = "coltype") %>%
-  rename(matrix.name = matname, matrix = EX.ktoe)
+  rename(matrix.name = matname, matrix = EX.ktoe) %>%
+  spread(key = matrix.name, value = matrix)
 
 use_data(UKEnergy2000mats, overwrite = TRUE)
 
