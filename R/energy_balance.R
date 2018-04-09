@@ -182,15 +182,18 @@ verify_SUT_energy_balance <- function(.sutdata,
 #' a message is printed which shows the first few non-balancing Products, and
 #' execution halts.
 #'
+#' Both product and industry energy balance are verified.
+#' Units (as supplied by the \code{S_units} matrix) are respected.
+#'
 #' @param .sutdata an SUT-style data frame containing metadata columns
-#' (typically \code{Country}, \code{Year}, \code{Ledger.side}, \code{Product}, etc.)
+#' (typically \code{Country}, \code{Year}, etc.)
 #' and columns of matrices, including
-#' \code{U}, \code{V}, and \code{Y}.
+#' \code{U}, \code{V}, \code{Y}, and \code{S_units}.
 #' @param U the name of the column that contains \code{U} matrices
 #' @param V the name of the column that contains \code{V} matrices
 #' @param Y the name of the column that contains \code{Y} matrices
 #' @param S_units the name of the column that contains \code{S_units} matrices
-#' @param tol the maximum amount by which Supply and Consumption can be out of balance
+#' @param tol the maximum amount by which energy can be out of balance
 #'
 #' @return Nothing is returned.
 #' This function should be called
@@ -199,7 +202,7 @@ verify_SUT_energy_balance <- function(.sutdata,
 #' @export
 #'
 #' @examples
-#' verify_SUT_energy_balance(SUTMatsWne)
+#' verify_SUT_energy_balance_with_units(UKEnergy2000mats)
 verify_SUT_energy_balance_with_units <- function(.sutdata,
                                       # Input column names
                                       U = "U", V = "V", Y = "Y", S_units = "S_units",
