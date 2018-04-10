@@ -1,0 +1,27 @@
+\documentclass{article}
+
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{Recca workflow}
+
+\begin{document}
+
+
+\title{A \texttt{Recca} workflow}
+\author{Matthew Kuperus Heun}
+
+\maketitle
+
+
+\begin{abstract}
+\texttt{Recca}
+(\texttt{R} energy conversion chain analysis)
+is an \texttt{R} package that assists with
+energy and exergy analysis of energy conversion chains.
+\end{abstract}
+
+
+Here is some text.
+
+
+
+\end{document}

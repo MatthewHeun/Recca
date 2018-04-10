@@ -127,8 +127,6 @@ test_that("UKEnergy2000 works as expected", {
       Energy.type = NULL,
       Last.stage = NULL
     ) %>%
-    # Spread so we can add all matrices
-    spread(key = matrix.name, value = matrix) %>%
     # Sum all matrices to make one big matrix with "from" or "source" nodes in rows
     # and "to" or "destination" nodes in columns
     mutate(
@@ -304,3 +302,4 @@ test_that("identify_industry_stages works as expected", {
                                "p-->f industry", "p-->f industry",
                                "f-->u industry", "f-->u industry"))
 })
+

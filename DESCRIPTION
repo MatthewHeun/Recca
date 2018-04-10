@@ -25,7 +25,6 @@ Imports:
     matsbyname
 Suggests:
     knitr, 
-    rmarkdown,
     testthat
 VignetteBuilder: 
     knitr

@@ -2,15 +2,17 @@ library(dplyr)
 library(lazyeval)
 library(matsbyname)
 library(testthat)
+library(parallel)
 
 ###########################################################
-context("Tidy IEA energy balance")
+context("SUT energy balance")
 ###########################################################
 
 test_that("SUT matrix energy balance works as expected", {
-  expect_silent(verify_SUT_energy_balance_with_units(UKEnergy2000mats))
+  expect_silent(verify_SUT_energy_balance_with_units(UKEnergy2000mats, tol = 1e-3))
 })
 
-test_that("tidy energy balance works as expected", {
-  expect_silent(verify_IEATable_energy_balance(UKEnergy2000tidy))
+
+test_that("all SUT industries are producing energy", {
+  expect_silent(verify_SUT_industry_production(UKEnergy2000mats))
 })

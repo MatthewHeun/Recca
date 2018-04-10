@@ -9,9 +9,9 @@ verify_SUT_energy_balance_with_units(.sutdata, U = "U", V = "V", Y = "Y",
 }
 \arguments{
 \item{.sutdata}{an SUT-style data frame containing metadata columns
-(typically \code{Country}, \code{Year}, \code{Ledger.side}, \code{Product}, etc.)
+(typically \code{Country}, \code{Year}, etc.)
 and columns of matrices, including
-\code{U}, \code{V}, and \code{Y}.}
+\code{U}, \code{V}, \code{Y}, and \code{S_units}.}
 
 \item{U}{the name of the column that contains \code{U} matrices}
 
@@ -21,7 +21,7 @@ and columns of matrices, including
 
 \item{S_units}{the name of the column that contains \code{S_units} matrices}
 
-\item{tol}{the maximum amount by which Supply and Consumption can be out of balance}
+\item{tol}{the maximum amount by which energy can be out of balance}
 }
 \value{
 Nothing is returned.
@@ -36,6 +36,10 @@ If energy balance is not observed for any combination of Country, Year, and Prod
 a message is printed which shows the first few non-balancing Products, and
 execution halts.
 }
+\details{
+Both product and industry energy balance are verified.
+Units (as supplied by the \code{S_units} matrix) are respected.
+}
 \examples{
-verify_SUT_energy_balance(SUTMatsWne)
+verify_SUT_energy_balance_with_units(UKEnergy2000mats)
 }
