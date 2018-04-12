@@ -309,12 +309,12 @@ finaldemand_aggregates_with_units <- function(.sutdata,
   }
 
   # Do some cleanup.
-  if (by == "total") {
+  if (by == "Total") {
     Out <- Out %>%
       mutate(
         # Sum down columns (Sectors)
         !!net := colsums_byname(!!net),
-        !!gross := colsums_byname(!!gross),
+        !!gross := colsums_byname(!!gross)
       )
   }
   return(Out)
