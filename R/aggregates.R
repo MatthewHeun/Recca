@@ -189,7 +189,7 @@ finaldemand_aggregates <- function(.sutdata,
 
   # Do some cleanup.
 
-  if (tolower(by) == "total"){
+  if (tolower(by) == "total") {
     # Need to convert the net and gross columns to numeric,
     # because net and gross are only single numbers when we ask for "Total" aggregation.
     Out <- Out %>%
@@ -202,7 +202,7 @@ finaldemand_aggregates <- function(.sutdata,
         ) %>%
           setNames(c(net_aggregate_demand_colname, gross_aggregate_demand_colname))
       )
-  } else if (tolower(by) == "sector"){
+  } else if (tolower(by) == "sector") {
     # If "Sector" aggregation is requested, the results will be row vectors.
     # Convert to column vectors.
     Out <- Out %>%
@@ -220,6 +220,115 @@ finaldemand_aggregates <- function(.sutdata,
   # Select desired columns only and return.
   Out %>%
     select_(.dots = c(intersect(keep_cols, names(.)), net_aggregate_demand_colname, gross_aggregate_demand_colname))
+}
+
+#' Final demand aggregate energy with units
+#'
+#' Calculates aggregate final demand energy and services from a data frame of Supply-Use matrices.
+#' The calculation includes non-energy uses if they are present in the final demand matrix.
+#' The calculation does not include balancing items (Losses and Statistical differences).
+#'
+#' @param .sutdata a data frame with columns of matrices from a supply-use analysis.
+#' @param fd_sectors a vector of names of sectors in final demand.
+#' @param U the name of the column in \code{.sutdata} containing Use (\code{U}) matrices.
+#' @param Y the name of the column in \code{.sutdata} containing final demand (\code{Y}) matrices.
+#' @param r_EIOU the name of the colum that holds ratios of EIOU to total input for each Machine and Product.
+#' @param by one of "Product", "Sector", or "Total" to indicate the desired aggregation:
+#' "Product" for aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.),
+#' "Sector" for aggregation by final demand sector (Agriculture/forestry, Domestic navigation, etc.), or
+#' "Total" for aggregation over both Product and Sector (the default).
+#' @param net_aggregate_demand the name of the output column containing aggregates of net energy demand.
+#' This column excludes energy industry own use.
+#' @param gross_aggregate_demand_colname the name of the output column containing aggregates of gross energy demand.
+#' This column includes energy industry own use.
+#'
+#' @return a data frame containing net aggregate energy demand
+#' and gross aggregate energy demand for each row of \code{.sutdata}.
+#'
+#' @export
+finaldemand_aggregates_with_units <- function(.sutdata,
+                                              fd_sectors,
+                                              # Input columns
+                                              U = "U",
+                                              Y = "Y",
+                                              r_EIOU = "r_EIOU",
+                                              by = "Total",
+                                              # Output columns
+                                              net_aggregate_demand_colname,
+                                              gross_aggregate_demand_colname){
+
+  # Decide which aggregation function to use
+  aggfuncs <- list(total = "sumall_byname", product = "rowsums_byname", sector = "colsums_byname")
+  if (!tolower(by) %in% names(aggfuncs)) {
+    stop(paste("Unknown value of argument by:", by, "in primary_aggregates."))
+  }
+  agg_func <- as.name(aggfuncs[[tolower(by)]])
+
+  # Establish names for columns
+  U_EIOU <- as.name(".U_EIOU")
+  U <- as.name(U)
+  Y <- as.name(Y)
+  r_EIOU <- as.name(r_EIOU)
+  net <- as.name(net_aggregate_demand_colname)
+  gross <- as.name(gross_aggregate_demand_colname)
+
+  Out <- .sutdata %>%
+    mutate(
+      !!U_EIOU := elementproduct_byname(!!r_EIOU, !!U),
+      !!net := !!Y %>%
+        select_cols_byname(retain_pattern = make_pattern(row_col_names = fd_sectors,
+                                                         pattern_type = "leading")) %>%
+        (!!agg_func)(),
+      !!gross := sum_byname((!!agg_func)(!!U_EIOU), !!net)
+    )
+
+  # Do some cleanup.
+
+  if (tolower(by) == "total") {
+    # Need to convert the net and gross columns to numeric,
+    # because net and gross are only single numbers when we ask for "Total" aggregation.
+    Out <- Out %>%
+      mutate(
+        !!net := as.numeric(!!net),
+        !!gross := as.numeric(!!gross)
+      )
+
+
+
+
+    # Out <- Out %>%
+    #   mutate_(
+    #     .dots = list(
+    #       interp(~ as.numeric(net),
+    #              net = as.name(net_aggregate_demand_colname)),
+    #       interp(~ as.numeric(gross),
+    #              gross = as.name(gross_aggregate_demand_colname))
+    #     ) %>%
+    #       setNames(c(net_aggregate_demand_colname, gross_aggregate_demand_colname))
+    #   )
+  } else if (tolower(by) == "sector") {
+    # If "Sector" aggregation is requested, the results will be row vectors.
+    # Convert to column vectors.
+    Out <- Out %>%
+      mutate(
+        !!net := transpose_byname(!!net),
+        !!gross := transpose_byname(!!gross)
+      )
+
+
+
+    # Out <- Out %>%
+    #   mutate_(
+    #     .dots = list(
+    #       interp(~ transpose_byname(net),
+    #              net = as.name(net_aggregate_demand_colname)),
+    #       interp(~ transpose_byname(gross),
+    #              gross = as.name(gross_aggregate_demand_colname))
+    #     ) %>%
+    #       setNames(c(net_aggregate_demand_colname, gross_aggregate_demand_colname))
+    #   )
+  }
+  return(Out)
 }
 
 #' Primary aggregate energy from IEA tables

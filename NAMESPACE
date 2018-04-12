@@ -3,6 +3,7 @@
 export(ecc_layout)
 export(finaldemand_aggregates)
 export(finaldemand_aggregates_IEA)
+export(finaldemand_aggregates_with_units)
 export(identify_industry_stages)
 export(primary_aggregates)
 export(primary_aggregates_IEA)
