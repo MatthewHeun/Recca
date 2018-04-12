@@ -5,8 +5,8 @@
 \title{Final demand aggregate energy with units}
 \usage{
 finaldemand_aggregates_with_units(.sutdata, fd_sectors, U = "U", Y = "Y",
-  r_EIOU = "r_EIOU", by = "Total", net_aggregate_demand_colname,
-  gross_aggregate_demand_colname)
+  r_EIOU = "r_EIOU", S_units = "S_units", by = c("Total", "Product",
+  "Sector"), net_aggregate_demand_colname, gross_aggregate_demand_colname)
 }
 \arguments{
 \item{.sutdata}{a data frame with columns of matrices from a supply-use analysis.}
@@ -17,7 +17,9 @@ finaldemand_aggregates_with_units(.sutdata, fd_sectors, U = "U", Y = "Y",
 
 \item{Y}{the name of the column in \code{.sutdata} containing final demand (\code{Y}) matrices.}
 
-\item{r_EIOU}{the name of the colum that holds ratios of EIOU to total input for each Machine and Product.}
+\item{r_EIOU}{the name of the column that holds ratios of EIOU to total input for each Machine and Product.}
+
+\item{S_units}{the name of the column in \code{.sutdata} containing \code{S_units} matrices.}
 
 \item{by}{one of "Product", "Sector", or "Total" to indicate the desired aggregation:
 "Product" for aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.),
