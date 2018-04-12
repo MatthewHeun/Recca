@@ -102,28 +102,6 @@ test_that("final demand aggregates of SUT data work as expected", {
                      file.path(expec_path, "final_demand_sector_aggregates_sut.rds"),
                      update = FALSE)
 
-
-
-
-
-
-  # # Product aggregates
-  # primary_product_aggregates_sut <- sutdata %>%
-  #   primary_aggregates(p_industries = p_industries, by = "Product",
-  #                      aggregate_primary_colname = "EX_product_agg.ktoe",
-  #                      keep_cols = c("Country", "Year", "Energy.type", "Last.stage"))
-  # expect_known_value(primary_product_aggregates_sut,
-  #                    file.path(expec_path, "expected_primary_product_aggregates_sut.rds"),
-  #                    update = FALSE)
-  # # Flow aggregates
-  # primary_flow_aggregates_sut <- sutdata %>%
-  #   primary_aggregates(p_industries = p_industries, by = "Flow",
-  #                      aggregate_primary_colname = "EX_flow_agg.ktoe",
-  #                      keep_cols = c("Country", "Year", "Energy.type", "Last.stage"))
-  # expect_known_value(primary_flow_aggregates_sut,
-  #                    file.path(expec_path, "expected_primary_flow_aggregates_sut.rds"),
-  #                    update = FALSE)
-
   if (is_testing()) {
     # Restore the previous working directory.
     setwd(currwd)

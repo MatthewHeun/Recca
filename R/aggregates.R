@@ -232,7 +232,8 @@ finaldemand_aggregates <- function(.sutdata,
 #' @param fd_sectors a vector of names of sectors in final demand.
 #' @param U the name of the column in \code{.sutdata} containing Use (\code{U}) matrices.
 #' @param Y the name of the column in \code{.sutdata} containing final demand (\code{Y}) matrices.
-#' @param r_EIOU the name of the colum that holds ratios of EIOU to total input for each Machine and Product.
+#' @param r_EIOU the name of the column that holds ratios of EIOU to total input for each Machine and Product.
+#' @param S_units the name of the column in \code{.sutdata} containing \code{S_units} matrices.
 #' @param by one of "Product", "Sector", or "Total" to indicate the desired aggregation:
 #' "Product" for aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.),
 #' "Sector" for aggregation by final demand sector (Agriculture/forestry, Domestic navigation, etc.), or
@@ -252,81 +253,69 @@ finaldemand_aggregates_with_units <- function(.sutdata,
                                               U = "U",
                                               Y = "Y",
                                               r_EIOU = "r_EIOU",
-                                              by = "Total",
+                                              S_units = "S_units",
+                                              by = c("Total", "Product", "Sector"),
                                               # Output columns
                                               net_aggregate_demand_colname,
                                               gross_aggregate_demand_colname){
 
+  by <- match.arg(by)
   # Decide which aggregation function to use
-  aggfuncs <- list(total = "sumall_byname", product = "rowsums_byname", sector = "colsums_byname")
-  if (!tolower(by) %in% names(aggfuncs)) {
-    stop(paste("Unknown value of argument by:", by, "in primary_aggregates."))
-  }
-  agg_func <- as.name(aggfuncs[[tolower(by)]])
+  # aggfuncs <- list(total = "sumall_byname", product = "rowsums_byname", sector = "colsums_byname")
+  # if (!tolower(by) %in% names(aggfuncs)) {
+  #   stop(paste("Unknown value of argument by:", by, "in primary_aggregates."))
+  # }
+  # agg_func <- as.name(aggfuncs[[tolower(by)]])
 
   # Establish names for columns
   U_EIOU <- as.name(".U_EIOU")
+  U_EIOU_bar <- as.name(".U_EIOU_bar")
   U <- as.name(U)
+  U_bar <- as.name(".U_bar")
   Y <- as.name(Y)
   r_EIOU <- as.name(r_EIOU)
+  S_units <- as.name(S_units)
   net <- as.name(net_aggregate_demand_colname)
   gross <- as.name(gross_aggregate_demand_colname)
 
-  Out <- .sutdata %>%
-    mutate(
-      !!U_EIOU := elementproduct_byname(!!r_EIOU, !!U),
-      !!net := !!Y %>%
-        select_cols_byname(retain_pattern = make_pattern(row_col_names = fd_sectors,
-                                                         pattern_type = "leading")) %>%
-        (!!agg_func)(),
-      !!gross := sum_byname((!!agg_func)(!!U_EIOU), !!net)
-    )
-
-  # Do some cleanup.
-
-  if (tolower(by) == "total") {
-    # Need to convert the net and gross columns to numeric,
-    # because net and gross are only single numbers when we ask for "Total" aggregation.
-    Out <- Out %>%
+  if (by == "Product") {
+    Out <- .sutdata %>%
       mutate(
-        !!net := as.numeric(!!net),
-        !!gross := as.numeric(!!gross)
+        !!U_EIOU := elementproduct_byname(!!r_EIOU, !!U),
+        !!net := rowsums_byname(!!Y),
+        !!gross := sum_byname(rowsums_byname(!!U_EIOU), !!net)
       )
-
-
-
-
-    # Out <- Out %>%
-    #   mutate_(
-    #     .dots = list(
-    #       interp(~ as.numeric(net),
-    #              net = as.name(net_aggregate_demand_colname)),
-    #       interp(~ as.numeric(gross),
-    #              gross = as.name(gross_aggregate_demand_colname))
-    #     ) %>%
-    #       setNames(c(net_aggregate_demand_colname, gross_aggregate_demand_colname))
-    #   )
-  } else if (tolower(by) == "sector") {
-    # If "Sector" aggregation is requested, the results will be row vectors.
-    # Convert to column vectors.
-    Out <- Out %>%
+  } else {
+    # by is "Total" or "Sector".
+    Out <- .sutdata %>%
       mutate(
+        !!U_EIOU := elementproduct_byname(!!r_EIOU, !!U),
+        !!U_EIOU_bar := matrixproduct_byname(transpose_byname(!!S_units), !!U_EIOU),
+        # !!net := !!Y %>%
+        #   select_cols_byname(retain_pattern = make_pattern(row_col_names = fd_sectors,
+        #                                                    pattern_type = "leading")) %>%
+        #   (!!agg_func)(),
+        !!net := matrixproduct_byname(
+          transpose_byname(!!S_units),
+          !!Y %>% select_cols_byname(retain_pattern = make_pattern(row_col_names = fd_sectors,
+                                                                   pattern_type = "leading"))
+        ),
+        !!gross := sum_byname(!!U_EIOU_bar, !!net),
         !!net := transpose_byname(!!net),
         !!gross := transpose_byname(!!gross)
+      ) %>%
+      # Eliminate temporary columns that we just made.
+      select(-(!!U_EIOU), -(!!U_EIOU_bar))
+  }
+
+  # Do some cleanup.
+  if (by == "Total") {
+    Out <- Out %>%
+      mutate(
+        # Sum down columns (Sectors)
+        !!net := colsums_byname(!!net),
+        !!gross := colsums_byname(!!gross)
       )
-
-
-
-    # Out <- Out %>%
-    #   mutate_(
-    #     .dots = list(
-    #       interp(~ transpose_byname(net),
-    #              net = as.name(net_aggregate_demand_colname)),
-    #       interp(~ transpose_byname(gross),
-    #              gross = as.name(gross_aggregate_demand_colname))
-    #     ) %>%
-    #       setNames(c(net_aggregate_demand_colname, gross_aggregate_demand_colname))
-    #   )
   }
   return(Out)
 }
