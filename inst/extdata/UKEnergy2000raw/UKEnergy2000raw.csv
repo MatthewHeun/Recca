@@ -1,188 +1,188 @@
-﻿Country,Year,Ledger.side,Flow.aggregation.point,Energy.type,Last.stage,Flow,Product,EX.ktoe,,
-GB,2000,Supply,Total primary energy supply,E.ktoe,final,Resources - Crude,Crude,50000,,
-GB,2000,Supply,Total primary energy supply,E.ktoe,final,Resources - NG,NG,43000,,
-GB,2000,Supply,Transformation processes,E.ktoe,final,Gas wells & proc.,NG - Wells,41000,,
-GB,2000,Supply,Transformation processes,E.ktoe,final,Oil fields,Crude - Fields,47500,,
-GB,2000,Supply,Transformation processes,E.ktoe,final,Crude dist.,Crude - Dist.,47000,,
-GB,2000,Supply,Transformation processes,E.ktoe,final,NG dist.,NG - Dist.,41000,,
-GB,2000,Supply,Transformation processes,E.ktoe,final,Oil refineries,Diesel,15500,,
-GB,2000,Supply,Transformation processes,E.ktoe,final,Oil refineries,Petrol,26500,,
-GB,2000,Supply,Transformation processes,E.ktoe,final,Power plants,Elect,6400,,
-GB,2000,Supply,Transformation processes,E.ktoe,final,Elect. grid,Elect - Grid,6275,,
-GB,2000,Supply,Transformation processes,E.ktoe,final,Diesel dist.,Diesel - Dist.,15150,,
-GB,2000,Supply,Transformation processes,E.ktoe,final,Petrol dist.,Petrol - Dist.,26000,,
-GB,2000,Supply,Transformation processes,E.ktoe,final,Oil fields,Crude,-50000,,
-GB,2000,Supply,Transformation processes,E.ktoe,final,Crude dist.,Crude - Fields,-47500,,
-GB,2000,Supply,Transformation processes,E.ktoe,final,Oil refineries,Crude - Dist.,-47000,,
-GB,2000,Supply,Transformation processes,E.ktoe,final,Gas wells & proc.,NG,-43000,,
-GB,2000,Supply,Transformation processes,E.ktoe,final,NG dist.,NG - Wells,-41000,,
-GB,2000,Supply,Transformation processes,E.ktoe,final,Power plants,NG - Dist.,-16000,,
-GB,2000,Supply,Transformation processes,E.ktoe,final,Diesel dist.,Diesel,-15500,,
-GB,2000,Supply,Energy industry own use,E.ktoe,final,Gas wells & proc.,Diesel - Dist.,-50,,
-GB,2000,Supply,Energy industry own use,E.ktoe,final,Oil fields,Diesel - Dist.,-50,,
-GB,2000,Supply,Energy industry own use,E.ktoe,final,Crude dist.,Diesel - Dist.,-25,,
-GB,2000,Supply,Energy industry own use,E.ktoe,final,NG dist.,Diesel - Dist.,-25,,
-GB,2000,Supply,Energy industry own use,E.ktoe,final,Petrol dist.,Diesel - Dist.,-250,,
-GB,2000,Supply,Transformation processes,E.ktoe,final,Elect. grid,Elect,-6400,,
-GB,2000,Supply,Energy industry own use,E.ktoe,final,Gas wells & proc.,Elect - Grid,-25,,
-GB,2000,Supply,Energy industry own use,E.ktoe,final,Oil fields,Elect - Grid,-25,,
-GB,2000,Supply,Energy industry own use,E.ktoe,final,Crude dist.,Elect - Grid,-25,,
-GB,2000,Supply,Energy industry own use,E.ktoe,final,NG dist.,Elect - Grid,-25,,
-GB,2000,Supply,Energy industry own use,E.ktoe,final,Oil refineries,Elect - Grid,-75,,
-GB,2000,Supply,Energy industry own use,E.ktoe,final,Power plants,Elect - Grid,-100,,
-GB,2000,Supply,Transformation processes,E.ktoe,final,Petrol dist.,Petrol,-26500,,
-GB,2000,Consumption,Residential,E.ktoe,final,Residential,NG - Dist.,25000,,
-GB,2000,Consumption,Transport,E.ktoe,final,Transport,Diesel - Dist.,14750,,
-GB,2000,Consumption,Residential,E.ktoe,final,Residential,Elect - Grid,6000,,
-GB,2000,Consumption,Transport,E.ktoe,final,Transport,Petrol - Dist.,26000,,
-GB,2000,Supply,Total primary energy supply,E.ktoe,useful,Resources - Crude,Crude,50000,,
-GB,2000,Supply,Total primary energy supply,E.ktoe,useful,Resources - NG,NG,43000,,
-GB,2000,Supply,Transformation processes,E.ktoe,useful,Gas wells & proc.,NG - Wells,41000,,
-GB,2000,Supply,Transformation processes,E.ktoe,useful,Oil fields,Crude - Fields,47500,,
-GB,2000,Supply,Transformation processes,E.ktoe,useful,Crude dist.,Crude - Dist.,47000,,
-GB,2000,Supply,Transformation processes,E.ktoe,useful,NG dist.,NG - Dist.,41000,,
-GB,2000,Supply,Transformation processes,E.ktoe,useful,Oil refineries,Diesel,15500,,
-GB,2000,Supply,Transformation processes,E.ktoe,useful,Oil refineries,Petrol,26500,,
-GB,2000,Supply,Transformation processes,E.ktoe,useful,Power plants,Elect,6400,,
-GB,2000,Supply,Transformation processes,E.ktoe,useful,Elect. grid,Elect - Grid,6275,,
-GB,2000,Supply,Transformation processes,E.ktoe,useful,Diesel dist.,Diesel - Dist.,15150,,
-GB,2000,Supply,Transformation processes,E.ktoe,useful,Petrol dist.,Petrol - Dist.,26000,,
-GB,2000,Supply,Transformation processes,E.ktoe,useful,Car engines,MD - Car engines,3000.4,,
-GB,2000,Supply,Transformation processes,E.ktoe,useful,Furnaces,LTH,20000,,
-GB,2000,Supply,Transformation processes,E.ktoe,useful,Light fixtures,Light,1200,,
-GB,2000,Supply,Transformation processes,E.ktoe,useful,Truck engines,MD - Truck engines,1799.98,,
-GB,2000,Supply,Transformation processes,E.ktoe,useful,Oil fields,Crude,-50000,,
-GB,2000,Supply,Transformation processes,E.ktoe,useful,Crude dist.,Crude - Fields,-47500,,
-GB,2000,Supply,Transformation processes,E.ktoe,useful,Oil refineries,Crude - Dist.,-47000,,
-GB,2000,Supply,Transformation processes,E.ktoe,useful,Gas wells & proc.,NG,-43000,,
-GB,2000,Supply,Transformation processes,E.ktoe,useful,NG dist.,NG - Wells,-41000,,
-GB,2000,Supply,Transformation processes,E.ktoe,useful,Power plants,NG - Dist.,-16000,,
-GB,2000,Supply,Transformation processes,E.ktoe,useful,Furnaces,NG - Dist.,-25000,,
-GB,2000,Supply,Transformation processes,E.ktoe,useful,Diesel dist.,Diesel,-15500,,
-GB,2000,Supply,Energy industry own use,E.ktoe,useful,Gas wells & proc.,Diesel - Dist.,-50,,
-GB,2000,Supply,Energy industry own use,E.ktoe,useful,Oil fields,Diesel - Dist.,-50,,
-GB,2000,Supply,Transformation processes,E.ktoe,useful,Truck engines,Diesel - Dist.,-15050,,
-GB,2000,Supply,Transformation processes,E.ktoe,useful,Elect. grid,Elect,-6400,,
-GB,2000,Supply,Energy industry own use,E.ktoe,useful,Gas wells & proc.,Elect - Grid,-25,,
-GB,2000,Supply,Energy industry own use,E.ktoe,useful,Oil fields,Elect - Grid,-25,,
-GB,2000,Supply,Energy industry own use,E.ktoe,useful,Crude dist.,Elect - Grid,-25,,
-GB,2000,Supply,Energy industry own use,E.ktoe,useful,NG dist.,Elect - Grid,-25,,
-GB,2000,Supply,Energy industry own use,E.ktoe,useful,Oil refineries,Elect - Grid,-75,,
-GB,2000,Supply,Energy industry own use,E.ktoe,useful,Power plants,Elect - Grid,-100,,
-GB,2000,Supply,Transformation processes,E.ktoe,useful,Light fixtures,Elect - Grid,-6000,,
-GB,2000,Supply,Transformation processes,E.ktoe,useful,Petrol dist.,Petrol,-26500,,
-GB,2000,Supply,Transformation processes,E.ktoe,useful,Car engines,Petrol - Dist.,-26000,,
-GB,2000,Supply,Energy industry own use,E.ktoe,useful,Crude dist.,MD - Truck engines,-20,,
-GB,2000,Supply,Energy industry own use,E.ktoe,useful,NG dist.,MD - Truck engines,-20,,
-GB,2000,Supply,Energy industry own use,E.ktoe,useful,Diesel dist.,MD - Truck engines,-17.9998,,
-GB,2000,Supply,Energy industry own use,E.ktoe,useful,Petrol dist.,MD - Truck engines,-26.9997,,
-GB,2000,Consumption,Residential,E.ktoe,useful,Residential,Light,1200,,
-GB,2000,Consumption,Transport,E.ktoe,useful,Transport,LTH,20000,,
-GB,2000,Consumption,Residential,E.ktoe,useful,Residential,MD - Car engines,3000.4,,
-GB,2000,Consumption,Transport,E.ktoe,useful,Transport,MD - Truck engines,1714.9805,,
-GB,2000,Supply,Total primary energy supply,E.ktoe,services,Resources - Crude,Crude,50000,,
-GB,2000,Supply,Total primary energy supply,E.ktoe,services,Resources - NG,NG,43000,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Gas wells & proc.,NG - Wells,41000,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Oil fields,Crude - Fields,47500,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Crude dist.,Crude - Dist.,47000,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,NG dist.,NG - Dist.,41000,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Oil refineries,Diesel,15500,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Oil refineries,Petrol,26500,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Power plants,Elect,6400,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Elect. grid,Elect - Grid,6275,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Diesel dist.,Diesel - Dist.,15150,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Petrol dist.,Petrol - Dist.,26000,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Car engines,MD - Car engines,3000.4,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Furnaces,LTH,20000,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Light fixtures,Light,1200,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Truck engines,MD - Truck engines,1799.98,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Cars,Passenger [passenger-km/yr],5E+11,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Homes,Space heating [m3-K],75000000000,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Rooms,Illumination [lumen-hrs/yr],5E+14,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Trucks,Freight [tonne-km/year],1.5E+11,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Oil fields,Crude,-50000,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Crude dist.,Crude - Fields,-47500,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Oil refineries,Crude - Dist.,-47000,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Gas wells & proc.,NG,-43000,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,NG dist.,NG - Wells,-41000,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Power plants,NG - Dist.,-16000,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Furnaces,NG - Dist.,-25000,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Diesel dist.,Diesel,-15500,,
-GB,2000,Supply,Energy industry own use,E.ktoe,services,Gas wells & proc.,Diesel - Dist.,-50,,
-GB,2000,Supply,Energy industry own use,E.ktoe,services,Oil fields,Diesel - Dist.,-50,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Truck engines,Diesel - Dist.,-15050,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Elect. grid,Elect,-6400,,
-GB,2000,Supply,Energy industry own use,E.ktoe,services,Gas wells & proc.,Elect - Grid,-25,,
-GB,2000,Supply,Energy industry own use,E.ktoe,services,Oil fields,Elect - Grid,-25,,
-GB,2000,Supply,Energy industry own use,E.ktoe,services,Crude dist.,Elect - Grid,-25,,
-GB,2000,Supply,Energy industry own use,E.ktoe,services,NG dist.,Elect - Grid,-25,,
-GB,2000,Supply,Energy industry own use,E.ktoe,services,Oil refineries,Elect - Grid,-75,,
-GB,2000,Supply,Energy industry own use,E.ktoe,services,Power plants,Elect - Grid,-100,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Light fixtures,Elect - Grid,-6000,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Petrol dist.,Petrol,-26500,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Car engines,Petrol - Dist.,-26000,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Rooms,Light,-1200,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Homes,LTH,-20000,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Cars,MD - Car engines,-3000.4,,
-GB,2000,Supply,Transformation processes,E.ktoe,services,Trucks,MD - Truck engines,-1799.98,,
-GB,2000,Supply,Energy industry own use,E.ktoe,services,Crude dist.,Freight [tonne-km/year],-1666685185.3909500,,
-GB,2000,Supply,Energy industry own use,E.ktoe,services,NG dist.,Freight [tonne-km/year],-1666685185.3909500,,
-GB,2000,Supply,Energy industry own use,E.ktoe,services,Diesel dist.,Freight [tonne-km/year],-1500000000,,
-GB,2000,Supply,Energy industry own use,E.ktoe,services,Petrol dist.,Freight [tonne-km/year],-2250000000,,
-GB,2000,Consumption,Transport,E.ktoe,services,Transport,Freight [tonne-km/year],142916629629.218000,,
-GB,2000,Consumption,Residential,E.ktoe,services,Residential,Illumination [lumen-hrs/yr],5E+14,,
-GB,2000,Consumption,Transport,E.ktoe,services,Transport,Passenger [passenger-km/yr],5E+11,,
-GB,2000,Consumption,Residential,E.ktoe,services,Residential,Space heating [m3-K],75000000000,,
-GB,2000,Supply,Total primary energy supply,X.ktoe,services,Resources - Crude,Crude,53500,,
-GB,2000,Supply,Total primary energy supply,X.ktoe,services,Resources - NG,NG,44720,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Gas wells & proc.,NG - Wells,42640,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Oil fields,Crude - Fields,50825,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Crude dist.,Crude - Dist.,50290,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,NG dist.,NG - Dist.,42640,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Oil refineries,Diesel,16585,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Oil refineries,Petrol,28355,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Power plants,Elect,6400,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Elect. grid,Elect - Grid,6275,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Diesel dist.,Diesel - Dist.,16210.5,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Petrol dist.,Petrol - Dist.,27820,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Car engines,MD - Car engines,3000.4,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Furnaces,LTH,335.4016435,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Light fixtures,Light,96,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Truck engines,MD - Truck engines,1799.98,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Cars,Passenger [passenger-km/yr],5E+11,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Homes,Space heating [m3-K],75000000000,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Rooms,Illumination [lumen-hrs/yr],5E+14,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Trucks,Freight [tonne-km/year],1.5E+11,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Oil fields,Crude,-53500,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Crude dist.,Crude - Fields,-50825,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Oil refineries,Crude - Dist.,-50290,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Gas wells & proc.,NG,-44720,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,NG dist.,NG - Wells,-42640,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Power plants,NG - Dist.,-16640,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Furnaces,NG - Dist.,-26000,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Diesel dist.,Diesel,-16585,,
-GB,2000,Supply,Energy industry own use,X.ktoe,services,Gas wells & proc.,Diesel - Dist.,-53.5,,
-GB,2000,Supply,Energy industry own use,X.ktoe,services,Oil fields,Diesel - Dist.,-53.5,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Truck engines,Diesel - Dist.,-16103.5,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Elect. grid,Elect,-6400,,
-GB,2000,Supply,Energy industry own use,X.ktoe,services,Gas wells & proc.,Elect - Grid,-25,,
-GB,2000,Supply,Energy industry own use,X.ktoe,services,Oil fields,Elect - Grid,-25,,
-GB,2000,Supply,Energy industry own use,X.ktoe,services,Crude dist.,Elect - Grid,-25,,
-GB,2000,Supply,Energy industry own use,X.ktoe,services,NG dist.,Elect - Grid,-25,,
-GB,2000,Supply,Energy industry own use,X.ktoe,services,Oil refineries,Elect - Grid,-75,,
-GB,2000,Supply,Energy industry own use,X.ktoe,services,Power plants,Elect - Grid,-100,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Light fixtures,Elect - Grid,-6000,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Petrol dist.,Petrol,-28355,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Car engines,Petrol - Dist.,-27820,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Rooms,Light,-96,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Homes,LTH,-335.4016435,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Cars,MD - Car engines,-3000.4,,
-GB,2000,Supply,Transformation processes,X.ktoe,services,Trucks,MD - Truck engines,-1799.98,,
-GB,2000,Supply,Energy industry own use,X.ktoe,services,Crude dist.,Freight [tonne-km/year],-1666685185.3909500000,,
-GB,2000,Supply,Energy industry own use,X.ktoe,services,NG dist.,Freight [tonne-km/year],-1666685185.3909500000,,
-GB,2000,Supply,Energy industry own use,X.ktoe,services,Diesel dist.,Freight [tonne-km/year],-1500000000,,
-GB,2000,Supply,Energy industry own use,X.ktoe,services,Petrol dist.,Freight [tonne-km/year],-2250000000,,
-GB,2000,Consumption,Transport,X.ktoe,services,Transport,Freight [tonne-km/year],142916629629.2180000,,
-GB,2000,Consumption,Residential,X.ktoe,services,Residential,Illumination [lumen-hrs/yr],5E+14,,
-GB,2000,Consumption,Transport,X.ktoe,services,Transport,Passenger [passenger-km/yr],5E+11,,
-GB,2000,Consumption,Residential,X.ktoe,services,Residential,Space heating [m3-K],75000000000,,
+﻿Country,Year,Ledger.side,Flow.aggregation.point,Energy.type,Last.stage,Flow,Product,EX.ktoe
+GB,2000,Supply,Total primary energy supply,E.ktoe,final,Resources - Crude,Crude,50000
+GB,2000,Supply,Total primary energy supply,E.ktoe,final,Resources - NG,NG,43000
+GB,2000,Supply,Transformation processes,E.ktoe,final,Gas wells & proc.,NG - Wells,41000
+GB,2000,Supply,Transformation processes,E.ktoe,final,Oil fields,Crude - Fields,47500
+GB,2000,Supply,Transformation processes,E.ktoe,final,Crude dist.,Crude - Dist.,47000
+GB,2000,Supply,Transformation processes,E.ktoe,final,NG dist.,NG - Dist.,41000
+GB,2000,Supply,Transformation processes,E.ktoe,final,Oil refineries,Diesel,15500
+GB,2000,Supply,Transformation processes,E.ktoe,final,Oil refineries,Petrol,26500
+GB,2000,Supply,Transformation processes,E.ktoe,final,Power plants,Elect,6400
+GB,2000,Supply,Transformation processes,E.ktoe,final,Elect. grid,Elect - Grid,6275
+GB,2000,Supply,Transformation processes,E.ktoe,final,Diesel dist.,Diesel - Dist.,15150
+GB,2000,Supply,Transformation processes,E.ktoe,final,Petrol dist.,Petrol - Dist.,26000
+GB,2000,Supply,Transformation processes,E.ktoe,final,Oil fields,Crude,-50000
+GB,2000,Supply,Transformation processes,E.ktoe,final,Crude dist.,Crude - Fields,-47500
+GB,2000,Supply,Transformation processes,E.ktoe,final,Oil refineries,Crude - Dist.,-47000
+GB,2000,Supply,Transformation processes,E.ktoe,final,Gas wells & proc.,NG,-43000
+GB,2000,Supply,Transformation processes,E.ktoe,final,NG dist.,NG - Wells,-41000
+GB,2000,Supply,Transformation processes,E.ktoe,final,Power plants,NG - Dist.,-16000
+GB,2000,Supply,Transformation processes,E.ktoe,final,Diesel dist.,Diesel,-15500
+GB,2000,Supply,Energy industry own use,E.ktoe,final,Gas wells & proc.,Diesel - Dist.,-50
+GB,2000,Supply,Energy industry own use,E.ktoe,final,Oil fields,Diesel - Dist.,-50
+GB,2000,Supply,Energy industry own use,E.ktoe,final,Crude dist.,Diesel - Dist.,-25
+GB,2000,Supply,Energy industry own use,E.ktoe,final,NG dist.,Diesel - Dist.,-25
+GB,2000,Supply,Energy industry own use,E.ktoe,final,Petrol dist.,Diesel - Dist.,-250
+GB,2000,Supply,Transformation processes,E.ktoe,final,Elect. grid,Elect,-6400
+GB,2000,Supply,Energy industry own use,E.ktoe,final,Gas wells & proc.,Elect - Grid,-25
+GB,2000,Supply,Energy industry own use,E.ktoe,final,Oil fields,Elect - Grid,-25
+GB,2000,Supply,Energy industry own use,E.ktoe,final,Crude dist.,Elect - Grid,-25
+GB,2000,Supply,Energy industry own use,E.ktoe,final,NG dist.,Elect - Grid,-25
+GB,2000,Supply,Energy industry own use,E.ktoe,final,Oil refineries,Elect - Grid,-75
+GB,2000,Supply,Energy industry own use,E.ktoe,final,Power plants,Elect - Grid,-100
+GB,2000,Supply,Transformation processes,E.ktoe,final,Petrol dist.,Petrol,-26500
+GB,2000,Consumption,Residential,E.ktoe,final,Residential,NG - Dist.,25000
+GB,2000,Consumption,Transport,E.ktoe,final,Transport,Diesel - Dist.,14750
+GB,2000,Consumption,Residential,E.ktoe,final,Residential,Elect - Grid,6000
+GB,2000,Consumption,Transport,E.ktoe,final,Transport,Petrol - Dist.,26000
+GB,2000,Supply,Total primary energy supply,E.ktoe,useful,Resources - Crude,Crude,50000
+GB,2000,Supply,Total primary energy supply,E.ktoe,useful,Resources - NG,NG,43000
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Gas wells & proc.,NG - Wells,41000
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Oil fields,Crude - Fields,47500
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Crude dist.,Crude - Dist.,47000
+GB,2000,Supply,Transformation processes,E.ktoe,useful,NG dist.,NG - Dist.,41000
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Oil refineries,Diesel,15500
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Oil refineries,Petrol,26500
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Power plants,Elect,6400
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Elect. grid,Elect - Grid,6275
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Diesel dist.,Diesel - Dist.,15150
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Petrol dist.,Petrol - Dist.,26000
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Car engines,MD - Car engines,3000.4
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Furnaces,LTH,20000
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Light fixtures,Light,1200
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Truck engines,MD - Truck engines,1799.98
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Oil fields,Crude,-50000
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Crude dist.,Crude - Fields,-47500
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Oil refineries,Crude - Dist.,-47000
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Gas wells & proc.,NG,-43000
+GB,2000,Supply,Transformation processes,E.ktoe,useful,NG dist.,NG - Wells,-41000
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Power plants,NG - Dist.,-16000
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Furnaces,NG - Dist.,-25000
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Diesel dist.,Diesel,-15500
+GB,2000,Supply,Energy industry own use,E.ktoe,useful,Gas wells & proc.,Diesel - Dist.,-50
+GB,2000,Supply,Energy industry own use,E.ktoe,useful,Oil fields,Diesel - Dist.,-50
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Truck engines,Diesel - Dist.,-15050
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Elect. grid,Elect,-6400
+GB,2000,Supply,Energy industry own use,E.ktoe,useful,Gas wells & proc.,Elect - Grid,-25
+GB,2000,Supply,Energy industry own use,E.ktoe,useful,Oil fields,Elect - Grid,-25
+GB,2000,Supply,Energy industry own use,E.ktoe,useful,Crude dist.,Elect - Grid,-25
+GB,2000,Supply,Energy industry own use,E.ktoe,useful,NG dist.,Elect - Grid,-25
+GB,2000,Supply,Energy industry own use,E.ktoe,useful,Oil refineries,Elect - Grid,-75
+GB,2000,Supply,Energy industry own use,E.ktoe,useful,Power plants,Elect - Grid,-100
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Light fixtures,Elect - Grid,-6000
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Petrol dist.,Petrol,-26500
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Car engines,Petrol - Dist.,-26000
+GB,2000,Supply,Energy industry own use,E.ktoe,useful,Crude dist.,MD - Truck engines,-20
+GB,2000,Supply,Energy industry own use,E.ktoe,useful,NG dist.,MD - Truck engines,-20
+GB,2000,Supply,Energy industry own use,E.ktoe,useful,Diesel dist.,MD - Truck engines,-17.9998
+GB,2000,Supply,Energy industry own use,E.ktoe,useful,Petrol dist.,MD - Truck engines,-26.9997
+GB,2000,Consumption,Residential,E.ktoe,useful,Residential,Light,1200
+GB,2000,Consumption,Transport,E.ktoe,useful,Transport,LTH,20000
+GB,2000,Consumption,Residential,E.ktoe,useful,Residential,MD - Car engines,3000.4
+GB,2000,Consumption,Transport,E.ktoe,useful,Transport,MD - Truck engines,1714.9805
+GB,2000,Supply,Total primary energy supply,E.ktoe,services,Resources - Crude,Crude,50000
+GB,2000,Supply,Total primary energy supply,E.ktoe,services,Resources - NG,NG,43000
+GB,2000,Supply,Transformation processes,E.ktoe,services,Gas wells & proc.,NG - Wells,41000
+GB,2000,Supply,Transformation processes,E.ktoe,services,Oil fields,Crude - Fields,47500
+GB,2000,Supply,Transformation processes,E.ktoe,services,Crude dist.,Crude - Dist.,47000
+GB,2000,Supply,Transformation processes,E.ktoe,services,NG dist.,NG - Dist.,41000
+GB,2000,Supply,Transformation processes,E.ktoe,services,Oil refineries,Diesel,15500
+GB,2000,Supply,Transformation processes,E.ktoe,services,Oil refineries,Petrol,26500
+GB,2000,Supply,Transformation processes,E.ktoe,services,Power plants,Elect,6400
+GB,2000,Supply,Transformation processes,E.ktoe,services,Elect. grid,Elect - Grid,6275
+GB,2000,Supply,Transformation processes,E.ktoe,services,Diesel dist.,Diesel - Dist.,15150
+GB,2000,Supply,Transformation processes,E.ktoe,services,Petrol dist.,Petrol - Dist.,26000
+GB,2000,Supply,Transformation processes,E.ktoe,services,Car engines,MD - Car engines,3000.4
+GB,2000,Supply,Transformation processes,E.ktoe,services,Furnaces,LTH,20000
+GB,2000,Supply,Transformation processes,E.ktoe,services,Light fixtures,Light,1200
+GB,2000,Supply,Transformation processes,E.ktoe,services,Truck engines,MD - Truck engines,1799.98
+GB,2000,Supply,Transformation processes,E.ktoe,services,Cars,Passenger [passenger-km/yr],5E+11
+GB,2000,Supply,Transformation processes,E.ktoe,services,Homes,Space heating [m3-K],75000000000
+GB,2000,Supply,Transformation processes,E.ktoe,services,Rooms,Illumination [lumen-hrs/yr],5E+14
+GB,2000,Supply,Transformation processes,E.ktoe,services,Trucks,Freight [tonne-km/year],1.5E+11
+GB,2000,Supply,Transformation processes,E.ktoe,services,Oil fields,Crude,-50000
+GB,2000,Supply,Transformation processes,E.ktoe,services,Crude dist.,Crude - Fields,-47500
+GB,2000,Supply,Transformation processes,E.ktoe,services,Oil refineries,Crude - Dist.,-47000
+GB,2000,Supply,Transformation processes,E.ktoe,services,Gas wells & proc.,NG,-43000
+GB,2000,Supply,Transformation processes,E.ktoe,services,NG dist.,NG - Wells,-41000
+GB,2000,Supply,Transformation processes,E.ktoe,services,Power plants,NG - Dist.,-16000
+GB,2000,Supply,Transformation processes,E.ktoe,services,Furnaces,NG - Dist.,-25000
+GB,2000,Supply,Transformation processes,E.ktoe,services,Diesel dist.,Diesel,-15500
+GB,2000,Supply,Energy industry own use,E.ktoe,services,Gas wells & proc.,Diesel - Dist.,-50
+GB,2000,Supply,Energy industry own use,E.ktoe,services,Oil fields,Diesel - Dist.,-50
+GB,2000,Supply,Transformation processes,E.ktoe,services,Truck engines,Diesel - Dist.,-15050
+GB,2000,Supply,Transformation processes,E.ktoe,services,Elect. grid,Elect,-6400
+GB,2000,Supply,Energy industry own use,E.ktoe,services,Gas wells & proc.,Elect - Grid,-25
+GB,2000,Supply,Energy industry own use,E.ktoe,services,Oil fields,Elect - Grid,-25
+GB,2000,Supply,Energy industry own use,E.ktoe,services,Crude dist.,Elect - Grid,-25
+GB,2000,Supply,Energy industry own use,E.ktoe,services,NG dist.,Elect - Grid,-25
+GB,2000,Supply,Energy industry own use,E.ktoe,services,Oil refineries,Elect - Grid,-75
+GB,2000,Supply,Energy industry own use,E.ktoe,services,Power plants,Elect - Grid,-100
+GB,2000,Supply,Transformation processes,E.ktoe,services,Light fixtures,Elect - Grid,-6000
+GB,2000,Supply,Transformation processes,E.ktoe,services,Petrol dist.,Petrol,-26500
+GB,2000,Supply,Transformation processes,E.ktoe,services,Car engines,Petrol - Dist.,-26000
+GB,2000,Supply,Transformation processes,E.ktoe,services,Rooms,Light,-1200
+GB,2000,Supply,Transformation processes,E.ktoe,services,Homes,LTH,-20000
+GB,2000,Supply,Transformation processes,E.ktoe,services,Cars,MD - Car engines,-3000.4
+GB,2000,Supply,Transformation processes,E.ktoe,services,Trucks,MD - Truck engines,-1799.98
+GB,2000,Supply,Energy industry own use,E.ktoe,services,Crude dist.,Freight [tonne-km/year],-1666685185.3909500
+GB,2000,Supply,Energy industry own use,E.ktoe,services,NG dist.,Freight [tonne-km/year],-1666685185.3909500
+GB,2000,Supply,Energy industry own use,E.ktoe,services,Diesel dist.,Freight [tonne-km/year],-1500000000
+GB,2000,Supply,Energy industry own use,E.ktoe,services,Petrol dist.,Freight [tonne-km/year],-2250000000
+GB,2000,Consumption,Transport,E.ktoe,services,Transport,Freight [tonne-km/year],142916629629.218000
+GB,2000,Consumption,Residential,E.ktoe,services,Residential,Illumination [lumen-hrs/yr],5E+14
+GB,2000,Consumption,Transport,E.ktoe,services,Transport,Passenger [passenger-km/yr],5E+11
+GB,2000,Consumption,Residential,E.ktoe,services,Residential,Space heating [m3-K],75000000000
+GB,2000,Supply,Total primary energy supply,X.ktoe,services,Resources - Crude,Crude,53500
+GB,2000,Supply,Total primary energy supply,X.ktoe,services,Resources - NG,NG,44720
+GB,2000,Supply,Transformation processes,X.ktoe,services,Gas wells & proc.,NG - Wells,42640
+GB,2000,Supply,Transformation processes,X.ktoe,services,Oil fields,Crude - Fields,50825
+GB,2000,Supply,Transformation processes,X.ktoe,services,Crude dist.,Crude - Dist.,50290
+GB,2000,Supply,Transformation processes,X.ktoe,services,NG dist.,NG - Dist.,42640
+GB,2000,Supply,Transformation processes,X.ktoe,services,Oil refineries,Diesel,16585
+GB,2000,Supply,Transformation processes,X.ktoe,services,Oil refineries,Petrol,28355
+GB,2000,Supply,Transformation processes,X.ktoe,services,Power plants,Elect,6400
+GB,2000,Supply,Transformation processes,X.ktoe,services,Elect. grid,Elect - Grid,6275
+GB,2000,Supply,Transformation processes,X.ktoe,services,Diesel dist.,Diesel - Dist.,16210.5
+GB,2000,Supply,Transformation processes,X.ktoe,services,Petrol dist.,Petrol - Dist.,27820
+GB,2000,Supply,Transformation processes,X.ktoe,services,Car engines,MD - Car engines,3000.4
+GB,2000,Supply,Transformation processes,X.ktoe,services,Furnaces,LTH,335.4016435
+GB,2000,Supply,Transformation processes,X.ktoe,services,Light fixtures,Light,96
+GB,2000,Supply,Transformation processes,X.ktoe,services,Truck engines,MD - Truck engines,1799.98
+GB,2000,Supply,Transformation processes,X.ktoe,services,Cars,Passenger [passenger-km/yr],5E+11
+GB,2000,Supply,Transformation processes,X.ktoe,services,Homes,Space heating [m3-K],75000000000
+GB,2000,Supply,Transformation processes,X.ktoe,services,Rooms,Illumination [lumen-hrs/yr],5E+14
+GB,2000,Supply,Transformation processes,X.ktoe,services,Trucks,Freight [tonne-km/year],1.5E+11
+GB,2000,Supply,Transformation processes,X.ktoe,services,Oil fields,Crude,-53500
+GB,2000,Supply,Transformation processes,X.ktoe,services,Crude dist.,Crude - Fields,-50825
+GB,2000,Supply,Transformation processes,X.ktoe,services,Oil refineries,Crude - Dist.,-50290
+GB,2000,Supply,Transformation processes,X.ktoe,services,Gas wells & proc.,NG,-44720
+GB,2000,Supply,Transformation processes,X.ktoe,services,NG dist.,NG - Wells,-42640
+GB,2000,Supply,Transformation processes,X.ktoe,services,Power plants,NG - Dist.,-16640
+GB,2000,Supply,Transformation processes,X.ktoe,services,Furnaces,NG - Dist.,-26000
+GB,2000,Supply,Transformation processes,X.ktoe,services,Diesel dist.,Diesel,-16585
+GB,2000,Supply,Energy industry own use,X.ktoe,services,Gas wells & proc.,Diesel - Dist.,-53.5
+GB,2000,Supply,Energy industry own use,X.ktoe,services,Oil fields,Diesel - Dist.,-53.5
+GB,2000,Supply,Transformation processes,X.ktoe,services,Truck engines,Diesel - Dist.,-16103.5
+GB,2000,Supply,Transformation processes,X.ktoe,services,Elect. grid,Elect,-6400
+GB,2000,Supply,Energy industry own use,X.ktoe,services,Gas wells & proc.,Elect - Grid,-25
+GB,2000,Supply,Energy industry own use,X.ktoe,services,Oil fields,Elect - Grid,-25
+GB,2000,Supply,Energy industry own use,X.ktoe,services,Crude dist.,Elect - Grid,-25
+GB,2000,Supply,Energy industry own use,X.ktoe,services,NG dist.,Elect - Grid,-25
+GB,2000,Supply,Energy industry own use,X.ktoe,services,Oil refineries,Elect - Grid,-75
+GB,2000,Supply,Energy industry own use,X.ktoe,services,Power plants,Elect - Grid,-100
+GB,2000,Supply,Transformation processes,X.ktoe,services,Light fixtures,Elect - Grid,-6000
+GB,2000,Supply,Transformation processes,X.ktoe,services,Petrol dist.,Petrol,-28355
+GB,2000,Supply,Transformation processes,X.ktoe,services,Car engines,Petrol - Dist.,-27820
+GB,2000,Supply,Transformation processes,X.ktoe,services,Rooms,Light,-96
+GB,2000,Supply,Transformation processes,X.ktoe,services,Homes,LTH,-335.4016435
+GB,2000,Supply,Transformation processes,X.ktoe,services,Cars,MD - Car engines,-3000.4
+GB,2000,Supply,Transformation processes,X.ktoe,services,Trucks,MD - Truck engines,-1799.98
+GB,2000,Supply,Energy industry own use,X.ktoe,services,Crude dist.,Freight [tonne-km/year],-1666685185.3909500000
+GB,2000,Supply,Energy industry own use,X.ktoe,services,NG dist.,Freight [tonne-km/year],-1666685185.3909500000
+GB,2000,Supply,Energy industry own use,X.ktoe,services,Diesel dist.,Freight [tonne-km/year],-1500000000
+GB,2000,Supply,Energy industry own use,X.ktoe,services,Petrol dist.,Freight [tonne-km/year],-2250000000
+GB,2000,Consumption,Transport,X.ktoe,services,Transport,Freight [tonne-km/year],142916629629.2180000
+GB,2000,Consumption,Residential,X.ktoe,services,Residential,Illumination [lumen-hrs/yr],5E+14
+GB,2000,Consumption,Transport,X.ktoe,services,Transport,Passenger [passenger-km/yr],5E+11
+GB,2000,Consumption,Residential,X.ktoe,services,Residential,Space heating [m3-K],75000000000

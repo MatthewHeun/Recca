@@ -52,9 +52,14 @@ UKEnergy2000mats <- UKEnergy2000tidy %>%
   rename(matrix.name = matname, matrix = EX.ktoe) %>%
   spread(key = matrix.name, value = matrix) %>%
 
-  # Add unit information
   mutate(
+    # Create full U matrix
+    U = sum_byname(U, U_EIOU),
+    r_EIOU = elementquotient_byname(U_EIOU, U),
+    r_EIOU = replaceNaNWith0(r_EIOU),
+    # Add unit information
     S_units = make_list(S_units, 4)
-  )
+  ) %>%
+  select(-U_EIOU)
 
 use_data(UKEnergy2000mats, overwrite = TRUE)

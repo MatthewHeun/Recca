@@ -29,32 +29,40 @@ add_UKEnergy2000_matnames <- function(.DF,
                                       # Input columns
                                       ledger_side = "Ledger.side",
                                       energy = "EX.ktoe",
-                                      # Input identifiers for supply and consumption
+                                      flow.aggregation.point = "Flow.aggregation.point",
+                                      # Input identifiers for supply, consumption, and EIOU
                                       supply_side = "Supply",
                                       consumption_side = "Consumption",
+                                      eiou = "Energy industry own use",
                                       # Output column
                                       matname = "matname",
-                                      # Ouput identifiers for use, make, and final demand matrices
+                                      # Ouput identifiers for use, EIOU, make, and final demand matrices
                                       U = "U",
+                                      U_EIOU = "U_EIOU",
                                       V = "V",
                                       Y = "Y"){
   matname <- as.name(matname)
   ledger_side <- as.name(ledger_side)
   energy <- as.name(energy)
+  flow.aggregation.point <- as.name(flow.aggregation.point)
 
   .DF %>% mutate(
     # Add a column that indicates the matrix in which this entry belongs.
     !!matname := case_when(
-      # All negative values on the Supply side of the ledger belong in the use (U) matrix.
+      # Negative values on the supply side of the ledger with Flow == "Energy industry own use"
+      # are put into the U_EIOU matrix
+      !!ledger_side == supply_side & !!energy <= 0 & !!flow.aggregation.point == eiou ~ U_EIOU,
+      # All other negative values on the Supply side of the ledger belong in the use (U) matrix.
       !!ledger_side == supply_side & !!energy <= 0 ~ U,
       # All positive values on the Supply side of the ledger belong in the make (V) matrix.
-      !!ledger_side == supply_side & (!!as.name(energy)) > 0 ~ V,
+      !!ledger_side == supply_side & !!energy > 0 ~ V,
       # All Consumption items belong in the final demand (Y) matrix.
       !!ledger_side == consumption_side ~ Y,
       # Identify any places where our logic is faulty.
       TRUE ~ NA_character_
     )
-  )
+  ) #%>%
+    # select(-!!.U_non_EIOU)
 }
 
 #' Add row, column, row type, and column type metadata
@@ -62,9 +70,10 @@ add_UKEnergy2000_matnames <- function(.DF,
 #' @param .DF a data frame containing \code{matname_colname}.
 #' @param matname_colname the name of the column in \code{.data} that contains names of matrices
 #'        (a string).  Default is "\code{matname}".
-#' @param U_name the name for use matrices (a string). Default is "\code{U}".
-#' @param V_name the name for make matrices (a string). Default is "\code{V}".
-#' @param Y_name the name for final demand matrices (a string). Default is "\code{Y}".
+#' @param U the name for use matrices (a string). Default is "\code{U}".
+#' @param U_EIOU the name for the EIOU portino o fhte U matrix (a string). Default is "\code{U_EIOU}".
+#' @param V the name for make matrices (a string). Default is "\code{V}".
+#' @param Y the name for final demand matrices (a string). Default is "\code{Y}".
 #' @param product_colname the name of the column in \code{.data} where Product names
 #'        is found (a string). Default is "\code{Product}".
 #' @param flow_colname the name of the column in \code{.data} where Flow information is found
@@ -96,10 +105,14 @@ add_UKEnergy2000_matnames <- function(.DF,
 #'   add_UKEnergy2000_matnames() %>%
 #'   add_UKEnergy2000_row_col_meta()
 add_UKEnergy2000_row_col_meta <- function(.DF,
-                                          # Input column containing matrix names
+                                          # Name of the input column containing matrix names
                                           matname = "matname",
-                                          U_name = "U", V_name = "V", Y_name = "Y",
+                                          # Column names for Product and Flow
                                           product = "Product", flow = "Flow",
+                                          # Expected matrix names in the matname column
+                                          U = "U", U_EIOU = "U_EIOU",
+                                          V = "V", Y = "Y",
+                                          # Row and column Type identifiers
                                           industry_type = "Industry", product_type = "Product",
                                           sector_type = "Industry",
                                           # Output columns
@@ -116,28 +129,29 @@ add_UKEnergy2000_row_col_meta <- function(.DF,
   .DF %>%
     mutate(
       rowname = case_when(
-        !!matname == U_name ~ !!Product,
-        !!matname == V_name ~ !!Flow,
-        !!matname == Y_name ~ !!Product,
+        !!matname == U | !!matname == U_EIOU ~ !!Product,
+        !!matname == V ~ !!Flow,
+        !!matname == Y ~ !!Product,
         TRUE ~ NA_character_
       ),
       !!colname := case_when(
-        !!matname == U_name ~ !!Flow,
-        !!matname == V_name ~ !!Product,
-        !!matname == Y_name ~ !!Flow,
+        !!matname == U | !!matname == U_EIOU ~ !!Flow,
+        !!matname == V ~ !!Product,
+        !!matname == Y ~ !!Flow,
         TRUE ~ NA_character_
       ),
       !!rowtype := case_when(
-        !!matname == U_name ~ product_type,
-        !!matname == V_name ~ industry_type,
-        !!matname == Y_name ~ product_type,
+        !!matname == U | !!matname == U_EIOU ~ product_type,
+        !!matname == V ~ industry_type,
+        !!matname == Y ~ product_type,
         TRUE ~ NA_character_
       ),
       !!coltype := case_when(
-        !!matname == U_name ~ industry_type,
-        !!matname == V_name ~ product_type,
-        !!matname == Y_name ~ sector_type,
+        !!matname == U | !!matname == U_EIOU ~ industry_type,
+        !!matname == V ~ product_type,
+        !!matname == Y ~ sector_type,
         TRUE ~ NA_character_
       )
     )
 }
+

@@ -15,7 +15,7 @@ library(matsbyname)
 library(matsindf)
 
 ###########################################################
-context("small example")
+context("Small example")
 ###########################################################
 
 test_that("small example works as expected", {
@@ -115,7 +115,7 @@ test_that("second small example works as expected", {
 
 
 ###########################################################
-context("UKEnergy2000")
+context("Layout for UKEnergy2000mats")
 ###########################################################
 
 test_that("UKEnergy2000 works as expected", {
@@ -280,7 +280,7 @@ test_that("UKEnergy2000 works as expected", {
 
 
 ###########################################################
-context("identify industry stages")
+context("Identify industry stages")
 ###########################################################
 
 test_that("identify_industry_stages works as expected", {

@@ -52,6 +52,10 @@
 
 %\VignetteEngine{knitr::knitr}
 %\VignetteIndexEntry{Recca workflow}
+
+\usepackage[sort&compress]{natbib}      % For nice bibliographies
+
+\usepackage{hyperref}                   % For hyperlinks in .pdf file
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
 
@@ -62,16 +66,27 @@
 \maketitle
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
-\texttt{Recca}
-(\texttt{R} energy conversion chain analysis)
-is an \texttt{R} package that assists with
+\texttt{Recca} (\texttt{R} Energy Conversion Chain Analysis)
+is an \texttt{R} package that enables
 energy and exergy analysis of energy conversion chains.
+\texttt{Recca} makes extensive use of a matrix-based PSUT analysis technique
+that first appeared in Heun et al.~\cite{Heun:2017h}.
 \end{abstract}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+\label{sec:introduction}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Here is some text.
 
+\bibliographystyle{plain}
+
+\bibliography{recca}
 
 
 \end{document}
