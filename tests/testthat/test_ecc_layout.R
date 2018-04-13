@@ -9,13 +9,13 @@ library(tidyr)
 library(magrittr)
 library(tibble)
 library(lazyeval)
-library(byname)
 library(testthat)
 library(qgraph)
+library(matsbyname)
 library(matsindf)
 
 ###########################################################
-context("small example")
+context("Small example")
 ###########################################################
 
 test_that("small example works as expected", {
@@ -115,30 +115,18 @@ test_that("second small example works as expected", {
 
 
 ###########################################################
-context("UKEnergy2000")
+context("Layout for UKEnergy2000mats")
 ###########################################################
 
 test_that("UKEnergy2000 works as expected", {
-  # Use the UKEnergy2000 data from the matsindf package as an example.
-  bigmat <- UKEnergy2000 %>%
-    # Add metadata
-    matsindf:::add_UKEnergy2000_matnames(.) %>%
-    matsindf:::add_UKEnergy2000_row_col_meta(.) %>%
-    # Group correctly
-    group_by(Country, Year, matname) %>%
-    # Ensure all entries are positive numbers, as they should be in PSUT framework.
+  # Use a subset of the UKEnergy2000mats data from this package as an example.
+  bigmat <- UKEnergy2000mats %>%
+    filter(Country == "GB", Year == 2000, Energy.type == "E.ktoe", Last.stage == "final") %>%
     mutate(
-      E.ktoe = abs(E.ktoe)
+      # Delete unneeded columns.
+      Energy.type = NULL,
+      Last.stage = NULL
     ) %>%
-    # Make matrices
-    collapse_to_matrices(matnames = "matname", values = "E.ktoe",
-                         rownames = "rowname", colnames = "colname",
-                         rowtypes = "rowtype", coltypes = "coltype") %>%
-    rename(
-      matrix = E.ktoe
-    ) %>%
-    # Spread so we can add all matrices
-    spread(key = matname, value = matrix) %>%
     # Sum all matrices to make one big matrix with "from" or "source" nodes in rows
     # and "to" or "destination" nodes in columns
     mutate(
@@ -292,7 +280,7 @@ test_that("UKEnergy2000 works as expected", {
 
 
 ###########################################################
-context("identify industry stages")
+context("Identify industry stages")
 ###########################################################
 
 test_that("identify_industry_stages works as expected", {
@@ -314,3 +302,4 @@ test_that("identify_industry_stages works as expected", {
                                "p-->f industry", "p-->f industry",
                                "f-->u industry", "f-->u industry"))
 })
+

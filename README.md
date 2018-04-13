@@ -1,2 +1,2 @@
 # Recca
-Use R for energy eonversion chain analysis
+Use R for energy conversion chain analysis
