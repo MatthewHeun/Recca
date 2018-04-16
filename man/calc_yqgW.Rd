@@ -2,7 +2,7 @@
 % Please edit documentation in R/io.R
 \name{calc_yqgW}
 \alias{calc_yqgW}
-\title{Calculate g, q, and x vectors and W matrices}
+\title{Calculate y, g, and q vectors and W matrices}
 \usage{
 calc_yqgW(.sutdata, U_colname = "U", V_colname = "V", Y_colname = "Y",
   S_units = "S_units", keep_cols = NULL, y_colname = "y",
@@ -22,21 +22,21 @@ calc_yqgW(.sutdata, U_colname = "U", V_colname = "V", Y_colname = "Y",
 \item{keep_cols}{a vector of names of columns of \code{.sutdata} to return with the output}
 
 \item{y_colname}{the name of the output column containing \code{y} vectors.
-\code{y} is calculated by \code{rowsums(Y)}.}
+\code{y} is calculated by \code{rowsums_byname(Y)}.}
 
 \item{q_colname}{the name of the output column containing \code{q} vectors.
-\code{q} is calculated by \code{rowsums(U) + y}.}
+\code{q} is calculated by \code{rowsums_byname(U) + y}.}
 
 \item{g_colname}{the name of the output column containing \code{g} vectors.
-\code{g} is calculated by \code{rowsums(V)}.}
+\code{g} is calculated by \code{rowsums_byname(V)}.}
 
 \item{W_colname}{the name of the output column containing \code{W} matrices.
-\code{W} is calculated by \code{transpose(V) - U}.}
+\code{W} is calculated by \code{transpose_byname(V) - U}.}
 }
 \value{
 a data frame containing columns specified in \code{keep_cols},
 \code{y_colname}, \code{q_colname}, \code{g_colname}, and \code{W_colname}.
 }
 \description{
-Calculate g, q, and x vectors and W matrices
+Calculate y, g, and q vectors and W matrices
 }

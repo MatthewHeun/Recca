@@ -3,7 +3,7 @@
 context("IO calculations")
 ###########################################################
 
-test_that("calculating y, q, g, and W works as expected", {
+test_that("calculating y, q, g, W, and A works as expected", {
   expec_path <- file.path("tests", "expectations")
 
   if (is_testing()) {
@@ -21,6 +21,11 @@ test_that("calculating y, q, g, and W works as expected", {
   yqgW <- UKEnergy2000mats %>%
     calc_yqgW(keep_cols = c("Country", "Year", "Energy.type", "Last.stage", "U", "V", "Y", "r_EIOU", "S_units"))
   expect_known_value(yqgW, file.path(expec_path, "yqgW.rds"), update = FALSE)
+
+  A <- yqgW %>%
+    calc_A(keep_cols = c("Country", "Year", "Energy.type", "Last.stage", "U", "V", "Y", "r_EIOU",
+                         "S_units", "g", "y", "q", "W"))
+  expect_known_value(A, file.path(expec_path, "A.rds"), update = FALSE)
 
 
   if (is_testing()) {
