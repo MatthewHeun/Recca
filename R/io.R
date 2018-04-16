@@ -110,6 +110,9 @@ calc_yqgW <- function(.sutdata,
   S_units <- as.name(S_units)
   V_bar_check_colname <- ".V_bar_check"
   V_bar_check <- as.name(V_bar_check_colname)
+
+
+
   # Perform a check on units.
   # The V_bar matrix should have only one entry per row,
   # meaning that all products of a given industry are measured in the same units.
@@ -118,15 +121,20 @@ calc_yqgW <- function(.sutdata,
   # If product unit homogeneity is violated, the methods here cannot be used.
   # To accommodate unit inhomogenity of industry products,
   # further generalizations of this method will be needed.
-  CheckUnits <- .sutdata %>%
-    mutate(
-      !!V_bar := matrixproduct_byname(!!V, !!S_units),
-      !!V_bar_check := count_vals_inrows_byname(!!V_bar, "!=", 0) %>%
-        compare_byname("==", 1) %>%
-        all_byname()
-    )
+  # CheckUnits <- .sutdata %>%
+  #   mutate(
+  #     !!V_bar := matrixproduct_byname(!!V, !!S_units),
+  #     !!V_bar_check := count_vals_inrows_byname(!!V_bar, "!=", 0) %>%
+  #       compare_byname("==", 1) %>%
+  #       all_byname()
+  #   )
   # Verify that units are good everywhere.
-  stopifnot(all(as.logical(CheckUnits[[V_bar_check_colname]])))
+  # stopifnot(all(as.logical(CheckUnits[[V_bar_check_colname]])))
+
+
+
+
+
 
   # Now that we know the units are fine (i.e., the products of each industry are unit homogeneous),
   # we can proceed with calculating y, q, g, and W.
