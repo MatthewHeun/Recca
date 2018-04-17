@@ -17,6 +17,27 @@ test_that("embodied energy calculations works as expected", {
     setwd(file.path("..", ".."))
   }
 
+  # Calculate all IO matrices
+  io_mats <- UKEnergy2000mats %>%
+    calc_io_mats(keep_cols = c("Country", "Year", "Energy.type", "Last.stage",
+                               "U", "V", "Y", "r_EIOU", "S_units"))
+
+  # Calculate the G and H matrices
+  GH <- io_mats %>%
+    calc_GH(keep_cols = c("Country", "Year", "Energy.type", "Last.stage", "U", "V", "Y", "r_EIOU",
+                          "S_units", "y", "q", "g", "W", "Z", "D", "C", "A", "L_pxp", "L_ixp" ))
+  expect_known_value(GH, file.path(expec_path, "GH.rds"), update = FALSE)
+
+  E <- io_mats %>%
+    mutate(
+      U_EIOU = elementproduct_byname(U, r_EIOU)
+    ) %>%
+    calc_E(keep_cols = c("Country", "Year", "Energy.type", "Last.stage", "U", "V", "Y",
+                         "r_EIOU", "S_units", "y", "q", "g", "W", "Z", "D", "C",
+                         "A", "L_pxp", "L_ixp", "U_EIOU"))
+  expect_known_value(E, file.path(expec_path, "E.rds"), update = FALSE)
+
+
 
 
 
