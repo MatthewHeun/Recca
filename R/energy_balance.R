@@ -28,6 +28,8 @@
 #' This function should be called
 #' for its side-effect of testing whether energy is in balance in \code{.sutdata}.
 #'
+#' @export
+#'
 #' @examples
 #' verify_SUT_energy_balance(SUTMatsWne)
 verify_SUT_energy_balance <- function(.sutdata,
