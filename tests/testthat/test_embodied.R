@@ -28,14 +28,19 @@ test_that("embodied energy calculations works as expected", {
                           "S_units", "y", "q", "g", "W", "Z", "D", "C", "A", "L_pxp", "L_ixp" ))
   expect_known_value(GH, file.path(expec_path, "GH.rds"), update = FALSE)
 
-  E <- io_mats %>%
+  E <- GH %>%
     mutate(
       U_EIOU = elementproduct_byname(U, r_EIOU)
     ) %>%
     calc_E(keep_cols = c("Country", "Year", "Energy.type", "Last.stage", "U", "V", "Y",
                          "r_EIOU", "S_units", "y", "q", "g", "W", "Z", "D", "C",
-                         "A", "L_pxp", "L_ixp", "U_EIOU"))
+                         "A", "L_pxp", "L_ixp", "U_EIOU", "G", "H"))
   expect_known_value(E, file.path(expec_path, "E.rds"), update = FALSE)
+
+  M <- E %>%
+    calc_M(keep_cols = c("Country", "Year", "Energy.type", "Last.stage", "U", "V", "Y",
+                         "r_EIOU", "S_units", "y", "q", "g", "W", "Z", "D", "C",
+                         "A", "L_pxp", "L_ixp", "U_EIOU", "G", "H", "E"))
 
 
 
