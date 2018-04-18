@@ -1,3 +1,4 @@
+library(parallel)
 
 ###########################################################
 context("Embodied energy calculations")
@@ -41,10 +42,7 @@ test_that("embodied energy calculations works as expected", {
     calc_M(keep_cols = c("Country", "Year", "Energy.type", "Last.stage", "U", "V", "Y",
                          "r_EIOU", "S_units", "y", "q", "g", "W", "Z", "D", "C",
                          "A", "L_pxp", "L_ixp", "U_EIOU", "G", "H", "E"))
-
-
-
-
+  expect_known_value(M, file.path(expec_path, "M.rds"), update = FALSE)
 
   if (is_testing()) {
     # Restore the previous working directory.

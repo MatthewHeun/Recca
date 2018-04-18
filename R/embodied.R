@@ -270,9 +270,9 @@ calc_M <- function(.YqGHEdata,
       # Calculate the "per-sector" embodied energy.
       !!M_s_colname := matrixproduct_byname(!!as.name(M_p_colname), (!!as.name(q_colname)) %>%
                                               hatize_byname %>% invert_byname) %>% matrixproduct_byname(!!as.name(Y_colname))
-    ) # %>%
+    ) %>%
     # Trim columns before returning
-    # select(!!!intersect(keep_cols, names(.)), !!M_p_colname, !!M_s_colname)
+    select(!!!intersect(keep_cols, names(.)), !!M_p_colname, !!M_s_colname)
 }
 
 #' Upstream footprint and downstream effects matrices

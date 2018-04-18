@@ -18,6 +18,7 @@ Imports:
     fuzzyjoin,
     magrittr,
     qgraph, 
+    parallel,
     rlang,
     lazyeval,
     tibble,
