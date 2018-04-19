@@ -43,29 +43,59 @@ primary_aggregates <- function(.sutdata,
   aggfuncs <- list(total = "sumall_byname", product = "rowsums_byname", flow = "colsums_byname")
   agg_func <- aggfuncs[[tolower(by)]]
 
+  # Out <- .sutdata %>%
+  #   select_(.dots = c(intersect(keep_cols, names(.)), V_colname, Y_colname)) %>%
+  #   # Transpose V so that we can directly add the V and Y matrices.
+  #   # Select only primary columns from VT and Y.
+  #   mutate_(
+  #     .dots = list(
+  #       # VT_p
+  #       interp(~ transpose_byname(vcol) %>% select_cols_byname(retain_pattern = make_pattern(row_col_names = p_industries, pattern_type = "leading")),
+  #              vcol = as.name(V_colname)),
+  #       # Y_p
+  #       interp(~ ycol %>% select_cols_byname(retain_pattern = make_pattern(p_industries, pattern_type = "leading")),
+  #              ycol = as.name(Y_colname))
+  #     ) %>%
+  #       setNames(c(".VT_p", ".Y_p"))
+  #   ) %>%
+  #   mutate_(
+  #     .dots = list(
+  #       # VT_p - Y_p. This is TPES in product x industry matrix format
+  #       interp(~ difference_byname(vtpcol, ypcol),
+  #              vtpcol = as.name(".VT_p"),
+  #              ypcol = as.name(".Y_p"))
+  #     ) %>%
+  #       setNames(c(".VT_p_minus_Y_p"))
+  #   ) %>%
+  #   mutate_(
+  #     .dots = list(
+  #       # aggregated TPES = aggfunc(.VT_p_minus_Yp)
+  #       interp(~ af(diffcolname),
+  #              af = as.name(agg_func),
+  #              diffcolname = as.name(".VT_p_minus_Y_p"))
+  #     ) %>%
+  #       setNames(c(aggregate_primary_colname))
+  #   )
+  VT_p_name <- ".VT_p"
+  Y_p_name <- ".Y_p"
+  VT_p_minus_Y_p_name <- ".VT_p_minus_Y_p"
+  VT_p <- as.name(VT_p_name)
+  Y_p <- as.name(Y_p_name)
+  V <- as.name(V_colname)
+  Y <- as.name(Y_colname)
+  VT_p_minus_Y_p <- as.name(VT_p_minus_Y_p_name)
+  agg_primary <- as.name(aggregate_primary_colname)
+
   Out <- .sutdata %>%
-    select_(.dots = c(intersect(keep_cols, names(.)), V_colname, Y_colname)) %>%
     # Transpose V so that we can directly add the V and Y matrices.
     # Select only primary columns from VT and Y.
-    mutate_(
-      .dots = list(
-        # VT_p
-        interp(~ transpose_byname(vcol) %>% select_cols_byname(retain_pattern = make_pattern(row_col_names = p_industries, pattern_type = "leading")),
-               vcol = as.name(V_colname)),
-        # Y_p
-        interp(~ ycol %>% select_cols_byname(retain_pattern = make_pattern(p_industries, pattern_type = "leading")),
-               ycol = as.name(Y_colname))
-      ) %>%
-        setNames(c(".VT_p", ".Y_p"))
-    ) %>%
-    mutate_(
-      .dots = list(
-        # VT_p - Y_p. This is TPES in product x industry matrix format
-        interp(~ difference_byname(vtpcol, ypcol),
-               vtpcol = as.name(".VT_p"),
-               ypcol = as.name(".Y_p"))
-      ) %>%
-        setNames(c(".VT_p_minus_Y_p"))
+    mutate(
+      !!VT_p := transpose_byname(!!V) %>%
+        select_cols_byname(retain_pattern = make_pattern(row_col_names = p_industries, pattern_type = "leading")),
+      !!Y_p := !!Y %>%
+        select_cols_byname(retain_pattern = make_pattern(row_col_names = p_industries, pattern_type = "leading")),
+      # VT_p - Y_p. This is TPES in product x industry matrix format
+      !!VT_p_minus_Y_p := difference_byname(!!VT_p, !!Y_p)
     ) %>%
     mutate_(
       .dots = list(
