@@ -294,12 +294,6 @@ finaldemand_aggregates_with_units <- function(.sutdata,
                                               gross_aggregate_demand_colname){
 
   by <- match.arg(by)
-  # Decide which aggregation function to use
-  # aggfuncs <- list(total = "sumall_byname", product = "rowsums_byname", sector = "colsums_byname")
-  # if (!tolower(by) %in% names(aggfuncs)) {
-  #   stop(paste("Unknown value of argument by:", by, "in primary_aggregates."))
-  # }
-  # agg_func <- as.name(aggfuncs[[tolower(by)]])
 
   # Establish names for columns
   U_EIOU <- as.name(".U_EIOU")
@@ -325,10 +319,6 @@ finaldemand_aggregates_with_units <- function(.sutdata,
       mutate(
         !!U_EIOU := elementproduct_byname(!!r_EIOU, !!U),
         !!U_EIOU_bar := matrixproduct_byname(transpose_byname(!!S_units), !!U_EIOU),
-        # !!net := !!Y %>%
-        #   select_cols_byname(retain_pattern = make_pattern(row_col_names = fd_sectors,
-        #                                                    pattern_type = "leading")) %>%
-        #   (!!agg_func)(),
         !!net := matrixproduct_byname(
           transpose_byname(!!S_units),
           !!Y %>% select_cols_byname(retain_pattern = make_pattern(row_col_names = fd_sectors,
