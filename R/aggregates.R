@@ -135,11 +135,11 @@ primary_aggregates <- function(.sutdata,
   }
 
   # Keep only the desired columns and return the resulting data frame.
-  Out %>%
-    select_(.dots = c(intersect(keep_cols, names(.)), aggregate_primary_colname))
-  # Eliminate temporary columns
   # Out %>%
-  #   select(-(!!VT_p), -(!!Y_p), -(!!VT_p_minus_Y_p))
+  #   select_(.dots = c(intersect(keep_cols, names(.)), aggregate_primary_colname))
+  # Eliminate temporary columns
+  Out %>%
+    select(-(!!VT_p), -(!!Y_p), -(!!VT_p_minus_Y_p))
 }
 
 #' Final demand aggregate energy
