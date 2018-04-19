@@ -41,7 +41,8 @@ primary_aggregates <- function(.sutdata,
 
   by <- match.arg(by)
   aggfuncs <- list(total = "sumall_byname", product = "rowsums_byname", flow = "colsums_byname")
-  agg_func <- aggfuncs[[tolower(by)]]
+  agg_func <- match.fun(aggfuncs[[tolower(by)]])
+
 
   # Out <- .sutdata %>%
   #   select_(.dots = c(intersect(keep_cols, names(.)), V_colname, Y_colname)) %>%
@@ -95,47 +96,50 @@ primary_aggregates <- function(.sutdata,
       !!Y_p := !!Y %>%
         select_cols_byname(retain_pattern = make_pattern(row_col_names = p_industries, pattern_type = "leading")),
       # VT_p - Y_p. This is TPES in product x industry matrix format
-      !!VT_p_minus_Y_p := difference_byname(!!VT_p, !!Y_p)
-    ) %>%
-    mutate_(
-      .dots = list(
-        # aggregated TPES = aggfunc(.VT_p_minus_Yp)
-        interp(~ af(diffcolname),
-               af = as.name(agg_func),
-               diffcolname = as.name(".VT_p_minus_Y_p"))
-      ) %>%
-        setNames(c(aggregate_primary_colname))
+      !!VT_p_minus_Y_p := difference_byname(!!VT_p, !!Y_p),
+      !!agg_primary := agg_func(!!VT_p_minus_Y_p)
     )
 
   # Do some cleanup
 
-  if (tolower(by) == "total") {
+  if (by == "Total") {
     # Need to convert aggregate column to numeric,
     # because the aggregate is only a single number when we ask for "Total" aggregation.
+    # Out <- Out %>%
+    #   mutate_(
+    #     .dots = list(
+    #       interp(~ as.numeric(aggcol),
+    #              aggcol = as.name(aggregate_primary_colname))
+    #     ) %>%
+    #       setNames(c(aggregate_primary_colname))
+    #   )
     Out <- Out %>%
-      mutate_(
-        .dots = list(
-          interp(~ as.numeric(aggcol),
-                 aggcol = as.name(aggregate_primary_colname))
-        ) %>%
-          setNames(c(aggregate_primary_colname))
+      mutate(
+        !!agg_primary := as.numeric(!!agg_primary)
       )
-  } else if (tolower(by) == "flow") {
+  } else if (by == "Flow") {
     # If "Flow" aggregation is requested, the results will be a row vector.
     # Convert to a column vector.
+    # Out <- Out %>%
+    #   mutate_(
+    #     .dots = list(
+    #       interp(~ transpose_byname(aggcol),
+    #              aggcol = as.name(aggregate_primary_colname))
+    #     ) %>%
+    #       setNames(c(aggregate_primary_colname))
+    #   )
     Out <- Out %>%
-      mutate_(
-        .dots = list(
-          interp(~ transpose_byname(aggcol),
-                 aggcol = as.name(aggregate_primary_colname))
-        ) %>%
-          setNames(c(aggregate_primary_colname))
+      mutate(
+        !!agg_primary := transpose_byname(!!agg_primary)
       )
   }
 
   # Keep only the desired columns and return the resulting data frame.
   Out %>%
     select_(.dots = c(intersect(keep_cols, names(.)), aggregate_primary_colname))
+  # Eliminate temporary columns
+  # Out %>%
+  #   select(-(!!VT_p), -(!!Y_p), -(!!VT_p_minus_Y_p))
 }
 
 #' Final demand aggregate energy
