@@ -87,6 +87,9 @@ primary_aggregates <- function(.sutdata,
   VT_p_minus_Y_p <- as.name(VT_p_minus_Y_p_name)
   agg_primary <- as.name(aggregate_primary_colname)
 
+  # Ensure that all columns that we're going to create don't already exist in .sutdata
+  check_colnames(.sutdata, c(VT_p_name, Y_p_name, VT_p_minus_Y_p_name, VT_p, aggregate_primary_colname))
+
   Out <- .sutdata %>%
     # Transpose V so that we can directly add the V and Y matrices.
     # Select only primary columns from VT and Y.
