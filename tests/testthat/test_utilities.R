@@ -12,6 +12,10 @@ test_that("error messages about column names works as expected", {
 
   expect_silent(check_colnames(df, c("d")))
 
+  # Try with a list in newcols
+  expect_silent(check_colnames(df, list("d", "e")))
+  expect_error(check_colnames(df, list("a", "c")),
+               Hmisc::escapeRegex("column(s) 'a' is (are) already column names in data frame 'df'"))
 })
 
 
