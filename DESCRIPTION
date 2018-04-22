@@ -16,14 +16,15 @@ Depends: R (>= 2.10)
 Imports:
     dplyr,
     fuzzyjoin,
-    magrittr,
-    qgraph, 
-    parallel,
-    rlang,
+    Hmisc,
     lazyeval,
+    magrittr,
+    matsbyname,
+    parallel,
+    qgraph, 
+    rlang,
     tibble,
-    tidyr,
-    matsbyname
+    tidyr
 Suggests:
     knitr, 
     testthat
