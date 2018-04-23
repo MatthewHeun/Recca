@@ -165,6 +165,8 @@ calc_E <- function(.iodata,
 }
 
 
+#' Add embodied matrices colums to a data frame
+#'
 #' @param .YqGHEdata a data frame containing columns with \strong{q} vectors
 #' and \strong{Y}, \strong{G}, \strong{H}, and \strong{E} matrices.
 #' \code{.YqGEdata} will likely have been obtained from the \code{calc_G} and \code{calc_E} functions.
