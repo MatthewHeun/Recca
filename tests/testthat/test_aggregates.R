@@ -31,7 +31,8 @@ test_that("primary aggregates of SUT data work as expected", {
   primary_total_aggregates_sut <- UKEnergy2000mats %>%
     primary_aggregates(p_industries = p_industries, by = "Total",
                        aggregate_primary_colname = "EX_total_agg.ktoe",
-                       keep_cols = c("Country", "Year", "Energy.type", "Last.stage"))
+                       keep_cols = c("Country", "Year", "Energy.type", "Last.stage",
+                                     "U", "V", "Y", "r_EIOU", "S_units"))
   expect_known_value(primary_total_aggregates_sut,
                      file.path(expec_path, "expected_primary_total_aggregates_sut.rds"),
                      update = FALSE)
@@ -39,7 +40,8 @@ test_that("primary aggregates of SUT data work as expected", {
   primary_product_aggregates_sut <- UKEnergy2000mats %>%
     primary_aggregates(p_industries = p_industries, by = "Product",
                        aggregate_primary_colname = "EX_product_agg.ktoe",
-                       keep_cols = c("Country", "Year", "Energy.type", "Last.stage"))
+                       keep_cols = c("Country", "Year", "Energy.type", "Last.stage",
+                                     "U", "V", "Y", "r_EIOU", "S_units"))
   expect_known_value(primary_product_aggregates_sut,
                      file.path(expec_path, "expected_primary_product_aggregates_sut.rds"),
                      update = FALSE)
@@ -47,7 +49,8 @@ test_that("primary aggregates of SUT data work as expected", {
   primary_flow_aggregates_sut <- UKEnergy2000mats %>%
     primary_aggregates(p_industries = p_industries, by = "Flow",
                        aggregate_primary_colname = "EX_flow_agg.ktoe",
-                       keep_cols = c("Country", "Year", "Energy.type", "Last.stage"))
+                       keep_cols = c("Country", "Year", "Energy.type", "Last.stage",
+                                     "U", "V", "Y", "r_EIOU", "S_units"))
   expect_known_value(primary_flow_aggregates_sut,
                      file.path(expec_path, "expected_primary_flow_aggregates_sut.rds"),
                      update = FALSE)

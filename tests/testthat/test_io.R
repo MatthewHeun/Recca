@@ -56,10 +56,10 @@ test_that("calculating IO matrices works as expected", {
   }
 
   # Calculate all IO matrices
-  iomats <- UKEnergy2000mats %>%
+  io_mats <- UKEnergy2000mats %>%
     calc_io_mats(keep_cols = c("Country", "Year", "Energy.type", "Last.stage",
                                "U", "V", "Y", "r_EIOU", "S_units"))
-  expect_known_value(iomats, file.path(expec_path, "iomats.rds"), update = FALSE)
+  expect_known_value(io_mats, file.path(expec_path, "iomats.rds"), update = FALSE)
 
 
 

@@ -14,6 +14,8 @@ calc_GH(.iodata, y_colname = "y", Y_colname = "Y",
 
 \item{y_colname}{the name of the column in \code{.iodata} containing final demand (\code{y}) vectors.}
 
+\item{Y_colname}{the name of the column in \code{.iodata} containing final demand (\code{Y}) matrices.}
+
 \item{L_ixp_colname}{the name of the column in \code{.iodata} containing Industry-by-Product
 Leontief (\code{L_ixp}) matrices.}
 

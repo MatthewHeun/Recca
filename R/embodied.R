@@ -100,6 +100,7 @@ calc_embodied_mats <- function(.iodata,
 #' @param .iodata a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.
 #' \code{.iodata} will likely have been obtained from the \code{calc_io_mats} function.
 #' @param y_colname the name of the column in \code{.iodata} containing final demand (\code{y}) vectors.
+#' @param Y_colname the name of the column in \code{.iodata} containing final demand (\code{Y}) matrices.
 #' @param L_ixp_colname the name of the column in \code{.iodata} containing Industry-by-Product
 #' Leontief (\code{L_ixp}) matrices.
 #' @param keep_cols a vector of names of columns of \code{.iodata} to return with the output
@@ -117,10 +118,17 @@ calc_GH <- function(.iodata,
                     # Output columns
                     keep_cols = NULL,
                     G_colname = "G", H_colname = "H"){
+  # Establish some names
+  y <- as.name(y_colname)
+  Y <- as.name(Y_colname)
+  L_ixp <- as.name(L_ixp_colname)
+  G <- as.name(G_colname)
+  H <- as.name(H_colname)
+
   .iodata %>%
-    select(!!!intersect(keep_cols, names(.)), !!y_colname, !!L_ixp_colname) %>%
+    select(!!!intersect(keep_cols, names(.)), !!y_colname, !!Y_colname, !!L_ixp_colname) %>%
     mutate(
-      !!G_colname := matrixproduct_byname(!!as.name(L_ixp_colname), (!!as.name(y_colname)) %>% hatize_byname()),
+      !!G_colname := matrixproduct_byname(!!as.name(L_ixp_colname), hatize_byname(!!as.name(y_colname))),
       !!H_colname := matrixproduct_byname(!!as.name(L_ixp_colname), !!as.name(Y_colname))
     ) %>%
     select(!!!intersect(keep_cols, names(.)), !!G_colname, !!H_colname)
@@ -157,6 +165,8 @@ calc_E <- function(.iodata,
 }
 
 
+#' Add embodied matrices colums to a data frame
+#'
 #' @param .YqGHEdata a data frame containing columns with \strong{q} vectors
 #' and \strong{Y}, \strong{G}, \strong{H}, and \strong{E} matrices.
 #' \code{.YqGEdata} will likely have been obtained from the \code{calc_G} and \code{calc_E} functions.
