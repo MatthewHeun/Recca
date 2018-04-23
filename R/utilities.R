@@ -2,7 +2,7 @@
 # This file contains utility functions for Recca
 #
 
-#' Verify that column names in a data frame are not alread present
+#' Verify that column names in a data frame are not already present
 #'
 #' In the \code{Recca} package, many functions add columns to an existing data frame.
 #' If the incoming data frame already contains columns with the names of new columns to be added,
@@ -23,15 +23,15 @@
 #'
 #' @examples
 #' df <- data.frame(a = c(1,2), b = c(3,4))
+#' verify_cols_missing(df, "d") # Silent. There will be no problem adding column "d".
 #' newcols <- c("c", "d", "a", "b")
-#' check_colnames(df, "d") # Silent. There will be no problem adding column "d".
-#' \dontrun{check_colnames(df, newcols)}
-check_colnames <- function(.DF, newcols){
+#' \dontrun{verify_cols_missing(df, newcols)}
+verify_cols_missing <- function(.DF, newcols){
   df_names <- names(.DF)
   if (any(newcols %in% df_names)) {
     violators <- paste0("'", newcols[which(newcols %in% df_names)], "'", collapse = ", ")
     stop(paste0("column(s) ", violators, " is (are) already column names in data frame '",
                 deparse(substitute(.DF)), "'"))
   }
-  return(NULL)
+  invisible(NULL)
 }

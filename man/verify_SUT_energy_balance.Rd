@@ -5,9 +5,7 @@
 \title{Confirm that an SUT-style data frame conserves energy.}
 \usage{
 verify_SUT_energy_balance(.sutdata, U_colname = "U", V_colname = "V",
-  Y_colname = "Y", tol = 1e-06, V_sums_colname = ".V_sums",
-  U_sums_colname = ".U_sums", Y_sums_colname = ".Y_sums",
-  err_colname = "err")
+  Y_colname = "Y", tol = 1e-06)
 }
 \arguments{
 \item{.sutdata}{an SUT-style data frame containing metadata columns

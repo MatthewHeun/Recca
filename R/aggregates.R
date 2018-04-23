@@ -43,18 +43,18 @@ primary_aggregates <- function(.sutdata,
   aggfuncs <- list(total = "sumall_byname", product = "rowsums_byname", flow = "colsums_byname")
   agg_func <- match.fun(aggfuncs[[tolower(by)]])
 
-  VT_p_name <- ".VT_p"
-  Y_p_name <- ".Y_p"
-  VT_p_minus_Y_p_name <- ".VT_p_minus_Y_p"
-  VT_p <- as.name(VT_p_name)
-  Y_p <- as.name(Y_p_name)
+  # Establish names
   V <- as.name(V_colname)
   Y <- as.name(Y_colname)
-  VT_p_minus_Y_p <- as.name(VT_p_minus_Y_p_name)
+  # Establish intermediate column names
+  VT_p <- as.name(".VT_p")
+  Y_p <- as.name(".Y_p")
+  VT_p_minus_Y_p <- as.name(".VT_p_minus_Y_p")
+  # Establish output column name
   agg_primary <- as.name(aggregate_primary_colname)
 
-  # Ensure that all columns that we're going to create don't already exist in .sutdata
-  check_colnames(.sutdata, c(VT_p_name, Y_p_name, VT_p_minus_Y_p_name, VT_p, aggregate_primary_colname))
+  # Ensure that we won't overwrite a column.
+  verify_cols_missing(.sutdata, c(VT_p, Y_p, VT_p_minus_Y_p, agg_primary))
 
   Out <- .sutdata %>%
     # Transpose V so that we can directly add the V and Y matrices.
