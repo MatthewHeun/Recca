@@ -1,4 +1,46 @@
 
+#' Extract an \code{S_units} matrix from a tidy data frame
+#'
+#' The \code{.tidydf} should be grouped as needed.
+#'
+#' @param .tidydf the data frame from which an \code{S_units} matrix is to be formed
+#' @param Product the name of the \code{Product} column in \code{.tidydf}. Default is "\code{Product}".
+#' @param Unit the name of the \code{Unit} column in \code{.tidydf}. Default is "\code{Unit}".
+#' @param S_unit the name of the \code{S_unit} column to be added to \code{.tidydf}. Default is "\code{S_unit}".
+#'
+#' @return a data frame containing grouping variables and a new \code{S_unit} column
+#'
+#' @export
+#'
+#' @examples
+#' S_units_from_tidy(UKEnergy2000tidy %>% group_by("Country", "Year", "Energy.type", "Last.stage"))
+S_units_from_tidy <- function(.tidydf, Product = "Product", Unit = "Unit", S_unit = "S_unit"){
+  # Establish names
+  Unit <- as.name(Unit)
+  Product <- as.name(Product)
+  val <- ".val"
+  rowtype <- ".rowtype"
+  coltype <- ".coltype"
+
+  verify_cols_missing(.tidydf, c(S_unit, val, rowtype, coltype))
+
+  .tidydf %>%
+    select(!!!groups(.), !!Product, !!Unit) %>%
+    do(unique(.)) %>%
+    mutate(
+      !!as.name(val) := 1,
+      !!as.name(S_unit) := S_unit,
+      !!as.name(rowtype) := "Product",
+      !!as.name(coltype) := "Unit"
+    ) %>%
+    collapse_to_matrices(matnames = S_unit, values = val,
+                         rownames = as.character(Product), colnames = as.character(Unit),
+                         rowtypes = rowtype, coltypes = coltype) %>%
+    rename(
+      !!as.name(S_unit) := !!as.name(val)
+    )
+}
+
 
 #' Add a column of matrix names to tidy data frame
 #'
@@ -61,8 +103,7 @@ add_UKEnergy2000_matnames <- function(.DF,
       # Identify any places where our logic is faulty.
       TRUE ~ NA_character_
     )
-  ) #%>%
-    # select(-!!.U_non_EIOU)
+  )
 }
 
 #' Add row, column, row type, and column type metadata
@@ -154,4 +195,7 @@ add_UKEnergy2000_row_col_meta <- function(.DF,
       )
     )
 }
+
+
+
 

@@ -125,11 +125,11 @@ verify_SUT_energy_balance_with_units <- function(.sutdata,
   Y <- as.name(Y)
   S_units <- as.name(S_units)
   # Intermediate columns
-  W <- as.name(".W")
-  V_bar <- as.name(".V_bar")
-  U_bar <- as.name(".U_bar")
-  W_bar <- as.name(".W_bar")
   y <- as.name(".y")
+  W <- as.name(".W")
+  U_bar <- as.name(".U_bar")
+  V_bar <- as.name(".V_bar")
+  W_bar <- as.name(".W_bar")
   err_prod <- as.name(".err_prod")
   err_ind <- as.name(".err_ind")
 
@@ -206,8 +206,8 @@ verify_SUT_industry_production <- function(.sutdata,
   U <- as.name(U_colname)
   V <- as.name(V_colname)
   # Establish intermediate column names
-  OK <- as.name(".industry_production_OK")
   check <- as.name(".check")
+  OK <- as.name(".industry_production_OK")
 
   verify_cols_missing(.sutdata, c(OK, check))
 

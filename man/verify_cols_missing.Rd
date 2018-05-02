@@ -9,7 +9,9 @@ verify_cols_missing(.DF, newcols)
 \arguments{
 \item{.DF}{the data frame to which \code{newcols} are to be added}
 
-\item{newcols}{a vector of strings representing the names of new columns to be added to \code{.DF}}
+\item{newcols}{a single string, a single name,
+a vector of strings representing the names of new columns to be added to \code{.DF}, or
+a vector of names of new columns to be added to \code{.DF}}
 }
 \value{
 \code{NULL}. This function should be called for its side effect of checking the validity

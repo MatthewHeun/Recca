@@ -30,6 +30,12 @@ test_that("verify_cols_missing works when either strings or names are provided",
                Hmisc::escapeRegex("column(s) 'a', 'b' is (are) already column names in data frame 'df'"))
 })
 
+test_that("verify_cols_missing works with a single value", {
+  df <- data.frame(a = c(1,2), b = c(3,4))
+  expect_silent(verify_cols_missing(df, as.name("c")))
+  expect_error(verify_cols_missing(df, as.name("a")),
+               Hmisc::escapeRegex("column(s) 'a' is (are) already column names in data frame 'df'"))
+})
 
 
 

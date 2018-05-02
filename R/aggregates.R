@@ -131,12 +131,19 @@ finaldemand_aggregates <- function(.sutdata,
                                    net_aggregate_demand_colname,
                                    gross_aggregate_demand_colname){
 
+  by <- match.arg(by)
+
   # Decide which aggregation function to use
-  aggfuncs <- list(total = "sumall_byname", product = "rowsums_byname", sector = "colsums_byname")
-  if (!tolower(by) %in% names(aggfuncs)) {
-    stop(paste("Unknown value of argument by:", by, "in primary_aggregates."))
-  }
-  agg_func <- aggfuncs[[tolower(by)]]
+  aggfuncs <- list(total = "sumall_byname", product = "rowsums_byname", flow = "colsums_byname")
+  agg_func <- match.fun(aggfuncs[[tolower(by)]])
+
+  # Establish names
+  U <- as.name(U_colname)
+  V <- as.name(V_colname)
+  Y <- as.name(Y_colname)
+  r_EIOU <- as.name(r_EIOU_colname)
+  net <- as.name(net_aggregate_demand_colname)
+  gross <- as.name(gross_aggregate_demand_colname)
 
   Out <- .sutdata %>%
     # Select only relevant columns
@@ -246,15 +253,16 @@ finaldemand_aggregates_with_units <- function(.sutdata,
   by <- match.arg(by)
 
   # Establish names for columns
-  U_EIOU <- as.name(".U_EIOU")
-  U_EIOU_bar <- as.name(".U_EIOU_bar")
   U <- as.name(U)
-  U_bar <- as.name(".U_bar")
   Y <- as.name(Y)
   r_EIOU <- as.name(r_EIOU)
   S_units <- as.name(S_units)
+  # Establish names for intermediate columns
+  U_EIOU <- as.name(".U_EIOU")
   net <- as.name(net_aggregate_demand_colname)
   gross <- as.name(gross_aggregate_demand_colname)
+  U_EIOU_bar <- as.name(".U_EIOU_bar")
+  U_bar <- as.name(".U_bar")
 
   if (by == "Product") {
     Out <- .sutdata %>%
