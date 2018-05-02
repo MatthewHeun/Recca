@@ -140,10 +140,10 @@ verify_SUT_energy_balance_with_units <- function(.sutdata,
       !!y := rowsums_byname(!!Y),
       !!W := difference_byname(transpose_byname(!!V), !!U),
       !!U_bar := matrixproduct_byname(transpose_byname(!!S_units), !!U),
-      # !!V_bar := matrixproduct_byname(!!V, !!S_units),
-      # !!W_bar := matrixproduct_byname(transpose_byname(!!S_units), !!W),
-      # !!err_prod := difference_byname(rowsums_byname(!!W), !!y),
-      # !!err_ind := difference_byname(!!V_bar, transpose_byname(!!W_bar)) %>% difference_byname(transpose_byname(!!U_bar))
+      !!V_bar := matrixproduct_byname(!!V, !!S_units),
+      !!W_bar := matrixproduct_byname(transpose_byname(!!S_units), !!W),
+      !!err_prod := difference_byname(rowsums_byname(!!W), !!y),
+      !!err_ind := difference_byname(!!V_bar, transpose_byname(!!W_bar)) %>% difference_byname(transpose_byname(!!U_bar))
     )
 
   if (!all(EnergyCheck[[err_prod]] %>% iszero_byname(tol) %>% as.logical())) {
