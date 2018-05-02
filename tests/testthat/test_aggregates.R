@@ -41,10 +41,7 @@ test_that("primary aggregates of SUT data work as expected", {
     primary_aggregates(p_industries = p_industries, by = "Product",
                        aggregate_primary_colname = "EX_product_agg.ktoe",
                        keep_cols = c("Country", "Year", "Energy.type", "Last.stage",
-                                     "U", "V", "Y", "r_EIOU", "S_unit")) %>%
-    # For now to make sure that everything is still same.
-    # Later remove this selection and re-write the object
-    select(-S_unit)
+                                     "U", "V", "Y", "r_EIOU", "S_units"))
   expect_known_value(primary_product_aggregates_sut,
                      file.path(expec_path, "expected_primary_product_aggregates_sut.rds"),
                      update = FALSE)

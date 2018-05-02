@@ -20,7 +20,7 @@ UKEnergy2000tidy <- read.csv(system.file("extdata", "UKEnergy2000raw", "UKEnergy
 
 use_data(UKEnergy2000tidy, overwrite = TRUE)
 
-# Create S_unit matrices from the UKEnergy2000tidy data frame
+# Create S_units matrices from the UKEnergy2000tidy data frame
 S_units <- UKEnergy2000tidy %>%
   group_by(Country, Year, Energy.type, Last.stage) %>%
   S_units_from_tidy()
@@ -52,7 +52,7 @@ UKEnergy2000mats <- UKEnergy2000tidy %>%
     r_EIOU = replaceNaN_byname(r_EIOU, val = 0)
   ) %>%
   select(-U_EIOU) %>%
-  # Add S_unit matrices
+  # Add S_units matrices
   left_join(S_units, by = c("Country", "Year", "Energy.type", "Last.stage"))
 
 use_data(UKEnergy2000mats, overwrite = TRUE)
