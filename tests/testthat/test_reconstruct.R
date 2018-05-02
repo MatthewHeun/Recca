@@ -58,7 +58,7 @@ test_that("reconstructing U and V works as expected", {
                                  "U", "V", "Y", "r_EIOU", "S_units", "y", "q", "g", "W", "Z", "D", "C", "A",
                                  "L_ixp", "L_pxp", "Y_prime"))
   expect_known_value(Reconstructed_Residential,
-                     file.path(expec_path, "Reconstructed_Residential.rds"), update = FALSE)
+                     file.path(expec_path, "expected_Reconstructed_Residential.rds"), update = FALSE)
 
   if (is_testing()) {
     # Restore the previous working directory.
