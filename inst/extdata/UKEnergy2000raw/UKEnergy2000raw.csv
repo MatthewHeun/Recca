@@ -1,16 +1,16 @@
 ﻿Country,Year,Ledger.side,Flow.aggregation.point,Energy.type,Last.stage,Flow,Product,EX.ktoe,Unit
 GB,2000,Supply,Total primary energy supply,E.ktoe,final,Resources - Crude,Crude,50000,ktoe
 GB,2000,Supply,Total primary energy supply,E.ktoe,final,Resources - NG,NG,43000,ktoe
-GB,2000,Supply,Transformation processes,E.ktoe,final,Gas wells & proc.,NG - Wells,41000,ktoe
-GB,2000,Supply,Transformation processes,E.ktoe,final,Oil fields,Crude - Fields,47500,ktoe
-GB,2000,Supply,Transformation processes,E.ktoe,final,Crude dist.,Crude - Dist.,47000,ktoe
+GB,2000,Supply,Transformation processes,E.ktoe,final,Gas wells & proc.,NG - Wells,43000,ktoe
+GB,2000,Supply,Transformation processes,E.ktoe,final,Oil fields,Crude - Fields,50000,ktoe
+GB,2000,Supply,Transformation processes,E.ktoe,final,Crude dist.,Crude - Dist.,47500,ktoe
 GB,2000,Supply,Transformation processes,E.ktoe,final,NG dist.,NG - Dist.,41000,ktoe
-GB,2000,Supply,Transformation processes,E.ktoe,final,Oil refineries,Diesel,15500,ktoe
+GB,2000,Supply,Transformation processes,E.ktoe,final,Oil refineries,Diesel,20500,ktoe
 GB,2000,Supply,Transformation processes,E.ktoe,final,Oil refineries,Petrol,26500,ktoe
 GB,2000,Supply,Transformation processes,E.ktoe,final,Power plants,Elect,6400,ktoe
 GB,2000,Supply,Transformation processes,E.ktoe,final,Elect. grid,Elect - Grid,6275,ktoe
-GB,2000,Supply,Transformation processes,E.ktoe,final,Diesel dist.,Diesel - Dist.,15150,ktoe
-GB,2000,Supply,Transformation processes,E.ktoe,final,Petrol dist.,Petrol - Dist.,26000,ktoe
+GB,2000,Supply,Transformation processes,E.ktoe,final,Diesel dist.,Diesel - Dist.,15500,ktoe
+GB,2000,Supply,Transformation processes,E.ktoe,final,Petrol dist.,Petrol - Dist.,26500,ktoe
 GB,2000,Supply,Transformation processes,E.ktoe,final,Oil fields,Crude,-50000,ktoe
 GB,2000,Supply,Transformation processes,E.ktoe,final,Crude dist.,Crude - Fields,-47500,ktoe
 GB,2000,Supply,Transformation processes,E.ktoe,final,Oil refineries,Crude - Dist.,-47000,ktoe
@@ -18,19 +18,25 @@ GB,2000,Supply,Transformation processes,E.ktoe,final,Gas wells & proc.,NG,-43000
 GB,2000,Supply,Transformation processes,E.ktoe,final,NG dist.,NG - Wells,-41000,ktoe
 GB,2000,Supply,Transformation processes,E.ktoe,final,Power plants,NG - Dist.,-16000,ktoe
 GB,2000,Supply,Transformation processes,E.ktoe,final,Diesel dist.,Diesel,-15500,ktoe
-GB,2000,Supply,Energy industry own use,E.ktoe,final,Gas wells & proc.,Diesel - Dist.,-50,ktoe
-GB,2000,Supply,Energy industry own use,E.ktoe,final,Oil fields,Diesel - Dist.,-50,ktoe
-GB,2000,Supply,Energy industry own use,E.ktoe,final,Crude dist.,Diesel - Dist.,-25,ktoe
-GB,2000,Supply,Energy industry own use,E.ktoe,final,NG dist.,Diesel - Dist.,-25,ktoe
-GB,2000,Supply,Energy industry own use,E.ktoe,final,Petrol dist.,Diesel - Dist.,-250,ktoe
 GB,2000,Supply,Transformation processes,E.ktoe,final,Elect. grid,Elect,-6400,ktoe
+GB,2000,Supply,Transformation processes,E.ktoe,final,Petrol dist.,Petrol,-26500,ktoe
 GB,2000,Supply,Energy industry own use,E.ktoe,final,Gas wells & proc.,Elect - Grid,-25,ktoe
 GB,2000,Supply,Energy industry own use,E.ktoe,final,Oil fields,Elect - Grid,-25,ktoe
 GB,2000,Supply,Energy industry own use,E.ktoe,final,Crude dist.,Elect - Grid,-25,ktoe
 GB,2000,Supply,Energy industry own use,E.ktoe,final,NG dist.,Elect - Grid,-25,ktoe
 GB,2000,Supply,Energy industry own use,E.ktoe,final,Oil refineries,Elect - Grid,-75,ktoe
 GB,2000,Supply,Energy industry own use,E.ktoe,final,Power plants,Elect - Grid,-100,ktoe
-GB,2000,Supply,Transformation processes,E.ktoe,final,Petrol dist.,Petrol,-26500,ktoe
+GB,2000,Supply,Energy industry own use,E.ktoe,final,Oil refineries,Diesel,-5000,ktoe
+GB,2000,Supply,Energy industry own use,E.ktoe,final,Crude dist.,Crude - Dist.,-500,ktoe
+GB,2000,Supply,Energy industry own use,E.ktoe,final,Gas wells & proc.,Diesel - Dist.,-50,ktoe
+GB,2000,Supply,Energy industry own use,E.ktoe,final,Oil fields,Diesel - Dist.,-50,ktoe
+GB,2000,Supply,Energy industry own use,E.ktoe,final,Crude dist.,Diesel - Dist.,-25,ktoe
+GB,2000,Supply,Energy industry own use,E.ktoe,final,NG dist.,Diesel - Dist.,-25,ktoe
+GB,2000,Supply,Energy industry own use,E.ktoe,final,Petrol dist.,Diesel - Dist.,-250,ktoe
+GB,2000,Supply,Energy industry own use,E.ktoe,final,Gas wells & proc.,NG - Wells,-2000,ktoe
+GB,2000,Supply,Energy industry own use,E.ktoe,final,Oil fields,Crude - Fields,-2500,ktoe
+GB,2000,Supply,Energy industry own use,E.ktoe,final,Diesel dist.,Diesel - Dist.,-350,ktoe
+GB,2000,Supply,Energy industry own use,E.ktoe,final,Petrol dist.,Petrol - Dist.,-500,ktoe
 GB,2000,Consumption,Residential,E.ktoe,final,Residential,NG - Dist.,25000,ktoe
 GB,2000,Consumption,Transport,E.ktoe,final,Transport,Diesel - Dist.,14750,ktoe
 GB,2000,Consumption,Residential,E.ktoe,final,Residential,Elect - Grid,6000,ktoe
@@ -45,7 +51,7 @@ GB,2000,Supply,Transformation processes,E.ktoe,useful,Oil refineries,Diesel,1550
 GB,2000,Supply,Transformation processes,E.ktoe,useful,Oil refineries,Petrol,26500,ktoe
 GB,2000,Supply,Transformation processes,E.ktoe,useful,Power plants,Elect,6400,ktoe
 GB,2000,Supply,Transformation processes,E.ktoe,useful,Elect. grid,Elect - Grid,6275,ktoe
-GB,2000,Supply,Transformation processes,E.ktoe,useful,Diesel dist.,Diesel - Dist.,15150,ktoe
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Diesel dist.,Diesel - Dist.,15500,ktoe
 GB,2000,Supply,Transformation processes,E.ktoe,useful,Petrol dist.,Petrol - Dist.,26000,ktoe
 GB,2000,Supply,Transformation processes,E.ktoe,useful,Car engines,MD - Car engines,3000.4,ktoe
 GB,2000,Supply,Transformation processes,E.ktoe,useful,Furnaces,LTH,20000,ktoe
@@ -90,7 +96,7 @@ GB,2000,Supply,Transformation processes,E.ktoe,services,Oil refineries,Diesel,15
 GB,2000,Supply,Transformation processes,E.ktoe,services,Oil refineries,Petrol,26500,ktoe
 GB,2000,Supply,Transformation processes,E.ktoe,services,Power plants,Elect,6400,ktoe
 GB,2000,Supply,Transformation processes,E.ktoe,services,Elect. grid,Elect - Grid,6275,ktoe
-GB,2000,Supply,Transformation processes,E.ktoe,services,Diesel dist.,Diesel - Dist.,15150,ktoe
+GB,2000,Supply,Transformation processes,E.ktoe,services,Diesel dist.,Diesel - Dist.,15500,ktoe
 GB,2000,Supply,Transformation processes,E.ktoe,services,Petrol dist.,Petrol - Dist.,26000,ktoe
 GB,2000,Supply,Transformation processes,E.ktoe,services,Car engines,MD - Car engines,3000.4,ktoe
 GB,2000,Supply,Transformation processes,E.ktoe,services,Furnaces,LTH,20000,ktoe
