@@ -51,7 +51,7 @@ GB,2000,Supply,Transformation processes,E.ktoe,useful,Oil refineries,Diesel,1550
 GB,2000,Supply,Transformation processes,E.ktoe,useful,Oil refineries,Petrol,26500,ktoe
 GB,2000,Supply,Transformation processes,E.ktoe,useful,Power plants,Elect,6400,ktoe
 GB,2000,Supply,Transformation processes,E.ktoe,useful,Elect. grid,Elect - Grid,6275,ktoe
-GB,2000,Supply,Transformation processes,E.ktoe,useful,Diesel dist.,Diesel - Dist.,15500,ktoe
+GB,2000,Supply,Transformation processes,E.ktoe,useful,Diesel dist.,Diesel - Dist.,15150,ktoe
 GB,2000,Supply,Transformation processes,E.ktoe,useful,Petrol dist.,Petrol - Dist.,26000,ktoe
 GB,2000,Supply,Transformation processes,E.ktoe,useful,Car engines,MD - Car engines,3000.4,ktoe
 GB,2000,Supply,Transformation processes,E.ktoe,useful,Furnaces,LTH,20000,ktoe
@@ -96,7 +96,7 @@ GB,2000,Supply,Transformation processes,E.ktoe,services,Oil refineries,Diesel,15
 GB,2000,Supply,Transformation processes,E.ktoe,services,Oil refineries,Petrol,26500,ktoe
 GB,2000,Supply,Transformation processes,E.ktoe,services,Power plants,Elect,6400,ktoe
 GB,2000,Supply,Transformation processes,E.ktoe,services,Elect. grid,Elect - Grid,6275,ktoe
-GB,2000,Supply,Transformation processes,E.ktoe,services,Diesel dist.,Diesel - Dist.,15500,ktoe
+GB,2000,Supply,Transformation processes,E.ktoe,services,Diesel dist.,Diesel - Dist.,15150,ktoe
 GB,2000,Supply,Transformation processes,E.ktoe,services,Petrol dist.,Petrol - Dist.,26000,ktoe
 GB,2000,Supply,Transformation processes,E.ktoe,services,Car engines,MD - Car engines,3000.4,ktoe
 GB,2000,Supply,Transformation processes,E.ktoe,services,Furnaces,LTH,20000,ktoe
