@@ -15,9 +15,6 @@
 #' @param keep_cols a vector of names of columns of \code{.sutdata} to return with the output
 #' @param U_prime_colname the name of the output column that contains new Use (\code{U}) matrices.
 #' @param V_prime_colname the name of the output column that contains new Make (\code{V}) matrices.
-#' @param y_prime_colname the name of the column containing y_prime vectors
-#' @param g_prime_colname the name of the column containing g_prime vectors
-#' @param q_prime_colname the name of the column containing q_prime vectors
 #'
 #' @return a data frame containing columns specified in \code{keep_cols},
 #' \code{U_colname} and \code{V_colname}.
@@ -32,45 +29,35 @@ reconstruct_UV <- function(.sutdata,
                            Z_colname = "Z", D_colname = "D",
                            # Output columns
                            keep_cols = NULL,
-                           U_prime_colname = "U_prime", V_prime_colname = "V_prime",
-                           # Names for columns of intermediate results
-                           y_prime_colname = ".yprime", g_prime_colname = ".gprime", q_prime_colname = ".qprime"){
+                           U_prime_colname = "U_prime", V_prime_colname = "V_prime"){
+  # Establish names for input columns
+  Y_prime <- as.name(Y_prime_colname)
+  L_ixp <- as.name(L_ixp_colname)
+  L_pxp <- as.name(L_pxp_colname)
+  Z <- as.name(Z_colname)
+  D <- as.name(D_colname)
+  # Establish names for temporary columns
+  y_prime_colname <- ".y_prime"
+  y_prime <- as.name(y_prime_colname)
+  g_prime_colname <- ".g_prime"
+  g_prime <- as.name(g_prime_colname)
+  q_prime_colname <- ".q_prime"
+  q_prime <- as.name(q_prime_colname)
+  # Establish names for output columns
+  U_prime <- as.name(U_prime_colname)
+  V_prime <- as.name(V_prime_colname)
+
+  # Ensure that we won't overwrite a column.
+  verify_cols_missing(.sutdata, c(y_prime, g_prime, q_prime, U_prime, V_prime))
+
   .sutdata %>%
     select_(.dots = c(intersect(keep_cols, names(.)), Y_prime_colname, L_ixp_colname, L_pxp_colname, Z_colname, D_colname)) %>%
-    mutate_(
-      .dots = list(
-        # .yprime = rowsums(Y_prime)
-        interp(~ rowsums_byname(ycol),
-               ycol = as.name(Y_prime_colname))
-      ) %>%
-        setNames(c(y_prime_colname))
-    ) %>%
-    mutate_(
-      .dots = list(
-        # .gprime = L_xixp * .yprime
-        interp(~ matrixproduct_byname(Lipcol, yprimecol),
-               Lipcol = as.name(L_ixp_colname),
-               yprimecol = as.name(y_prime_colname)),
-        # .qprime = L_pxp * .yprime
-        interp(~ matrixproduct_byname(Lppcol, yprimecol),
-               Lppcol = as.name(L_pxp_colname),
-               yprimecol = as.name(y_prime_colname))
-      ) %>%
-        setNames(c(g_prime_colname, q_prime_colname))
-    ) %>%
-    mutate_(
-      # Calculate U and V
-      .dots = list(
-        # U_prime = Z * g_prime_hat
-        interp(~ matrixproduct_byname(zcol, g_primecol %>% hatize_byname()),
-               zcol = as.name(Z_colname),
-               g_primecol = as.name(g_prime_colname)),
-        # V_prime = D * q_prime_hat
-        interp(~ matrixproduct_byname(dcol, q_primecol %>% hatize_byname()),
-               dcol = as.name(D_colname),
-               q_primecol = as.name(q_prime_colname))
-      ) %>%
-        setNames(c(U_prime_colname, V_prime_colname))
+    mutate(
+      !!y_prime := rowsums_byname(!!Y_prime),
+      !!g_prime := matrixproduct_byname(!!L_ixp, !!y_prime),
+      !!q_prime := matrixproduct_byname(!!L_pxp, !!y_prime),
+      !!U_prime := matrixproduct_byname(!!Z, hatize_byname(!!g_prime)),
+      !!V_prime := matrixproduct_byname(!!D, hatize_byname(!!q_prime))
     ) %>%
     select_(.dots = c(intersect(keep_cols, names(.)), U_prime_colname, V_prime_colname))
 }

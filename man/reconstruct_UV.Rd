@@ -7,8 +7,7 @@
 reconstruct_UV(.sutdata, Y_prime_colname = "Y_prime",
   L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp", Z_colname = "Z",
   D_colname = "D", keep_cols = NULL, U_prime_colname = "U_prime",
-  V_prime_colname = "V_prime", y_prime_colname = ".yprime",
-  g_prime_colname = ".gprime", q_prime_colname = ".qprime")
+  V_prime_colname = "V_prime")
 }
 \arguments{
 \item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
@@ -29,12 +28,6 @@ that will be used to reconstruct the economy}
 \item{U_prime_colname}{the name of the output column that contains new Use (\code{U}) matrices.}
 
 \item{V_prime_colname}{the name of the output column that contains new Make (\code{V}) matrices.}
-
-\item{y_prime_colname}{the name of the column containing y_prime vectors}
-
-\item{g_prime_colname}{the name of the column containing g_prime vectors}
-
-\item{q_prime_colname}{the name of the column containing q_prime vectors}
 }
 \value{
 a data frame containing columns specified in \code{keep_cols},
