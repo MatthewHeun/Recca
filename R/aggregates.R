@@ -159,7 +159,9 @@ finaldemand_aggregates <- function(.sutdata,
       !!U_EIOU := elementproduct_byname(!!r_EIOU, !!U),
       !!net := !!Y %>% select_cols_byname(retain_pattern = make_pattern(row_col_names = fd_sectors, pattern_type = "leading")) %>% agg_func(),
       !!gross := sum_byname(!!net, agg_func(!!U_EIOU))
-    )
+    ) %>%
+    # Eliminate temporary columns
+    select(-(!!U_EIOU))
 
   # Do some cleanup.
 
@@ -180,10 +182,7 @@ finaldemand_aggregates <- function(.sutdata,
         !!gross := transpose_byname(!!gross)
       )
   }
-
-  # Eliminate temporary columns
-  Out %>%
-    select(-(!!U_EIOU))
+  return(Out)
 }
 
 #' Final demand aggregate energy with units
