@@ -191,6 +191,8 @@ calc_yqgW <- function(.sutdata,
 #'
 #' @return a data frame containing columns specified in \code{keep_cols},
 #' \code{Z_colname}, \code{D_colname}, and \code{A_colname}.
+#'
+#' @export
 calc_A <- function(.sutdata,
                    # Input columns
                    U_colname = "U", V_colname = "V",
@@ -243,6 +245,8 @@ calc_A <- function(.sutdata,
 #'
 #' @return a data frame containing columns specified in \code{keep_cols},
 #' \code{L_ixp_colname}, and \code{L_pxp_colname}.
+#'
+#' @export
 calc_L <- function(.sutdata,
                    # Input columns
                    D_colname = "D", A_colname = "A",

@@ -5,6 +5,7 @@
 library(magrittr)
 library(dplyr)
 library(tidyr)
+library(matsbyname)
 library(matsindf)
 library(devtools)
 
@@ -12,34 +13,26 @@ library(devtools)
 # Pull in functions to assist with cleaning the data
 source(file.path("data-raw", "data_prep_utilities.R"))
 
-# Load S_unit matrix
-S_units_temp <- read.csv(system.file("extdata", "UKEnergy2000raw", "S_units_tidy.csv",
-                                     package = "Recca", mustWork = TRUE),
-                         stringsAsFactors = FALSE) %>%
-  collapse_to_matrices(matnames = "matname", values = "value",
-                       rownames = "rowname", colnames = "colname",
-                       rowtypes = "rowtype", coltypes = "coltype")
-S_units <- S_units_temp$value[[1]]
-rm(S_units_temp)
-
 # Load the raw data from the .csv file
 UKEnergy2000tidy <- read.csv(system.file("extdata", "UKEnergy2000raw", "UKEnergy2000raw.csv",
                                          package = "Recca", mustWork = TRUE),
                              stringsAsFactors = FALSE)
+
 use_data(UKEnergy2000tidy, overwrite = TRUE)
 
-# Add metadata columns
+# Create S_units matrices from the UKEnergy2000tidy data frame
+S_units <- UKEnergy2000tidy %>%
+  group_by(Country, Year, Energy.type, Last.stage) %>%
+  S_units_from_tidy()
+
 UKEnergy2000mats <- UKEnergy2000tidy %>%
   # Add a column indicating the matrix in which this entry belongs (U, V, or Y).
   add_UKEnergy2000_matnames() %>%
-  # Add columns for row names, column names, row types, and column types.
+  # Add metadata columns for row names, column names, row types, and column types.
   add_UKEnergy2000_row_col_meta() %>%
+  # Eliminate columns we no longer need
+  select(-Ledger.side, -Flow.aggregation.point, -Flow, -Product) %>%
   mutate(
-    # Eliminate columns we no longer need
-    Ledger.side = NULL,
-    Flow.aggregation.point = NULL,
-    Flow = NULL,
-    Product = NULL,
     # Ensure that all energy values are positive, as required for analysis.
     EX.ktoe = abs(EX.ktoe)
   ) %>%
@@ -56,10 +49,10 @@ UKEnergy2000mats <- UKEnergy2000tidy %>%
     # Create full U matrix
     U = sum_byname(U, U_EIOU),
     r_EIOU = elementquotient_byname(U_EIOU, U),
-    r_EIOU = replaceNaNWith0(r_EIOU),
-    # Add unit information
-    S_units = make_list(S_units, 4)
+    r_EIOU = replaceNaN_byname(r_EIOU, val = 0)
   ) %>%
-  select(-U_EIOU)
+  select(-U_EIOU) %>%
+  # Add S_units matrices
+  left_join(S_units, by = c("Country", "Year", "Energy.type", "Last.stage"))
 
 use_data(UKEnergy2000mats, overwrite = TRUE)

@@ -36,40 +36,27 @@ verify_SUT_energy_balance <- function(.sutdata,
                                       # Input column names
                                       U_colname = "U", V_colname = "V", Y_colname = "Y",
                                       # Tolerance
-                                      tol = 1e-6,
-                                      # Intermediate results column names
-                                      V_sums_colname = ".V_sums",
-                                      U_sums_colname = ".U_sums",
-                                      Y_sums_colname = ".Y_sums",
-                                      err_colname = "err"){
-  EnergyCheck <- .sutdata %>%
-    mutate_(
-      .dots = list(
-        # V_sums = rowsums(V^T)
-        interp(~ vcol %>% transpose_byname() %>% rowsums_byname(),
-               vcol = as.name(V_colname)),
-        # U_sums = rowsums(U)
-        interp(~ ucol %>% rowsums_byname(),
-               ucol = as.name(U_colname)),
-        # Y_sums = rowsums(Y)
-        interp(~ ycol %>% rowsums_byname(),
-               ycol = as.name(Y_colname))
-      ) %>%
-        setNames(c(V_sums_colname, U_sums_colname, Y_sums_colname))
-    ) %>%
-    mutate_(
-      .dots = list(
-        # V^T*i - U*i - Y*i should be the zero vector
-        interp(~ vsums %>% difference_byname(usums) %>% difference_byname(ysums),
-               vsums = as.name(V_sums_colname),
-               usums = as.name(U_sums_colname),
-               ysums = as.name(Y_sums_colname)
-        )
-      ) %>%
-        setNames(c(err_colname))
-    )
+                                      tol = 1e-6){
+  # Make names
+  U <- as.name(U_colname)
+  V <- as.name(V_colname)
+  Y <- as.name(Y_colname)
+  # Establish temporary column names
+  V_sums <- as.name(".V_sums")
+  U_sums <- as.name(".U_sums")
+  Y_sums <- as.name(".Y_sums")
+  err <- as.name(".err")
 
-  if (!all(EnergyCheck$err %>% iszero_byname(tol) %>% as.logical())) {
+  verify_cols_missing(.sutdata, c(V_sums, U_sums, Y_sums, err))
+
+  EnergyCheck <- .sutdata %>%
+    mutate(
+      !!V_sums := transpose_byname(!!V) %>% rowsums_byname(),
+      !!U_sums := rowsums_byname(!!U),
+      !!Y_sums := rowsums_byname(!!Y),
+      !!err := difference_byname(!!V_sums, !!U_sums) %>% difference_byname(!!Y_sums)
+    )
+  if (!all(EnergyCheck[[err]] %>% iszero_byname(tol) %>% as.logical())) {
     # Print an error message containing rows of EnergyCheck that cause the failure
     print("Energy balance not obtained in verify_SUT_energy_balance")
     print("err should be zero.")
@@ -88,8 +75,7 @@ verify_SUT_energy_balance <- function(.sutdata,
       select(-matnames, -col, -rowtype, -coltype) %>%
       rename(err.ktoe = matrix.values) %>%
       filter(abs(err.ktoe) >= tol) %>%
-      print
-
+      print()
     stop()
   }
 
@@ -129,23 +115,25 @@ verify_SUT_energy_balance <- function(.sutdata,
 #' @examples
 #' verify_SUT_energy_balance_with_units(UKEnergy2000mats)
 verify_SUT_energy_balance_with_units <- function(.sutdata,
-                                      # Input column names
-                                      U = "U", V = "V", Y = "Y", S_units = "S_units",
-                                      # Tolerance
-                                      tol = 1e-6){
+                                                 # Input column names
+                                                 U = "U", V = "V", Y = "Y", S_units = "S_units",
+                                                 # Tolerance
+                                                 tol = 1e-6){
   # Input columns
   U <- as.name(U)
   V <- as.name(V)
   Y <- as.name(Y)
   S_units <- as.name(S_units)
-  # Intermediate column names
-  W <- as.name(".W")
-  V_bar <- as.name(".V_bar")
-  U_bar <- as.name(".U_bar")
-  W_bar <- as.name(".W_bar")
+  # Intermediate columns
   y <- as.name(".y")
+  W <- as.name(".W")
+  U_bar <- as.name(".U_bar")
+  V_bar <- as.name(".V_bar")
+  W_bar <- as.name(".W_bar")
   err_prod <- as.name(".err_prod")
   err_ind <- as.name(".err_ind")
+
+  verify_cols_missing(.sutdata, c(W, V_bar, U_bar, W_bar, y, err_prod, err_ind))
 
   EnergyCheck <- .sutdata %>%
     mutate(
@@ -210,42 +198,32 @@ verify_SUT_energy_balance_with_units <- function(.sutdata,
 #' @export
 #'
 #' @examples
-#' verify_SUT_industry_production(SUTMatsWne)
+#' verify_SUT_industry_production(UKEnergy2000mats)
 verify_SUT_industry_production <- function(.sutdata,
                                            # Input column names
-                                           U_colname = "U", V_colname = "V",
-                                           # Output column name
-                                           industry_production_OK_colname = "industry production OK",
-                                           # Intermediate results column names
-                                           check_colname = ".check",
-                                           problems_data_frame_name = "Problems"){
+                                           U_colname = "U", V_colname = "V"){
+  # Establish names
+  U <- as.name(U_colname)
+  V <- as.name(V_colname)
+  # Establish intermediate column names
+  check <- as.name(".check")
+  OK <- as.name(".industry_production_OK")
+
+  verify_cols_missing(.sutdata, c(OK, check))
+
   IndustryCheck <- .sutdata %>%
-    mutate_(
-      .dots = list(
-        # .check = V * i completed on rows against U^T
-        interp(~ vcol %>% rowsums_byname() %>% complete_rows_cols(mat = transpose_byname(ucol), margin = 1),
-               vcol = as.name(V_colname),
-               ucol = as.name(U_colname))
-      ) %>%
-        setNames(c(check_colname))
-    ) %>%
-    mutate_(
-      .dots = list(
-        interp(~ mclapply(.$checkcol, FUN = function(v){
-          # v is one of the vectors in the .check column of IndustryCheck
-          # If any of the elements in the v vector is zero, we have encountered an error.
-          !any(v == 0)
-        }),
-        checkcol = as.name(check_colname)
-        )
-      ) %>%
-        setNames(industry_production_OK_colname)
+    mutate(
+      !!check := rowsums_byname(!!V) %>% complete_rows_cols(mat = transpose_byname(!!U), margin = 1),
+      !!OK := lapply(!!check, FUN = function(v){
+        # v is one of the vectors in the .check column of IndustryCheck
+        # If any of the elements in the v vector is zero, we have encountered an error.
+        !any(v == 0)
+      })
     )
-  if (!(all(IndustryCheck[[industry_production_OK_colname]] %>% as.logical))) {
+
+  if (!(all(IndustryCheck[[OK]] %>% as.logical))) {
     # We have a problem.
-    assign(problems_data_frame_name, IndustryCheck, envir = globalenv())
-    stop(paste("There are some industries that consume but do not produce energy.",
-               "Check the Problems data frame for details."))
+    stop("There are some industries that consume but do not produce energy.")
   }
   invisible(NULL)
 }
