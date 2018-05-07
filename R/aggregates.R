@@ -134,7 +134,7 @@ finaldemand_aggregates <- function(.sutdata,
   by <- match.arg(by)
 
   # Decide which aggregation function to use
-  aggfuncs <- list(Total = "sumall_byname", Product = "rowsums_byname", Flow = "colsums_byname")
+  aggfuncs <- list(Total = "sumall_byname", Product = "rowsums_byname", Sector = "colsums_byname")
   agg_func <- match.fun(aggfuncs[[by]])
 
   # Establish names
