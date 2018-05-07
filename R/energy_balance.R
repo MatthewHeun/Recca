@@ -41,7 +41,7 @@ verify_SUT_energy_balance <- function(.sutdata,
   U <- as.name(U_colname)
   V <- as.name(V_colname)
   Y <- as.name(Y_colname)
-  # Establish intermediate column names
+  # Establish temporary column names
   V_sums <- as.name(".V_sums")
   U_sums <- as.name(".U_sums")
   Y_sums <- as.name(".Y_sums")

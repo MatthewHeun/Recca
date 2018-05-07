@@ -61,8 +61,6 @@ test_that("calculating IO matrices works as expected", {
                                "U", "V", "Y", "r_EIOU", "S_units"))
   expect_known_value(io_mats, file.path(expec_path, "expected_iomats.rds"), update = FALSE)
 
-
-
   if (is_testing()) {
     # Restore the previous working directory.
     setwd(currwd)
