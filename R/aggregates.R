@@ -142,14 +142,18 @@ finaldemand_aggregates <- function(.sutdata,
   V <- as.name(V_colname)
   Y <- as.name(Y_colname)
   r_EIOU <- as.name(r_EIOU_colname)
-  net <- as.name(net_aggregate_demand_colname)
-  gross <- as.name(gross_aggregate_demand_colname)
   # Intermediate column names
   U_EIOU <- as.name(".U_EIOU")
+  # Output columns
+  net <- as.name(net_aggregate_demand_colname)
+  gross <- as.name(gross_aggregate_demand_colname)
+
+  # Ensure that we won't overwrite a column.
+  verify_cols_missing(.sutdata, c(net, gross, U_EIOU))
 
   Out <- .sutdata %>%
     # Select only relevant columns
-    select_(.dots = c(intersect(keep_cols, names(.)), U_colname, V_colname, Y_colname, r_EIOU_colname)) %>%
+    # select_(.dots = c(intersect(keep_cols, names(.)), U_colname, V_colname, Y_colname, r_EIOU_colname)) %>%
     mutate(
       # And add EIOU information to the data frame.
       !!U_EIOU := elementproduct_byname(!!r_EIOU, !!U),
@@ -177,9 +181,9 @@ finaldemand_aggregates <- function(.sutdata,
       )
   }
 
-  # Select desired columns only and return.
+  # Eliminate temporary columns
   Out %>%
-    select_(.dots = c(intersect(keep_cols, names(.)), net_aggregate_demand_colname, gross_aggregate_demand_colname))
+    select(-(!!U_EIOU))
 }
 
 #' Final demand aggregate energy with units
@@ -221,17 +225,21 @@ finaldemand_aggregates_with_units <- function(.sutdata,
 
   by <- match.arg(by)
 
-  # Establish names for columns
+  # Establish names for input columns
   U <- as.name(U)
   Y <- as.name(Y)
   r_EIOU <- as.name(r_EIOU)
   S_units <- as.name(S_units)
   # Establish names for intermediate columns
   U_EIOU <- as.name(".U_EIOU")
-  net <- as.name(net_aggregate_demand_colname)
-  gross <- as.name(gross_aggregate_demand_colname)
   U_EIOU_bar <- as.name(".U_EIOU_bar")
   U_bar <- as.name(".U_bar")
+  # Establish names for output columns
+  net <- as.name(net_aggregate_demand_colname)
+  gross <- as.name(gross_aggregate_demand_colname)
+
+  # Ensure that we won't overwrite a column.
+  verify_cols_missing(.sutdata, c(net, gross, U_EIOU, U_EIOU_bar, U_bar))
 
   if (by == "Product") {
     Out <- .sutdata %>%
@@ -239,7 +247,9 @@ finaldemand_aggregates_with_units <- function(.sutdata,
         !!U_EIOU := elementproduct_byname(!!r_EIOU, !!U),
         !!net := rowsums_byname(!!Y),
         !!gross := sum_byname(rowsums_byname(!!U_EIOU), !!net)
-      )
+      ) %>%
+      # Eliminate temporary column
+      select(-(!!U_EIOU))
   } else {
     # by is "Total" or "Sector".
     Out <- .sutdata %>%
