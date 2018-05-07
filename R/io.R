@@ -46,23 +46,19 @@ calc_io_mats <- function(.sutdata,
                          y_colname = "y", q_colname = "q", g_colname = "g", W_colname = "W",
                          Z_colname = "Z", D_colname = "D", C_colname = "C", A_colname = "A",
                          L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp"){
+  # Establish names
+  U <- as.name(U_colname)
+  V <- as.name(V_colname)
+  Y <- as.name(Y_colname)
+
   .sutdata %>%
     # Clean the matrices in the columns.
     # This step avoids situations where rows or columns of zeroes
     # cause a _hat_inv step to fail due to inverting a matrix with a row or column of zeroes.
-    mutate_(
-      .dots = list(
-        # U = clean_byname(U)
-        interp(~ clean_byname(ucol, margin = c(1,2), clean_value = 0),
-               ucol = as.name(U_colname)),
-        # V = clean_byname(V)
-        interp(~ clean_byname(vcol, margin = c(1,2), clean_value = 0),
-               vcol = as.name(V_colname)),
-        # Y = clean_byname(Y)
-        interp(~ clean_byname(ycol, margin = c(1,2), clean_value = 0),
-               ycol = as.name(Y_colname))
-      ) %>%
-        setNames(c(U_colname, V_colname, Y_colname))
+    mutate(
+      !!U := clean_byname(!!U, margin = c(1,2), clean_value = 0),
+      !!V := clean_byname(!!V, margin = c(1,2), clean_value = 0),
+      !!Y := clean_byname(!!Y, margin = c(1,2), clean_value = 0)
     ) %>%
     calc_yqgW(U_colname = U_colname, V_colname = V_colname, Y_colname = Y_colname, W_colname = W_colname,
               keep_cols = c(keep_cols, U_colname, V_colname),
@@ -104,12 +100,28 @@ calc_yqgW <- function(.sutdata,
                       # Output columns
                       keep_cols = NULL,
                       y_colname = "y", q_colname = "q", g_colname = "g", W_colname = "W"){
+  # Establish input column names
+  U <- as.name(U_colname)
   V <- as.name(V_colname)
+  Y <- as.name(Y_colname)
+  S_units <- as.name(S_units)
+
+  # Establish temporary column names
   V_bar_colname <- ".V_bar"
   V_bar <- as.name(V_bar_colname)
-  S_units <- as.name(S_units)
   V_bar_check_colname <- ".V_bar_check"
   V_bar_check <- as.name(V_bar_check_colname)
+
+  # Establish output column names
+  y <- as.name(y_colname)
+  q <- as.name(q_colname)
+  g <- as.name(g_colname)
+  W <- as.name(W_colname)
+
+  # Ensure that we won't overwrite a column.
+  verify_cols_missing(.sutdata, c(V_bar, V_bar_check, y, q, g, W))
+
+
 
 
 
@@ -140,34 +152,11 @@ calc_yqgW <- function(.sutdata,
   # we can proceed with calculating y, q, g, and W.
   .sutdata %>%
     select_(.dots = c(intersect(keep_cols, names(.)), U_colname, V_colname, Y_colname)) %>%
-    mutate_(
-      .dots = list(
-        # .g = rowsums(V)
-        interp(~ rowsums_byname(vcol),
-               vcol = as.name(V_colname)),
-        # .y = rowsums(Y)
-        interp(~ rowsums_byname(vcol),
-               vcol = as.name(Y_colname))
-      ) %>%
-        setNames(c(g_colname, y_colname))
-    ) %>%
-    mutate_(
-      .dots = list(
-        # .q = rowsums(U) + y
-        interp(~ sum_byname(rowsums_byname(ucol), ycol),
-               ucol = as.name(U_colname),
-               ycol = as.name(y_colname))
-      ) %>%
-        setNames(c(q_colname))
-    ) %>%
-    mutate_(
-      .dots = list(
-        # W = transpose(V) - U
-        interp(~ difference_byname(transpose_byname(vcol), ucol),
-               ucol = as.name(U_colname),
-               vcol = as.name(V_colname))
-      ) %>%
-        setNames(c(W_colname))
+    mutate(
+      !!y := rowsums_byname(!!Y),
+      !!q := sum_byname(rowsums_byname(!!U), !!y),
+      !!g := rowsums_byname(!!V),
+      !!W := difference_byname(transpose_byname(!!V), !!U)
     ) %>%
     select_(.dots = c(intersect(keep_cols, names(.)), g_colname, y_colname, q_colname, W_colname))
 }
@@ -200,33 +189,26 @@ calc_A <- function(.sutdata,
                    # Output columns
                    keep_cols = NULL,
                    Z_colname = "Z", D_colname = "D", C_colname = "C", A_colname = "A"){
+  # Establish names of input columns
+  U <- as.name(U_colname)
+  V <- as.name(V_colname)
+  q <- as.name(q_colname)
+  g <- as.name(g_colname)
+  # Establish names of output columns
+  Z <- as.name(Z_colname)
+  D <- as.name(D_colname)
+  C <- as.name(C_colname)
+  A <- as.name(A_colname)
+  # Ensure that we won't overwrite a column.
+  verify_cols_missing(.sutdata, c(Z, D, C, A))
+
   .sutdata %>%
     select_(.dots = c(intersect(keep_cols, names(.)), U_colname, V_colname, q_colname, g_colname)) %>%
-    mutate_(
-      .dots = list(
-        # Z = U * g_hat_inv
-        interp(~ matrixproduct_byname(ucol, gcol %>% hatize_byname %>% invert_byname()),
-               ucol = as.name(U_colname),
-               gcol = as.name(g_colname)),
-        # D = V * q_hat_inv
-        interp(~ matrixproduct_byname(vcol, qcol %>% hatize_byname %>% invert_byname()),
-               vcol = as.name(V_colname),
-               qcol = as.name(q_colname)),
-        # C = transpose(V) * g_hat_inv
-        interp(~ matrixproduct_byname(transpose_byname(vcol), gcol %>% hatize_byname %>% invert_byname()),
-               vcol = as.name(V_colname),
-               gcol = as.name(g_colname))
-      ) %>%
-        setNames(c(Z_colname, D_colname, C_colname))
-    ) %>%
-    mutate_(
-      .dots = list(
-        # A = Z*D
-        interp(~ matrixproduct_byname(zcol, dcol),
-               zcol = as.name(Z_colname),
-               dcol = as.name(D_colname))
-      ) %>%
-        setNames(A_colname)
+    mutate(
+      !!Z := matrixproduct_byname(!!U, hatize_byname(!!g) %>% invert_byname()),
+      !!D := matrixproduct_byname(!!V, hatize_byname(!!q) %>% invert_byname()),
+      !!C := matrixproduct_byname(transpose_byname(!!V), hatize_byname(!!g) %>% invert_byname()),
+      !!A := matrixproduct_byname(!!Z, !!D)
     ) %>%
     select_(.dots = c(intersect(keep_cols, names(.)), Z_colname, C_colname, D_colname, A_colname))
 }
