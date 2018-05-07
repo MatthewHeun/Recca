@@ -235,24 +235,20 @@ calc_L <- function(.sutdata,
                    # Output columns
                    keep_cols = NULL,
                    L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp"){
+  # Establish input column names
+  D <- as.name(D_colname)
+  A <- as.name(A_colname)
+  # Establish output column names
+  L_ixp <- as.name(L_ixp_colname)
+  L_pxp <- as.name(L_pxp_colname)
+  # Ensure that we won't overwrite a column.
+  verify_cols_missing(.sutdata, c(L_ixp, L_pxp))
+
   .sutdata %>%
     select_(.dots = c(intersect(keep_cols, names(.)), D_colname, A_colname)) %>%
-    mutate_(
-      .dots = list(
-        # L_pxp = (I - A)^-1
-        interp(~ Iminus_byname(bdcol) %>% invert_byname(),
-               bdcol = as.name(A_colname))
-      ) %>%
-        setNames(c(L_pxp_colname))
-    ) %>%
-    mutate_(
-      .dots = list(
-        # L_ixp = D * L_pxp
-        interp(~ matrixproduct_byname(dcol, ppcol),
-               dcol = as.name(D_colname),
-               ppcol = as.name(L_pxp_colname))
-      ) %>%
-        setNames(c(L_ixp_colname))
+    mutate(
+      !!L_pxp := Iminus_byname(!!A) %>% invert_byname(),
+      !!L_ixp := matrixproduct_byname(!!D, !!L_pxp)
     ) %>%
     select_(.dots = c(intersect(keep_cols, names(.)), L_pxp_colname, L_ixp_colname))
 }
