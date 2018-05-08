@@ -28,7 +28,7 @@ reconstruct_UV <- function(.sutdata,
                            Y_prime_colname = "Y_prime", L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp",
                            Z_colname = "Z", D_colname = "D",
                            # Output columns
-                           keep_cols = NULL,
+                           # keep_cols = NULL,
                            U_prime_colname = "U_prime", V_prime_colname = "V_prime"){
   # Establish names for input columns
   Y_prime <- as.name(Y_prime_colname)
@@ -51,7 +51,7 @@ reconstruct_UV <- function(.sutdata,
   verify_cols_missing(.sutdata, c(y_prime, g_prime, q_prime, U_prime, V_prime))
 
   .sutdata %>%
-    select_(.dots = c(intersect(keep_cols, names(.)), Y_prime_colname, L_ixp_colname, L_pxp_colname, Z_colname, D_colname)) %>%
+    # select_(.dots = c(intersect(keep_cols, names(.)), Y_prime_colname, L_ixp_colname, L_pxp_colname, Z_colname, D_colname)) %>%
     mutate(
       !!y_prime := rowsums_byname(!!Y_prime),
       !!g_prime := matrixproduct_byname(!!L_ixp, !!y_prime),
@@ -59,5 +59,8 @@ reconstruct_UV <- function(.sutdata,
       !!U_prime := matrixproduct_byname(!!Z, hatize_byname(!!g_prime)),
       !!V_prime := matrixproduct_byname(!!D, hatize_byname(!!q_prime))
     ) %>%
-    select_(.dots = c(intersect(keep_cols, names(.)), U_prime_colname, V_prime_colname))
+    # Delete temporary columns
+    select(-(!!y_prime), -(!!g_prime), -(!!q_prime))
+    # %>%
+    # select_(.dots = c(intersect(keep_cols, names(.)), U_prime_colname, V_prime_colname))
 }

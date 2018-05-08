@@ -24,9 +24,10 @@ test_that("reconstructing U and V works as expected", {
     mutate(
       Y_prime = Y
     ) %>%
-    reconstruct_UV(keep_cols = c("Country", "Year", "Energy.type", "Last.stage",
-                   "U", "V", "Y", "r_EIOU", "S_units", "y", "q", "g", "W", "Z", "D", "C", "A",
-                   "L_ixp", "L_pxp", "Y_prime")) %>%
+    # reconstruct_UV(keep_cols = c("Country", "Year", "Energy.type", "Last.stage",
+    #                "U", "V", "Y", "r_EIOU", "S_units", "y", "q", "g", "W", "Z", "D", "C", "A",
+    #                "L_ixp", "L_pxp", "Y_prime")) %>%
+    reconstruct_UV() %>%
     mutate(
       # Take the difference between U_prime and U and V_prime and V
       U_diff = difference_byname(U_prime, U),
@@ -54,9 +55,10 @@ test_that("reconstructing U and V works as expected", {
     mutate(
       Y_prime = list(Y_prime_finalE, Y_prime_servicesE, Y_prime_usefulE, Y_prime_servicesX)
     ) %>%
-    reconstruct_UV(keep_cols = c("Country", "Year", "Energy.type", "Last.stage",
-                                 "U", "V", "Y", "r_EIOU", "S_units", "y", "q", "g", "W", "Z", "D", "C", "A",
-                                 "L_ixp", "L_pxp", "Y_prime"))
+    # reconstruct_UV(keep_cols = c("Country", "Year", "Energy.type", "Last.stage",
+    #                              "U", "V", "Y", "r_EIOU", "S_units", "y", "q", "g", "W", "Z", "D", "C", "A",
+    #                              "L_ixp", "L_pxp", "Y_prime"))
+    reconstruct_UV()
   expect_known_value(Reconstructed_Residential,
                      file.path(expec_path, "expected_Reconstructed_Residential.rds"), update = FALSE)
 

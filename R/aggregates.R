@@ -36,7 +36,6 @@ primary_aggregates <- function(.sutdata,
                                Y_colname = "Y",
                                by = c("Total", "Product", "Flow"),
                                # Output columns,
-                               keep_cols = NULL,
                                aggregate_primary_colname){
 
   by <- match.arg(by)
@@ -67,10 +66,11 @@ primary_aggregates <- function(.sutdata,
       # VT_p - Y_p. This is TPES in product x industry matrix format
       !!VT_p_minus_Y_p := difference_byname(!!VT_p, !!Y_p),
       !!agg_primary := agg_func(!!VT_p_minus_Y_p)
-    )
+    ) %>%
+    # Eliminate temporary columns
+    select(-(!!VT_p), -(!!Y_p), -(!!VT_p_minus_Y_p))
 
   # Do some cleanup
-
   if (by == "Total") {
     # Need to convert aggregate column to numeric,
     # because the aggregate is only a single number when we ask for "Total" aggregation.
@@ -86,10 +86,7 @@ primary_aggregates <- function(.sutdata,
         !!agg_primary := transpose_byname(!!agg_primary)
       )
   }
-
-  # Eliminate temporary columns
-  Out %>%
-    select(-(!!VT_p), -(!!Y_p), -(!!VT_p_minus_Y_p))
+  return(Out)
 }
 
 #' Final demand aggregate energy
@@ -127,7 +124,6 @@ finaldemand_aggregates <- function(.sutdata,
                                    r_EIOU_colname = "r_EIOU",
                                    by = c("Total", "Product", "Sector"),
                                    # Output columns
-                                   keep_cols = NULL,
                                    net_aggregate_demand_colname,
                                    gross_aggregate_demand_colname){
 
