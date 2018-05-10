@@ -45,7 +45,7 @@ S_units_from_tidy <- function(.tidydf, Product = "Product", Unit = "Unit", S_uni
 
 #' Add a column of matrix names to tidy data frame
 #'
-#' @param .data a data frame with \code{ledger_side_colname} and \code{energy_colname}.
+#' @param .DF a data frame with \code{ledger_side_colname} and \code{energy_colname}.
 #' @param ledger_side the name of the column in \code{.DF} that contains ledger side
 #'        (a string). Default is "\code{Ledger.side}".
 #' @param energy_colname the name of the column in \code{.DF} that contains energy and exergy values
@@ -60,7 +60,7 @@ S_units_from_tidy <- function(.tidydf, Product = "Product", Unit = "Unit", S_uni
 #' @param V the name for the make matrix (a string). Default is "\code{V}".
 #' @param Y the name for the final demand matrix (a string). Default is "\code{Y}".
 #'
-#' @return \code{.data} with an added column, \code{UVY_colname}.
+#' @return \code{.DF} with an added column, \code{UVY_colname}.
 #'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr case_when
@@ -110,15 +110,15 @@ add_UKEnergy2000_matnames <- function(.DF,
 #' Add row, column, row type, and column type metadata
 #'
 #' @param .DF a data frame containing \code{matname_colname}.
-#' @param matname_colname the name of the column in \code{.data} that contains names of matrices
+#' @param matname_colname the name of the column in \code{.DF} that contains names of matrices
 #'        (a string).  Default is "\code{matname}".
 #' @param U the name for use matrices (a string). Default is "\code{U}".
 #' @param U_EIOU the name for the EIOU portino o fhte U matrix (a string). Default is "\code{U_EIOU}".
 #' @param V the name for make matrices (a string). Default is "\code{V}".
 #' @param Y the name for final demand matrices (a string). Default is "\code{Y}".
-#' @param product_colname the name of the column in \code{.data} where Product names
+#' @param product_colname the name of the column in \code{.DF} where Product names
 #'        is found (a string). Default is "\code{Product}".
-#' @param flow_colname the name of the column in \code{.data} where Flow information is found
+#' @param flow_colname the name of the column in \code{.DF} where Flow information is found
 #'        (a string).
 #'        The Flow column usually contains the industries involved in this flow.
 #'        Default is "\code{Flow}".
@@ -137,7 +137,7 @@ add_UKEnergy2000_matnames <- function(.DF,
 #' @param coltype_colname the name of the output column that contains column types for matrices
 #'        (a string). Default is "\code{coltype}".
 #'
-#' @return \code{.data} with additional columns named
+#' @return \code{.DF} with additional columns named
 #'         \code{rowname_colname}, \code{colname_colname},
 #'         \code{rowtype_colname}, and \code{coltype_colname}.
 #'
