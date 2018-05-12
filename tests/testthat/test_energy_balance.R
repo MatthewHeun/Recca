@@ -36,10 +36,10 @@ test_that("energy_balance fails when an intermediate column already exists", {
   )
 })
 
-test_that("SUT energy balance works with single matrices", {
-  U <- UKEnergy2000mats$U[[1]]
-  V <- UKEnergy2000mats$V[[1]]
-  Y <- UKEnergy2000mats$Y[[1]]
-
-  expect_silent(verify_SUT_energy_balance(U_colname = U, V_colname = V, Y_colname = Y))
-})
+# test_that("SUT energy balance works with single matrices", {
+#   U <- UKEnergy2000mats$U[[1]]
+#   V <- UKEnergy2000mats$V[[1]]
+#   Y <- UKEnergy2000mats$Y[[1]]
+#
+#   expect_silent(verify_SUT_energy_balance(UKEnergy2000mats, U_colname = U, V_colname = V, Y_colname = Y))
+# })
