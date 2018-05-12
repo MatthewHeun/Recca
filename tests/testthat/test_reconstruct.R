@@ -3,6 +3,20 @@
 context("Reconstructing PSUT matrices")
 ###########################################################
 
+test_that("reconstructing U and V from single matrices works as expected", {
+  alliomats <- calc_io_mats(UKEnergy2000mats, keep_cols = "Y")
+  allUV <- reconstruct_UV(alliomats, Y_prime_colname = "Y")
+  for (i in 1:nrow(allUV)) {
+    UV <- reconstruct_UV(Y_prime_colname = alliomats$Y[[i]],
+                         L_ixp_colname = alliomats$L_ixp[[i]],
+                         L_pxp_colname = alliomats$L_pxp[[i]],
+                         Z_colname = alliomats$Z[[i]],
+                         D_colname = alliomats$D[[i]])
+    expect_equal(UV$U_prime, allUV$U_prime[[i]])
+    expect_equal(UV$V_prime, allUV$V_prime[[i]])
+  }
+})
+
 test_that("reconstructing U and V with a data frame works as expected", {
   expec_path <- file.path("tests", "expectations")
 
