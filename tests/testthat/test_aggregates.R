@@ -4,7 +4,6 @@ library(magrittr)
 library(tibble)
 library(lazyeval)
 library(matsbyname)
-library(purrr)
 library(testthat)
 library(rlang)
 
