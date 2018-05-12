@@ -100,6 +100,16 @@ calc_yqgW <- function(.sutdata,
                       # Output columns
                       keep_cols = NULL,
                       y_colname = "y", q_colname = "q", g_colname = "g", W_colname = "W"){
+  # yqgw_func <- function(U, V, Y, S_units){
+  #   ycol <- rowsums_byname(Y)
+  #   qcol <- sum_byname(rowsums_byname(U), y)
+  #   gcol <- rowsums_byname(V)
+  #   Wcol <- difference_byname(transpose_byname(V), U)
+  #   out <- list(ycol, qcol, gcol, Wcol) %>% set_names(y_colname, q_colname, g_colname, W_colname)
+  #   return(out)
+  # }
+  # matsindf_apply(.sutdata, FUN = yqgw_func, U = U_colname, V = V_colname, Y = Y_colname, S_units = S_units)
+
   # Establish input column names
   U <- as.name(U_colname)
   V <- as.name(V_colname)
