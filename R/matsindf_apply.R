@@ -50,15 +50,22 @@ matsindf_apply <- function(.DF = NULL, FUN, ...){
     return(FUN(...))
   }
   if (is.null(.DF) & all_dots_list) {
-    return(Map(f = FUN, ...) %>% bind_rows())
+    out_list <- transpose(Map(f = FUN, ...))
+    numrows <- length(out_list[[1]])
+    numcols <- length(out_list)
+    out_df <- data.frame(matrix(NA, nrow = numrows, ncol = numcols)) %>% set_names(names(out_list))
+    for (j in 1:numcols) {
+      out_df[[j]] <- out_list[[j]]
+    }
+    return(out_df)
   }
   if (all_dots_char) {
     args <- lapply(dots, FUN = function(colname){
       return(.DF[[colname]])
     })
-    return(matsindf_apply(FUN = FUN, ... = args) %>%
+    return(do.call(matsindf_apply, args = c(list(.DF = NULL, FUN = FUN), args)) %>%
              bind_rows() %>%
-             bindcols(.DF, .))
+             bind_cols(.DF, .))
   }
   stop("unknown state in matsindf_apply. ... must be all same type, all numeric, all matrices, all lists, or all character")
 }

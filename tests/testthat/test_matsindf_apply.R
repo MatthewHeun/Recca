@@ -23,10 +23,10 @@ test_that("matsindf_apply works as expected for single matrices", {
 
 test_that("matsindf_apply works as expected for lists of single values", {
   expect_equal(example_fun(a = list(2, 2), b = list(2, 2)), list(c = list(4, 4), d = list(0, 0)))
-  expect_equal(matsindf_apply(FUN = example_fun, a = list(2, 2), b = list(2, 2)),
-               data.frame(c = c(4, 4), d = c(0, 0)))
-  expect_equal(matsindf_apply(FUN = example_fun, a = list(2, 2), b = list(1, 2)),
-               data.frame(c = c(3, 4), d = c(1, 0)))
+  expect_equivalent(matsindf_apply(FUN = example_fun, a = list(2, 2, 2), b = list(2, 2, 2)),
+                    data.frame(c = c(4, 4, 4), d = c(0, 0, 0)))
+  expect_equivalent(matsindf_apply(FUN = example_fun, a = list(2, 2), b = list(1, 2)),
+                    data.frame(c = c(3, 4), d = c(1, 0)))
 })
 
 
@@ -37,10 +37,14 @@ test_that("matsindf_apply works as expected for lists of matrices", {
   d <- a - b
   a <- list(a, a)
   b <- list(b, b)
-  expect_equal(matsindf_apply(FUN = example_fun, a = a, b = b),
-               data.frame(c = I(list(c, c)), d = I(list(d, d))))
-
+  DF_expected <- data.frame(c = I(list(c, c)), d = I(list(d, d)))
+  # Because DF_expected$c and DF_expected$d are created with I(list()), their class is "AsIs".
+  # Need to set the class of DF_expected$c and DF_expected$d to NULL to get a match.
+  attr(DF_expected$c, which = "class") <- NULL
+  attr(DF_expected$d, which = "class") <- NULL
+  expect_equal(matsindf_apply(FUN = example_fun, a = a, b = b), DF_expected)
 })
+
 
 test_that("matsindf_apply works as expected using .DF with single numbers", {
   DF <- data.frame(a = c(4, 4), b = c(4, 4))

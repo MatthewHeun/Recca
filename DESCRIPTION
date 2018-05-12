@@ -21,6 +21,7 @@ Imports:
     magrittr,
     matsbyname,
     parallel,
+    purrr,
     qgraph, 
     rlang,
     tibble,
