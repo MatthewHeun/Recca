@@ -4,7 +4,7 @@
 \alias{reconstruct_UV}
 \title{Reconstruct an economy given a new final demand matrix}
 \usage{
-reconstruct_UV(.sutdata, Y_prime_colname = "Y_prime",
+reconstruct_UV(.sutdata = NULL, Y_prime_colname = "Y_prime",
   L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp", Z_colname = "Z",
   D_colname = "D", U_prime_colname = "U_prime",
   V_prime_colname = "V_prime")
