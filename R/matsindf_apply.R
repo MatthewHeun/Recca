@@ -37,8 +37,6 @@
 #' @return a named list or a data frame. (See details.)
 #'
 #' @export
-#'
-#' @examples
 matsindf_apply <- function(.DF = NULL, FUN, ...){
   dots <- list(...)
   all_dots_num  <- all(lapply(dots, FUN = is.numeric) %>% as.logical())
