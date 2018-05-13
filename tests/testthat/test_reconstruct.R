@@ -38,9 +38,6 @@ test_that("reconstructing U and V with a data frame works as expected", {
     mutate(
       Y_prime = Y
     ) %>%
-    # reconstruct_UV(keep_cols = c("Country", "Year", "Energy.type", "Last.stage",
-    #                "U", "V", "Y", "r_EIOU", "S_units", "y", "q", "g", "W", "Z", "D", "C", "A",
-    #                "L_ixp", "L_pxp", "Y_prime")) %>%
     reconstruct_UV() %>%
     mutate(
       # Take the difference between U_prime and U and V_prime and V
