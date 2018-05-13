@@ -100,6 +100,16 @@ calc_yqgW <- function(.sutdata,
                       # Output columns
                       keep_cols = NULL,
                       y_colname = "y", q_colname = "q", g_colname = "g", W_colname = "W"){
+  # yqgw_func <- function(U, V, Y, S_units){
+  #   y_val <- rowsums_byname(Y)
+  #   q_val <- sum_byname(rowsums_byname(U), y_val)
+  #   g_val <- rowsums_byname(V)
+  #   W_val <- difference_byname(transpose_byname(V), U)
+  #   out <- list(y_val, q_val, g_val, W_val) %>% set_names(y_colname, q_colname, g_colname, W_colname)
+  #   return(out)
+  # }
+  # matsindf_apply(.sutdata, FUN = yqgw_func, U = U_colname, V = V_colname, Y = Y_colname, S_units = S_units)
+
   # Establish input column names
   U <- as.name(U_colname)
   V <- as.name(V_colname)
@@ -189,6 +199,16 @@ calc_A <- function(.sutdata,
                    # Output columns
                    keep_cols = NULL,
                    Z_colname = "Z", D_colname = "D", C_colname = "C", A_colname = "A"){
+  # A_func <- function(U, V, q, g){
+  #   Z_val <- matrixproduct_byname(U, hatize_byname(g) %>% invert_byname())
+  #   D_val <- matrixproduct_byname(V, hatize_byname(q) %>% invert_byname())
+  #   C_val <- matrixproduct_byname(transpose_byname(V), hatize_byname(g) %>% invert_byname())
+  #   A_val <- matrixproduct_byname(Z_val, D_val)
+  #   out <- list(Z_val, D_val, C_val, A_val) %>% set_names(Z_colname, D_colname, C_colname, A_colname)
+  #   return(out)
+  # }
+  # matsindf_apply(.sutdata, FUN = A_func, U = U_colname, V = V_colname, q = q_colname, g = g_colname)
+
   # Establish names of input columns
   U <- as.name(U_colname)
   V <- as.name(V_colname)
@@ -235,6 +255,14 @@ calc_L <- function(.sutdata,
                    # Output columns
                    keep_cols = NULL,
                    L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp"){
+  # L_func <- function(D, A){
+  #   L_pxp_val := Iminus_byname(A) %>% invert_byname()
+  #   L_ixp_val := matrixproduct_byname(D, !!L_pxp_val)
+  #   out <- list(L_pxp_val, L_ixp_val) %>% set_names(L_pxp_colname, L_ixp_colname)
+  #   return(out)
+  # }
+  # matsindf_apply(.sutdata, FUN = L_func, D = D_colname, A = A_colname)
+
   # Establish input column names
   D <- as.name(D_colname)
   A <- as.name(A_colname)

@@ -3,7 +3,21 @@
 context("Reconstructing PSUT matrices")
 ###########################################################
 
-test_that("reconstructing U and V works as expected", {
+test_that("reconstructing U and V from single matrices works as expected", {
+  alliomats <- calc_io_mats(UKEnergy2000mats, keep_cols = "Y")
+  allUV <- reconstruct_UV(alliomats, Y_prime_colname = "Y")
+  for (i in 1:nrow(allUV)) {
+    UV <- reconstruct_UV(Y_prime_colname = alliomats$Y[[i]],
+                         L_ixp_colname = alliomats$L_ixp[[i]],
+                         L_pxp_colname = alliomats$L_pxp[[i]],
+                         Z_colname = alliomats$Z[[i]],
+                         D_colname = alliomats$D[[i]])
+    expect_equal(UV$U_prime, allUV$U_prime[[i]])
+    expect_equal(UV$V_prime, allUV$V_prime[[i]])
+  }
+})
+
+test_that("reconstructing U and V with a data frame works as expected", {
   expec_path <- file.path("tests", "expectations")
 
   if (is_testing()) {
@@ -24,9 +38,6 @@ test_that("reconstructing U and V works as expected", {
     mutate(
       Y_prime = Y
     ) %>%
-    # reconstruct_UV(keep_cols = c("Country", "Year", "Energy.type", "Last.stage",
-    #                "U", "V", "Y", "r_EIOU", "S_units", "y", "q", "g", "W", "Z", "D", "C", "A",
-    #                "L_ixp", "L_pxp", "Y_prime")) %>%
     reconstruct_UV() %>%
     mutate(
       # Take the difference between U_prime and U and V_prime and V
@@ -55,9 +66,6 @@ test_that("reconstructing U and V works as expected", {
     mutate(
       Y_prime = list(Y_prime_finalE, Y_prime_servicesE, Y_prime_usefulE, Y_prime_servicesX)
     ) %>%
-    # reconstruct_UV(keep_cols = c("Country", "Year", "Energy.type", "Last.stage",
-    #                              "U", "V", "Y", "r_EIOU", "S_units", "y", "q", "g", "W", "Z", "D", "C", "A",
-    #                              "L_ixp", "L_pxp", "Y_prime"))
     reconstruct_UV()
   expect_known_value(Reconstructed_Residential,
                      file.path(expec_path, "expected_Reconstructed_Residential.rds"), update = FALSE)
@@ -67,7 +75,3 @@ test_that("reconstructing U and V works as expected", {
     setwd(currwd)
   }
 })
-
-
-
-

@@ -36,6 +36,3 @@ test_that("verify_cols_missing works with a single value", {
   expect_error(verify_cols_missing(df, as.name("a")),
                Hmisc::escapeRegex("column(s) 'a' is (are) already column names in data frame 'df'"))
 })
-
-
-

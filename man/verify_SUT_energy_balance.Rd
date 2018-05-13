@@ -20,9 +20,6 @@ and columns of matrices, including
 \item{Y_colname}{the name of the column that contsins Y matrices}
 
 \item{tol}{the maximum amount by which Supply and Consumption can be out of balance}
-
-\item{err_colname}{the name of the column that contains (\strong{V}^T - \strong{U} - \strong{Y})*\strong{i}
-(which should be zero to within \code{tol})}
 }
 \value{
 Nothing is returned.

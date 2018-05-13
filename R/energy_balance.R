@@ -20,8 +20,6 @@
 #' @param U_colname the name of the column that contains \strong{U} matrices
 #' @param V_colname the name of the column that contains V matrices
 #' @param Y_colname the name of the column that contsins Y matrices
-#' @param err_colname the name of the column that contains (\strong{V}^T - \strong{U} - \strong{Y})*\strong{i}
-#' (which should be zero to within \code{tol})
 #' @param tol the maximum amount by which Supply and Consumption can be out of balance
 #'
 #' @return Nothing is returned.
