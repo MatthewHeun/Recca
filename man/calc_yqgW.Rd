@@ -5,8 +5,8 @@
 \title{Calculate y, g, and q vectors and W matrices}
 \usage{
 calc_yqgW(.sutdata, U_colname = "U", V_colname = "V", Y_colname = "Y",
-  S_units = "S_units", keep_cols = NULL, y_colname = "y",
-  q_colname = "q", g_colname = "g", W_colname = "W")
+  S_units = "S_units", y_colname = "y", q_colname = "q",
+  g_colname = "g", W_colname = "W")
 }
 \arguments{
 \item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
@@ -19,8 +19,6 @@ calc_yqgW(.sutdata, U_colname = "U", V_colname = "V", Y_colname = "Y",
 
 \item{S_units}{the name of the column in \code{.sutdata} containing \code{S_units} matrices.}
 
-\item{keep_cols}{a vector of names of columns of \code{.sutdata} to return with the output}
-
 \item{y_colname}{the name of the output column containing \code{y} vectors.
 \code{y} is calculated by \code{rowsums_byname(Y)}.}
 
@@ -32,6 +30,8 @@ calc_yqgW(.sutdata, U_colname = "U", V_colname = "V", Y_colname = "Y",
 
 \item{W_colname}{the name of the output column containing \code{W} matrices.
 \code{W} is calculated by \code{transpose_byname(V) - U}.}
+
+\item{keep_cols}{a vector of names of columns of \code{.sutdata} to return with the output}
 }
 \value{
 a data frame containing columns specified in \code{keep_cols},

@@ -5,8 +5,8 @@
 \title{Calculate \code{Z}, \code{D}, \code{C}, and \code{A} matrices}
 \usage{
 calc_A(.sutdata, U_colname = "U", V_colname = "V", q_colname = "q",
-  g_colname = "g", keep_cols = NULL, Z_colname = "Z", D_colname = "D",
-  C_colname = "C", A_colname = "A")
+  g_colname = "g", Z_colname = "Z", D_colname = "D", C_colname = "C",
+  A_colname = "A")
 }
 \arguments{
 \item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
@@ -19,8 +19,6 @@ calc_A(.sutdata, U_colname = "U", V_colname = "V", q_colname = "q",
 
 \item{g_colname}{the name of the column in \code{.sutdata} containing \code{g} vectors.}
 
-\item{keep_cols}{a vector of names of columns of \code{.sutdata} to return with the output}
-
 \item{Z_colname}{the name of the output column containing \code{Z} matrices.
 \code{Z} is calculated by \code{U * g_hat_inv}.}
 
@@ -32,6 +30,8 @@ calc_A(.sutdata, U_colname = "U", V_colname = "V", q_colname = "q",
 
 \item{A_colname}{the name of the output column containing \code{A} matrices.
 \code{A} is calculated by \code{Z * D}.}
+
+\item{keep_cols}{a vector of names of columns of \code{.sutdata} to return with the output}
 }
 \value{
 a data frame containing columns specified in \code{keep_cols},

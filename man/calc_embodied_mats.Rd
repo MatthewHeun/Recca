@@ -30,8 +30,6 @@ calc_embodied_mats(.iodata, Y_colname = "Y", y_colname = "y",
 \item{L_ixp_colname}{the name of the column in \code{.iodata} containing Industry-by-Product
 Leontief (\code{L_ixp}) matrices.}
 
-\item{keep_cols}{a vector of names of columns of \code{.iodata} (if any) to return with the output}
-
 \item{G_colname}{the name of the output column containing \code{G} matrices.
 \code{G} is calculated by \code{L_ixp * y_hat}.}
 

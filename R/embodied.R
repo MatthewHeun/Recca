@@ -12,7 +12,6 @@
 #' @param q_colname the name of the column in \code{.iodata} containing final demand (\strong{q}) vectors.
 #' @param L_ixp_colname the name of the column in \code{.iodata} containing Industry-by-Product
 #' Leontief (\code{L_ixp}) matrices.
-#' @param keep_cols a vector of names of columns of \code{.iodata} (if any) to return with the output
 #' @param G_colname the name of the output column containing \code{G} matrices.
 #' \code{G} is calculated by \code{L_ixp * y_hat}.
 #' @param H_colname the name of the output column containing \code{H} matrices.

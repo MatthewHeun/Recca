@@ -5,9 +5,9 @@
 \title{Calculate various input-output matrices}
 \usage{
 calc_io_mats(.sutdata, U_colname = "U", V_colname = "V", Y_colname = "Y",
-  keep_cols = NULL, y_colname = "y", q_colname = "q", g_colname = "g",
-  W_colname = "W", Z_colname = "Z", D_colname = "D", C_colname = "C",
-  A_colname = "A", L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp")
+  y_colname = "y", q_colname = "q", g_colname = "g", W_colname = "W",
+  Z_colname = "Z", D_colname = "D", C_colname = "C", A_colname = "A",
+  L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp")
 }
 \arguments{
 \item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
@@ -17,8 +17,6 @@ calc_io_mats(.sutdata, U_colname = "U", V_colname = "V", Y_colname = "Y",
 \item{V_colname}{the name of the column in \code{.sutdata} containing Make (\code{V}) matrices.}
 
 \item{Y_colname}{the name of the column in \code{.sutdata} containing final demand (\code{Y}) matrices.}
-
-\item{keep_cols}{a vector of names of columns of \code{.sutdata} to return with the output}
 
 \item{y_colname}{the name of the output column containing \code{y} vectors.
 \code{y} is calculated by \code{rowsums(Y)}.}
