@@ -10,7 +10,6 @@
 #' @param U_colname the name of the column in \code{.sutdata} containing Use (\code{U}) matrices.
 #' @param V_colname the name of the column in \code{.sutdata} containing Make (\code{V}) matrices.
 #' @param Y_colname the name of the column in \code{.sutdata} containing final demand (\code{Y}) matrices.
-#' @param keep_cols a vector of names of columns of \code{.sutdata} to return with the output
 #' @param g_colname the name of the output column containing \code{g} vectors.
 #' \code{g} is calculated by \code{rowsums(V)}.
 #' @param y_colname the name of the output column containing \code{y} vectors.
@@ -42,7 +41,7 @@ calc_io_mats <- function(.sutdata,
                          # Input columns
                          U_colname = "U", V_colname = "V", Y_colname = "Y",
                          # Output columns
-                         keep_cols = NULL,
+                         # keep_cols = NULL,
                          y_colname = "y", q_colname = "q", g_colname = "g", W_colname = "W",
                          Z_colname = "Z", D_colname = "D", C_colname = "C", A_colname = "A",
                          L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp"){
@@ -61,13 +60,13 @@ calc_io_mats <- function(.sutdata,
       !!Y := clean_byname(!!Y, margin = c(1,2), clean_value = 0)
     ) %>%
     calc_yqgW(U_colname = U_colname, V_colname = V_colname, Y_colname = Y_colname, W_colname = W_colname,
-              keep_cols = c(keep_cols, U_colname, V_colname),
+              # keep_cols = c(keep_cols, U_colname, V_colname),
               y_colname = y_colname, q_colname = q_colname, g_colname = g_colname) %>%
     calc_A(U_colname = U_colname, V_colname = V_colname, q_colname = q_colname, g_colname = g_colname,
-           keep_cols = c(keep_cols, y_colname, q_colname, g_colname, W_colname),
+           # keep_cols = c(keep_cols, y_colname, q_colname, g_colname, W_colname),
            Z_colname = Z_colname, D_colname = D_colname, C_colname = C_colname, A_colname = A_colname) %>%
     calc_L(D_colname = D_colname, A_colname = A_colname,
-           keep_cols = c(keep_cols, y_colname, q_colname, g_colname, W_colname, Z_colname, D_colname, C_colname, A_colname),
+           # keep_cols = c(keep_cols, y_colname, q_colname, g_colname, W_colname, Z_colname, D_colname, C_colname, A_colname),
            L_ixp_colname = L_ixp_colname, L_pxp_colname = L_pxp_colname)
 }
 
@@ -98,14 +97,14 @@ calc_yqgW <- function(.sutdata,
                       # Input columns
                       U_colname = "U", V_colname = "V", Y_colname = "Y", S_units = "S_units",
                       # Output columns
-                      keep_cols = NULL,
+                      # keep_cols = NULL,
                       y_colname = "y", q_colname = "q", g_colname = "g", W_colname = "W"){
   # yqgw_func <- function(U, V, Y, S_units){
   #   y_val <- rowsums_byname(Y)
   #   q_val <- sum_byname(rowsums_byname(U), y_val)
   #   g_val <- rowsums_byname(V)
   #   W_val <- difference_byname(transpose_byname(V), U)
-  #   out <- list(y_val, q_val, g_val, W_val) %>% set_names(y_colname, q_colname, g_colname, W_colname)
+  #   out <- list(g_val, y_val, q_val, W_val) %>% set_names(y_colname, q_colname, g_colname, W_colname)
   #   return(out)
   # }
   # matsindf_apply(.sutdata, FUN = yqgw_func, U = U_colname, V = V_colname, Y = Y_colname, S_units = S_units)
@@ -161,14 +160,14 @@ calc_yqgW <- function(.sutdata,
   # Now that we know the units are fine (i.e., the products of each industry are unit homogeneous),
   # we can proceed with calculating y, q, g, and W.
   .sutdata %>%
-    select_(.dots = c(intersect(keep_cols, names(.)), U_colname, V_colname, Y_colname)) %>%
+    # select_(.dots = c(intersect(keep_cols, names(.)), U_colname, V_colname, Y_colname)) %>%
     mutate(
       !!y := rowsums_byname(!!Y),
       !!q := sum_byname(rowsums_byname(!!U), !!y),
       !!g := rowsums_byname(!!V),
       !!W := difference_byname(transpose_byname(!!V), !!U)
-    ) %>%
-    select_(.dots = c(intersect(keep_cols, names(.)), g_colname, y_colname, q_colname, W_colname))
+    ) # %>%
+    # select_(.dots = c(intersect(keep_cols, names(.)), g_colname, y_colname, q_colname, W_colname))
 }
 
 #' Calculate \code{Z}, \code{D}, \code{C}, and \code{A} matrices
@@ -197,12 +196,12 @@ calc_A <- function(.sutdata,
                    U_colname = "U", V_colname = "V",
                    q_colname = "q", g_colname = "g",
                    # Output columns
-                   keep_cols = NULL,
+                   # keep_cols = NULL,
                    Z_colname = "Z", D_colname = "D", C_colname = "C", A_colname = "A"){
   # A_func <- function(U, V, q, g){
   #   Z_val <- matrixproduct_byname(U, hatize_byname(g) %>% invert_byname())
-  #   D_val <- matrixproduct_byname(V, hatize_byname(q) %>% invert_byname())
   #   C_val <- matrixproduct_byname(transpose_byname(V), hatize_byname(g) %>% invert_byname())
+  #   D_val <- matrixproduct_byname(V, hatize_byname(q) %>% invert_byname())
   #   A_val <- matrixproduct_byname(Z_val, D_val)
   #   out <- list(Z_val, D_val, C_val, A_val) %>% set_names(Z_colname, D_colname, C_colname, A_colname)
   #   return(out)
@@ -223,14 +222,14 @@ calc_A <- function(.sutdata,
   verify_cols_missing(.sutdata, c(Z, D, C, A))
 
   .sutdata %>%
-    select_(.dots = c(intersect(keep_cols, names(.)), U_colname, V_colname, q_colname, g_colname)) %>%
+    # select_(.dots = c(intersect(keep_cols, names(.)), U_colname, V_colname, q_colname, g_colname)) %>%
     mutate(
       !!Z := matrixproduct_byname(!!U, hatize_byname(!!g) %>% invert_byname()),
-      !!D := matrixproduct_byname(!!V, hatize_byname(!!q) %>% invert_byname()),
       !!C := matrixproduct_byname(transpose_byname(!!V), hatize_byname(!!g) %>% invert_byname()),
+      !!D := matrixproduct_byname(!!V, hatize_byname(!!q) %>% invert_byname()),
       !!A := matrixproduct_byname(!!Z, !!D)
-    ) %>%
-    select_(.dots = c(intersect(keep_cols, names(.)), Z_colname, C_colname, D_colname, A_colname))
+    ) # %>%
+    # select_(.dots = c(intersect(keep_cols, names(.)), Z_colname, C_colname, D_colname, A_colname))
 }
 
 
@@ -253,7 +252,7 @@ calc_L <- function(.sutdata,
                    # Input columns
                    D_colname = "D", A_colname = "A",
                    # Output columns
-                   keep_cols = NULL,
+                   # keep_cols = NULL,
                    L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp"){
   # L_func <- function(D, A){
   #   L_pxp_val := Iminus_byname(A) %>% invert_byname()
@@ -273,10 +272,10 @@ calc_L <- function(.sutdata,
   verify_cols_missing(.sutdata, c(L_ixp, L_pxp))
 
   .sutdata %>%
-    select_(.dots = c(intersect(keep_cols, names(.)), D_colname, A_colname)) %>%
+    # select_(.dots = c(intersect(keep_cols, names(.)), D_colname, A_colname)) %>%
     mutate(
       !!L_pxp := Iminus_byname(!!A) %>% invert_byname(),
       !!L_ixp := matrixproduct_byname(!!D, !!L_pxp)
-    ) %>%
-    select_(.dots = c(intersect(keep_cols, names(.)), L_pxp_colname, L_ixp_colname))
+    ) # %>%
+    # select_(.dots = c(intersect(keep_cols, names(.)), L_pxp_colname, L_ixp_colname))
 }
