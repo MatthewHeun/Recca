@@ -19,15 +19,15 @@ test_that("embodied energy calculations works as expected", {
   }
 
   # Calculate all IO matrices
-  io_mats <- UKEnergy2000mats %>%
-    calc_io_mats()
-    # calc_io_mats(keep_cols = c("Country", "Year", "Energy.type", "Last.stage",
-    #                            "U", "V", "Y", "r_EIOU", "S_units"))
+  io_mats <- UKEnergy2000mats %>% calc_io_mats()
 
   # Calculate the G and H matrices
   GH <- io_mats %>%
     calc_GH(keep_cols = c("Country", "Year", "Energy.type", "Last.stage", "U", "V", "Y", "r_EIOU",
-                          "S_units", "y", "q", "g", "W", "Z", "D", "C", "A", "L_pxp", "L_ixp"))
+                          "S_units", "y", "q", "g", "W", "Z", "D", "C", "A", "L_pxp", "L_ixp")) %>%
+    select(Country, Year, Energy.type, Last.stage, U, V, Y, r_EIOU, S_units,
+           y, q, g, W, Z, D, C, A, L_pxp, L_ixp,
+           G, H)
   expect_known_value(GH, file.path(expec_path, "expected_GH.rds"), update = FALSE)
 
   E <- GH %>%
@@ -36,13 +36,20 @@ test_that("embodied energy calculations works as expected", {
     ) %>%
     calc_E(keep_cols = c("Country", "Year", "Energy.type", "Last.stage", "U", "V", "Y",
                          "r_EIOU", "S_units", "y", "q", "g", "W", "Z", "D", "C",
-                         "A", "L_pxp", "L_ixp", "U_EIOU", "G", "H"))
+                         "A", "L_pxp", "L_ixp", "U_EIOU", "G", "H")) %>%
+    select(Country, Year, Energy.type, Last.stage, U, V, Y, r_EIOU, S_units,
+           y, q, g, W, Z, D, C, A,
+           L_pxp, L_ixp, U_EIOU, G, H, E)
   expect_known_value(E, file.path(expec_path, "expected_E.rds"), update = FALSE)
 
   M <- E %>%
-    calc_M(keep_cols = c("Country", "Year", "Energy.type", "Last.stage", "U", "V", "Y",
-                         "r_EIOU", "S_units", "y", "q", "g", "W", "Z", "D", "C",
-                         "A", "L_pxp", "L_ixp", "U_EIOU", "G", "H", "E"))
+    calc_M() %>%
+    # calc_M(keep_cols = c("Country", "Year", "Energy.type", "Last.stage", "U", "V", "Y",
+    #                      "r_EIOU", "S_units", "y", "q", "g", "W", "Z", "D", "C",
+    #                      "A", "L_pxp", "L_ixp", "U_EIOU", "G", "H", "E")) %>%
+    select(Country, Year, Energy.type, Last.stage, U, V, Y, r_EIOU, S_units,
+           y, q, g, W, Z, D, C, A,
+           L_pxp, L_ixp, U_EIOU, G, H, E, M_p, M_s)
   expect_known_value(M, file.path(expec_path, "expected_M.rds"), update = FALSE)
 
   if (is_testing()) {

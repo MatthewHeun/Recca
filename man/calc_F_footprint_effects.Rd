@@ -17,8 +17,6 @@ calc_F_footprint_effects(.Mdata, M_p_colname = "M_p", M_s_colname = "M_s",
 
 \item{M_s_colname}{the name of the column in \code{.Mdata} containing embodied sector matrices (default is \strong{"M_s"})}
 
-\item{keep_cols}{columns in \code{.Mdata} to be preserved in the output}
-
 \item{F_footprint_p_colname}{the name of the column in the output containing \strong{F_footprint_p} matrices (as a string)}
 
 \item{F_effects_p_colname}{the name of the column in the output containing \strong{F_effects_p} matrices (as a string)}

@@ -5,8 +5,8 @@
 \title{Embodied energy efficiencies}
 \usage{
 calc_embodied_etas(.embodiedmats, primary_machine_names, Y_colname = "Y",
-  G_colname = "G", H_colname = "H", keep_cols = NULL,
-  eta_p_colname = "eta_p", eta_s_colname = "eta_s")
+  G_colname = "G", H_colname = "H", eta_p_colname = "eta_p",
+  eta_s_colname = "eta_s")
 }
 \arguments{
 \item{.embodiedmats}{a data frame containing columns of \strong{Y}, \strong{G}, and \strong{H} matrices}
@@ -19,11 +19,11 @@ calc_embodied_etas(.embodiedmats, primary_machine_names, Y_colname = "Y",
 
 \item{H_colname}{a string for the name of a column of H matrices in \code{.embodiedmats} (default is \code{H})}
 
-\item{keep_cols}{strings for columns in \code{.embodiedmats} to be preserved in the output}
-
 \item{eta_p_colname}{a string for the name of the output column containing vectors of product-based efficiencies}
 
 \item{eta_s_colname}{a string for the name of the output column containing vectors of final-demand-sector-based efficiencies}
+
+\item{keep_cols}{strings for columns in \code{.embodiedmats} to be preserved in the output}
 }
 \value{
 a data frame containing columns identified in \code{keep_cols}, \code{eta_p_colname}, and \code{eta_s_colname}

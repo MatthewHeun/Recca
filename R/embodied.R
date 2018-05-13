@@ -125,12 +125,12 @@ calc_GH <- function(.iodata,
   H <- as.name(H_colname)
 
   .iodata %>%
-    select(!!!intersect(keep_cols, names(.)), !!y_colname, !!Y_colname, !!L_ixp_colname) %>%
+    # select(!!!intersect(keep_cols, names(.)), !!y_colname, !!Y_colname, !!L_ixp_colname) %>%
     mutate(
       !!G_colname := matrixproduct_byname(!!as.name(L_ixp_colname), hatize_byname(!!as.name(y_colname))),
       !!H_colname := matrixproduct_byname(!!as.name(L_ixp_colname), !!as.name(Y_colname))
-    ) %>%
-    select(!!!intersect(keep_cols, names(.)), !!G_colname, !!H_colname)
+    ) # %>%
+    # select(!!!intersect(keep_cols, names(.)), !!G_colname, !!H_colname)
 }
 
 #' Calculate the E matrix for embodied energy calculations
@@ -155,12 +155,12 @@ calc_E <- function(.iodata,
                    keep_cols = NULL,
                    E_colname = "E"){
   .iodata %>%
-    select(!!!intersect(keep_cols, names(.)), !!g_colname, !!W_colname, !!U_EIOU_colname) %>%
+    # select(!!!intersect(keep_cols, names(.)), !!g_colname, !!W_colname, !!U_EIOU_colname) %>%
     mutate(
       !!E_colname := matrixproduct_byname(sum_byname(!!as.name(W_colname), !!as.name(U_EIOU_colname)),
                                           (!!as.name(g_colname)) %>% hatize_byname() %>% invert_byname())
-    ) %>%
-    select(!!!intersect(keep_cols, names(.)), !!E_colname)
+    ) # %>%
+    # select(!!!intersect(keep_cols, names(.)), !!E_colname)
 }
 
 
@@ -209,7 +209,7 @@ calc_M <- function(.YqGHEdata,
                    Y_colname = "Y", q_colname = "q",
                    G_colname = "G", E_colname = "E",
                    # Output columns
-                   keep_cols = NULL,
+                   # keep_cols = NULL,
                    M_p_colname = "M_p",
                    M_s_colname = "M_s",
                    # Column names for intermediate results
@@ -271,9 +271,9 @@ calc_M <- function(.YqGHEdata,
       # Calculate the "per-sector" embodied energy.
       !!M_s_colname := matrixproduct_byname(!!as.name(M_p_colname), (!!as.name(q_colname)) %>%
                                               hatize_byname %>% invert_byname) %>% matrixproduct_byname(!!as.name(Y_colname))
-    ) %>%
+    ) # %>%
     # Trim columns before returning
-    select(!!!intersect(keep_cols, names(.)), !!M_p_colname, !!M_s_colname)
+    # select(!!!intersect(keep_cols, names(.)), !!M_p_colname, !!M_s_colname)
 }
 
 #' Upstream footprint and downstream effects matrices
@@ -287,7 +287,6 @@ calc_M <- function(.YqGHEdata,
 #' @param .Mdata a data frame containing a column of embodied matrices
 #' @param M_p_colname the name of the column in \code{.Mdata} containing embodied product  matrices (default is \strong{"M_p"})
 #' @param M_s_colname the name of the column in \code{.Mdata} containing embodied sector matrices (default is \strong{"M_s"})
-#' @param keep_cols columns in \code{.Mdata} to be preserved in the output
 #' @param F_footprint_p_colname the name of the column in the output containing \strong{F_footprint_p} matrices (as a string)
 #' @param F_effects_p_colname the name of the column in the output containing \strong{F_effects_p} matrices (as a string)
 #' @param F_footprint_s_colname the name of the column in the output containing \strong{F_footprint_s} matrices (as a string)
@@ -319,10 +318,10 @@ calc_F_footprint_effects <- function(.Mdata,
                                                       colsums_byname(!!M_s_colname) %>% hatize_byname %>% invert_byname),
       !!F_effects_s_colname := matrixproduct_byname(rowsums_byname(!!M_s_colname) %>% hatize_byname %>% invert_byname,
                                                     !!M_s_colname)
-    ) %>%
-    select(c(!!!keep_cols,
-             !!F_footprint_p_colname, !!F_effects_p_colname,
-             !!F_footprint_s_colname, !!F_effects_s_colname))
+    ) # %>%
+    # select(c(!!!keep_cols,
+    #          !!F_footprint_p_colname, !!F_effects_p_colname,
+    #          !!F_footprint_s_colname, !!F_effects_s_colname))
 }
 
 #' Embodied energy efficiencies
@@ -344,7 +343,7 @@ calc_embodied_etas <- function(.embodiedmats,
                                # Input columns of .embodiedmats
                                Y_colname = "Y", G_colname = "G", H_colname = "H",
                                # Output columns
-                               keep_cols = NULL,
+                               # keep_cols = NULL,
                                eta_p_colname = "eta_p", eta_s_colname = "eta_s"){
   .embodiedmats %>%
     mutate(

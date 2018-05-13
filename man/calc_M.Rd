@@ -5,10 +5,10 @@
 \title{Add embodied matrices colums to a data frame}
 \usage{
 calc_M(.YqGHEdata, Y_colname = "Y", q_colname = "q", G_colname = "G",
-  E_colname = "E", keep_cols = NULL, M_p_colname = "M_p",
-  M_s_colname = "M_s", e_colname = ".evectors",
-  e_hat_colname = ".ehatmatrices", Q_colname = ".Qmatrices",
-  Qpos_colname = ".Qposmatrices", Qposcolsums_colname = ".Qposcolsums")
+  E_colname = "E", M_p_colname = "M_p", M_s_colname = "M_s",
+  e_colname = ".evectors", e_hat_colname = ".ehatmatrices",
+  Q_colname = ".Qmatrices", Qpos_colname = ".Qposmatrices",
+  Qposcolsums_colname = ".Qposcolsums")
 }
 \arguments{
 \item{.YqGHEdata}{a data frame containing columns with \strong{q} vectors
@@ -26,8 +26,6 @@ and \strong{Y}, \strong{G}, \strong{H}, and \strong{E} matrices.
 
 \item{E_colname}{the name of the output column containing \strong{E} matrices.
 \code{E} is calculated by \code{\strong{W} * \strong{g_hat_inv}}.}
-
-\item{keep_cols}{a vector of names of columns of \code{.iodata} (if any) to return with the output}
 
 \item{M_p_colname}{the name of the output column containing matrices of embodied energy in products.
 These matrices contain embodied products in rows and embodying products in columns.}
@@ -56,6 +54,8 @@ In each list, there is one Q matrix for each Product in the Energy Conversion Ch
 Embodied energy entries in \strong{Q} are positive.}
 
 \item{Qposcolsums_colname}{the name of the column containing column sums of \strong{Qpos} matrices.}
+
+\item{keep_cols}{a vector of names of columns of \code{.iodata} (if any) to return with the output}
 }
 \value{
 a data frame containing columns specified in \code{keep_cols},

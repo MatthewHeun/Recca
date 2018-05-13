@@ -30,7 +30,7 @@ the total primary energy aggregate.}
 \item{aggregate_primary_colname}{the name of the output column containing aggregates of primary energy.}
 }
 \value{
-a data frame containing columns for \code{keep_cols} and
+a data frame containing columns of
 the aggregate primary energy for each row of \code{.sutdata}.
 }
 \description{
