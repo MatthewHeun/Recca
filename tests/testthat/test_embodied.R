@@ -34,9 +34,7 @@ test_that("embodied energy calculations works as expected", {
     mutate(
       U_EIOU = elementproduct_byname(U, r_EIOU)
     ) %>%
-    calc_E(keep_cols = c("Country", "Year", "Energy.type", "Last.stage", "U", "V", "Y",
-                         "r_EIOU", "S_units", "y", "q", "g", "W", "Z", "D", "C",
-                         "A", "L_pxp", "L_ixp", "U_EIOU", "G", "H")) %>%
+    calc_E() %>%
     select(Country, Year, Energy.type, Last.stage, U, V, Y, r_EIOU, S_units,
            y, q, g, W, Z, D, C, A,
            L_pxp, L_ixp, U_EIOU, G, H, E)
@@ -44,9 +42,6 @@ test_that("embodied energy calculations works as expected", {
 
   M <- E %>%
     calc_M() %>%
-    # calc_M(keep_cols = c("Country", "Year", "Energy.type", "Last.stage", "U", "V", "Y",
-    #                      "r_EIOU", "S_units", "y", "q", "g", "W", "Z", "D", "C",
-    #                      "A", "L_pxp", "L_ixp", "U_EIOU", "G", "H", "E")) %>%
     select(Country, Year, Energy.type, Last.stage, U, V, Y, r_EIOU, S_units,
            y, q, g, W, Z, D, C, A,
            L_pxp, L_ixp, U_EIOU, G, H, E, M_p, M_s)
