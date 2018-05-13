@@ -21,7 +21,6 @@
 #'   \item{\code{Product}: aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.)}
 #'   \item{\code{Flow}: aggregation by type of flow (Production, Imports, Exports, etc.)}
 #' }
-#' @param keep_cols a vector of names of columns of \code{.sutdata} to return with the output
 #' @param aggregate_primary_colname the name of the output column containing aggregates of primary energy.
 #'
 #' @return a data frame containing columns for \code{keep_cols} and

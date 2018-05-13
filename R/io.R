@@ -60,16 +60,12 @@ calc_io_mats <- function(.sutdata,
       !!Y := clean_byname(!!Y, margin = c(1,2), clean_value = 0)
     ) %>%
     calc_yqgW(U_colname = U_colname, V_colname = V_colname, Y_colname = Y_colname, W_colname = W_colname,
-              # keep_cols = c(keep_cols, U_colname, V_colname),
               y_colname = y_colname, q_colname = q_colname, g_colname = g_colname) %>%
     calc_A(U_colname = U_colname, V_colname = V_colname, q_colname = q_colname, g_colname = g_colname,
-           # keep_cols = c(keep_cols, y_colname, q_colname, g_colname, W_colname),
            Z_colname = Z_colname, D_colname = D_colname, C_colname = C_colname, A_colname = A_colname) %>%
     calc_L(D_colname = D_colname, A_colname = A_colname,
-           # keep_cols = c(keep_cols, y_colname, q_colname, g_colname, W_colname, Z_colname, D_colname, C_colname, A_colname),
            L_ixp_colname = L_ixp_colname, L_pxp_colname = L_pxp_colname)
 }
-
 
 
 #' Calculate y, g, and q vectors and W matrices

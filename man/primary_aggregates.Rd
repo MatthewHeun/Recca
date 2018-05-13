@@ -28,8 +28,6 @@ the total primary energy aggregate.}
 }}
 
 \item{aggregate_primary_colname}{the name of the output column containing aggregates of primary energy.}
-
-\item{keep_cols}{a vector of names of columns of \code{.sutdata} to return with the output}
 }
 \value{
 a data frame containing columns for \code{keep_cols} and
