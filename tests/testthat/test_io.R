@@ -3,7 +3,7 @@
 context("IO calculations")
 ###########################################################
 
-test_that("calculating y, q, g, W, and A works as expected", {
+test_that("calculating y, q, g, W, A, and L works as expected", {
   expec_path <- file.path("tests", "expectations")
 
   if (is_testing()) {
@@ -59,4 +59,25 @@ test_that("calculating IO matrices works as expected", {
     setwd(currwd)
   }
 })
+
+
+test_that("calculating IO matrices works as expected", {
+  # Make bogus U, V, Y, and S_units matrices
+  U <- matrix(c(1, 2,
+                3, 4), byrow = TRUE,
+              nrow = 2, ncol = 2, dimnames = list(c("p1", "p2"), c("i1", "i2")))
+  V <- matrix(c(1, 2,
+                3, 4), byrow = TRUE,
+              nrow = 2, ncol = 2, dimnames = list(c("i1", "i2"), c("p1", "p2")))
+  Y <- matrix(c(1, 2,
+                3, 4), byrow = TRUE,
+              nrow = 2, ncol = 2, dimnames = list(c("p1", "p2"), c("s1", "s2")))
+  S_units <- matrix(c(1, 0,
+                      0, 1), byrow = TRUE,
+                    nrow = 2, ncol = 2, dimnames = list(c("p1", "p2"), c("m", "K")))
+
+  expect_error(calc_yqgW(U_colname = U, V_colname = V, Y_colname = Y, S_units = S_units),
+               "Outputs from each industry not unit homogeneous. Offending industries: i1, i2")
+})
+
 

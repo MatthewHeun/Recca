@@ -4,9 +4,9 @@
 \alias{calc_yqgW}
 \title{Calculate y, g, and q vectors and W matrices}
 \usage{
-calc_yqgW(.sutdata, U_colname = "U", V_colname = "V", Y_colname = "Y",
-  S_units = "S_units", y_colname = "y", q_colname = "q",
-  g_colname = "g", W_colname = "W")
+calc_yqgW(.sutdata = NULL, U_colname = "U", V_colname = "V",
+  Y_colname = "Y", S_units = "S_units", y_colname = "y",
+  q_colname = "q", g_colname = "g", W_colname = "W")
 }
 \arguments{
 \item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}

@@ -89,12 +89,35 @@ calc_io_mats <- function(.sutdata,
 #'
 #' @return a data frame containing columns specified in \code{keep_cols},
 #' \code{y_colname}, \code{q_colname}, \code{g_colname}, and \code{W_colname}.
-calc_yqgW <- function(.sutdata,
+calc_yqgW <- function(.sutdata = NULL,
                       # Input columns
                       U_colname = "U", V_colname = "V", Y_colname = "Y", S_units = "S_units",
                       # Output columns
                       # keep_cols = NULL,
                       y_colname = "y", q_colname = "q", g_colname = "g", W_colname = "W"){
+  # Perform a unit homogeneity check on the incoming V matrix.
+  # But only if S_units is present and useable.
+  if (!is.null(S_units)) {
+    if (!missing(S_units)) {
+      # The V_bar matrix should have only one entry per row,
+      # meaning that all products of a given industry are measured in the same units.
+      # At the present time, the PSUT framework works only under those conditions
+      # (i.e., product unit homogeneity).
+      # If product unit homogeneity is violated, the PSUT method cannot be used.
+      # To accommodate unit inhomogenity of industry products,
+      # further generalizations of the PSUT method will be required.
+      V_bar <- matrixproduct_byname(V_colname, S_units)
+      V_bar_check <- count_vals_inrows_byname(V_bar, "!=", 0) %>%
+        compare_byname("==", 1)
+      # Verify that unit homogeneity exists for all products.
+      if (!all_byname(V_bar_check)) {
+        offenders <- which(!unlist(as.list(V_bar_check) %>% set_names(rownames(V_bar_check))))
+        stop(paste("Outputs from each industry not unit homogeneous.",
+                   "Offending industries:",
+                   paste(names(offenders), collapse = ", ")))
+      }
+    }
+  }
   yqgw_func <- function(U, V, Y, S_units){
     y_val <- rowsums_byname(Y)
     q_val <- sum_byname(rowsums_byname(U), y_val)
@@ -105,23 +128,6 @@ calc_yqgW <- function(.sutdata,
   }
   matsindf_apply(.sutdata, FUN = yqgw_func, U = U_colname, V = V_colname, Y = Y_colname, S_units = S_units)
 
-  # Perform a check on units.
-  # The V_bar matrix should have only one entry per row,
-  # meaning that all products of a given industry are measured in the same units.
-  # At the present time, this method works only under those conditions
-  # (product unit homogeneity).
-  # If product unit homogeneity is violated, the methods here cannot be used.
-  # To accommodate unit inhomogenity of industry products,
-  # further generalizations of this method will be needed.
-  # CheckUnits <- .sutdata %>%
-  #   mutate(
-  #     !!V_bar := matrixproduct_byname(!!V, !!S_units),
-  #     !!V_bar_check := count_vals_inrows_byname(!!V_bar, "!=", 0) %>%
-  #       compare_byname("==", 1) %>%
-  #       all_byname()
-  #   )
-  # Verify that units are good everywhere.
-  # stopifnot(all(as.logical(CheckUnits[[V_bar_check_colname]])))
 }
 
 #' Calculate \code{Z}, \code{D}, \code{C}, and \code{A} matrices
