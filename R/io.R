@@ -93,12 +93,11 @@ calc_yqgW <- function(.sutdata = NULL,
                       # Input columns
                       U_colname = "U", V_colname = "V", Y_colname = "Y", S_units = "S_units",
                       # Output columns
-                      # keep_cols = NULL,
                       y_colname = "y", q_colname = "q", g_colname = "g", W_colname = "W"){
-  # Perform a unit homogeneity check on the incoming V matrix.
-  # But only if S_units is present and useable.
-  if (!is.null(S_units)) {
-    if (!missing(S_units)) {
+  yqgw_func <- function(U, V, Y, S_units = NULL){
+    # Perform a unit homogeneity check on the incoming V matrix.
+    # But only if S_units is present and useable.
+    if (!is.null(S_units)) {
       # The V_bar matrix should have only one entry per row,
       # meaning that all products of a given industry are measured in the same units.
       # At the present time, the PSUT framework works only under those conditions
@@ -106,7 +105,7 @@ calc_yqgW <- function(.sutdata = NULL,
       # If product unit homogeneity is violated, the PSUT method cannot be used.
       # To accommodate unit inhomogenity of industry products,
       # further generalizations of the PSUT method will be required.
-      V_bar <- matrixproduct_byname(V_colname, S_units)
+      V_bar <- matrixproduct_byname(V, S_units)
       V_bar_check <- count_vals_inrows_byname(V_bar, "!=", 0) %>%
         compare_byname("==", 1)
       # Verify that unit homogeneity exists for all products.
@@ -117,17 +116,14 @@ calc_yqgW <- function(.sutdata = NULL,
                    paste(names(offenders), collapse = ", ")))
       }
     }
-  }
-  yqgw_func <- function(U, V, Y, S_units){
     y_val <- rowsums_byname(Y)
     q_val <- sum_byname(rowsums_byname(U), y_val)
     g_val <- rowsums_byname(V)
     W_val <- difference_byname(transpose_byname(V), U)
-    out <- list(y_val, q_val, g_val, W_val) %>% set_names(y_colname, q_colname, g_colname, W_colname)
+    out <- list(y_val, q_val, g_val, W_val) %>% set_names(c(y_colname, q_colname, g_colname, W_colname))
     return(out)
   }
   matsindf_apply(.sutdata, FUN = yqgw_func, U = U_colname, V = V_colname, Y = Y_colname, S_units = S_units)
-
 }
 
 #' Calculate \code{Z}, \code{D}, \code{C}, and \code{A} matrices
@@ -156,7 +152,6 @@ calc_A <- function(.sutdata,
                    U_colname = "U", V_colname = "V",
                    q_colname = "q", g_colname = "g",
                    # Output columns
-                   # keep_cols = NULL,
                    Z_colname = "Z", D_colname = "D", C_colname = "C", A_colname = "A"){
   A_func <- function(U, V, q, g){
     Z_val <- matrixproduct_byname(U, hatize_byname(g) %>% invert_byname())
@@ -189,7 +184,6 @@ calc_L <- function(.sutdata,
                    # Input columns
                    D_colname = "D", A_colname = "A",
                    # Output columns
-                   # keep_cols = NULL,
                    L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp"){
   L_func <- function(D, A){
     L_pxp_val <- Iminus_byname(A) %>% invert_byname()
