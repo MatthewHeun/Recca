@@ -47,6 +47,15 @@ test_that("embodied energy calculations works as expected", {
            L_pxp, L_ixp, U_EIOU, G, H, E, M_p, M_s)
   expect_known_value(M, file.path(expec_path, "expected_M.rds"), update = FALSE)
 
+  F <- M %>%
+    calc_F_footprint_effects()
+  expect_known_value(F, file.path(expec_path, "expected_F.rds"), update = FALSE)
+
+  primary_machine_names <- c("Resources - Crude", "Resources - NG")
+  embodied_etas <- F %>%
+    calc_embodied_etas(primary_machine_names = primary_machine_names)
+  expect_known_value(embodied_etas, file.path(expec_path, "expected_embodied_etas.rds"), update = FALSE)
+
   if (is_testing()) {
     # Restore the previous working directory.
     setwd(currwd)
