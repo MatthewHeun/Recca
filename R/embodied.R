@@ -71,27 +71,20 @@ calc_embodied_mats <- function(.iodata,
                                Qposcolsums_colname = ".Qposcolsums"){
   .iodata %>%
     calc_GH(y_colname = y_colname, Y_colname = Y_colname, L_ixp_colname = L_ixp_colname,
-            # keep_cols = c(keep_cols, Y_colname, q_colname, g_colname, W_colname, U_EIOU_colname),
             G_colname = G_colname, H_colname = H_colname) %>%
     calc_E(g_colname = g_colname, W_colname = W_colname, U_EIOU_colname = U_EIOU_colname,
-           # keep_cols = c(keep_cols, Y_colname, q_colname, G_colname, H_colname),
            E_colname = E_colname) %>%
     calc_M(Y_colname = Y_colname,
            q_colname = q_colname,
            G_colname = G_colname, E_colname = E_colname,
-           # keep_cols = c(keep_cols, G_colname, H_colname, E_colname),
            Q_colname = Q_colname,
            M_p_colname = M_p_colname,
            M_s_colname = M_s_colname) %>%
     calc_F_footprint_effects(M_p_colname = M_p_colname, M_s_colname = M_s_colname,
-                             # keep_cols = c(keep_cols, G_colname, H_colname, E_colname,
-                             #               M_p_colname, M_s_colname),
                              F_footprint_p_colname = F_footprint_p_colname,
                              F_effects_p_colname = F_effects_p_colname,
                              F_footprint_s_colname = F_footprint_s_colname,
-                             F_effects_s_colname = F_effects_s_colname) # %>%
-    # select(c(keep_cols, G_colname, H_colname, E_colname, M_p_colname, M_s_colname,
-    #          F_footprint_p_colname, F_effects_p_colname, F_footprint_s_colname, F_effects_s_colname))
+                             F_effects_s_colname = F_effects_s_colname)
 }
 
 #' Calculate the G and H matrices for embodied energy calculations
@@ -115,7 +108,6 @@ calc_GH <- function(.iodata,
                     # Input columns
                     y_colname = "y", Y_colname = "Y", L_ixp_colname = "L_ixp",
                     # Output columns
-                    # keep_cols = NULL,
                     G_colname = "G", H_colname = "H"){
   # Establish some names
   y <- as.name(y_colname)
@@ -125,12 +117,10 @@ calc_GH <- function(.iodata,
   H <- as.name(H_colname)
 
   .iodata %>%
-    # select(!!!intersect(keep_cols, names(.)), !!y_colname, !!Y_colname, !!L_ixp_colname) %>%
     mutate(
       !!G_colname := matrixproduct_byname(!!as.name(L_ixp_colname), hatize_byname(!!as.name(y_colname))),
       !!H_colname := matrixproduct_byname(!!as.name(L_ixp_colname), !!as.name(Y_colname))
-    ) # %>%
-    # select(!!!intersect(keep_cols, names(.)), !!G_colname, !!H_colname)
+    )
 }
 
 #' Calculate the E matrix for embodied energy calculations
@@ -155,12 +145,10 @@ calc_E <- function(.iodata,
                    # keep_cols = NULL,
                    E_colname = "E"){
   .iodata %>%
-    # select(!!!intersect(keep_cols, names(.)), !!g_colname, !!W_colname, !!U_EIOU_colname) %>%
     mutate(
       !!E_colname := matrixproduct_byname(sum_byname(!!as.name(W_colname), !!as.name(U_EIOU_colname)),
                                           (!!as.name(g_colname)) %>% hatize_byname() %>% invert_byname())
-    ) # %>%
-    # select(!!!intersect(keep_cols, names(.)), !!E_colname)
+    )
 }
 
 
@@ -209,7 +197,6 @@ calc_M <- function(.YqGHEdata,
                    Y_colname = "Y", q_colname = "q",
                    G_colname = "G", E_colname = "E",
                    # Output columns
-                   # keep_cols = NULL,
                    M_p_colname = "M_p",
                    M_s_colname = "M_s",
                    # Column names for intermediate results
@@ -271,9 +258,7 @@ calc_M <- function(.YqGHEdata,
       # Calculate the "per-sector" embodied energy.
       !!M_s_colname := matrixproduct_byname(!!as.name(M_p_colname), (!!as.name(q_colname)) %>%
                                               hatize_byname %>% invert_byname) %>% matrixproduct_byname(!!as.name(Y_colname))
-    ) # %>%
-    # Trim columns before returning
-    # select(!!!intersect(keep_cols, names(.)), !!M_p_colname, !!M_s_colname)
+    )
 }
 
 #' Upstream footprint and downstream effects matrices
@@ -301,7 +286,6 @@ calc_F_footprint_effects <- function(.Mdata,
                                      M_p_colname = "M_p",
                                      M_s_colname = "M_s",
                                      # Output columns
-                                     # keep_cols = NULL,
                                      F_footprint_p_colname = "F_footprint_p",
                                      F_effects_p_colname = "F_effects_p",
                                      F_footprint_s_colname = "F_footprint_s",
@@ -318,10 +302,7 @@ calc_F_footprint_effects <- function(.Mdata,
                                                       colsums_byname(!!M_s_colname) %>% hatize_byname %>% invert_byname),
       !!F_effects_s_colname := matrixproduct_byname(rowsums_byname(!!M_s_colname) %>% hatize_byname %>% invert_byname,
                                                     !!M_s_colname)
-    ) # %>%
-    # select(c(!!!keep_cols,
-    #          !!F_footprint_p_colname, !!F_effects_p_colname,
-    #          !!F_footprint_s_colname, !!F_effects_s_colname))
+    )
 }
 
 #' Embodied energy efficiencies
@@ -343,7 +324,6 @@ calc_embodied_etas <- function(.embodiedmats,
                                # Input columns of .embodiedmats
                                Y_colname = "Y", G_colname = "G", H_colname = "H",
                                # Output columns
-                               # keep_cols = NULL,
                                eta_p_colname = "eta_p", eta_s_colname = "eta_s"){
   .embodiedmats %>%
     mutate(
