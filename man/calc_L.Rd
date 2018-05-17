@@ -19,12 +19,9 @@ calc_L(.sutdata, D_colname = "D", A_colname = "A",
 
 \item{L_pxp_colname}{the name of the output column containing the product-by-product L matrix.
 \code{L_pxp} is calculated by \code{(I - Z*D)^-1}.}
-
-\item{keep_cols}{a vector of names of columns of \code{.sutdata} to return with the output}
 }
 \value{
-a data frame containing columns specified in \code{keep_cols},
-\code{L_ixp_colname}, and \code{L_pxp_colname}.
+\code{.sutdata} with columns \code{L_ixp_colname} and \code{L_pxp_colname} added
 }
 \description{
 Calculates total requirements matrices

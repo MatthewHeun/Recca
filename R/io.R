@@ -31,17 +31,17 @@
 #' @param L_pxp_colname the name of the output column containing product-by-product L matrices.
 #' \code{L_pxp} is calculated by \code{(I - Z*D)^-1}.
 #'
-#' @return a data frame containing columns specified in \code{keep_cols},
+#' @return \code{.sutdata} with columns
 #' \code{y_colname}, \code{q_colname}, \code{g_colname}, \code{W_colname},
 #' \code{Z_colname}, \code{D_colname}, \code{C_colname}, \code{A_colname},
-#' \code{L_ixp_colname}, and \code{L_pxp_colname}.
+#' \code{L_ixp_colname}, and \code{L_pxp_colname}
+#' added
 #'
 #' @export
 calc_io_mats <- function(.sutdata,
                          # Input columns
                          U_colname = "U", V_colname = "V", Y_colname = "Y",
                          # Output columns
-                         # keep_cols = NULL,
                          y_colname = "y", q_colname = "q", g_colname = "g", W_colname = "W",
                          Z_colname = "Z", D_colname = "D", C_colname = "C", A_colname = "A",
                          L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp"){
@@ -75,7 +75,6 @@ calc_io_mats <- function(.sutdata,
 #' @param V_colname the name of the column in \code{.sutdata} containing Make (\code{V}) matrices.
 #' @param Y_colname the name of the column in \code{.sutdata} containing final demand (\code{Y}) matrices.
 #' @param S_units the name of the column in \code{.sutdata} containing \code{S_units} matrices.
-#' @param keep_cols a vector of names of columns of \code{.sutdata} to return with the output
 #' @param y_colname the name of the output column containing \code{y} vectors.
 #' \code{y} is calculated by \code{rowsums_byname(Y)}.
 #' @param g_colname the name of the output column containing \code{g} vectors.
@@ -87,8 +86,7 @@ calc_io_mats <- function(.sutdata,
 #'
 #' @export
 #'
-#' @return a data frame containing columns specified in \code{keep_cols},
-#' \code{y_colname}, \code{q_colname}, \code{g_colname}, and \code{W_colname}.
+#' @return \code{.sutdata} with columns \code{y_colname}, \code{q_colname}, \code{g_colname}, and \code{W_colname} added
 calc_yqgW <- function(.sutdata = NULL,
                       # Input columns
                       U_colname = "U", V_colname = "V", Y_colname = "Y", S_units = "S_units",
@@ -133,7 +131,6 @@ calc_yqgW <- function(.sutdata = NULL,
 #' @param V_colname the name of the column in \code{.sutdata} containing Make (\code{V}) matrices.
 #' @param q_colname the name of the column in \code{.sutdata} containing \code{q} vectors.
 #' @param g_colname the name of the column in \code{.sutdata} containing \code{g} vectors.
-#' @param keep_cols a vector of names of columns of \code{.sutdata} to return with the output
 #' @param Z_colname the name of the output column containing \code{Z} matrices.
 #' \code{Z} is calculated by \code{U * g_hat_inv}.
 #' @param D_colname the name of the output column containing \code{D} matrices.
@@ -143,8 +140,7 @@ calc_yqgW <- function(.sutdata = NULL,
 #' @param A_colname the name of the output column containing \code{A} matrices.
 #' \code{A} is calculated by \code{Z * D}.
 #'
-#' @return a data frame containing columns specified in \code{keep_cols},
-#' \code{Z_colname}, \code{D_colname}, and \code{A_colname}.
+#' @return \code{.sutdata} with columns \code{Z_colname}, \code{D_colname}, and \code{A_colname} added
 #'
 #' @export
 calc_A <- function(.sutdata,
@@ -170,14 +166,12 @@ calc_A <- function(.sutdata,
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
 #' @param D_colname the name of the column in \code{.sutdata} containing the \code{D} matrix.
 #' @param A_colname the name of the column in \code{.sutdata} containing the \code{A} matrix.
-#' @param keep_cols a vector of names of columns of \code{.sutdata} to return with the output
 #' @param L_ixp_colname the name of the output column containing the industry-by-product L matrix.
 #' \code{L_ixp} is calculated by \code{D * L_pxp}.
 #' @param L_pxp_colname the name of the output column containing the product-by-product L matrix.
 #' \code{L_pxp} is calculated by \code{(I - Z*D)^-1}.
 #'
-#' @return a data frame containing columns specified in \code{keep_cols},
-#' \code{L_ixp_colname}, and \code{L_pxp_colname}.
+#' @return \code{.sutdata} with columns \code{L_ixp_colname} and \code{L_pxp_colname} added
 #'
 #' @export
 calc_L <- function(.sutdata,

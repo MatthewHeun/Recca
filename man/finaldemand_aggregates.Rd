@@ -32,12 +32,10 @@ Each entry in this column is \code{sumall(Y_fd)}.}
 
 \item{gross_aggregate_demand_colname}{the name of the output column containing aggregates of gross energy demand.
 Each entry in this column is calculated by \code{sumall(Y_fd)} + \code{sumall(U_EIOU)}.}
-
-\item{keep_cols}{a vector of names of columns of \code{.sutdata} to return with the output}
 }
 \value{
-a data frame containing the columns in \code{keep_cols}, gross aggregate energy demand
-and net aggregate energy demand for each row of \code{.sutdata}.
+\code{.sutdata} with columns \code{net_aggregate_demand_colname} and
+\code{gross_aggregate_demand_colname} added
 }
 \description{
 Calculates aggregate final demand energy from a data frame of Supply-Use matrices.

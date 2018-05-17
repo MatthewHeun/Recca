@@ -23,11 +23,9 @@ Leontief (\code{L_ixp}) matrices.}
 
 \item{H_colname}{the name of the output column containing \code{H} matrices.
 \code{G} is calculated by \code{L_ixp * Y}.}
-
-\item{keep_cols}{a vector of names of columns of \code{.iodata} to return with the output}
 }
 \value{
-a data frame containing columns specified in \code{keep_cols} and \code{G_colname}.
+\code{.iodata} with columns \code{G_colname} and \code{H_colname} added.
 }
 \description{
 Calculate the G and H matrices for embodied energy calculations

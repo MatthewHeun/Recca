@@ -20,11 +20,9 @@ value added (\code{W}) matrices}
 
 \item{E_colname}{the name of the output column containing \code{E} matrices.
 \code{E} is calculated by \code{W * g_hat_inv}.}
-
-\item{keep_cols}{a vector of names of columns of \code{.iodata} to return with the output}
 }
 \value{
-a data frame containing columns specified in \code{keep_cols} and \code{E_colname}.
+\code{.iodata} with column \code{E_colname} added
 }
 \description{
 Calculate the E matrix for embodied energy calculations

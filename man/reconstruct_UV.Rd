@@ -26,12 +26,9 @@ that will be used to reconstruct the economy}
 \item{U_prime_colname}{the name of the output column that contains new Use (\code{U}) matrices.}
 
 \item{V_prime_colname}{the name of the output column that contains new Make (\code{V}) matrices.}
-
-\item{keep_cols}{a vector of names of columns of \code{.sutdata} to return with the output}
 }
 \value{
-a data frame containing columns specified in \code{keep_cols},
-\code{U_colname} and \code{V_colname}.
+\code{.sutdata} with columns \code{U_prime} and \code{V_prime} added
 }
 \description{
 Reconstruct an economy given a new final demand matrix

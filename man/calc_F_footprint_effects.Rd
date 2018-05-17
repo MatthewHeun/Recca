@@ -26,8 +26,8 @@ calc_F_footprint_effects(.Mdata, M_p_colname = "M_p", M_s_colname = "M_s",
 \item{F_effects_s_colname}{the name of the column in the output containing \strong{F_effects_s} matrices (as a string)}
 }
 \value{
-columns of \code{F_footprint_p}, \code{F_effects_p},
-\code{F_footprint_s}, and \code{F_effects_s} matrices as well as columns named in \code{keep_cols}
+\code{.Mdata} with columns \code{F_footprint_p}, \code{F_effects_p},
+\code{F_footprint_s}, and \code{F_effects_s} added
 }
 \description{
 Calculates upstream footprint matrices (\strong{F_footprint_p}, \strong{F_footprint_s})

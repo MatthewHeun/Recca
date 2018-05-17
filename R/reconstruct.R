@@ -12,12 +12,10 @@
 #' @param L_pxp_colname the name of a column containing product-by-product L matrices.
 #' @param Z_colname the name of a column containing \code{Z} matrices.
 #' @param D_colname the name of a column containing \code{D} matrices.
-#' @param keep_cols a vector of names of columns of \code{.sutdata} to return with the output
 #' @param U_prime_colname the name of the output column that contains new Use (\code{U}) matrices.
 #' @param V_prime_colname the name of the output column that contains new Make (\code{V}) matrices.
 #'
-#' @return a data frame containing columns specified in \code{keep_cols},
-#' \code{U_colname} and \code{V_colname}.
+#' @return \code{.sutdata} with columns \code{U_prime} and \code{V_prime} added
 #'
 #' @export
 #'

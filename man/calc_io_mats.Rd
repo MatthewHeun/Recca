@@ -49,10 +49,11 @@ calc_io_mats(.sutdata, U_colname = "U", V_colname = "V", Y_colname = "Y",
 \code{L_pxp} is calculated by \code{(I - Z*D)^-1}.}
 }
 \value{
-a data frame containing columns specified in \code{keep_cols},
+\code{.sutdata} with columns
 \code{y_colname}, \code{q_colname}, \code{g_colname}, \code{W_colname},
 \code{Z_colname}, \code{D_colname}, \code{C_colname}, \code{A_colname},
-\code{L_ixp_colname}, and \code{L_pxp_colname}.
+\code{L_ixp_colname}, and \code{L_pxp_colname}
+added
 }
 \description{
 Calculate various input-output matrices

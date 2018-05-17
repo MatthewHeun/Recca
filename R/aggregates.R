@@ -104,14 +104,13 @@ primary_aggregates <- function(.sutdata,
 #' "Product" for aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.),
 #' "Sector" for aggregation by final demand sector (Agriculture/forestry, Domestic navigation, etc.), or
 #' "Total" for aggregation over both Product and Sector (the default).
-#' @param keep_cols a vector of names of columns of \code{.sutdata} to return with the output
 #' @param net_aggregate_demand_colname the name of the output column containing aggregates of net energy demand.
 #' Each entry in this column is \code{sumall(Y_fd)}.
 #' @param gross_aggregate_demand_colname the name of the output column containing aggregates of gross energy demand.
 #' Each entry in this column is calculated by \code{sumall(Y_fd)} + \code{sumall(U_EIOU)}.
 #'
-#' @return a data frame containing the columns in \code{keep_cols}, gross aggregate energy demand
-#' and net aggregate energy demand for each row of \code{.sutdata}.
+#' @return \code{.sutdata} with columns \code{net_aggregate_demand_colname} and
+#' \code{gross_aggregate_demand_colname} added
 #'
 #' @export
 finaldemand_aggregates <- function(.sutdata,
@@ -148,7 +147,6 @@ finaldemand_aggregates <- function(.sutdata,
 
   Out <- .sutdata %>%
     # Select only relevant columns
-    # select_(.dots = c(intersect(keep_cols, names(.)), U_colname, V_colname, Y_colname, r_EIOU_colname)) %>%
     mutate(
       # And add EIOU information to the data frame.
       !!U_EIOU := elementproduct_byname(!!r_EIOU, !!U),

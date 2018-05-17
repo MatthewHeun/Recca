@@ -79,8 +79,8 @@ These matrices give the energy of type shown in rows embodied in the Products sh
 \code{M} is formed from column sums of positive entries in the various Qx matrices}
 }
 \value{
-a data frame containing columns specified in \code{keep_cols},
-\code{G_colname}, \code{H_colname}, \code{E_colname}, and \code{Q_colname}.
+\code{.iodata} with columns
+\code{G_colname}, \code{H_colname}, \code{E_colname}, and \code{Q_colname} added
 }
 \description{
 Calculate various embodied energy matrices

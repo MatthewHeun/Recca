@@ -54,12 +54,9 @@ In each list, there is one Q matrix for each Product in the Energy Conversion Ch
 Embodied energy entries in \strong{Q} are positive.}
 
 \item{Qposcolsums_colname}{the name of the column containing column sums of \strong{Qpos} matrices.}
-
-\item{keep_cols}{a vector of names of columns of \code{.iodata} (if any) to return with the output}
 }
 \value{
-a data frame containing columns specified in \code{keep_cols},
-\code{Q_colname}, \code{M_p_colname}, and \code{M_s_colname}.
+\code{.YqGHEdata} with columns \code{Q_colname}, \code{M_p_colname}, and \code{M_s_colname} added
 }
 \description{
 Add embodied matrices colums to a data frame

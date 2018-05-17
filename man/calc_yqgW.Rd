@@ -30,12 +30,9 @@ calc_yqgW(.sutdata = NULL, U_colname = "U", V_colname = "V",
 
 \item{W_colname}{the name of the output column containing \code{W} matrices.
 \code{W} is calculated by \code{transpose_byname(V) - U}.}
-
-\item{keep_cols}{a vector of names of columns of \code{.sutdata} to return with the output}
 }
 \value{
-a data frame containing columns specified in \code{keep_cols},
-\code{y_colname}, \code{q_colname}, \code{g_colname}, and \code{W_colname}.
+\code{.sutdata} with columns \code{y_colname}, \code{q_colname}, \code{g_colname}, and \code{W_colname} added
 }
 \description{
 Calculate y, g, and q vectors and W matrices

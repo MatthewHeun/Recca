@@ -4,7 +4,6 @@ context("Reconstructing PSUT matrices")
 ###########################################################
 
 test_that("reconstructing U and V from single matrices works as expected", {
-  # alliomats <- calc_io_mats(UKEnergy2000mats, keep_cols = "Y")
   alliomats <- calc_io_mats(UKEnergy2000mats)
   allUV <- reconstruct_UV(alliomats, Y_prime_colname = "Y")
   for (i in 1:nrow(allUV)) {
@@ -35,8 +34,6 @@ test_that("reconstructing U and V with a data frame works as expected", {
   # Try with Y_prime <- Y, thereby simply trying to duplicate the original U and V matrices
   Reconstructed <- UKEnergy2000mats %>%
     calc_io_mats() %>%
-    # calc_io_mats(keep_cols = c("Country", "Year", "Energy.type", "Last.stage",
-    #                            "U", "V", "Y", "r_EIOU", "S_units")) %>%
     mutate(
       Y_prime = Y
     ) %>%

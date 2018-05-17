@@ -30,12 +30,9 @@ calc_A(.sutdata, U_colname = "U", V_colname = "V", q_colname = "q",
 
 \item{A_colname}{the name of the output column containing \code{A} matrices.
 \code{A} is calculated by \code{Z * D}.}
-
-\item{keep_cols}{a vector of names of columns of \code{.sutdata} to return with the output}
 }
 \value{
-a data frame containing columns specified in \code{keep_cols},
-\code{Z_colname}, \code{D_colname}, and \code{A_colname}.
+\code{.sutdata} with columns \code{Z_colname}, \code{D_colname}, and \code{A_colname} added
 }
 \description{
 Calculate \code{Z}, \code{D}, \code{C}, and \code{A} matrices
