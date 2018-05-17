@@ -58,7 +58,7 @@ calc_embodied_mats <- function(.iodata,
                                Y_colname = "Y", y_colname = "y", q_colname = "q",
                                L_ixp_colname = "L_ixp", g_colname = "g", W_colname = "W", U_EIOU_colname = "U_EIOU",
                                # Output columns
-                               keep_cols = NULL,
+                               # keep_cols = NULL,
                                G_colname = "G", H_colname = "H", E_colname = "E",
                                M_p_colname = "M_p", M_s_colname = "M_s",
                                F_footprint_p_colname = "F_footprint_p", F_effects_p_colname = "F_effects_p",
@@ -71,27 +71,27 @@ calc_embodied_mats <- function(.iodata,
                                Qposcolsums_colname = ".Qposcolsums"){
   .iodata %>%
     calc_GH(y_colname = y_colname, Y_colname = Y_colname, L_ixp_colname = L_ixp_colname,
-            keep_cols = c(keep_cols, Y_colname, q_colname, g_colname, W_colname, U_EIOU_colname),
+            # keep_cols = c(keep_cols, Y_colname, q_colname, g_colname, W_colname, U_EIOU_colname),
             G_colname = G_colname, H_colname = H_colname) %>%
     calc_E(g_colname = g_colname, W_colname = W_colname, U_EIOU_colname = U_EIOU_colname,
-           keep_cols = c(keep_cols, Y_colname, q_colname, G_colname, H_colname),
+           # keep_cols = c(keep_cols, Y_colname, q_colname, G_colname, H_colname),
            E_colname = E_colname) %>%
     calc_M(Y_colname = Y_colname,
            q_colname = q_colname,
            G_colname = G_colname, E_colname = E_colname,
-           keep_cols = c(keep_cols, G_colname, H_colname, E_colname),
+           # keep_cols = c(keep_cols, G_colname, H_colname, E_colname),
            Q_colname = Q_colname,
            M_p_colname = M_p_colname,
            M_s_colname = M_s_colname) %>%
     calc_F_footprint_effects(M_p_colname = M_p_colname, M_s_colname = M_s_colname,
-                             keep_cols = c(keep_cols, G_colname, H_colname, E_colname,
-                                           M_p_colname, M_s_colname),
+                             # keep_cols = c(keep_cols, G_colname, H_colname, E_colname,
+                             #               M_p_colname, M_s_colname),
                              F_footprint_p_colname = F_footprint_p_colname,
                              F_effects_p_colname = F_effects_p_colname,
                              F_footprint_s_colname = F_footprint_s_colname,
-                             F_effects_s_colname = F_effects_s_colname) %>%
-    select(c(keep_cols, G_colname, H_colname, E_colname, M_p_colname, M_s_colname,
-             F_footprint_p_colname, F_effects_p_colname, F_footprint_s_colname, F_effects_s_colname))
+                             F_effects_s_colname = F_effects_s_colname) # %>%
+    # select(c(keep_cols, G_colname, H_colname, E_colname, M_p_colname, M_s_colname,
+    #          F_footprint_p_colname, F_effects_p_colname, F_footprint_s_colname, F_effects_s_colname))
 }
 
 #' Calculate the G and H matrices for embodied energy calculations
@@ -115,7 +115,7 @@ calc_GH <- function(.iodata,
                     # Input columns
                     y_colname = "y", Y_colname = "Y", L_ixp_colname = "L_ixp",
                     # Output columns
-                    keep_cols = NULL,
+                    # keep_cols = NULL,
                     G_colname = "G", H_colname = "H"){
   # Establish some names
   y <- as.name(y_colname)
@@ -152,7 +152,7 @@ calc_E <- function(.iodata,
                    # Input columns
                    g_colname = "g", W_colname = "W", U_EIOU_colname = "U_EIOU",
                    # Output columns
-                   keep_cols = NULL,
+                   # keep_cols = NULL,
                    E_colname = "E"){
   .iodata %>%
     # select(!!!intersect(keep_cols, names(.)), !!g_colname, !!W_colname, !!U_EIOU_colname) %>%
@@ -301,7 +301,7 @@ calc_F_footprint_effects <- function(.Mdata,
                                      M_p_colname = "M_p",
                                      M_s_colname = "M_s",
                                      # Output columns
-                                     keep_cols = NULL,
+                                     # keep_cols = NULL,
                                      F_footprint_p_colname = "F_footprint_p",
                                      F_effects_p_colname = "F_effects_p",
                                      F_footprint_s_colname = "F_footprint_s",

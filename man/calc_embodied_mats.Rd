@@ -6,10 +6,9 @@
 \usage{
 calc_embodied_mats(.iodata, Y_colname = "Y", y_colname = "y",
   q_colname = "q", L_ixp_colname = "L_ixp", g_colname = "g",
-  W_colname = "W", U_EIOU_colname = "U_EIOU", keep_cols = NULL,
-  G_colname = "G", H_colname = "H", E_colname = "E",
-  M_p_colname = "M_p", M_s_colname = "M_s",
-  F_footprint_p_colname = "F_footprint_p",
+  W_colname = "W", U_EIOU_colname = "U_EIOU", G_colname = "G",
+  H_colname = "H", E_colname = "E", M_p_colname = "M_p",
+  M_s_colname = "M_s", F_footprint_p_colname = "F_footprint_p",
   F_effects_p_colname = "F_effects_p",
   F_footprint_s_colname = "F_footprint_s",
   F_effects_s_colname = "F_effects_s", e_colname = ".evectors",

@@ -5,8 +5,7 @@
 \title{Calculate the G and H matrices for embodied energy calculations}
 \usage{
 calc_GH(.iodata, y_colname = "y", Y_colname = "Y",
-  L_ixp_colname = "L_ixp", keep_cols = NULL, G_colname = "G",
-  H_colname = "H")
+  L_ixp_colname = "L_ixp", G_colname = "G", H_colname = "H")
 }
 \arguments{
 \item{.iodata}{a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.
@@ -19,13 +18,13 @@ calc_GH(.iodata, y_colname = "y", Y_colname = "Y",
 \item{L_ixp_colname}{the name of the column in \code{.iodata} containing Industry-by-Product
 Leontief (\code{L_ixp}) matrices.}
 
-\item{keep_cols}{a vector of names of columns of \code{.iodata} to return with the output}
-
 \item{G_colname}{the name of the output column containing \code{G} matrices.
 \code{G} is calculated by \code{L_ixp * y_hat}.}
 
 \item{H_colname}{the name of the output column containing \code{H} matrices.
 \code{G} is calculated by \code{L_ixp * Y}.}
+
+\item{keep_cols}{a vector of names of columns of \code{.iodata} to return with the output}
 }
 \value{
 a data frame containing columns specified in \code{keep_cols} and \code{G_colname}.

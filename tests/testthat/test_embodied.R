@@ -23,8 +23,9 @@ test_that("embodied energy calculations works as expected", {
 
   # Calculate the G and H matrices
   GH <- io_mats %>%
-    calc_GH(keep_cols = c("Country", "Year", "Energy.type", "Last.stage", "U", "V", "Y", "r_EIOU",
-                          "S_units", "y", "q", "g", "W", "Z", "D", "C", "A", "L_pxp", "L_ixp")) %>%
+    calc_GH() %>%
+    # calc_GH(keep_cols = c("Country", "Year", "Energy.type", "Last.stage", "U", "V", "Y", "r_EIOU",
+    #                       "S_units", "y", "q", "g", "W", "Z", "D", "C", "A", "L_pxp", "L_ixp")) %>%
     select(Country, Year, Energy.type, Last.stage, U, V, Y, r_EIOU, S_units,
            y, q, g, W, Z, D, C, A, L_pxp, L_ixp,
            G, H)

@@ -5,7 +5,7 @@
 \title{Calculate the E matrix for embodied energy calculations}
 \usage{
 calc_E(.iodata, g_colname = "g", W_colname = "W",
-  U_EIOU_colname = "U_EIOU", keep_cols = NULL, E_colname = "E")
+  U_EIOU_colname = "U_EIOU", E_colname = "E")
 }
 \arguments{
 \item{.iodata}{a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.
@@ -18,10 +18,10 @@ value added (\code{W}) matrices}
 
 \item{U_EIOU_colname}{the name of the column in \code{.iodata} containing energy industry own use matrices}
 
-\item{keep_cols}{a vector of names of columns of \code{.iodata} to return with the output}
-
 \item{E_colname}{the name of the output column containing \code{E} matrices.
 \code{E} is calculated by \code{W * g_hat_inv}.}
+
+\item{keep_cols}{a vector of names of columns of \code{.iodata} to return with the output}
 }
 \value{
 a data frame containing columns specified in \code{keep_cols} and \code{E_colname}.
