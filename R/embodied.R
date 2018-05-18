@@ -319,6 +319,29 @@ calc_embodied_etas <- function(.embodiedmats,
                                Y_colname = "Y", G_colname = "G", H_colname = "H",
                                # Output columns
                                eta_p_colname = "eta_p", eta_s_colname = "eta_s"){
+  # eta_func <- function(pmns, Y, G, H){
+  #   eta_p <- elementquotient_byname(
+  #     # Numerator
+  #     rowsums_byname(Y) %>% transpose_byname(),
+  #     # Denominator
+  #     G %>% select_rows_byname(retain_pattern = make_pattern(primary_machine_names, pattern_type = "leading")) %>% colsums_byname()
+  #   ) %>%
+  #     # Make it a column vector
+  #     transpose_byname()
+  #   eta_s <- elementquotient_byname(
+  #     # Numerator
+  #     colsums_byname(Y) %>% setrownames_byname("row") %>% setrowtype("row"),
+  #     # Denominator
+  #     H %>% select_rows_byname(retain_pattern = make_pattern(primary_machine_names, pattern_type = "leading")) %>%
+  #       colsums_byname() %>% setrownames_byname("row") %>% setrowtype("row")
+  #   ) %>%
+  #     # Make it a column vector
+  #     transpose_byname()
+  #   list(eta_p, eta_s) %>% set_names(eta_p_colname, eta_s_colname)
+  # }
+  # matsindf_apply(.embodiedmats, FUN = eta_func,
+  #                pmns = primary_machine_names, Y = Y_colname, G = G_colname, H = H_colname)
+
   .embodiedmats %>%
     mutate(
       # etp_p = transpose(Y*i) / iT * G_primary

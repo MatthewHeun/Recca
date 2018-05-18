@@ -118,8 +118,7 @@ calc_yqgW <- function(.sutdata = NULL,
     q_val <- sum_byname(rowsums_byname(U), y_val)
     g_val <- rowsums_byname(V)
     W_val <- difference_byname(transpose_byname(V), U)
-    out <- list(y_val, q_val, g_val, W_val) %>% set_names(c(y_colname, q_colname, g_colname, W_colname))
-    return(out)
+    list(y_val, q_val, g_val, W_val) %>% set_names(c(y_colname, q_colname, g_colname, W_colname))
   }
   matsindf_apply(.sutdata, FUN = yqgw_func, U = U_colname, V = V_colname, Y = Y_colname, S_units = S_units)
 }
@@ -154,8 +153,7 @@ calc_A <- function(.sutdata,
     C_val <- matrixproduct_byname(transpose_byname(V), hatize_byname(g) %>% invert_byname())
     D_val <- matrixproduct_byname(V, hatize_byname(q) %>% invert_byname())
     A_val <- matrixproduct_byname(Z_val, D_val)
-    out <- list(Z_val, C_val, D_val, A_val) %>% set_names(Z_colname, C_colname, D_colname, A_colname)
-    return(out)
+    list(Z_val, C_val, D_val, A_val) %>% set_names(Z_colname, C_colname, D_colname, A_colname)
   }
   matsindf_apply(.sutdata, FUN = A_func, U = U_colname, V = V_colname, q = q_colname, g = g_colname)
 }
@@ -182,8 +180,7 @@ calc_L <- function(.sutdata,
   L_func <- function(D, A){
     L_pxp_val <- Iminus_byname(A) %>% invert_byname()
     L_ixp_val <- matrixproduct_byname(D, L_pxp_val)
-    out <- list(L_pxp_val, L_ixp_val) %>% set_names(L_pxp_colname, L_ixp_colname)
-    return(out)
+    list(L_pxp_val, L_ixp_val) %>% set_names(L_pxp_colname, L_ixp_colname)
   }
   matsindf_apply(.sutdata, FUN = L_func, D = D_colname, A = A_colname)
 }

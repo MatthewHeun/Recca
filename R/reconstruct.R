@@ -34,8 +34,7 @@ reconstruct_UV <- function(.sutdata = NULL,
     q_prime_val <- matrixproduct_byname(L_pxp, y_prime_val)
     U_prime_val <- matrixproduct_byname(Z, hatize_byname(g_prime_val))
     V_prime_val <- matrixproduct_byname(D, hatize_byname(q_prime_val))
-    out <- list(U_prime_val, V_prime_val) %>% set_names(U_prime_colname, V_prime_colname)
-    return(out)
+    list(U_prime_val, V_prime_val) %>% set_names(U_prime_colname, V_prime_colname)
   }
   matsindf_apply(.sutdata, FUN = reconstruct_func,
                  Y_prime = Y_prime_colname, L_ixp = L_ixp_colname, L_pxp = L_pxp_colname,
