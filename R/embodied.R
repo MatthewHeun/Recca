@@ -55,7 +55,7 @@
 #' @export
 calc_embodied_mats <- function(.iodata,
                                # Input columns
-                               Y_colname = "Y", y_colname = "y", q_colname = "q",
+                               Y_colname = "Y", q_colname = "q",
                                L_ixp_colname = "L_ixp", g_colname = "g", W_colname = "W", U_EIOU_colname = "U_EIOU",
                                # Output columns
                                G_colname = "G", H_colname = "H", E_colname = "E",
@@ -69,7 +69,7 @@ calc_embodied_mats <- function(.iodata,
                                Qpos_colname = ".Qposmatrices",
                                Qposcolsums_colname = ".Qposcolsums"){
   .iodata %>%
-    calc_GH(y_colname = y_colname, Y_colname = Y_colname, L_ixp_colname = L_ixp_colname,
+    calc_GH(Y_colname = Y_colname, L_ixp_colname = L_ixp_colname,
             G_colname = G_colname, H_colname = H_colname) %>%
     calc_E(g_colname = g_colname, W_colname = W_colname, U_EIOU_colname = U_EIOU_colname,
            E_colname = E_colname) %>%
@@ -104,21 +104,16 @@ calc_embodied_mats <- function(.iodata,
 #' @export
 calc_GH <- function(.iodata,
                     # Input columns
-                    y_colname = "y", Y_colname = "Y", L_ixp_colname = "L_ixp",
+                    Y_colname = "Y", L_ixp_colname = "L_ixp",
                     # Output columns
                     G_colname = "G", H_colname = "H"){
-  # Establish some names
-  y <- as.name(y_colname)
-  Y <- as.name(Y_colname)
-  L_ixp <- as.name(L_ixp_colname)
-  G <- as.name(G_colname)
-  H <- as.name(H_colname)
-
-  .iodata %>%
-    mutate(
-      !!G_colname := matrixproduct_byname(!!as.name(L_ixp_colname), hatize_byname(!!as.name(y_colname))),
-      !!H_colname := matrixproduct_byname(!!as.name(L_ixp_colname), !!as.name(Y_colname))
-    )
+  GH_func <- function(Y, L_ixp){
+    y <- rowsums_byname(Y)
+    G <- matrixproduct_byname(L_ixp, hatize_byname(y))
+    H <- matrixproduct_byname(L_ixp, Y)
+    list(G, H) %>% set_names(G_colname, H_colname)
+  }
+  matsindf_apply(.iodata, FUN = GH_func, Y = Y_colname, L_ixp = L_ixp_colname)
 }
 
 #' Calculate the E matrix for embodied energy calculations
@@ -140,11 +135,11 @@ calc_E <- function(.iodata,
                    g_colname = "g", W_colname = "W", U_EIOU_colname = "U_EIOU",
                    # Output columns
                    E_colname = "E"){
-  .iodata %>%
-    mutate(
-      !!E_colname := matrixproduct_byname(sum_byname(!!as.name(W_colname), !!as.name(U_EIOU_colname)),
-                                          (!!as.name(g_colname)) %>% hatize_byname() %>% invert_byname())
-    )
+  E_func <- function(g, W, U_EIOU){
+    E <- matrixproduct_byname(sum_byname(W, U_EIOU), g %>% hatize_byname() %>% invert_byname())
+    list(E) %>% set_names(E_colname)
+  }
+  matsindf_apply(.iodata, FUN = E_func, g = g_colname, W = W_colname, U_EIOU = U_EIOU_colname)
 }
 
 
