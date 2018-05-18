@@ -4,11 +4,11 @@
 \alias{calc_embodied_mats}
 \title{Calculate various embodied energy matrices}
 \usage{
-calc_embodied_mats(.iodata, Y_colname = "Y", y_colname = "y",
-  q_colname = "q", L_ixp_colname = "L_ixp", g_colname = "g",
-  W_colname = "W", U_EIOU_colname = "U_EIOU", G_colname = "G",
-  H_colname = "H", E_colname = "E", M_p_colname = "M_p",
-  M_s_colname = "M_s", F_footprint_p_colname = "F_footprint_p",
+calc_embodied_mats(.iodata, Y_colname = "Y", q_colname = "q",
+  L_ixp_colname = "L_ixp", g_colname = "g", W_colname = "W",
+  U_EIOU_colname = "U_EIOU", G_colname = "G", H_colname = "H",
+  E_colname = "E", M_p_colname = "M_p", M_s_colname = "M_s",
+  F_footprint_p_colname = "F_footprint_p",
   F_effects_p_colname = "F_effects_p",
   F_footprint_s_colname = "F_footprint_s",
   F_effects_s_colname = "F_effects_s", e_colname = ".evectors",
@@ -21,8 +21,6 @@ calc_embodied_mats(.iodata, Y_colname = "Y", y_colname = "y",
 \code{.iodata} will likely have been obtained from the \code{calc_io_mats} function.}
 
 \item{Y_colname}{the name of the column in \code{.iodata} containing final demand (\strong{Y}) matrices.}
-
-\item{y_colname}{the name of the column in \code{.iodata} containing final demand (\strong{y}) vectors.}
 
 \item{q_colname}{the name of the column in \code{.iodata} containing final demand (\strong{q}) vectors.}
 
@@ -73,6 +71,8 @@ To simplify the process of finding embodied energy,
 set all negative entries in each \code{Q} matrix to zero.}
 
 \item{Qposcolsums_colname}{the name of the column containing column sums of \code{Qpos} matrices.}
+
+\item{y_colname}{the name of the column in \code{.iodata} containing final demand (\strong{y}) vectors.}
 
 \item{M_colname}{the name of the output column containing matrices of embodied energy.
 These matrices give the energy of type shown in rows embodied in the Products shown in columns.
