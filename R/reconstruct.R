@@ -37,7 +37,7 @@ reconstruct_UV <- function(.sutdata = NULL,
     out <- list(U_prime_val, V_prime_val) %>% set_names(U_prime_colname, V_prime_colname)
     return(out)
   }
-  return(matsindf_apply(.sutdata, FUN = reconstruct_func,
-                        Y_prime = Y_prime_colname, L_ixp = L_ixp_colname, L_pxp = L_pxp_colname,
-                        Z = Z_colname, D = D_colname))
+  matsindf_apply(.sutdata, FUN = reconstruct_func,
+                 Y_prime = Y_prime_colname, L_ixp = L_ixp_colname, L_pxp = L_pxp_colname,
+                 Z = Z_colname, D = D_colname)
 }
