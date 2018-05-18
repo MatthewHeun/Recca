@@ -40,35 +40,4 @@ reconstruct_UV <- function(.sutdata = NULL,
   return(matsindf_apply(.sutdata, FUN = reconstruct_func,
                         Y_prime = Y_prime_colname, L_ixp = L_ixp_colname, L_pxp = L_pxp_colname,
                         Z = Z_colname, D = D_colname))
-
-  # # Establish names for input columns
-  # Y_prime <- as.name(Y_prime_colname)
-  # L_ixp <- as.name(L_ixp_colname)
-  # L_pxp <- as.name(L_pxp_colname)
-  # Z <- as.name(Z_colname)
-  # D <- as.name(D_colname)
-  # # Establish names for temporary columns
-  # y_prime_colname <- ".y_prime"
-  # y_prime <- as.name(y_prime_colname)
-  # g_prime_colname <- ".g_prime"
-  # g_prime <- as.name(g_prime_colname)
-  # q_prime_colname <- ".q_prime"
-  # q_prime <- as.name(q_prime_colname)
-  # # Establish names for output columns
-  # U_prime <- as.name(U_prime_colname)
-  # V_prime <- as.name(V_prime_colname)
-  #
-  # # Ensure that we won't overwrite a column.
-  # verify_cols_missing(.sutdata, c(y_prime, g_prime, q_prime, U_prime, V_prime))
-  #
-  # .sutdata %>%
-  #   mutate(
-  #     !!y_prime := rowsums_byname(!!Y_prime),
-  #     !!g_prime := matrixproduct_byname(!!L_ixp, !!y_prime),
-  #     !!q_prime := matrixproduct_byname(!!L_pxp, !!y_prime),
-  #     !!U_prime := matrixproduct_byname(!!Z, hatize_byname(!!g_prime)),
-  #     !!V_prime := matrixproduct_byname(!!D, hatize_byname(!!q_prime))
-  #   ) %>%
-  #   # Delete temporary columns
-  #   select(-(!!y_prime), -(!!g_prime), -(!!q_prime))
 }
