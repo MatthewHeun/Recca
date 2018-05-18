@@ -310,49 +310,19 @@ calc_embodied_etas <- function(.embodiedmats,
                                Y_colname = "Y", G_colname = "G", H_colname = "H",
                                # Output columns
                                eta_p_colname = "eta_p", eta_s_colname = "eta_s"){
-  # eta_func <- function(pmns, Y, G, H){
-  #   eta_p <- elementquotient_byname(
-  #     # Numerator
-  #     rowsums_byname(Y) %>% transpose_byname(),
-  #     # Denominator
-  #     G %>% select_rows_byname(retain_pattern = make_pattern(primary_machine_names, pattern_type = "leading")) %>% colsums_byname()
-  #   ) %>%
-  #     # Make it a column vector
-  #     transpose_byname()
-  #   eta_s <- elementquotient_byname(
-  #     # Numerator
-  #     colsums_byname(Y) %>% setrownames_byname("row") %>% setrowtype("row"),
-  #     # Denominator
-  #     H %>% select_rows_byname(retain_pattern = make_pattern(primary_machine_names, pattern_type = "leading")) %>%
-  #       colsums_byname() %>% setrownames_byname("row") %>% setrowtype("row")
-  #   ) %>%
-  #     # Make it a column vector
-  #     transpose_byname()
-  #   list(eta_p, eta_s) %>% set_names(eta_p_colname, eta_s_colname)
-  # }
-  # matsindf_apply(.embodiedmats, FUN = eta_func,
-  #                pmns = primary_machine_names, Y = Y_colname, G = G_colname, H = H_colname)
-
-  .embodiedmats %>%
-    mutate(
-      # etp_p = transpose(Y*i) / iT * G_primary
-      !!eta_p_colname := elementquotient_byname(
-        # Numerator
-        rowsums_byname(!!as.name(Y_colname)) %>% transpose_byname(),
-        # Denominator
-        (!!as.name(G_colname)) %>% select_rows_byname(retain_pattern = make_pattern(primary_machine_names, pattern_type = "leading")) %>% colsums_byname()
-      ) %>%
-        # Make it a column vector
-        transpose_byname(),
-      # etp_s = iT*Y / iT * H_primary
-      !!eta_s_colname := elementquotient_byname(
-        # Numerator
-        colsums_byname(!!as.name(Y_colname)) %>% setrownames_byname("row") %>% setrowtype("row"),
-        # Denominator
-        (!!as.name(H_colname)) %>% select_rows_byname(retain_pattern = make_pattern(primary_machine_names, pattern_type = "leading")) %>%
-          colsums_byname() %>% setrownames_byname("row") %>% setrowtype("row")
-      ) %>%
-        # Make it a column vector
-        transpose_byname()
-    )
+  eta_func <- function(Y, G, H){
+    eta_p <- elementquotient_byname(
+      rowsums_byname(Y) %>% transpose_byname(),
+      G %>% select_rows_byname(retain_pattern = make_pattern(primary_machine_names, pattern_type = "leading")) %>% colsums_byname()
+    ) %>%
+      transpose_byname() # Make it a column vector
+    eta_s <- elementquotient_byname(
+      colsums_byname(Y) %>% setrownames_byname("row") %>% setrowtype("row"),
+      H %>% select_rows_byname(retain_pattern = make_pattern(primary_machine_names, pattern_type = "leading")) %>%
+        colsums_byname() %>% setrownames_byname("row") %>% setrowtype("row")
+    ) %>%
+      transpose_byname() # Make it a column vector
+    list(eta_p, eta_s) %>% set_names(eta_p_colname, eta_s_colname)
+  }
+  matsindf_apply(.embodiedmats, FUN = eta_func, Y = Y_colname, G = G_colname, H = H_colname)
 }
