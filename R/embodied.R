@@ -279,19 +279,15 @@ calc_F_footprint_effects <- function(.Mdata,
                                      F_effects_p_colname = "F_effects_p",
                                      F_footprint_s_colname = "F_footprint_s",
                                      F_effects_s_colname = "F_effects_s"){
-  M_p_colname <- as.name(M_p_colname)
-  M_s_colname <- as.name(M_s_colname)
-  .Mdata %>%
-    mutate(
-      !!F_footprint_p_colname := matrixproduct_byname(!!M_p_colname,
-                                                      colsums_byname(!!M_p_colname) %>% hatize_byname %>% invert_byname),
-      !!F_effects_p_colname := matrixproduct_byname(rowsums_byname(!!M_p_colname) %>% hatize_byname %>% invert_byname,
-                                                    !!M_p_colname),
-      !!F_footprint_s_colname := matrixproduct_byname(!!M_s_colname,
-                                                      colsums_byname(!!M_s_colname) %>% hatize_byname %>% invert_byname),
-      !!F_effects_s_colname := matrixproduct_byname(rowsums_byname(!!M_s_colname) %>% hatize_byname %>% invert_byname,
-                                                    !!M_s_colname)
-    )
+  F_func <- function(M_p, M_s){
+    F_footprint_p <- matrixproduct_byname(M_p, colsums_byname(M_p) %>% hatize_byname() %>% invert_byname())
+    F_effects_p <- matrixproduct_byname(rowsums_byname(M_p) %>% hatize_byname() %>% invert_byname(), M_p)
+    F_footprint_s <- matrixproduct_byname(M_s, colsums_byname(M_s) %>% hatize_byname() %>% invert_byname())
+    F_effects_s <- matrixproduct_byname(rowsums_byname(M_s) %>% hatize_byname() %>% invert_byname(), M_s)
+    list(F_footprint_p, F_effects_p, F_footprint_s, F_effects_s) %>%
+      set_names(F_footprint_p_colname, F_effects_p_colname, F_footprint_s_colname, F_effects_s_colname)
+  }
+  matsindf_apply(.Mdata, FUN = F_func, M_p = M_p_colname, M_s = M_s_colname)
 }
 
 #' Embodied energy efficiencies
