@@ -234,60 +234,6 @@ calc_M <- function(.YqGHEdata,
     list(M_p, M_s) %>% set_names(M_p_colname, M_s_colname)
   }
   matsindf_apply(.YqGHEdata, FUN = M_func, Y = Y_colname, q = q_colname, G = G_colname, E = E_colname)
-  # .YqGHEdata %>%
-  #   mutate(
-  #     # Form one e vector for each row of the E matrix.
-  #     # All vectors for a given row of the data frame are stored in a list
-  #     # in the e_colname column of the data frame.
-  #     !!e_colname := list_of_rows_or_cols(!!as.name(E_colname), margin = 1),
-  #     # Form one e_hat matrix for each e vector in each list.
-  #     # !!e_hat_colname := hatize_byname(!!as.name(e_colname)),
-  #     !!e_hat_colname := lapply(!!as.name(e_colname), FUN = hatize_byname),
-  #
-  #     # Calculate Q matrices
-  #     # !!Q_colname := matrixproduct_byname(!!as.name(e_hat_colname), !!as.name(G_colname)),
-  #     !!Q_colname := Map(matrixproduct_byname, !!as.name(e_hat_colname), !!as.name(G_colname)),
-  #     # We're looking for embodied energy, which are positive entries in the Q matrices.
-  #     # Set negative entries in the Q matrices to zero
-  #     !!Qpos_colname := lapply(!!as.name(Q_colname),
-  #                              FUN = function(l){
-  #                                # Here, each l is a list of Q matrices, one for each Product.
-  #                                lapply(l, FUN = function(m){
-  #                                  # Here, each m is a Q matrix for a specific Product.
-  #                                  # Need to apply our function to each element (e) of m
-  #                                  apply(X = m, MARGIN = c(1,2), FUN = function(e){
-  #                                    ifelse(e < 0, 0, e)
-  #                                  }) %>%
-  #                                    # At this point, we have another copy of our matrix with
-  #                                    # all negative elements set to zero.
-  #                                    # Ensure that row and column types of m are preserved.
-  #                                    setrowtype(rowtype(m)) %>%
-  #                                    setcoltype(coltype(m))
-  #                                })
-  #                              }),
-  #     # Calculate column sums for each matrix in Qpos.
-  #     # These column sums give the amount of energy of the type given by
-  #     # the Q matrix in the Product of its column name
-  #     # !!Qposcolsums_colname := colsums_byname(!!as.name(Qpos_colname)),
-  #     !!Qposcolsums_colname := lapply(!!as.name(Qpos_colname), FUN = colsums_byname),
-  #     # rbind the column sums of Qpos into a matrix,
-  #     # with row names taken from the name of the Q matrix whose column sums comprise the row.
-  #     !!M_p_colname := lapply(!!as.name(Qposcolsums_colname), FUN = function(lcolsums){
-  #       # lcolsums is the list of column sums to be rbound together.
-  #       do.call(rbind, lcolsums) %>%
-  #         # Row names for the matrix come from the names of the items in the list of column sums,
-  #         # namely the Product names.
-  #         setrownames_byname(names(lcolsums))
-  #     }),
-  #     # Row and column types for matrices in the M_p column are taken from the
-  #     # rowtype of the corresponding matrix in the E column
-  #     !!M_p_colname := mcMap(f = function(E, M_p){
-  #       M_p %>% setrowtype(rowtype(E)) %>% setcoltype(rowtype(E))
-  #     }, E = !!as.name(E_colname), M_p = !!as.name(M_p_colname)),
-  #     # Calculate the "per-sector" embodied energy.
-  #     !!M_s_colname := matrixproduct_byname(!!as.name(M_p_colname), (!!as.name(q_colname)) %>%
-  #                                             hatize_byname %>% invert_byname) %>% matrixproduct_byname(!!as.name(Y_colname))
-  #   )
 }
 
 #' Upstream footprint and downstream effects matrices
