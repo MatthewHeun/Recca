@@ -131,51 +131,19 @@ finaldemand_aggregates <- function(.sutdata,
   aggfuncs <- list(Total = "sumall_byname", Product = "rowsums_byname", Sector = "colsums_byname")
   agg_func <- match.fun(aggfuncs[[by]])
 
-  # Establish names
-  U <- as.name(U_colname)
-  V <- as.name(V_colname)
-  Y <- as.name(Y_colname)
-  r_EIOU <- as.name(r_EIOU_colname)
-  # Intermediate column names
-  U_EIOU <- as.name(".U_EIOU")
-  # Output columns
-  net <- as.name(net_aggregate_demand_colname)
-  gross <- as.name(gross_aggregate_demand_colname)
-
-  # Ensure that we won't overwrite a column.
-  verify_cols_missing(.sutdata, c(net, gross, U_EIOU))
-
-  Out <- .sutdata %>%
-    # Select only relevant columns
-    mutate(
-      # And add EIOU information to the data frame.
-      !!U_EIOU := elementproduct_byname(!!r_EIOU, !!U),
-      !!net := !!Y %>% select_cols_byname(retain_pattern = make_pattern(row_col_names = fd_sectors, pattern_type = "leading")) %>% agg_func(),
-      !!gross := sum_byname(!!net, agg_func(!!U_EIOU))
-    ) %>%
-    # Eliminate temporary columns
-    select(-(!!U_EIOU))
-
-  # Do some cleanup.
-
-  if (by == "Total") {
-    # Need to convert the net and gross columns to numeric,
-    # because net and gross are only single numbers when we ask for "Total" aggregation.
-    Out <- Out %>%
-      mutate(
-        !!net := as.numeric(!!net),
-        !!gross := as.numeric(!!gross)
-      )
-  } else if (by == "Sector") {
-    # If "Sector" aggregation is requested, the results will be row vectors.
-    # Convert to column vectors.
-    Out <- Out %>%
-      mutate(
-        !!net := transpose_byname(!!net),
-        !!gross := transpose_byname(!!gross)
-      )
+  fd_func <- function(U, V, Y, r_EIOU){
+    U_EIOU <- elementproduct_byname(r_EIOU, U)
+    net <- Y %>% select_cols_byname(retain_pattern = make_pattern(row_col_names = fd_sectors, pattern_type = "leading")) %>% agg_func()
+    gross <- sum_byname(net, agg_func(U_EIOU))
+    if (by == "Sector") {
+      # If "Sector" aggregation is requested, the results will be row vectors.
+      # Convert to column vectors.
+      net <- transpose_byname(net)
+      gross <- transpose_byname(gross)
+    }
+    list(net, gross) %>% set_names(net_aggregate_demand_colname, gross_aggregate_demand_colname)
   }
-  return(Out)
+  matsindf_apply(.sutdata, FUN = fd_func, U = U_colname, V = V_colname, Y = Y_colname, r_EIOU = r_EIOU_colname)
 }
 
 #' Final demand aggregate energy with units
