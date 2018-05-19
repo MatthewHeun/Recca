@@ -50,52 +50,6 @@ primary_aggregates <- function(.sutdata,
     list(agg_primary) %>% set_names(aggregate_primary_colname)
   }
   matsindf_apply(.sutdata, FUN = prim_func, V = V_colname, Y = Y_colname)
-
-  # # Establish names
-  # V <- as.name(V_colname)
-  # Y <- as.name(Y_colname)
-  # # Establish intermediate column names
-  # VT_p <- as.name(".VT_p")
-  # Y_p <- as.name(".Y_p")
-  # VT_p_minus_Y_p <- as.name(".VT_p_minus_Y_p")
-  # # Establish output column name
-  # agg_primary <- as.name(aggregate_primary_colname)
-  #
-  # # Ensure that we won't overwrite a column.
-  # verify_cols_missing(.sutdata, c(VT_p, Y_p, VT_p_minus_Y_p, agg_primary))
-  #
-  # Out <- .sutdata %>%
-  #   # Transpose V so that we can directly add the V and Y matrices.
-  #   # Select only primary columns from VT and Y.
-  #   mutate(
-  #     !!VT_p := transpose_byname(!!V) %>%
-  #       select_cols_byname(retain_pattern = make_pattern(row_col_names = p_industries, pattern_type = "leading")),
-  #     !!Y_p := !!Y %>%
-  #       select_cols_byname(retain_pattern = make_pattern(row_col_names = p_industries, pattern_type = "leading")),
-  #     # VT_p - Y_p. This is TPES in product x industry matrix format
-  #     !!VT_p_minus_Y_p := difference_byname(!!VT_p, !!Y_p),
-  #     !!agg_primary := agg_func(!!VT_p_minus_Y_p)
-  #   ) %>%
-  #   # Eliminate temporary columns
-  #   select(-(!!VT_p), -(!!Y_p), -(!!VT_p_minus_Y_p))
-  #
-  # # Do some cleanup
-  # if (by == "Total") {
-  #   # Need to convert aggregate column to numeric,
-  #   # because the aggregate is only a single number when we ask for "Total" aggregation.
-  #   Out <- Out %>%
-  #     mutate(
-  #       !!agg_primary := as.numeric(!!agg_primary)
-  #     )
-  # } else if (by == "Flow") {
-  #   # If "Flow" aggregation is requested, the results will be a row vector.
-  #   # Convert to a column vector.
-  #   Out <- Out %>%
-  #     mutate(
-  #       !!agg_primary := transpose_byname(!!agg_primary)
-  #     )
-  # }
-  # return(Out)
 }
 
 #' Final demand aggregate energy
