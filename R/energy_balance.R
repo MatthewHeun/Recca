@@ -166,29 +166,4 @@ verify_SUT_industry_production <- function(.sutdata = NULL,
     warning(paste("There are some industries that consume but do not produce energy. See column", industry_production_OK))
   }
   Out
-
-  # # Establish names
-  # U <- as.name(U_colname)
-  # V <- as.name(V_colname)
-  # # Establish intermediate column names
-  # check <- as.name(".check")
-  # OK <- as.name(".industry_production_OK")
-  #
-  # verify_cols_missing(.sutdata, c(OK, check))
-  #
-  # IndustryCheck <- .sutdata %>%
-  #   mutate(
-  #     !!check := rowsums_byname(!!V) %>% complete_rows_cols(mat = transpose_byname(!!U), margin = 1),
-  #     !!OK := lapply(!!check, FUN = function(v){
-  #       # v is one of the vectors in the .check column of IndustryCheck
-  #       # If any of the elements in the v vector is zero, we have encountered an error.
-  #       !any(v == 0)
-  #     })
-  #   )
-  #
-  # if (!(all(IndustryCheck[[OK]] %>% as.logical))) {
-  #   # We have a problem.
-  #   stop("There are some industries that consume but do not produce energy.")
-  # }
-  # invisible(NULL)
 }
