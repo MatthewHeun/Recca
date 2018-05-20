@@ -29,25 +29,6 @@
 #' \strong{F}\code{_footprint_s} is calculated by \strong{M_s} (\strong{M_s}^T\strong{i})_hat_inv.
 #' @param F_effects_s_colname the name of the output column containing \strong{F_effects_s} matrices.
 #' \strong{F}\code{_effects_p} is calculated by \strong{M_s i}_hat_inv \strong{M_s}.
-#' @param e_colname the name of the column containing \code{e} vectors.
-#' Each \code{e} vector is a row of the \code{E} matrix.
-#' Thus, column \code{e_colname} contains lists of \code{e} vectors,
-#' one \code{e} vector for each row in the corresponding \code{E} matrix.
-#' \code{e_colname} is a column of intermediate results that is not included in the output.
-#' @param e_hat_colname the name of the column containing \code{e_hat} matrices.
-#' Each \code{e} vector is converted to an \code{e_hat} matrix.
-#' Thus the \code{e_hat_colname} column contains lists of \code{e_hat} matrices.
-#' \code{e_hat_colname} is a column of intermediate results that is not included in the output.
-#' @param Q_colname the name of the output column containing lists of \code{Q} matrices.
-#' \code{Q} is calculated by \code{e_hat * G},
-#' but the e_hat column contains lists of matrices,
-#' so the \code{Q} column will also contain lists of matrices.
-#' In each list, there is one Q matrix for each Product in the Energy Conversion Chain.
-#' @param Qpos_colname the name of the column containing \code{Qpos} matrices.
-#' Embodied energy entries in \code{Q} are positive.
-#' To simplify the process of finding embodied energy,
-#' set all negative entries in each \code{Q} matrix to zero.
-#' @param Qposcolsums_colname the name of the column containing column sums of \code{Qpos} matrices.
 #'
 #' @return \code{.iodata} with columns
 #' \code{G_colname}, \code{H_colname}, \code{E_colname}, and \code{Q_colname} added
@@ -61,13 +42,7 @@ calc_embodied_mats <- function(.iodata = NULL,
                                G_colname = "G", H_colname = "H", E_colname = "E",
                                M_p_colname = "M_p", M_s_colname = "M_s",
                                F_footprint_p_colname = "F_footprint_p", F_effects_p_colname = "F_effects_p",
-                               F_footprint_s_colname = "F_footprint_s", F_effects_s_colname = "F_effects_s",
-                               # Column names for intermediate results
-                               e_colname = ".evectors",
-                               e_hat_colname = ".ehatmatrices",
-                               # Q_colname = ".Q",
-                               Qpos_colname = ".Qposmatrices",
-                               Qposcolsums_colname = ".Qposcolsums"){
+                               F_footprint_s_colname = "F_footprint_s", F_effects_s_colname = "F_effects_s"){
   embodied_func <- function(Y, q, L_ixp, g, W, U_EIOU){
     GH <- calc_GH(Y_colname = Y, L_ixp_colname = L_ixp,
                   G_colname = G_colname, H_colname = H_colname)
