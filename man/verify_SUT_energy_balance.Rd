@@ -25,16 +25,17 @@ verify_SUT_energy_balance(.sutdata = NULL, U_colname = "U",
 an additional column is added showing the row on which energy is not balanced.
 }
 \description{
-Energy balances are confirmed by Product (within \code{tol}) for every row in .sutdata.
+Energy balances are confirmed by Product (within \code{tol}) for every row in \code{.sutdata}.
 }
 \details{
-If energy is in balance for every row, \code{sutdata} is returned unmodified, and
+If energy is in balance for every row, \code{.sutdata} is returned with an additional column, and
 execution returns to the caller.
-If energy balance is not observed for any row,
+If energy balance is not observed for one or more of the rows,
 a warning is emitted, and
-a column named \code{SUT_energy_blance} is added to \code{.sutdata}
-wherein \code{TRUE} indicates energy balance is observed
-and \code{FALSE} indicates energy is not in balance.
+the additional column (\code{SUT_energy_blance})
+indicates where the problem occurred, with \code{FALSE}
+showing where energy is not in balance.
+
 This function should be called
 for its side-effect of testing whether energy is in balance in \code{.sutdata}.
 }

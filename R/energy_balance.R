@@ -6,15 +6,16 @@
 
 #' Confirm that an SUT-style data frame conserves energy.
 #'
-#' Energy balances are confirmed by Product (within \code{tol}) for every row in .sutdata.
+#' Energy balances are confirmed by Product (within \code{tol}) for every row in \code{.sutdata}.
 #'
-#' If energy is in balance for every row, \code{sutdata} is returned unmodified, and
+#' If energy is in balance for every row, \code{.sutdata} is returned with an additional column, and
 #' execution returns to the caller.
-#' If energy balance is not observed for any row,
+#' If energy balance is not observed for one or more of the rows,
 #' a warning is emitted, and
-#' a column named \code{SUT_energy_blance} is added to \code{.sutdata}
-#' wherein \code{TRUE} indicates energy balance is observed
-#' and \code{FALSE} indicates energy is not in balance.
+#' the additional column (\code{SUT_energy_blance})
+#' indicates where the problem occurred, with \code{FALSE}
+#' showing where energy is not in balance.
+#'
 #' This function should be called
 #' for its side-effect of testing whether energy is in balance in \code{.sutdata}.
 #'
@@ -60,19 +61,20 @@ verify_SUT_energy_balance <- function(.sutdata = NULL,
 
 #' Confirm that an SUT-style data frame conserves energy.
 #'
-#' Energy balances are confirmed by Product (within \code{tol}) for every row in .sutdata.
-#' If energy is in balance for every row, no message is given, and
+#' If energy is in balance for every row, \code{.sutdata} is returned with two additional columns, and
 #' execution returns to the caller.
-#' If energy balance is not observed for any combination of Country, Year, and Product, etc.,
-#' a message is printed which shows the first few non-balancing Products, and
-#' execution halts.
+#' If energy balance is not observed for one or more rows,
+#' a warning is emitted, and
+#' columns named \code{SUT_prod_energy_blance} and \code{SUT_ind_energy_blance} are added to \code{.sutdata}.
+#' \code{FALSE} indicates energy is not in balance.
+#'
+#' This function should be called
+#' for its side-effect of testing whether energy is in balance in \code{.sutdata}.
 #'
 #' Both product and industry energy balance are verified.
 #' Units (as supplied by the \code{S_units} matrix) are respected.
 #'
-#' @param .sutdata an SUT-style data frame containing metadata columns
-#' (typically \code{Country}, \code{Year}, etc.)
-#' and columns of matrices, including
+#' @param .sutdata an SUT-style data frame containing columns
 #' \code{U}, \code{V}, \code{Y}, and \code{S_units}.
 #' @param U the name of the column that contains \code{U} matrices
 #' @param V the name of the column that contains \code{V} matrices
@@ -80,9 +82,7 @@ verify_SUT_energy_balance <- function(.sutdata = NULL,
 #' @param S_units the name of the column that contains \code{S_units} matrices
 #' @param tol the maximum amount by which energy can be out of balance
 #'
-#' @return Nothing is returned.
-#' This function should be called
-#' for its side-effect of testing whether energy is in balance in \code{.sutdata}.
+#' @return \code{.sutdata} with additional columns.
 #'
 #' @export
 #'
@@ -114,50 +114,6 @@ verify_SUT_energy_balance_with_units <- function(.sutdata = NULL,
     warning(paste("Energy not conserved in verify_SUT_energy_balance_with_units. See column", SUT_ind_energy_balance))
   }
   Out
-
-  # # Input columns
-  # U <- as.name(U)
-  # V <- as.name(V)
-  # Y <- as.name(Y)
-  # S_units <- as.name(S_units)
-  # # Intermediate columns
-  # y <- as.name(".y")
-  # W <- as.name(".W")
-  # U_bar <- as.name(".U_bar")
-  # V_bar <- as.name(".V_bar")
-  # W_bar <- as.name(".W_bar")
-  # err_prod <- as.name(".err_prod")
-  # err_ind <- as.name(".err_ind")
-  #
-  # verify_cols_missing(.sutdata, c(W, V_bar, U_bar, W_bar, y, err_prod, err_ind))
-  #
-  # EnergyCheck <- .sutdata %>%
-  #   mutate(
-  #     !!y := rowsums_byname(!!Y),
-  #     !!W := difference_byname(transpose_byname(!!V), !!U),
-  #     !!U_bar := matrixproduct_byname(transpose_byname(!!S_units), !!U),
-  #     !!V_bar := matrixproduct_byname(!!V, !!S_units),
-  #     !!W_bar := matrixproduct_byname(transpose_byname(!!S_units), !!W),
-  #     !!err_prod := difference_byname(rowsums_byname(!!W), !!y),
-  #     !!err_ind := difference_byname(!!V_bar, transpose_byname(!!W_bar)) %>% difference_byname(transpose_byname(!!U_bar))
-  #   )
-  #
-  # if (!all(EnergyCheck[[err_prod]] %>% iszero_byname(tol) %>% as.logical())) {
-  #   # Print an error message containing rows of EnergyCheck that cause the failure
-  #   print("Energy balance not obtained in verify_SUT_energy_balance_with_units")
-  #   print(paste(err_prod, "should be zero."))
-  #   stop()
-  # }
-  #
-  # if (!all(EnergyCheck[[err_ind]] %>% iszero_byname(tol) %>% as.logical())) {
-  #   # Print an error message containing rows of EnergyCheck that cause the failure
-  #   print("Energy balance not obtained in verify_SUT_energy_balance_with_units")
-  #   print(paste(err_prod, "should be zero."))
-  #   stop()
-  # }
-  #
-  # # Wrap return value (NULL) with invisible() to prevent printing of the result.
-  # invisible(NULL)
 }
 
 
