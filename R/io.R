@@ -10,6 +10,7 @@
 #' @param U_colname the name of the column in \code{.sutdata} containing Use (\code{U}) matrices.
 #' @param V_colname the name of the column in \code{.sutdata} containing Make (\code{V}) matrices.
 #' @param Y_colname the name of the column in \code{.sutdata} containing final demand (\code{Y}) matrices.
+#' @param S_units the name of the column in \code{.sutdata} containing unit summation (\code{S_units}) matrices.
 #' @param g_colname the name of the output column containing \code{g} vectors.
 #' \code{g} is calculated by \code{rowsums(V)}.
 #' @param y_colname the name of the output column containing \code{y} vectors.
@@ -38,33 +39,56 @@
 #' added
 #'
 #' @export
-calc_io_mats <- function(.sutdata,
+calc_io_mats <- function(.sutdata = NULL,
                          # Input columns
-                         U_colname = "U", V_colname = "V", Y_colname = "Y",
+                         U_colname = "U", V_colname = "V", Y_colname = "Y", S_units = "S_units",
                          # Output columns
                          y_colname = "y", q_colname = "q", g_colname = "g", W_colname = "W",
-                         Z_colname = "Z", D_colname = "D", C_colname = "C", A_colname = "A",
+                         Z_colname = "Z", C_colname = "C", D_colname = "D", A_colname = "A",
                          L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp"){
-  # Establish names
-  U <- as.name(U_colname)
-  V <- as.name(V_colname)
-  Y <- as.name(Y_colname)
-
-  .sutdata %>%
-    # Clean the matrices in the columns.
-    # This step avoids situations where rows or columns of zeroes
+  io_func <- function(U, V, Y, S_units){
+    # Clean the matrices, thereby avoiding situations where rows or columns of zeroes
     # cause a _hat_inv step to fail due to inverting a matrix with a row or column of zeroes.
-    mutate(
-      !!U := clean_byname(!!U, margin = c(1,2), clean_value = 0),
-      !!V := clean_byname(!!V, margin = c(1,2), clean_value = 0),
-      !!Y := clean_byname(!!Y, margin = c(1,2), clean_value = 0)
-    ) %>%
-    calc_yqgW(U_colname = U_colname, V_colname = V_colname, Y_colname = Y_colname, W_colname = W_colname,
-              y_colname = y_colname, q_colname = q_colname, g_colname = g_colname) %>%
-    calc_A(U_colname = U_colname, V_colname = V_colname, q_colname = q_colname, g_colname = g_colname,
-           Z_colname = Z_colname, D_colname = D_colname, C_colname = C_colname, A_colname = A_colname) %>%
-    calc_L(D_colname = D_colname, A_colname = A_colname,
-           L_ixp_colname = L_ixp_colname, L_pxp_colname = L_pxp_colname)
+    U <- clean_byname(U, margin = c(1,2), clean_value = 0)
+    V <- clean_byname(V, margin = c(1,2), clean_value = 0)
+    Y <- clean_byname(Y, margin = c(1,2), clean_value = 0)
+    yqgW <- calc_yqgW(U_colname = U, V_colname = V, Y_colname = Y, S_units = S_units,
+                      y_colname = y_colname, q_colname = q_colname, g_colname = g_colname, W_colname = W_colname)
+    q <- yqgW$q
+    g <- yqgW$g
+    ZCDA <- calc_A(U_colname = U, V_colname = V, q_colname = q, g_colname = g,
+                   Z_colname = Z_colname, C_colname = C_colname, D_colname = D_colname, A_colname = A_colname)
+    D <- ZCDA$D
+    A <- ZCDA$A
+    L <- calc_L(D_colname = D, A_colname = A,
+                L_ixp_colname = L_ixp_colname, L_pxp_colname = L_pxp_colname)
+    c(yqgW, ZCDA, L) %>% set_names(y_colname, q_colname, g_colname, W_colname,
+                                   Z_colname, C_colname, D_colname, A_colname,
+                                   L_pxp_colname, L_ixp_colname)
+  }
+  matsindf_apply(.sutdata, FUN = io_func, U = U_colname, V = V_colname, Y = Y_colname, S_units = S_units)
+
+
+  # # Establish names
+  # U <- as.name(U_colname)
+  # V <- as.name(V_colname)
+  # Y <- as.name(Y_colname)
+  #
+  # .sutdata %>%
+  #   # Clean the matrices in the columns.
+  #   # This step avoids situations where rows or columns of zeroes
+  #   # cause a _hat_inv step to fail due to inverting a matrix with a row or column of zeroes.
+  #   mutate(
+  #     !!U := clean_byname(!!U, margin = c(1,2), clean_value = 0),
+  #     !!V := clean_byname(!!V, margin = c(1,2), clean_value = 0),
+  #     !!Y := clean_byname(!!Y, margin = c(1,2), clean_value = 0)
+  #   ) %>%
+  #   calc_yqgW(U_colname = U_colname, V_colname = V_colname, Y_colname = Y_colname, W_colname = W_colname,
+  #             y_colname = y_colname, q_colname = q_colname, g_colname = g_colname) %>%
+  #   calc_A(U_colname = U_colname, V_colname = V_colname, q_colname = q_colname, g_colname = g_colname,
+  #          Z_colname = Z_colname, C_colname = C_colname, D_colname = D_colname, A_colname = A_colname) %>%
+  #   calc_L(D_colname = D_colname, A_colname = A_colname,
+  #          L_ixp_colname = L_ixp_colname, L_pxp_colname = L_pxp_colname)
 }
 
 
@@ -132,22 +156,22 @@ calc_yqgW <- function(.sutdata = NULL,
 #' @param g_colname the name of the column in \code{.sutdata} containing \code{g} vectors.
 #' @param Z_colname the name of the output column containing \code{Z} matrices.
 #' \code{Z} is calculated by \code{U * g_hat_inv}.
-#' @param D_colname the name of the output column containing \code{D} matrices.
-#' \code{D} is calculated by \code{V * q_hat_inv}.
 #' @param C_colname the name of the output column containing \code{C} matrices.
 #' \code{C} is calculated by \code{transpose(V) * g_hat_inv}.
+#' @param D_colname the name of the output column containing \code{D} matrices.
+#' \code{D} is calculated by \code{V * q_hat_inv}.
 #' @param A_colname the name of the output column containing \code{A} matrices.
 #' \code{A} is calculated by \code{Z * D}.
 #'
 #' @return \code{.sutdata} with columns \code{Z_colname}, \code{D_colname}, and \code{A_colname} added
 #'
 #' @export
-calc_A <- function(.sutdata,
+calc_A <- function(.sutdata = NULL,
                    # Input columns
                    U_colname = "U", V_colname = "V",
                    q_colname = "q", g_colname = "g",
                    # Output columns
-                   Z_colname = "Z", D_colname = "D", C_colname = "C", A_colname = "A"){
+                   Z_colname = "Z", C_colname = "C", D_colname = "D", A_colname = "A"){
   A_func <- function(U, V, q, g){
     Z_val <- matrixproduct_byname(U, hatize_byname(g) %>% invert_byname())
     C_val <- matrixproduct_byname(transpose_byname(V), hatize_byname(g) %>% invert_byname())
@@ -172,11 +196,11 @@ calc_A <- function(.sutdata,
 #' @return \code{.sutdata} with columns \code{L_ixp_colname} and \code{L_pxp_colname} added
 #'
 #' @export
-calc_L <- function(.sutdata,
+calc_L <- function(.sutdata = NULL,
                    # Input columns
                    D_colname = "D", A_colname = "A",
                    # Output columns
-                   L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp"){
+                   L_pxp_colname = "L_pxp", L_ixp_colname = "L_ixp"){
   L_func <- function(D, A){
     L_pxp_val <- Iminus_byname(A) %>% invert_byname()
     L_ixp_val <- matrixproduct_byname(D, L_pxp_val)
