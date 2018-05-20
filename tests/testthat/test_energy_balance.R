@@ -36,12 +36,15 @@ test_that("SUT matrix energy balance works as expected", {
 
 test_that("all SUT industries are producing energy", {
   expect_silent(verify_SUT_industry_production(UKEnergy2000mats))
+  result <- verify_SUT_industry_production(UKEnergy2000mats)
+  expect_true(all(result[[".industry_production_OK"]] %>% as.logical()))
   # Try it when something doesn't produce energy
   U <- UKEnergy2000mats$U[[1]]
   V <- UKEnergy2000mats$V[[1]]
   V[1, 2] <- 0 # Zero out production of Crude - Dist. from Crude dist.
-  expect_warning(verify_SUT_industry_production(U_colname = U, V_colname = V),
+  expect_warning(result <- verify_SUT_industry_production(U_colname = U, V_colname = V),
                  "There are some industries that consume but do not produce energy.")
+  expect_false(result$.industry_production_OK)
 })
 
 test_that("SUT energy balance works with single matrices", {
