@@ -4,8 +4,8 @@
 \alias{calc_F_footprint_effects}
 \title{Upstream footprint and downstream effects matrices}
 \usage{
-calc_F_footprint_effects(.Mdata, M_p_colname = "M_p", M_s_colname = "M_s",
-  F_footprint_p_colname = "F_footprint_p",
+calc_F_footprint_effects(.Mdata = NULL, M_p_colname = "M_p",
+  M_s_colname = "M_s", F_footprint_p_colname = "F_footprint_p",
   F_effects_p_colname = "F_effects_p",
   F_footprint_s_colname = "F_footprint_s",
   F_effects_s_colname = "F_effects_s")

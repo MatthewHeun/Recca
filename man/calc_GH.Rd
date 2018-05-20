@@ -4,7 +4,7 @@
 \alias{calc_GH}
 \title{Calculate the G and H matrices for embodied energy calculations}
 \usage{
-calc_GH(.iodata, Y_colname = "Y", L_ixp_colname = "L_ixp",
+calc_GH(.iodata = NULL, Y_colname = "Y", L_ixp_colname = "L_ixp",
   G_colname = "G", H_colname = "H")
 }
 \arguments{

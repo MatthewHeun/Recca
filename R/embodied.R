@@ -29,31 +29,12 @@
 #' \strong{F}\code{_footprint_s} is calculated by \strong{M_s} (\strong{M_s}^T\strong{i})_hat_inv.
 #' @param F_effects_s_colname the name of the output column containing \strong{F_effects_s} matrices.
 #' \strong{F}\code{_effects_p} is calculated by \strong{M_s i}_hat_inv \strong{M_s}.
-#' @param e_colname the name of the column containing \code{e} vectors.
-#' Each \code{e} vector is a row of the \code{E} matrix.
-#' Thus, column \code{e_colname} contains lists of \code{e} vectors,
-#' one \code{e} vector for each row in the corresponding \code{E} matrix.
-#' \code{e_colname} is a column of intermediate results that is not included in the output.
-#' @param e_hat_colname the name of the column containing \code{e_hat} matrices.
-#' Each \code{e} vector is converted to an \code{e_hat} matrix.
-#' Thus the \code{e_hat_colname} column contains lists of \code{e_hat} matrices.
-#' \code{e_hat_colname} is a column of intermediate results that is not included in the output.
-#' @param Q_colname the name of the output column containing lists of \code{Q} matrices.
-#' \code{Q} is calculated by \code{e_hat * G},
-#' but the e_hat column contains lists of matrices,
-#' so the \code{Q} column will also contain lists of matrices.
-#' In each list, there is one Q matrix for each Product in the Energy Conversion Chain.
-#' @param Qpos_colname the name of the column containing \code{Qpos} matrices.
-#' Embodied energy entries in \code{Q} are positive.
-#' To simplify the process of finding embodied energy,
-#' set all negative entries in each \code{Q} matrix to zero.
-#' @param Qposcolsums_colname the name of the column containing column sums of \code{Qpos} matrices.
 #'
 #' @return \code{.iodata} with columns
 #' \code{G_colname}, \code{H_colname}, \code{E_colname}, and \code{Q_colname} added
 #'
 #' @export
-calc_embodied_mats <- function(.iodata,
+calc_embodied_mats <- function(.iodata = NULL,
                                # Input columns
                                Y_colname = "Y", q_colname = "q",
                                L_ixp_colname = "L_ixp", g_colname = "g", W_colname = "W", U_EIOU_colname = "U_EIOU",
@@ -61,29 +42,22 @@ calc_embodied_mats <- function(.iodata,
                                G_colname = "G", H_colname = "H", E_colname = "E",
                                M_p_colname = "M_p", M_s_colname = "M_s",
                                F_footprint_p_colname = "F_footprint_p", F_effects_p_colname = "F_effects_p",
-                               F_footprint_s_colname = "F_footprint_s", F_effects_s_colname = "F_effects_s",
-                               # Column names for intermediate results
-                               e_colname = ".evectors",
-                               e_hat_colname = ".ehatmatrices",
-                               Q_colname = ".Q",
-                               Qpos_colname = ".Qposmatrices",
-                               Qposcolsums_colname = ".Qposcolsums"){
-  .iodata %>%
-    calc_GH(Y_colname = Y_colname, L_ixp_colname = L_ixp_colname,
-            G_colname = G_colname, H_colname = H_colname) %>%
-    calc_E(g_colname = g_colname, W_colname = W_colname, U_EIOU_colname = U_EIOU_colname,
-           E_colname = E_colname) %>%
-    calc_M(Y_colname = Y_colname,
-           q_colname = q_colname,
-           G_colname = G_colname, E_colname = E_colname,
-           Q_colname = Q_colname,
-           M_p_colname = M_p_colname,
-           M_s_colname = M_s_colname) %>%
-    calc_F_footprint_effects(M_p_colname = M_p_colname, M_s_colname = M_s_colname,
-                             F_footprint_p_colname = F_footprint_p_colname,
-                             F_effects_p_colname = F_effects_p_colname,
-                             F_footprint_s_colname = F_footprint_s_colname,
-                             F_effects_s_colname = F_effects_s_colname)
+                               F_footprint_s_colname = "F_footprint_s", F_effects_s_colname = "F_effects_s"){
+  embodied_func <- function(Y, q, L_ixp, g, W, U_EIOU){
+    GH <- calc_GH(Y_colname = Y, L_ixp_colname = L_ixp,
+                  G_colname = G_colname, H_colname = H_colname)
+    G <- GH$G
+    E <- calc_E(g_colname = g, W_colname = W, U_EIOU_colname = U_EIOU,
+                E_colname = E_colname)
+    E <- E$E
+    M <- calc_M(Y_colname = Y, q_colname = q, G_colname = G, E_colname = E, M_p_colname = M_p_colname, M_s_colname = M_s_colname)
+    M_p <- M$M_p
+    M_s <- M$M_s
+    F_fe <- calc_F_footprint_effects(M_p_colname = M_p, M_s_colname = M_s,
+                                     F_footprint_p_colname = F_footprint_p_colname, F_effects_p_colname = F_effects_p_colname,
+                                     F_footprint_s_colname = F_footprint_s_colname, F_effects_s_colname = F_effects_s_colname)
+    c(GH, E, M, F_fe) %>% c(names(GH), names(E), names(M), names(F_fe))
+  }
 }
 
 #' Calculate the G and H matrices for embodied energy calculations
@@ -102,7 +76,7 @@ calc_embodied_mats <- function(.iodata,
 #' @return \code{.iodata} with columns \code{G_colname} and \code{H_colname} added.
 #'
 #' @export
-calc_GH <- function(.iodata,
+calc_GH <- function(.iodata = NULL,
                     # Input columns
                     Y_colname = "Y", L_ixp_colname = "L_ixp",
                     # Output columns
@@ -130,7 +104,7 @@ calc_GH <- function(.iodata,
 #' @return \code{.iodata} with column \code{E_colname} added
 #'
 #' @export
-calc_E <- function(.iodata,
+calc_E <- function(.iodata = NULL,
                    # Input columns
                    g_colname = "g", W_colname = "W", U_EIOU_colname = "U_EIOU",
                    # Output columns
@@ -181,19 +155,17 @@ calc_E <- function(.iodata,
 #' @return \code{.YqGHEdata} with columns \code{Q_colname}, \code{M_p_colname}, and \code{M_s_colname} added
 #'
 #' @export
-calc_M <- function(.YqGHEdata,
+calc_M <- function(.YqGHEdata = NULL,
                    # Input columns
-                   Y_colname = "Y", q_colname = "q",
-                   G_colname = "G", E_colname = "E",
+                   Y_colname = "Y", q_colname = "q", G_colname = "G", E_colname = "E",
                    # Output columns
-                   M_p_colname = "M_p",
-                   M_s_colname = "M_s",
+                   M_p_colname = "M_p", M_s_colname = "M_s"){
                    # Column names for intermediate results
-                   e_colname = ".evectors",
-                   e_hat_colname = ".ehatmatrices",
-                   Q_colname = ".Qmatrices",
-                   Qpos_colname = ".Qposmatrices",
-                   Qposcolsums_colname = ".Qposcolsums"){
+                   # e_colname = ".evectors",
+                   # e_hat_colname = ".ehatmatrices",
+                   # Q_colname = ".Qmatrices",
+                   # Qpos_colname = ".Qposmatrices",
+                   # Qposcolsums_colname = ".Qposcolsums"
   M_func <- function(Y, q, G, E){
     # Form one e vector for each row of the E matrix.
     # All vectors for a given row of the data frame are stored in a list
@@ -256,7 +228,7 @@ calc_M <- function(.YqGHEdata,
 #' \code{F_footprint_s}, and \code{F_effects_s} added
 #' @export
 #'
-calc_F_footprint_effects <- function(.Mdata,
+calc_F_footprint_effects <- function(.Mdata = NULL,
                                      # Input columns
                                      M_p_colname = "M_p",
                                      M_s_colname = "M_s",
@@ -289,7 +261,7 @@ calc_F_footprint_effects <- function(.Mdata,
 #' @return \code{.embodiedmats} with columns \code{eta_p_colname} and \code{eta_s_colname} added
 #'
 #' @export
-calc_embodied_etas <- function(.embodiedmats,
+calc_embodied_etas <- function(.embodiedmats = NULL,
                                # Input information
                                primary_machine_names,
                                # Input columns of .embodiedmats

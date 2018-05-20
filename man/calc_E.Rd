@@ -4,7 +4,7 @@
 \alias{calc_E}
 \title{Calculate the E matrix for embodied energy calculations}
 \usage{
-calc_E(.iodata, g_colname = "g", W_colname = "W",
+calc_E(.iodata = NULL, g_colname = "g", W_colname = "W",
   U_EIOU_colname = "U_EIOU", E_colname = "E")
 }
 \arguments{

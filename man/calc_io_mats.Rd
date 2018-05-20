@@ -4,9 +4,10 @@
 \alias{calc_io_mats}
 \title{Calculate various input-output matrices}
 \usage{
-calc_io_mats(.sutdata, U_colname = "U", V_colname = "V", Y_colname = "Y",
-  y_colname = "y", q_colname = "q", g_colname = "g", W_colname = "W",
-  Z_colname = "Z", D_colname = "D", C_colname = "C", A_colname = "A",
+calc_io_mats(.sutdata = NULL, U_colname = "U", V_colname = "V",
+  Y_colname = "Y", S_units = "S_units", y_colname = "y",
+  q_colname = "q", g_colname = "g", W_colname = "W", Z_colname = "Z",
+  C_colname = "C", D_colname = "D", A_colname = "A",
   L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp")
 }
 \arguments{
@@ -17,6 +18,8 @@ calc_io_mats(.sutdata, U_colname = "U", V_colname = "V", Y_colname = "Y",
 \item{V_colname}{the name of the column in \code{.sutdata} containing Make (\code{V}) matrices.}
 
 \item{Y_colname}{the name of the column in \code{.sutdata} containing final demand (\code{Y}) matrices.}
+
+\item{S_units}{the name of the column in \code{.sutdata} containing unit summation (\code{S_units}) matrices.}
 
 \item{y_colname}{the name of the output column containing \code{y} vectors.
 \code{y} is calculated by \code{rowsums(Y)}.}
@@ -33,11 +36,11 @@ calc_io_mats(.sutdata, U_colname = "U", V_colname = "V", Y_colname = "Y",
 \item{Z_colname}{the name of the output column containing \code{Z} matrices.
 \code{Z} is calculated by \code{U * g_hat_inv}.}
 
-\item{D_colname}{the name of the output column containing \code{D} matrices.
-\code{D} is calculated by \code{V * q_hat_inv}.}
-
 \item{C_colname}{the name of the output column containing \code{C} matrices.
 \code{C} is calculated by \code{transpose(V) * g_hat_inv}.}
+
+\item{D_colname}{the name of the output column containing \code{D} matrices.
+\code{D} is calculated by \code{V * q_hat_inv}.}
 
 \item{A_colname}{the name of the output column containing \code{A} matrices.
 \code{A} is calculated by \code{Z * D}.}
