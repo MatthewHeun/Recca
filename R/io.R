@@ -62,33 +62,9 @@ calc_io_mats <- function(.sutdata = NULL,
     A <- ZCDA$A
     L <- calc_L(D_colname = D, A_colname = A,
                 L_ixp_colname = L_ixp_colname, L_pxp_colname = L_pxp_colname)
-    c(yqgW, ZCDA, L) %>% set_names(y_colname, q_colname, g_colname, W_colname,
-                                   Z_colname, C_colname, D_colname, A_colname,
-                                   L_pxp_colname, L_ixp_colname)
+    c(yqgW, ZCDA, L) %>% set_names(c(names(yqgW), names(ZCDA), names(L)))
   }
   matsindf_apply(.sutdata, FUN = io_func, U = U_colname, V = V_colname, Y = Y_colname, S_units = S_units)
-
-
-  # # Establish names
-  # U <- as.name(U_colname)
-  # V <- as.name(V_colname)
-  # Y <- as.name(Y_colname)
-  #
-  # .sutdata %>%
-  #   # Clean the matrices in the columns.
-  #   # This step avoids situations where rows or columns of zeroes
-  #   # cause a _hat_inv step to fail due to inverting a matrix with a row or column of zeroes.
-  #   mutate(
-  #     !!U := clean_byname(!!U, margin = c(1,2), clean_value = 0),
-  #     !!V := clean_byname(!!V, margin = c(1,2), clean_value = 0),
-  #     !!Y := clean_byname(!!Y, margin = c(1,2), clean_value = 0)
-  #   ) %>%
-  #   calc_yqgW(U_colname = U_colname, V_colname = V_colname, Y_colname = Y_colname, W_colname = W_colname,
-  #             y_colname = y_colname, q_colname = q_colname, g_colname = g_colname) %>%
-  #   calc_A(U_colname = U_colname, V_colname = V_colname, q_colname = q_colname, g_colname = g_colname,
-  #          Z_colname = Z_colname, C_colname = C_colname, D_colname = D_colname, A_colname = A_colname) %>%
-  #   calc_L(D_colname = D_colname, A_colname = A_colname,
-  #          L_ixp_colname = L_ixp_colname, L_pxp_colname = L_pxp_colname)
 }
 
 

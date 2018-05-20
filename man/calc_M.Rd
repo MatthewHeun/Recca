@@ -4,11 +4,9 @@
 \alias{calc_M}
 \title{Add embodied matrices colums to a data frame}
 \usage{
-calc_M(.YqGHEdata, Y_colname = "Y", q_colname = "q", G_colname = "G",
-  E_colname = "E", M_p_colname = "M_p", M_s_colname = "M_s",
-  e_colname = ".evectors", e_hat_colname = ".ehatmatrices",
-  Q_colname = ".Qmatrices", Qpos_colname = ".Qposmatrices",
-  Qposcolsums_colname = ".Qposcolsums")
+calc_M(.YqGHEdata = NULL, Y_colname = "Y", q_colname = "q",
+  G_colname = "G", E_colname = "E", M_p_colname = "M_p",
+  M_s_colname = "M_s")
 }
 \arguments{
 \item{.YqGHEdata}{a data frame containing columns with \strong{q} vectors
@@ -33,6 +31,12 @@ These matrices contain embodied products in rows and embodying products in colum
 \item{M_s_colname}{the name of the output column containing matrices of embodied energy consumed by final demand sectors.
 These matrices contain embodied products in rows and consuming final demand sectors in columns.}
 
+\item{Q_colname}{the name of the output column containing lists of \strong{Q} matrices.
+\strong{Q} is calculated by \code{\strong{e_hat} * \strong{G}},
+but the e_hat column contains lists of matrices,
+so the \code{Q} column will also contain lists of matrices.
+In each list, there is one Q matrix for each Product in the Energy Conversion Chain.}
+
 \item{e_colname}{the name of the column containing \strong{e} vectors.
 Each \strong{e} vector is a row of the \strong{E} matrix.
 Thus, column \code{e_colname} contains lists of \strong{e} vectors,
@@ -43,12 +47,6 @@ one \strong{e} vector for each row in the corresponding \strong{E} matrix.
 Each \strong{e} vector is converted to an \strong{e_hat} matrix.
 Thus the \code{e_hat_colname} column contains lists of \strong{e_hat} matrices.
 \code{e_hat_colname} is a column of intermediate results that is not included in the output.}
-
-\item{Q_colname}{the name of the output column containing lists of \strong{Q} matrices.
-\strong{Q} is calculated by \code{\strong{e_hat} * \strong{G}},
-but the e_hat column contains lists of matrices,
-so the \code{Q} column will also contain lists of matrices.
-In each list, there is one Q matrix for each Product in the Energy Conversion Chain.}
 
 \item{Qpos_colname}{the name of the column containing \strong{Qpos} matrices.
 Embodied energy entries in \strong{Q} are positive.}
