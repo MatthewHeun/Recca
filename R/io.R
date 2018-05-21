@@ -8,35 +8,48 @@
 #'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
 #' @param U_colname the name of the column in \code{.sutdata} containing Use (\code{U}) matrices.
+#' Default is "\code{U}".
 #' @param V_colname the name of the column in \code{.sutdata} containing Make (\code{V}) matrices.
+#' Default is "\code{V}".
 #' @param Y_colname the name of the column in \code{.sutdata} containing final demand (\code{Y}) matrices.
+#' Default is "\code{Y}".
 #' @param S_units the name of the column in \code{.sutdata} containing unit summation (\code{S_units}) matrices.
+#' Default is "\code{S_units}".
 #' @param g_colname the name of the output column containing \code{g} vectors.
+#' Default is "\code{g}".
 #' \code{g} is calculated by \code{rowsums(V)}.
 #' @param y_colname the name of the output column containing \code{y} vectors.
+#' Default is "\code{y}".
 #' \code{y} is calculated by \code{rowsums(Y)}.
 #' @param q_colname the name of the output column containing \code{q} vectors.
+#' Default is "\code{q}".
 #' \code{q} is calculated by \code{rowsums(U) + y}.
 #' @param W_colname the name of the output column containing \code{W} matrices.
+#' Default is "\code{W}".
 #' \code{W} is calculated by \code{transpose(V) - U}.
 #' @param Z_colname the name of the output column containing \code{Z} matrices.
+#' Default is "\code{Z}".
 #' \code{Z} is calculated by \code{U * g_hat_inv}.
-#' @param D_colname the name of the output column containing \code{D} matrices.
-#' \code{D} is calculated by \code{V * q_hat_inv}.
 #' @param C_colname the name of the output column containing \code{C} matrices.
 #' \code{C} is calculated by \code{transpose(V) * g_hat_inv}.
+#' Default is "\code{C}".
+#' @param D_colname the name of the output column containing \code{D} matrices.
+#' Default is "\code{D}".
+#' \code{D} is calculated by \code{V * q_hat_inv}.
 #' @param A_colname the name of the output column containing \code{A} matrices.
+#' Default is "\code{A}".
 #' \code{A} is calculated by \code{Z * D}.
 #' @param L_ixp_colname the name of the output column containing industry-by-product L matrices.
+#' Default is "\code{L_ixp}".
 #' \code{L_ixp} is calculated by \code{D * L_pxp}.
 #' @param L_pxp_colname the name of the output column containing product-by-product L matrices.
+#' Default is "\code{L_pxp}".
 #' \code{L_pxp} is calculated by \code{(I - Z*D)^-1}.
 #'
-#' @return \code{.sutdata} with columns
+#' @return \code{.sutdata} with additional columns:
 #' \code{y_colname}, \code{q_colname}, \code{g_colname}, \code{W_colname},
 #' \code{Z_colname}, \code{D_colname}, \code{C_colname}, \code{A_colname},
-#' \code{L_ixp_colname}, and \code{L_pxp_colname}
-#' added
+#' \code{L_ixp_colname}, and \code{L_pxp_colname}.
 #'
 #' @export
 calc_io_mats <- function(.sutdata = NULL,
