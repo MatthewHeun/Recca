@@ -46,7 +46,7 @@ calc_io_mats <- function(.sutdata = NULL,
                          y_colname = "y", q_colname = "q", g_colname = "g", W_colname = "W",
                          Z_colname = "Z", C_colname = "C", D_colname = "D", A_colname = "A",
                          L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp"){
-  io_func <- function(U, V, Y, S_units){
+  io_func <- function(U, V, Y, S_units = NULL){
     # Clean the matrices, thereby avoiding situations where rows or columns of zeroes
     # cause a _hat_inv step to fail due to inverting a matrix with a row or column of zeroes.
     U <- clean_byname(U, margin = c(1,2), clean_value = 0)
