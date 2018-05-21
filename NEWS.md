@@ -1,5 +1,14 @@
 # News for `Recca`
 
+## Recca 0.1.2 (2018-05-20)
+
+* All functions now use the `matsindf::matsindf_apply` function
+* `F` functions now do internal energy balance checks.
+* Much code and API cleanup.
+* Note that some API changes are expected, 
+  particularly name changes for `*_colname` arguments.
+  
+
 ## Recca 0.1.1 (2018-04-16)
 
 * Many new functions
