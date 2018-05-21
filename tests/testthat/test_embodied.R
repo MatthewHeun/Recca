@@ -29,6 +29,7 @@ test_that("embodied energy calculations works as expected", {
            G, H)
   expect_known_value(GH, file.path(expec_path, "expected_GH.rds"), update = FALSE)
 
+  # Calculate E matrices
   E <- GH %>%
     mutate(
       U_EIOU = elementproduct_byname(U, r_EIOU)
@@ -39,6 +40,7 @@ test_that("embodied energy calculations works as expected", {
            L_pxp, L_ixp, U_EIOU, G, H, E)
   expect_known_value(E, file.path(expec_path, "expected_E.rds"), update = FALSE)
 
+  # Calculate M matrices
   M <- E %>%
     calc_M() %>%
     select(Country, Year, Energy.type, Last.stage, U, V, Y, r_EIOU, S_units,
@@ -46,14 +48,23 @@ test_that("embodied energy calculations works as expected", {
            L_pxp, L_ixp, U_EIOU, G, H, E, M_p, M_s)
   expect_known_value(M, file.path(expec_path, "expected_M.rds"), update = FALSE)
 
-  F <- M %>%
+  # Calculate footprint matrices
+  F_fe <- M %>%
     calc_F_footprint_effects()
-  expect_known_value(F, file.path(expec_path, "expected_F.rds"), update = FALSE)
+  expect_known_value(F_fe, file.path(expec_path, "expected_F.rds"), update = FALSE)
 
+  # Calcualte efficiencies
   primary_machine_names <- c("Resources - Crude", "Resources - NG")
-  embodied_etas <- F %>%
+  embodied_etas <- F_fe %>%
     calc_embodied_etas(primary_machine_names = primary_machine_names)
   expect_known_value(embodied_etas, file.path(expec_path, "expected_embodied_etas.rds"), update = FALSE)
+
+  # Calculate all embodied matrices
+  embodied_mats <- io_mats %>%
+    mutate(
+      U_EIOU = elementproduct_byname(r_EIOU, U)
+    ) %>%
+    calc_embodied_mats()
 
   if (is_testing()) {
     # Restore the previous working directory.
