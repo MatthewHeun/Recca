@@ -44,20 +44,23 @@ calc_embodied_mats <- function(.iodata = NULL,
                                F_footprint_p_colname = "F_footprint_p", F_effects_p_colname = "F_effects_p",
                                F_footprint_s_colname = "F_footprint_s", F_effects_s_colname = "F_effects_s"){
   embodied_func <- function(Y, q, L_ixp, g, W, U_EIOU){
-    GH <- calc_GH(Y_colname = Y, L_ixp_colname = L_ixp,
-                  G_colname = G_colname, H_colname = H_colname)
-    G <- GH$G
-    E <- calc_E(g_colname = g, W_colname = W, U_EIOU_colname = U_EIOU,
-                E_colname = E_colname)
-    E <- E$E
-    M <- calc_M(Y_colname = Y, q_colname = q, G_colname = G, E_colname = E, M_p_colname = M_p_colname, M_s_colname = M_s_colname)
-    M_p <- M$M_p
-    M_s <- M$M_s
-    F_fe <- calc_F_footprint_effects(M_p_colname = M_p, M_s_colname = M_s,
+    GH_list <- calc_GH(Y_colname = Y, L_ixp_colname = L_ixp,
+                       G_colname = G_colname, H_colname = H_colname)
+    G <- GH_list$G
+    E_list <- calc_E(g_colname = g, W_colname = W, U_EIOU_colname = U_EIOU,
+                     E_colname = E_colname)
+    E <- E_list$E
+    M_list <- calc_M(Y_colname = Y, q_colname = q, G_colname = G, E_colname = E,
+                     M_p_colname = M_p_colname, M_s_colname = M_s_colname)
+    M_p <- M_list$M_p
+    M_s <- M_list$M_s
+    F_list <- calc_F_footprint_effects(M_p_colname = M_p, M_s_colname = M_s,
                                      F_footprint_p_colname = F_footprint_p_colname, F_effects_p_colname = F_effects_p_colname,
                                      F_footprint_s_colname = F_footprint_s_colname, F_effects_s_colname = F_effects_s_colname)
-    c(GH, E, M, F_fe) %>% c(names(GH), names(E), names(M), names(F_fe))
+    c(GH_list, E_list, M_list, F_list) %>% set_names(c(names(GH_list), names(E_list), names(M_list), names(F_list)))
   }
+  matsindf_apply(.iodata, FUN = embodied_func, Y = Y_colname, q = q_colname,
+                 L_ixp = L_ixp_colname, g = g_colname, W = W_colname, U_EIOU = U_EIOU_colname)
 }
 
 #' Calculate the G and H matrices for embodied energy calculations
