@@ -65,6 +65,7 @@ test_that("embodied energy calculations works as expected", {
       U_EIOU = elementproduct_byname(r_EIOU, U)
     ) %>%
     calc_embodied_mats()
+  expect_known_value(embodied_mats, file.path(expec_path, "expected_embodied_mats.rds"), update = FALSE)
 
   if (is_testing()) {
     # Restore the previous working directory.
