@@ -2,6 +2,7 @@ Package: Recca
 Type: Package
 Title: R Energy Conversion Chain Analysis
 Version: 0.1.2
+Date: 2018-05-20
 Authors@R: c(person("Matthew", "Heun", role = c("aut", "cre"),
                      email = "matthew.heun@me.com"))
 Author: Matthew Heun [aut, cre]
