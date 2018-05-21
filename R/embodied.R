@@ -241,10 +241,15 @@ calc_F_footprint_effects <- function(.Mdata = NULL,
                                      F_footprint_s_colname = "F_footprint_s",
                                      F_effects_s_colname = "F_effects_s"){
   F_func <- function(M_p, M_s){
-    F_footprint_p <- matrixproduct_byname(M_p, colsums_byname(M_p) %>% hatize_byname() %>% invert_byname())
-    F_effects_p <- matrixproduct_byname(rowsums_byname(M_p) %>% hatize_byname() %>% invert_byname(), M_p)
-    F_footprint_s <- matrixproduct_byname(M_s, colsums_byname(M_s) %>% hatize_byname() %>% invert_byname())
-    F_effects_s <- matrixproduct_byname(rowsums_byname(M_s) %>% hatize_byname() %>% invert_byname(), M_s)
+    # Note that clean_byname() removes zeroes and avoids errors when inverting the matrices.
+    F_footprint_p <- matrixproduct_byname(M_p,
+                                          colsums_byname(M_p) %>% clean_byname() %>% hatize_byname() %>% invert_byname())
+    F_effects_p <- matrixproduct_byname(rowsums_byname(M_p) %>% clean_byname() %>% hatize_byname() %>% invert_byname(),
+                                        M_p)
+    F_footprint_s <- matrixproduct_byname(M_s,
+                                          colsums_byname(M_s) %>% clean_byname() %>% hatize_byname() %>% invert_byname())
+    F_effects_s <- matrixproduct_byname(rowsums_byname(M_s) %>% clean_byname() %>% hatize_byname() %>% invert_byname(),
+                                        M_s)
     list(F_footprint_p, F_effects_p, F_footprint_s, F_effects_s) %>%
       set_names(F_footprint_p_colname, F_effects_p_colname, F_footprint_s_colname, F_effects_s_colname)
   }
