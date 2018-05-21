@@ -4,40 +4,40 @@
 \alias{verify_SUT_energy_balance}
 \title{Confirm that an SUT-style data frame conserves energy.}
 \usage{
-verify_SUT_energy_balance(.sutdata, U_colname = "U", V_colname = "V",
-  Y_colname = "Y", tol = 1e-06, V_sums_colname = ".V_sums",
-  U_sums_colname = ".U_sums", Y_sums_colname = ".Y_sums",
-  err_colname = "err")
+verify_SUT_energy_balance(.sutdata = NULL, U_colname = "U",
+  V_colname = "V", Y_colname = "Y", tol = 1e-06,
+  SUT_energy_balance = ".SUT_energy_balance")
 }
 \arguments{
-\item{.sutdata}{an SUT-style data frame containing metadata columns
-(typically \code{Country}, \code{Year}, \code{Ledger.side}, \code{Product}, etc.)
-and columns of matrices, including
+\item{.sutdata}{an SUT-style data frame with columns of matrices, including
 \code{U}, \code{V}, and \code{Y}.}
 
-\item{U_colname}{the name of the column that contains \strong{U} matrices}
+\item{U_colname}{the name of the column that contains \code{U} matrices}
 
-\item{V_colname}{the name of the column that contains V matrices}
+\item{V_colname}{the name of the column that contains \code{V} matrices}
 
-\item{Y_colname}{the name of the column that contsins Y matrices}
+\item{Y_colname}{the name of the column that contsins \code{Y} matrices}
 
 \item{tol}{the maximum amount by which Supply and Consumption can be out of balance}
-
-\item{err_colname}{the name of the column that contains (\strong{V}^T - \strong{U} - \strong{Y})*\strong{i}
-(which should be zero to within \code{tol})}
 }
 \value{
-Nothing is returned.
-This function should be called
-for its side-effect of testing whether energy is in balance in \code{.sutdata}.
+\code{.sutdata}. If energy balance is not observed,
+an additional column is added showing the row on which energy is not balanced.
 }
 \description{
-Energy balances are confirmed by Product (within \code{tol}) for every row in .sutdata.
-If energy is in balance for every row, no message is given, and
+Energy balances are confirmed by Product (within \code{tol}) for every row in \code{.sutdata}.
+}
+\details{
+If energy is in balance for every row, \code{.sutdata} is returned with an additional column, and
 execution returns to the caller.
-If energy balance is not observed for any combination of Country, Year, and Product, etc.,
-a message is printed which shows the first few non-balancing Products, and
-execution halts.
+If energy balance is not observed for one or more of the rows,
+a warning is emitted, and
+the additional column (\code{SUT_energy_blance})
+indicates where the problem occurred, with \code{FALSE}
+showing where energy is not in balance.
+
+This function should be called
+for its side-effect of testing whether energy is in balance in \code{.sutdata}.
 }
 \examples{
 verify_SUT_energy_balance(SUTMatsWne)

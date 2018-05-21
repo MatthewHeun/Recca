@@ -3,7 +3,7 @@
 context("IO calculations")
 ###########################################################
 
-test_that("calculating y, q, g, W, and A works as expected", {
+test_that("calculating y, q, g, W, A, and L works as expected", {
   expec_path <- file.path("tests", "expectations")
 
   if (is_testing()) {
@@ -18,21 +18,16 @@ test_that("calculating y, q, g, W, and A works as expected", {
   }
 
   # Calculate y, q, g, and W from UKEnergy2000mats
-  yqgW <- UKEnergy2000mats %>%
-    calc_yqgW(keep_cols = c("Country", "Year", "Energy.type", "Last.stage", "U", "V", "Y", "r_EIOU", "S_units"))
-  expect_known_value(yqgW, file.path(expec_path, "yqgW.rds"), update = FALSE)
+  yqgW <- UKEnergy2000mats %>% calc_yqgW()
+  expect_known_value(yqgW, file.path(expec_path, "expected_yqgW.rds"), update = FALSE)
 
   # Calculate Z, D, C, and A matrices from yqgW
-  A <- yqgW %>%
-    calc_A(keep_cols = c("Country", "Year", "Energy.type", "Last.stage", "U", "V", "Y", "r_EIOU",
-                         "S_units", "g", "y", "q", "W"))
-  expect_known_value(A, file.path(expec_path, "A.rds"), update = FALSE)
+  A <- yqgW %>% calc_A()
+  expect_known_value(A, file.path(expec_path, "expected_A.rds"), update = FALSE)
 
   # Calculate L matrices (L_ixp and L_pxp)
-  L <- A %>%
-    calc_L(keep_cols = c("Country", "Year", "Energy.type", "Last.stage", "U", "V", "Y", "r_EIOU",
-                         "S_units", "g", "y", "q", "W", "Z", "C", "D", "A"))
-  expect_known_value(L, file.path(expec_path, "L.rds"), update = FALSE)
+  L <- A %>% calc_L()
+  expect_known_value(L, file.path(expec_path, "expected_L.rds"), update = FALSE)
 
   if (is_testing()) {
     # Restore the previous working directory.
@@ -56,16 +51,33 @@ test_that("calculating IO matrices works as expected", {
   }
 
   # Calculate all IO matrices
-  iomats <- UKEnergy2000mats %>%
-    calc_io_mats(keep_cols = c("Country", "Year", "Energy.type", "Last.stage",
-                               "U", "V", "Y", "r_EIOU", "S_units"))
-  expect_known_value(iomats, file.path(expec_path, "iomats.rds"), update = FALSE)
-
-
+  io_mats <- UKEnergy2000mats %>% calc_io_mats()
+  expect_known_value(io_mats, file.path(expec_path, "expected_iomats.rds"), update = FALSE)
 
   if (is_testing()) {
     # Restore the previous working directory.
     setwd(currwd)
   }
 })
+
+
+test_that("calculating IO matrices works as expected", {
+  # Make bogus U, V, Y, and S_units matrices
+  U <- matrix(c(1, 2,
+                3, 4), byrow = TRUE,
+              nrow = 2, ncol = 2, dimnames = list(c("p1", "p2"), c("i1", "i2")))
+  V <- matrix(c(1, 2,
+                3, 4), byrow = TRUE,
+              nrow = 2, ncol = 2, dimnames = list(c("i1", "i2"), c("p1", "p2")))
+  Y <- matrix(c(1, 2,
+                3, 4), byrow = TRUE,
+              nrow = 2, ncol = 2, dimnames = list(c("p1", "p2"), c("s1", "s2")))
+  S_units <- matrix(c(1, 0,
+                      0, 1), byrow = TRUE,
+                    nrow = 2, ncol = 2, dimnames = list(c("p1", "p2"), c("m", "K")))
+
+  expect_error(calc_yqgW(U_colname = U, V_colname = V, Y_colname = Y, S_units = S_units),
+               "Outputs from each industry not unit homogeneous. Offending industries: i1, i2")
+})
+
 

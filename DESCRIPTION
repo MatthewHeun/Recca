@@ -1,7 +1,7 @@
 Package: Recca
 Type: Package
 Title: R Energy Conversion Chain Analysis
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: c(person("Matthew", "Heun", role = c("aut", "cre"),
                      email = "matthew.heun@me.com"))
 Author: Matthew Heun [aut, cre]
@@ -16,13 +16,16 @@ Depends: R (>= 2.10)
 Imports:
     dplyr,
     fuzzyjoin,
+    Hmisc,
+    lazyeval,
     magrittr,
+    matsbyname,
+    parallel,
+    purrr,
     qgraph, 
     rlang,
-    lazyeval,
     tibble,
-    tidyr,
-    matsbyname
+    tidyr
 Suggests:
     knitr, 
     testthat

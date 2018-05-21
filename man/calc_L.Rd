@@ -4,8 +4,8 @@
 \alias{calc_L}
 \title{Calculates total requirements matrices}
 \usage{
-calc_L(.sutdata, D_colname = "D", A_colname = "A", keep_cols = NULL,
-  L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp")
+calc_L(.sutdata = NULL, D_colname = "D", A_colname = "A",
+  L_pxp_colname = "L_pxp", L_ixp_colname = "L_ixp")
 }
 \arguments{
 \item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
@@ -14,17 +14,14 @@ calc_L(.sutdata, D_colname = "D", A_colname = "A", keep_cols = NULL,
 
 \item{A_colname}{the name of the column in \code{.sutdata} containing the \code{A} matrix.}
 
-\item{keep_cols}{a vector of names of columns of \code{.sutdata} to return with the output}
+\item{L_pxp_colname}{the name of the output column containing the product-by-product L matrix.
+\code{L_pxp} is calculated by \code{(I - Z*D)^-1}.}
 
 \item{L_ixp_colname}{the name of the output column containing the industry-by-product L matrix.
 \code{L_ixp} is calculated by \code{D * L_pxp}.}
-
-\item{L_pxp_colname}{the name of the output column containing the product-by-product L matrix.
-\code{L_pxp} is calculated by \code{(I - Z*D)^-1}.}
 }
 \value{
-a data frame containing columns specified in \code{keep_cols},
-\code{L_ixp_colname}, and \code{L_pxp_colname}.
+\code{.sutdata} with columns \code{L_ixp_colname} and \code{L_pxp_colname} added
 }
 \description{
 Calculates total requirements matrices

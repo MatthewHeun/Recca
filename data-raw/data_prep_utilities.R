@@ -1,8 +1,51 @@
 
+#' Extract an \code{S_units} matrix from a tidy data frame
+#'
+#' The \code{.tidydf} should be grouped as needed.
+#'
+#' @param .tidydf the data frame from which an \code{S_units} matrix is to be formed
+#' @param Product the name of the \code{Product} column in \code{.tidydf}. Default is "\code{Product}".
+#' @param Unit the name of the \code{Unit} column in \code{.tidydf}. Default is "\code{Unit}".
+#' @param S_units the name of the \code{S_units} column to be added to \code{.tidydf}.
+#'        Default is "\code{S_unit}".
+#'
+#' @return a data frame containing grouping variables and a new \code{S_unit} column
+#'
+#' @export
+#'
+#' @examples
+#' S_units_from_tidy(UKEnergy2000tidy %>% group_by("Country", "Year", "Energy.type", "Last.stage"))
+S_units_from_tidy <- function(.tidydf, Product = "Product", Unit = "Unit", S_units = "S_units"){
+  # Establish names
+  Unit <- as.name(Unit)
+  Product <- as.name(Product)
+  val <- ".val"
+  rowtype <- ".rowtype"
+  coltype <- ".coltype"
+
+  verify_cols_missing(.tidydf, c(S_units, val, rowtype, coltype))
+
+  .tidydf %>%
+    select(!!!groups(.), !!Product, !!Unit) %>%
+    do(unique(.)) %>%
+    mutate(
+      !!as.name(val) := 1,
+      !!as.name(S_units) := S_units,
+      !!as.name(rowtype) := "Product",
+      !!as.name(coltype) := "Unit"
+    ) %>%
+    collapse_to_matrices(matnames = S_units, values = val,
+                         rownames = as.character(Product), colnames = as.character(Unit),
+                         rowtypes = rowtype, coltypes = coltype) %>%
+    rename(
+      !!as.name(S_units) := !!as.name(val)
+    )
+}
+
 
 #' Add a column of matrix names to tidy data frame
 #'
-#' @param .data a data frame with \code{ledger_side_colname} and \code{energy_colname}.
+#' @param .DF a data frame with \code{ledger_side_colname} and \code{energy_colname}.
 #' @param ledger_side the name of the column in \code{.DF} that contains ledger side
 #'        (a string). Default is "\code{Ledger.side}".
 #' @param energy_colname the name of the column in \code{.DF} that contains energy and exergy values
@@ -17,7 +60,7 @@
 #' @param V the name for the make matrix (a string). Default is "\code{V}".
 #' @param Y the name for the final demand matrix (a string). Default is "\code{Y}".
 #'
-#' @return \code{.data} with an added column, \code{UVY_colname}.
+#' @return \code{.DF} with an added column, \code{UVY_colname}.
 #'
 #' @importFrom dplyr mutate
 #' @importFrom dplyr case_when
@@ -61,22 +104,21 @@ add_UKEnergy2000_matnames <- function(.DF,
       # Identify any places where our logic is faulty.
       TRUE ~ NA_character_
     )
-  ) #%>%
-    # select(-!!.U_non_EIOU)
+  )
 }
 
 #' Add row, column, row type, and column type metadata
 #'
 #' @param .DF a data frame containing \code{matname_colname}.
-#' @param matname_colname the name of the column in \code{.data} that contains names of matrices
+#' @param matname_colname the name of the column in \code{.DF} that contains names of matrices
 #'        (a string).  Default is "\code{matname}".
 #' @param U the name for use matrices (a string). Default is "\code{U}".
 #' @param U_EIOU the name for the EIOU portino o fhte U matrix (a string). Default is "\code{U_EIOU}".
 #' @param V the name for make matrices (a string). Default is "\code{V}".
 #' @param Y the name for final demand matrices (a string). Default is "\code{Y}".
-#' @param product_colname the name of the column in \code{.data} where Product names
+#' @param product_colname the name of the column in \code{.DF} where Product names
 #'        is found (a string). Default is "\code{Product}".
-#' @param flow_colname the name of the column in \code{.data} where Flow information is found
+#' @param flow_colname the name of the column in \code{.DF} where Flow information is found
 #'        (a string).
 #'        The Flow column usually contains the industries involved in this flow.
 #'        Default is "\code{Flow}".
@@ -95,7 +137,7 @@ add_UKEnergy2000_matnames <- function(.DF,
 #' @param coltype_colname the name of the output column that contains column types for matrices
 #'        (a string). Default is "\code{coltype}".
 #'
-#' @return \code{.data} with additional columns named
+#' @return \code{.DF} with additional columns named
 #'         \code{rowname_colname}, \code{colname_colname},
 #'         \code{rowtype_colname}, and \code{coltype_colname}.
 #'
@@ -154,4 +196,7 @@ add_UKEnergy2000_row_col_meta <- function(.DF,
       )
     )
 }
+
+
+
 

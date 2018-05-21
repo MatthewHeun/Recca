@@ -5,8 +5,7 @@
 \title{Primary aggregate energy}
 \usage{
 primary_aggregates(.sutdata, p_industries, V_colname = "V", Y_colname = "Y",
-  by = c("Total", "Product", "Flow"), keep_cols = NULL,
-  aggregate_primary_colname)
+  by = c("Total", "Product", "Flow"), aggregate_primary_colname)
 }
 \arguments{
 \item{.sutdata}{a data frame with columns of matrices from a supply-use analysis.}
@@ -28,12 +27,10 @@ the total primary energy aggregate.}
   \item{\code{Flow}: aggregation by type of flow (Production, Imports, Exports, etc.)}
 }}
 
-\item{keep_cols}{a vector of names of columns of \code{.sutdata} to return with the output}
-
 \item{aggregate_primary_colname}{the name of the output column containing aggregates of primary energy.}
 }
 \value{
-a data frame containing columns for \code{keep_cols} and
+a data frame containing columns of
 the aggregate primary energy for each row of \code{.sutdata}.
 }
 \description{

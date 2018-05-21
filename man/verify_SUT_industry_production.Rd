@@ -4,9 +4,8 @@
 \alias{verify_SUT_industry_production}
 \title{Confirm that all Industries in an SUT-style data frame produce energy.}
 \usage{
-verify_SUT_industry_production(.sutdata, U_colname = "U", V_colname = "V",
-  industry_production_OK_colname = "industry production OK",
-  check_colname = ".check", problems_data_frame_name = "Problems")
+verify_SUT_industry_production(.sutdata = NULL, U_colname = "U",
+  V_colname = "V", industry_production_OK = ".industry_production_OK")
 }
 \arguments{
 \item{.sutdata}{an SUT-style data frame containing metadata columns
@@ -44,5 +43,5 @@ If you find a row with a problem, look at the \code{check_colname} column.
 Any \code{0} entries indicate industries that consume energy but do not make energy.
 }
 \examples{
-verify_SUT_industry_production(SUTMatsWne)
+verify_SUT_industry_production(UKEnergy2000mats)
 }

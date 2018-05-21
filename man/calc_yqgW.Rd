@@ -4,8 +4,8 @@
 \alias{calc_yqgW}
 \title{Calculate y, g, and q vectors and W matrices}
 \usage{
-calc_yqgW(.sutdata, U_colname = "U", V_colname = "V", Y_colname = "Y",
-  S_units = "S_units", keep_cols = NULL, y_colname = "y",
+calc_yqgW(.sutdata = NULL, U_colname = "U", V_colname = "V",
+  Y_colname = "Y", S_units = "S_units", y_colname = "y",
   q_colname = "q", g_colname = "g", W_colname = "W")
 }
 \arguments{
@@ -18,8 +18,6 @@ calc_yqgW(.sutdata, U_colname = "U", V_colname = "V", Y_colname = "Y",
 \item{Y_colname}{the name of the column in \code{.sutdata} containing final demand (\code{Y}) matrices.}
 
 \item{S_units}{the name of the column in \code{.sutdata} containing \code{S_units} matrices.}
-
-\item{keep_cols}{a vector of names of columns of \code{.sutdata} to return with the output}
 
 \item{y_colname}{the name of the output column containing \code{y} vectors.
 \code{y} is calculated by \code{rowsums_byname(Y)}.}
@@ -34,8 +32,7 @@ calc_yqgW(.sutdata, U_colname = "U", V_colname = "V", Y_colname = "Y",
 \code{W} is calculated by \code{transpose_byname(V) - U}.}
 }
 \value{
-a data frame containing columns specified in \code{keep_cols},
-\code{y_colname}, \code{q_colname}, \code{g_colname}, and \code{W_colname}.
+\code{.sutdata} with columns \code{y_colname}, \code{q_colname}, \code{g_colname}, and \code{W_colname} added
 }
 \description{
 Calculate y, g, and q vectors and W matrices
