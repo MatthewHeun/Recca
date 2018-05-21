@@ -244,12 +244,34 @@ calc_F_footprint_effects <- function(.Mdata = NULL,
     # Note that clean_byname() removes zeroes and avoids errors when inverting the matrices.
     F_footprint_p <- matrixproduct_byname(M_p,
                                           colsums_byname(M_p) %>% clean_byname() %>% hatize_byname() %>% invert_byname())
+
     F_effects_p <- matrixproduct_byname(rowsums_byname(M_p) %>% clean_byname() %>% hatize_byname() %>% invert_byname(),
                                         M_p)
     F_footprint_s <- matrixproduct_byname(M_s,
                                           colsums_byname(M_s) %>% clean_byname() %>% hatize_byname() %>% invert_byname())
     F_effects_s <- matrixproduct_byname(rowsums_byname(M_s) %>% clean_byname() %>% hatize_byname() %>% invert_byname(),
                                         M_s)
+    # Run some tests to make sure everything is working.
+    # Start with footpring matrices
+    colsums_F_footprint_p <- colsums_byname(F_footprint_p)
+    colsums_F_footprint_s <- colsums_byname(F_footprint_s)
+    err_F_footprint_p <- difference_byname(colsums_F_footprint_p, 1)
+    err_F_footprint_s <- difference_byname(colsums_F_footprint_s, 1)
+    F_footprint_p_OK <- iszero_byname(err_F_footprint_p)
+    F_footprint_s_OK <- iszero_byname(err_F_footprint_s)
+    stopifnot(F_footprint_p_OK)
+    stopifnot(F_footprint_s_OK)
+    # Also check effects matrices
+    rowsums_F_effects_p <- rowsums_byname(F_effects_p)
+    rowsums_F_effects_s <- rowsums_byname(F_effects_s)
+    err_F_effects_p <- difference_byname(rowsums_F_effects_p, 1)
+    err_F_effects_s <- difference_byname(rowsums_F_effects_s, 1)
+    F_effects_p_OK <- iszero_byname(err_F_effects_p)
+    F_effects_s_OK <- iszero_byname(err_F_effects_s)
+    stopifnot(F_effects_p_OK)
+    stopifnot(F_effects_s_OK)
+
+    # Everything checked out, so make our outgoing list and return it.
     list(F_footprint_p, F_effects_p, F_footprint_s, F_effects_s) %>%
       set_names(F_footprint_p_colname, F_effects_p_colname, F_footprint_s_colname, F_effects_s_colname)
   }
