@@ -90,27 +90,24 @@ add_matnames <- function(.DF,
                          U_EIOU = "U_EIOU",
                          V = "V",
                          Y = "Y"){
-  matname_func <- function(ledger_side, energy, flow_aggregation_point){
-    matname_val <- case_when(
-      # Negative values on the supply side of the ledger with Flow == "Energy industry own use"
-      # are put into the U_EIOU matrix
-      ledger_side == supply_side & energy <= 0 & flow_aggregation_point == eiou ~ U_EIOU,
-      # All other negative values on the Supply side of the ledger belong in the use (U) matrix.
-      ledger_side == supply_side & energy <= 0 ~ U,
-      # All positive values on the Supply side of the ledger belong in the make (V) matrix.
-      ledger_side == supply_side & energy > 0 ~ V,
-      # All Consumption items belong in the final demand (Y) matrix.
-      ledger_side == consumption_side ~ Y,
-      # Identify any places where our logic is faulty.
-      TRUE ~ NA_character_
-    )
-    list(matname_val) %>% set_names(matname)
-  }
-  matsindf_apply(.DF, FUN = matname_func,
-                 ledger_side = ledger_side, energy = energy, flow_aggregation_point = flow_aggregation_point) %>%
+  ledger_side <- as.name(ledger_side)
+  energy <- as.name(energy)
+  flow_aggregation_point <- as.name(flow_aggregation_point)
+  .DF %>%
     mutate(
-      # Change to character vectors. No need to have this as a list.
-      !!as.name(matname) := as.character(!!as.name(matname))
+      !!matname := case_when(
+        # Negative values on the supply side of the ledger with Flow == "Energy industry own use"
+        # are put into the U_EIOU matrix
+        !!ledger_side == supply_side & !!energy <= 0 & !!flow_aggregation_point == eiou ~ U_EIOU,
+        # All other negative values on the Supply side of the ledger belong in the use (U) matrix.
+        !!ledger_side == supply_side & !!energy <= 0 ~ U,
+        # All positive values on the Supply side of the ledger belong in the make (V) matrix.
+        !!ledger_side == supply_side & !!energy > 0 ~ V,
+        # All Consumption items belong in the final demand (Y) matrix.
+        !!ledger_side == consumption_side ~ Y,
+        # Identify any places where our logic is faulty.
+        TRUE ~ NA_character_
+      )
     )
 }
 
@@ -169,41 +166,39 @@ add_row_col_meta <- function(.DF,
                              # Output columns
                              rowname = "rowname", colname = "colname",
                              rowtype = "rowtype", coltype = "coltype"){
+  product <- as.name(product)
+  flow <- as.name(flow)
+  matname <- as.name(matname)
+  rowname <- as.name(rowname)
+  colname <- as.name(colname)
+  rowtype <- as.name(rowtype)
+  coltype <- as.name(coltype)
 
-  meta_func <- function(matname, product, flow){
-    rowname_val <- case_when(
-      matname == U | matname == U_EIOU ~ product,
-      matname == V ~ flow,
-      matname == Y ~ product,
-      TRUE ~ NA_character_
-    )
-    colname_val <- case_when(
-      matname == U | matname == U_EIOU ~ flow,
-      matname == V ~ product,
-      matname == Y ~ flow,
-      TRUE ~ NA_character_
-    )
-    rowtype_val <- case_when(
-      matname == U | matname == U_EIOU ~ product_type,
-      matname == V ~ industry_type,
-      matname == Y ~ product_type,
-      TRUE ~ NA_character_
-    )
-    coltype_val <- case_when(
-      matname == U | matname == U_EIOU ~ industry_type,
-      matname == V ~ product_type,
-      matname == Y ~ sector_type,
-      TRUE ~ NA_character_
-    )
-    list(rowname_val, colname_val, rowtype_val, coltype_val) %>%
-      set_names(c(rowname, colname, rowtype, coltype))
-  }
-  matsindf_apply(.DF, FUN = meta_func, matname = matname, product = product, flow = flow) %>%
+  .DF %>%
     mutate(
-      # Change to character vectors instead of lists
-      !!as.name(rowname) := as.character(!!as.name(rowname)),
-      !!as.name(colname) := as.character(!!as.name(colname)),
-      !!as.name(rowtype) := as.character(!!as.name(rowtype)),
-      !!as.name(coltype) := as.character(!!as.name(coltype)),
+      !!rowname := case_when(
+        !!matname == U | !!matname == U_EIOU ~ !!product,
+        !!matname == V ~ !!flow,
+        !!matname == Y ~ !!product,
+        TRUE ~ NA_character_
+      ),
+      !!colname := case_when(
+        !!matname == U | !!matname == U_EIOU ~ !!flow,
+        !!matname == V ~ !!product,
+        !!matname == Y ~ !!flow,
+        TRUE ~ NA_character_
+      ),
+      !!rowtype := case_when(
+        !!matname == U | !!matname == U_EIOU ~ product_type,
+        !!matname == V ~ industry_type,
+        !!matname == Y ~ product_type,
+        TRUE ~ NA_character_
+      ),
+      !!coltype := case_when(
+        !!matname == U | !!matname == U_EIOU ~ industry_type,
+        !!matname == V ~ product_type,
+        !!matname == Y ~ sector_type,
+        TRUE ~ NA_character_
+      )
     )
 }
