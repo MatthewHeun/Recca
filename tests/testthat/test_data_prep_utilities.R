@@ -18,7 +18,7 @@ test_that("add_matnames and add_row_col_meta works as expected", {
     setwd(file.path("..", ".."))
   }
 
-  expect_known_value(UKEnergy2000tidy %>% add_matnames() %>% add_row_col_meta(),
+  expect_known_value(UKEnergy2000tidy %>% add_matnames_iea() %>% add_row_col_meta(),
                      file.path(expec_path, "expected_row_col_meta.rds"), update = FALSE)
 
   if (is_testing()) {
