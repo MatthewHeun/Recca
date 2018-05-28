@@ -113,6 +113,9 @@ add_matnames_iea <- function(.DF,
   energy <- as.name(energy)
   flow <- as.name(flow)
   flow_aggregation_point <- as.name(flow_aggregation_point)
+
+  verify_cols_missing(.DF, matname)
+
   .DF %>%
     mutate(
       !!matname := case_when(
