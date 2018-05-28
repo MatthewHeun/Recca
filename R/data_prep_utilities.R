@@ -44,9 +44,13 @@ S_units_from_tidy <- function(.tidydf, Product = "Product", Unit = "Unit", S_uni
 
 #' Add a column of matrix names to tidy data frame
 #'
-#' This function adds a column of matrix names to a tidy data frame.
+#' This function adds a column of matrix names to a tidy data frame
+#' wherein each row of \code{.DF} is a single value in an energy conversion chain.
 #' The default argument values assume that \code{.DF} uses IEA-style nomenclature
 #' and terminology, although \code{.DF} does not necessarily need to contain IEA data.
+#'
+#' In a reasonable workflow, this function would be followed by a call to
+#' \link{add_row_col_meta} and \link[matsindf]{collapse_to_matrices}.
 #'
 #' @param .DF a data frame with \code{ledger_side}, \code{energy}, \code{flow_aggregation_point},
 #'        and \code{flow} columns.
@@ -67,7 +71,7 @@ S_units_from_tidy <- function(.tidydf, Product = "Product", Unit = "Unit", S_uni
 #' @param neg_supply_in_fd identifiers for \code{flow} items that, when negative,
 #'        are entries in the final demand (\code{Y}) matrix.
 #' @param matname the name of the output column containing the name of the matrix
-#'        to which a row's value belongs (a string). Default is "\code{UVY}".
+#'        to which a row's value belongs (a string). Default is "\code{matname}".
 #' @param U the name for the use matrix (a string). Default is "\code{U}".
 #' @param U_EIOU the name for the energy industry own use matrix. Default is "\code{U_EIOU}".
 #' @param V the name for the make matrix (a string). Default is "\code{V}".
@@ -99,7 +103,7 @@ add_matnames_iea <- function(.DF,
                                                   "Statistical differences",
                                                   "Stock changes"),
                              # Output column
-                             matname = "UVY",
+                             matname = "matname",
                              # Ouput identifiers for use, EIOU, make, and final demand matrices
                              U = "U",
                              U_EIOU = "U_EIOU",

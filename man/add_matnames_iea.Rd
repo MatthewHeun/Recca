@@ -9,7 +9,7 @@ add_matnames_iea(.DF, ledger_side = "Ledger.side", energy = "EX.ktoe",
   supply_side = "Supply", consumption_side = "Consumption",
   eiou = "Energy industry own use", neg_supply_in_fd = c("Exports",
   "International aviation bunkers", "International marine bunkers", "Losses",
-  "Statistical differences", "Stock changes"), matname = "UVY", U = "U",
+  "Statistical differences", "Stock changes"), matname = "matname", U = "U",
   U_EIOU = "U_EIOU", V = "V", Y = "Y")
 }
 \arguments{
@@ -41,7 +41,7 @@ Default is "\code{"Energy industry own use"}.}
 are entries in the final demand (\code{Y}) matrix.}
 
 \item{matname}{the name of the output column containing the name of the matrix
-to which a row's value belongs (a string). Default is "\code{UVY}".}
+to which a row's value belongs (a string). Default is "\code{matname}".}
 
 \item{U}{the name for the use matrix (a string). Default is "\code{U}".}
 
@@ -55,9 +55,14 @@ to which a row's value belongs (a string). Default is "\code{UVY}".}
 \code{.DF} with an added column, \code{matname}.
 }
 \description{
-This function adds a column of matrix names to a tidy data frame.
+This function adds a column of matrix names to a tidy data frame
+wherein each row of \code{.DF} is a single value in an energy conversion chain.
 The default argument values assume that \code{.DF} uses IEA-style nomenclature
 and terminology, although \code{.DF} does not necessarily need to contain IEA data.
+}
+\details{
+In a reasonable workflow, this function would be followed by a call to
+\link{add_row_col_meta} and \link[matsindf]{collapse_to_matrices}.
 }
 \examples{
 UKEnergy2000tidy \%>\% add_matnames_iea()
