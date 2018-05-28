@@ -50,13 +50,15 @@ S_units_from_tidy <- function(.tidydf, Product = "Product", Unit = "Unit", S_uni
 #' @param energy the name of the column in \code{.DF} that contains energy and exergy values
 #'        (a string). Default is "\code{EX.ktoe}".
 #' @param flow_aggregation_point the name of the column in \code{.DF} that contains flow aggregation point information.
-#'        Default is "\code{Flow.aggregation.point",
+#'        Default is "\code{Flow.aggregation.point}",
 #' @param supply_side the identifier for items on the supply side of the ledger (a string).
 #'        Default is "\code{Supply}".
 #' @param consumption_side the identifier for items on the consumption side
 #'        of the ledger (a string). Default is "\code{Consumption}".
 #' @param eiou the identifier for items that are energy industry own use.
 #'        Default is "\code{"Energy industry own use"}.
+#' @param neg_supply_in_fd identifiers for \code{flow} items that, when negative,
+#'        are entries in the final demand (\code{fd}) matrix.
 #' @param matname the name of the output column containing the name of the matrix
 #'        in which this row belongs (a string). Default is "\code{matname}".
 #' @param U the name for the use matrix (a string). Default is "\code{U}".
@@ -79,12 +81,19 @@ add_matnames <- function(.DF,
                          ledger_side = "Ledger.side",
                          energy = "EX.ktoe",
                          flow_aggregation_point = "Flow.aggregation.point",
+                         flow = "Flow",
                          # Input identifiers for supply, consumption, and EIOU
                          supply_side = "Supply",
                          consumption_side = "Consumption",
                          eiou = "Energy industry own use",
+                         neg_supply_in_fd = c("Exports",
+                                              "International aviation bunkers",
+                                              "International marine bunkers",
+                                              "Losses",
+                                              "Statistical differences",
+                                              "Stock changes"),
                          # Output column
-                         matname = "matname",
+                         matname = "UVY",
                          # Ouput identifiers for use, EIOU, make, and final demand matrices
                          U = "U",
                          U_EIOU = "U_EIOU",
@@ -92,19 +101,22 @@ add_matnames <- function(.DF,
                          Y = "Y"){
   ledger_side <- as.name(ledger_side)
   energy <- as.name(energy)
+  flow <- as.name(flow)
   flow_aggregation_point <- as.name(flow_aggregation_point)
   .DF %>%
     mutate(
       !!matname := case_when(
+        # All Consumption items belong in the final demand (Y) matrix.
+        !!ledger_side == consumption_side ~ Y,
+        # All positive values on the Supply side of the ledger belong in the make (V) matrix.
+        !!ledger_side == supply_side & !!energy > 0 ~ V,
         # Negative values on the supply side of the ledger with Flow == "Energy industry own use"
         # are put into the U_EIOU matrix
         !!ledger_side == supply_side & !!energy <= 0 & !!flow_aggregation_point == eiou ~ U_EIOU,
+        # Negative values on the supply side that have Flow %in% supply_in_fd go in the final demand matrix
+        !!ledger_side == supply_side & !!energy <= 0 & !!flow %in% supply_in_fd ~ Y,
         # All other negative values on the Supply side of the ledger belong in the use (U) matrix.
         !!ledger_side == supply_side & !!energy <= 0 ~ U,
-        # All positive values on the Supply side of the ledger belong in the make (V) matrix.
-        !!ledger_side == supply_side & !!energy > 0 ~ V,
-        # All Consumption items belong in the final demand (Y) matrix.
-        !!ledger_side == consumption_side ~ Y,
         # Identify any places where our logic is faulty.
         TRUE ~ NA_character_
       )

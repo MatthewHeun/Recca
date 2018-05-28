@@ -5,9 +5,12 @@
 \title{Add a column of matrix names to tidy data frame}
 \usage{
 add_matnames(.DF, ledger_side = "Ledger.side", energy = "EX.ktoe",
-  flow_aggregation_point = "Flow.aggregation.point", supply_side = "Supply",
-  consumption_side = "Consumption", eiou = "Energy industry own use",
-  matname = "matname", U = "U", U_EIOU = "U_EIOU", V = "V", Y = "Y")
+  flow_aggregation_point = "Flow.aggregation.point", flow = "Flow",
+  supply_side = "Supply", consumption_side = "Consumption",
+  eiou = "Energy industry own use", supply_in_fd = c("Exports",
+  "International aviation bunkers", "International marine bunkers", "Losses",
+  "Statistical differences", "Stock changes"), matname = "matname", U = "U",
+  U_EIOU = "U_EIOU", V = "V", Y = "Y")
 }
 \arguments{
 \item{.DF}{a data frame with \code{ledger_side} and \code{energy} columns.}
@@ -17,6 +20,9 @@ add_matnames(.DF, ledger_side = "Ledger.side", energy = "EX.ktoe",
 
 \item{energy}{the name of the column in \code{.DF} that contains energy and exergy values
 (a string). Default is "\code{EX.ktoe}".}
+
+\item{flow_aggregation_point}{the name of the column in \code{.DF} that contains flow aggregation point information.
+Default is "\code{Flow.aggregation.point}",}
 
 \item{supply_side}{the identifier for items on the supply side of the ledger (a string).
 Default is "\code{Supply}".}
@@ -37,6 +43,9 @@ in which this row belongs (a string). Default is "\code{matname}".}
 \item{V}{the name for the make matrix (a string). Default is "\code{V}".}
 
 \item{Y}{the name for the final demand matrix (a string). Default is "\code{Y}".}
+
+\item{exports}{the identifier for items that are exports.
+Default is "\code{"Exports"}.}
 }
 \value{
 \code{.DF} with an added column, \code{matname}.
