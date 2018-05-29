@@ -4,7 +4,9 @@ context("Reconstructing PSUT matrices")
 ###########################################################
 
 test_that("reconstructing U and V from single matrices works as expected", {
-  alliomats <- calc_io_mats(UKEnergy2000mats)
+  alliomats <- UKEnergy2000mats %>%
+    spread(key = matrix.name, value = matrix) %>%
+    calc_io_mats()
   allUV <- reconstruct_UV(alliomats, Y_prime_colname = "Y")
   for (i in 1:nrow(allUV)) {
     UV <- reconstruct_UV(Y_prime_colname = alliomats$Y[[i]],

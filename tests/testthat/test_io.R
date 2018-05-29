@@ -18,7 +18,9 @@ test_that("calculating y, q, g, W, A, and L works as expected", {
   }
 
   # Calculate y, q, g, and W from UKEnergy2000mats
-  yqgW <- UKEnergy2000mats %>% calc_yqgW()
+  yqgW <- UKEnergy2000mats %>%
+    spread(key = matrix.name, value = matrix) %>%
+    calc_yqgW()
   expect_known_value(yqgW, file.path(expec_path, "expected_yqgW.rds"), update = FALSE)
 
   # Calculate Z, D, C, and A matrices from yqgW
@@ -51,7 +53,9 @@ test_that("calculating IO matrices works as expected", {
   }
 
   # Calculate all IO matrices
-  io_mats <- UKEnergy2000mats %>% calc_io_mats()
+  io_mats <- UKEnergy2000mats %>%
+    spread(key = matrix.name, value = matrix) %>%
+    calc_io_mats()
   expect_known_value(io_mats, file.path(expec_path, "expected_iomats.rds"), update = FALSE)
 
   if (is_testing()) {

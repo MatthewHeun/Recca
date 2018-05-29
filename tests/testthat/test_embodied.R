@@ -19,7 +19,10 @@ test_that("embodied energy calculations works as expected", {
   }
 
   # Calculate all IO matrices
-  io_mats <- UKEnergy2000mats %>% calc_io_mats()
+  io_mats <- UKEnergy2000mats %>%
+    spread(key = matrix.name, value = matrix) %>%
+    select(Country, Year, Energy.type, Last.stage, U, V, Y, r_EIOU, S_units) %>%
+    calc_io_mats()
 
   # Calculate the G and H matrices
   GH <- io_mats %>%

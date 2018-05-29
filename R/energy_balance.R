@@ -35,7 +35,9 @@
 #' @export
 #'
 #' @examples
-#' verify_SUT_energy_balance(SUTMatsWne)
+#' verify_SUT_energy_balance(UKEnergy2000mats %>%
+#'                             spread(key = matrix.name, value = matrix) %>%
+#'                             filter(Last.stage %in% c("final", "useful")), tol = 1e-4)
 verify_SUT_energy_balance <- function(.sutdata = NULL,
                                       # Input column names
                                       U_colname = "U", V_colname = "V", Y_colname = "Y",

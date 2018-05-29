@@ -42,5 +42,7 @@ This function should be called
 for its side-effect of testing whether energy is in balance in \code{.sutdata}.
 }
 \examples{
-verify_SUT_energy_balance(SUTMatsWne)
+verify_SUT_energy_balance(UKEnergy2000mats \%>\%
+                            spread(key = matrix.name, value = matrix) \%>\%
+                            filter(Last.stage \%in\% c("final", "useful")), tol = 1e-4)
 }
