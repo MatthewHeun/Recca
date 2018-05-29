@@ -12,13 +12,15 @@ verify_SUT_energy_balance(.sutdata = NULL, U_colname = "U",
 \item{.sutdata}{an SUT-style data frame with columns of matrices, including
 \code{U}, \code{V}, and \code{Y}.}
 
-\item{U_colname}{the name of the column that contains \code{U} matrices}
+\item{U_colname}{the name of the column that contains \code{U} matrices. Default is "\code{U}".}
 
-\item{V_colname}{the name of the column that contains \code{V} matrices}
+\item{V_colname}{the name of the column that contains \code{V} matrices. Default is "\code{V}".}
 
-\item{Y_colname}{the name of the column that contsins \code{Y} matrices}
+\item{Y_colname}{the name of the column that contsins \code{Y} matrices. Default is "\code{Y}".}
 
 \item{tol}{the maximum amount by which Supply and Consumption can be out of balance}
+
+\item{SUT_energy_balance}{the name of the output column. Default is "\code{.SUT_energy_balance}".}
 }
 \value{
 \code{.sutdata}. If energy balance is not observed,
@@ -40,5 +42,10 @@ This function should be called
 for its side-effect of testing whether energy is in balance in \code{.sutdata}.
 }
 \examples{
-verify_SUT_energy_balance(SUTMatsWne)
+library(tidyr)
+library(magrittr)
+verify_SUT_energy_balance(UKEnergy2000mats \%>\%
+                            filter(Last.stage \%in\% c("final", "useful")) \%>\%
+                            spread(key = matrix.name, value = matrix),
+                          tol = 1e-4)
 }

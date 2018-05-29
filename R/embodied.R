@@ -7,28 +7,31 @@
 #' @param .iodata a data frame containing matrices that describe the Input-Output structure
 #' (using the supply-use table format) of an Energy Conversion Chain.
 #' \code{.iodata} will likely have been obtained from the \code{calc_io_mats} function.
-#' @param Y_colname the name of the column in \code{.iodata} containing final demand (\strong{Y}) matrices.
-#' @param y_colname the name of the column in \code{.iodata} containing final demand (\strong{y}) vectors.
-#' @param q_colname the name of the column in \code{.iodata} containing final demand (\strong{q}) vectors.
+#' @param Y_colname the name of the column in \code{.iodata} containing final demand (\code{Y}) matrices.
+#' @param q_colname the name of the column in \code{.iodata} containing final demand (\code{q}) vectors.
 #' @param L_ixp_colname the name of the column in \code{.iodata} containing Industry-by-Product
 #' Leontief (\code{L_ixp}) matrices.
+#' @param g_colname the name of the output column containing \code{g} vectors.
+#' @param W_colname the name of the output column containing \code{W} matrices.
+#' @param U_EIOU_colname the name of the output column containing \code{U_EIOU} matrices.
 #' @param G_colname the name of the output column containing \code{G} matrices.
 #' \code{G} is calculated by \code{L_ixp * y_hat}.
 #' @param H_colname the name of the output column containing \code{H} matrices.
 #' \code{H} is calculated by \code{L_ixp * Y}.
 #' @param E_colname the name of the output column containing \code{E} matrices.
 #' \code{E} is calculated by \code{W * g_hat_inv}.
-#' @param M_colname the name of the output column containing matrices of embodied energy.
-#' These matrices give the energy of type shown in rows embodied in the Products shown in columns.
-#' \code{M} is formed from column sums of positive entries in the various Qx matrices
-#' @param F_footprint_p_colname the name of the output column containing \strong{F_footprint_p} matrices.
-#' \strong{F}\code{_footprint_p} is calculated by \strong{M_p} (\strong{M_p}^T\strong{i})_hat_inv.
-#' @param F_effects_p_colname the name of the output column containing \strong{F_effects_p} matrices.
-#' \strong{F}\code{_effects_p} is calculated by \strong{M_p i}_hat_inv \strong{M_p}.
-#' @param F_footprint_s_colname the name of the output column containing \strong{F_footprint_s} matrices.
-#' \strong{F}\code{_footprint_s} is calculated by \strong{M_s} (\strong{M_s}^T\strong{i})_hat_inv.
-#' @param F_effects_s_colname the name of the output column containing \strong{F_effects_s} matrices.
-#' \strong{F}\code{_effects_p} is calculated by \strong{M_s i}_hat_inv \strong{M_s}.
+#' @param M_p_colname the name of the output column containing \code{M_p} matrices.
+#' \code{M_p} is formed from column sums of positive entries in the various Qx matrices
+#' @param M_s_colname the name of the output column containing \code{M_s} matrices.
+#' \code{M_s} is constructed by \code{M_p * q_hat_inv * Y}.
+#' @param F_footprint_p_colname the name of the output column containing \code{F_footprint_p} matrices.
+#' \code{F}\code{_footprint_p} is calculated by \code{M_p} (\code{M_p}^T\code{i})_hat_inv.
+#' @param F_effects_p_colname the name of the output column containing \code{F_effects_p} matrices.
+#' \code{F}\code{_effects_p} is calculated by \code{M_p i}_hat_inv \code{M_p}.
+#' @param F_footprint_s_colname the name of the output column containing \code{F_footprint_s} matrices.
+#' \code{F}\code{_footprint_s} is calculated by \code{M_s} (\code{M_s}^T\code{i})_hat_inv.
+#' @param F_effects_s_colname the name of the output column containing \code{F_effects_s} matrices.
+#' \code{F}\code{_effects_p} is calculated by \code{M_s i}_hat_inv \code{M_s}.
 #'
 #' @return \code{.iodata} with columns
 #' \code{G_colname}, \code{H_colname}, \code{E_colname}, and \code{Q_colname} added
@@ -67,7 +70,6 @@ calc_embodied_mats <- function(.iodata = NULL,
 #'
 #' @param .iodata a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.
 #' \code{.iodata} will likely have been obtained from the \code{calc_io_mats} function.
-#' @param y_colname the name of the column in \code{.iodata} containing final demand (\code{y}) vectors.
 #' @param Y_colname the name of the column in \code{.iodata} containing final demand (\code{Y}) matrices.
 #' @param L_ixp_colname the name of the column in \code{.iodata} containing Industry-by-Product
 #' Leontief (\code{L_ixp}) matrices.
@@ -88,7 +90,7 @@ calc_GH <- function(.iodata = NULL,
     y <- rowsums_byname(Y)
     G <- matrixproduct_byname(L_ixp, hatize_byname(y))
     H <- matrixproduct_byname(L_ixp, Y)
-    list(G, H) %>% set_names(G_colname, H_colname)
+    list(G, H) %>% set_names(c(G_colname, H_colname))
   }
   matsindf_apply(.iodata, FUN = GH_func, Y = Y_colname, L_ixp = L_ixp_colname)
 }
@@ -106,6 +108,11 @@ calc_GH <- function(.iodata = NULL,
 #'
 #' @return \code{.iodata} with column \code{E_colname} added
 #'
+#' @importFrom matsbyname sum_byname
+#' @importFrom matsbyname clean_byname
+#' @importFrom matsbyname rowsums_byname
+#' @importFrom matsbyname difference_byname
+#'
 #' @export
 calc_E <- function(.iodata = NULL,
                    # Input columns
@@ -122,18 +129,17 @@ calc_E <- function(.iodata = NULL,
 
 #' Add embodied matrices colums to a data frame
 #'
-#' @param .YqGHEdata a data frame containing columns with \strong{q} vectors
-#' and \strong{Y}, \strong{G}, \strong{H}, and \strong{E} matrices.
+#' @param .YqGHEdata a data frame containing columns with \code{q} vectors
+#' and \code{Y}, \code{G}, \code{H}, and \code{E} matrices.
 #' \code{.YqGEdata} will likely have been obtained from the \code{calc_G} and \code{calc_E} functions.
-#' @param Y_colname the name of the output column containing \strong{Y} matrices.
-#' \strong{Y} is the final demand matrix.
-#' @param q_colname the name of the output column containing \strong{q} column vectors.
-#' \strong{q} is calculated by \code{\strong{Ui} + \strong{y}}.
+#' @param Y_colname the name of the output column containing \code{Y} matrices.
+#' \code{Y} is the final demand matrix.
+#' @param q_colname the name of the output column containing \code{q} column vectors.
+#' \code{q} is calculated by \code{Ui} + \code{y}.
 #' @param G_colname the name of the output column containing \code{G} matrices.
-#' \code{G} is calculated by \code{\strong{L_ixp} * \strong{y_hat}}.
-#' @param E_colname the name of the output column containing \strong{E} matrices.
-#' \code{E} is calculated by \code{\strong{W} * \strong{g_hat_inv}}.
-#' @param Q_colname the name of the output column containing lists of \strong{Q} matrices.
+#' \code{G} is calculated by \code{L_ixp} * \code{y_hat}.
+#' @param E_colname the name of the output column containing \code{E} matrices.
+#' \code{E} is calculated by \code{W} * \code{g_hat_inv}.
 #' @param tol the allowable energy balance error.
 #' \code{Q} is calculated by \code{e_hat * G},
 #' but the e_hat column contains lists of matrices,
@@ -145,6 +151,16 @@ calc_E <- function(.iodata = NULL,
 #' These matrices contain embodied products in rows and consuming final demand sectors in columns.
 #'
 #' @return \code{.YqGHEdata} with columns \code{Q_colname}, \code{M_p_colname}, and \code{M_s_colname} added
+#'
+#' @importFrom matsbyname list_of_rows_or_cols
+#' @importFrom matsbyname make_list
+#' @importFrom matsbyname setrowtype
+#' @importFrom matsbyname setcoltype
+#' @importFrom matsbyname rowtype
+#' @importFrom matsbyname coltype
+#' @importFrom matsbyname colsums_byname
+#' @importFrom matsbyname setrownames_byname
+#' @importFrom matsbyname setcolnames_byname
 #'
 #' @export
 calc_M <- function(.YqGHEdata = NULL,
@@ -197,7 +213,7 @@ calc_M <- function(.YqGHEdata = NULL,
     M_p_energy_balance_OK = iszero_byname(err, tol = tol)
     stopifnot(M_p_energy_balance_OK)
     # Everything has checked out. Build our list and return.
-    list(M_p, M_s) %>% set_names(M_p_colname, M_s_colname)
+    list(M_p, M_s) %>% set_names(c(M_p_colname, M_s_colname))
   }
   matsindf_apply(.YqGHEdata, FUN = M_func, Y = Y_colname, q = q_colname, G = G_colname, E = E_colname)
 }
@@ -220,6 +236,10 @@ calc_M <- function(.YqGHEdata = NULL,
 #'
 #' @return \code{.Mdata} with columns \code{F_footprint_p}, \code{F_effects_p},
 #' \code{F_footprint_s}, and \code{F_effects_s} added
+#'
+#' @importFrom matsbyname colsums_byname
+#' @importFrom matsbyname iszero_byname
+#'
 #' @export
 #'
 calc_F_footprint_effects <- function(.Mdata = NULL,
@@ -280,6 +300,10 @@ calc_F_footprint_effects <- function(.Mdata = NULL,
 #' @param eta_s_colname a string for the name of the output column containing vectors of final-demand-sector-based efficiencies
 #'
 #' @return \code{.embodiedmats} with columns \code{eta_p_colname} and \code{eta_s_colname} added
+#'
+#' @importFrom matsbyname elementquotient_byname
+#' @importFrom matsbyname select_rows_byname
+#' @importFrom matsbyname make_pattern
 #'
 #' @export
 calc_embodied_etas <- function(.embodiedmats = NULL,

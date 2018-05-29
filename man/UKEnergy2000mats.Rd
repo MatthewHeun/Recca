@@ -11,7 +11,7 @@
   \item{Energy.type}{E.ktoe (for energy) or X.ktoe (for exergy)}
   \item{Last.stage}{tells the final stage of the energy conversion chain: final, useful, or services}
   \item{matrix.name}{gives the name of the matrix}
-  \item{matrix}{gives use, make, and final demand matrices}
+  \item{matrix}{gives use (U), make (V), final demand (Y), r_EIOU, and S_units matrices}
 }}
 \source{
 \url{http://www.see.leeds.ac.uk/fileadmin/Documents/research/sri/workingpapers/sri-wp111.pdf}
@@ -35,6 +35,6 @@ Leeds, England,
 \details{
 \code{UKEnergy2000mats} gives the make (\code{V}), use (\code{U}), and final demand (\code{Y}) matrices
 associated with \code{UKEnergy2000tidy}.
-These data are in \code{\pkg{matsindf}} format.
+These data are in \pkg{matsindf} format.
 }
 \keyword{datasets}

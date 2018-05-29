@@ -24,5 +24,6 @@ a data frame containing grouping variables and a new \code{S_unit} column
 The \code{.tidydf} should be grouped as needed.
 }
 \examples{
+library(dplyr)
 S_units_from_tidy(UKEnergy2000tidy \%>\% group_by("Country", "Year", "Energy.type", "Last.stage"))
 }

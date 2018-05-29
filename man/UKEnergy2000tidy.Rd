@@ -14,7 +14,8 @@
   \item{Last.stage}{tells the final stage of the energy conversion chain: final, useful, or services}
   \item{Flow}{the Industry or Sector involved in this flow}
   \item{Product}{the energy product involved in this flow}
-  \item{EX.ktoe}{magnitude of the energy or exergy flow in ktoe}
+  \item{EX.ktoe}{value of the energy, exergy, or service flow in ktoe}
+  \item{Unit}{unit in which quantity is expressed}
 }}
 \source{
 \url{http://www.see.leeds.ac.uk/fileadmin/Documents/research/sri/workingpapers/sri-wp111.pdf}

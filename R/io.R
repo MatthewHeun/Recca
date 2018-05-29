@@ -97,6 +97,10 @@ calc_io_mats <- function(.sutdata = NULL,
 #' @param W_colname the name of the output column containing \code{W} matrices.
 #' \code{W} is calculated by \code{transpose_byname(V) - U}.
 #'
+#' @importFrom matsbyname count_vals_inrows_byname
+#' @importFrom matsbyname compare_byname
+#' @importFrom matsbyname all_byname
+#'
 #' @export
 #'
 #' @return \code{.sutdata} with columns \code{y_colname}, \code{q_colname}, \code{g_colname}, and \code{W_colname} added
@@ -154,6 +158,12 @@ calc_yqgW <- function(.sutdata = NULL,
 #'
 #' @return \code{.sutdata} with columns \code{Z_colname}, \code{D_colname}, and \code{A_colname} added
 #'
+#' @importFrom matsbyname hatize_byname
+#' @importFrom matsbyname invert_byname
+#' @importFrom matsbyname matrixproduct_byname
+#' @importFrom matsbyname transpose_byname
+#' @importFrom matsindf matsindf_apply
+#'
 #' @export
 calc_A <- function(.sutdata = NULL,
                    # Input columns
@@ -183,6 +193,8 @@ calc_A <- function(.sutdata = NULL,
 #' \code{L_pxp} is calculated by \code{(I - Z*D)^-1}.
 #'
 #' @return \code{.sutdata} with columns \code{L_ixp_colname} and \code{L_pxp_colname} added
+#'
+#' @importFrom matsbyname Iminus_byname
 #'
 #' @export
 calc_L <- function(.sutdata = NULL,

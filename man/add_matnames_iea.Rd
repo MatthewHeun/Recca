@@ -65,5 +65,5 @@ In a reasonable workflow, this function would be followed by a call to
 \link{add_row_col_meta} and \link[matsindf]{collapse_to_matrices}.
 }
 \examples{
-UKEnergy2000tidy \%>\% add_matnames_iea()
+add_matnames_iea(UKEnergy2000tidy)
 }

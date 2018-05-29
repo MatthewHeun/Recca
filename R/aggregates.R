@@ -26,6 +26,8 @@
 #' @return a data frame containing columns of
 #' the aggregate primary energy for each row of \code{.sutdata}.
 #'
+#' @importFrom matsbyname select_cols_byname
+#'
 #' @export
 primary_aggregates <- function(.sutdata,
                                # Vector of primary industries
@@ -61,7 +63,6 @@ primary_aggregates <- function(.sutdata,
 #' @param .sutdata a data frame with columns of matrices from a supply-use analysis.
 #' @param fd_sectors a vector of names of sectors in final demand.
 #' @param U_colname the name of the column in \code{.sutdata} containing Use (\code{U}) matrices.
-#' @param V_colname the name of the column in \code{.sutdata} containing Make (\code{V}) matrices.
 #' @param Y_colname the name of the column in \code{.sutdata} containing final demand (\code{Y}) matrices.
 #' @param r_EIOU_colname the name of the colum that holds ratios of EIOU to total input for each Machine and Product.
 #' @param by one of "Product", "Sector", or "Total" to indicate the desired aggregation:
@@ -75,6 +76,9 @@ primary_aggregates <- function(.sutdata,
 #'
 #' @return \code{.sutdata} with columns \code{net_aggregate_demand_colname} and
 #' \code{gross_aggregate_demand_colname} added
+#'
+#' @importFrom matsbyname elementproduct_byname
+#' @importFrom matsbyname select_cols_byname
 #'
 #' @export
 finaldemand_aggregates <- function(.sutdata,
@@ -125,13 +129,15 @@ finaldemand_aggregates <- function(.sutdata,
 #' "Product" for aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.),
 #' "Sector" for aggregation by final demand sector (Agriculture/forestry, Domestic navigation, etc.), or
 #' "Total" for aggregation over both Product and Sector (the default).
-#' @param net_aggregate_demand the name of the output column containing aggregates of net energy demand.
+#' @param net_aggregate_demand_colname the name of the output column containing aggregates of net energy demand.
 #' This column excludes energy industry own use.
 #' @param gross_aggregate_demand_colname the name of the output column containing aggregates of gross energy demand.
 #' This column includes energy industry own use.
 #'
 #' @return a data frame containing net aggregate energy demand
 #' and gross aggregate energy demand for each row of \code{.sutdata}.
+#'
+#' @importFrom matsbyname select_cols_byname
 #'
 #' @export
 finaldemand_aggregates_with_units <- function(.sutdata,
