@@ -42,7 +42,10 @@ This function should be called
 for its side-effect of testing whether energy is in balance in \code{.sutdata}.
 }
 \examples{
+library(tidyr)
+library(magrittr)
 verify_SUT_energy_balance(UKEnergy2000mats \%>\%
-                            spread(key = matrix.name, value = matrix) \%>\%
-                            filter(Last.stage \%in\% c("final", "useful")), tol = 1e-4)
+                            filter(Last.stage \%in\% c("final", "useful")) \%>\%
+                            spread(key = matrix.name, value = matrix),
+                          tol = 1e-4)
 }
