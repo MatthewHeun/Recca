@@ -18,12 +18,18 @@ calc_embodied_mats(.iodata = NULL, Y_colname = "Y", q_colname = "q",
 (using the supply-use table format) of an Energy Conversion Chain.
 \code{.iodata} will likely have been obtained from the \code{calc_io_mats} function.}
 
-\item{Y_colname}{the name of the column in \code{.iodata} containing final demand (\strong{Y}) matrices.}
+\item{Y_colname}{the name of the column in \code{.iodata} containing final demand (\code{Y}) matrices.}
 
-\item{q_colname}{the name of the column in \code{.iodata} containing final demand (\strong{q}) vectors.}
+\item{q_colname}{the name of the column in \code{.iodata} containing final demand (\code{q}) vectors.}
 
 \item{L_ixp_colname}{the name of the column in \code{.iodata} containing Industry-by-Product
 Leontief (\code{L_ixp}) matrices.}
+
+\item{g_colname}{the name of the output column containing \code{g} vectors.}
+
+\item{W_colname}{the name of the output column containing \code{W} matrices.}
+
+\item{U_EIOU_colname}{the name of the output column containing \code{U_EIOU} matrices.}
 
 \item{G_colname}{the name of the output column containing \code{G} matrices.
 \code{G} is calculated by \code{L_ixp * y_hat}.}
@@ -34,23 +40,23 @@ Leontief (\code{L_ixp}) matrices.}
 \item{E_colname}{the name of the output column containing \code{E} matrices.
 \code{E} is calculated by \code{W * g_hat_inv}.}
 
-\item{F_footprint_p_colname}{the name of the output column containing \strong{F_footprint_p} matrices.
-\strong{F}\code{_footprint_p} is calculated by \strong{M_p} (\strong{M_p}^T\strong{i})_hat_inv.}
+\item{M_p_colname}{the name of the output column containing \code{M_p} matrices.
+\code{M_p} is formed from column sums of positive entries in the various Qx matrices}
 
-\item{F_effects_p_colname}{the name of the output column containing \strong{F_effects_p} matrices.
-\strong{F}\code{_effects_p} is calculated by \strong{M_p i}_hat_inv \strong{M_p}.}
+\item{M_s_colname}{the name of the output column containing \code{M_s} matrices.
+\code{M_s} is constructed by \code{M_p * q_hat_inv * Y}.}
 
-\item{F_footprint_s_colname}{the name of the output column containing \strong{F_footprint_s} matrices.
-\strong{F}\code{_footprint_s} is calculated by \strong{M_s} (\strong{M_s}^T\strong{i})_hat_inv.}
+\item{F_footprint_p_colname}{the name of the output column containing \code{F_footprint_p} matrices.
+\code{F}\code{_footprint_p} is calculated by \code{M_p} (\code{M_p}^T\code{i})_hat_inv.}
 
-\item{F_effects_s_colname}{the name of the output column containing \strong{F_effects_s} matrices.
-\strong{F}\code{_effects_p} is calculated by \strong{M_s i}_hat_inv \strong{M_s}.}
+\item{F_effects_p_colname}{the name of the output column containing \code{F_effects_p} matrices.
+\code{F}\code{_effects_p} is calculated by \code{M_p i}_hat_inv \code{M_p}.}
 
-\item{y_colname}{the name of the column in \code{.iodata} containing final demand (\strong{y}) vectors.}
+\item{F_footprint_s_colname}{the name of the output column containing \code{F_footprint_s} matrices.
+\code{F}\code{_footprint_s} is calculated by \code{M_s} (\code{M_s}^T\code{i})_hat_inv.}
 
-\item{M_colname}{the name of the output column containing matrices of embodied energy.
-These matrices give the energy of type shown in rows embodied in the Products shown in columns.
-\code{M} is formed from column sums of positive entries in the various Qx matrices}
+\item{F_effects_s_colname}{the name of the output column containing \code{F_effects_s} matrices.
+\code{F}\code{_effects_p} is calculated by \code{M_s i}_hat_inv \code{M_s}.}
 }
 \value{
 \code{.iodata} with columns

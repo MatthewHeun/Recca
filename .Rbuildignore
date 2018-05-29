@@ -1,3 +1,9 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^data-raw$
+^NEWS\.html$
+^README\.Rmd$
+^README\.html$
+^cran-comments\.md$
+^cran-comments\.html$
+^\.travis\.yml$

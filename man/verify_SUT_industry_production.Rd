@@ -16,11 +16,8 @@ and columns of SUT matrices, including \code{U} and \code{V}.}
 
 \item{V_colname}{the name of the column of make matrices}
 
-\item{check_colname}{the name of a column of intermediate results
-that contains \bold{V}*i (rowsums of \bold{V}) completed against \bold{U}^T on rows.}
-
-\item{problems_data_frame_name}{the name of the data frame created
-in the event that any problems are discovered}
+\item{industry_production_OK}{the name of the column in \code{.sutdata} that
+tells whether all industries produce something. Default is "\code{.industry_production_OK}".}
 }
 \value{
 Nothing is returned.

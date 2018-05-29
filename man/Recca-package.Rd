@@ -23,8 +23,7 @@
     ECC analyses query economy-spanning ECCs
     for features, themes, and metrics
     that elucidate historical trends and allow projection of future scenarios.
-    \code{\link[Recca:Recca-package]{Recca}}
-    provides functions that
+    \pkg{Recca} provides functions that
     aggregate energy aggregates at all stages of the ECC
     (primary, final, useful, and services),
     calculate physical supply use table (PSUT) matrices to describe the input-output
@@ -51,12 +50,9 @@ array
 }
 \seealso{
 The
-\code{\link[Recca:Recca-package]{Recca}}
+\pkg{Recca}
 package relies upon several other packages, including
-\code{qgraph},
-\code{\link[matsindf:matsindf-package]{matsindf}},
-and
-\code{\link[byname:byname-package]{byname}}.
+\pkg{matsindf} and \pkg{matsbyname}.
 }
 \examples{
 library(magrittr)

@@ -13,6 +13,15 @@ add_row_col_meta(.DF, matname = "matname", product = "Product",
 \arguments{
 \item{.DF}{a data frame containing \code{matname_colname}.}
 
+\item{matname}{the name of the column in \code{.DF} that contains names of matrices
+(a string).  Default is "\code{matname}".}
+
+\item{product}{the name of the column in \code{.DF} where Product names
+is found (a string). Default is "\code{Product}".}
+
+\item{flow}{the name of the column in \code{.DF} where Flow names
+is found (a string). Default is "\code{Flow}".}
+
 \item{U}{the name for use matrices (a string). Default is "\code{U}".}
 
 \item{U_EIOU}{the name for the EIOU portino o fhte U matrix (a string). Default is "\code{U_EIOU}".}
@@ -30,33 +39,22 @@ Default is "\code{Product}".}
 \item{sector_type}{the name that identifies final demand sectors (a string).
 Default is "\code{Sector}".}
 
-\item{matname_colname}{the name of the column in \code{.DF} that contains names of matrices
-(a string).  Default is "\code{matname}".}
-
-\item{product_colname}{the name of the column in \code{.DF} where Product names
-is found (a string). Default is "\code{Product}".}
-
-\item{flow_colname}{the name of the column in \code{.DF} where Flow information is found
-(a string).
-The Flow column usually contains the industries involved in this flow.
-Default is "\code{Flow}".}
-
-\item{rowname_colname}{the name of the output column that contains row names for matrices
+\item{rowname}{the name of the output column that contains row names for matrices
 (a string). Default is "\code{rowname}".}
 
-\item{colname_colname}{the name of the output column that contains column names for matrices
+\item{colname}{the name of the output column that contains column names for matrices
 (a string). Default is "\code{colname}".}
 
-\item{rowtype_colname}{the name of the output column that contains row types for matrices
+\item{rowtype}{the name of the output column that contains row types for matrices
 (a string). Default is "\code{rowtype}".}
 
-\item{coltype_colname}{the name of the output column that contains column types for matrices
+\item{coltype}{the name of the output column that contains column types for matrices
 (a string). Default is "\code{coltype}".}
 }
 \value{
 \code{.DF} with additional columns named
-        \code{rowname_colname}, \code{colname_colname},
-        \code{rowtype_colname}, and \code{coltype_colname}.
+        \code{rowname}, \code{colname},
+        \code{rowtype}, and \code{coltype}.
 }
 \description{
 Add row, column, row type, and column type metadata
@@ -64,6 +62,6 @@ Add row, column, row type, and column type metadata
 \examples{
 library(magrittr)
 UKEnergy2000tidy \%>\%
-  add_matnames() \%>\%
+  add_matnames_iea() \%>\%
   add_row_col_meta()
 }

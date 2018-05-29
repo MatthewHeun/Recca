@@ -27,7 +27,7 @@ S_units <- UKEnergy2000tidy %>%
 
 UKEnergy2000mats <- UKEnergy2000tidy %>%
   # Add a column indicating the matrix in which this entry belongs (U, V, or Y).
-  add_matnames() %>%
+  add_matnames_iea() %>%
   # Add metadata columns for row names, column names, row types, and column types.
   add_row_col_meta() %>%
   # Eliminate columns we no longer need
@@ -53,6 +53,7 @@ UKEnergy2000mats <- UKEnergy2000tidy %>%
   ) %>%
   select(-U_EIOU) %>%
   # Add S_units matrices
-  left_join(S_units, by = c("Country", "Year", "Energy.type", "Last.stage"))
+  left_join(S_units, by = c("Country", "Year", "Energy.type", "Last.stage")) %>%
+  gather(key = matrix.name, value = matrix, U, V, Y, r_EIOU, S_units)
 
 use_data(UKEnergy2000mats, overwrite = TRUE)

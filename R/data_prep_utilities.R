@@ -18,6 +18,7 @@
 #' @export
 #'
 #' @examples
+#' library(dplyr)
 #' S_units_from_tidy(UKEnergy2000tidy %>% group_by("Country", "Year", "Energy.type", "Last.stage"))
 S_units_from_tidy <- function(.tidydf, Product = "Product", Unit = "Unit", S_units = "S_units"){
   # Establish names
@@ -29,9 +30,8 @@ S_units_from_tidy <- function(.tidydf, Product = "Product", Unit = "Unit", S_uni
 
   verify_cols_missing(.tidydf, c(S_units, val, rowtype, coltype))
 
-  .tidydf %>%
-    select(!!!groups(.), !!Product, !!Unit) %>%
-    do(unique(.)) %>%
+  select(.tidydf, !!!groups(.tidydf), !!Product, !!Unit) %>%
+    do(unique(.data)) %>%
     mutate(
       !!as.name(val) := 1,
       !!as.name(S_units) := S_units,
@@ -90,7 +90,7 @@ S_units_from_tidy <- function(.tidydf, Product = "Product", Unit = "Unit", S_uni
 #' @importFrom dplyr case_when
 #'
 #' @examples
-#' UKEnergy2000tidy %>% add_matnames_iea()
+#' add_matnames_iea(UKEnergy2000tidy)
 add_matnames_iea <- function(.DF,
                              # Input columns
                              ledger_side = "Ledger.side",
@@ -144,43 +144,41 @@ add_matnames_iea <- function(.DF,
 #' Add row, column, row type, and column type metadata
 #'
 #' @param .DF a data frame containing \code{matname_colname}.
-#' @param matname_colname the name of the column in \code{.DF} that contains names of matrices
+#' @param matname the name of the column in \code{.DF} that contains names of matrices
 #'        (a string).  Default is "\code{matname}".
 #' @param U the name for use matrices (a string). Default is "\code{U}".
 #' @param U_EIOU the name for the EIOU portino o fhte U matrix (a string). Default is "\code{U_EIOU}".
 #' @param V the name for make matrices (a string). Default is "\code{V}".
 #' @param Y the name for final demand matrices (a string). Default is "\code{Y}".
-#' @param product_colname the name of the column in \code{.DF} where Product names
+#' @param product the name of the column in \code{.DF} where Product names
 #'        is found (a string). Default is "\code{Product}".
-#' @param flow_colname the name of the column in \code{.DF} where Flow information is found
-#'        (a string).
-#'        The Flow column usually contains the industries involved in this flow.
-#'        Default is "\code{Flow}".
+#' @param flow the name of the column in \code{.DF} where Flow names
+#'        is found (a string). Default is "\code{Flow}".
 #' @param industry_type the name that identifies production industries and
 #'        and transformation processes (a string). Default is "\code{Industry}".
 #' @param product_type the name that identifies energy carriers (a string).
 #'        Default is "\code{Product}".
 #' @param sector_type the name that identifies final demand sectors (a string).
 #'        Default is "\code{Sector}".
-#' @param rowname_colname the name of the output column that contains row names for matrices
+#' @param rowname the name of the output column that contains row names for matrices
 #'        (a string). Default is "\code{rowname}".
-#' @param colname_colname the name of the output column that contains column names for matrices
+#' @param colname the name of the output column that contains column names for matrices
 #'        (a string). Default is "\code{colname}".
-#' @param rowtype_colname the name of the output column that contains row types for matrices
+#' @param rowtype the name of the output column that contains row types for matrices
 #'        (a string). Default is "\code{rowtype}".
-#' @param coltype_colname the name of the output column that contains column types for matrices
+#' @param coltype the name of the output column that contains column types for matrices
 #'        (a string). Default is "\code{coltype}".
 #'
 #' @return \code{.DF} with additional columns named
-#'         \code{rowname_colname}, \code{colname_colname},
-#'         \code{rowtype_colname}, and \code{coltype_colname}.
+#'         \code{rowname}, \code{colname},
+#'         \code{rowtype}, and \code{coltype}.
 #'
 #' @export
 #'
 #' @examples
 #' library(magrittr)
 #' UKEnergy2000tidy %>%
-#'   add_matnames() %>%
+#'   add_matnames_iea() %>%
 #'   add_row_col_meta()
 add_row_col_meta <- function(.DF,
                              # Name of the input column containing matrix names
