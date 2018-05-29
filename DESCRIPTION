@@ -21,6 +21,7 @@ Imports:
     lazyeval,
     magrittr,
     matsbyname,
+    matsindf,
     parallel,
     purrr,
     qgraph, 

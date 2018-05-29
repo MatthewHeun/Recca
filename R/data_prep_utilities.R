@@ -11,9 +11,9 @@
 #' @return a data frame containing grouping variables and a new \code{S_unit} column
 #'
 #' @importFrom dplyr groups
-#' @importFrom dplyr .data
 #' @importFrom dplyr do
 #' @importFrom matsindf collapse_to_matrices
+#' @importFrom rlang .data
 #'
 #' @export
 #'
