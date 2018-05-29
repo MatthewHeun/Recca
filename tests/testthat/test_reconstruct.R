@@ -35,6 +35,8 @@ test_that("reconstructing U and V with a data frame works as expected", {
 
   # Try with Y_prime <- Y, thereby simply trying to duplicate the original U and V matrices
   Reconstructed <- UKEnergy2000mats %>%
+    spread(key = matrix.name, value = matrix) %>%
+    select(Country, Year, Energy.type, Last.stage, U, V, Y, r_EIOU, S_units) %>%
     calc_io_mats() %>%
     mutate(
       Y_prime = Y
