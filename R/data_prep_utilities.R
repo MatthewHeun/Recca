@@ -132,6 +132,7 @@ add_matnames_iea <- function(.DF,
         # are put into the U_EIOU matrix
         !!ledger_side == supply_side & !!energy <= 0 & !!flow_aggregation_point == eiou ~ U_EIOU,
         # Negative values on the supply side that have Flow %in% supply_in_fd go in the final demand matrix
+        # !!ledger_side == supply_side & !!energy <= 0 & !!flow %in% neg_supply_in_fd ~ Y,
         !!ledger_side == supply_side & !!energy <= 0 & !!flow %in% neg_supply_in_fd ~ Y,
         # All other negative values on the Supply side of the ledger belong in the use (U) matrix.
         !!ledger_side == supply_side & !!energy <= 0 ~ U,

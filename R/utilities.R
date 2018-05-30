@@ -41,6 +41,50 @@ verify_cols_missing <- function(.DF, newcols){
   invisible(NULL)
 }
 
+
+
+#' Tell if any of a list of strings starts with another string
+#'
+#' @param x a vector of strings
+#' @param target
+#'
+#' @return \code{TRUE} if any of \code{x} starts with \code{target}, \code{FALSE} otherwise.
+#'
+#' importFrom Hmisc escapeRegex
+#'
+#' @export
+#'
+#' @examples
+#' any_start_with(x = c("ad", "bd", "cd"), target = "b") # TRUE
+#' any_start_with(x = c("Production - Crude", "Production - NG", "Bogus"), target = "Production") # TRUE
+#' any_start_with(x = c("Production - Crude", "Production - NG", "Bogus"), target = "Offshore") # FALSE
+any_start_with <- function(x, target){
+  if (length(target) == 1) {
+    # return(grepl(paste(paste0("^", Hmisc::escapeRegex(target)), collapse = "|"), x) %>%
+    #          any())
+    return(grepl(paste0("^", Hmisc::escapeRegex(target)), x) %>%
+             any())
+  }
+  sapply(target, FUN = function(t){
+    grepl(paste0("^", Hmisc::escapeRegex(t)), x) %>%
+      any()
+    }) %>%
+    as.logical()
+}
+
+#' Title
+#'
+#' @param target
+#' @param x
+#'
+#' @return
+#' @export
+#'
+#' @examples
+starts_with_any_of <- function(x, target){
+  grepl(paste(Hmisc::escapeRegex(target), collapse = "|"), x)
+}
+
 #'
 #' #' Add UVY, Commodity, Industry, row, and col columns to a tidy data frame
 #' #' containing IEA-formatted data.

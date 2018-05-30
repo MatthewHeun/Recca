@@ -36,3 +36,16 @@ test_that("verify_cols_missing works with a single value", {
   expect_error(verify_cols_missing(df, as.name("a")),
                Hmisc::escapeRegex("column(s) 'a' is (are) already column names in data frame 'df'"))
 })
+
+test_that("any_start_with works properly", {
+  expect_true(any_start_with(c("a", "b", "c"), "b"))
+  expect_true(any_start_with(c("Production - Crude", "Production - NG", "Bogus"), "Production"))
+  expect_false(any_start_with(c("Production - Crude", "Production - NG", "Bogus"), "Offshore"))
+  expect_false(any_start_with(c("Production - Crude", "Production - NG", "Bogus"), "Crude"))
+  expect_equal(any_start_with(c("Production - Crude", "Production - NG", "Bogus"), c("Production", "Offshore")),
+               c(TRUE, FALSE))
+})
+
+test_that("starts_with_any_of works properly", {
+  expect_true(starts_with_any_of("prefix - suffix", c("a", "b", "prefix")))
+})
