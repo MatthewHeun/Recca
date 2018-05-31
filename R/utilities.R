@@ -117,6 +117,44 @@ starts_with_any_of <- function(x, target){
     set_names(NULL)
 }
 
+
+#' Primary industries
+#'
+#' Tells which industries are primary industries.
+#'
+#' Primary industries are industries that make a product without using any products.
+#' Primary industries are identified by interrogating
+#' the use (\code{U}) and make (\code{V}) matrices.
+#' Primary industries have all zeroes in the column of the use matrix (\code{U})
+#' and at least one non-zero value in the make (\code{V}) matrix.
+#'
+#' Argument descriptions are written assuming that \code{.sutdata} is a data frame.
+#' Alternatively, \code{.sutdata} can be unspecified, and \code{U} and \code{V} can be matrices.
+#'
+#' @param .sutdata a list or data frame containing use matrix(ces) and make matrix(ces)
+#' @param U identifier for the use matrix (a string). Default is "U".
+#' @param V identifier for the make matrix (a string). Default is "Y".
+#' @param p_industries name for the primary industries vector (a string). Default is "\code{p_industries}".
+#'
+#' @return \code{.sutdata} with an additional column (named with the value in the \code{p_industries} argument)
+#'         containing the primary industries for each row
+#'
+#' @export
+#'
+#' @examples
+#' primary_industries(UKEnergy2000mats %>% spread(key = matrix.name, value = matrix))
+primary_industries <- function(.sutdata = NULL, U = "U", V = "V", p_industries = "p_industries"){
+  p_ind_func <- function(U, V){
+    completed_cols_U <- complete_rows_cols(a = U, mat = transpose_byname(V), margin = 2) %>% sort_rows_cols()
+    zero_cols_U_inds <- completed_cols_U %>%
+      colsums_byname() %>%
+      compare_byname("==", 0) %>%
+      which()
+    list(dimnames(completed_cols_U)[[2]][zero_cols_U_inds]) %>% set_names(p_industries)
+  }
+  matsindf_apply(.sutdata, FUN = p_ind_func, U = U, V = V)
+}
+
 #'
 #' #' Add UVY, Commodity, Industry, row, and col columns to a tidy data frame
 #' #' containing IEA-formatted data.

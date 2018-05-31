@@ -61,3 +61,14 @@ test_that("starts_with_any_of works properly", {
                                   target = c("Production", "Imports")),
                c(TRUE, TRUE, FALSE, FALSE))
 })
+
+test_that("primary_industries works correctly", {
+  mats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
+  expected <- c("Resources - Crude", "Resources - NG")
+  expect_equal(primary_industries(mats)[["p_industries"]],
+               list(expected, expected, expected, expected))
+  # Try with individual matrices
+  for (i in 1:nrow(mats)) {
+    expect_equal(primary_industries(U = mats$U[[i]], V = mats$V[[i]]) %>% set_names(NULL) %>% unlist(), expected)
+  }
+})
