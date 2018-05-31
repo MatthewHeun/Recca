@@ -34,7 +34,7 @@ a data frame containing the grouping columns of \code{.ieadata}
 as well as a column named \code{aggregate_primary_colname}.
 }
 \description{
-Calculates aggregate primary energy from a data frame of IEA data.
+Calculates total aggregate primary energy from a data frame of IEA data.
 This function is named with "_IEA", because it is meant to operate on
 tidy, IEA-style data frames.
 The function \code{primary_aggregates} does the same thing,
