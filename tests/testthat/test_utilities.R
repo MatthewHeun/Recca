@@ -44,6 +44,9 @@ test_that("any_start_with works properly", {
   expect_false(any_start_with(c("Production - Crude", "Production - NG", "Bogus"), "Crude"))
   expect_equal(any_start_with(c("Production - Crude", "Production - NG", "Bogus"), c("Production", "Offshore")),
                c(TRUE, FALSE))
+  # Does it also work with lists?
+  expect_equal(any_start_with(list("Production - Crude", "Production - NG", "Bogus"), c("Production", "Offshore")),
+               c(TRUE, FALSE))
 })
 
 test_that("starts_with_any_of works properly", {
@@ -51,6 +54,10 @@ test_that("starts_with_any_of works properly", {
   expect_false(starts_with_any_of("prefix - suffix", c("a", "b", "c")))
   expect_false(starts_with_any_of("prefix - suffix", "suffix"))
   expect_equal(starts_with_any_of(c("Production - Crude", "Production - NG", "Exports - Oil", "Exports - Crude"),
-                                 c("Production", "Imports")),
+                                  c("Production", "Imports")),
+               c(TRUE, TRUE, FALSE, FALSE))
+  # Does it also work with lists?
+  expect_equal(starts_with_any_of(list("Production - Crude", "Production - NG", "Exports - Oil", "Exports - Crude"),
+                                  c("Production", "Imports")),
                c(TRUE, TRUE, FALSE, FALSE))
 })
