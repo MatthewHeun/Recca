@@ -59,12 +59,6 @@ verify_cols_missing <- function(.DF, newcols){
 #' any_start_with(x = c("Production - Crude", "Production - NG", "Bogus"), target = "Production") # TRUE
 #' any_start_with(x = c("Production - Crude", "Production - NG", "Bogus"), target = "Offshore") # FALSE
 any_start_with <- function(x, target){
-  if (length(target) == 1) {
-    # return(grepl(paste(paste0("^", Hmisc::escapeRegex(target)), collapse = "|"), x) %>%
-    #          any())
-    return(grepl(paste0("^", Hmisc::escapeRegex(target)), x) %>%
-             any())
-  }
   sapply(target, FUN = function(t){
     grepl(paste0("^", Hmisc::escapeRegex(t)), x) %>%
       any()
@@ -82,7 +76,10 @@ any_start_with <- function(x, target){
 #'
 #' @examples
 starts_with_any_of <- function(x, target){
-  grepl(paste(Hmisc::escapeRegex(target), collapse = "|"), x)
+  sapply(x, FUN = function(one_x){
+    grepl(paste(paste0("^", Hmisc::escapeRegex(target)), collapse = "|"), one_x)
+  }) %>%
+    set_names(NULL)
 }
 
 #'

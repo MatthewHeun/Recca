@@ -48,4 +48,9 @@ test_that("any_start_with works properly", {
 
 test_that("starts_with_any_of works properly", {
   expect_true(starts_with_any_of("prefix - suffix", c("a", "b", "prefix")))
+  expect_false(starts_with_any_of("prefix - suffix", c("a", "b", "c")))
+  expect_false(starts_with_any_of("prefix - suffix", "suffix"))
+  expect_equal(starts_with_any_of(c("Production - Crude", "Production - NG", "Exports - Oil", "Exports - Crude"),
+                                 c("Production", "Imports")),
+               c(TRUE, TRUE, FALSE, FALSE))
 })
