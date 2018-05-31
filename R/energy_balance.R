@@ -63,7 +63,7 @@ verify_SUT_energy_balance <- function(.sutdata = NULL,
   if (!all(Out[[SUT_energy_balance]] %>% as.logical())) {
     warning(paste("Energy not conserved in verify_SUT_energy_balance. See column", SUT_energy_balance))
   }
-  Out
+  return(Out)
 }
 
 
@@ -123,7 +123,7 @@ verify_SUT_energy_balance_with_units <- function(.sutdata = NULL,
   if (!all(Out[[SUT_ind_energy_balance]] %>% as.logical())) {
     warning(paste("Energy not conserved in verify_SUT_energy_balance_with_units. See column", SUT_ind_energy_balance))
   }
-  Out
+  return(Out)
 }
 
 
@@ -173,5 +173,5 @@ verify_SUT_industry_production <- function(.sutdata = NULL,
   if (!all(Out[[industry_production_OK]] %>% as.logical())) {
     warning(paste("There are some industries that consume but do not produce energy. See column", industry_production_OK))
   }
-  Out
+  return(Out)
 }
