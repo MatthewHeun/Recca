@@ -77,7 +77,7 @@ S_units_from_tidy <- function(.tidydf, Product = "Product", Unit = "Unit", S_uni
 #'        are entries in the final demand (\code{Y}) matrix.
 #' @param matname the name of the output column containing the name of the matrix
 #'        to which a row's value belongs (a string). Default is "\code{matname}".
-#' @param U the name for the use matrix (a string). Default is "\code{U}".
+#' @param U_excl_EIOU the name for the use matrix that excludes energy industry own use (a string). Default is "\code{U_excl_EIOU}".
 #' @param U_EIOU the name for the energy industry own use matrix. Default is "\code{U_EIOU}".
 #' @param V the name for the make matrix (a string). Default is "\code{V}".
 #' @param Y the name for the final demand matrix (a string). Default is "\code{Y}".
@@ -110,7 +110,7 @@ add_matnames_iea <- function(.DF,
                              # Output column
                              matname = "matname",
                              # Ouput identifiers for use, EIOU, make, and final demand matrices
-                             U = "U",
+                             U_excl_EIOU = "U_excl_EIOU",
                              U_EIOU = "U_EIOU",
                              V = "V",
                              Y = "Y"){
@@ -134,8 +134,9 @@ add_matnames_iea <- function(.DF,
         # Negative values on the supply side that have Flow %in% supply_in_fd go in the final demand matrix
         # !!ledger_side == supply_side & !!energy <= 0 & !!flow %in% neg_supply_in_fd ~ Y,
         !!ledger_side == supply_side & !!energy <= 0 & starts_with_any_of(!!flow, neg_supply_in_fd) ~ Y,
-        # All other negative values on the Supply side of the ledger belong in the use (U) matrix.
-        !!ledger_side == supply_side & !!energy <= 0 ~ U,
+        # All other negative values on the Supply side of the ledger belong in the use matrix
+        # that excludes EIOU (U_excl_EIOU).
+        !!ledger_side == supply_side & !!energy <= 0 ~ U_excl_EIOU,
         # Identify any places where our logic is faulty.
         TRUE ~ NA_character_
       )
@@ -148,7 +149,6 @@ add_matnames_iea <- function(.DF,
 #' @param matname the name of the column in \code{.DF} that contains names of matrices
 #'        (a string).  Default is "\code{matname}".
 #' @param U the name for use matrices (a string). Default is "\code{U}".
-#' @param U_EIOU the name for the EIOU portino o fhte U matrix (a string). Default is "\code{U_EIOU}".
 #' @param V the name for make matrices (a string). Default is "\code{V}".
 #' @param Y the name for final demand matrices (a string). Default is "\code{Y}".
 #' @param product the name of the column in \code{.DF} where Product names
@@ -208,25 +208,25 @@ add_row_col_meta <- function(.DF,
   .DF %>%
     mutate(
       !!rowname := case_when(
-        !!matname == U | !!matname == U_EIOU ~ !!product,
+        startsWith(!!matname, U) ~ !!product,
         !!matname == V ~ !!flow,
         !!matname == Y ~ !!product,
         TRUE ~ NA_character_
       ),
       !!colname := case_when(
-        !!matname == U | !!matname == U_EIOU ~ !!flow,
+        startsWith(!!matname, U) ~ !!flow,
         !!matname == V ~ !!product,
         !!matname == Y ~ !!flow,
         TRUE ~ NA_character_
       ),
       !!rowtype := case_when(
-        !!matname == U | !!matname == U_EIOU ~ product_type,
+        startsWith(!!matname, U) ~ product_type,
         !!matname == V ~ industry_type,
         !!matname == Y ~ product_type,
         TRUE ~ NA_character_
       ),
       !!coltype := case_when(
-        !!matname == U | !!matname == U_EIOU ~ industry_type,
+        startsWith(!!matname, U) ~ industry_type,
         !!matname == V ~ product_type,
         !!matname == Y ~ sector_type,
         TRUE ~ NA_character_
