@@ -42,22 +42,38 @@ verify_cols_missing <- function(.DF, newcols){
 }
 
 
-
-#' Tell if any of a list of strings starts with another string
+#' Tell if any of a vector of strings starts with another string
 #'
-#' @param x a vector of strings
-#' @param target
+#' This function returns \code{TRUE} if any of the strings in \code{x}
+#' starts with the string in \code{target} and \code{FALSE} otherwise.
+#'
+#' This function is vectorized. If \code{target} is a vector or list of strings,
+#' the return value is the same length as \code{target} and
+#' contains the result of applying the same test
+#' (do any of \code{x} start with \code{target}?)
+#' to each item in \code{target}.
+#'
+#' @param x a vector or list of strings
+#' @param target a string (or a vector or list of strings)
 #'
 #' @return \code{TRUE} if any of \code{x} starts with \code{target}, \code{FALSE} otherwise.
+#'         If \code{target} is a vector or list, the return value is the same length as \code{target}
+#'         and contains the result of applying the test to each item in \code{target}.
 #'
-#' importFrom Hmisc escapeRegex
+#' @importFrom Hmisc escapeRegex
 #'
 #' @export
 #'
 #' @examples
-#' any_start_with(x = c("ad", "bd", "cd"), target = "b") # TRUE
-#' any_start_with(x = c("Production - Crude", "Production - NG", "Bogus"), target = "Production") # TRUE
-#' any_start_with(x = c("Production - Crude", "Production - NG", "Bogus"), target = "Offshore") # FALSE
+#' # TRUE, because one of the x string ("bd") starts with "b"
+#' any_start_with(x = c("ad", "bd", "cd"), target = "b")
+#' # TRUE, because two of the x strings starts with "Production"
+#' any_start_with(x = c("Production - Crude", "Production - NG", "Bogus"), target = "Production")
+#' # FALSE, because none of the x strings starts with "Offshore"
+#' any_start_with(x = c("Production - Crude", "Production - NG", "Bogus"), target = "Offshore")
+#' # TRUE FALSE, because the x strings start with "Production" but not "Offshore"
+#' any_start_with(x = c("Production - Crude", "Production - NG", "Bogus"),
+#'                target = c("Production", "Offshore"))
 any_start_with <- function(x, target){
   sapply(target, FUN = function(t){
     grepl(paste0("^", Hmisc::escapeRegex(t)), x) %>%
@@ -66,15 +82,34 @@ any_start_with <- function(x, target){
     as.logical()
 }
 
-#' Title
+
+#' Tell if a string starts with any of a vector of strings
 #'
-#' @param target
-#' @param x
+#' This function returns \code{TRUE} if \code{x}
+#' starts with any of the strings in \code{target} and \code{FALSE} otherwise.
 #'
-#' @return
+#' This function is vectorized. If \code{x} is a vector or list of strings,
+#' the return value has the same length as \code{x} and contains the result
+#' of applying the test (does \code{x} start with any of \code{target})
+#' for each item in \code{x}.
+#'
+#' @param x a string (or vector or list of strings)
+#' @param target a vector or list of strings
+#'
+#' @return \code{TRUE} if \code{x} starts with any of the strings in \code{target},
+#'         \code{FALSE} otherwise.
+#'         If \code{x} is a vector or list of strings, the return value is the same length as \code{x}
+#'         and contains the result of applying the test to each item in \code{x}.
+#'
 #' @export
 #'
 #' @examples
+#' starts_with_any_of(x = "prefix - suffix", target = c("a", "b", "prefix"))
+#' starts_with_any_of(x = "prefix - suffix", target = c("a", "b", "c"))
+#' starts_with_any_of(x = "prefix - suffix", target = "suffix")
+#' starts_with_any_of(x = c("Production - Crude", "Production - NG",
+#'                          "Exports - Oil", "Exports - Crude"),
+#'                    target = c("Production", "Imports"))
 starts_with_any_of <- function(x, target){
   sapply(x, FUN = function(one_x){
     grepl(paste(paste0("^", Hmisc::escapeRegex(target)), collapse = "|"), one_x)

@@ -2,25 +2,39 @@
 % Please edit documentation in R/utilities.R
 \name{any_start_with}
 \alias{any_start_with}
-\title{Tell if any of a list of strings starts with another string}
+\title{Tell if any of a vector of strings starts with another string}
 \usage{
 any_start_with(x, target)
 }
 \arguments{
-\item{x}{a vector of strings}
+\item{x}{a vector or list of strings}
 
-\item{target}{}
+\item{target}{a string (or a vector or list of strings)}
 }
 \value{
 \code{TRUE} if any of \code{x} starts with \code{target}, \code{FALSE} otherwise.
-
-importFrom Hmisc escapeRegex
+        If \code{target} is a vector or list, the return value is the same length as \code{target}
+        and contains the result of applying the test to each item in \code{target}.
 }
 \description{
-Tell if any of a list of strings starts with another string
+This function returns \code{TRUE} if any of the strings in \code{x}
+starts with the string in \code{target} and \code{FALSE} otherwise.
+}
+\details{
+This function is vectorized. If \code{target} is a vector or list of strings,
+the return value is the same length as \code{target} and
+contains the result of applying the same test
+(do any of \code{x} start with \code{target}?)
+to each item in \code{target}.
 }
 \examples{
-any_start_with(x = c("ad", "bd", "cd"), target = "b") # TRUE
-any_start_with(x = c("Production - Crude", "Production - NG", "Bogus"), target = "Production") # TRUE
-any_start_with(x = c("Production - Crude", "Production - NG", "Bogus"), target = "Offshore") # FALSE
+# TRUE, because one of the x string ("bd") starts with "b"
+any_start_with(x = c("ad", "bd", "cd"), target = "b")
+# TRUE, because two of the x strings starts with "Production"
+any_start_with(x = c("Production - Crude", "Production - NG", "Bogus"), target = "Production")
+# FALSE, because none of the x strings starts with "Offshore"
+any_start_with(x = c("Production - Crude", "Production - NG", "Bogus"), target = "Offshore")
+# TRUE FALSE, because the x strings start with "Production" but not "Offshore"
+any_start_with(x = c("Production - Crude", "Production - NG", "Bogus"),
+               target = c("Production", "Offshore"))
 }
