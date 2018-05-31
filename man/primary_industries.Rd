@@ -17,21 +17,23 @@ primary_industries(.sutdata = NULL, U = "U", V = "V",
 \item{p_industries}{name for the primary industries vector (a string). Default is "\code{p_industries}".}
 }
 \value{
-\code{.sutdata} with an additional column (named with the value in the \code{p_industries} argument)
+\code{.sutdata} with an additional column (named with the value of the \code{p_industries} argument)
         containing the primary industries for each row
 }
 \description{
-Tells which industries are primary industries.
+Identify primary industries
 }
 \details{
 Primary industries are industries that make a product without using any products.
 Primary industries are identified by interrogating
 the use (\code{U}) and make (\code{V}) matrices.
-Primary industries have all zeroes in the column of the use matrix (\code{U})
-and at least one non-zero value in the make (\code{V}) matrix.
+Primary industries have all zeroes in their column of the use matrix (\code{U})
+and at least one non-zero value in their row of the make (\code{V}) matrix.
 
-Argument descriptions are written assuming that \code{.sutdata} is a data frame.
+Argument and value descriptions are written assuming that \code{.sutdata} is a data frame.
 Alternatively, \code{.sutdata} can be unspecified, and \code{U} and \code{V} can be matrices.
+In that case, the return value is a list with a single item: \code{p_industries}
+which contains a vector of names of primary industries for the \code{U} and \code{V} matrices.
 }
 \examples{
 primary_industries(UKEnergy2000mats \%>\% spread(key = matrix.name, value = matrix))
