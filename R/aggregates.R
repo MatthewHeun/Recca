@@ -261,41 +261,54 @@ primary_aggregates_IEA <- function(.ieadata,
 
 #' Final demand aggregate energy from IEA tables
 #'
-#' Calculates total aggregate final demand energy from a data frame of IEA data,
-#' either including or excluding non-energy uses of energy carriers.
+#' Calculates total aggregate final demand energy from a data frame of IEA data
+#' on both net and gross bases.
 #'
 #' This function is named with "_IEA", because it is meant to operate on
 #' tidy, IEA-style data frames.
-#' The function \code{finaldemand_aggregates} does the same thing,
-#' but it is meant to operate on tidy SUT-style data frames.
+#' The function \link{finaldemand_aggregates} does the same thing,
+#' but it is meant to operate on SUT-style data frames.
 #'
 #' Note that all items in \code{.ieadata} must be in same units.
 #'
 #' This function works similar to \code{\link[dplyr]{summarise}}:
 #' it distills \code{.ieadata} to many fewer rows
 #' according to the grouping variables.
-#' Thus, \code{.ieadata} should be grouped prior to sending into this function.
+#' Thus, \code{.ieadata} should be grouped prior to passing into this function.
 #' Grouping columns are preserved on output.
 #'
 #' @param .ieadata a data frame with columns of IEA data.
-#' @param UVY_colname the name of the column in \code{.ieadata}
-#' containing names of submatrices of U, V, and G to which this
-#' row of data belongs.
-#' @param energy_colname the name of the column in \code{.ieadata}
-#' that contains energy data.
-#' @param Y_fd_varname the name of the variable in \code{.ieadata} containing final demand (\code{Y_fd}) matrices.
-#' \code{Y_fd} will typically contain energy consumption by industries, transport, and other.
-#' @param U_EIOU_colname the name of the column in \code{.ieadata} containing Energy industry own use
-#' (\code{U_EIOU}) matrices.
-#' @param aggregate_net_finaldemand_colname the name of the output column containing aggregates of net energy demand.
-#' Each entry in this column is \code{sumall(Y_fd)}.
-#' @param aggregate_gross_finaldemand_colname the name of the output column containing aggregates of gross energy demand.
-#' Each entry in this column is calculated by \code{sumall(Y_fd)} + \code{sumall(U_EIOU)}.
+#' @param ledger_side the name of the ledger side column in \code{.ieadata}.
+#'        Default is "\code{Ledger.side}".
+#' @param flow_aggregation_point the name of the flow aggregation point column in \code{.ieadata}.
+#'        Default is "\code{Flow.aggregation.point}".
+#' @param flow the name of the column that contains flow information.
+#'        Default is "\code{Flow}".
+#' @param energy the name of the column that contains energy information.
+#'        Default is "\code{EX.ktoe}".
+#' @param consumption the identifier for consumption in the \code{flow_aggregation_point} column.
+#'        Default is "\code{Consumption}".
+#' @param eiou the identifier for energy industry own use in the \code{flow_aggregation_point} column.
+#'        Default is "\code{Energy industry own use}".
+#' @param aggregate_net_finaldemand_colname the name of the output column containing aggregates of net final demand.
+#'        Default is "\code{EX_fd_net_IEA.ktoe}".
+#' @param aggregate_gross_finaldemand_colname the name of the output column containing aggregates of gross final demand.
+#'        Default is "\code{EX_fd_gross_IEA.ktoe}".
 #'
 #' @export
 #'
-#' @return a two-column data fram containing the gross aggregate energy demand
-#' and net aggregate energy demand for each row of \code{.sutdata}.
+#' @return a data frame containing grouping columns of \code{.ieadata} and
+#'         two additional columns containing net and gross final demand.
+#'
+#' @examples
+#' library(magrittr)
+#' # Works only when all entries are in same units.
+#' # When Last.stage is services, different units are involved.
+#' # Thus, filter to rows in UKEnergy2000tidy where Last.stage is final or useful.
+#' UKEnergy2000tidy %>%
+#'   filter(Last.stage %in% c("final", "useful")) %>%
+#'   group_by(Country, Year, Energy.type, Last.stage) %>%
+#'   finaldemand_aggregates_IEA()
 finaldemand_aggregates_IEA <- function(.ieadata,
                                        # # Input information
                                        # UVY_colname = "UVY", energy_colname = "EX.ktoe",
