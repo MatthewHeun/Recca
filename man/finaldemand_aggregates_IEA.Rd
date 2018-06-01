@@ -4,13 +4,21 @@
 \alias{finaldemand_aggregates_IEA}
 \title{Final demand aggregate energy from IEA tables}
 \usage{
-finaldemand_aggregates_IEA(.ieadata, UVY_colname = "UVY",
-  energy_colname = "EX.ktoe", Y_fd_varname = "Y_fd",
-  Y_ne_varname = "Y_ne", U_EIOU_varname = "U_EIOU",
-  aggregate_net_finaldemand_colname, aggregate_gross_finaldemand_colname)
+finaldemand_aggregates_IEA(.ieadata, ledger_side = "Ledger.side",
+  flow_aggregation_point = "Flow.aggregation.point", flow = "Flow",
+  energy = "EX.ktoe", consumption = "Consumption",
+  eiou = "Energy industry own use",
+  aggregate_net_finaldemand_colname = "EX_fd_net_IEA.ktoe",
+  aggregate_gross_finaldemand_colname = "EX_fd_gross_IEA.ktoe")
 }
 \arguments{
 \item{.ieadata}{a data frame with columns of IEA data.}
+
+\item{aggregate_net_finaldemand_colname}{the name of the output column containing aggregates of net energy demand.
+Each entry in this column is \code{sumall(Y_fd)}.}
+
+\item{aggregate_gross_finaldemand_colname}{the name of the output column containing aggregates of gross energy demand.
+Each entry in this column is calculated by \code{sumall(Y_fd)} + \code{sumall(U_EIOU)}.}
 
 \item{UVY_colname}{the name of the column in \code{.ieadata}
 containing names of submatrices of U, V, and G to which this
@@ -22,12 +30,6 @@ that contains energy data.}
 \item{Y_fd_varname}{the name of the variable in \code{.ieadata} containing final demand (\code{Y_fd}) matrices.
 \code{Y_fd} will typically contain energy consumption by industries, transport, and other.}
 
-\item{aggregate_net_finaldemand_colname}{the name of the output column containing aggregates of net energy demand.
-Each entry in this column is \code{sumall(Y_fd)}.}
-
-\item{aggregate_gross_finaldemand_colname}{the name of the output column containing aggregates of gross energy demand.
-Each entry in this column is calculated by \code{sumall(Y_fd)} + \code{sumall(U_EIOU)}.}
-
 \item{U_EIOU_colname}{the name of the column in \code{.ieadata} containing Energy industry own use
 (\code{U_EIOU}) matrices.}
 }
@@ -36,5 +38,20 @@ a two-column data fram containing the gross aggregate energy demand
 and net aggregate energy demand for each row of \code{.sutdata}.
 }
 \description{
-Calculates aggregate final demand energy from a data frame of IEA data.
+Calculates total aggregate final demand energy from a data frame of IEA data,
+either including or excluding non-energy uses of energy carriers.
+}
+\details{
+This function is named with "_IEA", because it is meant to operate on
+tidy, IEA-style data frames.
+The function \code{finaldemand_aggregates} does the same thing,
+but it is meant to operate on tidy SUT-style data frames.
+
+Note that all items in \code{.ieadata} must be in same units.
+
+This function works similar to \code{\link[dplyr]{summarise}}:
+it distills \code{.ieadata} to many fewer rows
+according to the grouping variables.
+Thus, \code{.ieadata} should be grouped prior to sending into this function.
+Grouping columns are preserved on output.
 }

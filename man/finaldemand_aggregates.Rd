@@ -6,7 +6,8 @@
 \usage{
 finaldemand_aggregates(.sutdata, fd_sectors, U_colname = "U",
   Y_colname = "Y", r_EIOU_colname = "r_EIOU", by = c("Total", "Product",
-  "Sector"), net_aggregate_demand_colname, gross_aggregate_demand_colname)
+  "Sector"), net_aggregate_demand_colname = "EX_fd_net.ktoe",
+  gross_aggregate_demand_colname = "EX_fd_gross.ktoe")
 }
 \arguments{
 \item{.sutdata}{a data frame with columns of matrices from a supply-use analysis.}

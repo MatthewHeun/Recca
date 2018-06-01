@@ -2,36 +2,33 @@
 % Please edit documentation in R/aggregates.R
 \name{primary_aggregates_IEA}
 \alias{primary_aggregates_IEA}
-\title{Primary aggregate energy from IEA tables}
+\title{Total primary aggregate energy from IEA tables}
 \usage{
 primary_aggregates_IEA(.ieadata, flow = "Flow", energy = "EX.ktoe",
-  p_industries = "p_industries", aggregate_primary_colname = "EX_IEA.ktoe")
+  p_industries = c("Production", "Coal mines", "Oil and gas extraction",
+  "Imports", "Exports", "International aviation bunkers",
+  "International marine bunkers", "Stock changes"),
+  aggregate_primary_colname = "EX_p_IEA.ktoe")
 }
 \arguments{
 \item{.ieadata}{the data frame containing an IEA table}
 
+\item{flow}{the name of the column that contains flow information. Default is "\code{Flow}".}
+
+\item{energy}{the name of the column that contains energy information. Default is "\code{EX.ktoe}".}
+
+\item{p_industries}{a vector of names of primary industries. Default is
+"\code{c("Coal mines", "Oil and gas extraction",
+"Production", "Imports", "Exports",
+"International aviation bunkers", "International marine bunkers",
+"Stock changes")}"}
+
 \item{aggregate_primary_colname}{the name of the aggregate primary energy
 column to be created in the output data frame.}
-
-\item{UVY_colname}{the name of the column in \code{.ieadata}
-containing names of submatrices of U, V, and G to which this
-row of data belongs.}
-
-\item{energy_colname}{the name of the column in \code{.ieadata}
-that contains energy data.}
-
-\item{energy_type_colname}{the name of the column in \code{.ieadata}
-that contains the energy type for this row in the table}
-
-\item{V_p_varname}{the name of the primary submatrix (\code{_p})
-of the Make (\code{V}) matrix.}
-
-\item{Y_p_varname}{the name of the primary submatrix (\code{_p})
-of the final demand (\code{G}) matrix.}
 }
 \value{
 a data frame containing the grouping columns of \code{.ieadata}
-as well as a column named \code{aggregate_primary_colname}.
+        as well as a column named with the value of \code{aggregate_primary_colname}.
 }
 \description{
 Calculates total aggregate primary energy from a data frame of IEA data.
@@ -46,4 +43,12 @@ it distills \code{.ieadata} to many fewer rows
 according to the grouping variables.
 Thus, \code{.ieadata} should be grouped prior to sending into this function.
 Grouping columns are preserved on output.
+}
+\examples{
+library(magrittr)
+p_ind <- primary_industries(UKEnergy2000mats \%>\%
+  spread(key = matrix.name, value = matrix))[["p_industries"]][[1]]
+UKEnergy2000tidy \%>\%
+  group_by(Country, Year, Energy.type, Last.stage) \%>\%
+  primary_aggregates_IEA(p_industries = p_ind)
 }

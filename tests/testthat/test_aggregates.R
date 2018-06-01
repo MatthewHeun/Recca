@@ -122,5 +122,19 @@ test_that("primary_aggregates_IEA works as expected", {
   result <- UKEnergy2000tidy %>%
     group_by(Country, Year, Energy.type, Last.stage) %>%
     primary_aggregates_IEA(p_industries = p_ind)
-  expect_equal(result[["EX_IEA.ktoe"]], c(93000, 93000, 93000, 98220))
+  expect_equal(result[["EX_p_IEA.ktoe"]], c(93000, 93000, 93000, 98220))
+})
+
+test_that("finaldemand_aggregates_IEA works as expected", {
+  iea_result <- UKEnergy2000tidy %>%
+    # Can calculate only when all entries are in same units, i.e., only when last stage is final or useful energy.
+    filter(Last.stage %in% c("final", "useful")) %>%
+    group_by(Country, Year, Energy.type, Last.stage) %>%
+    finaldemand_aggregates_IEA()
+  sut_result <- UKEnergy2000mats %>%
+    spread(key = matrix.name, value = matrix) %>%
+    filter(Last.stage %in% c("final", "useful")) %>%
+    finaldemand_aggregates(fd_sectors = c("Residential", "Transport"))
+  expect_equal(iea_result[["EX_fd_net_IEA.ktoe"]], sut_result[["EX_fd_net.ktoe"]] %>% unlist())
+  expect_equal(iea_result[["EX_fd_gross_IEA.ktoe"]], sut_result[["EX_fd_gross.ktoe"]] %>% unlist())
 })
