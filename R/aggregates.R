@@ -205,6 +205,7 @@ finaldemand_aggregates_with_units <- function(.sutdata,
 #'        "Stock changes")}"
 #' @param aggregate_primary_colname the name of the aggregate primary energy
 #'        column to be created in the output data frame.
+#'        Default is "\code{EX_p_IEA.ktoe}".
 #'
 #' @return a data frame containing the grouping columns of \code{.ieadata}
 #'         as well as a column named with the value of \code{aggregate_primary_colname}.

@@ -24,7 +24,8 @@ primary_aggregates_IEA(.ieadata, flow = "Flow", energy = "EX.ktoe",
 "Stock changes")}"}
 
 \item{aggregate_primary_colname}{the name of the aggregate primary energy
-column to be created in the output data frame.}
+column to be created in the output data frame.
+Default is "\code{EX_p_IEA.ktoe}".}
 }
 \value{
 a data frame containing the grouping columns of \code{.ieadata}
