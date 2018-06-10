@@ -4,16 +4,21 @@
 \alias{primary_aggregates_IEA}
 \title{Total primary aggregate energy from IEA tables}
 \usage{
-primary_aggregates_IEA(.ieadata, flow = "Flow", energy = "EX.ktoe",
+primary_aggregates_IEA(.ieadata, flow = "Flow",
+  flow_aggregation_point = "Flow.aggregation.point", energy = "EX.ktoe",
   p_industries = c("Production", "Coal mines", "Oil and gas extraction",
   "Imports", "Exports", "International aviation bunkers",
   "International marine bunkers", "Stock changes"),
+  eiou = "Energy industry own use",
   aggregate_primary_colname = "EX_p_IEA.ktoe")
 }
 \arguments{
 \item{.ieadata}{the data frame containing an IEA table}
 
 \item{flow}{the name of the column that contains flow information. Default is "\code{Flow}".}
+
+\item{flow_aggregation_point}{the name of the column that identifies flow aggregation points.
+Default is "\code{Flow.aggregation.point}".}
 
 \item{energy}{the name of the column that contains energy information. Default is "\code{EX.ktoe}".}
 
@@ -22,6 +27,9 @@ primary_aggregates_IEA(.ieadata, flow = "Flow", energy = "EX.ktoe",
 "Production", "Imports", "Exports",
 "International aviation bunkers", "International marine bunkers",
 "Stock changes")}"}
+
+\item{eiou}{the string that identifies energy industry own use in the \code{Flow.aggregation.point} column.
+Default is "\code{Energy industry own use}".}
 
 \item{aggregate_primary_colname}{the name of the aggregate primary energy
 column to be created in the output data frame.

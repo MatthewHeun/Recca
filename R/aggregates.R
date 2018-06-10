@@ -197,12 +197,16 @@ finaldemand_aggregates_with_units <- function(.sutdata,
 #'
 #' @param .ieadata the data frame containing an IEA table
 #' @param flow the name of the column that contains flow information. Default is "\code{Flow}".
+#' @param flow_aggregation_point the name of the column that identifies flow aggregation points.
+#'        Default is "\code{Flow.aggregation.point}".
 #' @param energy the name of the column that contains energy information. Default is "\code{EX.ktoe}".
 #' @param p_industries a vector of names of primary industries. Default is
 #'        "\code{c("Coal mines", "Oil and gas extraction",
 #'        "Production", "Imports", "Exports",
 #'        "International aviation bunkers", "International marine bunkers",
 #'        "Stock changes")}"
+#' @param eiou the string that identifies energy industry own use in the \code{Flow.aggregation.point} column.
+#'        Default is "\code{Energy industry own use}".
 #' @param aggregate_primary_colname the name of the aggregate primary energy
 #'        column to be created in the output data frame.
 #'        Default is "\code{EX_p_IEA.ktoe}".
@@ -222,17 +226,20 @@ finaldemand_aggregates_with_units <- function(.sutdata,
 primary_aggregates_IEA <- function(.ieadata,
                                    # Input information
                                    flow = "Flow",
+                                   flow_aggregation_point = "Flow.aggregation.point",
                                    energy = "EX.ktoe",
                                    p_industries = c("Production", "Coal mines", "Oil and gas extraction",
                                                     "Imports", "Exports", "International aviation bunkers",
                                                     "International marine bunkers", "Stock changes"),
+                                   eiou = "Energy industry own use",
                                    # Output information
                                    aggregate_primary_colname = "EX_p_IEA.ktoe"){
   flow <- as.name(flow)
+  flow_aggregation_point <- as.name(flow_aggregation_point)
   energy <- as.name(energy)
   aggregate_primary_colname <- as.name(aggregate_primary_colname)
   .ieadata %>%
-    filter(starts_with_any_of(!!flow, p_industries)) %>%
+    filter(starts_with_any_of(!!flow, p_industries), !startsWith(!!flow_aggregation_point, eiou)) %>%
     summarise(!!aggregate_primary_colname := sum(!!energy))
   # .ieadata %>%
   #   filter_(interp(~ uvy %in% c(vp, gp),
