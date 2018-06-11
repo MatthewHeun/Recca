@@ -294,6 +294,7 @@ primary_aggregates_IEA <- function(.ieadata,
 #' # Works only when all entries are in same units.
 #' # When Last.stage is services, different units are involved.
 #' # Thus, filter to rows in UKEnergy2000tidy where Last.stage is final or useful.
+#' print(names(UKEnergy2000tidy))
 #' UKEnergy2000tidy %>%
 #'   filter(Last.stage %in% c("final", "useful")) %>%
 #'   group_by(Country, Year, Energy.type, Last.stage) %>%

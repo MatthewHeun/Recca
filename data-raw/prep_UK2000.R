@@ -47,11 +47,11 @@ UKEnergy2000mats <- UKEnergy2000tidy %>%
 
   mutate(
     # Create full U matrix
-    U = sum_byname(U, U_EIOU),
+    U = sum_byname(U_excl_EIOU, U_EIOU),
     r_EIOU = elementquotient_byname(U_EIOU, U),
     r_EIOU = replaceNaN_byname(r_EIOU, val = 0)
   ) %>%
-  select(-U_EIOU) %>%
+  select(-U_EIOU, -U_excl_EIOU) %>%
   # Add S_units matrices
   left_join(S_units, by = c("Country", "Year", "Energy.type", "Last.stage")) %>%
   gather(key = matrix.name, value = matrix, U, V, Y, r_EIOU, S_units)
