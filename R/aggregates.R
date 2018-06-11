@@ -303,6 +303,10 @@ primary_aggregates_IEA <- function(.ieadata,
 #' @param aggregate_gross_finaldemand_colname the name of the output column containing aggregates of gross final demand.
 #'        Default is "\code{EX_fd_gross_IEA.ktoe}".
 #'
+#' @importFrom dplyr full_join
+#' @importFrom dplyr group_vars
+#' @importFrom dplyr summarise
+#'
 #' @export
 #'
 #' @return a data frame containing grouping columns of \code{.ieadata} and

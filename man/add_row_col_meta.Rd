@@ -24,6 +24,8 @@ is found (a string). Default is "\code{Flow}".}
 
 \item{U}{the name for use matrices (a string). Default is "\code{U}".}
 
+\item{U_EIOU}{the name for energy industry own use matrices (a string). Defulat is "\code{U_EIOU}".}
+
 \item{V}{the name for make matrices (a string). Default is "\code{V}".}
 
 \item{Y}{the name for final demand matrices (a string). Default is "\code{Y}".}

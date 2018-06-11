@@ -149,6 +149,7 @@ add_matnames_iea <- function(.DF,
 #' @param matname the name of the column in \code{.DF} that contains names of matrices
 #'        (a string).  Default is "\code{matname}".
 #' @param U the name for use matrices (a string). Default is "\code{U}".
+#' @param U_EIOU the name for energy industry own use matrices (a string). Defulat is "\code{U_EIOU}".
 #' @param V the name for make matrices (a string). Default is "\code{V}".
 #' @param Y the name for final demand matrices (a string). Default is "\code{Y}".
 #' @param product the name of the column in \code{.DF} where Product names

@@ -141,6 +141,8 @@ starts_with_any_of <- function(x, target){
 #' @return \code{.sutdata} with an additional column (named with the value of the \code{p_industries} argument)
 #'         containing the primary industries for each row
 #'
+#' @importFrom matsbyname sort_rows_cols
+#'
 #' @export
 #'
 #' @examples
