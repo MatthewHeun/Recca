@@ -9,8 +9,8 @@ verify_SUT_energy_balance(.sutdata = NULL, U_colname = "U",
   SUT_energy_balance = ".SUT_energy_balance")
 }
 \arguments{
-\item{.sutdata}{an SUT-style data frame with columns of matrices, including
-\code{U}, \code{V}, and \code{Y}.}
+\item{.sutdata}{an SUT-style data frame with columns of matrices,
+including \code{U}, \code{V}, and \code{Y} columns.}
 
 \item{U_colname}{the name of the column that contains \code{U} matrices. Default is "\code{U}".}
 
@@ -18,13 +18,14 @@ verify_SUT_energy_balance(.sutdata = NULL, U_colname = "U",
 
 \item{Y_colname}{the name of the column that contsins \code{Y} matrices. Default is "\code{Y}".}
 
-\item{tol}{the maximum amount by which Supply and Consumption can be out of balance}
+\item{tol}{the maximum amount by which Supply and Consumption can be out of balance.
+Default is \code{1e-6}.}
 
 \item{SUT_energy_balance}{the name of the output column. Default is "\code{.SUT_energy_balance}".}
 }
 \value{
 \code{.sutdata}. If energy balance is not observed,
-an additional column is added showing the row on which energy is not balanced.
+        an additional column is added showing the row on which energy is not balanced.
 }
 \description{
 Energy balances are confirmed by Product (within \code{tol}) for every row in \code{.sutdata}.

@@ -19,16 +19,17 @@
 #' This function should be called
 #' for its side-effect of testing whether energy is in balance in \code{.sutdata}.
 #'
-#' @param .sutdata an SUT-style data frame with columns of matrices, including
-#' \code{U}, \code{V}, and \code{Y}.
+#' @param .sutdata an SUT-style data frame with columns of matrices,
+#'        including \code{U}, \code{V}, and \code{Y} columns.
 #' @param U_colname the name of the column that contains \code{U} matrices. Default is "\code{U}".
 #' @param V_colname the name of the column that contains \code{V} matrices. Default is "\code{V}".
 #' @param Y_colname the name of the column that contsins \code{Y} matrices. Default is "\code{Y}".
 #' @param SUT_energy_balance the name of the output column. Default is "\code{.SUT_energy_balance}".
-#' @param tol the maximum amount by which Supply and Consumption can be out of balance
+#' @param tol the maximum amount by which Supply and Consumption can be out of balance.
+#'        Default is \code{1e-6}.
 #'
 #' @return \code{.sutdata}. If energy balance is not observed,
-#' an additional column is added showing the row on which energy is not balanced.
+#'         an additional column is added showing the row on which energy is not balanced.
 #'
 #' @importFrom matsbyname complete_rows_cols
 #'
@@ -151,9 +152,7 @@ verify_SUT_energy_balance_with_units <- function(.sutdata = NULL,
 #' @param industry_production_OK the name of the column in \code{.sutdata} that
 #'        tells whether all industries produce something. Default is "\code{.industry_production_OK}".
 #'
-#' @return Nothing is returned.
-#' This function should be called
-#' for its side-effect of testing whether energy is in balance in \code{.sutdata}.
+#' @return \code{.sutdata} with added column named with the value of \code{industry_production_OK}.
 #'
 #' @export
 #'
@@ -181,11 +180,6 @@ verify_SUT_industry_production <- function(.sutdata = NULL,
 #'
 #' Energy balances are confirmed (within \code{tol}) for every combination of
 #' grouping variables in \code{.ieatidydata}.
-#' If energy is in balance for every group of \code{.ieatidydata},
-#' execution returns to the caller.
-#' If energy balance is not observed for any group of \code{.ieatidydata},
-#' a message is printed which shows the first few non-balancing Products, and
-#' execution halts.
 #'
 #' Be sure to group \code{.ieatidydata} prior to calling this function,
 #' as shown in the example.
@@ -205,6 +199,8 @@ verify_SUT_industry_production <- function(.sutdata = NULL,
 #' @return Nothing is returned.
 #' This function should be called
 #' for its side-effect of testing whether energy is balanced in \code{.ieatidydata}.
+#'
+#' @export
 #'
 #' @examples
 #' UKEnergy2000tidy %>%

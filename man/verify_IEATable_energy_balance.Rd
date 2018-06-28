@@ -6,11 +6,23 @@
 \usage{
 verify_IEATable_energy_balance(.ieatidydata, ledger.side = "Ledger.side",
   energy = "E.ktoe", supply = "Supply", consumption = "Consumption",
-  tol = 1e-06)
+  err = ".err", tol = 1e-06)
 }
 \arguments{
 \item{.ieatidydata}{an IEA-style data frame containing the following columns:
 \code{Country}, \code{Year}, \code{Ledger.side}, \code{Product}, \code{E.ktoe}.}
+
+\item{ledger.side}{the name of the column in \code{.ieatidydata}
+that contains ledger side information (a string). Default is "\code{Ledger.side}".}
+
+\item{energy}{the name of the column in \code{.ieatidydata}
+that contains energy data (a string). Default is "\code{E.ktoe}".}
+
+\item{supply}{the identifier for supply data in the \code{ledger.side} column (a string).
+Default is "\code{Supply}".}
+
+\item{consumption}{the identifier for consumption data in the \code{ledger.side} column (a string).
+Default is "\code{Consumption}".}
 
 \item{tol}{the maximum amount by which Supply and Consumption can be out of balance}
 }
@@ -22,16 +34,13 @@ for its side-effect of testing whether energy is balanced in \code{.ieatidydata}
 \description{
 Energy balances are confirmed (within \code{tol}) for every combination of
 grouping variables in \code{.ieatidydata}.
-If energy is in balance for every group of \code{.ieatidydata},
-execution returns to the caller.
-If energy balance is not observed for any group of \code{.ieatidydata},
-a message is printed which shows the first few non-balancing Products, and
-execution halts.
 }
 \details{
 Be sure to group \code{.ieatidydata} prior to calling this function,
 as shown in the example.
 }
 \examples{
-verify_IEATable_energy_balance(IEAData_orig \%>\% group_by(Country, Year, Product))
+UKEnergy2000tidy \%>\%
+  group_by(Country, Year, Energy.type, Last.stage) \%>\%
+  verify_IEATable_energy_balance(energy = "EX.ktoe")
 }

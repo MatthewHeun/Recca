@@ -20,9 +20,7 @@ and columns of SUT matrices, including \code{U} and \code{V}.}
 tells whether all industries produce something. Default is "\code{.industry_production_OK}".}
 }
 \value{
-Nothing is returned.
-This function should be called
-for its side-effect of testing whether energy is in balance in \code{.sutdata}.
+\code{.sutdata} with added column named with the value of \code{industry_production_OK}.
 }
 \description{
 If an Industry consumes energy (in the \strong{U} matrix)
