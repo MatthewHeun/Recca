@@ -296,8 +296,8 @@ primary_aggregates_IEA <- function(.ieadata,
 #' # Thus, filter to rows in UKEnergy2000tidy where Last.stage is final or useful.
 #' print(names(UKEnergy2000tidy))
 #' UKEnergy2000tidy %>%
-#'   filter(Last.stage %in% c("final", "useful")) %>%
 #'   group_by(Country, Year, Energy.type, Last.stage) %>%
+#'   filter(Last.stage %in% c("final", "useful")) %>%
 #'   finaldemand_aggregates_IEA()
 finaldemand_aggregates_IEA <- function(.ieadata,
                                        # Input information
