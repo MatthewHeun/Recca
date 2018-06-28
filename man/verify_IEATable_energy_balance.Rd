@@ -27,6 +27,8 @@ Default is "\code{Supply}".}
 \item{consumption}{the identifier for consumption data in the \code{ledger.side} column (a string).
 Default is "\code{Consumption}".}
 
+\item{err}{the name of the error column in the output. Default is "\code{.err}".}
+
 \item{tol}{the maximum amount by which Supply and Consumption can be out of balance}
 }
 \value{

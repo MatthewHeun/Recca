@@ -202,6 +202,7 @@ verify_SUT_industry_production <- function(.sutdata = NULL,
 #'        Default is "\code{Supply}".
 #' @param consumption the identifier for consumption data in the \code{ledger.side} column (a string).
 #'        Default is "\code{Consumption}".
+#' @param err the name of the error column in the output. Default is "\code{.err}".
 #' @param tol the maximum amount by which Supply and Consumption can be out of balance
 #'
 #' @return a data frame containing with grouping variables and
@@ -227,18 +228,20 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
                                            tol = 1e-6){
   ledger.side <- as.name(ledger.side)
   energy <- as.name(energy)
+  esupply <- as.name("ESupply")
+  econsumption <- as.name("EConsumption")
 
   EnergyCheck <- full_join(
     .ieatidydata %>%
       filter(!!ledger.side == "Supply") %>%
-      summarise(ESupply.ktoe = sum(!!energy)),
+      summarise(!!esupply := sum(!!energy)),
     .ieatidydata %>%
       filter(!!ledger.side == "Consumption") %>%
-      summarise(EConsumption.ktoe = sum(!!energy)),
+      summarise(!!econsumption := sum(!!energy)),
     by = group_vars(.ieatidydata)
   ) %>%
     mutate(
-      !!err := ESupply.ktoe - EConsumption.ktoe
+      !!err := !!esupply - !!econsumption
     )
 
   # There are two options here.
@@ -264,7 +267,7 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 
   # Option (b)
   EnergyCheck_supply <- EnergyCheck %>% filter(is.na(!!err))
-  if (!all(abs(EnergyCheck_supply$ESupply.ktoe) < tol)) {
+  if (!all(abs(EnergyCheck_supply[[esupply]]) < tol)) {
     # Emit a warning
     warning(
       paste("Energy not balanced in verify_IEATable_energy_balance.",
