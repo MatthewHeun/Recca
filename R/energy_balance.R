@@ -257,7 +257,7 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
   # Check that both of these are true.
 
   # Option (a)
-  EnergyCheck_err <- EnergyCheck %>% filter(!is.na(!!err))
+  EnergyCheck_err <- EnergyCheck %>% filter(!is.na(!!as.name(err)))
   if (!all(abs(EnergyCheck_err[[err]]) < tol)) {
     # Emit a warning
     warning(
@@ -267,7 +267,7 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
   }
 
   # Option (b)
-  EnergyCheck_supply <- EnergyCheck %>% filter(is.na(!!err))
+  EnergyCheck_supply <- EnergyCheck %>% filter(is.na(!!as.name(err)))
   if (!all(abs(EnergyCheck_supply[[esupply]]) < tol)) {
     # Emit a warning
     warning(
