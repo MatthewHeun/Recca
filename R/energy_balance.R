@@ -175,3 +175,101 @@ verify_SUT_industry_production <- function(.sutdata = NULL,
   }
   return(Out)
 }
+
+
+#' Confirm that an IEA-style data frame conserves energy.
+#'
+#' Energy balances are confirmed (within \code{tol}) for every combination of
+#' grouping variables in \code{.ieatidydata}.
+#' If energy is in balance for every group of \code{.ieatidydata},
+#' execution returns to the caller.
+#' If energy balance is not observed for any group of \code{.ieatidydata},
+#' a message is printed which shows the first few non-balancing Products, and
+#' execution halts.
+#'
+#' Be sure to group \code{.ieatidydata} prior to calling this function,
+#' as shown in the example.
+#'
+#' @param .ieatidydata an IEA-style data frame containing the following columns:
+#' \code{Country}, \code{Year}, \code{Ledger.side}, \code{Product}, \code{E.ktoe}.
+#' @param ledger.side the name of the column in \code{.ieatidydata}
+#'        that contains ledger side information (a string). Default is "\code{Ledger.side}".
+#' @param energy the name of the column in \code{.ieatidydata}
+#'        that contains energy data (a string). Default is "\code{E.ktoe}".
+#' @param supply the identifier for supply data in the \code{ledger.side} column (a string).
+#'        Default is "\code{Supply}".
+#' @param consumption the identifier for consumption data in the \code{ledger.side} column (a string).
+#'        Default is "\code{Consumption}".
+#' @param tol the maximum amount by which Supply and Consumption can be out of balance
+#'
+#' @return Nothing is returned.
+#' This function should be called
+#' for its side-effect of testing whether energy is balanced in \code{.ieatidydata}.
+#'
+#' @examples
+#' UKEnergy2000tidy %>%
+#'   group_by(Country, Year, Energy.type, Last.stage) %>%
+#'   verify_IEATable_energy_balance(energy = "EX.ktoe")
+verify_IEATable_energy_balance <- function(.ieatidydata,
+                                           # Input column names
+                                           ledger.side = "Ledger.side",
+                                           energy = "E.ktoe",
+                                           # ledger.side identifiers
+                                           supply = "Supply",
+                                           consumption = "Consumption",
+                                           # Output column names
+                                           err = ".err",
+                                           # Tolerance
+                                           tol = 1e-6){
+  ledger.side <- as.name(ledger.side)
+  energy <- as.name(energy)
+
+  EnergyCheck <- full_join(
+    .ieatidydata %>%
+      filter(!!ledger.side == "Supply") %>%
+      summarise(ESupply.ktoe = sum(!!energy)),
+    .ieatidydata %>%
+      filter(!!ledger.side == "Consumption") %>%
+      summarise(EConsumption.ktoe = sum(!!energy)),
+    by = group_vars(.ieatidydata)
+  ) %>%
+    mutate(
+      !!err := ESupply.ktoe - EConsumption.ktoe
+    )
+
+  # There are two options here.
+  # (a) the Product appears on both Supply and Demand sides
+  #     and, therefore, has a value for err
+  # (b) the Product appears only on Supply side
+  #     (because it is completely transformed
+  #     before reaching the Consumption side of the ledger)
+  #     and, therefore, has err = NA
+  # If (a), then err should be zero (within tol).
+  # If (b), then ESupply.ktoe should be zero (within tol).
+  # Check that both of these are true.
+
+  # Option (a)
+  EnergyCheck_err <- EnergyCheck %>% filter(!is.na(!!err))
+  if (!all(abs(EnergyCheck_err[[err]]) < tol)) {
+    # Print an error message containing rows of EnergyCheck_err that cause the failure
+    print("Energy balance not obtained in verify_IEATable_energy_balance")
+    print("err should be zero.")
+    print("First non-balancing Products are shown below:")
+    print(EnergyCheck_err %>% filter(abs(err) >= tol))
+    stop()
+  }
+
+  # Option (b)
+  EnergyCheck_supply <- EnergyCheck %>% filter(is.na(!!err))
+  if (!all(abs(EnergyCheck_supply$ESupply.ktoe) < tol)) {
+    # Print an error message containing rows of EnergyCheck_supply that cause the failure
+    print("Energy balance not obtained in verify_IEATable_energy_balance")
+    print("ESupply.ktoe should be zero.")
+    print("First non-balancing Products are shown below:")
+    print(EnergyCheck_supply %>% filter(abs(ESupply.ktoe) >= tol))
+    stop()
+  }
+
+  # Wrap return value (NULL) with invisible() to prevent printing of the result.
+  invisible(NULL)
+}

@@ -60,3 +60,18 @@ test_that("SUT energy balance works with single matrices", {
   Y <- UKspread$Y[[1]]
   expect_silent(verify_SUT_energy_balance(U_colname = U, V_colname = V, Y_colname = Y))
 })
+
+
+###########################################################
+context("IEA energy balance")
+###########################################################
+
+test_that("IEA energy balance works with energy only", {
+  expect_silent(
+    UKEnergy2000tidy %>%
+      group_by(Country, Year, Energy.type, Last.stage) %>%
+      verify_IEATable_energy_balance(energy = "EX.ktoe")
+  )
+
+})
+
