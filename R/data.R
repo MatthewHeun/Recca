@@ -26,7 +26,8 @@
 #'   \item{Last.stage}{tells the final stage of the energy conversion chain: final, useful, or services}
 #'   \item{Flow}{the Industry or Sector involved in this flow}
 #'   \item{Product}{the energy product involved in this flow}
-#'   \item{EX.ktoe}{magnitude of the energy or exergy flow in ktoe}
+#'   \item{EX.ktoe}{value of the energy, exergy, or service flow in ktoe}
+#'   \item{Unit}{unit in which quantity is expressed}
 #' }
 #' @source \url{http://www.see.leeds.ac.uk/fileadmin/Documents/research/sri/workingpapers/sri-wp111.pdf}
 "UKEnergy2000tidy"
@@ -48,7 +49,7 @@
 #'
 #' \code{UKEnergy2000mats} gives the make (\code{V}), use (\code{U}), and final demand (\code{Y}) matrices
 #' associated with \code{UKEnergy2000tidy}.
-#' These data are in \code{\pkg{matsindf}} format.
+#' These data are in \pkg{matsindf} format.
 #'
 #' @format A data frame with 12 rows and 6 variables:
 #' \describe{
@@ -57,7 +58,7 @@
 #'   \item{Energy.type}{E.ktoe (for energy) or X.ktoe (for exergy)}
 #'   \item{Last.stage}{tells the final stage of the energy conversion chain: final, useful, or services}
 #'   \item{matrix.name}{gives the name of the matrix}
-#'   \item{matrix}{gives use, make, and final demand matrices}
+#'   \item{matrix}{gives use (U), make (V), final demand (Y), r_EIOU, and S_units matrices}
 #' }
 #' @source \url{http://www.see.leeds.ac.uk/fileadmin/Documents/research/sri/workingpapers/sri-wp111.pdf}
 "UKEnergy2000mats"

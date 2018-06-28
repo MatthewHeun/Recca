@@ -26,11 +26,11 @@ finaldemand_aggregates_with_units(.sutdata, fd_sectors, U = "U", Y = "Y",
 "Sector" for aggregation by final demand sector (Agriculture/forestry, Domestic navigation, etc.), or
 "Total" for aggregation over both Product and Sector (the default).}
 
+\item{net_aggregate_demand_colname}{the name of the output column containing aggregates of net energy demand.
+This column excludes energy industry own use.}
+
 \item{gross_aggregate_demand_colname}{the name of the output column containing aggregates of gross energy demand.
 This column includes energy industry own use.}
-
-\item{net_aggregate_demand}{the name of the output column containing aggregates of net energy demand.
-This column excludes energy industry own use.}
 }
 \value{
 a data frame containing net aggregate energy demand

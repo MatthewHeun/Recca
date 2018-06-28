@@ -5,7 +5,8 @@
 \title{Primary aggregate energy}
 \usage{
 primary_aggregates(.sutdata, p_industries, V_colname = "V", Y_colname = "Y",
-  by = c("Total", "Product", "Flow"), aggregate_primary_colname)
+  by = c("Total", "Product", "Flow"),
+  aggregate_primary_colname = "EX_p.ktoe")
 }
 \arguments{
 \item{.sutdata}{a data frame with columns of matrices from a supply-use analysis.}

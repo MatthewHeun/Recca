@@ -18,9 +18,6 @@
 #' @return \code{.sutdata} with columns \code{U_prime} and \code{V_prime} added
 #'
 #' @export
-#'
-#' @examples
-#'
 reconstruct_UV <- function(.sutdata = NULL,
                            # Input columns
                            Y_prime_colname = "Y_prime", L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp",

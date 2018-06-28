@@ -22,6 +22,10 @@ verify_SUT_energy_balance_with_units(.sutdata = NULL, U = "U", V = "V",
 \item{S_units}{the name of the column that contains \code{S_units} matrices}
 
 \item{tol}{the maximum amount by which energy can be out of balance}
+
+\item{SUT_prod_energy_balance}{the name of the output column that tells whether product balance is OK. Default is "\code{.SUT_prod_energy_balance}"}
+
+\item{SUT_ind_energy_balance}{the name of the output column that tells whether industry balance is OK. Default is "\code{.SUT_ind_energy_balance}"}
 }
 \value{
 \code{.sutdata} with additional columns.

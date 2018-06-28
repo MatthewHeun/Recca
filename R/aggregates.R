@@ -26,6 +26,8 @@
 #' @return a data frame containing columns of
 #' the aggregate primary energy for each row of \code{.sutdata}.
 #'
+#' @importFrom matsbyname select_cols_byname
+#'
 #' @export
 primary_aggregates <- function(.sutdata,
                                # Vector of primary industries
@@ -35,7 +37,7 @@ primary_aggregates <- function(.sutdata,
                                Y_colname = "Y",
                                by = c("Total", "Product", "Flow"),
                                # Output columns,
-                               aggregate_primary_colname){
+                               aggregate_primary_colname = "EX_p.ktoe"){
 
   by <- match.arg(by)
   aggfuncs <- list(total = "sumall_byname", product = "rowsums_byname", flow = "colsums_byname")
@@ -52,6 +54,7 @@ primary_aggregates <- function(.sutdata,
   matsindf_apply(.sutdata, FUN = prim_func, V = V_colname, Y = Y_colname)
 }
 
+
 #' Final demand aggregate energy
 #'
 #' Calculates aggregate final demand energy from a data frame of Supply-Use matrices.
@@ -61,7 +64,6 @@ primary_aggregates <- function(.sutdata,
 #' @param .sutdata a data frame with columns of matrices from a supply-use analysis.
 #' @param fd_sectors a vector of names of sectors in final demand.
 #' @param U_colname the name of the column in \code{.sutdata} containing Use (\code{U}) matrices.
-#' @param V_colname the name of the column in \code{.sutdata} containing Make (\code{V}) matrices.
 #' @param Y_colname the name of the column in \code{.sutdata} containing final demand (\code{Y}) matrices.
 #' @param r_EIOU_colname the name of the colum that holds ratios of EIOU to total input for each Machine and Product.
 #' @param by one of "Product", "Sector", or "Total" to indicate the desired aggregation:
@@ -76,6 +78,9 @@ primary_aggregates <- function(.sutdata,
 #' @return \code{.sutdata} with columns \code{net_aggregate_demand_colname} and
 #' \code{gross_aggregate_demand_colname} added
 #'
+#' @importFrom matsbyname elementproduct_byname
+#' @importFrom matsbyname select_cols_byname
+#'
 #' @export
 finaldemand_aggregates <- function(.sutdata,
                                    fd_sectors,
@@ -85,8 +90,8 @@ finaldemand_aggregates <- function(.sutdata,
                                    r_EIOU_colname = "r_EIOU",
                                    by = c("Total", "Product", "Sector"),
                                    # Output columns
-                                   net_aggregate_demand_colname,
-                                   gross_aggregate_demand_colname){
+                                   net_aggregate_demand_colname = "EX_fd_net.ktoe",
+                                   gross_aggregate_demand_colname = "EX_fd_gross.ktoe"){
 
   by <- match.arg(by)
 
@@ -104,7 +109,7 @@ finaldemand_aggregates <- function(.sutdata,
       net <- transpose_byname(net)
       gross <- transpose_byname(gross)
     }
-    list(net, gross) %>% set_names(net_aggregate_demand_colname, gross_aggregate_demand_colname)
+    list(net, gross) %>% set_names(c(net_aggregate_demand_colname, gross_aggregate_demand_colname))
   }
   matsindf_apply(.sutdata, FUN = fd_func, U = U_colname, Y = Y_colname, r_EIOU = r_EIOU_colname)
 }
@@ -125,13 +130,15 @@ finaldemand_aggregates <- function(.sutdata,
 #' "Product" for aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.),
 #' "Sector" for aggregation by final demand sector (Agriculture/forestry, Domestic navigation, etc.), or
 #' "Total" for aggregation over both Product and Sector (the default).
-#' @param net_aggregate_demand the name of the output column containing aggregates of net energy demand.
+#' @param net_aggregate_demand_colname the name of the output column containing aggregates of net energy demand.
 #' This column excludes energy industry own use.
 #' @param gross_aggregate_demand_colname the name of the output column containing aggregates of gross energy demand.
 #' This column includes energy industry own use.
 #'
 #' @return a data frame containing net aggregate energy demand
 #' and gross aggregate energy demand for each row of \code{.sutdata}.
+#'
+#' @importFrom matsbyname select_cols_byname
 #'
 #' @export
 finaldemand_aggregates_with_units <- function(.sutdata,
@@ -168,7 +175,169 @@ finaldemand_aggregates_with_units <- function(.sutdata,
       net <- colsums_byname(net)
       gross <- colsums_byname(gross)
     }
-    list(net, gross) %>% set_names(net_aggregate_demand_colname, gross_aggregate_demand_colname)
+    list(net, gross) %>% set_names(c(net_aggregate_demand_colname, gross_aggregate_demand_colname))
   }
   matsindf_apply(.sutdata, FUN = fd_func, U = U, Y = Y, r_EIOU = r_EIOU, S_units = S_units)
 }
+
+
+#' Total primary aggregate energy from IEA tables
+#'
+#' Calculates total aggregate primary energy from a data frame of IEA data.
+#' This function is named with "_IEA", because it is meant to operate on
+#' tidy, IEA-style data frames.
+#' The function \code{primary_aggregates} does the same thing,
+#' but it is meant to operate on tidy SUT-style data frames.
+#'
+#' This function works similar to \code{\link[dplyr]{summarise}}:
+#' it distills \code{.ieadata} to many fewer rows
+#' according to the grouping variables.
+#' Thus, \code{.ieadata} should be grouped prior to sending into this function.
+#' Grouping columns are preserved on output.
+#'
+#' @param .ieadata the data frame containing an IEA table
+#' @param flow the name of the column that contains flow information. Default is "\code{Flow}".
+#' @param flow_aggregation_point the name of the column that identifies flow aggregation points.
+#'        Default is "\code{Flow.aggregation.point}".
+#' @param energy the name of the column that contains energy information. Default is "\code{EX.ktoe}".
+#' @param p_industries a vector of names of primary industries. Default is
+#'        "\code{c("Coal mines", "Oil and gas extraction",
+#'        "Production", "Imports", "Exports",
+#'        "International aviation bunkers", "International marine bunkers",
+#'        "Stock changes")}"
+#' @param eiou the string that identifies energy industry own use in the \code{Flow.aggregation.point} column.
+#'        Default is "\code{Energy industry own use}".
+#' @param aggregate_primary_colname the name of the aggregate primary energy
+#'        column to be created in the output data frame.
+#'        Default is "\code{EX_p_IEA.ktoe}".
+#'
+#' @return a data frame containing the grouping columns of \code{.ieadata}
+#'         as well as a column named with the value of \code{aggregate_primary_colname}.
+#'
+#' @export
+#'
+#' @examples
+#' library(magrittr)
+#' p_ind <- primary_industries(UKEnergy2000mats %>%
+#'   spread(key = matrix.name, value = matrix))[["p_industries"]][[1]]
+#' UKEnergy2000tidy %>%
+#'   group_by(Country, Year, Energy.type, Last.stage) %>%
+#'   primary_aggregates_IEA(p_industries = p_ind)
+primary_aggregates_IEA <- function(.ieadata,
+                                   # Input information
+                                   flow = "Flow",
+                                   flow_aggregation_point = "Flow.aggregation.point",
+                                   energy = "EX.ktoe",
+                                   p_industries = c("Production", "Coal mines", "Oil and gas extraction",
+                                                    "Imports", "Exports", "International aviation bunkers",
+                                                    "International marine bunkers", "Stock changes"),
+                                   eiou = "Energy industry own use",
+                                   # Output information
+                                   aggregate_primary_colname = "EX_p_IEA.ktoe"){
+  flow <- as.name(flow)
+  flow_aggregation_point <- as.name(flow_aggregation_point)
+  energy <- as.name(energy)
+  aggregate_primary_colname <- as.name(aggregate_primary_colname)
+  .ieadata %>%
+    filter(starts_with_any_of(!!flow, p_industries), !startsWith(!!flow_aggregation_point, eiou)) %>%
+    summarise(!!aggregate_primary_colname := sum(!!energy))
+}
+
+
+#' Final demand aggregate energy from IEA tables
+#'
+#' Calculates total aggregate final demand energy from a data frame of IEA data
+#' on both net and gross bases.
+#'
+#' This function is named with "_IEA", because it is meant to operate on
+#' tidy, IEA-style data frames.
+#' The function \link{finaldemand_aggregates} does the same thing,
+#' but it is meant to operate on SUT-style data frames.
+#'
+#' Note that all items in \code{.ieadata} must be in same units.
+#'
+#' This function works similar to \code{\link[dplyr]{summarise}}:
+#' it distills \code{.ieadata} to many fewer rows
+#' according to the grouping variables.
+#' Thus, \code{.ieadata} should be grouped prior to passing into this function.
+#' Grouping columns are preserved on output.
+#'
+#' @param .ieadata a data frame with columns of IEA data.
+#' @param ledger_side the name of the ledger side column in \code{.ieadata}.
+#'        Default is "\code{Ledger.side}".
+#' @param flow_aggregation_point the name of the flow aggregation point column in \code{.ieadata}.
+#'        Default is "\code{Flow.aggregation.point}".
+#' @param flow the name of the column that contains flow information.
+#'        Default is "\code{Flow}".
+#' @param energy the name of the column that contains energy information.
+#'        Default is "\code{EX.ktoe}".
+#' @param consumption the identifier for consumption in the \code{flow_aggregation_point} column.
+#'        Default is "\code{Consumption}".
+#' @param eiou the identifier for energy industry own use in the \code{flow_aggregation_point} column.
+#'        Default is "\code{Energy industry own use}".
+#' @param aggregate_net_finaldemand_colname the name of the output column containing aggregates of net final demand.
+#'        Default is "\code{EX_fd_net_IEA.ktoe}".
+#' @param aggregate_gross_finaldemand_colname the name of the output column containing aggregates of gross final demand.
+#'        Default is "\code{EX_fd_gross_IEA.ktoe}".
+#'
+#' @importFrom dplyr full_join
+#' @importFrom dplyr group_vars
+#' @importFrom dplyr summarise
+#'
+#' @export
+#'
+#' @return a data frame containing grouping columns of \code{.ieadata} and
+#'         two additional columns containing net and gross final demand.
+#'
+#' @examples
+#' library(magrittr)
+#' # Works only when all entries are in same units.
+#' # When Last.stage is services, different units are involved.
+#' # Thus, filter to rows in UKEnergy2000tidy where Last.stage is final or useful.
+#' print(names(UKEnergy2000tidy))
+#' UKEnergy2000tidy %>%
+#'   group_by(Country, Year, Energy.type, Last.stage) %>%
+#'   filter(Last.stage %in% c("final", "useful")) %>%
+#'   finaldemand_aggregates_IEA()
+finaldemand_aggregates_IEA <- function(.ieadata,
+                                       # Input information
+                                       ledger_side = "Ledger.side",
+                                       flow_aggregation_point = "Flow.aggregation.point",
+                                       flow = "Flow",
+                                       energy = "EX.ktoe",
+                                       consumption = "Consumption",
+                                       eiou = "Energy industry own use",
+                                       # Output information
+                                       aggregate_net_finaldemand_colname = "EX_fd_net_IEA.ktoe",
+                                       aggregate_gross_finaldemand_colname = "EX_fd_gross_IEA.ktoe"){
+  ledger_side <- as.name(ledger_side)
+  flow_aggregation_point <- as.name(flow_aggregation_point)
+  flow <- as.name(flow)
+  energy <- as.name(energy)
+  diff_colname <- as.name(".gross_less_net")
+
+  verify_cols_missing(.ieadata, diff_colname)
+
+  # First calculate net energy
+  net <- .ieadata %>%
+    filter(starts_with_any_of(!!ledger_side, consumption)) %>%
+    summarise(
+      !!aggregate_net_finaldemand_colname := sum(!!energy)
+    )
+  # Now calculate additional energy, gross - net = eiou
+  gross_less_net <- .ieadata %>%
+    filter(starts_with_any_of(!!flow_aggregation_point, eiou)) %>%
+    mutate(
+      !!energy := abs(!!energy)
+    ) %>%
+    summarise(
+      !!diff_colname := sum(!!energy)
+    )
+  # Add net and gross_less_net to obtain gross and return the resulting data frame.
+  full_join(net, gross_less_net, by = group_vars(.ieadata)) %>%
+    mutate(
+      !!as.name(aggregate_gross_finaldemand_colname) := !!as.name(aggregate_net_finaldemand_colname) + !!diff_colname
+    ) %>%
+    select(-(!!diff_colname))
+}
+

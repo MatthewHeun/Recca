@@ -6,7 +6,8 @@
 \usage{
 finaldemand_aggregates(.sutdata, fd_sectors, U_colname = "U",
   Y_colname = "Y", r_EIOU_colname = "r_EIOU", by = c("Total", "Product",
-  "Sector"), net_aggregate_demand_colname, gross_aggregate_demand_colname)
+  "Sector"), net_aggregate_demand_colname = "EX_fd_net.ktoe",
+  gross_aggregate_demand_colname = "EX_fd_gross.ktoe")
 }
 \arguments{
 \item{.sutdata}{a data frame with columns of matrices from a supply-use analysis.}
@@ -29,8 +30,6 @@ Each entry in this column is \code{sumall(Y_fd)}.}
 
 \item{gross_aggregate_demand_colname}{the name of the output column containing aggregates of gross energy demand.
 Each entry in this column is calculated by \code{sumall(Y_fd)} + \code{sumall(U_EIOU)}.}
-
-\item{V_colname}{the name of the column in \code{.sutdata} containing Make (\code{V}) matrices.}
 }
 \value{
 \code{.sutdata} with columns \code{net_aggregate_demand_colname} and

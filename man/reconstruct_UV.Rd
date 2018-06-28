@@ -33,6 +33,3 @@ that will be used to reconstruct the economy}
 \description{
 Reconstruct an economy given a new final demand matrix
 }
-\examples{
-
-}

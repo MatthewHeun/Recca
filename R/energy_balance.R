@@ -19,20 +19,29 @@
 #' This function should be called
 #' for its side-effect of testing whether energy is in balance in \code{.sutdata}.
 #'
-#' @param .sutdata an SUT-style data frame with columns of matrices, including
-#' \code{U}, \code{V}, and \code{Y}.
-#' @param U_colname the name of the column that contains \code{U} matrices
-#' @param V_colname the name of the column that contains \code{V} matrices
-#' @param Y_colname the name of the column that contsins \code{Y} matrices
-#' @param tol the maximum amount by which Supply and Consumption can be out of balance
+#' @param .sutdata an SUT-style data frame with columns of matrices,
+#'        including \code{U}, \code{V}, and \code{Y} columns.
+#' @param U_colname the name of the column that contains \code{U} matrices. Default is "\code{U}".
+#' @param V_colname the name of the column that contains \code{V} matrices. Default is "\code{V}".
+#' @param Y_colname the name of the column that contsins \code{Y} matrices. Default is "\code{Y}".
+#' @param SUT_energy_balance the name of the output column. Default is "\code{.SUT_energy_balance}".
+#' @param tol the maximum amount by which Supply and Consumption can be out of balance.
+#'        Default is \code{1e-6}.
 #'
 #' @return \code{.sutdata}. If energy balance is not observed,
-#' an additional column is added showing the row on which energy is not balanced.
+#'         an additional column is added showing the row on which energy is not balanced.
+#'
+#' @importFrom matsbyname complete_rows_cols
 #'
 #' @export
 #'
 #' @examples
-#' verify_SUT_energy_balance(SUTMatsWne)
+#' library(tidyr)
+#' library(magrittr)
+#' verify_SUT_energy_balance(UKEnergy2000mats %>%
+#'                             filter(Last.stage %in% c("final", "useful")) %>%
+#'                             spread(key = matrix.name, value = matrix),
+#'                           tol = 1e-4)
 verify_SUT_energy_balance <- function(.sutdata = NULL,
                                       # Input column names
                                       U_colname = "U", V_colname = "V", Y_colname = "Y",
@@ -55,7 +64,7 @@ verify_SUT_energy_balance <- function(.sutdata = NULL,
   if (!all(Out[[SUT_energy_balance]] %>% as.logical())) {
     warning(paste("Energy not conserved in verify_SUT_energy_balance. See column", SUT_energy_balance))
   }
-  Out
+  return(Out)
 }
 
 
@@ -81,6 +90,8 @@ verify_SUT_energy_balance <- function(.sutdata = NULL,
 #' @param Y the name of the column that contains \code{Y} matrices
 #' @param S_units the name of the column that contains \code{S_units} matrices
 #' @param tol the maximum amount by which energy can be out of balance
+#' @param SUT_prod_energy_balance the name of the output column that tells whether product balance is OK. Default is "\code{.SUT_prod_energy_balance}"
+#' @param SUT_ind_energy_balance the name of the output column that tells whether industry balance is OK. Default is "\code{.SUT_ind_energy_balance}"
 #'
 #' @return \code{.sutdata} with additional columns.
 #'
@@ -104,7 +115,7 @@ verify_SUT_energy_balance_with_units <- function(.sutdata = NULL,
     W_bar <- matrixproduct_byname(transpose_byname(S_units), W)
     prodOK <- difference_byname(rowsums_byname(W), y) %>% iszero_byname(tol = tol)
     indOK <- difference_byname(V_bar, transpose_byname(W_bar)) %>% difference_byname(transpose_byname(U_bar)) %>% iszero_byname(tol = tol)
-    list(prodOK, indOK) %>% set_names(SUT_prod_energy_balance, SUT_ind_energy_balance)
+    list(prodOK, indOK) %>% set_names(c(SUT_prod_energy_balance, SUT_ind_energy_balance))
   }
   Out <- matsindf_apply(.sutdata, FUN = verify_func, U = U, V = V, Y = Y, S_units = S_units)
   if (!all(Out[[SUT_prod_energy_balance]] %>% as.logical())) {
@@ -113,7 +124,7 @@ verify_SUT_energy_balance_with_units <- function(.sutdata = NULL,
   if (!all(Out[[SUT_ind_energy_balance]] %>% as.logical())) {
     warning(paste("Energy not conserved in verify_SUT_energy_balance_with_units. See column", SUT_ind_energy_balance))
   }
-  Out
+  return(Out)
 }
 
 
@@ -138,14 +149,10 @@ verify_SUT_energy_balance_with_units <- function(.sutdata = NULL,
 #' and columns of SUT matrices, including \code{U} and \code{V}.
 #' @param U_colname the name of the column of use matrices
 #' @param V_colname the name of the column of make matrices
-#' @param check_colname the name of a column of intermediate results
-#' that contains \bold{V}*i (rowsums of \bold{V}) completed against \bold{U}^T on rows.
-#' @param problems_data_frame_name the name of the data frame created
-#' in the event that any problems are discovered
+#' @param industry_production_OK the name of the column in \code{.sutdata} that
+#'        tells whether all industries produce something. Default is "\code{.industry_production_OK}".
 #'
-#' @return Nothing is returned.
-#' This function should be called
-#' for its side-effect of testing whether energy is in balance in \code{.sutdata}.
+#' @return \code{.sutdata} with added column named with the value of \code{industry_production_OK}.
 #'
 #' @export
 #'
@@ -165,5 +172,109 @@ verify_SUT_industry_production <- function(.sutdata = NULL,
   if (!all(Out[[industry_production_OK]] %>% as.logical())) {
     warning(paste("There are some industries that consume but do not produce energy. See column", industry_production_OK))
   }
-  Out
+  return(Out)
+}
+
+
+#' Confirm that an IEA-style data frame conserves energy.
+#'
+#' Energy balances are confirmed (within \code{tol}) for every combination of
+#' grouping variables in \code{.ieatidydata}.
+#'
+#' Be sure to group \code{.ieatidydata} prior to calling this function,
+#' as shown in the example.
+#'
+#' If energy is in balance for every group, a data frame with additional column \code{err}
+#' is returned.
+#' If energy balance is not observed for one or more of the groups,
+#' a warning is emitted.
+#'
+#' @param .ieatidydata an IEA-style data frame containing grouping columns
+#'        (typically \code{Country}, \code{Year}, \code{Product}, and others),
+#'        a \code{Ledger.side} column, and
+#'        an energy column (\code{E.ktoe}).
+#'        \code{.ieatidydata} should be grouped prior to sending to this function.
+#' @param ledger.side the name of the column in \code{.ieatidydata}
+#'        that contains ledger side information (a string). Default is "\code{Ledger.side}".
+#' @param energy the name of the column in \code{.ieatidydata}
+#'        that contains energy data (a string). Default is "\code{E.ktoe}".
+#' @param supply the identifier for supply data in the \code{ledger.side} column (a string).
+#'        Default is "\code{Supply}".
+#' @param consumption the identifier for consumption data in the \code{ledger.side} column (a string).
+#'        Default is "\code{Consumption}".
+#' @param err the name of the error column in the output. Default is "\code{.err}".
+#' @param tol the maximum amount by which Supply and Consumption can be out of balance
+#'
+#' @return a data frame containing with grouping variables and
+#'         an additional column whose name is the value of \code{err}.
+#'         The \code{err} column should be 0.
+#'
+#' @export
+#'
+#' @examples
+#' UKEnergy2000tidy %>%
+#'   filter(Last.stage %in% c("final", "useful")) %>%
+#'   group_by(Country, Year, Energy.type, Last.stage) %>%
+#'   verify_IEATable_energy_balance(energy = "EX.ktoe")
+verify_IEATable_energy_balance <- function(.ieatidydata,
+                                           # Input column names
+                                           ledger.side = "Ledger.side",
+                                           energy = "E.ktoe",
+                                           # ledger.side identifiers
+                                           supply = "Supply",
+                                           consumption = "Consumption",
+                                           # Output column names
+                                           err = ".err",
+                                           # Tolerance
+                                           tol = 1e-6){
+  ledger.side <- as.name(ledger.side)
+  energy <- as.name(energy)
+  esupply <- as.name("ESupply")
+  econsumption <- as.name("EConsumption")
+
+  EnergyCheck <- full_join(
+    .ieatidydata %>%
+      filter(!!ledger.side == "Supply") %>%
+      summarise(!!esupply := sum(!!energy)),
+    .ieatidydata %>%
+      filter(!!ledger.side == "Consumption") %>%
+      summarise(!!econsumption := sum(!!energy)),
+    by = group_vars(.ieatidydata)
+  ) %>%
+    mutate(
+      !!err := !!esupply - !!econsumption
+    )
+
+  # There are two options here.
+  # (a) the Product appears on both Supply and Demand sides
+  #     and, therefore, has a value for err
+  # (b) the Product appears only on Supply side
+  #     (because it is completely transformed
+  #     before reaching the Consumption side of the ledger)
+  #     and, therefore, has err = NA
+  # If (a), then err should be zero (within tol).
+  # If (b), then ESupply.ktoe should be zero (within tol).
+  # Check that both of these are true.
+
+  # Option (a)
+  EnergyCheck_err <- EnergyCheck %>% filter(!is.na(!!err))
+  if (!all(abs(EnergyCheck_err[[err]]) < tol)) {
+    # Emit a warning
+    warning(
+      paste("Energy not balanced in verify_IEATable_energy_balance.",
+            "Check return value for non-zero", err, "column.")
+    )
+  }
+
+  # Option (b)
+  EnergyCheck_supply <- EnergyCheck %>% filter(is.na(!!err))
+  if (!all(abs(EnergyCheck_supply[[esupply]]) < tol)) {
+    # Emit a warning
+    warning(
+      paste("Energy not balanced in verify_IEATable_energy_balance.",
+            "Check return value for non-zero", err, "column.")
+    )
+  }
+
+  return(EnergyCheck)
 }

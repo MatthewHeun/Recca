@@ -9,21 +9,21 @@ calc_M(.YqGHEdata = NULL, Y_colname = "Y", q_colname = "q",
   M_s_colname = "M_s")
 }
 \arguments{
-\item{.YqGHEdata}{a data frame containing columns with \strong{q} vectors
-and \strong{Y}, \strong{G}, \strong{H}, and \strong{E} matrices.
+\item{.YqGHEdata}{a data frame containing columns with \code{q} vectors
+and \code{Y}, \code{G}, \code{H}, and \code{E} matrices.
 \code{.YqGEdata} will likely have been obtained from the \code{calc_G} and \code{calc_E} functions.}
 
-\item{Y_colname}{the name of the output column containing \strong{Y} matrices.
-\strong{Y} is the final demand matrix.}
+\item{Y_colname}{the name of the output column containing \code{Y} matrices.
+\code{Y} is the final demand matrix.}
 
-\item{q_colname}{the name of the output column containing \strong{q} column vectors.
-\strong{q} is calculated by \code{\strong{Ui} + \strong{y}}.}
+\item{q_colname}{the name of the output column containing \code{q} column vectors.
+\code{q} is calculated by \code{Ui} + \code{y}.}
 
 \item{G_colname}{the name of the output column containing \code{G} matrices.
-\code{G} is calculated by \code{\strong{L_ixp} * \strong{y_hat}}.}
+\code{G} is calculated by \code{L_ixp} * \code{y_hat}.}
 
-\item{E_colname}{the name of the output column containing \strong{E} matrices.
-\code{E} is calculated by \code{\strong{W} * \strong{g_hat_inv}}.}
+\item{E_colname}{the name of the output column containing \code{E} matrices.
+\code{E} is calculated by \code{W} * \code{g_hat_inv}.}
 
 \item{tol}{the allowable energy balance error.
 \code{Q} is calculated by \code{e_hat * G},
@@ -36,8 +36,6 @@ These matrices contain embodied products in rows and embodying products in colum
 
 \item{M_s_colname}{the name of the output column containing matrices of embodied energy consumed by final demand sectors.
 These matrices contain embodied products in rows and consuming final demand sectors in columns.}
-
-\item{Q_colname}{the name of the output column containing lists of \strong{Q} matrices.}
 }
 \value{
 \code{.YqGHEdata} with columns \code{Q_colname}, \code{M_p_colname}, and \code{M_s_colname} added

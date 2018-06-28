@@ -21,8 +21,6 @@ Leontief (\code{L_ixp}) matrices.}
 
 \item{H_colname}{the name of the output column containing \code{H} matrices.
 \code{G} is calculated by \code{L_ixp * Y}.}
-
-\item{y_colname}{the name of the column in \code{.iodata} containing final demand (\code{y}) vectors.}
 }
 \value{
 \code{.iodata} with columns \code{G_colname} and \code{H_colname} added.

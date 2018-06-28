@@ -121,6 +121,8 @@ context("Layout for UKEnergy2000mats")
 test_that("UKEnergy2000 works as expected", {
   # Use a subset of the UKEnergy2000mats data from this package as an example.
   bigmat <- UKEnergy2000mats %>%
+    spread(key = matrix.name, value = matrix) %>%
+    select(Country, Year, Energy.type, Last.stage, U, V, Y, r_EIOU, S_units) %>%
     filter(Country == "GB", Year == 2000, Energy.type == "E.ktoe", Last.stage == "final") %>%
     mutate(
       # Delete unneeded columns.
