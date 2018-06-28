@@ -1,5 +1,10 @@
 # News for `Recca`
 
+## Recca 0.1.3 (2018-06-27)
+
+* Added `verify_IEATable_energy_balance` function
+
+
 ## Recca 0.1.2 (2018-05-20)
 
 * All functions now use the `matsindf::matsindf_apply` function
