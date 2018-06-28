@@ -214,6 +214,7 @@ verify_SUT_industry_production <- function(.sutdata = NULL,
 #' @examples
 #' UKEnergy2000tidy %>%
 #'   group_by(Country, Year, Energy.type, Last.stage) %>%
+#'   filter(Last.stage %in% c("final", "useful")) %>%
 #'   verify_IEATable_energy_balance(energy = "EX.ktoe")
 verify_IEATable_energy_balance <- function(.ieatidydata,
                                            # Input column names

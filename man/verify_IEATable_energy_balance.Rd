@@ -52,5 +52,6 @@ a warning is emitted.
 \examples{
 UKEnergy2000tidy \%>\%
   group_by(Country, Year, Energy.type, Last.stage) \%>\%
+  filter(Last.stage \%in\% c("final", "useful")) \%>\%
   verify_IEATable_energy_balance(energy = "EX.ktoe")
 }
