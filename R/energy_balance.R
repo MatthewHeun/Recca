@@ -184,8 +184,16 @@ verify_SUT_industry_production <- function(.sutdata = NULL,
 #' Be sure to group \code{.ieatidydata} prior to calling this function,
 #' as shown in the example.
 #'
-#' @param .ieatidydata an IEA-style data frame containing the following columns:
-#' \code{Country}, \code{Year}, \code{Ledger.side}, \code{Product}, \code{E.ktoe}.
+#' If energy is in balance for every group, a data frame with additional column \code{err}
+#' is returned.
+#' If energy balance is not observed for one or more of the groups,
+#' a warning is emitted.
+#'
+#' @param .ieatidydata an IEA-style data frame containing grouping columns
+#'        (typically \code{Country}, \code{Year}, \code{Product}, and others),
+#'        a \code{Ledger.side} column, and
+#'        an energy column (\code{E.ktoe}).
+#'        \code{.ieatidydata} should be grouped prior to sending to this function.
 #' @param ledger.side the name of the column in \code{.ieatidydata}
 #'        that contains ledger side information (a string). Default is "\code{Ledger.side}".
 #' @param energy the name of the column in \code{.ieatidydata}
@@ -196,9 +204,9 @@ verify_SUT_industry_production <- function(.sutdata = NULL,
 #'        Default is "\code{Consumption}".
 #' @param tol the maximum amount by which Supply and Consumption can be out of balance
 #'
-#' @return Nothing is returned.
-#' This function should be called
-#' for its side-effect of testing whether energy is balanced in \code{.ieatidydata}.
+#' @return a data frame containing with grouping variables and
+#'         an additional column whose name is the value of \code{err}.
+#'         The \code{err} column should be 0.
 #'
 #' @export
 #'
@@ -247,25 +255,22 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
   # Option (a)
   EnergyCheck_err <- EnergyCheck %>% filter(!is.na(!!err))
   if (!all(abs(EnergyCheck_err[[err]]) < tol)) {
-    # Print an error message containing rows of EnergyCheck_err that cause the failure
-    print("Energy balance not obtained in verify_IEATable_energy_balance")
-    print("err should be zero.")
-    print("First non-balancing Products are shown below:")
-    print(EnergyCheck_err %>% filter(abs(err) >= tol))
-    stop()
+    # Emit a warning
+    warning(
+      paste("Energy not balanced in verify_IEATable_energy_balance.",
+            "Check return value for non-zero", err, "column.")
+    )
   }
 
   # Option (b)
   EnergyCheck_supply <- EnergyCheck %>% filter(is.na(!!err))
   if (!all(abs(EnergyCheck_supply$ESupply.ktoe) < tol)) {
-    # Print an error message containing rows of EnergyCheck_supply that cause the failure
-    print("Energy balance not obtained in verify_IEATable_energy_balance")
-    print("ESupply.ktoe should be zero.")
-    print("First non-balancing Products are shown below:")
-    print(EnergyCheck_supply %>% filter(abs(ESupply.ktoe) >= tol))
-    stop()
+    # Emit a warning
+    warning(
+      paste("Energy not balanced in verify_IEATable_energy_balance.",
+            "Check return value for non-zero", err, "column.")
+    )
   }
 
-  # Wrap return value (NULL) with invisible() to prevent printing of the result.
-  invisible(NULL)
+  return(EnergyCheck)
 }

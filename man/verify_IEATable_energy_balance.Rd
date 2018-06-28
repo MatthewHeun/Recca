@@ -9,8 +9,11 @@ verify_IEATable_energy_balance(.ieatidydata, ledger.side = "Ledger.side",
   err = ".err", tol = 1e-06)
 }
 \arguments{
-\item{.ieatidydata}{an IEA-style data frame containing the following columns:
-\code{Country}, \code{Year}, \code{Ledger.side}, \code{Product}, \code{E.ktoe}.}
+\item{.ieatidydata}{an IEA-style data frame containing grouping columns
+(typically \code{Country}, \code{Year}, \code{Product}, and others),
+a \code{Ledger.side} column, and
+an energy column (\code{E.ktoe}).
+\code{.ieatidydata} should be grouped prior to sending to this function.}
 
 \item{ledger.side}{the name of the column in \code{.ieatidydata}
 that contains ledger side information (a string). Default is "\code{Ledger.side}".}
@@ -27,9 +30,9 @@ Default is "\code{Consumption}".}
 \item{tol}{the maximum amount by which Supply and Consumption can be out of balance}
 }
 \value{
-Nothing is returned.
-This function should be called
-for its side-effect of testing whether energy is balanced in \code{.ieatidydata}.
+a data frame containing with grouping variables and
+        an additional column whose name is the value of \code{err}.
+        The \code{err} column should be 0.
 }
 \description{
 Energy balances are confirmed (within \code{tol}) for every combination of
@@ -38,6 +41,11 @@ grouping variables in \code{.ieatidydata}.
 \details{
 Be sure to group \code{.ieatidydata} prior to calling this function,
 as shown in the example.
+
+If energy is in balance for every group, a data frame with additional column \code{err}
+is returned.
+If energy balance is not observed for one or more of the groups,
+a warning is emitted.
 }
 \examples{
 UKEnergy2000tidy \%>\%

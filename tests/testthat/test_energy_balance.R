@@ -66,7 +66,7 @@ test_that("SUT energy balance works with single matrices", {
 context("IEA energy balance")
 ###########################################################
 
-test_that("IEA energy balance works with energy only", {
+test_that("IEA energy balance works correctly", {
   # Make sure that it works.
   expect_silent(
     UKEnergy2000tidy %>%
@@ -78,9 +78,10 @@ test_that("IEA energy balance works with energy only", {
   # Change from 5e4 to 1e4
   Unbalanced$EX.ktoe[[1]] <- 1e4
   # Now try energy balance. It should fail.
-  expect_error(Unbalanced %>%
+  expect_warning(Unbalanced %>%
                  group_by(Country, Year, Energy.type, Last.stage) %>%
-                 verify_IEATable_energy_balance(energy = "EX.ktoe"))
+                 verify_IEATable_energy_balance(energy = "EX.ktoe"),
+                 "Energy not balanced in verify_IEATable_energy_balance.")
 
 })
 
