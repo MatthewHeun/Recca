@@ -130,25 +130,20 @@ verify_SUT_energy_balance_with_units <- function(.sutdata = NULL,
 
 #' Confirm that all Industries in an SUT-style data frame produce energy.
 #'
-#' If an Industry consumes energy (in the \strong{U} matrix)
-#' but does not make energy (in the \strong{V} matrix),
+#' If an Industry consumes energy (in the \code{U} matrix)
+#' but does not make energy (in the \code{V} matrix),
 #' it is most certainly an error.
 #' (In contrast, there can be Industries that make energy but do not consume it,
 #' such as Industries involved in Production.)
-#' This function errors if an Industry is found that consumes energy but does not make energy.
-#' But it will also place an object named \code{problems_data_frame_name}
-#' into the global environment.
-#' \code{problems_data_frame_name} can assist debugging this problem
-#' First, look at the \code{industry_production_OK_colname} column of \code{problems_data_frame_name}.
-#' It shows which rows of \code{.sutdata} had a problem (FALSE in that column).
-#' If you find a row with a problem, look at the \code{check_colname} column.
-#' Any \code{0} entries indicate industries that consume energy but do not make energy.
+#' This function emits a warning if an Industry is found to consume energy but not make energy.
+#' Look at the \code{industry_production_OK} column of the output to see which rows of
+#' \code{.sutdata} exhibit the problem.
 #'
 #' @param .sutdata an SUT-style data frame containing metadata columns
 #' (typically \code{Country}, \code{Year}, \code{Ledger.side}, \code{Product}, etc.)
 #' and columns of SUT matrices, including \code{U} and \code{V}.
-#' @param U_colname the name of the column of use matrices
-#' @param V_colname the name of the column of make matrices
+#' @param U_colname the name of the column of use matrices. Default is "\code{U}".
+#' @param V_colname the name of the column of make matrices. Default is "\code{V}".
 #' @param industry_production_OK the name of the column in \code{.sutdata} that
 #'        tells whether all industries produce something. Default is "\code{.industry_production_OK}".
 #'
