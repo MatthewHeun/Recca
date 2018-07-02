@@ -130,22 +130,28 @@ verify_SUT_energy_balance_with_units <- function(.sutdata = NULL,
 
 #' Confirm that all Industries in an SUT-style data frame produce energy.
 #'
-#' If an Industry consumes energy (in the \code{U} matrix)
+#' If a transformation process industry consumes energy (in the \code{U} matrix)
 #' but does not make energy (in the \code{V} matrix),
 #' it is most certainly an error.
 #' (In contrast, there can be Industries that make energy but do not consume it,
-#' such as Industries involved in Production.)
-#' This function emits a warning if an Industry is found to consume energy but not make energy.
+#' such as Industries involved in Production.
+#' And final demand sectors consume energy but do not produce any.)
+#' This function emits a warning if an Industry in the \code{U} matrix
+#' is found to consume energy but not make energy.
 #' Look at the \code{industry_production_OK} column of the output to see which rows of
 #' \code{.sutdata} exhibit the problem.
+#' Look at the \code{problem_industries} column of the output to see which industries
+#' exhibit this problem.
 #'
 #' @param .sutdata an SUT-style data frame containing metadata columns
 #' (typically \code{Country}, \code{Year}, \code{Ledger.side}, \code{Product}, etc.)
 #' and columns of SUT matrices, including \code{U} and \code{V}.
 #' @param U_colname the name of the column of use matrices. Default is "\code{U}".
 #' @param V_colname the name of the column of make matrices. Default is "\code{V}".
-#' @param industry_production_OK the name of the column in \code{.sutdata} that
+#' @param industry_production_OK the name of the column in the output that
 #'        tells whether all industries produce something. Default is "\code{.industry_production_OK}".
+#' @param problem_industries the name of the column in the output that
+#'        tells which transformation processes consume energy but do not produce anything.
 #'
 #' @return \code{.sutdata} with added column named with the value of \code{industry_production_OK}.
 #'
@@ -157,11 +163,13 @@ verify_SUT_industry_production <- function(.sutdata = NULL,
                                            # Input column names
                                            U_colname = "U", V_colname = "V",
                                            # Output column names
-                                           industry_production_OK = ".industry_production_OK"){
+                                           industry_production_OK = ".industry_production_OK",
+                                           problem_industries = ".problem_industries"){
   verify_func <- function(U, V){
     check <- rowsums_byname(V) %>% complete_rows_cols(mat = transpose_byname(U), margin = 1)
     OK <- !any(check == 0)
-    list(OK) %>% set_names(industry_production_OK)
+    problems <- rownames(check)[which(check == 0)]
+    list(OK, problems) %>% set_names(c(industry_production_OK, problem_industries))
   }
   Out <- matsindf_apply(.sutdata, FUN = verify_func, U = U_colname, V = V_colname)
   if (!all(Out[[industry_production_OK]] %>% as.logical())) {
