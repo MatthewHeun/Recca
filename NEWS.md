@@ -1,5 +1,11 @@
 # News for `Recca`
 
+## Recca 0.1.5 (2018-07-02)
+
+* Added a column in the output of `verify_SUT_industry_production` that 
+  indicates which industries are problematic.
+
+
 ## Recca 0.1.4 (2018-06-28)
 
 * Fixed a bug in the `verify_IEATable_energy_balance` function: !!err --> !!as.name(err)

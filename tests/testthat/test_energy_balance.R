@@ -51,6 +51,7 @@ test_that("all SUT industries are producing energy", {
   expect_warning(result <- verify_SUT_industry_production(U_colname = U, V_colname = V),
                  "There are some industries that consume but do not produce energy.")
   expect_false(result$.industry_production_OK)
+  expect_equal(expected = "Crude dist.", result$.problem_industries)
 })
 
 test_that("SUT energy balance works with single matrices", {
