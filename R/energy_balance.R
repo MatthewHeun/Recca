@@ -229,6 +229,7 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
                                            tol = 1e-6){
   ledger.side <- as.name(ledger.side)
   energy <- as.name(energy)
+  err <- as.name(err)
   esupply <- as.name("ESupply")
   econsumption <- as.name("EConsumption")
 
