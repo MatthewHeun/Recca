@@ -72,3 +72,14 @@ test_that("primary_industries works correctly", {
     expect_equal(primary_industries(U = mats$U[[i]], V = mats$V[[i]]) %>% set_names(NULL) %>% unlist(), expected)
   }
 })
+
+
+###########################################################
+context("Edge list")
+###########################################################
+
+test_that("edge_list works correctly", {
+  mats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
+  el <- edge_list(mats)
+
+})

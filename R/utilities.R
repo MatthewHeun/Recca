@@ -120,6 +120,98 @@ primary_industries <- function(.sutdata = NULL, U = "U", V = "V", p_industries =
   matsindf_apply(.sutdata, FUN = p_ind_func, U = U, V = V)
 }
 
+
+
+#' Title
+#'
+#'
+#'
+#'
+#' @param .sutdata
+#' @param U
+#' @param V
+#' @param Y
+#' @param edge_list
+#' @param from
+#' @param to
+#' @param value
+#' @param product
+#' @param rejected_energy
+#' @param simplify_edges
+#'
+#' @return
+#' @export
+#'
+#' @examples
+edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
+                      edge_list = "edge_list",
+                      from = "From", to = "To", value = "Value", product = "Product",
+                      rejected_energy = "Rejected Energy", simplify_edges = TRUE){
+  # Figure out which Products have only one source and one destination.
+  # These are the flows that can be collapsed in the edge list.
+  el_func <- function(Umat, Vmat, Ymat){
+    # At this point, Umat, Vmat, and Ymat should be single matrices.
+    expanded_mats <- list(U = Umat, V = Vmat, Y = Ymat) %>%
+      lapply(FUN = function(m){
+        # Convert all to tidy (row, col, value) format
+        mat_to_rowcolval(m, rownames = from, colnames = to, matvals = value, rowtype = "rowtype", coltype = "coltype", drop = 0)
+      }) %>%
+      bind_rows(.id = ".matrix") %>%
+      # Add Product column based on the matrix of origin of the value
+      mutate(
+        !!as.name(product) := case_when(
+          .matrix == U ~ !!as.name(from),
+          .matrix == V ~ !!as.name(to),
+          .matrix == Y ~ !!as.name(from),
+          TRUE ~ NA_character_
+        )
+      ) %>%
+      select(-rowtype, -coltype, -.matrix)
+    if (simplify_edges) {
+      # Look for edges where
+      #   * a Product occurs in only one edge in the FROM column and
+      #   * a Product occurs in only one edge in the TO column and
+      #   * the magnitude of both edges is the same.
+      # When this situation occurs, the same Product flows through a node that bears the name of the Product.
+      # The node can be removed and the edges connected.
+      # I.e., the two edges can be replaced by a single edge.
+      # Let's say we have this situation
+      #
+      #   From     To     Value    Product
+      #   .
+      #   .
+      #   .
+      #   A        Oil    42       Oil
+      #   Oil      C      42       Oil
+      #   .
+      #   .
+      #   .
+      #
+      # and Oil appears in no other edges.
+      # This can be replaced by
+      #
+      #   From     To     Value    Product
+      #   .
+      #   .
+      #   .
+      #   A        C      42       Oil
+      #   .
+      #   .
+      #   .
+      #
+      # when is.true(simplify_edges).
+
+      # Find all unique names in the from and to columns.
+      from_unique <- unique(expanded_mats[[from]])
+      to_unique <- unique(expanded_mats[[to]])
+
+    }
+    list(expanded_mats) %>% set_names(edge_list)
+  }
+  matsindf_apply(.sutdata, FUN = el_func, Umat = U, Vmat = V, Ymat = Y)
+}
+
+
 #'
 #' #' Add UVY, Commodity, Industry, row, and col columns to a tidy data frame
 #' #' containing IEA-formatted data.
