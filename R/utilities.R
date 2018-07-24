@@ -201,9 +201,8 @@ edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
       #
       # when is.true(simplify_edges).
 
-      # Find all unique names in the from and to columns.
-      from_unique <- unique(expanded_mats[[from]])
-      to_unique <- unique(expanded_mats[[to]])
+      # Find unique Products in the make matrix.
+      V_unique_products <- count_vals_incols_byname(Vmat, "!=", 0)
 
     }
     list(expanded_mats) %>% set_names(edge_list)
