@@ -34,6 +34,14 @@ that first appeared in Heun et al.~\cite{Heun:2017h}.
 
 Here is some text.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Making an edge list}
+\label{sec:edge_list}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Text about edge lists here.
+
+
 \bibliographystyle{plain}
 
 \bibliography{recca}
