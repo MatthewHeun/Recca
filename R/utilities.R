@@ -121,7 +121,6 @@ primary_industries <- function(.sutdata = NULL, U = "U", V = "V", p_industries =
 }
 
 
-
 #' Create an edge list
 #'
 #' An edge list is a data frame in which each row describes a flow from one entity to another.
@@ -211,51 +210,28 @@ edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
 
 #' Simplify an edge list
 #'
-#' An energy conversion chain edge list can be simplified if
-#' there is only one source for a
+#' A PSUT energy conversion chain edge can be simplified if
+#' a product has only one supplier (i.e., one "from").
+#' Then, every "to" node for that product can have the product's "from" be its "from".
+#' See examples.
 #'
-#' @param edge_list
-#' @param from
-#' @param to
-#' @param value
-#' @param product
+#' @param edge_list the edge list to be simplified
+#' @param from the name of the from column in the edge list. (Default is "\code{From}".)
+#' @param to the name of the to column in the edge list. (Default is "\code{To}".)
+#' @param value the name of the value column in the edge list. (Default is "\code{Value}".)
+#' @param product the name of the product column in the edge list. (Default is "\code{Product}".)
 #'
-#' @return
 #' @export
 #'
+#' @return a simplified edge list
+#'
 #' @examples
+#' el <- data.frame(From = c("A", "Oil"), To = c("Oil", "C"), Value = c(42, 42), Product = c("Oil", "Oil"), stringsAsFactors = FALSE)
+#' # Oil flows from A to C through its product node (Oil)
+#' el
+#' # Simplify to have Oil flow from A to C without the product node
+#' simplify_edge_list(el)
 simplify_edge_list <- function(edge_list, from = "From", to = "To", value = "Value", product = "Product"){
-  # Look for edges where
-  #   * a Product occurs in only one edge in the FROM column and
-  #   * a Product occurs in only one edge in the TO column and
-  #   * the magnitude of both edges is the same.
-  # When this situation occurs, the same Product flows through a node that bears the name of the Product.
-  # The node can be removed and the edges connected.
-  # I.e., the two edges can be replaced by a single edge.
-  # Let's say we have this situation
-  #
-  #   From     To     Value    Product
-  #   .
-  #   .
-  #   .
-  #   A        Oil    42       Oil
-  #   Oil      C      42       Oil
-  #   .
-  #   .
-  #   .
-  #
-  # and Oil appears in no other edges.
-  # This combination can be replaced by the following:
-  #
-  #   From     To     Value    Product
-  #   .
-  #   .
-  #   .
-  #   A        C      42       Oil
-  #   .
-  #   .
-  #   .
-
   # First step is to split the edge_list into two data frames.
   # One contains the portion of the edge_list that comes from the use (U) matrix.
   # The other contains the portion of the edge_list that comes from the make (V) matris.
@@ -298,7 +274,7 @@ simplify_edge_list <- function(edge_list, from = "From", to = "To", value = "Val
     # Now rbind with rows in U_entries that aren't simplified
     bind_rows(U_entries %>% filter(!(!!as.name(product) %in% products_to_simplify)))
 
-  # Now remove all of these products from the make (V) matrix rows.
+  # Now remove all of the simplified products from the make (V) matrix rows.
   Reduced_V_entries <- V_entries %>% filter(!(!!as.name(product) %in% products_to_simplify))
 
   # Recombine U_entries and V_entries to make the full edge list and return it.
@@ -307,21 +283,30 @@ simplify_edge_list <- function(edge_list, from = "From", to = "To", value = "Val
 
 #' Create waste energy edges for an edge map
 #'
-#' @param Umat
-#' @param Vmat
-#' @param from
-#' @param to
-#' @param value
-#' @param product
-#' @param waste
+#' Waste edges are created from the \code{W} matrix.
+#'
+#' The \code{waste} argument supplies both the name of the waste flow (default is "\code{Waste}")
+#' and the name of the destination of the waste flows.
+#'
+#' @param Umat a use matrix.
+#' @param Vmat a make matrix.
+#' @param from the name of the edge list column containing source nodes. (Default is "\code{From}".)
+#' @param to the name of the edge list column containing destination nodes. (Default is "\code{To}".)
+#' @param value the name of the edge list column containing magnitudes of the flows. (Default is "\code{Value}".)
+#' @param product the name of the edge list column containing the product of the edge list flow. (Default is "\code{Product}".)
+#' @param waste the name of the waste product and the destination node for wastes. (Default is "\code{Waste}".)
+#'
+#' @export
 #'
 #' @return
 #'
 #' @examples
+#' sutmats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
+#' edge_list(sutmats)$`Edge list`[[1]] %>% filter(Product == "Waste")
 waste_edges <- function(Umat, Vmat,
-                               from = "From", to = "To",
-                               value = "Value", product = "Product",
-                               waste = "Rejected energy") {
+                        from = "From", to = "To",
+                        value = "Value", product = "Product",
+                        waste = "Waste") {
   # Create edges for the waste sectors in a data frame.
   # Start by calculating the W matrix (V^T - U)
   difference_byname(transpose_byname(Vmat), Umat) %>%

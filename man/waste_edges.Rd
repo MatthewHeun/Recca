@@ -5,14 +5,34 @@
 \title{Create waste energy edges for an edge map}
 \usage{
 waste_edges(Umat, Vmat, from = "From", to = "To", value = "Value",
-  product = "Product", waste = "Rejected energy")
+  product = "Product", waste = "Waste")
 }
 \arguments{
-\item{waste}{}
+\item{Umat}{a use matrix.}
+
+\item{Vmat}{a make matrix.}
+
+\item{from}{the name of the edge list column containing source nodes. (Default is "\code{From}".)}
+
+\item{to}{the name of the edge list column containing destination nodes. (Default is "\code{To}".)}
+
+\item{value}{the name of the edge list column containing magnitudes of the flows. (Default is "\code{Value}".)}
+
+\item{product}{the name of the edge list column containing the product of the edge list flow. (Default is "\code{Product}".)}
+
+\item{waste}{the name of the waste product and the destination node for wastes. (Default is "\code{Waste}".)}
 }
 \value{
 
 }
 \description{
-Create waste energy edges for an edge map
+Waste edges are created from the \code{W} matrix.
+}
+\details{
+The \code{waste} argument supplies both the name of the waste flow (default is "\code{Waste}")
+and the name of the destination of the waste flows.
+}
+\examples{
+sutmats <- UKEnergy2000mats \%>\% spread(key = matrix.name, value = matrix)
+edge_list(sutmats)$`Edge list`[[1]] \%>\% filter(Product == "Waste")
 }
