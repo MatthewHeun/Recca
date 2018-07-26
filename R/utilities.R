@@ -122,31 +122,44 @@ primary_industries <- function(.sutdata = NULL, U = "U", V = "V", p_industries =
 
 
 
-#' Title
+#' Create an edge list
 #'
+#' An edge list is a data frame in which each row describes a flow from one entity to another.
+#' Columns in the edge list data frame are \code{From}, \code{To}, \code{Value}, and \code{Product}.
+#' The edge list can be created from the \code{U}, \code{V}, and \code{Y} matrices of an energy conversion chain.
+#' Edge lists is a typical data format for visulaization software.
 #'
+#' Optionally, waste streams can be calculated from the \code{U} and \code{V} matrices and
+#' added to the edge list.
+#' Optionally, edges can be simplified when a product has a single source.
+#' In that event, the node named after the product is removed,
+#' and destinations are connected to the sources.
 #'
+#' @param .sutdata Optionally, a data frame containing columns named with the values of the \code{U}, \code{V}, and \code{Y} arguments.
+#' @param U a use matrix of the name of a column in \code{.sutdata} containing use matrices. (Default is "\code{U}".)
+#' @param V a make matrix of the name of a column in \code{.sutdata} containing make matrices. (Default is "\code{V}".)
+#' @param Y a final demand matrix of the name of a column in \code{.sutdata} containing final demant matrices. (Default is "\code{Y}".)
+#' @param edge_list the name of the column in the output data frame containing edge lists. (Default is "\code{Edge list}".)
+#' @param from the name of the edge list column containing source nodes. (Default is "\code{From}".)
+#' @param to the name of the edge list column containing destination nodes. (Default is "\code{To}".)
+#' @param value the name of the edge list column containing magnitudes of the flows. (Default is "\code{Value}".)
+#' @param product the name of the edge list column containing the product of the edge list flow. (Default is "\code{Product}".)
+#' @param waste the name of the waste product and the destination node for wastes. (Default is "\code{Waste}".)
+#' @param simplify_edges if \code{TRUE}, products with only one source will not have a node.
+#' The source of the product will be connected directly to its consumers. If \code{FALSE}, no simplifications are made.
+#' (Default is \code{TRUE}.)
+#' @param include_waste if \code{TRUE}, edges for waste streams will be added to the edge list.
+#' If \code{FALSE}, no waste edges will be added. (Default is \code{TRUE}.)
 #'
-#' @param .sutdata
-#' @param U
-#' @param V
-#' @param Y
-#' @param edge_list
-#' @param from
-#' @param to
-#' @param value
-#' @param product
-#' @param rejected_energy
-#' @param simplify_edges
+#' @return an edge list or a column of edge lists
 #'
-#' @return
 #' @export
 #'
 #' @examples
 edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
-                      edge_list = "edge_list",
+                      edge_list = "Edge list",
                       from = "From", to = "To", value = "Value", product = "Product",
-                      rejected_energy = "Rejected Energy", simplify_edges = TRUE){
+                      waste = "Waste", simplify_edges = TRUE, include_waste = TRUE){
   # Figure out which Products have only one source and one destination.
   # These are the flows that can be collapsed in the edge list.
   el_func <- function(Umat, Vmat, Ymat){
@@ -169,6 +182,12 @@ edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
       select(-rowtype, -coltype, -.matrix)
     if (simplify_edges) {
       expanded_mats <- simplify_edge_list(expanded_mats, from, to, value, product)
+    }
+    if (include_waste) {
+      expanded_mats <- bind_rows(expanded_mats, waste_edges(Umat = Umat, Vmat = Vmat,
+                                                            from = from, to = to,
+                                                            value = value, product = product,
+                                                            waste = waste))
     }
     list(expanded_mats) %>% set_names(edge_list)
   }
@@ -226,7 +245,7 @@ simplify_edge_list <- function(edge_list, from = "From", to = "To", value = "Val
     select(!!as.name(product)) %>%
     unlist() %>%
     set_names(NULL)
-  # Now simplify the products.
+  # Now simplify the products in the U matrix entries by changing their from value.
   Simplified_U_entries <- lapply(products_to_simplify, FUN = function(p) {
     # Find the row in V_entries that pertain to product p
     V_entries_p <- V_entries %>% filter(!!as.name(product) == p)
@@ -250,58 +269,56 @@ simplify_edge_list <- function(edge_list, from = "From", to = "To", value = "Val
     # Now rbind with rows in U_entries that aren't simplified
     bind_rows(U_entries %>% filter(!(!!as.name(product) %in% products_to_simplify)))
 
-
-
-  # # This is a case where an old-fashioned for loop makes a lot of sense
-  # for (p in products_to_simplify) {
-  #   # Find the row in V_entries that pertain to product p
-  #   V_entries_p <- V_entries %>% filter(!!as.name(product) == p)
-  #   # Verify that there is only one row.
-  #   stopifnot(nrow(V_entries_p) == 1)
-  #   # Get the source of product p
-  #   source <- V_entries_p[[from]][[1]]
-  #   # Change the sources of all nodes that receive this product
-  #   # to be the single source of the product instead of p itself.
-  #   U_entries <- U_entries %>%
-  #     mutate(
-  #       !!as.name(from) := case_when(
-  #         !!as.name(product) == p ~ source,
-  #         TRUE ~ !!as.name(product)
-  #       )
-  #     )
-  # }
-
   # Now remove all of these products from the make (V) matrix rows.
   Reduced_V_entries <- V_entries %>% filter(!(!!as.name(product) %in% products_to_simplify))
 
   # Recombine U_entries and V_entries to make the full edge list and return it.
   bind_rows(Simplified_U_entries, Reduced_V_entries)
+}
 
-
-
-  # lapply(products_to_simplify, FUN = function(p){
-  #   # Find the row in V_entries that pertain to product p
-  #   V_entries_p <- V_entries %>% filter(!!as.name(product) == p)
-  #   # Verify that there is only one row.
-  #   stopifnot(nrow(V_entries_p) == 1)
-  #   # Get the source
-  #   source <- V_entries_p[[from]][[1]]
-  #   # Change the sources of all nodes that receive this product
-  #   # to be not the product itself but the source of the product
-  #   U_entries <- U_entries %>%
-  #     mutate(
-  #       !!as.name(from) := case_when(
-  #         !!as.name(product) == p ~ source,
-  #         TRUE ~ !!as.name(product)
-  #       )
-  #     )
-  #   # We no longer need this item in the make (V) portion of the edge list.
-  #   # So remove it from V_entries
-  #   V_entries <- anti_join(V_entries, V_entries_p, by = c(from, to, value, product))
-  # })
-
-
-
+#' Create waste energy edges for an edge map
+#'
+#' @param Umat
+#' @param Vmat
+#' @param from
+#' @param to
+#' @param value
+#' @param product
+#' @param waste
+#'
+#' @return
+#'
+#' @examples
+waste_edges <- function(Umat, Vmat,
+                               from = "From", to = "To",
+                               value = "Value", product = "Product",
+                               waste = "Rejected energy") {
+  # Create edges for the waste sectors in a data frame.
+  # Start by calculating the W matrix (V^T - U)
+  difference_byname(transpose_byname(Vmat), Umat) %>%
+    # The column sums of the W matrix contain positive and negative numbers.
+    # We're interested in the negative numbers, because those are industries that are generating waste.
+    # Positive numbers arise from industries that extract free gifts from nature.
+    colsums_byname() %>%
+    # industry names are column names of W. Put those as row names of the matrix by transposing.
+    transpose_byname() %>%
+    # As a data frame, we can filter and do other useful things.
+    # Furthermore, the edge list is a data frame, anyway.
+    as.data.frame() %>%
+    # The only column in this data frame contains the values of the waste heat flows.
+    # So call it by the desired value argument.
+    set_names(value) %>%
+    # The row names are the industry from which waste is generated.
+    # Put that in the from column.
+    rownames_to_column(from) %>%
+    # Select only those industries that have waste.
+    filter(!!as.name(value) < 0) %>%
+    mutate(
+      !!as.name(value) := abs(!!as.name(value)),
+      !!as.name(to) := waste,
+      !!as.name(product) := waste
+    ) %>%
+    select(from, to, value, product)
 }
 
 #'
