@@ -6,8 +6,8 @@
 \usage{
 edge_list(.sutdata = NULL, U = "U", V = "V", Y = "Y",
   edge_list = "Edge list", from = "From", to = "To", value = "Value",
-  product = "Product", waste = "Waste", simplify_edges = TRUE,
-  include_waste = TRUE)
+  product = "Product", waste = "Waste", node_id = "node_id",
+  edge_id = "edge_id", simplify_edges = TRUE)
 }
 \arguments{
 \item{.sutdata}{Optionally, a data frame containing columns named with the values of the \code{U}, \code{V}, and \code{Y} arguments.}
@@ -28,14 +28,12 @@ edge_list(.sutdata = NULL, U = "U", V = "V", Y = "Y",
 
 \item{product}{the name of the edge list column containing the product of the edge list flow. (Default is "\code{Product}".)}
 
-\item{waste}{the name of the waste product and the destination node for wastes. (Default is "\code{Waste}".)}
+\item{waste}{the name of the waste product and the destination node for wastes.
+Set \code{NULL} to suppress addition of waste edges. (Default is "\code{Waste}".)}
 
 \item{simplify_edges}{if \code{TRUE}, products with only one source will not have a node.
 The source of the product will be connected directly to its consumers. If \code{FALSE}, no simplifications are made.
 (Default is \code{TRUE}.)}
-
-\item{include_waste}{if \code{TRUE}, edges for waste streams will be added to the edge list.
-If \code{FALSE}, no waste edges will be added. (Default is \code{TRUE}.)}
 }
 \value{
 an edge list or a column of edge lists

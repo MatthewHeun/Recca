@@ -84,12 +84,10 @@ test_that("edge_list (unsimplified) works correctly", {
   # Verify a few of the data points
   el_final <- eldf$`Edge list`[[1]] %>%
     mutate_if(is.factor, as.character)
-  expect_equal(el_final %>%
-                 filter(From == "Crude - Dist.", To == "Crude dist.", Product == "Crude - Dist."),
-               data.frame(From = "Crude - Dist.", To = "Crude dist.", Value = 500, Product = "Crude - Dist.", stringsAsFactors = FALSE))
-  expect_equal(el_final %>%
-                 filter(From == "Crude dist.", To == "Crude - Dist.", Product == "Crude - Dist."),
-               data.frame(From = "Crude dist.", To = "Crude - Dist.", Value = 47500, Product = "Crude - Dist.", stringsAsFactors = FALSE))
+  expect_equivalent(el_final %>%
+                      filter(From == "Crude - Dist.", To == "Crude dist.", Product == "Crude - Dist.") %>% select(Value), 500)
+  expect_equivalent(el_final %>%
+                      filter(From == "Crude dist.", To == "Crude - Dist.", Product == "Crude - Dist.") %>% select(Value), 47500)
 })
 
 test_that("edge_list (simplified) works correctly", {
@@ -160,5 +158,10 @@ test_that("waste_edges works as expected", {
   expect_equal(el_final %>%
                  filter(From == "Gas wells & proc.", To == "Waste", Product == "Waste"),
                data.frame(From = "Gas wells & proc.", To = "Waste", Value = 2075, Product = "Waste", stringsAsFactors = FALSE))
+})
 
+test_that("add_edge_id works as expected", {
+  sutmats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
+  elDF <- edge_list(sutmats)
+  expect_equal(elDF$`Edge list`[[1]][["edge_id"]], seq(1, 39))
 })

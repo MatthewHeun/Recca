@@ -143,12 +143,11 @@ primary_industries <- function(.sutdata = NULL, U = "U", V = "V", p_industries =
 #' @param to the name of the edge list column containing destination nodes. (Default is "\code{To}".)
 #' @param value the name of the edge list column containing magnitudes of the flows. (Default is "\code{Value}".)
 #' @param product the name of the edge list column containing the product of the edge list flow. (Default is "\code{Product}".)
-#' @param waste the name of the waste product and the destination node for wastes. (Default is "\code{Waste}".)
+#' @param waste the name of the waste product and the destination node for wastes.
+#'              Set \code{NULL} to suppress addition of waste edges. (Default is "\code{Waste}".)
 #' @param simplify_edges if \code{TRUE}, products with only one source will not have a node.
 #' The source of the product will be connected directly to its consumers. If \code{FALSE}, no simplifications are made.
 #' (Default is \code{TRUE}.)
-#' @param include_waste if \code{TRUE}, edges for waste streams will be added to the edge list.
-#' If \code{FALSE}, no waste edges will be added. (Default is \code{TRUE}.)
 #'
 #' @return an edge list or a column of edge lists
 #'
@@ -172,7 +171,7 @@ primary_industries <- function(.sutdata = NULL, U = "U", V = "V", p_industries =
 edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
                       edge_list = "Edge list",
                       from = "From", to = "To", value = "Value", product = "Product",
-                      waste = "Waste", simplify_edges = TRUE, include_waste = TRUE){
+                      waste = "Waste", node_id = "node_id", edge_id = "edge_id", simplify_edges = TRUE){
   # Figure out which Products have only one source and one destination.
   # These are the flows that can be collapsed in the edge list.
   el_func <- function(Umat, Vmat, Ymat){
@@ -193,7 +192,7 @@ edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
       )
     el <- bind_rows(expandedUY, expandedV) %>%
       select(-rowtype, -coltype)
-    if (include_waste) {
+    if (!is.null(waste)) {
       el <- bind_rows(el, waste_edges(Umat = Umat, Vmat = Vmat,
                                       from = from, to = to,
                                       value = value, product = product,
@@ -202,9 +201,34 @@ edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
     if (simplify_edges) {
       el <- simplify_edge_list(el, from, to, value, product)
     }
+    if (!is.null(edge_id)) {
+      el <- add_edge_ids(el)
+    }
+    if (!is.null(node_id)) {
+      el <- add_node_ids(el)
+    }
     list(el) %>% set_names(edge_list)
   }
   matsindf_apply(.sutdata, FUN = el_func, Umat = U, Vmat = V, Ymat = Y)
+}
+
+
+add_node_ids <- function(edge_list, from = "From", to = "To", node_id = "node_id"){
+  from_id <- paste(from, node_id)
+  to_id <- paste(to, node_id)
+
+
+
+
+  # Just for now.
+  return(edge_list)
+}
+
+add_edge_ids <- function(edge_list, edge_id = "edge_id"){
+  edge_list %>%
+    mutate(
+      !!as.name(edge_id) := seq.int(nrow(edge_list))
+    )
 }
 
 
