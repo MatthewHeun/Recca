@@ -1,5 +1,10 @@
 # News for `Recca`
 
+## Recca 0.1.7 (2018-07-26)
+
+* Added new function `edge_list` which creates an edge list from U, V, and Y matrices.
+
+
 ## Recca 0.1.6 (2018-07-09)
 
 * Fixed a bug in `verify_IEATable_energy_balance`. 
