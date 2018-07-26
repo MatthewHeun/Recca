@@ -156,7 +156,7 @@ edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
         # Convert all to tidy (row, col, value) format
         mat_to_rowcolval(m, rownames = from, colnames = to, matvals = value, rowtype = "rowtype", coltype = "coltype", drop = 0)
       }) %>%
-      bind_rows(.id = ".matrix") %>%
+      bind_rows(.id = ".matrix") %>% View
       # Add Product column based on the matrix of origin of the value
       mutate(
         !!as.name(product) := case_when(
@@ -168,48 +168,87 @@ edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
       ) %>%
       select(-rowtype, -coltype, -.matrix)
     if (simplify_edges) {
-      # Look for edges where
-      #   * a Product occurs in only one edge in the FROM column and
-      #   * a Product occurs in only one edge in the TO column and
-      #   * the magnitude of both edges is the same.
-      # When this situation occurs, the same Product flows through a node that bears the name of the Product.
-      # The node can be removed and the edges connected.
-      # I.e., the two edges can be replaced by a single edge.
-      # Let's say we have this situation
-      #
-      #   From     To     Value    Product
-      #   .
-      #   .
-      #   .
-      #   A        Oil    42       Oil
-      #   Oil      C      42       Oil
-      #   .
-      #   .
-      #   .
-      #
-      # and Oil appears in no other edges.
-      # This can be replaced by
-      #
-      #   From     To     Value    Product
-      #   .
-      #   .
-      #   .
-      #   A        C      42       Oil
-      #   .
-      #   .
-      #   .
-      #
-      # when is.true(simplify_edges).
-
-      # Find unique Products in the make matrix.
-      V_unique_products <- count_vals_incols_byname(Vmat, "!=", 0)
-
+      expanded_mats <- simplify_edge_list(expanded_mats, from, to, value, product)
     }
     list(expanded_mats) %>% set_names(edge_list)
   }
   matsindf_apply(.sutdata, FUN = el_func, Umat = U, Vmat = V, Ymat = Y)
 }
 
+
+simplify_edge_list <- function(edge_list, from, to, value, product){
+  # Look for edges where
+  #   * a Product occurs in only one edge in the FROM column and
+  #   * a Product occurs in only one edge in the TO column and
+  #   * the magnitude of both edges is the same.
+  # When this situation occurs, the same Product flows through a node that bears the name of the Product.
+  # The node can be removed and the edges connected.
+  # I.e., the two edges can be replaced by a single edge.
+  # Let's say we have this situation
+  #
+  #   From     To     Value    Product
+  #   .
+  #   .
+  #   .
+  #   A        Oil    42       Oil
+  #   Oil      C      42       Oil
+  #   .
+  #   .
+  #   .
+  #
+  # and Oil appears in no other edges.
+  # This combination can be replaced by the following:
+  #
+  #   From     To     Value    Product
+  #   .
+  #   .
+  #   .
+  #   A        C      42       Oil
+  #   .
+  #   .
+  #   .
+
+  # Get the entries that would have come from the U matrix.
+  U_entries <- edge_list %>%
+    filter(!!as.name(from) == !!as.name(product))
+  num_U_entries <- U_entries %>%
+    group_by(!!as.name(product)) %>%
+    summarise(num_U_entries = length(product))
+  # Get the entries that would have come from the V matrix.
+  V_entries <- edge_list %>%
+    filter(!!as.name(to) == !!as.name(product))
+  num_V_entries <- V_entries %>%
+    group_by(!!as.name(product)) %>%
+    summarise(num_V_entries = length(product))
+  # Figure out which products can be simplified
+  products_to_simplify <- full_join(num_U_entries, num_V_entries, by = product) %>%
+    filter(num_U_entries == 1 & num_V_entries == 1) %>%
+    select(!!as.name(product)) %>%
+    unlist() %>%
+    set_names(NULL)
+  # Now simplify the products.
+  lapply(products_to_simplify, FUN = function(p){
+    # Find the rows in edge_list that pertain to product p
+    p_rows <- edge_list %>%
+      filter(!!as.name(product) == p)
+    # Verify that there are only 2 rows
+    stopifnot(nrow(p_rows) == 2)
+    # Verify that the value of the edge is same for both edges.
+    stopifnot(p_rows[[value]][[1]] == p_rows[[value]][[2]])
+    # We passed both tests, so convert to a single edge.
+    # Use the p entry from the make (V) matrix
+    # but replace the "to" item with the "to" entry from the use (U) matrix
+    new_edge <- V_entries %>% filter(!!as.name(product) == p)
+    new_edge[[to]][[1]] <- (U_entries %>% filter(!!as.name(product) == p))[[to]][[1]]
+
+    edge_list <- edge_list %>%
+      # Get rid of the p rows in edge_list
+      filter(!!as.name(product) != p) %>%
+      # Add new_edge to the edge_list
+      bind_rows(new_edge)
+  })
+  return(edge_list)
+}
 
 #'
 #' #' Add UVY, Commodity, Industry, row, and col columns to a tidy data frame
