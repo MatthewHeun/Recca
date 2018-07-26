@@ -156,6 +156,20 @@ primary_industries <- function(.sutdata = NULL, U = "U", V = "V", p_industries =
 #' @export
 #'
 #' @examples
+#' sutmats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
+#' # Don't simplify edges and don't include waste edges
+#' el_basic <- edge_list(sutmats, simplify_edges = FALSE, include_waste = FALSE)
+#' head(el_basic$`Edge list`[[1]])
+#' tail(el_basic$`Edge list`[[1]])
+#' # Simplify edges and include waste
+#' el <- edge_list(sutmats)
+#' head(el$`Edge list`[[1]])
+#' # Now includes waste edges
+#' tail(el$`Edge list`[[1]])
+#' # Works with single matrices, too.
+#' elmats <- edge_list(U = sutmats$U[[1]], V = sutmats$V[[1]], Y = sutmats$Y[[1]])
+#' head(elmats[["Edge list"]])
+#' tail(elmats[["Edge list"]])
 edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
                       edge_list = "Edge list",
                       from = "From", to = "To", value = "Value", product = "Product",
@@ -164,37 +178,52 @@ edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
   # These are the flows that can be collapsed in the edge list.
   el_func <- function(Umat, Vmat, Ymat){
     # At this point, Umat, Vmat, and Ymat should be single matrices.
-    expanded_mats <- list(U = Umat, V = Vmat, Y = Ymat) %>%
+    expandedUY <- list(Umat, Ymat) %>%
       lapply(FUN = function(m){
         # Convert all to tidy (row, col, value) format
         mat_to_rowcolval(m, rownames = from, colnames = to, matvals = value, rowtype = "rowtype", coltype = "coltype", drop = 0)
       }) %>%
-      bind_rows(.id = ".matrix") %>%
-      # Add Product column based on the matrix of origin of the value
+      bind_rows() %>%
       mutate(
-        !!as.name(product) := case_when(
-          .matrix == U ~ !!as.name(from),
-          .matrix == V ~ !!as.name(to),
-          .matrix == Y ~ !!as.name(from),
-          TRUE ~ NA_character_
-        )
-      ) %>%
-      select(-rowtype, -coltype, -.matrix)
-    if (simplify_edges) {
-      expanded_mats <- simplify_edge_list(expanded_mats, from, to, value, product)
-    }
+        !!as.name(product) := !!as.name(from)
+      )
+    expandedV <- mat_to_rowcolval(Vmat, rownames = from, colnames = to, matvals = value, rowtype = "rowtype", coltype = "coltype", drop = 0) %>%
+      as.data.frame() %>%
+      mutate(
+        !!as.name(product) := !!as.name(to)
+      )
+    el <- bind_rows(expandedUY, expandedV) %>%
+      select(-rowtype, -coltype)
     if (include_waste) {
-      expanded_mats <- bind_rows(expanded_mats, waste_edges(Umat = Umat, Vmat = Vmat,
-                                                            from = from, to = to,
-                                                            value = value, product = product,
-                                                            waste = waste))
+      el <- bind_rows(el, waste_edges(Umat = Umat, Vmat = Vmat,
+                                      from = from, to = to,
+                                      value = value, product = product,
+                                      waste = waste))
     }
-    list(expanded_mats) %>% set_names(edge_list)
+    if (simplify_edges) {
+      el <- simplify_edge_list(el, from, to, value, product)
+    }
+    list(el) %>% set_names(edge_list)
   }
   matsindf_apply(.sutdata, FUN = el_func, Umat = U, Vmat = V, Ymat = Y)
 }
 
 
+#' Simplify an edge list
+#'
+#' An energy conversion chain edge list can be simplified if
+#' there is only one source for a
+#'
+#' @param edge_list
+#' @param from
+#' @param to
+#' @param value
+#' @param product
+#'
+#' @return
+#' @export
+#'
+#' @examples
 simplify_edge_list <- function(edge_list, from = "From", to = "To", value = "Value", product = "Product"){
   # Look for edges where
   #   * a Product occurs in only one edge in the FROM column and
@@ -240,7 +269,7 @@ simplify_edge_list <- function(edge_list, from = "From", to = "To", value = "Val
   # We find this information from the make (V) matrix entries
   products_to_simplify <- V_entries %>%
     group_by(!!as.name(product)) %>%
-    summarise(num_V_entries = length(product)) %>%
+    summarise(num_V_entries = length(!!as.name(product))) %>%
     filter(num_V_entries == 1) %>%
     select(!!as.name(product)) %>%
     unlist() %>%

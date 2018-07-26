@@ -135,4 +135,30 @@ test_that("waste_edges works as expected", {
   expect_equal(el_final %>%
                  filter(From == "Gas wells & proc.", To == "Waste", Product == "Waste"),
                data.frame(From = "Gas wells & proc.", To = "Waste", Value = 2075, Product = "Waste", stringsAsFactors = FALSE))
+
+  # Test waste_edges when only matrices are specified
+  Umat <- sutmats$U[[1]]
+  Vmat <- sutmats$V[[1]]
+  Ymat <- sutmats$Y[[1]]
+  el_final <- edge_list(U = Umat, V = Vmat, Y = Ymat)[["Edge list"]]
+  expect_equal(el_final %>%
+                 filter(From == "Crude dist.", To == "Crude dist.", Product == "Crude - Dist."),
+               data.frame(From = "Crude dist.", To = "Crude dist.", Value = 500, Product = "Crude - Dist.", stringsAsFactors = FALSE))
+  expect_equal(el_final %>%
+                 filter(From == "Elect. grid", To == "Residential", Product == "Elect - Grid"),
+               data.frame(From = "Elect. grid", To = "Residential", Value = 6000, Product = "Elect - Grid", stringsAsFactors = FALSE))
+  expect_equal(el_final %>%
+                 filter(From == "Oil refineries", To == "Oil refineries", Product == "Diesel"),
+               data.frame(From = "Oil refineries", To = "Oil refineries", Value = 5000, Product = "Diesel", stringsAsFactors = FALSE))
+
+  expect_equal(el_final %>%
+                 filter(From == "Crude dist.", To == "Waste", Product == "Waste"),
+               data.frame(From = "Crude dist.", To = "Waste", Value = 550, Product = "Waste", stringsAsFactors = FALSE))
+  expect_equal(el_final %>%
+                 filter(From == "Power plants", To == "Waste", Product == "Waste"),
+               data.frame(From = "Power plants", To = "Waste", Value = 9700, Product = "Waste", stringsAsFactors = FALSE))
+  expect_equal(el_final %>%
+                 filter(From == "Gas wells & proc.", To == "Waste", Product == "Waste"),
+               data.frame(From = "Gas wells & proc.", To = "Waste", Value = 2075, Product = "Waste", stringsAsFactors = FALSE))
+
 })

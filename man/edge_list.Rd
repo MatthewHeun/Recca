@@ -53,3 +53,19 @@ Optionally, edges can be simplified when a product has a single source.
 In that event, the node named after the product is removed,
 and destinations are connected to the sources.
 }
+\examples{
+sutmats <- UKEnergy2000mats \%>\% spread(key = matrix.name, value = matrix)
+# Don't simplify edges and don't include waste edges
+el_basic <- edge_list(sutmats, simplify_edges = FALSE, include_waste = FALSE)
+head(el_basic$`Edge list`[[1]])
+tail(el_basic$`Edge list`[[1]])
+# Simplify edges and include waste
+el <- edge_list(sutmats)
+head(el$`Edge list`[[1]])
+# Now includes waste edges
+tail(el$`Edge list`[[1]])
+# Works with single matrices, too.
+elmats <- edge_list(U = sutmats$U[[1]], V = sutmats$V[[1]], Y = sutmats$Y[[1]])
+head(elmats[["Edge list"]])
+tail(elmats[["Edge list"]])
+}
