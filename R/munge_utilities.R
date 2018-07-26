@@ -38,7 +38,7 @@ S_units_from_tidy <- function(.tidydf, Product = "Product", Unit = "Unit", S_uni
       !!as.name(rowtype) := "Product",
       !!as.name(coltype) := "Unit"
     ) %>%
-    collapse_to_matrices(matnames = S_units, values = val,
+    collapse_to_matrices(matnames = S_units, matvals = val,
                          rownames = as.character(Product), colnames = as.character(Unit),
                          rowtypes = rowtype, coltypes = coltype) %>%
     rename(

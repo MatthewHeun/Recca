@@ -1,5 +1,19 @@
 # News for `Recca`
 
+## Recca 0.1.7 (2018-07-26)
+
+* Added new function `edge_list` which creates an edge list from U, V, and Y matrices.
+
+
+## Recca 0.1.6 (2018-07-09)
+
+* Fixed a bug in `verify_IEATable_energy_balance`. 
+  `err` --> `as.name(err)`.
+* Fixed a bug in `S_units_from_tidy`.
+  Needed to change an argument name for `matsindf::collapse_to_matrices`
+  from `values` --> `matvals`.
+
+
 ## Recca 0.1.5 (2018-07-02)
 
 * Added a column in the output of `verify_SUT_industry_production` that 
