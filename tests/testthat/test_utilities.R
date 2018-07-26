@@ -78,8 +78,38 @@ test_that("primary_industries works correctly", {
 context("Edge list")
 ###########################################################
 
-test_that("edge_list works correctly", {
+test_that("edge_list (unsimplified) works correctly", {
   mats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
-  el <- edge_list(mats)
+  eldf <- edge_list(mats, simplify_edges = FALSE)
+  # Verify a few of the data points
+  el_final <- eldf$edge_list[[1]] %>%
+    mutate_if(is.factor, as.character)
+  expect_equal(el_final %>%
+                 filter(From == "Crude - Dist.", To == "Crude dist.", Product == "Crude - Dist."),
+               data.frame(From = "Crude - Dist.", To = "Crude dist.", Value = 500, Product = "Crude - Dist.", stringsAsFactors = FALSE))
+  expect_equal(el_final %>%
+                 filter(From == "Crude dist.", To == "Crude - Dist.", Product == "Crude - Dist."),
+               data.frame(From = "Crude dist.", To = "Crude - Dist.", Value = 47500, Product = "Crude - Dist.", stringsAsFactors = FALSE))
+})
 
+test_that("edge_list (simplified) works correctly", {
+  # Make a simple edge list that should be simplified.
+  el <- data.frame(From = c("A", "Oil"), To = c("Oil", "C"), Value = c(42, 42), Product = c("Oil", "Oil"), stringsAsFactors = FALSE)
+  el_simple <- Recca:::simplify_edge_list(el)
+  expect_equal(el_simple, data.frame(From = "A", To = "C", Value = 42, Product = "Oil", stringsAsFactors = FALSE))
+
+  # Try another edge list that should be simplified, one that loops back on itself in self-use fashion.
+  el_A <- data.frame(From = c("A", "Oil"), To = c("Oil", "A"), Value = c(42, 42), Product = c("Oil", "Oil"), stringsAsFactors = FALSE)
+  el_simple_A <- Recca:::simplify_edge_list(el_A)
+  expect_equal(el_simple_A, data.frame(From = "A", To = "A", Value = 42, Product = "Oil", stringsAsFactors = FALSE))
+
+  # Now try with a bigger ECC.
+  mats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
+  eldf_simplified <- edge_list(mats, simplify_edges = TRUE)
+  el_final_simplified <- eldf_simplified$edge_list[[1]] %>%
+    mutate_if(is.factor, as.character)
+  # Verify a few of the data points
+  expect_equal(el_final_simplified %>%
+                 filter(From == "Crude dist.", To == "Crude dist.", Product == "Crude - Dist."),
+               data.frame(From = "Crude dist.", To = "Crude dist.", Value = 500, Product = "Crude - Dist.", stringsAsFactors = FALSE))
 })

@@ -156,7 +156,7 @@ edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
         # Convert all to tidy (row, col, value) format
         mat_to_rowcolval(m, rownames = from, colnames = to, matvals = value, rowtype = "rowtype", coltype = "coltype", drop = 0)
       }) %>%
-      bind_rows(.id = ".matrix") %>% View
+      bind_rows(.id = ".matrix") %>%
       # Add Product column based on the matrix of origin of the value
       mutate(
         !!as.name(product) := case_when(
@@ -176,7 +176,7 @@ edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
 }
 
 
-simplify_edge_list <- function(edge_list, from, to, value, product){
+simplify_edge_list <- function(edge_list, from = "From", to = "To", value = "Value", product = "Product"){
   # Look for edges where
   #   * a Product occurs in only one edge in the FROM column and
   #   * a Product occurs in only one edge in the TO column and
@@ -208,46 +208,100 @@ simplify_edge_list <- function(edge_list, from, to, value, product){
   #   .
   #   .
 
+  # First step is to split the edge_list into two data frames.
+  # One contains the portion of the edge_list that comes from the use (U) matrix.
+  # The other contains the portion of the edge_list that comes from the make (V) matris.
   # Get the entries that would have come from the U matrix.
-  U_entries <- edge_list %>%
-    filter(!!as.name(from) == !!as.name(product))
-  num_U_entries <- U_entries %>%
-    group_by(!!as.name(product)) %>%
-    summarise(num_U_entries = length(product))
+  U_entries <- edge_list %>% filter(!!as.name(from) == !!as.name(product))
   # Get the entries that would have come from the V matrix.
-  V_entries <- edge_list %>%
-    filter(!!as.name(to) == !!as.name(product))
-  num_V_entries <- V_entries %>%
-    group_by(!!as.name(product)) %>%
-    summarise(num_V_entries = length(product))
+  V_entries <- edge_list %>% filter(!!as.name(to) == !!as.name(product))
   # Figure out which products can be simplified
-  products_to_simplify <- full_join(num_U_entries, num_V_entries, by = product) %>%
-    filter(num_U_entries == 1 & num_V_entries == 1) %>%
+  # An edge for a product can be simplified if it has only one "From",
+  # i.e., the product has only one source.
+  # We find this information from the make (V) matrix entries
+  products_to_simplify <- V_entries %>%
+    group_by(!!as.name(product)) %>%
+    summarise(num_V_entries = length(product)) %>%
+    filter(num_V_entries == 1) %>%
     select(!!as.name(product)) %>%
     unlist() %>%
     set_names(NULL)
   # Now simplify the products.
-  lapply(products_to_simplify, FUN = function(p){
-    # Find the rows in edge_list that pertain to product p
-    p_rows <- edge_list %>%
-      filter(!!as.name(product) == p)
-    # Verify that there are only 2 rows
-    stopifnot(nrow(p_rows) == 2)
-    # Verify that the value of the edge is same for both edges.
-    stopifnot(p_rows[[value]][[1]] == p_rows[[value]][[2]])
-    # We passed both tests, so convert to a single edge.
-    # Use the p entry from the make (V) matrix
-    # but replace the "to" item with the "to" entry from the use (U) matrix
-    new_edge <- V_entries %>% filter(!!as.name(product) == p)
-    new_edge[[to]][[1]] <- (U_entries %>% filter(!!as.name(product) == p))[[to]][[1]]
+  Simplified_U_entries <- lapply(products_to_simplify, FUN = function(p) {
+    # Find the row in V_entries that pertain to product p
+    V_entries_p <- V_entries %>% filter(!!as.name(product) == p)
+    # Verify that there is only one row.
+    stopifnot(nrow(V_entries_p) == 1)
+    # Get the source of product p
+    source <- V_entries_p[[from]][[1]]
+    # Change the sources of all nodes that receive this product
+    # to be the single source of the product instead of p itself.
+    U_entries %>%
+      filter(!!as.name(product) == p) %>%
+      mutate(
+        !!as.name(from) := case_when(
+          !!as.name(product) == p ~ source,
+          TRUE ~ !!as.name(product)
+        )
+      )
+  }) %>%
+    # rbind all of these together
+    bind_rows() %>%
+    # Now rbind with rows in U_entries that aren't simplified
+    bind_rows(U_entries %>% filter(!(!!as.name(product) %in% products_to_simplify)))
 
-    edge_list <- edge_list %>%
-      # Get rid of the p rows in edge_list
-      filter(!!as.name(product) != p) %>%
-      # Add new_edge to the edge_list
-      bind_rows(new_edge)
-  })
-  return(edge_list)
+
+
+  # # This is a case where an old-fashioned for loop makes a lot of sense
+  # for (p in products_to_simplify) {
+  #   # Find the row in V_entries that pertain to product p
+  #   V_entries_p <- V_entries %>% filter(!!as.name(product) == p)
+  #   # Verify that there is only one row.
+  #   stopifnot(nrow(V_entries_p) == 1)
+  #   # Get the source of product p
+  #   source <- V_entries_p[[from]][[1]]
+  #   # Change the sources of all nodes that receive this product
+  #   # to be the single source of the product instead of p itself.
+  #   U_entries <- U_entries %>%
+  #     mutate(
+  #       !!as.name(from) := case_when(
+  #         !!as.name(product) == p ~ source,
+  #         TRUE ~ !!as.name(product)
+  #       )
+  #     )
+  # }
+
+  # Now remove all of these products from the make (V) matrix rows.
+  Reduced_V_entries <- V_entries %>% filter(!(!!as.name(product) %in% products_to_simplify))
+
+  # Recombine U_entries and V_entries to make the full edge list and return it.
+  bind_rows(Simplified_U_entries, Reduced_V_entries)
+
+
+
+  # lapply(products_to_simplify, FUN = function(p){
+  #   # Find the row in V_entries that pertain to product p
+  #   V_entries_p <- V_entries %>% filter(!!as.name(product) == p)
+  #   # Verify that there is only one row.
+  #   stopifnot(nrow(V_entries_p) == 1)
+  #   # Get the source
+  #   source <- V_entries_p[[from]][[1]]
+  #   # Change the sources of all nodes that receive this product
+  #   # to be not the product itself but the source of the product
+  #   U_entries <- U_entries %>%
+  #     mutate(
+  #       !!as.name(from) := case_when(
+  #         !!as.name(product) == p ~ source,
+  #         TRUE ~ !!as.name(product)
+  #       )
+  #     )
+  #   # We no longer need this item in the make (V) portion of the edge list.
+  #   # So remove it from V_entries
+  #   V_entries <- anti_join(V_entries, V_entries_p, by = c(from, to, value, product))
+  # })
+
+
+
 }
 
 #'
