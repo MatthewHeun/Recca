@@ -120,6 +120,7 @@ primary_industries <- function(.sutdata = NULL, U = "U", V = "V", p_industries =
   matsindf_apply(.sutdata, FUN = p_ind_func, U = U, V = V)
 }
 
+
 #'
 #' #' Add UVY, Commodity, Industry, row, and col columns to a tidy data frame
 #' #' containing IEA-formatted data.

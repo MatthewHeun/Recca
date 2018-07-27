@@ -72,3 +72,4 @@ test_that("primary_industries works correctly", {
     expect_equal(primary_industries(U = mats$U[[i]], V = mats$V[[i]]) %>% set_names(NULL) %>% unlist(), expected)
   }
 })
+
