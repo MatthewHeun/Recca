@@ -181,3 +181,18 @@ test_that("add_edge_id works as expected", {
   elDF <- edge_list(sutmats)
   expect_equal(elDF$`Edge list`[[1]][["edge_id"]], seq(1, 39))
 })
+
+test_that("add_node_id_works as expected", {
+  sutmats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
+  elDF <- edge_list(sutmats)
+  edge_lists <- elDF$`Edge list`
+  for (el in edge_lists) {
+    # Test every edge list to ensure that node IDs are matched with same node names everywhere
+    fromIDs <- el %>% select(From, From_node_id) %>% rename(Name = From, ID = From_node_id)
+    toIDs <- el %>% select(To, To_node_id) %>% rename(Name = To, ID = To_node_id)
+    fromtoIDs <- bind_rows(fromIDs, toIDs)
+    n_unique_pairs <- fromtoIDs %>% unique() %>% nrow()
+    n_unique_names <- fromtoIDs %>% select(Name) %>% unique() %>% nrow()
+    expect_equal(n_unique_pairs, n_unique_names)
+  }
+})
