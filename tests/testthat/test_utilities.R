@@ -85,9 +85,13 @@ test_that("edge_list (unsimplified) works correctly", {
   el_final <- eldf$`Edge list`[[1]] %>%
     mutate_if(is.factor, as.character)
   expect_equivalent(el_final %>%
-                      filter(From == "Crude - Dist.", To == "Crude dist.", Product == "Crude - Dist.") %>% select(Value), 500)
+                      filter(From == "Crude - Dist.", To == "Crude dist.", Product == "Crude - Dist.") %>%
+                      select(Value),
+                    500)
   expect_equivalent(el_final %>%
-                      filter(From == "Crude dist.", To == "Crude - Dist.", Product == "Crude - Dist.") %>% select(Value), 47500)
+                      filter(From == "Crude dist.", To == "Crude - Dist.", Product == "Crude - Dist.") %>%
+                      select(Value),
+                    47500)
 })
 
 test_that("edge_list (simplified) works correctly", {
@@ -107,15 +111,18 @@ test_that("edge_list (simplified) works correctly", {
   el_final_simplified <- eldf_simplified$`Edge list`[[1]] %>%
     mutate_if(is.factor, as.character)
   # Verify a few of the data points
-  expect_equal(el_final_simplified %>%
-                 filter(From == "Crude dist.", To == "Crude dist.", Product == "Crude - Dist."),
-               data.frame(From = "Crude dist.", To = "Crude dist.", Value = 500, Product = "Crude - Dist.", stringsAsFactors = FALSE))
-  expect_equal(el_final_simplified %>%
-                 filter(From == "Elect. grid", To == "Residential", Product == "Elect - Grid"),
-               data.frame(From = "Elect. grid", To = "Residential", Value = 6000, Product = "Elect - Grid", stringsAsFactors = FALSE))
-  expect_equal(el_final_simplified %>%
-                 filter(From == "Oil refineries", To == "Oil refineries", Product == "Diesel"),
-               data.frame(From = "Oil refineries", To = "Oil refineries", Value = 5000, Product = "Diesel", stringsAsFactors = FALSE))
+  expect_equivalent(el_final_simplified %>%
+                      filter(From == "Crude dist.", To == "Crude dist.", Product == "Crude - Dist.") %>%
+                      select(Value),
+                    500)
+  expect_equivalent(el_final_simplified %>%
+                      filter(From == "Elect. grid", To == "Residential", Product == "Elect - Grid") %>%
+                      select(Value),
+                    6000)
+  expect_equivalent(el_final_simplified %>%
+                      filter(From == "Oil refineries", To == "Oil refineries", Product == "Diesel") %>%
+                      select(Value),
+                    5000)
 })
 
 test_that("waste_edges works as expected", {
@@ -124,40 +131,49 @@ test_that("waste_edges works as expected", {
   el_final <- eldf$`Edge list`[[1]] %>%
     mutate_if(is.factor, as.character)
   # Verify that a few of the numbers are correct
-  expect_equal(el_final %>%
-                 filter(From == "Crude dist.", To == "Waste", Product == "Waste"),
-               data.frame(From = "Crude dist.", To = "Waste", Value = 550, Product = "Waste", stringsAsFactors = FALSE))
-  expect_equal(el_final %>%
-                 filter(From == "Power plants", To == "Waste", Product == "Waste"),
-               data.frame(From = "Power plants", To = "Waste", Value = 9700, Product = "Waste", stringsAsFactors = FALSE))
-  expect_equal(el_final %>%
-                 filter(From == "Gas wells & proc.", To == "Waste", Product == "Waste"),
-               data.frame(From = "Gas wells & proc.", To = "Waste", Value = 2075, Product = "Waste", stringsAsFactors = FALSE))
+  expect_equivalent(el_final %>%
+                      filter(From == "Crude dist.", To == "Waste", Product == "Waste") %>%
+                      select(Value),
+                    550)
+  expect_equivalent(el_final %>%
+                      filter(From == "Power plants", To == "Waste", Product == "Waste") %>%
+                      select(Value),
+                    9700)
+  expect_equivalent(el_final %>%
+                      filter(From == "Gas wells & proc.", To == "Waste", Product == "Waste") %>%
+                      select(Value),
+                    2075)
 
   # Test waste_edges when only matrices are specified
   Umat <- sutmats$U[[1]]
   Vmat <- sutmats$V[[1]]
   Ymat <- sutmats$Y[[1]]
   el_final <- edge_list(U = Umat, V = Vmat, Y = Ymat)[["Edge list"]]
-  expect_equal(el_final %>%
-                 filter(From == "Crude dist.", To == "Crude dist.", Product == "Crude - Dist."),
-               data.frame(From = "Crude dist.", To = "Crude dist.", Value = 500, Product = "Crude - Dist.", stringsAsFactors = FALSE))
-  expect_equal(el_final %>%
-                 filter(From == "Elect. grid", To == "Residential", Product == "Elect - Grid"),
-               data.frame(From = "Elect. grid", To = "Residential", Value = 6000, Product = "Elect - Grid", stringsAsFactors = FALSE))
-  expect_equal(el_final %>%
-                 filter(From == "Oil refineries", To == "Oil refineries", Product == "Diesel"),
-               data.frame(From = "Oil refineries", To = "Oil refineries", Value = 5000, Product = "Diesel", stringsAsFactors = FALSE))
+  expect_equivalent(el_final %>%
+                      filter(From == "Crude dist.", To == "Crude dist.", Product == "Crude - Dist.") %>%
+                      select(Value),
+                    500)
+  expect_equivalent(el_final %>%
+                      filter(From == "Elect. grid", To == "Residential", Product == "Elect - Grid") %>%
+                      select(Value),
+                    6000)
+  expect_equivalent(el_final %>%
+                      filter(From == "Oil refineries", To == "Oil refineries", Product == "Diesel") %>%
+                      select(Value),
+                    5000)
 
-  expect_equal(el_final %>%
-                 filter(From == "Crude dist.", To == "Waste", Product == "Waste"),
-               data.frame(From = "Crude dist.", To = "Waste", Value = 550, Product = "Waste", stringsAsFactors = FALSE))
-  expect_equal(el_final %>%
-                 filter(From == "Power plants", To == "Waste", Product == "Waste"),
-               data.frame(From = "Power plants", To = "Waste", Value = 9700, Product = "Waste", stringsAsFactors = FALSE))
-  expect_equal(el_final %>%
-                 filter(From == "Gas wells & proc.", To == "Waste", Product == "Waste"),
-               data.frame(From = "Gas wells & proc.", To = "Waste", Value = 2075, Product = "Waste", stringsAsFactors = FALSE))
+  expect_equivalent(el_final %>%
+                      filter(From == "Crude dist.", To == "Waste", Product == "Waste") %>%
+                      select(Value),
+                    550)
+  expect_equivalent(el_final %>%
+                     filter(From == "Power plants", To == "Waste", Product == "Waste") %>%
+                     select(Value),
+                   9700)
+  expect_equivalent(el_final %>%
+                      filter(From == "Gas wells & proc.", To == "Waste", Product == "Waste") %>%
+                      select(Value),
+                    2075)
 })
 
 test_that("add_edge_id works as expected", {

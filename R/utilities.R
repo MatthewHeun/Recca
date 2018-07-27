@@ -214,14 +214,42 @@ edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
 
 
 add_node_ids <- function(edge_list, from = "From", to = "To", node_id = "node_id"){
-  from_id <- paste(from, node_id)
-  to_id <- paste(to, node_id)
-
-
-
-
-  # Just for now.
-  return(edge_list)
+  from_id <- paste0(from, "_", node_id)
+  to_id <- paste0(to, "_", node_id)
+  # Gather a list of all node names
+  node_names <- ".node_names"
+  # Make a 1-column data frame containing all of the node names.
+  NodeNameID <- data.frame(unique(c(edge_list[[from]], edge_list[[to]])), stringsAsFactors = FALSE) %>%
+    # Set the name of the only column.
+    set_names(node_names) %>%
+    # Add node_ids
+    mutate(
+      !!as.name(node_id) := seq.int(nrow(.))
+    )
+  # Add node IDs for the from nodes.
+  edge_list <- left_join(edge_list,
+                         NodeNameID %>%
+                           rename(
+                             !!as.name(from) := !!as.name(node_names),
+                             !!as.name(from_id) := !!as.name(node_id)
+                            ),
+                         by = from)
+  edge_list <- left_join(edge_list,
+                         NodeNameID %>%
+                           rename(
+                             !!as.name(to) := !!as.name(node_names),
+                             !!as.name(to_id) := !!as.name(node_id)
+                           ),
+                         by = to)
+  # edge_list %>%
+  #   # Add node IDs for the From nodes
+  #   left_join(NodeNameID %>%
+  #               rename(!!as.name(from_id) := !!as.name(node_id)),
+  #             by = c(!!as.name(from) = ".node_names")) %>%
+  #   # Add node IDs for the To nodes
+  #   left_join(NodeNameID %>%
+  #               rename(!!as.name(to_id) := !!as.name(node_id)),
+  #             by = c("To" = ".node_names"))
 }
 
 add_edge_ids <- function(edge_list, edge_id = "edge_id"){
