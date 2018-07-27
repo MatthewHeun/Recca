@@ -131,3 +131,15 @@ test_that("add_node_id_works as expected", {
     expect_equal(n_unique_names, n_unique_ids)
   }
 })
+
+test_that("node_list works as expected", {
+  sutmats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
+  el <- edge_list(sutmats)$`Edge list`[[1]]
+  nl <- node_list(el)
+  # Verify a few of the node numbers
+  expect_equal(filter(nl, Node == "Resources - Crude")$node_id, 1)
+  expect_equal(filter(nl, Node == "Diesel dist.")$node_id, 5)
+  expect_equal(filter(nl, Node == "NG dist.")$node_id, 9)
+  expect_equal(filter(nl, Node == "Transport")$node_id, 12)
+  expect_equal(filter(nl, Node == "Waste")$node_id, 14)
+})

@@ -309,17 +309,21 @@ waste_edges <- function(Umat, Vmat,
     select(from, to, value, product)
 }
 
+
 #' Create a node list
 #'
-#' Node lists are created from edge lists that include node IDs.
+#' A node list is a data frame containing node names and associated node ID numbers.
+#' This function creates a node list from an edge list, as shown in the examples.
 #'
-#' @param edge_list
-#' @param from
-#' @param to
-#' @param node
-#' @param node_id
+#' See \code{\link{edge_list}} for a function to create edge lists.
 #'
-#' @return
+#' @param edge_list an edge list data frame.
+#' @param from the name of the \code{edge_list} column containing names of source nodes. (Default is "\code{From}".)
+#' @param to the name of the \code{edge_list} column containing names of destination nodes. (Default is "\code{To}".)
+#' @param node the name of the output column containing node names. (Default is "\code{Node}".)
+#' @param node_id the name of the output column containing node ID numbers. (Default is "\code{node_id}".)
+#'
+#' @return a node list
 #'
 #' @export
 #'
@@ -328,16 +332,16 @@ waste_edges <- function(Umat, Vmat,
 #' el <- edge_list(sutmats)$`Edge list`[[1]]
 #' node_list(el)
 node_list <- function(edge_list, from = "From", to = "To", node = "Node", node_id = "node_id"){
-  fromID <- paste0(from, node_id)
-  toID <- paste0(to, node_id)
+  fromID <- paste0(from, "_", node_id)
+  toID <- paste0(to, "_", node_id)
   fromIDs <- edge_list %>%
-    select(!!as.name(from), !!as.name(node_id)) %>%
+    select(!!as.name(from), !!as.name(fromID)) %>%
     rename(
       !!as.name(node) := !!as.name(from),
       !!as.name(node_id) := !!as.name(fromID)
     )
   toIDs <- edge_list %>%
-    select(!!as.name(to), !!as.name(node_id)) %>%
+    select(!!as.name(to), !!as.name(toID)) %>%
     rename(
       !!as.name(node) := !!as.name(to),
       !!as.name(node_id) := !!as.name(toID)
