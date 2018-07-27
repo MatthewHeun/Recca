@@ -18,7 +18,9 @@ edge_list(.sutdata = NULL, U = "U", V = "V", Y = "Y",
 
 \item{Y}{a final demand matrix of the name of a column in \code{.sutdata} containing final demant matrices. (Default is "\code{Y}".)}
 
-\item{edge_list}{the name of the column in the output data frame containing edge lists. (Default is "\code{Edge list}".)}
+\item{edge_list}{the name of the column in the output data frame containing edge lists.
+Or the name of the item in the return list if .sutdata is not specified.
+(Default is "\code{Edge list}".)}
 
 \item{from}{the name of the edge list column containing source nodes. (Default is "\code{From}".)}
 
