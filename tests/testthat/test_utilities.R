@@ -193,6 +193,8 @@ test_that("add_node_id_works as expected", {
     fromtoIDs <- bind_rows(fromIDs, toIDs)
     n_unique_pairs <- fromtoIDs %>% unique() %>% nrow()
     n_unique_names <- fromtoIDs %>% select(Name) %>% unique() %>% nrow()
+    n_unique_ids <- fromtoIDs %>% select(ID) %>% unique() %>% nrow()
     expect_equal(n_unique_pairs, n_unique_names)
+    expect_equal(n_unique_names, n_unique_ids)
   }
 })
