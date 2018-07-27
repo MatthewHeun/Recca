@@ -31,6 +31,7 @@
 #' @param node_id the base name of node ID columns.
 #'                Set \code{NULL} to suppress addition of node ID numbers.
 #'                (Default is "\code{node_id}".)
+#' @param first_node the first node number. (Default is \code{0}.)
 #' @param edge_id the name of the edge ID column.
 #'                Set \code{NULL} to suppress addition of edge ID numbers.
 #'                (Default is "\code{edge_id}".)
@@ -60,8 +61,9 @@
 #' tail(elmats[["Edge list"]])
 edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
                       edge_list = "Edge list",
-                      from = "From", to = "To", value = "Value", product = "Product",
-                      waste = "Waste", node_id = "node_id", edge_id = "edge_id", simplify_edges = TRUE){
+                      from = "From", to = "To", value = "Value", product = "Product", waste = "Waste",
+                      node_id = "node_id", first_node = 0,
+                      edge_id = "edge_id", simplify_edges = TRUE){
   # Figure out which Products have only one source and one destination.
   # These are the flows that can be collapsed in the edge list.
   el_func <- function(Umat, Vmat, Ymat){
@@ -95,7 +97,7 @@ edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
       el <- add_edge_ids(el)
     }
     if (!is.null(node_id)) {
-      el <- add_node_ids(el)
+      el <- add_node_ids(el, from = from, to = to, node_id = node_id, first_node = first_node)
     }
     list(el) %>% set_names(edge_list)
   }
@@ -105,7 +107,7 @@ edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
 
 #' Add node ID numbers to an edge list
 #'
-#' Edge lists need identification numbers for each node.
+#' Edge lists can contain identification numbers (integers) for each node.
 #' Because each row in the edge list data frame contains a "\code{From}" node
 #' and a "\code{To}" node, two columns of node IDs are added, one for "\code{From}"
 #' and one for "\code{To}".
@@ -117,6 +119,7 @@ edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
 #' @param from the name of the column containing source nodes. (Default is "\code{From}".)
 #' @param to the name of the column containing destination nodes. (Default is "\code{To}".)
 #' @param node_id the root of the column name for node IDs. (Default is "\code{node_ID}".)  See details.
+#' @param first_node the ID number of the first node. (Default is \code{0}.)
 #'
 #' @return \code{edge_list} with two additional columns containing \code{From} and \code{To} node ID numbers.
 #'
@@ -127,7 +130,7 @@ edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
 #' # Suppress adding node IDs
 #' elDF <- edge_list(sutmats, node_id = NULL)$`Edge list`[[1]]
 #' add_node_ids(elDF)
-add_node_ids <- function(edge_list, from = "From", to = "To", node_id = "node_id"){
+add_node_ids <- function(edge_list, from = "From", to = "To", node_id = "node_id", first_node = 0){
   from_id <- paste0(from, "_", node_id)
   to_id <- paste0(to, "_", node_id)
   # Gather a list of all node names
@@ -138,7 +141,7 @@ add_node_ids <- function(edge_list, from = "From", to = "To", node_id = "node_id
     set_names(node_names) %>%
     # Add node_ids
     mutate(
-      !!as.name(node_id) := seq.int(nrow(.))
+      !!as.name(node_id) := seq.int(first_node, first_node + nrow(.) - 1)
     )
   # Add node IDs for the from nodes.
   edge_list <- left_join(edge_list,
@@ -314,7 +317,7 @@ waste_edges <- function(Umat, Vmat,
 
 #' Create a node list
 #'
-#' A node list is a data frame containing node names and associated node ID numbers.
+#' A node list is a data frame containing node names and associated node ID numbers (integers).
 #' This function creates a node list from an edge list, as shown in the examples.
 #'
 #' See \code{\link{edge_list}} for a function to create edge lists.

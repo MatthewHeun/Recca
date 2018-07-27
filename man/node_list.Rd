@@ -22,7 +22,7 @@ node_list(edge_list, from = "From", to = "To", node = "Node",
 a node list
 }
 \description{
-A node list is a data frame containing node names and associated node ID numbers.
+A node list is a data frame containing node names and associated node ID numbers (integers).
 This function creates a node list from an edge list, as shown in the examples.
 }
 \details{

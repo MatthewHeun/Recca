@@ -137,9 +137,9 @@ test_that("node_list works as expected", {
   el <- edge_list(sutmats)$`Edge list`[[1]]
   nl <- node_list(el)
   # Verify a few of the node numbers
-  expect_equal(filter(nl, Node == "Resources - Crude")$node_id, 1)
-  expect_equal(filter(nl, Node == "Diesel dist.")$node_id, 5)
-  expect_equal(filter(nl, Node == "NG dist.")$node_id, 9)
-  expect_equal(filter(nl, Node == "Transport")$node_id, 12)
-  expect_equal(filter(nl, Node == "Waste")$node_id, 14)
+  expect_equal(filter(nl, Node == "Resources - Crude")$node_id, 0)
+  expect_equal(filter(nl, Node == "Diesel dist.")$node_id, 4)
+  expect_equal(filter(nl, Node == "NG dist.")$node_id, 8)
+  expect_equal(filter(nl, Node == "Transport")$node_id, 11)
+  expect_equal(filter(nl, Node == "Waste")$node_id, 13)
 })

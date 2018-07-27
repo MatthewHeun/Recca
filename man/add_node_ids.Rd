@@ -4,7 +4,8 @@
 \alias{add_node_ids}
 \title{Add node ID numbers to an edge list}
 \usage{
-add_node_ids(edge_list, from = "From", to = "To", node_id = "node_id")
+add_node_ids(edge_list, from = "From", to = "To", node_id = "node_id",
+  first_node = 0)
 }
 \arguments{
 \item{edge_list}{the edge list to which node ID numbers are to be added}
@@ -14,12 +15,14 @@ add_node_ids(edge_list, from = "From", to = "To", node_id = "node_id")
 \item{to}{the name of the column containing destination nodes. (Default is "\code{To}".)}
 
 \item{node_id}{the root of the column name for node IDs. (Default is "\code{node_ID}".)  See details.}
+
+\item{first_node}{the ID number of the first node. (Default is \code{0}.)}
 }
 \value{
 \code{edge_list} with two additional columns containing \code{From} and \code{To} node ID numbers.
 }
 \description{
-Edge lists need identification numbers for each node.
+Edge lists can contain identification numbers (integers) for each node.
 Because each row in the edge list data frame contains a "\code{From}" node
 and a "\code{To}" node, two columns of node IDs are added, one for "\code{From}"
 and one for "\code{To}".
