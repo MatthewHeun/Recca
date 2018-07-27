@@ -133,9 +133,10 @@ test_that("add_node_id_works as expected", {
 })
 
 test_that("node_list works as expected", {
+  # Test a single edge list
   sutmats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
   el <- edge_list(sutmats)$`Edge list`[[1]]
-  nl <- node_list(el)
+  nl <- node_list(edge_list = el)
   # Verify a few of the node numbers
   expect_equal(filter(nl, Node == "Resources - Crude")$node_id, 0)
   expect_equal(filter(nl, Node == "Diesel dist.")$node_id, 4)

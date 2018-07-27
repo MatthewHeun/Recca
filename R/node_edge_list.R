@@ -322,7 +322,9 @@ waste_edges <- function(Umat, Vmat,
 #'
 #' See \code{\link{edge_list}} for a function to create edge lists.
 #'
-#' @param edge_list an edge list data frame.
+#' @param edge_list the name of the column in \code{.sutmats} containing edge lists
+#'                  or a single edge list data frame.
+#'                  (Default is "\code{Edge list}".)
 #' @param from the name of the \code{edge_list} column containing names of source nodes. (Default is "\code{From}".)
 #' @param to the name of the \code{edge_list} column containing names of destination nodes. (Default is "\code{To}".)
 #' @param node the name of the output column containing node names. (Default is "\code{Node}".)
@@ -354,3 +356,26 @@ node_list <- function(edge_list, from = "From", to = "To", node = "Node", node_i
   bind_rows(fromIDs, toIDs) %>%
     unique()
 }
+
+# node_list <- function(.sutmats = NULL, edge_list = "Edge list",
+#                       from = "From", to = "To", node = "Node", node_id = "node_id"){
+#   nl_func <- function(el){
+#     fromID <- paste0(from, "_", node_id)
+#     toID <- paste0(to, "_", node_id)
+#     fromIDs <- el %>%
+#       select(!!as.name(from), !!as.name(fromID)) %>%
+#       rename(
+#         !!as.name(node) := !!as.name(from),
+#         !!as.name(node_id) := !!as.name(fromID)
+#       )
+#     toIDs <- el %>%
+#       select(!!as.name(to), !!as.name(toID)) %>%
+#       rename(
+#         !!as.name(node) := !!as.name(to),
+#         !!as.name(node_id) := !!as.name(toID)
+#       )
+#     list(bind_rows(fromIDs, toIDs) %>% unique()) %>% set_names(el)
+#   }
+#   matsindf_apply(.sutmats, FUN = nl_func, el = edge_list)
+# }
+
