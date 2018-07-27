@@ -8,7 +8,9 @@ node_list(edge_list, from = "From", to = "To", node = "Node",
   node_id = "node_id")
 }
 \arguments{
-\item{edge_list}{an edge list data frame.}
+\item{edge_list}{the name of the column in \code{.sutmats} containing edge lists
+or a single edge list data frame.
+(Default is "\code{Edge list}".)}
 
 \item{from}{the name of the \code{edge_list} column containing names of source nodes. (Default is "\code{From}".)}
 
