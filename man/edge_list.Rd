@@ -31,8 +31,17 @@ edge_list(.sutdata = NULL, U = "U", V = "V", Y = "Y",
 \item{waste}{the name of the waste product and the destination node for wastes.
 Set \code{NULL} to suppress addition of waste edges. (Default is "\code{Waste}".)}
 
+\item{node_id}{the base name of node ID columns.
+Set \code{NULL} to suppress addition of node ID numbers.
+(Default is "\code{node_id}".)}
+
+\item{edge_id}{the name of the edge ID column.
+Set \code{NULL} to suppress addition of edge ID numbers.
+(Default is "\code{edge_id}".)}
+
 \item{simplify_edges}{if \code{TRUE}, products with only one source will not have a node.
-The source of the product will be connected directly to its consumers. If \code{FALSE}, no simplifications are made.
+The source of the product will be connected directly to its consumers.
+If \code{FALSE}, no simplifications are made.
 (Default is \code{TRUE}.)}
 }
 \value{

@@ -145,9 +145,16 @@ primary_industries <- function(.sutdata = NULL, U = "U", V = "V", p_industries =
 #' @param product the name of the edge list column containing the product of the edge list flow. (Default is "\code{Product}".)
 #' @param waste the name of the waste product and the destination node for wastes.
 #'              Set \code{NULL} to suppress addition of waste edges. (Default is "\code{Waste}".)
+#' @param node_id the base name of node ID columns.
+#'                Set \code{NULL} to suppress addition of node ID numbers.
+#'                (Default is "\code{node_id}".)
+#' @param edge_id the name of the edge ID column.
+#'                Set \code{NULL} to suppress addition of edge ID numbers.
+#'                (Default is "\code{edge_id}".)
 #' @param simplify_edges if \code{TRUE}, products with only one source will not have a node.
-#' The source of the product will be connected directly to its consumers. If \code{FALSE}, no simplifications are made.
-#' (Default is \code{TRUE}.)
+#'                       The source of the product will be connected directly to its consumers.
+#'                       If \code{FALSE}, no simplifications are made.
+#'                       (Default is \code{TRUE}.)
 #'
 #' @return an edge list or a column of edge lists
 #'
@@ -213,6 +220,30 @@ edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
 }
 
 
+#' Add node ID numbers to an edge list
+#'
+#' Edge lists need identification numbers for each node.
+#' Because each row in the edge list data frame contains a "\code{From}" node
+#' and a "\code{To}" node, two columns of node IDs are added, one for "\code{From}"
+#' and one for "\code{To}".
+#'
+#' The column names for the "\code{From}" and "\code{To}" nodes are created by \code{paste}-ing
+#' the value of the \code{from} and \code{to} arguments with the value of the \code{node_id} argument.
+#'
+#' @param edge_list the edge list to which node ID numbers are to be added
+#' @param from the name of the column containing source nodes. (Default is "\code{From}".)
+#' @param to the name of the column containing destination nodes. (Default is "\code{To}".)
+#' @param node_id the root of the column name for node IDs. (Default is "\code{node_ID}".)  See details.
+#'
+#' @return \code{edge_list} with two additional columns containing \code{From} and \code{To} node ID numbers.
+#'
+#' @export
+#'
+#' @examples
+#' sutmats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
+#' # Suppress adding node IDs
+#' elDF <- edge_list(sutmats, node_id = NULL)$`Edge list`[[1]]
+#' add_node_ids(elDF)
 add_node_ids <- function(edge_list, from = "From", to = "To", node_id = "node_id"){
   from_id <- paste0(from, "_", node_id)
   to_id <- paste0(to, "_", node_id)
@@ -241,17 +272,27 @@ add_node_ids <- function(edge_list, from = "From", to = "To", node_id = "node_id
                              !!as.name(to_id) := !!as.name(node_id)
                            ),
                          by = to)
-  # edge_list %>%
-  #   # Add node IDs for the From nodes
-  #   left_join(NodeNameID %>%
-  #               rename(!!as.name(from_id) := !!as.name(node_id)),
-  #             by = c(!!as.name(from) = ".node_names")) %>%
-  #   # Add node IDs for the To nodes
-  #   left_join(NodeNameID %>%
-  #               rename(!!as.name(to_id) := !!as.name(node_id)),
-  #             by = c("To" = ".node_names"))
+  return(edge_list)
 }
 
+
+#' Add edge ID numbers to an edge list
+#'
+#' The edges in an edge list can have ID numbers.
+#' This functions adds a column of edge ID numbers.
+#'
+#' @param edge_list the edge list to which edge ID numbers are to be added
+#' @param edge_id the name of the edge ID column in the outgoing edge list. (Default is "\code{edge_id}".)
+#'
+#' @return \code{edge_list} with an added column containing the edge ID numbers.
+#'
+#' @export
+#'
+#' @examples
+#' sutmats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
+#' # Suppress adding edge IDs
+#' elDF <- edge_list(sutmats, edge_id = NULL)$`Edge list`[[1]]
+#' add_node_ids(elDF)
 add_edge_ids <- function(edge_list, edge_id = "edge_id"){
   edge_list %>%
     mutate(

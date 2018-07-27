@@ -188,13 +188,22 @@ test_that("add_node_id_works as expected", {
   edge_lists <- elDF$`Edge list`
   for (el in edge_lists) {
     # Test every edge list to ensure that node IDs are matched with same node names everywhere
+    # The testing strategy is to gather all name/ID pairs and count.
+    # Gather from IDs and to IDs and bind them together.
     fromIDs <- el %>% select(From, From_node_id) %>% rename(Name = From, ID = From_node_id)
     toIDs <- el %>% select(To, To_node_id) %>% rename(Name = To, ID = To_node_id)
     fromtoIDs <- bind_rows(fromIDs, toIDs)
+    # Count the number of unique pairs.
     n_unique_pairs <- fromtoIDs %>% unique() %>% nrow()
+    # Count the number of unique names.
     n_unique_names <- fromtoIDs %>% select(Name) %>% unique() %>% nrow()
+    # Count the number of uniqe ID numbers.
     n_unique_ids <- fromtoIDs %>% select(ID) %>% unique() %>% nrow()
+    # We expect that the number of unique pairs is the same as the number of unique names.
+    # If not, one of the names is paired with two or more ID numbers.
     expect_equal(n_unique_pairs, n_unique_names)
+    # We expect that the number of unique names is the same as the number of unique ID numbers.
+    # If not, something is amiss.
     expect_equal(n_unique_names, n_unique_ids)
   }
 })
