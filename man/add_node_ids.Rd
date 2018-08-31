@@ -4,8 +4,8 @@
 \alias{add_node_ids}
 \title{Add node ID numbers to an edge list}
 \usage{
-add_node_ids(edge_list, from = "From", to = "To", node_id = "node_id",
-  first_node = 0)
+add_node_ids(edge_list, from = "From", to = "To",
+  node_id = "node_id", first_node = 0)
 }
 \arguments{
 \item{edge_list}{the edge list to which node ID numbers are to be added}

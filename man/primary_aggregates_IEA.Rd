@@ -5,11 +5,11 @@
 \title{Total primary aggregate energy from IEA tables}
 \usage{
 primary_aggregates_IEA(.ieadata, flow = "Flow",
-  flow_aggregation_point = "Flow.aggregation.point", energy = "EX.ktoe",
-  p_industries = c("Production", "Coal mines", "Oil and gas extraction",
-  "Imports", "Exports", "International aviation bunkers",
-  "International marine bunkers", "Stock changes"),
-  eiou = "Energy industry own use",
+  flow_aggregation_point = "Flow.aggregation.point",
+  energy = "EX.ktoe", p_industries = c("Production", "Coal mines",
+  "Oil and gas extraction", "Imports", "Exports",
+  "International aviation bunkers", "International marine bunkers",
+  "Stock changes"), eiou = "Energy industry own use",
   aggregate_primary_colname = "EX_p_IEA.ktoe")
 }
 \arguments{

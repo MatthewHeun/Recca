@@ -5,8 +5,8 @@
 \title{Calculate \code{Z}, \code{D}, \code{C}, and \code{A} matrices}
 \usage{
 calc_A(.sutdata = NULL, U_colname = "U", V_colname = "V",
-  q_colname = "q", g_colname = "g", Z_colname = "Z", C_colname = "C",
-  D_colname = "D", A_colname = "A")
+  q_colname = "q", g_colname = "g", Z_colname = "Z",
+  C_colname = "C", D_colname = "D", A_colname = "A")
 }
 \arguments{
 \item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}

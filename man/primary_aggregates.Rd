@@ -4,8 +4,8 @@
 \alias{primary_aggregates}
 \title{Primary aggregate energy}
 \usage{
-primary_aggregates(.sutdata, p_industries, V_colname = "V", Y_colname = "Y",
-  by = c("Total", "Product", "Flow"),
+primary_aggregates(.sutdata, p_industries, V_colname = "V",
+  Y_colname = "Y", by = c("Total", "Product", "Flow"),
   aggregate_primary_colname = "EX_p.ktoe")
 }
 \arguments{

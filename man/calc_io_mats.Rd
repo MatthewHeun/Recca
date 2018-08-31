@@ -6,9 +6,9 @@
 \usage{
 calc_io_mats(.sutdata = NULL, U_colname = "U", V_colname = "V",
   Y_colname = "Y", S_units = "S_units", y_colname = "y",
-  q_colname = "q", g_colname = "g", W_colname = "W", Z_colname = "Z",
-  C_colname = "C", D_colname = "D", A_colname = "A",
-  L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp")
+  q_colname = "q", g_colname = "g", W_colname = "W",
+  Z_colname = "Z", C_colname = "C", D_colname = "D",
+  A_colname = "A", L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp")
 }
 \arguments{
 \item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}

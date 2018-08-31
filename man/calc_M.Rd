@@ -5,8 +5,8 @@
 \title{Add embodied matrices colums to a data frame}
 \usage{
 calc_M(.YqGHEdata = NULL, Y_colname = "Y", q_colname = "q",
-  G_colname = "G", E_colname = "E", tol = 1e-04, M_p_colname = "M_p",
-  M_s_colname = "M_s")
+  G_colname = "G", E_colname = "E", tol = 1e-04,
+  M_p_colname = "M_p", M_s_colname = "M_s")
 }
 \arguments{
 \item{.YqGHEdata}{a data frame containing columns with \code{q} vectors
