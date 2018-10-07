@@ -148,11 +148,13 @@ add_node_ids <- function(edge_list, from = "From", to = "To", node_id = "node_id
   # Make a 1-column data frame containing all of the node names.
   NodeNameID <- data.frame(unique(c(edge_list[[from]], edge_list[[to]])), stringsAsFactors = FALSE) %>%
     # Set the name of the only column.
-    set_names(node_names) %>%
-    # Add node_ids
+    set_names(node_names)
+  n_node_names <- nrow(NodeNameID)
+  NodeNameID <- NodeNameID %>%
     mutate(
-      !!as.name(node_id) := seq.int(first_node, first_node + nrow(.) - 1)
+      !!as.name(node_id) := seq.int(first_node, first_node + n_node_names - 1)
     )
+
   # Add node IDs for the from nodes.
   edge_list <- left_join(edge_list,
                          NodeNameID %>%
@@ -233,6 +235,8 @@ simplify_edge_list <- function(edge_list, from = "From", to = "To", value = "Val
   U_entries <- edge_list %>% filter(!!as.name(from) == !!as.name(product))
   # Get the entries that would have come from the V matrix.
   V_entries <- edge_list %>% filter(!!as.name(to) == !!as.name(product))
+  # Avoid a NOTE in R CMD check
+  num_V_entries <- NULL
   # Figure out which products can be simplified
   # An edge for a product can be simplified if it has only one "From",
   # i.e., the product has only one source.

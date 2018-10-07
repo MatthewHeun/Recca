@@ -99,6 +99,8 @@ verify_SUT_energy_balance <- function(.sutdata = NULL,
 #' @export
 #'
 #' @examples
+#' library(magrittr)
+#' library(tidyr)
 #' verify_SUT_energy_balance_with_units(UKEnergy2000mats %>%
 #'                                        spread(key = matrix.name, value = matrix))
 verify_SUT_energy_balance_with_units <- function(.sutdata = NULL,
