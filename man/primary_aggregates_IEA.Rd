@@ -54,7 +54,9 @@ Thus, \code{.ieadata} should be grouped prior to sending into this function.
 Grouping columns are preserved on output.
 }
 \examples{
+library(dplyr)
 library(magrittr)
+library(tidyr)
 p_ind <- primary_industries(UKEnergy2000mats \%>\%
   spread(key = matrix.name, value = matrix))[["p_industries"]][[1]]
 UKEnergy2000tidy \%>\%

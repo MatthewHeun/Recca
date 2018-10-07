@@ -46,5 +46,6 @@ Both product and industry energy balance are verified.
 Units (as supplied by the \code{S_units} matrix) are respected.
 }
 \examples{
-verify_SUT_energy_balance_with_units(UKEnergy2000mats)
+verify_SUT_energy_balance_with_units(UKEnergy2000mats \%>\%
+                                       spread(key = matrix.name, value = matrix))
 }

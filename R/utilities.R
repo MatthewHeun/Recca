@@ -107,6 +107,8 @@ starts_with_any_of <- function(x, target){
 #' @export
 #'
 #' @examples
+#' library(magrittr)
+#' library(tidyr)
 #' primary_industries(UKEnergy2000mats %>% spread(key = matrix.name, value = matrix))
 primary_industries <- function(.sutdata = NULL, U = "U", V = "V", p_industries = "p_industries"){
   p_ind_func <- function(U, V){

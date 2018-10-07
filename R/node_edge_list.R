@@ -44,13 +44,17 @@
 #'
 #' @importFrom matsindf mat_to_rowcolval
 #' @importFrom dplyr bind_rows
+#' @importFrom tidyr spread
 #'
 #' @export
 #'
 #' @examples
+#' library(magrittr)
+#' library(matsbyname)
+#' library(tidyr)
 #' sutmats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
 #' # Don't simplify edges and don't include waste edges
-#' el_basic <- edge_list(sutmats, simplify_edges = FALSE, include_waste = FALSE)
+#' el_basic <- edge_list(sutmats, simplify_edges = FALSE)
 #' head(el_basic$`Edge list`[[1]])
 #' tail(el_basic$`Edge list`[[1]])
 #' # Simplify edges and include waste
@@ -129,6 +133,9 @@ edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
 #' @export
 #'
 #' @examples
+#' library(magrittr)
+#' library(matsbyname)
+#' library(tidyr)
 #' sutmats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
 #' # Suppress adding node IDs
 #' elDF <- edge_list(sutmats, node_id = NULL)$`Edge list`[[1]]
@@ -178,7 +185,9 @@ add_node_ids <- function(edge_list, from = "From", to = "To", node_id = "node_id
 #' @export
 #'
 #' @examples
+#' library(tidyr)
 #' library(magrittr)
+#' library(matsbyname)
 #' sutmats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
 #' # Suppress adding edge IDs
 #' elDF <- edge_list(sutmats, edge_id = NULL)$`Edge list`[[1]]
@@ -283,7 +292,7 @@ simplify_edge_list <- function(edge_list, from = "From", to = "To", value = "Val
 #'
 #' @export
 #'
-#' @return
+#' @return waste energy edges computed from the \code{Umat} and \code{Vmat} matrices
 #'
 #' @examples
 #' sutmats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
@@ -341,6 +350,9 @@ waste_edges <- function(Umat, Vmat,
 #' @export
 #'
 #' @examples
+#' library(magrittr)
+#' library(matsbyname)
+#' library(tidyr)
 #' sutmats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
 #' el <- edge_list(sutmats)$`Edge list`[[1]]
 #' node_list(el)

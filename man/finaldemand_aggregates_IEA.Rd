@@ -61,6 +61,7 @@ Thus, \code{.ieadata} should be grouped prior to passing into this function.
 Grouping columns are preserved on output.
 }
 \examples{
+library(dplyr)
 library(magrittr)
 # Works only when all entries are in same units.
 # When Last.stage is services, different units are involved.

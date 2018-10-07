@@ -217,7 +217,9 @@ finaldemand_aggregates_with_units <- function(.sutdata,
 #' @export
 #'
 #' @examples
+#' library(dplyr)
 #' library(magrittr)
+#' library(tidyr)
 #' p_ind <- primary_industries(UKEnergy2000mats %>%
 #'   spread(key = matrix.name, value = matrix))[["p_industries"]][[1]]
 #' UKEnergy2000tidy %>%
@@ -291,6 +293,7 @@ primary_aggregates_IEA <- function(.ieadata,
 #'         two additional columns containing net and gross final demand.
 #'
 #' @examples
+#' library(dplyr)
 #' library(magrittr)
 #' # Works only when all entries are in same units.
 #' # When Last.stage is services, different units are involved.

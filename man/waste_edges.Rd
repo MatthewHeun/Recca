@@ -23,7 +23,7 @@ waste_edges(Umat, Vmat, from = "From", to = "To", value = "Value",
 \item{waste}{the name of the waste product and the destination node for wastes. (Default is "\code{Waste}".)}
 }
 \value{
-
+waste energy edges computed from the \code{Umat} and \code{Vmat} matrices
 }
 \description{
 Waste edges are created from the \code{W} matrix.

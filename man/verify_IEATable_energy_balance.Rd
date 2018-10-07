@@ -50,6 +50,8 @@ If energy balance is not observed for one or more of the groups,
 a warning is emitted.
 }
 \examples{
+library(dplyr)
+library(magrittr)
 UKEnergy2000tidy \%>\%
   filter(Last.stage \%in\% c("final", "useful")) \%>\%
   group_by(Country, Year, Energy.type, Last.stage) \%>\%
