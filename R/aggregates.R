@@ -283,6 +283,7 @@ primary_aggregates_IEA <- function(.ieadata,
 #' @importFrom dplyr full_join
 #' @importFrom dplyr group_vars
 #' @importFrom dplyr summarise
+#' @importFrom matsindf verify_cols_missing
 #'
 #' @export
 #'

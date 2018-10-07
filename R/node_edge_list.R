@@ -42,6 +42,9 @@
 #'
 #' @return an edge list or a column of edge lists
 #'
+#' @importFrom matsindf mat_to_rowcolval
+#' @importFrom dplyr bind_rows
+#'
 #' @export
 #'
 #' @examples
@@ -175,6 +178,7 @@ add_node_ids <- function(edge_list, from = "From", to = "To", node_id = "node_id
 #' @export
 #'
 #' @examples
+#' library(magrittr)
 #' sutmats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
 #' # Suppress adding edge IDs
 #' elDF <- edge_list(sutmats, edge_id = NULL)$`Edge list`[[1]]
@@ -205,7 +209,9 @@ add_edge_ids <- function(edge_list, edge_id = "edge_id"){
 #' @return a simplified edge list
 #'
 #' @examples
-#' el <- data.frame(From = c("A", "Oil"), To = c("Oil", "C"), Value = c(42, 42), Product = c("Oil", "Oil"), stringsAsFactors = FALSE)
+#' el <- data.frame(From = c("A", "Oil"), To = c("Oil", "C"),
+#'                  Value = c(42, 42), Product = c("Oil", "Oil"),
+#'                  stringsAsFactors = FALSE)
 #' # Oil flows from A to C through its product node (Oil)
 #' el
 #' # Simplify to have Oil flow from A to C without the product node
