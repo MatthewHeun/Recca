@@ -299,6 +299,10 @@ simplify_edge_list <- function(edge_list, from = "From", to = "To", value = "Val
 #' @return waste energy edges computed from the \code{Umat} and \code{Vmat} matrices
 #'
 #' @examples
+#' library(dplyr)
+#' library(magrittr)
+#' library(matsbyname)
+#' library(tidyr)
 #' sutmats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
 #' edge_list(sutmats)$`Edge list`[[1]] %>% filter(Product == "Waste")
 waste_edges <- function(Umat, Vmat,

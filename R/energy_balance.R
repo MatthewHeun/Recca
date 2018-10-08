@@ -162,7 +162,10 @@ verify_SUT_energy_balance_with_units <- function(.sutdata = NULL,
 #' @export
 #'
 #' @examples
-#' verify_SUT_industry_production(UKEnergy2000mats)
+#' library(magrittr)
+#' library(tidyr)
+#' verify_SUT_industry_production(UKEnergy2000mats %>%
+#'                                  spread(key = matrix.name, value = matrix))
 verify_SUT_industry_production <- function(.sutdata = NULL,
                                            # Input column names
                                            U_colname = "U", V_colname = "V",

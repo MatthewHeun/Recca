@@ -41,5 +41,8 @@ Look at the \code{problem_industries} column of the output to see which industri
 exhibit this problem.
 }
 \examples{
-verify_SUT_industry_production(UKEnergy2000mats)
+library(magrittr)
+library(tidyr)
+verify_SUT_industry_production(UKEnergy2000mats \%>\%
+                                 spread(key = matrix.name, value = matrix))
 }
