@@ -3,7 +3,7 @@
 context("IO calculations")
 ###########################################################
 
-test_that("calculating y, q, g, W, A, and L works as expected", {
+test_that("calculating y, q, f, g, W, A, and L works as expected", {
   expec_path <- file.path("tests", "expectations")
 
   if (is_testing()) {
@@ -17,14 +17,14 @@ test_that("calculating y, q, g, W, A, and L works as expected", {
     setwd(file.path("..", ".."))
   }
 
-  # Calculate y, q, g, and W from UKEnergy2000mats
-  yqgW <- UKEnergy2000mats %>%
+  # Calculate y, q, f, g, and W from UKEnergy2000mats
+  yqfgW <- UKEnergy2000mats %>%
     spread(key = matrix.name, value = matrix) %>%
-    calc_yqgW()
-  expect_known_value(yqgW, file.path(expec_path, "expected_yqgW.rds"), update = FALSE)
+    calc_yqfgW()
+  expect_known_value(yqfgW, file.path(expec_path, "expected_yqfgW.rds"), update = FALSE)
 
-  # Calculate Z, D, C, and A matrices from yqgW
-  A <- yqgW %>% calc_A()
+  # Calculate Z, D, C, and A matrices from yqfgW
+  A <- yqfgW %>% calc_A()
   expect_known_value(A, file.path(expec_path, "expected_A.rds"), update = FALSE)
 
   # Calculate L matrices (L_ixp and L_pxp)

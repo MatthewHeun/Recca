@@ -6,9 +6,10 @@
 \usage{
 calc_io_mats(.sutdata = NULL, U_colname = "U", V_colname = "V",
   Y_colname = "Y", S_units = "S_units", y_colname = "y",
-  q_colname = "q", g_colname = "g", W_colname = "W",
-  Z_colname = "Z", C_colname = "C", D_colname = "D",
-  A_colname = "A", L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp")
+  q_colname = "q", f_colname = "f", g_colname = "g",
+  W_colname = "W", B_colname = "B", Z_colname = "Z",
+  C_colname = "C", D_colname = "D", A_colname = "A",
+  L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp")
 }
 \arguments{
 \item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
@@ -33,6 +34,10 @@ Default is "\code{y}".
 Default is "\code{q}".
 \code{q} is calculated by \code{rowsums(U) + y}.}
 
+\item{f_colname}{the name of the output column containing \code{f} vectors.
+Default is "\code{f}".
+\code{f} is calculated by \code{colsums(U)}.}
+
 \item{g_colname}{the name of the output column containing \code{g} vectors.
 Default is "\code{g}".
 \code{g} is calculated by \code{rowsums(V)}.}
@@ -40,6 +45,10 @@ Default is "\code{g}".
 \item{W_colname}{the name of the output column containing \code{W} matrices.
 Default is "\code{W}".
 \code{W} is calculated by \code{transpose(V) - U}.}
+
+\item{B_colname}{the name of the output column containing \code{B} matrices.
+Default is "\code{B}".
+\code{B} is calculated by \code{U * f_hat_inv}.}
 
 \item{Z_colname}{the name of the output column containing \code{Z} matrices.
 Default is "\code{Z}".

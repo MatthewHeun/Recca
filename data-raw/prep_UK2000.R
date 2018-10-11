@@ -35,7 +35,7 @@ UKEnergy2000mats <- UKEnergy2000tidy %>%
 
   # Collapse to matrices
   group_by(Country, Year, Energy.type, Last.stage, matname) %>%
-  collapse_to_matrices(matnames = "matname", values = "EX.ktoe",
+  collapse_to_matrices(matnames = "matname", matvals = "EX.ktoe",
                        rownames = "rowname", colnames = "colname",
                        rowtypes = "rowtype", coltypes = "coltype") %>%
   rename(matrix.name = matname, matrix = EX.ktoe) %>%
