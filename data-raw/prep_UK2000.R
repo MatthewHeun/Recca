@@ -9,10 +9,6 @@ library(matsbyname)
 library(matsindf)
 library(devtools)
 
-
-# Pull in functions to assist with cleaning the data
-# source(file.path("data-raw", "data_prep_utilities.R"))
-
 # Load the raw data from the .csv file
 UKEnergy2000tidy <- read.csv(system.file("extdata", "UKEnergy2000raw", "UKEnergy2000raw.csv",
                                          package = "Recca", mustWork = TRUE),
