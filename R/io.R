@@ -206,7 +206,7 @@ calc_A <- function(.sutdata = NULL,
                    # Output columns
                    Z_colname = "Z", B_colname = "B", C_colname = "C",
                    D_colname = "D", A_colname = "A"){
-  A_func <- function(U, V, q, f, g){
+  A_func <- function(U, V, q, fvec, g){
     # The calculation of C and Z will fail when g contains NA values.
     # NA values can be created when V has any industry whose outputs are inhomogeneous.
     # Test here if any entry in g is NA.
@@ -222,10 +222,10 @@ calc_A <- function(.sutdata = NULL,
     # NA values can be created when U has any industry whose inputs are inhomogeneous.
     # Test here if any entry in f is NA.
     # If so, the value for B will be assigned NA.
-    if (any(is.na(f))) {
+    if (any(is.na(fvec))) {
       B_val <- NA_real_
     } else {
-      B_val <- matrixproduct_byname(U, hatize_byname(f) %>% invert_byname())
+      B_val <- matrixproduct_byname(U, hatize_byname(fvec) %>% invert_byname())
     }
     D_val <- matrixproduct_byname(V, hatize_byname(q) %>% invert_byname())
     A_val <- matrixproduct_byname(Z_val, D_val)
@@ -233,7 +233,7 @@ calc_A <- function(.sutdata = NULL,
     list(Z_val, B_val, C_val, D_val, A_val) %>%
       magrittr::set_names(c(Z_colname, B_colname, C_colname, D_colname, A_colname))
   }
-  matsindf_apply(.sutdata, FUN = A_func, U = U_colname, V = V_colname, q = q_colname, f = f_colname, g = g_colname)
+  matsindf_apply(.sutdata, FUN = A_func, U = U_colname, V = V_colname, q = q_colname, fvec = f_colname, g = g_colname)
 }
 
 
