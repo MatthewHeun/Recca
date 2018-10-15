@@ -1,8 +1,10 @@
 library(dplyr)
 library(Hmisc)
 library(magrittr)
+library(matsindf)
 library(Recca)
 library(testthat)
+library(tidyr)
 
 ###########################################################
 context("Perfect substitution")
@@ -52,13 +54,31 @@ prep_perfect_subsitution <- function(){
 }
 
 test_that("calculation of B matrix works", {
+  expec_path <- file.path("tests", "expectations")
+
+  if (is_testing()) {
+    # testthat sets the working directory to the folder containing this file.
+    # We want the ability to use these tests interactively, too,
+    # when the working directory will be the top level of this project.
+    # So change the working directory if we're testing.
+    # Save the current working directory, to be restored later
+    currwd <- getwd()
+    # Move the working directory up two levels, to the top level of this project.
+    setwd(file.path("..", ".."))
+  }
+
   perfectsublist <- prep_perfect_subsitution()
   perfectsub_tidy <- perfectsublist$tidy
   perfectsub_mats <- perfectsublist$mats
 
-  # B <- calc_B()
+  io_mats <- perfectsub_mats %>% calc_io_mats()
+  B <- io_mats$B[[1]]
 
-  expect_true(TRUE)
+  expect_known_value(B, file.path(expec_path, "expected_B.rds"), update = FALSE)
 
+  if (is_testing()) {
+    # Restore the previous working directory.
+    setwd(currwd)
+  }
 })
 
