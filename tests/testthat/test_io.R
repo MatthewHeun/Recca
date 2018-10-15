@@ -29,7 +29,7 @@ test_that("calculating y, q, f, g, W, A, and L works as expected", {
 
   # Calculate L matrices (L_ixp and L_pxp)
   L <- A %>% calc_L()
-  expect_known_value(L, file.path(expec_path, "expected_L.rds"), update = TRUE)
+  expect_known_value(L, file.path(expec_path, "expected_L.rds"), update = FALSE)
 
   if (is_testing()) {
     # Restore the previous working directory.
