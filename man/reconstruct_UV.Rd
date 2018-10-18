@@ -28,8 +28,20 @@ that will be used to reconstruct the economy}
 \item{V_prime_colname}{the name of the output column that contains new Make (\code{V}) matrices.}
 }
 \value{
-\code{.sutdata} with columns \code{U_prime} and \code{V_prime} added
+\code{.sutdata} with additional columns \code{U_prime} and \code{V_prime}
 }
 \description{
 Reconstruct an economy given a new final demand matrix
+}
+\examples{
+UKEnergy2000mats \%>\%
+  spread(key = matrix.name, value = matrix) \%>\%
+  select(Country, Year, Energy.type, Last.stage, U, V, Y, r_EIOU, S_units) \%>\%
+  calc_io_mats() \%>\%
+  mutate(
+    # Give new Y matrices that are double the existing Y matrices
+    Y_prime = elementproduct_byname(2, Y)
+  ) \%>\%
+  # Should give U_prime and V_prime matrices that are double the existing U and V matrices
+  reconstruct_UV()
 }

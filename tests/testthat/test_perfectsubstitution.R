@@ -72,9 +72,19 @@ test_that("calculation of B matrix works", {
   perfectsub_mats <- perfectsublist$mats
 
   io_mats <- perfectsub_mats %>% calc_io_mats()
-  B <- io_mats$B[[1]]
+  K <- io_mats$K[[1]]
 
-  expect_known_value(B, file.path(expec_path, "expected_B.rds"), update = FALSE)
+  expect_known_value(K, file.path(expec_path, "expected_K.rds"), update = FALSE)
+
+  # Set up a new k_prime vector for Electric transport.
+  # That vector will be used for the infininte substitution calculation.
+  k_prime <- K[, "Electric transport", drop = FALSE]
+  k_prime["FF elec", "Electric transport"] <- 0.5
+  k_prime["Ren elec", "Electric transport"] <- 0.5
+  # Now do the calculation of U_prime and V_prime matrices.
+  delta_inputs_ps(io_mats, k_prime = k_prime)
+
+
 
   if (is_testing()) {
     # Restore the previous working directory.

@@ -6,7 +6,7 @@
 \usage{
 calc_A(.sutdata = NULL, U_colname = "U", V_colname = "V",
   q_colname = "q", f_colname = "f", g_colname = "g",
-  Z_colname = "Z", B_colname = "B", C_colname = "C",
+  Z_colname = "Z", K_colname = "K", C_colname = "C",
   D_colname = "D", A_colname = "A")
 }
 \arguments{
@@ -25,8 +25,8 @@ calc_A(.sutdata = NULL, U_colname = "U", V_colname = "V",
 \item{Z_colname}{the name of the output column containing \code{Z} matrices.
 \code{Z} is calculated by \code{U * g_hat_inv}.}
 
-\item{B_colname}{the name of the output column containing \code{B} matrices.
-\code{B} is calculated by \code{U * f_hat_inv}.}
+\item{K_colname}{the name of the output column containing \code{K} matrices.
+\code{K} is calculated by \code{U * f_hat_inv}.}
 
 \item{C_colname}{the name of the output column containing \code{C} matrices.
 \code{C} is calculated by \code{transpose(V) * g_hat_inv}.}
@@ -39,7 +39,7 @@ calc_A(.sutdata = NULL, U_colname = "U", V_colname = "V",
 }
 \value{
 \code{.sutdata} with columns \code{Z_colname},
-\code{B_colname}, \code{C_colname},
+\code{K_colname}, \code{C_colname},
 \code{D_colname}, and \code{A_colname} added
 }
 \description{

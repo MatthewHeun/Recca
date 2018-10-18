@@ -7,7 +7,7 @@
 calc_io_mats(.sutdata = NULL, U_colname = "U", V_colname = "V",
   Y_colname = "Y", S_units = "S_units", y_colname = "y",
   q_colname = "q", f_colname = "f", g_colname = "g",
-  W_colname = "W", B_colname = "B", Z_colname = "Z",
+  W_colname = "W", K_colname = "K", Z_colname = "Z",
   C_colname = "C", D_colname = "D", A_colname = "A",
   L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp")
 }
@@ -46,10 +46,6 @@ Default is "\code{g}".
 Default is "\code{W}".
 \code{W} is calculated by \code{transpose(V) - U}.}
 
-\item{B_colname}{the name of the output column containing \code{B} matrices.
-Default is "\code{B}".
-\code{B} is calculated by \code{U * f_hat_inv}.}
-
 \item{Z_colname}{the name of the output column containing \code{Z} matrices.
 Default is "\code{Z}".
 \code{Z} is calculated by \code{U * g_hat_inv}.}
@@ -73,11 +69,15 @@ Default is "\code{L_ixp}".
 \item{L_pxp_colname}{the name of the output column containing product-by-product L matrices.
 Default is "\code{L_pxp}".
 \code{L_pxp} is calculated by \code{(I - Z*D)^-1}.}
+
+\item{B_colname}{the name of the output column containing \code{B} matrices.
+Default is "\code{K}".
+\code{K} is calculated by \code{U * f_hat_inv}.}
 }
 \value{
 \code{.sutdata} with additional columns:
 \code{y_colname}, \code{q_colname}, \code{g_colname}, \code{W_colname},
-\code{Z_colname}, \code{D_colname}, \code{C_colname}, \code{A_colname},
+\code{Z_colname}, \code{D_colname}, \code{K_colname}, \code{C_colname}, \code{A_colname},
 \code{L_ixp_colname}, and \code{L_pxp_colname}.
 }
 \description{
