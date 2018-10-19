@@ -5,18 +5,13 @@
 \title{Assess the effect of changing perfectly substitutable inputs to an industry}
 \usage{
 delta_inputs_ps(.sutdata = NULL, k_prime_colname = "k_prime",
+  K_colname = "K", Y_colname = "Y", f_colname = "f",
   U_prime_colname = "U_prime", V_prime_colname = "V_prime")
 }
 \arguments{
 \item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
 
-\item{U_prime_colname}{the name of the output column that contains new Use (\code{U}) matrices.
-Default is "\code{U_prime}".}
-
-\item{V_prime_colname}{the name of the output column that contains new Make (\code{V}) matrices.
-Default is "\code{V_prime}".}
-
-\item{k_prime}{the name of a column in \code{.sutdata} containing vectors representing new
+\item{k_prime_colname}{the name of a column in \code{.sutdata} containing vectors representing new
 columns of the \code{K} matrix in each row of \code{.sutdata}.
 Each entry in the \code{k_prime} column of \code{.sutdata} must be a single-column matrix, and
 the name of the single column must match the name of one of the columns of matrix \code{K}.}
@@ -26,6 +21,14 @@ the name of the single column must match the name of one of the columns of matri
 Elements of \code{K} indicate the fraction of total input to industries (in columns)
 provided by products (in rows).
 \code{K} can be calculated by \code{\link{calc_io_mats}}.}
+
+\item{Y_colname}{the name of a column in \code{.sutdata} containing final demand matrices.}
+
+\item{U_prime_colname}{the name of the output column that contains new Use (\code{U}) matrices.
+Default is "\code{U_prime}".}
+
+\item{V_prime_colname}{the name of the output column that contains new Make (\code{V}) matrices.
+Default is "\code{V_prime}".}
 }
 \value{
 \code{.sutdata} with additional columns \code{U_prime} and \code{V_prime}

@@ -76,13 +76,20 @@ test_that("calculation of B matrix works", {
 
   expect_known_value(K, file.path(expec_path, "expected_K.rds"), update = FALSE)
 
-  # Set up a new k_prime vector for Electric transport.
-  # That vector will be used for the infininte substitution calculation.
-  k_prime <- K[, "Electric transport", drop = FALSE]
-  k_prime["FF elec", "Electric transport"] <- 0.5
-  k_prime["Ren elec", "Electric transport"] <- 0.5
+  # Figure out a new column vector for k_prime.
+  k_prime_vec <- K[, "Electric transport", drop = FALSE]
+  k_prime_vec["FF elec", "Electric transport"] <- 0.5
+  k_prime_vec["Ren elec", "Electric transport"] <- 0.5
+  # Add this vector to the io_mats data frame.
+  io_mats <- io_mats %>%
+    mutate(
+      # Set up a new k_prime vector for Electric transport.
+      # That vector will be used for the infininte substitution calculation.
+      # k_prime = select_cols_byname(K, retain_pattern = make_pattern("Electric transport", pattern_type = "exact")),
+      k_prime = make_list(k_prime_vec, n = 1)
+    )
   # Now do the calculation of U_prime and V_prime matrices.
-  delta_inputs_ps(io_mats, k_prime = k_prime)
+  delta_inputs_ps(io_mats)
 
 
 

@@ -61,7 +61,7 @@ reconstruct_UV <- function(.sutdata = NULL,
 #' and input arguments should be single matrices or vectors.
 #'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
-#' @param k_prime the name of a column in \code{.sutdata} containing vectors representing new
+#' @param k_prime_colname the name of a column in \code{.sutdata} containing vectors representing new
 #'        columns of the \code{K} matrix in each row of \code{.sutdata}.
 #'        Each entry in the \code{k_prime} column of \code{.sutdata} must be a single-column matrix, and
 #'        the name of the single column must match the name of one of the columns of matrix \code{K}.
@@ -70,6 +70,7 @@ reconstruct_UV <- function(.sutdata = NULL,
 #'        Elements of \code{K} indicate the fraction of total input to industries (in columns)
 #'        provided by products (in rows).
 #'        \code{K} can be calculated by \code{\link{calc_io_mats}}.
+#' @param Y_colname the name of a column in \code{.sutdata} containing final demand matrices.
 #' @param U_prime_colname the name of the output column that contains new Use (\code{U}) matrices.
 #'        Default is "\code{U_prime}".
 #' @param V_prime_colname the name of the output column that contains new Make (\code{V}) matrices.
@@ -81,16 +82,33 @@ reconstruct_UV <- function(.sutdata = NULL,
 #' @examples
 delta_inputs_ps <- function(.sutdata = NULL,
                             # Input columns
-                            k_prime_colname = "k_prime",
+                            k_prime_colname = "k_prime", K_colname = "K", Y_colname = "Y",
+                            f_colname = "f",
                             # Output colums
                             U_prime_colname = "U_prime", V_prime_colname = "V_prime"){
-  delta_inputs_ps_func <- function(k_prime){
+  delta_inputs_ps_func <- function(k_prime_2, K, Y, f_vec){
+    # k_prime_2 is the new vector for the k matrix.
     # Get the name of the industry whose inputs will be changed.
-    ind_to_change <- colnames(k_prime)
-    # Ensure that k_prime is a single-column vector.
-    if (length(ind_to_change) != 1) {
-      stop(paste("k_prime has ", ncol(k_prime), "columns in delta_inputs_ps_func. Must be 1."))
+    industry_to_change <- colnames(k_prime_2)
+    # Ensure that k_prime_2 is a single-column vector.
+    if (length(industry_to_change) != 1) {
+      stop(paste("k_prime_2 has", ncol(k_prime_2), "columns in delta_inputs_ps_func. Must be 1."))
     }
+    # Ensure that the column sum of k_prime_2 is exactly 1.0.
+    if (colsums_byname(k_prime_2) != 1) {
+      stop(paste("k_prime_2 has column sum of", colsums_byname(y_prime_2), "but it must be exactly 1.0."))
+    }
+    # Grab the k_prime_1 (not k_prime_2) column out of the existing K matrix.
+    # k_prime_1 is the column from the K matrix with the same name as k_prime_2.
+    k_prime_1 <- K[, industry_to_change, drop = FALSE]
+
+    # Multiply both k_prime_1 and k_prime_2 by f_hat.
+    k_prime_1_f_hat <- matrixproduct_byname(k_prime_1, hatize_byname(f_vec))
+    k_prime_2_f_hat <- matrixproduct_byname(k_prime_2, hatize_byname(f_vec))
+
+    # Get y_prime_1 and y_prime_2 vectors by calculating row sums of k_prime_1_f_hat and k_prime_2_f_hat.
+    y_prime_1 <- rowsums_byname(k_prime_1_f_hat)
+    y_prime_2 <- rowsums_byname(k_prime_2_f_hat)
 
 
     U_prime_val <- "something"
@@ -98,7 +116,7 @@ delta_inputs_ps <- function(.sutdata = NULL,
     list(U_prime_val, V_prime_val) %>% purrr::set_names(c(U_prime_colname, V_prime_colname))
   }
   matsindf_apply(.sutdata, FUN = delta_inputs_ps_func,
-                 k_prime = k_prime_colname)
+                 k_prime_2 = k_prime_colname, K = K_colname, Y = Y_colname, f_vec = f_colname)
 
 }
 
