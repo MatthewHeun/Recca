@@ -5,6 +5,22 @@
 
 #' Reconstruct an economy given a new final demand matrix
 #'
+#' When the final demand matrix changes from \code{Y} to \code{Y_prime},
+#' this function calculates new use (\code{U_prime}) and make (\code{V_prime}) matrices
+#' that would be required to meet the new final demand (\code{Y_prime}).
+#'
+#' Note that inputs \code{L_ixp_colname}, \code{L_pxp_colname},
+#' \code{Z_colname}, and \code{D_colname} can be
+#' conveniently calculated by the function \code{\link{calc_io_mats}}.
+#'
+#' Internally, this function uses \code{\link[matsindf]{matsindf_apply}},
+#' and documentation assumes that
+#' \code{.sutdata} is not \code{NULL} and is a data frame.
+#' If \code{.sutdata} is present, output is a data frame with columns named by string values of output arguments, and
+#' input arguments should be character strings that name columns in \code{.sutdata}.
+#' If \code{.sutdata} is \code{NULL} (the default), output is a list with items named by output strings,
+#' and input arguments should be single matrices or vectors.
+#'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
 #' @param Y_prime_colname the name of a column containing new final demand matrices
 #' that will be used to reconstruct the economy
@@ -29,15 +45,15 @@
 #'     Y_prime = elementproduct_byname(2, Y)
 #'   ) %>%
 #'   # Should give U_prime and V_prime matrices that are double the existing U and V matrices
-#'   reconstruct_UV()
-reconstruct_UV <- function(.sutdata = NULL,
-                           # Input columns
-                           Y_prime_colname = "Y_prime", L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp",
-                           Z_colname = "Z", D_colname = "D",
-                           # Output columns
-                           U_prime_colname = "U_prime", V_prime_colname = "V_prime"){
+#'   new_Y()
+new_Y <- function(.sutdata = NULL,
+                  # Input columns
+                  Y_prime_colname = "Y_prime", L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp",
+                  Z_colname = "Z", D_colname = "D",
+                  # Output columns
+                  U_prime_colname = "U_prime", V_prime_colname = "V_prime"){
 
-  reconstruct_func <- function(Y_prime, L_ixp, L_pxp, Z, D){
+  new_Y_func <- function(Y_prime, L_ixp, L_pxp, Z, D){
     y_prime_val <- rowsums_byname(Y_prime)
     g_prime_val <- matrixproduct_byname(L_ixp, y_prime_val)
     q_prime_val <- matrixproduct_byname(L_pxp, y_prime_val)
@@ -45,15 +61,25 @@ reconstruct_UV <- function(.sutdata = NULL,
     V_prime_val <- matrixproduct_byname(D, hatize_byname(q_prime_val))
     list(U_prime_val, V_prime_val) %>% purrr::set_names(c(U_prime_colname, V_prime_colname))
   }
-  matsindf_apply(.sutdata, FUN = reconstruct_func,
+  matsindf_apply(.sutdata, FUN = new_Y_func,
                  Y_prime = Y_prime_colname, L_ixp = L_ixp_colname, L_pxp = L_pxp_colname,
                  Z = Z_colname, D = D_colname)
 }
 
 
-#' Assess the effect of changing perfectly substitutable inputs to an industry
+#' Assess the effect of changing perfectly substitutable internediate inputs to an industry
 #'
-#' Internally, this function uses matsindf_apply, and documentation assumes that
+#' This function calculates the effect of changing perfectly-substitutable (ps) inputs
+#' to an intermediate industry.
+#' New versions of \code{U} and \code{V} matrices are returned
+#' as \code{U_prime} and \code{V_prime}.
+#'
+#' Note that inputs \code{K_colname}, \code{L_ixp_colname}, \code{L_pxp_colname},
+#' \code{Z_colname}, \code{D_colname}, and \code{f_colname} can be
+#' conveniently calculated by the function \code{\link{calc_io_mats}}.
+#'
+#' Internally, this function uses \code{\link[matsindf]{matsindf_apply}},
+#' and documentation assumes that
 #' \code{.sutdata} is not \code{NULL} and is a data frame.
 #' If \code{.sutdata} is present, output is a data frame with columns named by string values of output arguments, and
 #' input arguments should be character strings that name columns in \code{.sutdata}.
@@ -84,7 +110,7 @@ reconstruct_UV <- function(.sutdata = NULL,
 #' @export
 #'
 #' @examples
-delta_inputs_ps <- function(.sutdata = NULL,
+new_k_ps <- function(.sutdata = NULL,
                             # Input columns
                             k_prime_colname = "k_prime",
                             U_colname = "U", V_colname = "V", Y_colname = "Y",
@@ -93,7 +119,7 @@ delta_inputs_ps <- function(.sutdata = NULL,
                             Z_colname = "Z", D_colname = "D", f_colname = "f",
                             # Output colums
                             U_prime_colname = "U_prime", V_prime_colname = "V_prime"){
-  delta_inputs_ps_func <- function(k_prime_2, U, V, Y, K, L_ixp, L_pxp, Z, D, f_vec){
+  new_k_ps_func <- function(k_prime_2, U, V, Y, K, L_ixp, L_pxp, Z, D, f_vec){
     # In this function, all "1" variables are calculated from the original ECC as supplied by the
     # input matrices and vectors, K, Y, L_ixp, Z, and f.
     # All "2" variables are calculated for the "new" ECC as supplied by the k_prime_2 vector.
@@ -143,7 +169,7 @@ delta_inputs_ps <- function(.sutdata = NULL,
 
     list(U_prime, V_prime) %>% purrr::set_names(c(U_prime_colname, V_prime_colname))
   }
-  matsindf_apply(.sutdata, FUN = delta_inputs_ps_func,
+  matsindf_apply(.sutdata, FUN = new_k_ps_func,
                  k_prime_2 = k_prime_colname,
                  U = U_colname, V = V_colname, Y = Y_colname,
                  K = K_colname,

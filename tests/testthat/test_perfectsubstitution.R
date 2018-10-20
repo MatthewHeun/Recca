@@ -90,7 +90,7 @@ test_that("calculation of B matrix works", {
       k_prime = make_list(k_prime_vec, n = 1)
     )
   # Now do the calculation of U_prime and V_prime matrices.
-  perfect_sub_results <- delta_inputs_ps(io_mats)
+  new_k_ps <- delta_inputs_ps(io_mats)
 
 
 
