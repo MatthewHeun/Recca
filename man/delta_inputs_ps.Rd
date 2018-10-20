@@ -5,7 +5,9 @@
 \title{Assess the effect of changing perfectly substitutable inputs to an industry}
 \usage{
 delta_inputs_ps(.sutdata = NULL, k_prime_colname = "k_prime",
-  K_colname = "K", Y_colname = "Y", f_colname = "f",
+  U_colname = "U", V_colname = "V", Y_colname = "Y",
+  K_colname = "K", L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp",
+  Z_colname = "Z", D_colname = "D", f_colname = "f",
   U_prime_colname = "U_prime", V_prime_colname = "V_prime")
 }
 \arguments{
@@ -16,13 +18,19 @@ columns of the \code{K} matrix in each row of \code{.sutdata}.
 Each entry in the \code{k_prime} column of \code{.sutdata} must be a single-column matrix, and
 the name of the single column must match the name of one of the columns of matrix \code{K}.}
 
+\item{Y_colname}{the name of a column in \code{.sutdata} containing final demand matrices.}
+
 \item{K_colname}{the name of a column in \code{.sutdata} containing product-by-industry \code{K} matrices.
 \code{K} consists of columns that sum to 1.
 Elements of \code{K} indicate the fraction of total input to industries (in columns)
 provided by products (in rows).
 \code{K} can be calculated by \code{\link{calc_io_mats}}.}
 
-\item{Y_colname}{the name of a column in \code{.sutdata} containing final demand matrices.}
+\item{L_ixp_colname}{the name of a column in \code{.sutadata} containing \code{L_ixp} matrices.}
+
+\item{Z_colname}{the name of a column in \code{.sutadata} containing \code{Z} matrices.}
+
+\item{f_colname}{the name of a column in \code{.sutadata} containing \code{f} vectors.}
 
 \item{U_prime_colname}{the name of the output column that contains new Use (\code{U}) matrices.
 Default is "\code{U_prime}".}
@@ -31,7 +39,7 @@ Default is "\code{U_prime}".}
 Default is "\code{V_prime}".}
 }
 \value{
-\code{.sutdata} with additional columns \code{U_prime} and \code{V_prime}
+\code{.sutdata} with additional columns \code{U_prime_colname} and \code{V_prime_colname}
 }
 \description{
 Internally, this function uses matsindf_apply, and documentation assumes that

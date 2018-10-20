@@ -71,23 +71,35 @@ reconstruct_UV <- function(.sutdata = NULL,
 #'        provided by products (in rows).
 #'        \code{K} can be calculated by \code{\link{calc_io_mats}}.
 #' @param Y_colname the name of a column in \code{.sutdata} containing final demand matrices.
+#' @param L_ixp_colname the name of a column in \code{.sutadata} containing \code{L_ixp} matrices.
+#' @param Z_colname the name of a column in \code{.sutadata} containing \code{Z} matrices.
+#' @param f_colname the name of a column in \code{.sutadata} containing \code{f} vectors.
 #' @param U_prime_colname the name of the output column that contains new Use (\code{U}) matrices.
 #'        Default is "\code{U_prime}".
 #' @param V_prime_colname the name of the output column that contains new Make (\code{V}) matrices.
 #'        Default is "\code{V_prime}".
 #'
-#' @return \code{.sutdata} with additional columns \code{U_prime} and \code{V_prime}
+#' @return \code{.sutdata} with additional columns \code{U_prime_colname} and \code{V_prime_colname}
+#'
 #' @export
 #'
 #' @examples
 delta_inputs_ps <- function(.sutdata = NULL,
                             # Input columns
-                            k_prime_colname = "k_prime", K_colname = "K", Y_colname = "Y",
-                            f_colname = "f",
+                            k_prime_colname = "k_prime",
+                            U_colname = "U", V_colname = "V", Y_colname = "Y",
+                            K_colname = "K",
+                            L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp",
+                            Z_colname = "Z", D_colname = "D", f_colname = "f",
                             # Output colums
                             U_prime_colname = "U_prime", V_prime_colname = "V_prime"){
-  delta_inputs_ps_func <- function(k_prime_2, K, Y, f_vec){
-    # k_prime_2 is the new vector for the k matrix.
+  delta_inputs_ps_func <- function(k_prime_2, U, V, Y, K, L_ixp, L_pxp, Z, D, f_vec){
+    # In this function, all "1" variables are calculated from the original ECC as supplied by the
+    # input matrices and vectors, K, Y, L_ixp, Z, and f.
+    # All "2" variables are calculated for the "new" ECC as supplied by the k_prime_2 vector.
+    # Note that k_prime_colname in the wrapping function is mapped to k_prime_2 inside this function.
+
+    # k_prime_2 is the new vector for the K matrix.
     # Get the name of the industry whose inputs will be changed.
     industry_to_change <- colnames(k_prime_2)
     # Ensure that k_prime_2 is a single-column vector.
@@ -102,22 +114,41 @@ delta_inputs_ps <- function(.sutdata = NULL,
     # k_prime_1 is the column from the K matrix with the same name as k_prime_2.
     k_prime_1 <- K[, industry_to_change, drop = FALSE]
 
-    # Multiply both k_prime_1 and k_prime_2 by f_hat.
+    # We need the matrix product of k_prime_1 and f_hat in several places.
+    # Calculate it here now.
     k_prime_1_f_hat <- matrixproduct_byname(k_prime_1, hatize_byname(f_vec))
     k_prime_2_f_hat <- matrixproduct_byname(k_prime_2, hatize_byname(f_vec))
 
-    # Get y_prime_1 and y_prime_2 vectors by calculating row sums of k_prime_1_f_hat and k_prime_2_f_hat.
+    # Get y_prime, g_prime, and q_prime vectors.
     y_prime_1 <- rowsums_byname(k_prime_1_f_hat)
     y_prime_2 <- rowsums_byname(k_prime_2_f_hat)
 
+    g_prime_1 <- matrixproduct_byname(L_ixp, y_prime_1)
+    g_prime_2 <- matrixproduct_byname(L_ixp, y_prime_2)
 
-    U_prime_val <- "something"
-    V_prime_val <- "something"
-    list(U_prime_val, V_prime_val) %>% purrr::set_names(c(U_prime_colname, V_prime_colname))
+    q_prime_1 <- matrixproduct_byname(L_pxp, y_prime_1)
+    q_prime_2 <- matrixproduct_byname(L_pxp, y_prime_2)
+
+    # Calculate U_prime_1 and U_prime_2
+    U_prime_1 <- sum_byname(matrixproduct_byname(Z, hatize_byname(g_prime_1)), k_prime_1_f_hat)
+    U_prime_2 <- sum_byname(matrixproduct_byname(Z, hatize_byname(g_prime_2)), k_prime_2_f_hat)
+
+    # Calculate V_prime_1 and V_prime_2
+    V_prime_1 <- matrixproduct_byname(D, hatize_byname(q_prime_1))
+    V_prime_2 <- matrixproduct_byname(D, hatize_byname(q_prime_2))
+
+    # Now subtract the "1" versions and add the "2" versions.
+    U_prime <- difference_byname(U, U_prime_1) %>% sum_byname(U_prime_2)
+    V_prime <- difference_byname(V, V_prime_1) %>% sum_byname(V_prime_2)
+
+    list(U_prime, V_prime) %>% purrr::set_names(c(U_prime_colname, V_prime_colname))
   }
   matsindf_apply(.sutdata, FUN = delta_inputs_ps_func,
-                 k_prime_2 = k_prime_colname, K = K_colname, Y = Y_colname, f_vec = f_colname)
-
+                 k_prime_2 = k_prime_colname,
+                 U = U_colname, V = V_colname, Y = Y_colname,
+                 K = K_colname,
+                 L_ixp = L_ixp_colname, L_pxp = L_pxp_colname,
+                 Z = Z_colname, D = D_colname, f_vec = f_colname)
 }
 
 

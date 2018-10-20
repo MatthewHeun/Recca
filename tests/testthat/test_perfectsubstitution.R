@@ -1,6 +1,7 @@
 library(dplyr)
 library(Hmisc)
 library(magrittr)
+library(matsbyname)
 library(matsindf)
 library(Recca)
 library(testthat)
@@ -89,7 +90,8 @@ test_that("calculation of B matrix works", {
       k_prime = make_list(k_prime_vec, n = 1)
     )
   # Now do the calculation of U_prime and V_prime matrices.
-  delta_inputs_ps(io_mats)
+  perfect_sub_results <- delta_inputs_ps(io_mats)
+
 
 
 
