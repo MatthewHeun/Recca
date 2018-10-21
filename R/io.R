@@ -30,7 +30,7 @@
 #' @param W_colname the name of the output column containing \code{W} matrices.
 #' Default is "\code{W}".
 #' \code{W} is calculated by \code{transpose(V) - U}.
-#' @param B_colname the name of the output column containing \code{B} matrices.
+#' @param K_colname the name of the output column containing \code{K} matrices.
 #' Default is "\code{K}".
 #' \code{K} is calculated by \code{U * f_hat_inv}.
 #' @param Z_colname the name of the output column containing \code{Z} matrices.

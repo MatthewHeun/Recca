@@ -46,6 +46,10 @@ Default is "\code{g}".
 Default is "\code{W}".
 \code{W} is calculated by \code{transpose(V) - U}.}
 
+\item{K_colname}{the name of the output column containing \code{K} matrices.
+Default is "\code{K}".
+\code{K} is calculated by \code{U * f_hat_inv}.}
+
 \item{Z_colname}{the name of the output column containing \code{Z} matrices.
 Default is "\code{Z}".
 \code{Z} is calculated by \code{U * g_hat_inv}.}
@@ -69,10 +73,6 @@ Default is "\code{L_ixp}".
 \item{L_pxp_colname}{the name of the output column containing product-by-product L matrices.
 Default is "\code{L_pxp}".
 \code{L_pxp} is calculated by \code{(I - Z*D)^-1}.}
-
-\item{B_colname}{the name of the output column containing \code{B} matrices.
-Default is "\code{K}".
-\code{K} is calculated by \code{U * f_hat_inv}.}
 }
 \value{
 \code{.sutdata} with additional columns:

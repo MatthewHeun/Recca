@@ -49,6 +49,10 @@ If \code{.sutdata} is \code{NULL} (the default), output is a list with items nam
 and input arguments should be single matrices or vectors.
 }
 \examples{
+library(dplyr)
+library(magrittr)
+library(matsbyname)
+library(tidyr)
 UKEnergy2000mats \%>\%
   spread(key = matrix.name, value = matrix) \%>\%
   select(Country, Year, Energy.type, Last.stage, U, V, Y, r_EIOU, S_units) \%>\%
