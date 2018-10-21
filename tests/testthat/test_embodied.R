@@ -1,4 +1,7 @@
+library(dplyr)
+library(matsbyname)
 library(parallel)
+library(tidyr)
 
 ###########################################################
 context("Embodied energy calculations")

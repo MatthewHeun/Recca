@@ -7,13 +7,13 @@ test_that("reconstructing U and V from single matrices works as expected", {
   alliomats <- UKEnergy2000mats %>%
     spread(key = matrix.name, value = matrix) %>%
     calc_io_mats()
-  allUV <- reconstruct_UV(alliomats, Y_prime_colname = "Y")
+  allUV <- new_Y(alliomats, Y_prime_colname = "Y")
   for (i in 1:nrow(allUV)) {
-    UV <- reconstruct_UV(Y_prime_colname = alliomats$Y[[i]],
-                         L_ixp_colname = alliomats$L_ixp[[i]],
-                         L_pxp_colname = alliomats$L_pxp[[i]],
-                         Z_colname = alliomats$Z[[i]],
-                         D_colname = alliomats$D[[i]])
+    UV <- new_Y(Y_prime_colname = alliomats$Y[[i]],
+                L_ixp_colname = alliomats$L_ixp[[i]],
+                L_pxp_colname = alliomats$L_pxp[[i]],
+                Z_colname = alliomats$Z[[i]],
+                D_colname = alliomats$D[[i]])
     expect_equal(UV$U_prime, allUV$U_prime[[i]])
     expect_equal(UV$V_prime, allUV$V_prime[[i]])
   }
@@ -41,7 +41,7 @@ test_that("reconstructing U and V with a data frame works as expected", {
     mutate(
       Y_prime = Y
     ) %>%
-    reconstruct_UV() %>%
+    new_Y() %>%
     mutate(
       # Take the difference between U_prime and U and V_prime and V
       U_diff = difference_byname(U_prime, U),
@@ -69,7 +69,7 @@ test_that("reconstructing U and V with a data frame works as expected", {
     mutate(
       Y_prime = list(Y_prime_finalE, Y_prime_servicesE, Y_prime_usefulE, Y_prime_servicesX)
     ) %>%
-    reconstruct_UV()
+    new_Y()
   expect_known_value(Reconstructed_Residential,
                      file.path(expec_path, "expected_Reconstructed_Residential.rds"), update = FALSE)
 

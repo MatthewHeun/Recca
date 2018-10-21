@@ -90,10 +90,9 @@ test_that("calculation of B matrix works", {
       k_prime = make_list(k_prime_vec, n = 1)
     )
   # Now do the calculation of U_prime and V_prime matrices.
-  new_k_ps <- delta_inputs_ps(io_mats)
+  new_UV <- new_k_ps(io_mats)
 
-
-
+  expect_known_value(new_UV, file.path(expec_path, "expected_new_UV_from_new_k_ps.rds"), update = FALSE)
 
   if (is_testing()) {
     # Restore the previous working directory.
