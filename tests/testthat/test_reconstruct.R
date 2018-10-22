@@ -19,7 +19,7 @@ test_that("reconstructing U and V from single matrices works as expected", {
   }
 })
 
-test_that("reconstructing U and V with a data frame works as expected", {
+test_that("reconstructing U and V from a new Y matrix works as expected", {
   expec_path <- file.path("tests", "expectations")
 
   if (is_testing()) {
