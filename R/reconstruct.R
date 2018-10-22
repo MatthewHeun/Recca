@@ -71,7 +71,7 @@ new_Y <- function(.sutdata = NULL,
 }
 
 
-#' Assess the effect of changing perfectly substitutable internediate inputs to an industry
+#' Assess the effect of changing perfectly substitutable intermediate inputs to an industry
 #'
 #' This function calculates the effect of changing perfectly-substitutable (ps) inputs
 #' to an intermediate industry.
@@ -118,6 +118,41 @@ new_Y <- function(.sutdata = NULL,
 #' @export
 #'
 #' @examples
+#' library(dplyr)
+#' library(magrittr)
+#' library(matsbyname)
+#' library(tidyr)
+#' # To demonstrate calculating changes to an energy conversion chain due to changes
+#' # in perfectly-substitutable inputs to an intermediate industry,
+#' # we use the PerfectSubmats data frame.
+#' # But we need to calculate several important input-output matrices first.
+#' io_mats <- PerfectSubmats %>%
+#'   spread(key = "matrix.name", value = "matrix") %>%
+#'   calc_io_mats()
+#' # Next, find the K matrix that contains the fraction of each type of energy
+#' # that enters each industry
+#' K <- io_mats$K[[1]]
+#' # Develop a new column vector for inputs to the Electric transport sector.
+#' # As provided, the Electric transport sector is dominated by Renewable elec.
+#' # What if the electricity input to the Electric transport sector
+#' # were split 50/50 between Renewable elect and FF elec?
+#' k_prime_vec <- K[, "Electric transport", drop = FALSE]
+#' k_prime_vec["FF elec", "Electric transport"] <- 0.5
+#' k_prime_vec["Ren elec", "Electric transport"] <- 0.5
+#' # Add k_prime_vec to the io_mats data frame.
+#' io_mats <- io_mats %>%
+#'   mutate(
+#'     # Set up a new k_prime vector for Electric transport.
+#'     # That vector will be used for the infininte substitution calculation.
+#'     k_prime = select_cols_byname(K, retain_pattern = make_pattern("Electric transport",
+#'                                                                   pattern_type = "exact")),
+#'     k_prime = make_list(k_prime_vec, n = 1)
+#'   )
+#' # Now do the calculation of U_prime and V_prime matrices.
+#' new_UV <- new_k_ps(io_mats)
+#' # There is much more FF extraction now than before.
+#' io_mats$U[[1]]["FF", "FF extraction"]
+#' new_UV$U_prime[[1]]["FF", "FF extraction"]
 new_k_ps <- function(.sutdata = NULL,
                             # Input columns
                             k_prime_colname = "k_prime",
@@ -129,7 +164,7 @@ new_k_ps <- function(.sutdata = NULL,
                             U_prime_colname = "U_prime", V_prime_colname = "V_prime"){
   new_k_ps_func <- function(k_prime_2, U, V, Y, K, L_ixp, L_pxp, Z, D, f_vec){
     # In this function, all "1" variables are calculated from the original ECC as supplied by the
-    # input matrices and vectors, K, Y, L_ixp, Z, and f.
+    # input matrices and vectors, namely K, Y, L_ixp, Z, and f.
     # All "2" variables are calculated for the "new" ECC as supplied by the k_prime_2 vector.
     # Note that k_prime_colname in the wrapping function is mapped to k_prime_2 inside this function.
 
