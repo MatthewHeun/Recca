@@ -77,6 +77,8 @@ test_that("resource_industries works correctly", {
 })
 
 test_that("extract_R works correctly", {
+  # These tests will need to be re-evaluated after I implement R matrices in the
+  # UKEnergy2000Mats data frame.
   expected <- UKEnergy2000mats %>%
     spread(key = "matrix.name", value = "matrix") %>%
     mutate(
@@ -93,6 +95,7 @@ test_that("extract_R works correctly", {
     ) %>%
     extract_R()
 
+  # Make sure that we get the expected values for R and V matrices
   for (i in 1:4) {
     expect_true(equal_byname(mats$R[[i]], expected$R[[i]]))
     expect_true(equal_byname(mats$V[[i]], expected$V[[i]]))
