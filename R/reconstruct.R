@@ -1,6 +1,7 @@
 #
 # This file contains functions that reconstruct an economy given
-# total requirements matrices and a new final demand matrix (Y)
+# total requirements matrices (U and V) and a new final demand matrix (Y)
+# or a new inputs matrix (K).
 #
 
 #' Reconstruct an economy given a new final demand matrix

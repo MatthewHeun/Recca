@@ -116,12 +116,12 @@ test_that("final demand aggregates of SUT data work as expected", {
 
 test_that("primary_aggregates_IEA works as expected", {
   # Get the vector of primary industries for the example data set.
-  p_ind <- primary_industries(UKEnergy2000mats %>%
-                                spread(key = matrix.name, value = matrix))[["p_industries"]][[1]]
+  r_ind <- resource_industries(UKEnergy2000mats %>%
+                                spread(key = matrix.name, value = matrix))[["r_industries"]][[1]]
 
   result <- UKEnergy2000tidy %>%
     group_by(Country, Year, Energy.type, Last.stage) %>%
-    primary_aggregates_IEA(p_industries = p_ind)
+    primary_aggregates_IEA(p_industries = r_ind)
   expect_equal(result[["EX_p_IEA.ktoe"]], c(93000, 93000, 93000, 98220))
 })
 

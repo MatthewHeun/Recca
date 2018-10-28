@@ -1,4 +1,7 @@
+library(dplyr)
 library(Hmisc)
+library(magrittr)
+library(tidyr)
 
 ###########################################################
 context("Utilities")
@@ -62,14 +65,38 @@ test_that("starts_with_any_of works properly", {
                c(TRUE, TRUE, FALSE, FALSE))
 })
 
-test_that("primary_industries works correctly", {
+test_that("resource_industries works correctly", {
   mats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
   expected <- c("Resources - Crude", "Resources - NG")
-  expect_equal(primary_industries(mats)[["p_industries"]],
+  expect_equal(resource_industries(mats)[["r_industries"]],
                list(expected, expected, expected, expected))
   # Try with individual matrices
   for (i in 1:nrow(mats)) {
-    expect_equal(primary_industries(U = mats$U[[i]], V = mats$V[[i]]) %>% set_names(NULL) %>% unlist(), expected)
+    expect_equal(resource_industries(U = mats$U[[i]], V = mats$V[[i]]) %>% set_names(NULL) %>% unlist(), expected)
   }
+})
+
+test_that("extract_R works correctly", {
+  expected <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    mutate(
+      R = V %>% select_rows_byname(retain_pattern = make_pattern("Resources - ", pattern_type = "leading")),
+      V = V %>% select_rows_byname(remove_pattern = make_pattern("Resources - ", pattern_type = "leading"))
+    )
+
+  mats <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    # Rename the V matrix, because it includes the R matrix.
+    # At some point, this rename step will be unnecessary because UKEnergy2000mats will be created with R separate from V
+    rename(
+      V_plus_R = V
+    ) %>%
+    extract_R()
+
+  for (i in 1:4) {
+    expect_true(equal_byname(mats$R[[i]], expected$R[[i]]))
+    expect_true(equal_byname(mats$V[[i]], expected$V[[i]]))
+  }
+
 })
 

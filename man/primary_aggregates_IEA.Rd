@@ -57,9 +57,9 @@ Grouping columns are preserved on output.
 library(dplyr)
 library(magrittr)
 library(tidyr)
-p_ind <- primary_industries(UKEnergy2000mats \%>\%
-  spread(key = matrix.name, value = matrix))[["p_industries"]][[1]]
+r_ind <- resource_industries(UKEnergy2000mats \%>\%
+  spread(key = matrix.name, value = matrix))[["r_industries"]][[1]]
 UKEnergy2000tidy \%>\%
   group_by(Country, Year, Energy.type, Last.stage) \%>\%
-  primary_aggregates_IEA(p_industries = p_ind)
+  primary_aggregates_IEA(p_industries = r_ind)
 }
