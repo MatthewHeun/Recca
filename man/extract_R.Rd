@@ -19,7 +19,7 @@ extract_R(.sutdata = NULL, U_colname = "U",
 \item{R_colname}{identifier for the resource matrix (a string). Default is "\code{R}".}
 }
 \value{
-a version of the \code{V} matrix without resource industries and an \code{R} matrix
+a version of the \code{V_plus_R} matrix without resource industries and an \code{R} matrix
 }
 \description{
 Resource industries are industries that make a product without using any products.
@@ -43,4 +43,16 @@ If there are no resource industries in the \code{V_plus_R} matrix,
 a warning is emitted,
 no \code{R} matrix is created, and
 no changes are made to the \code{V_plus_R} matrix.
+}
+\examples{
+library(dplyr)
+library(magrittr)
+library(tidyr)
+UKEnergy2000mats \%>\%
+  spread(key = "matrix.name", value = "matrix") \%>\%
+  # Rename the V matrix, because it includes the R matrix.
+  rename(
+    V_plus_R = V
+  ) \%>\%
+  extract_R()
 }

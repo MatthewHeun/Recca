@@ -152,11 +152,21 @@ resource_industries <- function(.sutdata = NULL, U = "U", V = "V", r_industries 
 #' @param V_colname identifier for the make matrix (a string). Default is "\code{V}".
 #' @param R_colname identifier for the resource matrix (a string). Default is "\code{R}".
 #'
-#' @return a version of the \code{V} matrix without resource industries and an \code{R} matrix
+#' @return a version of the \code{V_plus_R} matrix without resource industries and an \code{R} matrix
 #'
 #' @export
 #'
 #' @examples
+#' library(dplyr)
+#' library(magrittr)
+#' library(tidyr)
+#' UKEnergy2000mats %>%
+#'   spread(key = "matrix.name", value = "matrix") %>%
+#'   # Rename the V matrix, because it includes the R matrix.
+#'   rename(
+#'     V_plus_R = V
+#'   ) %>%
+#'   extract_R()
 extract_R <- function(.sutdata = NULL, U_colname = "U", V_plus_R_colname = "V_plus_R",
                       V_colname = "V", R_colname = "R"){
   extract_R_func <- function(U, V_plus_R){
