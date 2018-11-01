@@ -183,3 +183,54 @@ extract_R <- function(.sutdata = NULL, U_colname = "U", V_plus_R_colname = "V_pl
 }
 
 
+#' Execute \code{expect_known_value} interactively or during testing
+#'
+#' \code{testthat::expect_known_value} is difficult to use,
+#' because working directories are different for interactive sessions and
+#' during \code{R cmd check}.
+#' This function abstracts those difficulties by using \code{testthat::is_testing()}
+#' and other system checks.
+#' The assumed directory for saved expected objects is "\code{tests/expectations}"
+#'
+#' @param actual_object an object created during a test
+#' @param expected_file_name the name of a file previously saved
+#'        against which \code{actual_object} will be tested.
+#'        This argument must be a string and should probably end in "\code{.rds}".
+#'        Do not include path information.
+#'        Example: "\code{expected_L.rds}".
+#' @param update tells whether to update the saved object
+#' @param check.attributes tells whether the test should also check attributes during the testing process
+#' @param expec_folder a string giving the path to expected values stored as objects
+#'        on disk.
+#'        Default is "\code{tests/expectations}"
+#'
+#' @return NULL (invisibly). This function is called for its side effect of executing \code{expect_known_value}.
+#'
+test_against_file <- function(actual_object, expected_file_name,
+                              update = FALSE, check.attributes = TRUE,
+                              expec_folder = file.path("tests", "expectations")){
+
+  # This is supposed to skip a test when it runs with environment variable NOT_CRAN set.
+  # But this functionality doesn't apparently work for me.
+  skip_on_cran()
+
+  if (is_testing()) {
+    # testthat sets the working directory to the folder containing the test file.
+    # We want the ability to use these tests interactively, too,
+    # when the working directory will be the top level of this project.
+    # So change the working directory if we're testing.
+    # Save the current working directory, to be restored later
+    currwd <- getwd()
+    # Move the working directory up two levels, to the top level of this project.
+    setwd(file.path("..", ".."))
+  }
+
+  result <- expect_known_value(actual_object, file.path(expec_folder, expected_file_name),
+                     update = update, check.attributes = check.attributes)
+
+  if (is_testing()) {
+    # Set working directory back to its original value
+    setwd(currwd)
+  }
+  invisible(result)
+}

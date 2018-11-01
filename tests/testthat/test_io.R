@@ -10,15 +10,15 @@ test_that("calculating y, q, f, g, W, A, and L works as expected", {
   yqfgW <- UKEnergy2000mats %>%
     spread(key = matrix.name, value = matrix) %>%
     calc_yqfgW()
-  expect_known_value(yqfgW, system.file("expectations", "expected_yqfgW.rds", package = "Recca"), update = FALSE)
+  Recca:::test_against_file(yqfgW, "expected_yqfgW.rds", update = FALSE)
 
   # Calculate Z, D, C, and A matrices from yqfgW
   A <- yqfgW %>% calc_A()
-  expect_known_value(A, system.file("expectations", "expected_A.rds", package = "Recca"))
+  Recca:::test_against_file(A, "expected_A.rds", update = FALSE)
 
   # Calculate L matrices (L_ixp and L_pxp)
   L <- A %>% calc_L()
-  expect_known_value(L, system.file("expectations", "expected_L.rds", package = "Recca"), update = FALSE)
+  Recca:::test_against_file(L, "expected_L.rds", update = FALSE)
 })
 
 
@@ -27,7 +27,7 @@ test_that("calculating IO matrices works as expected", {
   io_mats <- UKEnergy2000mats %>%
     spread(key = matrix.name, value = matrix) %>%
     calc_io_mats()
-  expect_known_value(io_mats, system.file("expectations", "expected_iomats.rds", package = "Recca"), update = FALSE)
+  Recca:::test_against_file(io_mats, "expected_iomats.rds", update = FALSE)
 })
 
 

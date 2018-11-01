@@ -65,8 +65,7 @@ test_that("reconstructing U and V from a new Y matrix works as expected", {
       Y_prime = list(Y_prime_finalE, Y_prime_servicesE, Y_prime_usefulE, Y_prime_servicesX)
     ) %>%
     new_Y()
-  expect_known_value(Reconstructed_Residential,
-                     system.file("expectations", "expected_Reconstructed_Residential.rds", package = "Recca"), update = FALSE)
+  Recca:::test_against_file(Reconstructed_Residential, "expected_Reconstructed_Residential.rds", update = FALSE)
 })
 
 
@@ -80,8 +79,7 @@ test_that("new_k_ps works as expected", {
 
   io_mats <- perfectsub_mats %>% calc_io_mats()
   K <- io_mats$K[[1]]
-
-  expect_known_value(K, system.file("expectations", "expected_K.rds", package = "Recca"), update = FALSE)
+  Recca:::test_against_file(K, "expected_K.rds", update = FALSE)
 
   # Figure out a new column vector for k_prime.
   k_prime_vec <- K[, "Electric transport", drop = FALSE]
@@ -97,6 +95,5 @@ test_that("new_k_ps works as expected", {
     )
   # Now do the calculation of U_prime and V_prime matrices.
   new_UV <- new_k_ps(io_mats)
-
-  expect_known_value(new_UV, system.file("expectations", "expected_new_UV_from_new_k_ps.rds", package = "Recca"), update = FALSE)
+  Recca:::test_against_file(new_UV, "expected_new_UV_from_new_k_ps.rds", update = FALSE)
 })
