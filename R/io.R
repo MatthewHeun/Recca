@@ -93,7 +93,7 @@ calc_io_mats <- function(.sutdata = NULL,
 }
 
 
-#' Calculate y, f, g, and q vectors and W matrices
+#' Calculate \code{y}, \code{f}, \code{g}, and \code{q} vectors and the \code{W} matrix
 #'
 #' Note that a necessary condition for calculating the \code{f} and \code{g} vectors is that
 #' the U_bar and V_bar matrices should have only one entry per column and row, respectively,
@@ -237,7 +237,7 @@ calc_A <- function(.sutdata = NULL,
 }
 
 
-#' Calculates total requirements matrices
+#' Calculates total requirements matrices (\code{L_pxp} and \code{L_ixp})
 #'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
 #' @param D_colname the name of the column in \code{.sutdata} containing the \code{D} matrix.

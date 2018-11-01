@@ -2,7 +2,7 @@
 % Please edit documentation in R/io.R
 \name{calc_yqfgW}
 \alias{calc_yqfgW}
-\title{Calculate y, f, g, and q vectors and W matrices}
+\title{Calculate \code{y}, \code{f}, \code{g}, and \code{q} vectors and the \code{W} matrix}
 \usage{
 calc_yqfgW(.sutdata = NULL, U_colname = "U", V_colname = "V",
   Y_colname = "Y", S_units = "S_units", y_colname = "y",

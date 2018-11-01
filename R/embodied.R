@@ -66,7 +66,7 @@ calc_embodied_mats <- function(.iodata = NULL,
                  L_ixp = L_ixp_colname, g = g_colname, W = W_colname, U_EIOU = U_EIOU_colname)
 }
 
-#' Calculate the G and H matrices for embodied energy calculations
+#' Calculate the \code{G} and \code{H} matrices for embodied energy calculations
 #'
 #' @param .iodata a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.
 #' \code{.iodata} will likely have been obtained from the \code{calc_io_mats} function.
@@ -95,7 +95,7 @@ calc_GH <- function(.iodata = NULL,
   matsindf_apply(.iodata, FUN = GH_func, Y = Y_colname, L_ixp = L_ixp_colname)
 }
 
-#' Calculate the E matrix for embodied energy calculations
+#' Calculate the \code{E} matrix for embodied energy calculations
 #'
 #' @param .iodata a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.
 #' \code{.iodata} will likely have been obtained from the \code{calc_io_mats} function.
@@ -284,7 +284,7 @@ calc_F_footprint_effects <- function(.Mdata = NULL,
 
     # Everything checked out, so make our outgoing list and return it.
     list(F_footprint_p, F_effects_p, F_footprint_s, F_effects_s) %>%
-      set_names(F_footprint_p_colname, F_effects_p_colname, F_footprint_s_colname, F_effects_s_colname)
+      magrittr::set_names(c(F_footprint_p_colname, F_effects_p_colname, F_footprint_s_colname, F_effects_s_colname))
   }
   matsindf_apply(.Mdata, FUN = F_func, M_p = M_p_colname, M_s = M_s_colname)
 }

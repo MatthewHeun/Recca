@@ -2,7 +2,7 @@
 % Please edit documentation in R/embodied.R
 \name{calc_GH}
 \alias{calc_GH}
-\title{Calculate the G and H matrices for embodied energy calculations}
+\title{Calculate the \code{G} and \code{H} matrices for embodied energy calculations}
 \usage{
 calc_GH(.iodata = NULL, Y_colname = "Y", L_ixp_colname = "L_ixp",
   G_colname = "G", H_colname = "H")
@@ -26,5 +26,5 @@ Leontief (\code{L_ixp}) matrices.}
 \code{.iodata} with columns \code{G_colname} and \code{H_colname} added.
 }
 \description{
-Calculate the G and H matrices for embodied energy calculations
+Calculate the \code{G} and \code{H} matrices for embodied energy calculations
 }
