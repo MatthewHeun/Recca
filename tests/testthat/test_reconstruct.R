@@ -28,19 +28,6 @@ test_that("reconstructing U and V from single matrices works as expected", {
 })
 
 test_that("reconstructing U and V from a new Y matrix works as expected", {
-  expec_path <- file.path("tests", "expectations")
-
-  if (is_testing()) {
-    # testthat sets the working directory to the folder containing this file.
-    # We want the ability to use these tests interactively, too,
-    # when the working directory will be the top level of this project.
-    # So change the working directory if we're testing.
-    # Save the current working directory, to be restored later
-    currwd <- getwd()
-    # Move the working directory up two levels, to the top level of this project.
-    setwd(file.path("..", ".."))
-  }
-
   # Try with Y_prime <- Y, thereby simply trying to duplicate the original U and V matrices
   Reconstructed <- UKEnergy2000mats %>%
     spread(key = matrix.name, value = matrix) %>%
@@ -79,12 +66,7 @@ test_that("reconstructing U and V from a new Y matrix works as expected", {
     ) %>%
     new_Y()
   expect_known_value(Reconstructed_Residential,
-                     file.path(expec_path, "expected_Reconstructed_Residential.rds"), update = FALSE)
-
-  if (is_testing()) {
-    # Restore the previous working directory.
-    setwd(currwd)
-  }
+                     system.file("expectations", "expected_Reconstructed_Residential.rds", package = "Recca"), update = FALSE)
 })
 
 
@@ -92,27 +74,14 @@ test_that("reconstructing U and V from a new Y matrix works as expected", {
 context("Perfect substitution")
 ###########################################################
 
-test_that("calculation of K matrix works", {
-  expec_path <- file.path("tests", "expectations")
-
-  if (is_testing()) {
-    # testthat sets the working directory to the folder containing this file.
-    # We want the ability to use these tests interactively, too,
-    # when the working directory will be the top level of this project.
-    # So change the working directory if we're testing.
-    # Save the current working directory, to be restored later
-    currwd <- getwd()
-    # Move the working directory up two levels, to the top level of this project.
-    setwd(file.path("..", ".."))
-  }
-
+test_that("new_k_ps works as expected", {
   perfectsub_mats <- PerfectSubmats %>%
     spread(key = "matrix.name", value = "matrix")
 
   io_mats <- perfectsub_mats %>% calc_io_mats()
   K <- io_mats$K[[1]]
 
-  expect_known_value(K, file.path(expec_path, "expected_K.rds"), update = FALSE)
+  expect_known_value(K, system.file("expectations", "expected_K.rds", package = "Recca"), update = FALSE)
 
   # Figure out a new column vector for k_prime.
   k_prime_vec <- K[, "Electric transport", drop = FALSE]
@@ -129,10 +98,5 @@ test_that("calculation of K matrix works", {
   # Now do the calculation of U_prime and V_prime matrices.
   new_UV <- new_k_ps(io_mats)
 
-  expect_known_value(new_UV, file.path(expec_path, "expected_new_UV_from_new_k_ps.rds"), update = FALSE)
-
-  if (is_testing()) {
-    # Restore the previous working directory.
-    setwd(currwd)
-  }
+  expect_known_value(new_UV, system.file("expectations", "expected_new_UV_from_new_k_ps.rds", package = "Recca"), update = FALSE)
 })
