@@ -44,6 +44,13 @@ test_that("verify_cols_missing works with a single value", {
 })
 
 test_that("S_units_from_tidy works as expected", {
-  expect_known_value(S_units_from_tidy(UKEnergy2000tidy %>% group_by(Country, Year, Energy.type, Last.stage)),
-                     system.file("expectations", "expected_S_units.rds", package = "Recca"), update = FALSE)
+  su <- S_units_from_tidy(UKEnergy2000tidy %>% group_by(Country, Year, Energy.type, Last.stage))
+print("Expected:")
+print(attributes(readRDS(system.file("expectations", "expected_S_units.rds", package = "Recca"))))
+# print(readRDS(system.file("expectations", "expected_S_units.rds", package = "Recca")))
+print("Actual:")
+print(attributes(su))
+# print(su)
+  expect_known_value(su, system.file("expectations", "expected_S_units.rds", package = "Recca"),
+                     update = TRUE)
 })
