@@ -1,0 +1,45 @@
+---
+title: "Recca"
+author: "Matthew Kuperus Heun"
+date: "`r Sys.Date()`"
+header-includes:
+   - \usepackage{amsmath}
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{matsindf Vignette}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+bibliography: recca.bib
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(dplyr)
+library(tidyr)
+library(tibble)
+library(ggplot2)
+library(matsbyname)
+library(matsindf)
+```
+
+
+## Introduction
+
+`Recca` (`R` Energy Conversion Chain Analysis)
+is an `R` package that enables
+energy and exergy analysis of energy conversion chains.
+`Recca` makes extensive use of a matrix-based PSUT analysis technique
+that first appeared in Heun, Owen, and Brockway [-@Heun:2018].
+
+
+## Conclusion
+
+This vignette demonstrated the use of the <tt>Recca</tt> package. 
+
+
+## References
