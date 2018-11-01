@@ -20,11 +20,10 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 library(dplyr)
-library(tidyr)
-library(tibble)
-library(ggplot2)
 library(matsbyname)
 library(matsindf)
+library(tidyr)
+library(tibble)
 ```
 
 
@@ -34,12 +33,14 @@ library(matsindf)
 is an `R` package that enables
 energy and exergy analysis of energy conversion chains.
 `Recca` makes extensive use of a matrix-based PSUT analysis technique
-that first appeared in Heun, Owen, and Brockway [-@Heun:2018].
+that first appeared in Heun, Owen, and Brockway 
+[Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
+
 
 
 ## Conclusion
 
-This vignette demonstrated the use of the <tt>Recca</tt> package. 
+This vignette demonstrated the use of the `Recca` package. 
 
 
 ## References

@@ -212,7 +212,7 @@ test_against_file <- function(actual_object, expected_file_name,
 
   # This is supposed to skip a test when it runs with environment variable NOT_CRAN set.
   # But this functionality doesn't apparently work for me.
-  skip_on_cran()
+  # skip_on_cran()
 
   if (is_testing()) {
     # testthat sets the working directory to the folder containing the test file.
@@ -226,7 +226,7 @@ test_against_file <- function(actual_object, expected_file_name,
   }
 
   result <- expect_known_value(actual_object, file.path(expec_folder, expected_file_name),
-                     update = update, check.attributes = check.attributes)
+                                         update = update, check.attributes = check.attributes)
 
   if (is_testing()) {
     # Set working directory back to its original value
