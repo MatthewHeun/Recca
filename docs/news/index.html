@@ -104,12 +104,104 @@
       <small>Source: <a href='https://github.com/MatthewHeun/Recca/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="recca-0-1-8-2018-07-27" class="section level1">
+<h1 class="page-header">
+<a href="#recca-0-1-8-2018-07-27" class="anchor"></a>Recca 0.1.8 (2018-07-27)</h1>
+<ul>
+<li>Added new function <code>node_list</code> which creates a node list from an edge list.</li>
+</ul>
+</div>
+    <div id="recca-0-1-7-2018-07-26" class="section level1">
+<h1 class="page-header">
+<a href="#recca-0-1-7-2018-07-26" class="anchor"></a>Recca 0.1.7 (2018-07-26)</h1>
+<ul>
+<li>Added new function <code>edge_list</code> which creates an edge list from U, V, and Y matrices.</li>
+</ul>
+</div>
+    <div id="recca-0-1-6-2018-07-09" class="section level1">
+<h1 class="page-header">
+<a href="#recca-0-1-6-2018-07-09" class="anchor"></a>Recca 0.1.6 (2018-07-09)</h1>
+<ul>
+<li>Fixed a bug in <code>verify_IEATable_energy_balance</code>. <code>err</code> –&gt; <code>as.name(err)</code>.</li>
+<li>Fixed a bug in <code>S_units_from_tidy</code>. Needed to change an argument name for <code><a href="http://www.rdocumentation.org/packages/matsindf/topics/collapse_to_matrices">matsindf::collapse_to_matrices</a></code> from <code>values</code> –&gt; <code>matvals</code>.</li>
+</ul>
+</div>
+    <div id="recca-0-1-5-2018-07-02" class="section level1">
+<h1 class="page-header">
+<a href="#recca-0-1-5-2018-07-02" class="anchor"></a>Recca 0.1.5 (2018-07-02)</h1>
+<ul>
+<li>Added a column in the output of <code>verify_SUT_industry_production</code> that indicates which industries are problematic.</li>
+</ul>
+</div>
+    <div id="recca-0-1-4-2018-06-28" class="section level1">
+<h1 class="page-header">
+<a href="#recca-0-1-4-2018-06-28" class="anchor"></a>Recca 0.1.4 (2018-06-28)</h1>
+<ul>
+<li>Fixed a bug in the <code>verify_IEATable_energy_balance</code> function: !!err –&gt; !!as.name(err)</li>
+</ul>
+</div>
+    <div id="recca-0-1-3-2018-06-27" class="section level1">
+<h1 class="page-header">
+<a href="#recca-0-1-3-2018-06-27" class="anchor"></a>Recca 0.1.3 (2018-06-27)</h1>
+<ul>
+<li>Added <code>verify_IEATable_energy_balance</code> function</li>
+</ul>
+</div>
+    <div id="recca-0-1-2-2018-05-20" class="section level1">
+<h1 class="page-header">
+<a href="#recca-0-1-2-2018-05-20" class="anchor"></a>Recca 0.1.2 (2018-05-20)</h1>
+<ul>
+<li>All functions now use the <code><a href="http://www.rdocumentation.org/packages/matsindf/topics/matsindf_apply">matsindf::matsindf_apply</a></code> function</li>
+<li>
+<code>F</code> functions now do internal energy balance checks.</li>
+<li>Much code and API cleanup.</li>
+<li>Note that some API changes are expected, particularly name changes for <code>*_colname</code> arguments.</li>
+</ul>
+</div>
+    <div id="recca-0-1-1-2018-04-16" class="section level1">
+<h1 class="page-header">
+<a href="#recca-0-1-1-2018-04-16" class="anchor"></a>Recca 0.1.1 (2018-04-16)</h1>
+<div id="many-new-functions" class="section level2">
+<h2 class="hasAnchor">
+<a href="#many-new-functions" class="anchor"></a>Many new functions</h2>
+<ul>
+<li><p><code>calc_io_mats</code>: calculate input-output (PSUT version) matrices, including <code>y</code>, <code>q</code>, <code>g</code>, <code>W</code>, <code>Z</code>, <code>D</code>, <code>C</code>, <code>A</code>, <code>L_ixp</code>, and <code>L_pxp</code>.</p></li>
+<li><p><code>reconstruct_UV</code>: Reconstruct the energy conversion chain (new <code>U</code> and <code>V</code> matrices) from a new final demand matrix (<code>Y</code>)</p></li>
+</ul>
+</div>
+</div>
+    <div id="recca-0-1-0-2018-04-12" class="section level1">
+<h1 class="page-header">
+<a href="#recca-0-1-0-2018-04-12" class="anchor"></a>Recca 0.1.0 (2018-04-12)</h1>
+<ul>
+<li>Initial version</li>
+<li>Includes:
+<ul>
+<li>
+<code>UKEnergy2000tidy</code>, <code>UKEnergy2000mats</code>
+</li>
+<li>Functions to check energy balance</li>
+<li>Functions to perform aggregation calculations for primary energy and final demand</li>
+<li>Stub LaTeX vignette</li>
+</ul>
+</li>
+</ul>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#recca-0-1-8-2018-07-27">0.1.8</a></li>
+        <li><a href="#recca-0-1-7-2018-07-26">0.1.7</a></li>
+        <li><a href="#recca-0-1-6-2018-07-09">0.1.6</a></li>
+        <li><a href="#recca-0-1-5-2018-07-02">0.1.5</a></li>
+        <li><a href="#recca-0-1-4-2018-06-28">0.1.4</a></li>
+        <li><a href="#recca-0-1-3-2018-06-27">0.1.3</a></li>
+        <li><a href="#recca-0-1-2-2018-05-20">0.1.2</a></li>
+        <li><a href="#recca-0-1-1-2018-04-16">0.1.1</a></li>
+        <li><a href="#recca-0-1-0-2018-04-12">0.1.0</a></li>
       </ul>
     </div>
   </div>
