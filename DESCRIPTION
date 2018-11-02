@@ -30,8 +30,7 @@ Imports:
     tibble,
     tidyr
 Suggests:
-    knitr, 
-    testthat
+    knitr
 VignetteBuilder: 
     knitr
 URL: https://github.com/MatthewHeun/Recca
