@@ -100,6 +100,5 @@ test_that("separate_RV works correctly", {
     expect_true(equal_byname(mats$R[[i]], expected$R[[i]]))
     expect_true(equal_byname(mats$V[[i]], expected$V[[i]]))
   }
-
 })
 
