@@ -222,5 +222,13 @@ new_k_ps <- function(.sutdata = NULL,
 }
 
 
+new_R <- function(.sutdata = NULL,
+                  # Input columns
+                  k_prime_colname = "k_prime",
+                  U_colname = "U", V_colname = "V", Y_colname = "Y",
+                  # Output columns
+                  U_prime_colname = "U_prime", V_prime_colname = "V_prime", Y_Prime_colname = "Y_prime"){
+
+}
 
 

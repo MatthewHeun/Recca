@@ -123,7 +123,7 @@ resource_industries <- function(.sutdata = NULL, U = "U", V = "V", r_industries 
 }
 
 
-#' Extract resource matrices (\code{R}) from make plus resource (\code{V_plus_R}) and use (\code{U}) matrices
+#' Separate resource (\code{R}) and make (\code{V}) matrices from make plus resource (\code{V_plus_R}) matrices
 #'
 #' Resource industries are industries that make a product without using any products.
 #' Resource industries are identified by interrogating
@@ -166,8 +166,8 @@ resource_industries <- function(.sutdata = NULL, U = "U", V = "V", r_industries 
 #'   rename(
 #'     V_plus_R = V
 #'   ) %>%
-#'   extract_R()
-extract_R <- function(.sutdata = NULL, U_colname = "U", V_plus_R_colname = "V_plus_R",
+#'   separate_RV()
+separate_RV <- function(.sutdata = NULL, U_colname = "U", V_plus_R_colname = "V_plus_R",
                       V_colname = "V", R_colname = "R"){
   extract_R_func <- function(U, V_plus_R){
     r_industry_names <- resource_industries(U = U, V = V_plus_R, r_industries = "r_inds") %>% unlist()

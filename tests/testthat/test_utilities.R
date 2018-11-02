@@ -76,7 +76,7 @@ test_that("resource_industries works correctly", {
   }
 })
 
-test_that("extract_R works correctly", {
+test_that("separate_RV works correctly", {
   # These tests will need to be re-evaluated after I implement R matrices in the
   # UKEnergy2000Mats data frame.
   expected <- UKEnergy2000mats %>%
@@ -93,7 +93,7 @@ test_that("extract_R works correctly", {
     rename(
       V_plus_R = V
     ) %>%
-    extract_R()
+    separate_RV()
 
   # Make sure that we get the expected values for R and V matrices
   for (i in 1:4) {
