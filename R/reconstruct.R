@@ -78,6 +78,7 @@ new_Y <- function(.sutdata = NULL,
 #' to an intermediate industry.
 #' New versions of \code{U} and \code{V} matrices are returned
 #' as \code{U_prime} and \code{V_prime}.
+#' Final demand (\code{Y}) is unchanged.
 #'
 #' Note that inputs \code{K_colname}, \code{L_ixp_colname}, \code{L_pxp_colname},
 #' \code{Z_colname}, \code{D_colname}, and \code{f_colname} can be
@@ -96,23 +97,21 @@ new_Y <- function(.sutdata = NULL,
 #'        columns of the \code{K} matrix in each row of \code{.sutdata}.
 #'        Each entry in the \code{k_prime} column of \code{.sutdata} must be a single-column matrix, and
 #'        the name of the single column must match the name of one of the columns of matrix \code{K}.
-#' @param U_colname the name of a column in \code{.sutdata} containing \code{U} matrices for the base ECC.
-#' @param V_colname the name of a column in \code{.sutdata} containing \code{V} matrices for the base ECC.
-#' @param Y_colname the name of a column in \code{.sutdata} containing \code{Y} matrices for the base ECC.
-#' @param K_colname the name of a column in \code{.sutdata} containing product-by-industry \code{K} matrices.
+#' @param U_colname the name of a column in \code{.sutdata} containing \code{U} matrices for the base ECC.  Default is "\code{U}".
+#' @param V_colname the name of a column in \code{.sutdata} containing \code{V} matrices for the base ECC.  Default is "\code{V}".
+#' @param Y_colname the name of a column in \code{.sutdata} containing \code{Y} matrices for the base ECC.  Default is "\code{Y}".
+#' @param K_colname the name of a column in \code{.sutdata} containing product-by-industry \code{K} matrices.  Default is "\code{K}".
 #'        \code{K} consists of columns that sum to 1.
 #'        Elements of \code{K} indicate the fraction of total input to industries (in columns)
 #'        provided by products (in rows).
 #'        \code{K} can be calculated by \code{\link{calc_io_mats}}.
-#' @param L_ixp_colname the name of a column in \code{.sutdata} containing \code{L_ixp} matrices for the base ECC.
-#' @param L_pxp_colname the name of a column in \code{.sutdata} containing \code{L_pxp} matrices for the base ECC.
-#' @param Z_colname the name of a column in \code{.sutadata} containing \code{Z} matrices for the base ECC.
-#' @param D_colname the name of a column in \code{.sutadata} containing \code{D} matrices for the base ECC.
-#' @param f_colname the name of a column in \code{.sutadata} containing \code{f} vectors for the base ECC.
-#' @param U_prime_colname the name of the output column that contains new Use (\code{U}) matrices.
-#'        Default is "\code{U_prime}".
-#' @param V_prime_colname the name of the output column that contains new Make (\code{V}) matrices.
-#'        Default is "\code{V_prime}".
+#' @param L_ixp_colname the name of a column in \code{.sutdata} containing \code{L_ixp} matrices for the base ECC.  Default is "\code{L_ixp}".
+#' @param L_pxp_colname the name of a column in \code{.sutdata} containing \code{L_pxp} matrices for the base ECC.  Default is "\code{L_pxp}".
+#' @param Z_colname the name of a column in \code{.sutadata} containing \code{Z} matrices for the base ECC.  Default is "\code{Z}".
+#' @param D_colname the name of a column in \code{.sutadata} containing \code{D} matrices for the base ECC.  Default is "\code{D}".
+#' @param f_colname the name of a column in \code{.sutadata} containing \code{f} vectors for the base ECC.  Default is "\code{f}".
+#' @param U_prime_colname the name of the output column that contains new Use (\code{U}) matrices.  Default is "\code{U_prime}".
+#' @param V_prime_colname the name of the output column that contains new Make (\code{V}) matrices.  Default is "\code{V_prime}".
 #'
 #' @return \code{.sutdata} with additional columns \code{U_prime_colname} and \code{V_prime_colname}
 #'
@@ -222,9 +221,35 @@ new_k_ps <- function(.sutdata = NULL,
 }
 
 
+#' Assess the effect of new levels of resources
+#'
+#' This function calculates the effect of changing the resources available to an energy conversion chain.
+#' New versions of \code{U}, \code{V}, and \code{Y} matrices are returned
+#' as \code{U_prime}, \code{V_prime}, and \code{Y_prime}.
+#'
+#' Note that inputs \code{L_ixp_colname}, \code{L_pxp_colname},
+#' can be
+#' conveniently calculated by the function \code{\link{calc_io_mats}}.
+#'
+#' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
+#' @param R_prime_colname the name of an input column in \code{.sutdata} containing a new resource matrix for the ECC.
+#' @param U_colname the name of a column in \code{.sutdata} containing \code{U} matrices for the base ECC.  Default is "\code{U}".
+#' @param V_colname the name of a column in \code{.sutdata} containing \code{V} matrices for the base ECC.  Default is "\code{V}".
+#' @param Y_colname the name of a column in \code{.sutdata} containing \code{Y} matrices for the base ECC.  Default is "\code{Y}".
+#' @param U_prime_colname the name of the output column that contains new Use (\code{U}) matrices.
+#'        Default is "\code{U_prime}".
+#' @param V_prime_colname the name of the output column that contains new Make (\code{V}) matrices.
+#'        Default is "\code{V_prime}".
+#' @param Y_Prime_colname
+#'
+#' @return \code{.sutdata} with additional columns \code{U_prime_colname}, \code{V_prime_colname}, and \code{Y_prime_colname}.
+#'
+#' @export
+#'
+#' @examples
 new_R <- function(.sutdata = NULL,
                   # Input columns
-                  k_prime_colname = "k_prime",
+                  R_prime_colname = "R_prime",
                   U_colname = "U", V_colname = "V", Y_colname = "Y",
                   # Output columns
                   U_prime_colname = "U_prime", V_prime_colname = "V_prime", Y_Prime_colname = "Y_prime"){

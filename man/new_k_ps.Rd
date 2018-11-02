@@ -18,33 +18,31 @@ columns of the \code{K} matrix in each row of \code{.sutdata}.
 Each entry in the \code{k_prime} column of \code{.sutdata} must be a single-column matrix, and
 the name of the single column must match the name of one of the columns of matrix \code{K}.}
 
-\item{U_colname}{the name of a column in \code{.sutdata} containing \code{U} matrices for the base ECC.}
+\item{U_colname}{the name of a column in \code{.sutdata} containing \code{U} matrices for the base ECC.  Default is "\code{U}".}
 
-\item{V_colname}{the name of a column in \code{.sutdata} containing \code{V} matrices for the base ECC.}
+\item{V_colname}{the name of a column in \code{.sutdata} containing \code{V} matrices for the base ECC.  Default is "\code{V}".}
 
-\item{Y_colname}{the name of a column in \code{.sutdata} containing \code{Y} matrices for the base ECC.}
+\item{Y_colname}{the name of a column in \code{.sutdata} containing \code{Y} matrices for the base ECC.  Default is "\code{Y}".}
 
-\item{K_colname}{the name of a column in \code{.sutdata} containing product-by-industry \code{K} matrices.
+\item{K_colname}{the name of a column in \code{.sutdata} containing product-by-industry \code{K} matrices.  Default is "\code{K}".
 \code{K} consists of columns that sum to 1.
 Elements of \code{K} indicate the fraction of total input to industries (in columns)
 provided by products (in rows).
 \code{K} can be calculated by \code{\link{calc_io_mats}}.}
 
-\item{L_ixp_colname}{the name of a column in \code{.sutdata} containing \code{L_ixp} matrices for the base ECC.}
+\item{L_ixp_colname}{the name of a column in \code{.sutdata} containing \code{L_ixp} matrices for the base ECC.  Default is "\code{L_ixp}".}
 
-\item{L_pxp_colname}{the name of a column in \code{.sutdata} containing \code{L_pxp} matrices for the base ECC.}
+\item{L_pxp_colname}{the name of a column in \code{.sutdata} containing \code{L_pxp} matrices for the base ECC.  Default is "\code{L_pxp}".}
 
-\item{Z_colname}{the name of a column in \code{.sutadata} containing \code{Z} matrices for the base ECC.}
+\item{Z_colname}{the name of a column in \code{.sutadata} containing \code{Z} matrices for the base ECC.  Default is "\code{Z}".}
 
-\item{D_colname}{the name of a column in \code{.sutadata} containing \code{D} matrices for the base ECC.}
+\item{D_colname}{the name of a column in \code{.sutadata} containing \code{D} matrices for the base ECC.  Default is "\code{D}".}
 
-\item{f_colname}{the name of a column in \code{.sutadata} containing \code{f} vectors for the base ECC.}
+\item{f_colname}{the name of a column in \code{.sutadata} containing \code{f} vectors for the base ECC.  Default is "\code{f}".}
 
-\item{U_prime_colname}{the name of the output column that contains new Use (\code{U}) matrices.
-Default is "\code{U_prime}".}
+\item{U_prime_colname}{the name of the output column that contains new Use (\code{U}) matrices.  Default is "\code{U_prime}".}
 
-\item{V_prime_colname}{the name of the output column that contains new Make (\code{V}) matrices.
-Default is "\code{V_prime}".}
+\item{V_prime_colname}{the name of the output column that contains new Make (\code{V}) matrices.  Default is "\code{V_prime}".}
 }
 \value{
 \code{.sutdata} with additional columns \code{U_prime_colname} and \code{V_prime_colname}
@@ -54,6 +52,7 @@ This function calculates the effect of changing perfectly-substitutable (ps) inp
 to an intermediate industry.
 New versions of \code{U} and \code{V} matrices are returned
 as \code{U_prime} and \code{V_prime}.
+Final demand (\code{Y}) is unchanged.
 }
 \details{
 Note that inputs \code{K_colname}, \code{L_ixp_colname}, \code{L_pxp_colname},
