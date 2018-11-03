@@ -35,7 +35,8 @@
 <meta property="og:description" content="This function calculates the effect of changing perfectly-substitutable (ps) inputs
 to an intermediate industry.
 New versions of U and V matrices are returned
-as U_prime and V_prime." />
+as U_prime and V_prime.
+Final demand (Y) is unchanged." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -116,7 +117,8 @@ as U_prime and V_prime." />
     <p>This function calculates the effect of changing perfectly-substitutable (ps) inputs
 to an intermediate industry.
 New versions of <code>U</code> and <code>V</code> matrices are returned
-as <code>U_prime</code> and <code>V_prime</code>.</p>
+as <code>U_prime</code> and <code>V_prime</code>.
+Final demand (<code>Y</code>) is unchanged.</p>
     
     </div>
 
@@ -142,19 +144,19 @@ the name of the single column must match the name of one of the columns of matri
     </tr>
     <tr>
       <th>U_colname</th>
-      <td><p>the name of a column in <code>.sutdata</code> containing <code>U</code> matrices for the base ECC.</p></td>
+      <td><p>the name of a column in <code>.sutdata</code> containing <code>U</code> matrices for the base ECC.  Default is "<code>U</code>".</p></td>
     </tr>
     <tr>
       <th>V_colname</th>
-      <td><p>the name of a column in <code>.sutdata</code> containing <code>V</code> matrices for the base ECC.</p></td>
+      <td><p>the name of a column in <code>.sutdata</code> containing <code>V</code> matrices for the base ECC.  Default is "<code>V</code>".</p></td>
     </tr>
     <tr>
       <th>Y_colname</th>
-      <td><p>the name of a column in <code>.sutdata</code> containing <code>Y</code> matrices for the base ECC.</p></td>
+      <td><p>the name of a column in <code>.sutdata</code> containing <code>Y</code> matrices for the base ECC.  Default is "<code>Y</code>".</p></td>
     </tr>
     <tr>
       <th>K_colname</th>
-      <td><p>the name of a column in <code>.sutdata</code> containing product-by-industry <code>K</code> matrices.
+      <td><p>the name of a column in <code>.sutdata</code> containing product-by-industry <code>K</code> matrices.  Default is "<code>K</code>".
 <code>K</code> consists of columns that sum to 1.
 Elements of <code>K</code> indicate the fraction of total input to industries (in columns)
 provided by products (in rows).
@@ -162,33 +164,31 @@ provided by products (in rows).
     </tr>
     <tr>
       <th>L_ixp_colname</th>
-      <td><p>the name of a column in <code>.sutdata</code> containing <code>L_ixp</code> matrices for the base ECC.</p></td>
+      <td><p>the name of a column in <code>.sutdata</code> containing <code>L_ixp</code> matrices for the base ECC.  Default is "<code>L_ixp</code>".</p></td>
     </tr>
     <tr>
       <th>L_pxp_colname</th>
-      <td><p>the name of a column in <code>.sutdata</code> containing <code>L_pxp</code> matrices for the base ECC.</p></td>
+      <td><p>the name of a column in <code>.sutdata</code> containing <code>L_pxp</code> matrices for the base ECC.  Default is "<code>L_pxp</code>".</p></td>
     </tr>
     <tr>
       <th>Z_colname</th>
-      <td><p>the name of a column in <code>.sutadata</code> containing <code>Z</code> matrices for the base ECC.</p></td>
+      <td><p>the name of a column in <code>.sutadata</code> containing <code>Z</code> matrices for the base ECC.  Default is "<code>Z</code>".</p></td>
     </tr>
     <tr>
       <th>D_colname</th>
-      <td><p>the name of a column in <code>.sutadata</code> containing <code>D</code> matrices for the base ECC.</p></td>
+      <td><p>the name of a column in <code>.sutadata</code> containing <code>D</code> matrices for the base ECC.  Default is "<code>D</code>".</p></td>
     </tr>
     <tr>
       <th>f_colname</th>
-      <td><p>the name of a column in <code>.sutadata</code> containing <code>f</code> vectors for the base ECC.</p></td>
+      <td><p>the name of a column in <code>.sutadata</code> containing <code>f</code> vectors for the base ECC.  Default is "<code>f</code>".</p></td>
     </tr>
     <tr>
       <th>U_prime_colname</th>
-      <td><p>the name of the output column that contains new Use (<code>U</code>) matrices.
-Default is "<code>U_prime</code>".</p></td>
+      <td><p>the name of the output column that contains new Use (<code>U</code>) matrices.  Default is "<code>U_prime</code>".</p></td>
     </tr>
     <tr>
       <th>V_prime_colname</th>
-      <td><p>the name of the output column that contains new Make (<code>V</code>) matrices.
-Default is "<code>V_prime</code>".</p></td>
+      <td><p>the name of the output column that contains new Make (<code>V</code>) matrices.  Default is "<code>V_prime</code>".</p></td>
     </tr>
     </table>
     
