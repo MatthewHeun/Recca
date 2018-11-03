@@ -111,7 +111,7 @@ test_that("new_R works as expected", {
     rename(
       V_plus_R = V
     ) %>%
-    extract_R() %>%
+    separate_RV() %>%
     # At this point, the matrices are they way we want them.
     # Calculate the input-output matrices which are inputs to the new_R function.
     calc_io_mats() %>%
