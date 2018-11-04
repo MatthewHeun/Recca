@@ -5,7 +5,8 @@
 \title{Assess the effect of new levels of resources}
 \usage{
 new_R(.sutdata = NULL, R_prime_colname = "R_prime", U_colname = "U",
-  V_colname = "V", Y_colname = "Y", U_prime_colname = "U_prime",
+  V_colname = "V", Y_colname = "Y", eta_colname = "eta",
+  maxiter = 100, tol = 1e-06, U_prime_colname = "U_prime",
   V_prime_colname = "V_prime", Y_Prime_colname = "Y_prime")
 }
 \arguments{
@@ -19,13 +20,19 @@ new_R(.sutdata = NULL, R_prime_colname = "R_prime", U_colname = "U",
 
 \item{Y_colname}{the name of a column in \code{.sutdata} containing \code{Y} matrices for the base ECC.  Default is "\code{Y}".}
 
+\item{maxiter}{the maximum number of iterations. Default is 100.}
+
+\item{tol}{the maximum allowable change in any one entry of the \code{U} and \code{V} matrices
+from one iteration to the next. Default is 1e-6.}
+
 \item{U_prime_colname}{the name of the output column that contains new Use (\code{U}) matrices.
 Default is "\code{U_prime}".}
 
 \item{V_prime_colname}{the name of the output column that contains new Make (\code{V}) matrices.
 Default is "\code{V_prime}".}
 
-\item{Y_Prime_colname}{}
+\item{Y_Prime_colname}{the name of the output column that contains new Final Demand (\code{Y}) matrices.
+Default is "\code{Y_prime}".}
 }
 \value{
 \code{.sutdata} with additional columns \code{U_prime_colname}, \code{V_prime_colname}, and \code{Y_prime_colname}.

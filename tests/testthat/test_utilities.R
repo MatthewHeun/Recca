@@ -102,3 +102,16 @@ test_that("separate_RV works correctly", {
   }
 })
 
+test_that("products_unit_homogeneous works correctly", {
+  result <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    products_unit_homogeneous() %>%
+    extract2("products_unit_homogeneous") %>%
+    unlist()
+  expect_true(all(result))
+
+  # Now make an S_units matrix that should fail.
+  su <- matrix(c(1, 1, 0, 1), byrow = TRUE, nrow = 2, ncol = 2, dimnames = list(c("p1", "p2"), c("m", "kg")))
+  expect_false(products_unit_homogeneous(S_units_colname = su)[[1]])
+})
+

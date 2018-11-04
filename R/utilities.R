@@ -234,3 +234,42 @@ test_against_file <- function(actual_object, expected_file_name,
   }
   invisible(result)
 }
+
+
+#' Are products unit-homogenous
+#'
+#' Returns \code{TRUE} if products are unit-homogeneous
+#' according to the \code{S_units} matrix and
+#' \code{FALSE} otherwise.
+#'
+#' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
+#' @param S_units_colname the name of the column in \code{.sutdata} that contains
+#'        \code{S_units} matrices
+#' @param product_unit_homogeneous_colname the name of the output column
+#'        that tells whether products in \code{S_units} are unit-homogeneous
+#'
+#' @return \code{TRUE} if products in \code{S_units} are unit-homogeneous, \code{FALSE} otherwise.
+#'
+#' importFrom magrittr extract2
+#'
+#' @export
+#'
+#' @examples
+#' library(magrittr)
+#' UKEnergy2000mats %>%
+#'   spread(key = "matrix.name", value = "matrix") %>%
+#'   products_unit_homogeneous() %>%
+#'   extract2("products_unit_homogeneous")
+products_unit_homogeneous <- function(.sutdata = NULL,
+                                      # Input columns
+                                      S_units_colname = "S_units",
+                                      # Output columns
+                                      product_unit_homogeneous_colname = "products_unit_homogeneous"){
+  unit_homogeneous_func <- function(S_units){
+    num_ones <- count_vals_inrows_byname(S_units, "==", 1)
+    unit_homo <- all(num_ones == 1)
+    list(unit_homo) %>% magrittr::set_names(product_unit_homogeneous_colname)
+  }
+
+  matsindf_apply(.sutdata, FUN = unit_homogeneous_func, S_units = S_units_colname)
+}
