@@ -291,6 +291,18 @@ calc_F_footprint_effects <- function(.Mdata = NULL,
 
 #' Embodied energy efficiencies
 #'
+#' Embodied energy efficiencies are based on the total upstream primary energy demand
+#' for a product produced by the ECC or
+#' for the energy consumed by a final demand sector of the ECC.
+#' This function calculates both.
+#' \code{eta_s} gives sector-based embodied energy efficiency, and
+#' \code{eta_p} gives product-based embodied energy efficiency.
+#'
+#' Note that these efficiencies (\code{eta_s} and \code{eta_p}) are different from
+#' energy conversion industry efficiencies.
+#' To calculate energy conversion industry efficiencies, use the
+#' \code{\link{calc_eta}} function.
+#'
 #' @param .embodiedmats a data frame containing columns of \strong{Y}, \strong{G}, and \strong{H} matrices
 #' @param primary_machine_names a list of strings representing names of Industries whose output is counted in TPES
 #' @param Y_colname a string for the name of a column of Y matrices in \code{.embodiedmats} (default is \code{Y})

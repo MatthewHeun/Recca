@@ -27,5 +27,16 @@ calc_embodied_etas(.embodiedmats = NULL, primary_machine_names,
 \code{.embodiedmats} with columns \code{eta_p_colname} and \code{eta_s_colname} added
 }
 \description{
-Embodied energy efficiencies
+Embodied energy efficiencies are based on the total upstream primary energy demand
+for a product produced by the ECC or
+for the energy consumed by a final demand sector of the ECC.
+This function calculates both.
+\code{eta_s} gives sector-based embodied energy efficiency, and
+\code{eta_p} gives product-based embodied energy efficiency.
+}
+\details{
+Note that these efficiencies (\code{eta_s} and \code{eta_p}) are different from
+energy conversion industry efficiencies.
+To calculate energy conversion industry efficiencies, use the
+\code{\link{calc_eta}} function.
 }

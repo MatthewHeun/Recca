@@ -1,3 +1,6 @@
+* New function `products_unit_homogeneous` tests whether an `S_units` matrix has the right form.
+
+
 # Recca 0.1.8 (2018-07-27)
 
 * Added new function `node_list` which creates a node list from an edge list.
