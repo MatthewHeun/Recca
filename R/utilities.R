@@ -277,9 +277,9 @@ products_unit_homogeneous <- function(.sutdata = NULL,
 }
 
 
-#' Tell whether industry inputs are unit-homogeneous
+#' Tell whether each industry's inputs are unit-homogeneous
 #'
-#' Returns \code{TRUE} if all inputs to all industries are unit-homogeneous.
+#' Returns \code{TRUE} if each industry's inputs are unit-homogeneous.
 #'
 #' The \code{U_bar} matrix is queried for the number of non-zero entries in each column.
 #' If the number of non-zero entries in each column is exactly 1,
@@ -292,10 +292,11 @@ products_unit_homogeneous <- function(.sutdata = NULL,
 #' @param S_units_colname the name of the column in \code{.sutdata} that contains
 #'        \code{S_units} matrices. Default is "\code{S_units}".
 #' @param inputs_unit_homogeneous_colname the name of the output column
-#'        that tells whether industry inputs are unit-homogeneous.
+#'        that tells whether each industry's inputs are unit-homogeneous.
 #'        Default is "\code{inputs_unit_homogeneous}".
 #'
-#' @return
+#' @return \code{.sutdata} with additional column "\code{inputs_unit_homogeneous}"
+#'         containing \code{TRUE} if inputs to each energy conversion industry are unit-homogeneous, \code{FALSE} otherwise.
 #'
 #' @export
 #'
@@ -303,33 +304,62 @@ products_unit_homogeneous <- function(.sutdata = NULL,
 #' library(magrittr)
 #' UKEnergy2000mats %>%
 #'   spread(key = "matrix.name", value = "matrix") %>%
-#'   inputs_unit_homogeneous() %>%
-#'   extract2("inputs_unit_homogeneous") %>%
-#'   unlist()
+#'   inputs_unit_homogeneous()
 inputs_unit_homogeneous <- function(.sutdata = NULL,
                                     # Input columns
                                     U_colname = "U", S_units_colname = "S_units",
                                     # Output columns
-                                    inputs_unit_homogeneous_colname = "inputs_unit_homogeneous"){
+                                    ins_unit_homogeneous_colname = "inputs_unit_homogeneous"){
   inputs_unit_homogeneous_func <- function(U, S_units){
     U_bar <- transpose_byname(S_units) %>% matrixproduct_byname(U)
     num_non_zero <- count_vals_incols_byname(U_bar, "!=", 0)
-    unit_homo <- all(num_non_zero == 1)
-    list(unit_homo) %>% magrittr::set_names(inputs_unit_homogeneous_colname)
+    in_unit_homo <- all(num_non_zero == 1)
+    list(in_unit_homo) %>% magrittr::set_names(ins_unit_homogeneous_colname)
   }
   matsindf_apply(.sutdata, FUN = inputs_unit_homogeneous_func, U = U_colname, S_units = S_units_colname)
 }
 
 
 
+#' Tell whether industry outputs are unit-homogeneous
+#'
+#' Returns \code{TRUE} if each industry's output are unit-homogeneous.
+#'
+#' The \code{V_bar} matrix is queried for the number of non-zero entries in each row.
+#' If the number of non-zero entries in each row is exactly 1,
+#' industry outputs are unit-homogeneous.
+#' Note that \code{V_bar = \link[matsbyname]{matrixproduct_byname}(V, S_units)}.
+#'
+#' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
+#' @param V_colname the name of the column in \code{.sutdata} that contains
+#'        \code{V} matrices. Default is "\code{V}".
+#' @param S_units_colname the name of the column in \code{.sutdata} that contains
+#'        \code{S_units} matrices. Default is "\code{S_units}".
+#' @param outs_unit_homogeneous_colname the name of the output column
+#'        that tells whether each industry's outputs are unit-homogeneous.
+#'        Default is "\code{outputs_unit_homogeneous}".
+#'
+#' @return \code{.sutdata} with additional column "\code{outputs_unit_homogeneous}"
+#'         containing \code{TRUE} if each industry's outputs are unit-homogeneous, \code{FALSE} otherwise.
+#'
+#' @export
+#'
+#' @examples
+#' library(magrittr)
+#' UKEnergy2000mats %>%
+#'   spread(key = "matrix.name", value = "matrix") %>%
+#'   outputs_unit_homogeneous()
 outputs_unit_homogeneous <- function(.sutdata = NULL,
                                      # Input columns
                                      V_colname = "V", S_units_colname = "S_units",
                                      # Output columns
-                                     outputs_unit_homogeneous = "outputs_unit_homogeneous"){
+                                     outs_unit_homogeneous = "outputs_unit_homogeneous"){
 
   outputs_unit_homogeneous_func <- function(V, S_units){
-
+    V_bar <- matrixproduct_byname(V, S_units)
+    num_non_zero <- count_vals_inrows_byname(V_bar, "!=", 0)
+    out_unit_homo <- all(num_non_zero == 1)
+    list(out_unit_homo) %>% magrittr::set_names(outs_unit_homogeneous)
   }
-  matsindf_apply(.sutdata, FUN = outputs_unit_homogeneous_func)
+  matsindf_apply(.sutdata, FUN = outputs_unit_homogeneous_func, V = V_colname, S_units = S_units_colname)
 }

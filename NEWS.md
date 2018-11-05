@@ -1,4 +1,5 @@
-* New function `products_unit_homogeneous` tests whether an `S_units` matrix has the right form.
+* New functions `products_unit_homogeneous`, `inputs_unit_homogeneous`, and `outputs_unit_homogeneous`
+  test whether products, inputs to all industries, and outputs from all industries are unit-homogeneous.
 
 
 # Recca 0.1.8 (2018-07-27)

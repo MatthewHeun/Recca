@@ -121,16 +121,45 @@ test_that("inputs_unit_homogeneous works correctly", {
     inputs_unit_homogeneous() %>%
     extract2("inputs_unit_homogeneous") %>%
     unlist()
-  # We expect to have FALSE when services are the last.stage.
+  # We expect to have FALSE when services are the Last.stage.
   expected <- UKEnergy2000mats %>%
     spread(key = "matrix.name", value = "matrix") %>%
     mutate(
       expected = case_when(
         Last.stage == "services" ~ FALSE,
-        TRUE ~ TRUE
+        Last.stage != "services" ~ TRUE,
+        TRUE ~ NA
         )
     ) %>%
     extract2("expected")
+  # Perform the test.
   expect_equal(result, expected)
 })
+
+test_that("output_unit_homogeneous works correctly", {
+  result <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    outputs_unit_homogeneous() %>%
+    extract2("outputs_unit_homogeneous") %>%
+    unlist()
+  expect_true(all(result))
+
+  # Now make a version that we expect to fail
+  V <- matrix(c(1, 1,
+                1, 1), nrow = 2, ncol = 2, byrow = TRUE, dimnames = list(c("i1", "i2"), c("p1", "p2")))
+  S_units <- matrix(c(1, 0,
+                      0, 1), nrow = 2, ncol = 2, byrow = TRUE, dimnames = list(c("p1", "p2"), c("m", "kg")))
+  result2 <- outputs_unit_homogeneous(V_colname = V, S_units_colname = S_units)
+  expect_false(result2 %>% unlist())
+})
+
+
+
+
+
+
+
+
+
+
 

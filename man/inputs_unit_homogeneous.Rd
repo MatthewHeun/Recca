@@ -2,11 +2,11 @@
 % Please edit documentation in R/utilities.R
 \name{inputs_unit_homogeneous}
 \alias{inputs_unit_homogeneous}
-\title{Tell whether industry inputs are unit-homogeneous}
+\title{Tell whether each industry's inputs are unit-homogeneous}
 \usage{
 inputs_unit_homogeneous(.sutdata = NULL, U_colname = "U",
   S_units_colname = "S_units",
-  inputs_unit_homogeneous_colname = "inputs_unit_homogeneous")
+  ins_unit_homogeneous_colname = "inputs_unit_homogeneous")
 }
 \arguments{
 \item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
@@ -18,14 +18,15 @@ inputs_unit_homogeneous(.sutdata = NULL, U_colname = "U",
 \code{S_units} matrices. Default is "\code{S_units}".}
 
 \item{inputs_unit_homogeneous_colname}{the name of the output column
-that tells whether industry inputs are unit-homogeneous.
+that tells whether each industry's inputs are unit-homogeneous.
 Default is "\code{inputs_unit_homogeneous}".}
 }
 \value{
-
+\code{.sutdata} with additional column "\code{inputs_unit_homogeneous}"
+        containing \code{TRUE} if inputs to each energy conversion industry are unit-homogeneous, \code{FALSE} otherwise.
 }
 \description{
-Returns \code{TRUE} if all inputs to all industries are unit-homogeneous.
+Returns \code{TRUE} if each industry's inputs are unit-homogeneous.
 }
 \details{
 The \code{U_bar} matrix is queried for the number of non-zero entries in each column.
@@ -37,7 +38,5 @@ Note that \code{U_bar = \link[matsbyname]{matrixproduct_byname}(\link[matsbyname
 library(magrittr)
 UKEnergy2000mats \%>\%
   spread(key = "matrix.name", value = "matrix") \%>\%
-  inputs_unit_homogeneous() \%>\%
-  extract2("inputs_unit_homogeneous") \%>\%
-  unlist()
+  inputs_unit_homogeneous()
 }
