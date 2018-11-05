@@ -236,7 +236,7 @@ test_against_file <- function(actual_object, expected_file_name,
 }
 
 
-#' Are products unit-homogenous
+#' Tell whether ECC products are unit-homogenous
 #'
 #' Returns \code{TRUE} if products are unit-homogeneous
 #' according to the \code{S_units} matrix and
@@ -244,11 +244,13 @@ test_against_file <- function(actual_object, expected_file_name,
 #'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
 #' @param S_units_colname the name of the column in \code{.sutdata} that contains
-#'        \code{S_units} matrices
-#' @param product_unit_homogeneous_colname the name of the output column
-#'        that tells whether products in \code{S_units} are unit-homogeneous
+#'        \code{S_units} matrices. Default is "\code{S_units}".
+#' @param products_unit_homogeneous_colname the name of the output column
+#'        that tells whether products in \code{S_units} are unit-homogeneous.
+#'        Default is "\code{products_unit_homogeneous}".
 #'
-#' @return \code{TRUE} if products in \code{S_units} are unit-homogeneous, \code{FALSE} otherwise.
+#' @return \code{.sutdata} with additional column "\code{products_unit_homogeneous}"
+#'         containing \code{TRUE} if products in \code{S_units} are unit-homogeneous, \code{FALSE} otherwise.
 #'
 #' importFrom magrittr extract2
 #'
@@ -264,12 +266,70 @@ products_unit_homogeneous <- function(.sutdata = NULL,
                                       # Input columns
                                       S_units_colname = "S_units",
                                       # Output columns
-                                      product_unit_homogeneous_colname = "products_unit_homogeneous"){
-  unit_homogeneous_func <- function(S_units){
+                                      products_unit_homogeneous_colname = "products_unit_homogeneous"){
+  products_unit_homogeneous_func <- function(S_units){
     num_ones <- count_vals_inrows_byname(S_units, "==", 1)
     unit_homo <- all(num_ones == 1)
-    list(unit_homo) %>% magrittr::set_names(product_unit_homogeneous_colname)
+    list(unit_homo) %>% magrittr::set_names(products_unit_homogeneous_colname)
   }
 
-  matsindf_apply(.sutdata, FUN = unit_homogeneous_func, S_units = S_units_colname)
+  matsindf_apply(.sutdata, FUN = products_unit_homogeneous_func, S_units = S_units_colname)
+}
+
+
+#' Tell whether industry inputs are unit-homogeneous
+#'
+#' Returns \code{TRUE} if all inputs to all industries are unit-homogeneous.
+#'
+#' The \code{U_bar} matrix is queried for the number of non-zero entries in each column.
+#' If the number of non-zero entries in each column is exactly 1,
+#' industry inputs are unit-homogeneous.
+#' Note that \code{U_bar = \link[matsbyname]{matrixproduct_byname}(\link[matsbyname]{transpose_byname}(S_units), U)}.
+#'
+#' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
+#' @param U_colname the name of the column in \code{.sutdata} that contains
+#'        \code{U} matrices. Default is "\code{U}".
+#' @param S_units_colname the name of the column in \code{.sutdata} that contains
+#'        \code{S_units} matrices. Default is "\code{S_units}".
+#' @param inputs_unit_homogeneous_colname the name of the output column
+#'        that tells whether industry inputs are unit-homogeneous.
+#'        Default is "\code{inputs_unit_homogeneous}".
+#'
+#' @return
+#'
+#' @export
+#'
+#' @examples
+#' library(magrittr)
+#' UKEnergy2000mats %>%
+#'   spread(key = "matrix.name", value = "matrix") %>%
+#'   inputs_unit_homogeneous() %>%
+#'   extract2("inputs_unit_homogeneous") %>%
+#'   unlist()
+inputs_unit_homogeneous <- function(.sutdata = NULL,
+                                    # Input columns
+                                    U_colname = "U", S_units_colname = "S_units",
+                                    # Output columns
+                                    inputs_unit_homogeneous_colname = "inputs_unit_homogeneous"){
+  inputs_unit_homogeneous_func <- function(U, S_units){
+    U_bar <- transpose_byname(S_units) %>% matrixproduct_byname(U)
+    num_non_zero <- count_vals_incols_byname(U_bar, "!=", 0)
+    unit_homo <- all(num_non_zero == 1)
+    list(unit_homo) %>% magrittr::set_names(inputs_unit_homogeneous_colname)
+  }
+  matsindf_apply(.sutdata, FUN = inputs_unit_homogeneous_func, U = U_colname, S_units = S_units_colname)
+}
+
+
+
+outputs_unit_homogeneous <- function(.sutdata = NULL,
+                                     # Input columns
+                                     V_colname = "V", S_units_colname = "S_units",
+                                     # Output columns
+                                     outputs_unit_homogeneous = "outputs_unit_homogeneous"){
+
+  outputs_unit_homogeneous_func <- function(V, S_units){
+
+  }
+  matsindf_apply(.sutdata, FUN = outputs_unit_homogeneous_func)
 }

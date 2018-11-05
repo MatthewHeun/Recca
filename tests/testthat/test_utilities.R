@@ -115,3 +115,22 @@ test_that("products_unit_homogeneous works correctly", {
   expect_false(products_unit_homogeneous(S_units_colname = su)[[1]])
 })
 
+test_that("inputs_unit_homogeneous works correctly", {
+  result <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    inputs_unit_homogeneous() %>%
+    extract2("inputs_unit_homogeneous") %>%
+    unlist()
+  # We expect to have FALSE when services are the last.stage.
+  expected <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    mutate(
+      expected = case_when(
+        Last.stage == "services" ~ FALSE,
+        TRUE ~ TRUE
+        )
+    ) %>%
+    extract2("expected")
+  expect_equal(result, expected)
+})
+

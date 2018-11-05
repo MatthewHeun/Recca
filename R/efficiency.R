@@ -35,10 +35,11 @@ calc_eta_i <- function(.sutdata,
                      eta_colname = "eta"){
   eta_func <- function(g, U, S_units){
     # Test whether S_units has the right form.
-    stopifnot(products_unit_homogeneous(S_units_colname = S_units)[[1]])
+    stopifnot(all(products_unit_homogeneous(S_units_colname = S_units)))
+    # If we get here, we know that each column of U has homogeneous units.
     # Now calculate efficiencies
-    U_bar <- matrixproduct_byname(transpose_byname(S_units), U)
-    iU_bar_hat <- hatize_byname(colsums_byname(U_bar))
+    U_bar_T <- matrixproduct_byname(transpose_byname(U), S_units)
+    U_bar_T_i_hat <- rowsums_byname(U_bar_T) %>% hatize_byname()
     eta <- g %>% matrixproduct_byname(invert_byname(iU_bar_hat))
     # Return the eta value(s) with the correct name
     list(eta) %>% magrittr::set_names(eta_colname)
