@@ -346,7 +346,7 @@ inputs_unit_homogeneous <- function(.sutdata = NULL,
 #'        \code{V} matrices. Default is "\code{V}".
 #' @param S_units_colname the name of the column in \code{.sutdata} that contains
 #'        \code{S_units} matrices. Default is "\code{S_units}".
-#' @param keep_details if \code{TRUE}, per-product results are returned;
+#' @param keep_details if \code{TRUE}, per-industry results are returned;
 #'        if \code{FALSE}, per-ECC results are returned.
 #' @param outs_unit_homogeneous_colname the name of the output column
 #'        that tells whether each industry's outputs are unit-homogeneous.
@@ -365,14 +365,18 @@ inputs_unit_homogeneous <- function(.sutdata = NULL,
 outputs_unit_homogeneous <- function(.sutdata = NULL,
                                      # Input columns
                                      V_colname = "V", S_units_colname = "S_units",
+                                     keep_details = FALSE,
                                      # Output columns
                                      outs_unit_homogeneous = "outputs_unit_homogeneous"){
 
   outputs_unit_homogeneous_func <- function(V, S_units){
     V_bar <- matrixproduct_byname(V, S_units)
     num_non_zero <- count_vals_inrows_byname(V_bar, "!=", 0)
-    out_unit_homo <- all(num_non_zero == 1)
-    list(out_unit_homo) %>% magrittr::set_names(outs_unit_homogeneous)
+    out <- num_non_zero == 1
+    if (!keep_details) {
+      out <- all(out)
+    }
+    list(out) %>% magrittr::set_names(outs_unit_homogeneous)
   }
   matsindf_apply(.sutdata, FUN = outputs_unit_homogeneous_func, V = V_colname, S_units = S_units_colname)
 }

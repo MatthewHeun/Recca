@@ -176,15 +176,20 @@ test_that("output_unit_homogeneous works correctly", {
     outputs_unit_homogeneous() %>%
     extract2("outputs_unit_homogeneous") %>%
     unlist()
+  # All outputs are unit-homogeneous in the UKEnergy2000mats data frame.
   expect_true(all(result))
 
   # Now make a version that we expect to fail
   V <- matrix(c(1, 1,
-                1, 1), nrow = 2, ncol = 2, byrow = TRUE, dimnames = list(c("i1", "i2"), c("p1", "p2")))
+                1, 0), nrow = 2, ncol = 2, byrow = TRUE, dimnames = list(c("i1", "i2"), c("p1", "p2")))
   S_units <- matrix(c(1, 0,
                       0, 1), nrow = 2, ncol = 2, byrow = TRUE, dimnames = list(c("p1", "p2"), c("m", "kg")))
   result2 <- outputs_unit_homogeneous(V_colname = V, S_units_colname = S_units)
   expect_false(result2 %>% unlist())
+
+  # Now test the failure when details are requested.
+  result2_details <- outputs_unit_homogeneous(V_colname = V, S_units_colname = S_units, keep_details = TRUE)
+  expect_equal(result2_details$outputs_unit_homogeneous[ ,1], c(i1 = FALSE, i2 = TRUE))
 })
 
 test_that("inputs_outputs_unit_homogeneous works as expected", {

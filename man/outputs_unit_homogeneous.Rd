@@ -5,7 +5,7 @@
 \title{Tell whether industry outputs are unit-homogeneous}
 \usage{
 outputs_unit_homogeneous(.sutdata = NULL, V_colname = "V",
-  S_units_colname = "S_units",
+  S_units_colname = "S_units", keep_details = FALSE,
   outs_unit_homogeneous = "outputs_unit_homogeneous")
 }
 \arguments{
@@ -17,7 +17,7 @@ outputs_unit_homogeneous(.sutdata = NULL, V_colname = "V",
 \item{S_units_colname}{the name of the column in \code{.sutdata} that contains
 \code{S_units} matrices. Default is "\code{S_units}".}
 
-\item{keep_details}{if \code{TRUE}, per-product results are returned;
+\item{keep_details}{if \code{TRUE}, per-industry results are returned;
 if \code{FALSE}, per-ECC results are returned.}
 
 \item{outs_unit_homogeneous_colname}{the name of the output column
