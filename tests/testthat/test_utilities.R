@@ -121,7 +121,8 @@ test_that("inputs_unit_homogeneous works correctly", {
     inputs_unit_homogeneous() %>%
     extract2("inputs_unit_homogeneous") %>%
     unlist()
-  # We expect to have FALSE when services are the Last.stage.
+  # The 2nd and 4th rows of UKEnergy2000mats have services inputs to industries, with different units, of course.
+  # Thus, we expect to have FALSE when services are the Last.stage.
   expected <- UKEnergy2000mats %>%
     spread(key = "matrix.name", value = "matrix") %>%
     mutate(
@@ -151,6 +152,27 @@ test_that("output_unit_homogeneous works correctly", {
                       0, 1), nrow = 2, ncol = 2, byrow = TRUE, dimnames = list(c("p1", "p2"), c("m", "kg")))
   result2 <- outputs_unit_homogeneous(V_colname = V, S_units_colname = S_units)
   expect_false(result2 %>% unlist())
+})
+
+test_that("inputs_outputs_unit_homogeneous works as expected", {
+  result <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    flows_unit_homogeneous() %>%
+    extract2("flows_unit_homogeneous") %>%
+    unlist()
+  # The 2nd and 4th rows of UKEnergy2000mats have services inputs to industries, with different units, of course.
+  # Thus, we expect to have FALSE when services are the Last.stage.
+  expected <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    mutate(
+      expected = case_when(
+        Last.stage == "services" ~ FALSE,
+        Last.stage != "services" ~ TRUE,
+        TRUE ~ NA
+      )
+    ) %>%
+    extract2("expected")
+  expect_equal(result, expected)
 })
 
 

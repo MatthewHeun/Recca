@@ -4,36 +4,36 @@
 \alias{calc_eta_i}
 \title{Calculate industry efficiencies}
 \usage{
-calc_eta_i(.sutdata, g_colname = "g", U_colname = "U",
-  S_units_colname = "S_units", eta_colname = "eta")
+calc_eta_i(.sutdata, U_colname = "f", V_colname = "g",
+  S_units_colname = "S_units", eta_i_colname = "eta_i")
 }
 \arguments{
-\item{g_colname}{a string for the name of a column of \code{g} matrices in \code{.sutmats}. (Default is "\code{g}".)}
-
 \item{U_colname}{a string for the name of a column of \code{U} matrices in \code{.sutmats}. (Default is "\code{U}".)}
+
+\item{V_colname}{a string for the name of a column of \code{V} matrices in \code{.sutmats}. (Default is "\code{V}".)}
 
 \item{S_units_colname}{a string for the name of a column of \code{S_units} matrices in \code{.sutmats}. (Default is "\code{S_units}".)}
 
-\item{eta_colname}{the name of the industry efficiency column in output. Default is "\code{eta}".}
+\item{eta_i_colname}{the name of the industry efficiency column in output. Default is "\code{eta_i}".}
 
-\item{.sutmats}{a data frame containing columns for \code{g}, \code{U}, and \code{S_units} matrices}
+\item{.sutmats}{a data frame containing columns for \code{U}, \code{V}, and \code{S_units} matrices}
 }
 \value{
 \code{.sutmats} with an additional column "\code{eta}"
 }
 \description{
 Calculates industry efficiencies for all energy conversion industries in the ECC.
+The efficiency for a given industry is calculated iff the units for inputs and outputs for that industry are unit-homogeneous.
+If units for inputs and outpus are heterogeneous for an industry, \code{NA} is the result.
 }
 \details{
 Note that these efficiencies (\code{eta}) are different from
 final demand sector and product efficiencies (\code{eta_s} and \code{eta_p}, respectively).
 Both final demand sector and product efficiencies
 (\code{eta_s} and \code{eta_p}) are based on embodied energy, whereas
-industry efficiencies (\code{eta}) is based on direct energy consumed and produced
+industry efficiencies (\code{eta}) is based on direct inputs consumed and outputs produced
 by the energy conversion industry.
 
-To calculate energy conversion industry efficiencies, use the
+To calculate energy conversion final demand sector and product efficiencies, use the
 \code{\link{calc_embodied_etas}} function.
-
-The "\code{g}" column can be calculated by \code{\link{calc_io_mats}}.
 }
