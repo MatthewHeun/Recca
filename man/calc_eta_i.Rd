@@ -19,12 +19,12 @@ calc_eta_i(.sutdata, U_colname = "U", V_colname = "V",
 \item{.sutmats}{a data frame containing columns for \code{U}, \code{V}, and \code{S_units} matrices}
 }
 \value{
-\code{.sutmats} with an additional column "\code{eta}"
+\code{.sutmats} with an additional column "\code{eta_i}"
 }
 \description{
 Calculates industry efficiencies for all energy conversion industries in the ECC.
 The efficiency for a given industry is calculated iff the units for inputs and outputs for that industry are unit-homogeneous.
-If units for inputs and outpus are heterogeneous for an industry, \code{NA} is the result.
+If units for inputs and outputs are heterogeneous for an industry, \code{NA} is the result.
 }
 \details{
 Note that these efficiencies (\code{eta}) are different from
@@ -36,4 +36,9 @@ by the energy conversion industry.
 
 To calculate energy conversion final demand sector and product efficiencies, use the
 \code{\link{calc_embodied_etas}} function.
+}
+\examples{
+UKEnergy2000mats \%>\%
+  spread(key = "matrix.name", value = "matrix") \%>\%
+  calc_eta_i()
 }

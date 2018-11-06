@@ -5,7 +5,7 @@
 #'
 #' Calculates industry efficiencies for all energy conversion industries in the ECC.
 #' The efficiency for a given industry is calculated iff the units for inputs and outputs for that industry are unit-homogeneous.
-#' If units for inputs and outpus are heterogeneous for an industry, \code{NA} is the result.
+#' If units for inputs and outputs are heterogeneous for an industry, \code{NA} is the result.
 #'
 #' Note that these efficiencies (\code{eta}) are different from
 #' final demand sector and product efficiencies (\code{eta_s} and \code{eta_p}, respectively).
@@ -23,16 +23,19 @@
 #' @param S_units_colname a string for the name of a column of \code{S_units} matrices in \code{.sutmats}. (Default is "\code{S_units}".)
 #' @param eta_i_colname the name of the industry efficiency column in output. Default is "\code{eta_i}".
 #'
-#' @return \code{.sutmats} with an additional column "\code{eta}"
+#' @return \code{.sutmats} with an additional column "\code{eta_i}"
 #'
 #' @export
 #'
 #' @examples
+#' UKEnergy2000mats %>%
+#'   spread(key = "matrix.name", value = "matrix") %>%
+#'   calc_eta_i()
 calc_eta_i <- function(.sutdata,
-                     # Input columns
-                     U_colname = "U", V_colname = "V", S_units_colname = "S_units",
-                     # Output columns
-                     eta_i_colname = "eta_i"){
+                       # Input columns
+                       U_colname = "U", V_colname = "V", S_units_colname = "S_units",
+                       # Output columns
+                       eta_i_colname = "eta_i"){
   eta_func <- function(U, V, S_units){
 
     result_var <- "result"
