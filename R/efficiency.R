@@ -35,7 +35,8 @@ calc_eta_i <- function(.sutdata,
                      eta_i_colname = "eta_i"){
   eta_func <- function(U, V, S_units){
 
-    units_OK <- flows_unit_homogeneous(U_colname = U, V_colname = V, S_units_colname = S_units)
+    result_var <- "result"
+    units_OK <- flows_unit_homogeneous(U_colname = U, V_colname = V, S_units_colname = S_units, flows_unit_homogeneous = result_var, keep_details = TRUE)[[result_var]]
 
     f <- colsums_byname(U) %>% transpose_byname()
     g <- rowsums_byname(V)
@@ -43,7 +44,7 @@ calc_eta_i <- function(.sutdata,
     # Now set eta to NA if the industry is unit-heterogeneous.
     eta[which(!units_OK)] <- NA_real_
     # Return the eta value(s) with the correct name
-    list(eta) %>% magrittr::set_names(eta_colname)
+    list(eta) %>% magrittr::set_names(eta_i_colname)
   }
 
   matsindf_apply(.sutdata, FUN = eta_func, U = U_colname, V = V_colname, S_units = S_units_colname)

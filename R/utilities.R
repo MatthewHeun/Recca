@@ -398,7 +398,7 @@ outputs_unit_homogeneous <- function(.sutdata = NULL,
 #'        \code{V} matrices. Default is "\code{V}".
 #' @param S_units_colname the name of the column in \code{.sutdata} that contains
 #'        \code{S_units} matrices. Default is "\code{S_units}".
-#' @param keep_details if \code{TRUE}, per-product results are returned;
+#' @param keep_details if \code{TRUE}, per-industry results are returned;
 #'        if \code{FALSE}, per-ECC results are returned.
 #' @param flows_unit_homogeneous_colname the name of the output column
 #'        that tells whether each industry's outputs are unit-homogeneous.
@@ -416,10 +416,11 @@ outputs_unit_homogeneous <- function(.sutdata = NULL,
 #'   spread(key = "matrix.name", value = "matrix") %>%
 #'   flows_outputs_unit_homogeneous()
 flows_unit_homogeneous <- function(.sutdata = NULL,
-                                     # Input columns
-                                     U_colname = "U", V_colname = "V", S_units_colname = "S_units",
-                                     # Output columns
-                                     flows_unit_homogeneous = "flows_unit_homogeneous"){
+                                   # Input columns
+                                   U_colname = "U", V_colname = "V", S_units_colname = "S_units",
+                                   keep_details = FALSE,
+                                   # Output columns
+                                   flows_unit_homogeneous = "flows_unit_homogeneous"){
 
   flows_unit_homogeneous_func <- function(U, V, S_units){
     U_bar <- matrixproduct_byname(transpose_byname(S_units), U)
@@ -429,8 +430,11 @@ flows_unit_homogeneous <- function(.sutdata = NULL,
     # If rows of sums_by_unit have 1 non-zero row, the inputs and outputs for the industry of that row are unit-homogeneous.
     # If rows of sums_by_unit have more than 1 non-zero row, the inputs and outputs for the industry of that row are unit-inhomogeneous.
     num_non_zero <- count_vals_inrows_byname(sums_by_unit, "!=", 0)
-    flows_unit_homo <- all(num_non_zero == 1)
-    list(flows_unit_homo) %>% magrittr::set_names(flows_unit_homogeneous)
+    out <- num_non_zero == 1
+    if (!keep_details) {
+      out <- all(out)
+    }
+    list(out) %>% magrittr::set_names(flows_unit_homogeneous)
   }
 
   matsindf_apply(.sutdata, FUN = flows_unit_homogeneous_func, U = U_colname, V = V_colname, S_units = S_units_colname)

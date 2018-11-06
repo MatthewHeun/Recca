@@ -5,7 +5,7 @@
 \title{Tell whether industry flows (inputs and outputs) are unit-homogeneous}
 \usage{
 flows_unit_homogeneous(.sutdata = NULL, U_colname = "U",
-  V_colname = "V", S_units_colname = "S_units",
+  V_colname = "V", S_units_colname = "S_units", keep_details = FALSE,
   flows_unit_homogeneous = "flows_unit_homogeneous")
 }
 \arguments{
@@ -20,7 +20,7 @@ flows_unit_homogeneous(.sutdata = NULL, U_colname = "U",
 \item{S_units_colname}{the name of the column in \code{.sutdata} that contains
 \code{S_units} matrices. Default is "\code{S_units}".}
 
-\item{keep_details}{if \code{TRUE}, per-product results are returned;
+\item{keep_details}{if \code{TRUE}, per-industry results are returned;
 if \code{FALSE}, per-ECC results are returned.}
 
 \item{flows_unit_homogeneous_colname}{the name of the output column
