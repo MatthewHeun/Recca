@@ -117,13 +117,13 @@ test_that("products_unit_homogeneous works correctly", {
   # Test when details are requested
   detailed_result <- UKEnergy2000mats %>%
     spread(key = "matrix.name", value = "matrix") %>%
-    products_unit_homogeneous(details = TRUE) %>%
+    products_unit_homogeneous(keep_details = TRUE) %>%
     extract2("products_unit_homogeneous") %>%
     unlist()
   expect_true(all(detailed_result))
 
   # Test a failing situation when details are requested.
-  su_detailed <- products_unit_homogeneous(S_units_colname = su, details = TRUE)
+  su_detailed <- products_unit_homogeneous(S_units_colname = su, keep_details = TRUE)
   # The first row has two units, the second row has one unit.
   expect_equal(su_detailed$products_unit_homogeneous[ , 1], c(p1 = FALSE, p2 = TRUE))
 })
@@ -148,6 +148,26 @@ test_that("inputs_unit_homogeneous works correctly", {
     extract2("expected")
   # Perform the test.
   expect_equal(result, expected)
+
+  # Now test when details are requested.
+  # When Last.stage is "services", we have mixed units on the inputs for *dist. industries,
+  # because services (with funny units) are inputs to the industries.
+  result_details <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    inputs_unit_homogeneous(keep_details = TRUE) %>%
+    select(Country, Year, Energy.type, Last.stage, inputs_unit_homogeneous) %>%
+    gather(key = "matnames", value = "matvals", inputs_unit_homogeneous) %>%
+    expand_to_tidy() %>%
+    mutate(
+      expected = case_when(
+        Last.stage == "final" ~ TRUE,
+        Last.stage == "useful" ~ TRUE,
+        endsWith(colnames, "dist.") ~ FALSE,
+        !endsWith(colnames, "dist.") ~ TRUE,
+        TRUE ~ NA
+      )
+    )
+  expect_equal(result_details$matvals, result_details$expected)
 })
 
 test_that("output_unit_homogeneous works correctly", {

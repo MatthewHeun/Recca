@@ -5,7 +5,7 @@
 \title{Tell whether ECC products are unit-homogenous}
 \usage{
 products_unit_homogeneous(.sutdata = NULL, S_units_colname = "S_units",
-  details = FALSE,
+  keep_details = FALSE,
   products_unit_homogeneous_colname = "products_unit_homogeneous")
 }
 \arguments{
@@ -14,7 +14,7 @@ products_unit_homogeneous(.sutdata = NULL, S_units_colname = "S_units",
 \item{S_units_colname}{the name of the column in \code{.sutdata} that contains
 \code{S_units} matrices. Default is "\code{S_units}".}
 
-\item{details}{if \code{TRUE}, per-product results are returned;
+\item{keep_details}{if \code{TRUE}, per-product results are returned;
 if \code{FALSE}, per-ECC results are returned.}
 
 \item{products_unit_homogeneous_colname}{the name of the output column

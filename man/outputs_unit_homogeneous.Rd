@@ -17,6 +17,9 @@ outputs_unit_homogeneous(.sutdata = NULL, V_colname = "V",
 \item{S_units_colname}{the name of the column in \code{.sutdata} that contains
 \code{S_units} matrices. Default is "\code{S_units}".}
 
+\item{keep_details}{if \code{TRUE}, per-product results are returned;
+if \code{FALSE}, per-ECC results are returned.}
+
 \item{outs_unit_homogeneous_colname}{the name of the output column
 that tells whether each industry's outputs are unit-homogeneous.
 Default is "\code{outputs_unit_homogeneous}".}
