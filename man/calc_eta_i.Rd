@@ -4,7 +4,7 @@
 \alias{calc_eta_i}
 \title{Calculate industry efficiencies}
 \usage{
-calc_eta_i(.sutdata, U_colname = "f", V_colname = "g",
+calc_eta_i(.sutdata, U_colname = "U", V_colname = "V",
   S_units_colname = "S_units", eta_i_colname = "eta_i")
 }
 \arguments{

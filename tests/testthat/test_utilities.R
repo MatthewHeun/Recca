@@ -113,6 +113,19 @@ test_that("products_unit_homogeneous works correctly", {
   # Now make an S_units matrix that should fail.
   su <- matrix(c(1, 1, 0, 1), byrow = TRUE, nrow = 2, ncol = 2, dimnames = list(c("p1", "p2"), c("m", "kg")))
   expect_false(products_unit_homogeneous(S_units_colname = su)[[1]])
+
+  # Test when details are requested
+  detailed_result <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    products_unit_homogeneous(details = TRUE) %>%
+    extract2("products_unit_homogeneous") %>%
+    unlist()
+  expect_true(all(detailed_result))
+
+  # Test a failing situation when details are requested.
+  su_detailed <- products_unit_homogeneous(S_units_colname = su, details = TRUE)
+  # The first row has two units, the second row has one unit.
+  expect_equal(su_detailed$products_unit_homogeneous[ , 1], c(p1 = FALSE, p2 = TRUE))
 })
 
 test_that("inputs_unit_homogeneous works correctly", {

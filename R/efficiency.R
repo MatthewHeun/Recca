@@ -30,7 +30,7 @@
 #' @examples
 calc_eta_i <- function(.sutdata,
                      # Input columns
-                     U_colname = "f", V_colname = "g", S_units_colname = "S_units",
+                     U_colname = "U", V_colname = "V", S_units_colname = "S_units",
                      # Output columns
                      eta_i_colname = "eta_i"){
   eta_func <- function(U, V, S_units){

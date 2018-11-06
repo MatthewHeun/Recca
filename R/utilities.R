@@ -248,6 +248,8 @@ test_against_file <- function(actual_object, expected_file_name,
 #' @param products_unit_homogeneous_colname the name of the output column
 #'        that tells whether products in \code{S_units} are unit-homogeneous.
 #'        Default is "\code{products_unit_homogeneous}".
+#' @param details if \code{TRUE}, per-product results are returned;
+#'        if \code{FALSE}, per-ECC results are returned.
 #'
 #' @return \code{.sutdata} with additional column "\code{products_unit_homogeneous}"
 #'         containing \code{TRUE} if products in \code{S_units} are unit-homogeneous, \code{FALSE} otherwise.
@@ -265,12 +267,16 @@ test_against_file <- function(actual_object, expected_file_name,
 products_unit_homogeneous <- function(.sutdata = NULL,
                                       # Input columns
                                       S_units_colname = "S_units",
+                                      details = FALSE,
                                       # Output columns
                                       products_unit_homogeneous_colname = "products_unit_homogeneous"){
   products_unit_homogeneous_func <- function(S_units){
     num_ones <- count_vals_inrows_byname(S_units, "==", 1)
-    unit_homo <- all(num_ones == 1)
-    list(unit_homo) %>% magrittr::set_names(products_unit_homogeneous_colname)
+    out <- num_ones == 1
+    if (!details) {
+      out <- all(out)
+    }
+    list(out) %>% magrittr::set_names(products_unit_homogeneous_colname)
   }
 
   matsindf_apply(.sutdata, FUN = products_unit_homogeneous_func, S_units = S_units_colname)
