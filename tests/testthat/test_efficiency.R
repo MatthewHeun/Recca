@@ -11,7 +11,7 @@ test_that("efficiencies are calculated correctly", {
     spread(key = "matrix.name", value = "matrix") %>%
     calc_eta_i()
   # Make expected vectors
-  #
+
 
 })
 
