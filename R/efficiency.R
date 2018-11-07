@@ -46,10 +46,12 @@ calc_eta_i <- function(.sutdata,
     eta <- elementquotient_byname(g, f)
     # Make sure that units_OK and eta have same rows by completing the rows (industries) relative to one another
     completed <- complete_and_sort(units_OK, eta, margin = 1)
-    units_OK <- completed$a
+    # The complete_and_sort function converts the TRUE/FALSE values in units_OK to 1/0.
+    # Convert back to TRUE and FALSE.
+    units_OK <- completed$a == 1
     eta <- completed$b
-    # Now set eta to NA if the industry is unit-heterogeneous.
-    eta[which(!units_OK)] <- NA_real_
+    # Now set eta to NA if the industry is unit-heterogeneous in the first column of the respective vectors.
+    eta[which(!units_OK[ , 1]), 1] <- NA_real_
     # Return the eta value(s) with the correct name
     list(eta) %>% magrittr::set_names(eta_i_colname)
   }
