@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Embodied energy efficiencies — calc_embodied_etas • Recca</title>
+<title>Tell whether ECC products are unit-homogenous — products_unit_homogeneous • Recca</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,14 +30,11 @@
 
 
 
-<meta property="og:title" content="Embodied energy efficiencies — calc_embodied_etas" />
+<meta property="og:title" content="Tell whether ECC products are unit-homogenous — products_unit_homogeneous" />
 
-<meta property="og:description" content="Embodied energy efficiencies are based on the total upstream primary energy demand
-for a product produced by the ECC or
-for the energy consumed by a final demand sector of the ECC.
-This function calculates both.
-eta_s gives sector-based embodied energy efficiency, and
-eta_p gives product-based embodied energy efficiency." />
+<meta property="og:description" content="Returns TRUE if products are unit-homogeneous
+according to the S_units matrix and
+FALSE otherwise." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -108,71 +105,72 @@ eta_p gives product-based embodied energy efficiency." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Embodied energy efficiencies</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MatthewHeun/Recca/blob/master/R/embodied.R'><code>R/embodied.R</code></a></small>
-    <div class="hidden name"><code>calc_embodied_etas.Rd</code></div>
+    <h1>Tell whether ECC products are unit-homogenous</h1>
+    <small class="dont-index">Source: <a href='https://github.com/MatthewHeun/Recca/blob/master/R/utilities.R'><code>R/utilities.R</code></a></small>
+    <div class="hidden name"><code>products_unit_homogeneous.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Embodied energy efficiencies are based on the total upstream primary energy demand
-for a product produced by the ECC or
-for the energy consumed by a final demand sector of the ECC.
-This function calculates both.
-<code>eta_s</code> gives sector-based embodied energy efficiency, and
-<code>eta_p</code> gives product-based embodied energy efficiency.</p>
+    <p>Returns <code>TRUE</code> if products are unit-homogeneous
+according to the <code>S_units</code> matrix and
+<code>FALSE</code> otherwise.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>calc_embodied_etas</span>(<span class='kw'>.embodiedmats</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>primary_machine_names</span>,
-  <span class='kw'>Y_colname</span> <span class='kw'>=</span> <span class='st'>"Y"</span>, <span class='kw'>G_colname</span> <span class='kw'>=</span> <span class='st'>"G"</span>, <span class='kw'>H_colname</span> <span class='kw'>=</span> <span class='st'>"H"</span>,
-  <span class='kw'>eta_p_colname</span> <span class='kw'>=</span> <span class='st'>"eta_p"</span>, <span class='kw'>eta_s_colname</span> <span class='kw'>=</span> <span class='st'>"eta_s"</span>)</pre>
+    <pre class="usage"><span class='fu'>products_unit_homogeneous</span>(<span class='kw'>.sutdata</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>S_units_colname</span> <span class='kw'>=</span> <span class='st'>"S_units"</span>,
+  <span class='kw'>keep_details</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>products_unit_homogeneous_colname</span> <span class='kw'>=</span> <span class='st'>"products_unit_homogeneous"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>.embodiedmats</th>
-      <td><p>a data frame containing columns of <strong>Y</strong>, <strong>G</strong>, and <strong>H</strong> matrices</p></td>
+      <th>.sutdata</th>
+      <td><p>a data frame of supply-use table matrices with matrices arranged in columns.</p></td>
     </tr>
     <tr>
-      <th>primary_machine_names</th>
-      <td><p>a list of strings representing names of Industries whose output is counted in TPES</p></td>
+      <th>S_units_colname</th>
+      <td><p>the name of the column in <code>.sutdata</code> that contains
+<code>S_units</code> matrices. Default is "<code>S_units</code>".</p></td>
     </tr>
     <tr>
-      <th>Y_colname</th>
-      <td><p>a string for the name of a column of Y matrices in <code>.embodiedmats</code> (default is <code>Y</code>)</p></td>
+      <th>keep_details</th>
+      <td><p>if <code>TRUE</code>, per-product results are returned;
+if <code>FALSE</code>, per-ECC results are returned.</p></td>
     </tr>
     <tr>
-      <th>G_colname</th>
-      <td><p>a string for the name of a column of G matrices in <code>.embodiedmats</code> (default is <code>G</code>)</p></td>
-    </tr>
-    <tr>
-      <th>H_colname</th>
-      <td><p>a string for the name of a column of H matrices in <code>.embodiedmats</code> (default is <code>H</code>)</p></td>
-    </tr>
-    <tr>
-      <th>eta_p_colname</th>
-      <td><p>a string for the name of the output column containing vectors of product-based efficiencies</p></td>
-    </tr>
-    <tr>
-      <th>eta_s_colname</th>
-      <td><p>a string for the name of the output column containing vectors of final-demand-sector-based efficiencies</p></td>
+      <th>products_unit_homogeneous_colname</th>
+      <td><p>the name of the output column
+that tells whether products in <code>S_units</code> are unit-homogeneous.
+Default is "<code>products_unit_homogeneous</code>".</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>.embodiedmats</code> with columns <code>eta_p_colname</code> and <code>eta_s_colname</code> added</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Note that these efficiencies (<code>eta_s</code> and <code>eta_p</code>) are different from
-energy conversion industry efficiencies.
-To calculate energy conversion industry efficiencies, use the
-<code><a href='calc_eta_i.html'>calc_eta_i</a></code> function.</p>
+    <p><code>.sutdata</code> with additional column "<code>products_unit_homogeneous</code>"
+        containing <code>TRUE</code> if products in <code>S_units</code> are unit-homogeneous, <code>FALSE</code> otherwise.</p>
+<p>importFrom magrittr extract2</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>library</span>(<span class='no'>magrittr</span>)
+<span class='no'>UKEnergy2000mats</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'>spread</span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='st'>"matrix.name"</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>"matrix"</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'>products_unit_homogeneous</span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/magrittr/topics/aliases'>extract2</a></span>(<span class='st'>"products_unit_homogeneous"</span>)</div><div class='output co'>#&gt; [[1]]
+#&gt; [1] TRUE
+#&gt; 
+#&gt; [[2]]
+#&gt; [1] TRUE
+#&gt; 
+#&gt; [[3]]
+#&gt; [1] TRUE
+#&gt; 
+#&gt; [[4]]
+#&gt; [1] TRUE
+#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -180,9 +178,9 @@ To calculate energy conversion industry efficiencies, use the
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

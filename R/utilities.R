@@ -205,7 +205,6 @@ separate_RV <- function(.sutdata = NULL, U_colname = "U", V_plus_R_colname = "V_
 #'        Default is "\code{tests/expectations}"
 #'
 #' @return NULL (invisibly). This function is called for its side effect of executing \code{expect_known_value}.
-#'
 test_against_file <- function(actual_object, expected_file_name,
                               update = FALSE, check.attributes = TRUE,
                               expec_folder = file.path("tests", "expectations")){
@@ -299,7 +298,7 @@ products_unit_homogeneous <- function(.sutdata = NULL,
 #'        \code{S_units} matrices. Default is "\code{S_units}".
 #' @param keep_details if \code{TRUE}, per-product results are returned;
 #'        if \code{FALSE}, per-ECC results are returned.
-#' @param inputs_unit_homogeneous_colname the name of the output column
+#' @param ins_unit_homogeneous_colname the name of the output column
 #'        that tells whether each industry's inputs are unit-homogeneous.
 #'        Default is "\code{inputs_unit_homogeneous}".
 #'
@@ -310,6 +309,7 @@ products_unit_homogeneous <- function(.sutdata = NULL,
 #'
 #' @examples
 #' library(magrittr)
+#' library(tidyr)
 #' UKEnergy2000mats %>%
 #'   spread(key = "matrix.name", value = "matrix") %>%
 #'   inputs_unit_homogeneous()
@@ -367,7 +367,7 @@ outputs_unit_homogeneous <- function(.sutdata = NULL,
                                      V_colname = "V", S_units_colname = "S_units",
                                      keep_details = FALSE,
                                      # Output columns
-                                     outs_unit_homogeneous = "outputs_unit_homogeneous"){
+                                     outs_unit_homogeneous_colname = "outputs_unit_homogeneous"){
 
   outputs_unit_homogeneous_func <- function(V, S_units){
     V_bar <- matrixproduct_byname(V, S_units)
@@ -376,7 +376,7 @@ outputs_unit_homogeneous <- function(.sutdata = NULL,
     if (!keep_details) {
       out <- all(out)
     }
-    list(out) %>% magrittr::set_names(outs_unit_homogeneous)
+    list(out) %>% magrittr::set_names(outs_unit_homogeneous_colname)
   }
   matsindf_apply(.sutdata, FUN = outputs_unit_homogeneous_func, V = V_colname, S_units = S_units_colname)
 }
@@ -412,15 +412,16 @@ outputs_unit_homogeneous <- function(.sutdata = NULL,
 #'
 #' @examples
 #' library(magrittr)
+#' library(tidyr)
 #' UKEnergy2000mats %>%
 #'   spread(key = "matrix.name", value = "matrix") %>%
-#'   flows_outputs_unit_homogeneous()
+#'   flows_unit_homogeneous()
 flows_unit_homogeneous <- function(.sutdata = NULL,
                                    # Input columns
                                    U_colname = "U", V_colname = "V", S_units_colname = "S_units",
                                    keep_details = FALSE,
                                    # Output columns
-                                   flows_unit_homogeneous = "flows_unit_homogeneous"){
+                                   flows_unit_homogeneous_colname = "flows_unit_homogeneous"){
 
   flows_unit_homogeneous_func <- function(U, V, S_units){
     U_bar <- matrixproduct_byname(transpose_byname(S_units), U)
@@ -434,7 +435,7 @@ flows_unit_homogeneous <- function(.sutdata = NULL,
     if (!keep_details) {
       out <- all(out)
     }
-    list(out) %>% magrittr::set_names(flows_unit_homogeneous)
+    list(out) %>% magrittr::set_names(flows_unit_homogeneous_colname)
   }
 
   matsindf_apply(.sutdata, FUN = flows_unit_homogeneous_func, U = U_colname, V = V_colname, S_units = S_units_colname)

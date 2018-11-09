@@ -8,6 +8,8 @@ calc_eta_i(.sutdata, U_colname = "U", V_colname = "V",
   S_units_colname = "S_units", eta_i_colname = "eta_i")
 }
 \arguments{
+\item{.sutdata}{a data frame containing columns for \code{U}, \code{V}, and \code{S_units} matrices}
+
 \item{U_colname}{a string for the name of a column of \code{U} matrices in \code{.sutmats}. (Default is "\code{U}".)}
 
 \item{V_colname}{a string for the name of a column of \code{V} matrices in \code{.sutmats}. (Default is "\code{V}".)}
@@ -15,8 +17,6 @@ calc_eta_i(.sutdata, U_colname = "U", V_colname = "V",
 \item{S_units_colname}{a string for the name of a column of \code{S_units} matrices in \code{.sutmats}. (Default is "\code{S_units}".)}
 
 \item{eta_i_colname}{the name of the industry efficiency column in output. Default is "\code{eta_i}".}
-
-\item{.sutmats}{a data frame containing columns for \code{U}, \code{V}, and \code{S_units} matrices}
 }
 \value{
 \code{.sutmats} with an additional column "\code{eta_i}"
@@ -38,6 +38,8 @@ To calculate energy conversion final demand sector and product efficiencies, use
 \code{\link{calc_embodied_etas}} function.
 }
 \examples{
+library(magrittr)
+library(tidyr)
 UKEnergy2000mats \%>\%
   spread(key = "matrix.name", value = "matrix") \%>\%
   calc_eta_i()

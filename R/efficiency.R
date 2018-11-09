@@ -17,7 +17,7 @@
 #' To calculate energy conversion final demand sector and product efficiencies, use the
 #' \code{\link{calc_embodied_etas}} function.
 #'
-#' @param .sutmats a data frame containing columns for \code{U}, \code{V}, and \code{S_units} matrices
+#' @param .sutdata a data frame containing columns for \code{U}, \code{V}, and \code{S_units} matrices
 #' @param U_colname a string for the name of a column of \code{U} matrices in \code{.sutmats}. (Default is "\code{U}".)
 #' @param V_colname a string for the name of a column of \code{V} matrices in \code{.sutmats}. (Default is "\code{V}".)
 #' @param S_units_colname a string for the name of a column of \code{S_units} matrices in \code{.sutmats}. (Default is "\code{S_units}".)
@@ -27,7 +27,12 @@
 #'
 #' @export
 #'
+#' @importFrom matsbyname complete_and_sort
+#' @importFrom tidyr spread
+#'
 #' @examples
+#' library(magrittr)
+#' library(tidyr)
 #' UKEnergy2000mats %>%
 #'   spread(key = "matrix.name", value = "matrix") %>%
 #'   calc_eta_i()
@@ -39,7 +44,8 @@ calc_eta_i <- function(.sutdata,
   eta_func <- function(U, V, S_units){
 
     result_var <- "result"
-    units_OK <- flows_unit_homogeneous(U_colname = U, V_colname = V, S_units_colname = S_units, flows_unit_homogeneous = result_var, keep_details = TRUE)[[result_var]]
+    units_OK <- flows_unit_homogeneous(U_colname = U, V_colname = V, S_units_colname = S_units,
+                                       flows_unit_homogeneous_colname = result_var, keep_details = TRUE)[[result_var]]
 
     f <- colsums_byname(U) %>% transpose_byname()
     g <- rowsums_byname(V)

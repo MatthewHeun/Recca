@@ -38,5 +38,5 @@ This function calculates both.
 Note that these efficiencies (\code{eta_s} and \code{eta_p}) are different from
 energy conversion industry efficiencies.
 To calculate energy conversion industry efficiencies, use the
-\code{\link{calc_eta}} function.
+\code{\link{calc_eta_i}} function.
 }

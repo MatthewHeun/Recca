@@ -6,7 +6,7 @@
 \usage{
 flows_unit_homogeneous(.sutdata = NULL, U_colname = "U",
   V_colname = "V", S_units_colname = "S_units", keep_details = FALSE,
-  flows_unit_homogeneous = "flows_unit_homogeneous")
+  flows_unit_homogeneous_colname = "flows_unit_homogeneous")
 }
 \arguments{
 \item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
@@ -43,7 +43,8 @@ Note that \code{V_bar = \link[matsbyname]{matrixproduct_byname}(V, S_units)}.
 }
 \examples{
 library(magrittr)
+library(tidyr)
 UKEnergy2000mats \%>\%
   spread(key = "matrix.name", value = "matrix") \%>\%
-  flows_outputs_unit_homogeneous()
+  flows_unit_homogeneous()
 }

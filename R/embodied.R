@@ -301,7 +301,7 @@ calc_F_footprint_effects <- function(.Mdata = NULL,
 #' Note that these efficiencies (\code{eta_s} and \code{eta_p}) are different from
 #' energy conversion industry efficiencies.
 #' To calculate energy conversion industry efficiencies, use the
-#' \code{\link{calc_eta}} function.
+#' \code{\link{calc_eta_i}} function.
 #'
 #' @param .embodiedmats a data frame containing columns of \strong{Y}, \strong{G}, and \strong{H} matrices
 #' @param primary_machine_names a list of strings representing names of Industries whose output is counted in TPES

@@ -6,7 +6,7 @@
 \usage{
 outputs_unit_homogeneous(.sutdata = NULL, V_colname = "V",
   S_units_colname = "S_units", keep_details = FALSE,
-  outs_unit_homogeneous = "outputs_unit_homogeneous")
+  outs_unit_homogeneous_colname = "outputs_unit_homogeneous")
 }
 \arguments{
 \item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
