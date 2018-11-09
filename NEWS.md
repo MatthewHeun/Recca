@@ -1,3 +1,13 @@
+# Recca 0.1.9 (2018-11-08)
+
+* Breaking change: `reconstruct_UV` --> `new_Y`. 
+  This change allows for several `new_*` functions that assess changes to the ECC
+  when some part of the ECC changes.
+
+* New function `new_k_ps` assesses changes to the ECC when 
+  proportion of inputs to an industry change 
+  under the assumption of perfect substitution.
+
 * New functions `products_unit_homogeneous`, `inputs_unit_homogeneous`, and `outputs_unit_homogeneous`
   test whether products, inputs to all industries, and outputs from all industries are unit-homogeneous.
 
