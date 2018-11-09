@@ -1,4 +1,7 @@
+library(dplyr)
 library(Hmisc)
+library(magrittr)
+library(tidyr)
 
 ###########################################################
 context("Utilities")
@@ -62,14 +65,179 @@ test_that("starts_with_any_of works properly", {
                c(TRUE, TRUE, FALSE, FALSE))
 })
 
-test_that("primary_industries works correctly", {
+test_that("resource_industries works correctly", {
   mats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
   expected <- c("Resources - Crude", "Resources - NG")
-  expect_equal(primary_industries(mats)[["p_industries"]],
+  expect_equal(resource_industries(mats)[["r_industries"]],
                list(expected, expected, expected, expected))
   # Try with individual matrices
   for (i in 1:nrow(mats)) {
-    expect_equal(primary_industries(U = mats$U[[i]], V = mats$V[[i]]) %>% set_names(NULL) %>% unlist(), expected)
+    expect_equal(resource_industries(U = mats$U[[i]], V = mats$V[[i]]) %>% set_names(NULL) %>% unlist(), expected)
   }
 })
+
+test_that("separate_RV works correctly", {
+  # These tests will need to be re-evaluated after I implement R matrices in the
+  # UKEnergy2000Mats data frame.
+  expected <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    mutate(
+      R = V %>% select_rows_byname(retain_pattern = make_pattern("Resources - ", pattern_type = "leading")),
+      V = V %>% select_rows_byname(remove_pattern = make_pattern("Resources - ", pattern_type = "leading"))
+    )
+
+  mats <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    # Rename the V matrix, because it includes the R matrix.
+    # At some point, this rename step will be unnecessary because UKEnergy2000mats will be created with R separate from V
+    rename(
+      V_plus_R = V
+    ) %>%
+    separate_RV()
+
+  # Make sure that we get the expected values for R and V matrices
+  for (i in 1:4) {
+    expect_true(equal_byname(mats$R[[i]], expected$R[[i]]))
+    expect_true(equal_byname(mats$V[[i]], expected$V[[i]]))
+  }
+})
+
+test_that("products_unit_homogeneous works correctly", {
+  result <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    products_unit_homogeneous() %>%
+    extract2("products_unit_homogeneous") %>%
+    unlist()
+  expect_true(all(result))
+
+  # Now make an S_units matrix that should fail.
+  su <- matrix(c(1, 1, 0, 1), byrow = TRUE, nrow = 2, ncol = 2, dimnames = list(c("p1", "p2"), c("m", "kg")))
+  expect_false(products_unit_homogeneous(S_units_colname = su)[[1]])
+
+  # Test when details are requested
+  detailed_result <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    products_unit_homogeneous(keep_details = TRUE) %>%
+    extract2("products_unit_homogeneous") %>%
+    unlist()
+  expect_true(all(detailed_result))
+
+  # Test a failing situation when details are requested.
+  su_detailed <- products_unit_homogeneous(S_units_colname = su, keep_details = TRUE)
+  # The first row has two units, the second row has one unit.
+  expect_equal(su_detailed$products_unit_homogeneous[ , 1], c(p1 = FALSE, p2 = TRUE))
+})
+
+test_that("inputs_unit_homogeneous works correctly", {
+  result <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    inputs_unit_homogeneous() %>%
+    extract2("inputs_unit_homogeneous") %>%
+    unlist()
+  # The 2nd and 4th rows of UKEnergy2000mats have services inputs to industries, with different units, of course.
+  # Thus, we expect to have FALSE when services are the Last.stage.
+  expected <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    mutate(
+      expected = case_when(
+        Last.stage == "services" ~ FALSE,
+        Last.stage != "services" ~ TRUE,
+        TRUE ~ NA
+        )
+    ) %>%
+    extract2("expected")
+  # Perform the test.
+  expect_equal(result, expected)
+
+  # Now test when details are requested.
+  # When Last.stage is "services", we have mixed units on the inputs for *dist. industries,
+  # because services (with funny units) are inputs to the industries.
+  result_details <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    inputs_unit_homogeneous(keep_details = TRUE) %>%
+    select(Country, Year, Energy.type, Last.stage, inputs_unit_homogeneous) %>%
+    gather(key = "matnames", value = "matvals", inputs_unit_homogeneous) %>%
+    expand_to_tidy() %>%
+    mutate(
+      expected = case_when(
+        Last.stage == "final" ~ TRUE,
+        Last.stage == "useful" ~ TRUE,
+        endsWith(colnames, "dist.") ~ FALSE,
+        !endsWith(colnames, "dist.") ~ TRUE,
+        TRUE ~ NA
+      )
+    )
+  expect_equal(result_details$matvals, result_details$expected)
+})
+
+test_that("output_unit_homogeneous works correctly", {
+  result <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    outputs_unit_homogeneous() %>%
+    extract2("outputs_unit_homogeneous") %>%
+    unlist()
+  # All outputs are unit-homogeneous in the UKEnergy2000mats data frame.
+  expect_true(all(result))
+
+  # Now make a version that we expect to fail
+  V <- matrix(c(1, 1,
+                1, 0), nrow = 2, ncol = 2, byrow = TRUE, dimnames = list(c("i1", "i2"), c("p1", "p2")))
+  S_units <- matrix(c(1, 0,
+                      0, 1), nrow = 2, ncol = 2, byrow = TRUE, dimnames = list(c("p1", "p2"), c("m", "kg")))
+  result2 <- outputs_unit_homogeneous(V_colname = V, S_units_colname = S_units)
+  expect_false(result2 %>% unlist())
+
+  # Now test the failure when details are requested.
+  result2_details <- outputs_unit_homogeneous(V_colname = V, S_units_colname = S_units, keep_details = TRUE)
+  expect_equal(result2_details$outputs_unit_homogeneous[ ,1], c(i1 = FALSE, i2 = TRUE))
+})
+
+test_that("inputs_outputs_unit_homogeneous works as expected", {
+  result <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    flows_unit_homogeneous() %>%
+    extract2("flows_unit_homogeneous") %>%
+    unlist()
+  # The 2nd and 4th rows of UKEnergy2000mats have services inputs to industries, with different units, of course.
+  # Thus, we expect to have FALSE when services are the Last.stage.
+  expected <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    mutate(
+      expected = case_when(
+        Last.stage == "services" ~ FALSE,
+        Last.stage != "services" ~ TRUE,
+        TRUE ~ NA
+      )
+    ) %>%
+    extract2("expected")
+  expect_equal(result, expected)
+
+  # Test when details are requested.
+  result2 <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    flows_unit_homogeneous(keep_details = TRUE) %>%
+    select(Country, Year, Energy.type, Last.stage, flows_unit_homogeneous) %>%
+    gather(key = "matnames", value = "matvals", flows_unit_homogeneous) %>%
+    expand_to_tidy() %>%
+    mutate(
+      expected = case_when(
+        Last.stage == "final" ~ TRUE,
+        Last.stage == "useful" ~ TRUE,
+        endsWith(rownames, "dist.") ~ FALSE,
+        rownames %in% c("Cars", "Homes", "Rooms", "Trucks") ~ FALSE,
+        TRUE ~ TRUE
+      )
+    )
+  expect_equal(result2$matvals, result2$expected)
+})
+
+
+
+
+
+
+
+
+
+
 

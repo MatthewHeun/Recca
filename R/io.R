@@ -15,18 +15,24 @@
 #' Default is "\code{Y}".
 #' @param S_units the name of the column in \code{.sutdata} containing unit summation (\code{S_units}) matrices.
 #' Default is "\code{S_units}".
-#' @param g_colname the name of the output column containing \code{g} vectors.
-#' Default is "\code{g}".
-#' \code{g} is calculated by \code{rowsums(V)}.
 #' @param y_colname the name of the output column containing \code{y} vectors.
 #' Default is "\code{y}".
 #' \code{y} is calculated by \code{rowsums(Y)}.
 #' @param q_colname the name of the output column containing \code{q} vectors.
 #' Default is "\code{q}".
 #' \code{q} is calculated by \code{rowsums(U) + y}.
+#' @param f_colname the name of the output column containing \code{f} vectors.
+#' Default is "\code{f}".
+#' \code{f} is calculated by \code{colsums(U)}.
+#' @param g_colname the name of the output column containing \code{g} vectors.
+#' Default is "\code{g}".
+#' \code{g} is calculated by \code{rowsums(V)}.
 #' @param W_colname the name of the output column containing \code{W} matrices.
 #' Default is "\code{W}".
 #' \code{W} is calculated by \code{transpose(V) - U}.
+#' @param K_colname the name of the output column containing \code{K} matrices.
+#' Default is "\code{K}".
+#' \code{K} is calculated by \code{U * f_hat_inv}.
 #' @param Z_colname the name of the output column containing \code{Z} matrices.
 #' Default is "\code{Z}".
 #' \code{Z} is calculated by \code{U * g_hat_inv}.
@@ -48,7 +54,7 @@
 #'
 #' @return \code{.sutdata} with additional columns:
 #' \code{y_colname}, \code{q_colname}, \code{g_colname}, \code{W_colname},
-#' \code{Z_colname}, \code{D_colname}, \code{C_colname}, \code{A_colname},
+#' \code{Z_colname}, \code{D_colname}, \code{K_colname}, \code{C_colname}, \code{A_colname},
 #' \code{L_ixp_colname}, and \code{L_pxp_colname}.
 #'
 #' @export
@@ -56,7 +62,9 @@ calc_io_mats <- function(.sutdata = NULL,
                          # Input columns
                          U_colname = "U", V_colname = "V", Y_colname = "Y", S_units = "S_units",
                          # Output columns
-                         y_colname = "y", q_colname = "q", g_colname = "g", W_colname = "W",
+                         y_colname = "y", q_colname = "q",
+                         f_colname = "f", g_colname = "g",
+                         W_colname = "W", K_colname = "K",
                          Z_colname = "Z", C_colname = "C", D_colname = "D", A_colname = "A",
                          L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp"){
   io_func <- function(U, V, Y, S_units = NULL){
@@ -65,23 +73,37 @@ calc_io_mats <- function(.sutdata = NULL,
     U <- clean_byname(U, margin = c(1,2), clean_value = 0)
     V <- clean_byname(V, margin = c(1,2), clean_value = 0)
     Y <- clean_byname(Y, margin = c(1,2), clean_value = 0)
-    yqgW <- calc_yqgW(U_colname = U, V_colname = V, Y_colname = Y, S_units = S_units,
-                      y_colname = y_colname, q_colname = q_colname, g_colname = g_colname, W_colname = W_colname)
-    q <- yqgW$q
-    g <- yqgW$g
-    ZCDA <- calc_A(U_colname = U, V_colname = V, q_colname = q, g_colname = g,
-                   Z_colname = Z_colname, C_colname = C_colname, D_colname = D_colname, A_colname = A_colname)
-    D <- ZCDA$D
-    A <- ZCDA$A
+    yqfgW <- calc_yqfgW(U_colname = U, V_colname = V, Y_colname = Y, S_units = S_units,
+                        y_colname = y_colname, q_colname = q_colname,
+                        f_colname = f_colname, g_colname = g_colname,
+                        W_colname = W_colname)
+    q <- yqfgW$q
+    f <- yqfgW$f
+    g <- yqfgW$g
+    ZKCDA <- calc_A(U_colname = U, V_colname = V, q_colname = q, f_colname = f, g_colname = g,
+                    Z_colname = Z_colname, C_colname = C_colname, D_colname = D_colname, A_colname = A_colname)
+    D <- ZKCDA$D
+    A <- ZKCDA$A
     L <- calc_L(D_colname = D, A_colname = A,
                 L_ixp_colname = L_ixp_colname, L_pxp_colname = L_pxp_colname)
-    c(yqgW, ZCDA, L) %>% set_names(c(names(yqgW), names(ZCDA), names(L)))
+    # Set names and return
+    c(yqfgW, ZKCDA, L) %>% magrittr::set_names(c(names(yqfgW), names(ZKCDA), names(L)))
   }
   matsindf_apply(.sutdata, FUN = io_func, U = U_colname, V = V_colname, Y = Y_colname, S_units = S_units)
 }
 
 
-#' Calculate y, g, and q vectors and W matrices
+#' Calculate \code{y}, \code{f}, \code{g}, and \code{q} vectors and the \code{W} matrix
+#'
+#' Note that a necessary condition for calculating the \code{f} and \code{g} vectors is that
+#' the U_bar and V_bar matrices should have only one entry per column and row, respectively,
+#' meaning that all products input into a given industry need to be unit homogeneous
+#' before we can calculate the \code{f} vector and
+#' all products of a given industry are measured in the same units
+#' before we can calculate the \code{g} vector.
+#' If the unit homogeneity assumptions above are violated, we will return NA
+#' for violating industries in the \code{f} and \code{g} vectors.
+#' The checks for unit homogenity are performed only when an \code{S_units} matrix is present.
 #'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
 #' @param U_colname the name of the column in \code{.sutdata} containing Use (\code{U}) matrices.
@@ -90,6 +112,8 @@ calc_io_mats <- function(.sutdata = NULL,
 #' @param S_units the name of the column in \code{.sutdata} containing \code{S_units} matrices.
 #' @param y_colname the name of the output column containing \code{y} vectors.
 #' \code{y} is calculated by \code{rowsums_byname(Y)}.
+#' @param f_colname the name of the output column containing \code{f} vectors.
+#' \code{f} is calculated by \code{colsums_byname(U)}.
 #' @param g_colname the name of the output column containing \code{g} vectors.
 #' \code{g} is calculated by \code{rowsums_byname(V)}.
 #' @param q_colname the name of the output column containing \code{q} vectors.
@@ -97,47 +121,52 @@ calc_io_mats <- function(.sutdata = NULL,
 #' @param W_colname the name of the output column containing \code{W} matrices.
 #' \code{W} is calculated by \code{transpose_byname(V) - U}.
 #'
+#' @importFrom matsbyname count_vals_incols_byname
 #' @importFrom matsbyname count_vals_inrows_byname
 #' @importFrom matsbyname compare_byname
 #' @importFrom matsbyname all_byname
 #'
 #' @export
 #'
-#' @return \code{.sutdata} with columns \code{y_colname}, \code{q_colname}, \code{g_colname}, and \code{W_colname} added
-calc_yqgW <- function(.sutdata = NULL,
-                      # Input columns
-                      U_colname = "U", V_colname = "V", Y_colname = "Y", S_units = "S_units",
-                      # Output columns
-                      y_colname = "y", q_colname = "q", g_colname = "g", W_colname = "W"){
-  yqgw_func <- function(U, V, Y, S_units = NULL){
-    # Perform a unit homogeneity check on the incoming V matrix.
-    # But only if S_units is present and useable.
-    if (!is.null(S_units)) {
-      # The V_bar matrix should have only one entry per row,
-      # meaning that all products of a given industry are measured in the same units.
-      # At the present time, the PSUT framework works only under those conditions
-      # (i.e., product unit homogeneity).
-      # If product unit homogeneity is violated, the PSUT method cannot be used.
-      # To accommodate unit inhomogenity of industry products,
-      # further generalizations of the PSUT method will be required.
-      V_bar <- matrixproduct_byname(V, S_units)
-      V_bar_check <- count_vals_inrows_byname(V_bar, "!=", 0) %>%
-        compare_byname("==", 1)
-      # Verify that unit homogeneity exists for all products.
-      if (!all_byname(V_bar_check)) {
-        offenders <- which(!unlist(as.list(V_bar_check) %>% set_names(rownames(V_bar_check))))
-        stop(paste("Outputs from each industry not unit homogeneous.",
-                   "Offending industries:",
-                   paste(names(offenders), collapse = ", ")))
-      }
-    }
+#' @return \code{.sutdata} with columns \code{y_colname}, \code{q_colname},
+#'          \code{f_colname}, \code{g_colname}, and \code{W_colname} added
+calc_yqfgW <- function(.sutdata = NULL,
+                       # Input columns
+                       U_colname = "U", V_colname = "V", Y_colname = "Y", S_units = "S_units",
+                       # Output columns
+                       y_colname = "y", q_colname = "q",
+                       f_colname = "f", g_colname = "g",
+                       W_colname = "W"){
+  yqfgw_func <- function(U, V, Y, S_units = NULL){
     y_val <- rowsums_byname(Y)
     q_val <- sum_byname(rowsums_byname(U), y_val)
+    f_val <- colsums_byname(U) %>% transpose_byname() # vectors are always column vectors
     g_val <- rowsums_byname(V)
     W_val <- difference_byname(transpose_byname(V), U)
-    list(y_val, q_val, g_val, W_val) %>% set_names(c(y_colname, q_colname, g_colname, W_colname))
+    # Deal with any unit homogenity issues for f and g.
+    if (!is.null(S_units)) {
+      U_bar <- matrixproduct_byname(transpose_byname(S_units), U)
+      U_bar_units_OK <- count_vals_incols_byname(U_bar, "!=", 0) %>%
+        compare_byname("<=", 1) %>%
+        transpose_byname()
+      # When we have an Industry whose inputs are not unit-homogeneous,
+      # the value for that Industry in the f vector is nonsensical.
+      # Replace with NA.
+      f_val[which(!U_bar_units_OK)] <- NA_real_
+
+      V_bar <- matrixproduct_byname(V, S_units)
+      V_bar_units_OK <- count_vals_inrows_byname(V_bar, "!=", 0) %>%
+        compare_byname("<=", 1)
+      # When we have an Industry whose outputs are not unit-homogeneous,
+      # the value for that Industry in the g vector is nonsensical.
+      # Replace with NA.
+      g_val[which(!V_bar_units_OK)] <- NA_real_
+    }
+    # Put the values in a list and return the list
+    list(y_val, q_val, f_val, g_val, W_val) %>%
+      magrittr::set_names(c(y_colname, q_colname, f_colname, g_colname, W_colname))
   }
-  matsindf_apply(.sutdata, FUN = yqgw_func, U = U_colname, V = V_colname, Y = Y_colname, S_units = S_units)
+  matsindf_apply(.sutdata, FUN = yqfgw_func, U = U_colname, V = V_colname, Y = Y_colname, S_units = S_units)
 }
 
 #' Calculate \code{Z}, \code{D}, \code{C}, and \code{A} matrices
@@ -146,9 +175,12 @@ calc_yqgW <- function(.sutdata = NULL,
 #' @param U_colname the name of the column in \code{.sutdata} containing Use (\code{U}) matrices.
 #' @param V_colname the name of the column in \code{.sutdata} containing Make (\code{V}) matrices.
 #' @param q_colname the name of the column in \code{.sutdata} containing \code{q} vectors.
+#' @param f_colname the name of the column in \code{.sutdata} containing \code{f} vectors.
 #' @param g_colname the name of the column in \code{.sutdata} containing \code{g} vectors.
 #' @param Z_colname the name of the output column containing \code{Z} matrices.
 #' \code{Z} is calculated by \code{U * g_hat_inv}.
+#' @param K_colname the name of the output column containing \code{K} matrices.
+#' \code{K} is calculated by \code{U * f_hat_inv}.
 #' @param C_colname the name of the output column containing \code{C} matrices.
 #' \code{C} is calculated by \code{transpose(V) * g_hat_inv}.
 #' @param D_colname the name of the output column containing \code{D} matrices.
@@ -156,7 +188,9 @@ calc_yqgW <- function(.sutdata = NULL,
 #' @param A_colname the name of the output column containing \code{A} matrices.
 #' \code{A} is calculated by \code{Z * D}.
 #'
-#' @return \code{.sutdata} with columns \code{Z_colname}, \code{D_colname}, and \code{A_colname} added
+#' @return \code{.sutdata} with columns \code{Z_colname},
+#' \code{K_colname}, \code{C_colname},
+#' \code{D_colname}, and \code{A_colname} added
 #'
 #' @importFrom matsbyname hatize_byname
 #' @importFrom matsbyname invert_byname
@@ -168,21 +202,42 @@ calc_yqgW <- function(.sutdata = NULL,
 calc_A <- function(.sutdata = NULL,
                    # Input columns
                    U_colname = "U", V_colname = "V",
-                   q_colname = "q", g_colname = "g",
+                   q_colname = "q", f_colname = "f", g_colname = "g",
                    # Output columns
-                   Z_colname = "Z", C_colname = "C", D_colname = "D", A_colname = "A"){
-  A_func <- function(U, V, q, g){
-    Z_val <- matrixproduct_byname(U, hatize_byname(g) %>% invert_byname())
-    C_val <- matrixproduct_byname(transpose_byname(V), hatize_byname(g) %>% invert_byname())
+                   Z_colname = "Z", K_colname = "K", C_colname = "C",
+                   D_colname = "D", A_colname = "A"){
+  A_func <- function(U, V, q, fvec, g){
+    # The calculation of C and Z will fail when g contains NA values.
+    # NA values can be created when V has any industry whose outputs are inhomogeneous.
+    # Test here if any entry in g is NA.
+    # If so, the value for C will be assigned to NA.
+    if (any(is.na(g))) {
+      C_val <- NA_real_
+      Z_val <- NA_real_
+    } else {
+      C_val <- matrixproduct_byname(transpose_byname(V), hatize_byname(g) %>% invert_byname())
+      Z_val <- matrixproduct_byname(U, hatize_byname(g) %>% invert_byname())
+    }
+    # The calculation of K will fail when f contains NA values.
+    # NA values can be created when U has any industry whose inputs are inhomogeneous.
+    # Test here if any entry in f is NA.
+    # If so, the value for K will be assigned NA.
+    if (any(is.na(fvec))) {
+      K_val <- NA_real_
+    } else {
+      K_val <- matrixproduct_byname(U, hatize_byname(fvec) %>% invert_byname())
+    }
     D_val <- matrixproduct_byname(V, hatize_byname(q) %>% invert_byname())
     A_val <- matrixproduct_byname(Z_val, D_val)
-    list(Z_val, C_val, D_val, A_val) %>% set_names(Z_colname, C_colname, D_colname, A_colname)
+    # Put all output matrices in a list and return it.
+    list(Z_val, K_val, C_val, D_val, A_val) %>%
+      magrittr::set_names(c(Z_colname, K_colname, C_colname, D_colname, A_colname))
   }
-  matsindf_apply(.sutdata, FUN = A_func, U = U_colname, V = V_colname, q = q_colname, g = g_colname)
+  matsindf_apply(.sutdata, FUN = A_func, U = U_colname, V = V_colname, q = q_colname, fvec = f_colname, g = g_colname)
 }
 
 
-#' Calculates total requirements matrices
+#' Calculates total requirements matrices (\code{L_pxp} and \code{L_ixp})
 #'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
 #' @param D_colname the name of the column in \code{.sutdata} containing the \code{D} matrix.
@@ -205,7 +260,8 @@ calc_L <- function(.sutdata = NULL,
   L_func <- function(D, A){
     L_pxp_val <- Iminus_byname(A) %>% invert_byname()
     L_ixp_val <- matrixproduct_byname(D, L_pxp_val)
-    list(L_pxp_val, L_ixp_val) %>% set_names(L_pxp_colname, L_ixp_colname)
+    list(L_pxp_val, L_ixp_val) %>%
+      magrittr::set_names(c(L_pxp_colname, L_ixp_colname))
   }
   matsindf_apply(.sutdata, FUN = L_func, D = D_colname, A = A_colname)
 }

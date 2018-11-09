@@ -66,7 +66,7 @@ calc_embodied_mats <- function(.iodata = NULL,
                  L_ixp = L_ixp_colname, g = g_colname, W = W_colname, U_EIOU = U_EIOU_colname)
 }
 
-#' Calculate the G and H matrices for embodied energy calculations
+#' Calculate the \code{G} and \code{H} matrices for embodied energy calculations
 #'
 #' @param .iodata a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.
 #' \code{.iodata} will likely have been obtained from the \code{calc_io_mats} function.
@@ -95,7 +95,7 @@ calc_GH <- function(.iodata = NULL,
   matsindf_apply(.iodata, FUN = GH_func, Y = Y_colname, L_ixp = L_ixp_colname)
 }
 
-#' Calculate the E matrix for embodied energy calculations
+#' Calculate the \code{E} matrix for embodied energy calculations
 #'
 #' @param .iodata a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.
 #' \code{.iodata} will likely have been obtained from the \code{calc_io_mats} function.
@@ -284,12 +284,24 @@ calc_F_footprint_effects <- function(.Mdata = NULL,
 
     # Everything checked out, so make our outgoing list and return it.
     list(F_footprint_p, F_effects_p, F_footprint_s, F_effects_s) %>%
-      set_names(F_footprint_p_colname, F_effects_p_colname, F_footprint_s_colname, F_effects_s_colname)
+      magrittr::set_names(c(F_footprint_p_colname, F_effects_p_colname, F_footprint_s_colname, F_effects_s_colname))
   }
   matsindf_apply(.Mdata, FUN = F_func, M_p = M_p_colname, M_s = M_s_colname)
 }
 
 #' Embodied energy efficiencies
+#'
+#' Embodied energy efficiencies are based on the total upstream primary energy demand
+#' for a product produced by the ECC or
+#' for the energy consumed by a final demand sector of the ECC.
+#' This function calculates both.
+#' \code{eta_s} gives sector-based embodied energy efficiency, and
+#' \code{eta_p} gives product-based embodied energy efficiency.
+#'
+#' Note that these efficiencies (\code{eta_s} and \code{eta_p}) are different from
+#' energy conversion industry efficiencies.
+#' To calculate energy conversion industry efficiencies, use the
+#' \code{\link{calc_eta_i}} function.
 #'
 #' @param .embodiedmats a data frame containing columns of \strong{Y}, \strong{G}, and \strong{H} matrices
 #' @param primary_machine_names a list of strings representing names of Industries whose output is counted in TPES

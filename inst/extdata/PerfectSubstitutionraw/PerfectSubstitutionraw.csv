@@ -1,0 +1,21 @@
+﻿Country,Year,Ledger.side,Flow.aggregation.point,Energy.type,Last.stage,Flow,Product,EX.ktoe,Unit
+Example,2000,Supply,Total primary energy supply,E.ktoe,services,Resources - Rens,Rens,22.4,ktoe
+Example,2000,Supply,Total primary energy supply,E.ktoe,services,Resources - FF,FF,87,ktoe
+Example,2000,Supply,Transformation processes,E.ktoe,services,Solar and wind plants,Rens,-22.4,ktoe
+Example,2000,Supply,Energy industry own use,E.ktoe,services,Solar and wind plants,Ren elec,-3,ktoe
+Example,2000,Supply,Transformation processes,E.ktoe,services,Solar and wind plants,Ren elec,22.4,ktoe
+Example,2000,Supply,Transformation processes,E.ktoe,services,FF extraction,FF,-87,ktoe
+Example,2000,Supply,Transformation processes,E.ktoe,services,FF extraction,Refined FF,78.2,ktoe
+Example,2000,Supply,Transformation processes,E.ktoe,services,FF plants,Refined FF,-17.8,ktoe
+Example,2000,Supply,Transformation processes,E.ktoe,services,FF plants,FF elec,12.6,ktoe
+Example,2000,Supply,Transformation processes,E.ktoe,services,Fossil transport,Refined FF,-28.1,ktoe
+Example,2000,Supply,Transformation processes,E.ktoe,services,Fossil transport,Fossil miles,5.9,miles
+Example,2000,Supply,Transformation processes,E.ktoe,services,Electric transport,Ren elec,-19.4,ktoe
+Example,2000,Supply,Transformation processes,E.ktoe,services,Electric transport,FF elec,-0.5,ktoe
+Example,2000,Supply,Transformation processes,E.ktoe,services,Electric transport,Elec miles,0.4,miles
+Example,2000,Supply,Transformation processes,E.ktoe,services,Buildings,FF elec,-12.1,ktoe
+Example,2000,Supply,Transformation processes,E.ktoe,services,Buildings,Refined FF,-32.3,ktoe
+Example,2000,Supply,Transformation processes,E.ktoe,services,Buildings,Bldg services,25.2,Gm3-K
+Example,2000,Consumption,Transport,E.ktoe,services,Transport,Fossil miles,5.9,miles
+Example,2000,Consumption,Transport,E.ktoe,services,Transport,Elec miles,0.4,miles
+Example,2000,Consumption,Commercial and public services,E.ktoe,services,Commercial and public services,Bldg services,25.2,Gm3-K

@@ -38,7 +38,7 @@ Leeds, England,
 }
 \details{
 \code{UKEnergy2000tidy} gives each non-zero entry in \code{UKEnergy2000mats}
-as a single row in a data frame.
+as a single column in a data frame.
 These data are in tidy format.
 }
 \keyword{datasets}

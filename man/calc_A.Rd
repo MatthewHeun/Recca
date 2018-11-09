@@ -5,8 +5,9 @@
 \title{Calculate \code{Z}, \code{D}, \code{C}, and \code{A} matrices}
 \usage{
 calc_A(.sutdata = NULL, U_colname = "U", V_colname = "V",
-  q_colname = "q", g_colname = "g", Z_colname = "Z",
-  C_colname = "C", D_colname = "D", A_colname = "A")
+  q_colname = "q", f_colname = "f", g_colname = "g",
+  Z_colname = "Z", K_colname = "K", C_colname = "C",
+  D_colname = "D", A_colname = "A")
 }
 \arguments{
 \item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
@@ -17,10 +18,15 @@ calc_A(.sutdata = NULL, U_colname = "U", V_colname = "V",
 
 \item{q_colname}{the name of the column in \code{.sutdata} containing \code{q} vectors.}
 
+\item{f_colname}{the name of the column in \code{.sutdata} containing \code{f} vectors.}
+
 \item{g_colname}{the name of the column in \code{.sutdata} containing \code{g} vectors.}
 
 \item{Z_colname}{the name of the output column containing \code{Z} matrices.
 \code{Z} is calculated by \code{U * g_hat_inv}.}
+
+\item{K_colname}{the name of the output column containing \code{K} matrices.
+\code{K} is calculated by \code{U * f_hat_inv}.}
 
 \item{C_colname}{the name of the output column containing \code{C} matrices.
 \code{C} is calculated by \code{transpose(V) * g_hat_inv}.}
@@ -32,7 +38,9 @@ calc_A(.sutdata = NULL, U_colname = "U", V_colname = "V",
 \code{A} is calculated by \code{Z * D}.}
 }
 \value{
-\code{.sutdata} with columns \code{Z_colname}, \code{D_colname}, and \code{A_colname} added
+\code{.sutdata} with columns \code{Z_colname},
+\code{K_colname}, \code{C_colname},
+\code{D_colname}, and \code{A_colname} added
 }
 \description{
 Calculate \code{Z}, \code{D}, \code{C}, and \code{A} matrices

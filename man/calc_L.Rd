@@ -2,7 +2,7 @@
 % Please edit documentation in R/io.R
 \name{calc_L}
 \alias{calc_L}
-\title{Calculates total requirements matrices}
+\title{Calculates total requirements matrices (\code{L_pxp} and \code{L_ixp})}
 \usage{
 calc_L(.sutdata = NULL, D_colname = "D", A_colname = "A",
   L_pxp_colname = "L_pxp", L_ixp_colname = "L_ixp")
@@ -24,5 +24,5 @@ calc_L(.sutdata = NULL, D_colname = "D", A_colname = "A",
 \code{.sutdata} with columns \code{L_ixp_colname} and \code{L_pxp_colname} added
 }
 \description{
-Calculates total requirements matrices
+Calculates total requirements matrices (\code{L_pxp} and \code{L_ixp})
 }

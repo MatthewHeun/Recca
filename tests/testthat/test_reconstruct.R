@@ -1,38 +1,33 @@
+library(dplyr)
+library(Hmisc)
+library(magrittr)
+library(matsbyname)
+library(matsindf)
+library(Recca)
+library(testthat)
+library(tidyr)
 
 ###########################################################
-context("Reconstructing PSUT matrices")
+context("Reconstructing PSUT matrices from a new Y matrix")
 ###########################################################
 
 test_that("reconstructing U and V from single matrices works as expected", {
   alliomats <- UKEnergy2000mats %>%
     spread(key = matrix.name, value = matrix) %>%
     calc_io_mats()
-  allUV <- reconstruct_UV(alliomats, Y_prime_colname = "Y")
+  allUV <- new_Y(alliomats, Y_prime_colname = "Y")
   for (i in 1:nrow(allUV)) {
-    UV <- reconstruct_UV(Y_prime_colname = alliomats$Y[[i]],
-                         L_ixp_colname = alliomats$L_ixp[[i]],
-                         L_pxp_colname = alliomats$L_pxp[[i]],
-                         Z_colname = alliomats$Z[[i]],
-                         D_colname = alliomats$D[[i]])
+    UV <- new_Y(Y_prime_colname = alliomats$Y[[i]],
+                L_ixp_colname = alliomats$L_ixp[[i]],
+                L_pxp_colname = alliomats$L_pxp[[i]],
+                Z_colname = alliomats$Z[[i]],
+                D_colname = alliomats$D[[i]])
     expect_equal(UV$U_prime, allUV$U_prime[[i]])
     expect_equal(UV$V_prime, allUV$V_prime[[i]])
   }
 })
 
-test_that("reconstructing U and V with a data frame works as expected", {
-  expec_path <- file.path("tests", "expectations")
-
-  if (is_testing()) {
-    # testthat sets the working directory to the folder containing this file.
-    # We want the ability to use these tests interactively, too,
-    # when the working directory will be the top level of this project.
-    # So change the working directory if we're testing.
-    # Save the current working directory, to be restored later
-    currwd <- getwd()
-    # Move the working directory up two levels, to the top level of this project.
-    setwd(file.path("..", ".."))
-  }
-
+test_that("reconstructing U and V from a new Y matrix works as expected", {
   # Try with Y_prime <- Y, thereby simply trying to duplicate the original U and V matrices
   Reconstructed <- UKEnergy2000mats %>%
     spread(key = matrix.name, value = matrix) %>%
@@ -41,7 +36,7 @@ test_that("reconstructing U and V with a data frame works as expected", {
     mutate(
       Y_prime = Y
     ) %>%
-    reconstruct_UV() %>%
+    new_Y() %>%
     mutate(
       # Take the difference between U_prime and U and V_prime and V
       U_diff = difference_byname(U_prime, U),
@@ -69,12 +64,74 @@ test_that("reconstructing U and V with a data frame works as expected", {
     mutate(
       Y_prime = list(Y_prime_finalE, Y_prime_servicesE, Y_prime_usefulE, Y_prime_servicesX)
     ) %>%
-    reconstruct_UV()
-  expect_known_value(Reconstructed_Residential,
-                     file.path(expec_path, "expected_Reconstructed_Residential.rds"), update = FALSE)
-
-  if (is_testing()) {
-    # Restore the previous working directory.
-    setwd(currwd)
-  }
+    new_Y()
+  Recca:::test_against_file(Reconstructed_Residential, "expected_Reconstructed_Residential.rds", update = FALSE)
 })
+
+
+###########################################################
+context("Reconstructing PSUT matrices from perfect substitution")
+###########################################################
+
+test_that("new_k_ps works as expected", {
+  perfectsub_mats <- PerfectSubmats %>%
+    spread(key = "matrix.name", value = "matrix")
+
+  io_mats <- perfectsub_mats %>% calc_io_mats()
+  K <- io_mats$K[[1]]
+  Recca:::test_against_file(K, "expected_K.rds", update = FALSE)
+
+  # Figure out a new column vector for k_prime.
+  k_prime_vec <- K[, "Electric transport", drop = FALSE]
+  k_prime_vec["FF elec", "Electric transport"] <- 0.5
+  k_prime_vec["Ren elec", "Electric transport"] <- 0.5
+  # Add this vector to the io_mats data frame.
+  io_mats <- io_mats %>%
+    mutate(
+      # Set up a new k_prime vector for Electric transport.
+      # That vector will be used for the infininte substitution calculation.
+      # k_prime = select_cols_byname(K, retain_pattern = make_pattern("Electric transport", pattern_type = "exact")),
+      k_prime = make_list(k_prime_vec, n = 1)
+    )
+  # Now do the calculation of U_prime and V_prime matrices.
+  new_UV <- new_k_ps(io_mats)
+  Recca:::test_against_file(new_UV, "expected_new_UV_from_new_k_ps.rds", update = FALSE)
+})
+
+
+###########################################################
+context("Reconstructing PSUT matrices from new primary industries")
+###########################################################
+
+# test_that("new_R works as expected", {
+#   doubleR <- UKEnergy2000mats %>%
+#     spread(key = "matrix.name", value = "matrix") %>%
+#     # At present, the UKEnergy2000Mats has a V matrix that is the sum of both V and R.
+#     # Change to use the R matrix.
+#     rename(
+#       V_plus_R = V
+#     ) %>%
+#     separate_RV() %>%
+#     # At this point, the matrices are they way we want them.
+#     # Calculate the input-output matrices which are inputs to the new_R function.
+#     calc_io_mats() %>%
+#     # Make an R_prime matrix that gives twice the resource inputs to the economy.
+#     mutate(
+#       R_prime = elementproduct_byname(2, R)
+#     ) %>%
+#     # Now call the new_R function which will calculate
+#     # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
+#     # given R_prime.
+#     # Each of the *_prime matrices should be 2x their originals,
+#     # because R_prime is 2x relative to R.
+#     new_R()
+#
+#   for (i in 1:nrow(doubleR)) {
+#     expectedU <- elementproduct_byname(2, doubleR$U[[i]])
+#     expect_true(equal_byname(doubleR$U_prime[[i]], expectedU))
+#     expectedV <- elementproduct_byname(2, doubleR$V[[i]])
+#     expect_true(equal_byname(doubleR$V_prime[[i]], expectedV))
+#     expectedY <- elementproduct_byname(2, doubleR$Y[[i]])
+#     expect_true(equal_byname(doubleR$Y_prime[[i]], expectedY))
+#   }
+# })

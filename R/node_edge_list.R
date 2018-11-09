@@ -78,13 +78,13 @@ edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
     expandedUY <- list(Umat, Ymat) %>%
       lapply(FUN = function(m){
         # Convert all to tidy (row, col, value) format
-        mat_to_rowcolval(m, rownames = from, colnames = to, matvals = value, rowtype = "rowtype", coltype = "coltype", drop = 0)
+        mat_to_rowcolval(m, rownames = from, colnames = to, matvals = value, rowtypes = "rowtype", coltypes = "coltype", drop = 0)
       }) %>%
       bind_rows() %>%
       mutate(
         !!as.name(product) := !!as.name(from)
       )
-    expandedV <- mat_to_rowcolval(Vmat, rownames = from, colnames = to, matvals = value, rowtype = "rowtype", coltype = "coltype", drop = 0) %>%
+    expandedV <- mat_to_rowcolval(Vmat, rownames = from, colnames = to, matvals = value, rowtypes = "rowtype", coltypes = "coltype", drop = 0) %>%
       as.data.frame() %>%
       mutate(
         !!as.name(product) := !!as.name(to)

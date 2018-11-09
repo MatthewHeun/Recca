@@ -79,28 +79,28 @@ starts_with_any_of <- function(x, target){
 }
 
 
-#' Primary industries
+#' Resource industries
 #'
-#' Identify primary industries
+#' Identifies resource industries.
 #'
-#' Primary industries are industries that make a product without using any products.
-#' Primary industries are identified by interrogating
+#' Resource industries are industries that make a product without using any products.
+#' Resource industries are identified by interrogating
 #' the use (\code{U}) and make (\code{V}) matrices.
-#' Primary industries have all zeroes in their column of the use matrix (\code{U})
+#' Resource industries have all zeroes in their column of the use matrix (\code{U})
 #' and at least one non-zero value in their row of the make (\code{V}) matrix.
 #'
 #' Argument and value descriptions are written assuming that \code{.sutdata} is a data frame.
 #' Alternatively, \code{.sutdata} can be unspecified, and \code{U} and \code{V} can be matrices.
-#' In that case, the return value is a list with a single item: \code{p_industries}
-#' which contains a vector of names of primary industries for the \code{U} and \code{V} matrices.
+#' In that case, the return value is a list with a single item: \code{r_industries}
+#' which contains a vector of names of resource industries for the \code{U} and \code{V} matrices.
 #'
 #' @param .sutdata a list or data frame containing use matrix(ces) and make matrix(ces)
-#' @param U identifier for the use matrix (a string). Default is "U".
-#' @param V identifier for the make matrix (a string). Default is "Y".
-#' @param p_industries name for the primary industries vector (a string). Default is "\code{p_industries}".
+#' @param U identifier for the use matrix (a string). Default is "\code{U}".
+#' @param V identifier for the make matrix (a string). Default is "\code{V}".
+#' @param r_industries name for the resource industries vector (a string). Default is "\code{r_industries}".
 #'
 #' @return \code{.sutdata} with an additional column (named with the value of the \code{p_industries} argument)
-#'         containing the primary industries for each row
+#'         containing the resource industries for each row
 #'
 #' @importFrom matsbyname sort_rows_cols
 #'
@@ -109,199 +109,334 @@ starts_with_any_of <- function(x, target){
 #' @examples
 #' library(magrittr)
 #' library(tidyr)
-#' primary_industries(UKEnergy2000mats %>% spread(key = matrix.name, value = matrix))
-primary_industries <- function(.sutdata = NULL, U = "U", V = "V", p_industries = "p_industries"){
-  p_ind_func <- function(U, V){
+#' resource_industries(UKEnergy2000mats %>% spread(key = matrix.name, value = matrix))
+resource_industries <- function(.sutdata = NULL, U = "U", V = "V", r_industries = "r_industries"){
+  r_industries_func <- function(U, V){
     completed_cols_U <- complete_rows_cols(a = U, mat = transpose_byname(V), margin = 2) %>% sort_rows_cols()
     zero_cols_U_inds <- completed_cols_U %>%
       colsums_byname() %>%
       compare_byname("==", 0) %>%
       which()
-    list(dimnames(completed_cols_U)[[2]][zero_cols_U_inds]) %>% set_names(p_industries)
+    list(dimnames(completed_cols_U)[[2]][zero_cols_U_inds]) %>% magrittr::set_names(r_industries)
   }
-  matsindf_apply(.sutdata, FUN = p_ind_func, U = U, V = V)
+  matsindf_apply(.sutdata, FUN = r_industries_func, U = U, V = V)
 }
 
 
+#' Separate resource (\code{R}) and make (\code{V}) matrices from make plus resource (\code{V_plus_R}) matrices
 #'
-#' #' Add UVY, Commodity, Industry, row, and col columns to a tidy data frame
-#' #' containing IEA-formatted data.
-#' #'
-#' #' This function is specific to our data and nomenclature.
-#' #' It does not account for sign changes needed when
-#' #' switching from the IEA representation to the SUT representation.
-#' #' This function merely tags each row of the IEA data to indicate the
-#' #' submatix to which it belongs.
-#' #' This function assumes that columns with names
-#' #' \code{Ledger.side}, \code{Flow}, \code{Flow.aggregation.point},
-#' #' \code{EX.ktoe}, and \code{Product} exist.
-#' #'
-#' #' @param .ieadata a tidy data frame in IEA format containing columns for
-#' #' Ledger.side, Flow, and Flow.aggregation.point
-#' #' @param Ledger.side the name of the column in \code{.ieadata} containing ledger side information
-#' #' @param Flow of the column in \code{.ieadata} containing flow information
-#' #' @param Flow.aggregation.point the name of the column in \code{.ieadata} containing flow aggregation point information
-#' #' @param Flow the name of the column in \code{.ieadata} containing flow information
-#' #' @param E the name of the column in in \code{.ieadata} containing energy information
-#' #' @param UVY the name of the column to be added to \code{.ieadata} containing matrix identifiers
-#' #' @param U the name of the use matrix (default is "U")
-#' #' @param U_EIOU the name of the use matrix (default is "U_EIOU")
-#' #' @param V the name of the make matrix (default is "V")
-#' #' @param Y the name of the final demand matrix (default is "Y")
-#' #'
-#' #' @return a modified version of \code{.data} including a UVY column that indicates
-#' #' the matrix in which the data point should be placed.
-#' #'
-#' #' @export
-#' #'
-#' #' @importFrom dplyr case_when
-#' #' @importFrom dplyr mutate
-#' #' @importFrom magrittr %>%
-#' #'
-#' #' @examples
-#' #' library(dplyr)
-#' #' library(magrittr)
-#' #' addUVY(filter(AllIEAData, Country == "HN"))
-#' addUVY <- function(.ieadata,
-#'                    # Input columns
-#'                    Ledger.side = "Ledger.side",
-#'                    Flow.aggregation.point = "Flow.aggregation.point",
-#'                    Flow = "Flow",
-#'                    E = "E.ktoe",
-#'                    # Output columns
-#'                    UVY = "UVY",
-#'                    U = "U", U_EIOU = "U_EIOU", V = "V", Y = "Y"){
-#'   .ieadata %>%
-#'     mutate(
-#'       UVY = case_when(
-#'         # Identify MATRICES for each piece of data in an IEA-table style tidy data frame.
-#'         # Note that we proceed from most-specific to most-general,
-#'         # because the case_when function applies the rule of the first match.
+#' Resource industries are industries that make a product without using any products.
+#' Resource industries are identified by interrogating
+#' the use (\code{U}) and make (\code{V_plus_R}) matrices.
+#' Resource industries have all zeroes in their column of the use matrix (\code{U})
+#' and at least one non-zero value in their row of the make (\code{V_plus_R}) matrix.
 #'
-#'         # Start with the Consumption side of the ledger.
-#'         .$Ledger.side == "Consumption" ~                                             "Y",
+#' A resource matrix (\code{R}) has industries in rows and products in columns.
+#' The elements of of \code{R} indicate extraction of resources from the biosphere.
+#' The industries of \code{R} are the reserves of the extracted products.
 #'
-#'         # Work on the Supply side of the ledger.
+#' This function uses the \code{\link{resource_industries}} function to
+#' identify the resource industries in the \code{V_plus_R} matrix.
+#' Thereafter, the function extracts the resource industries from the \code{V_plus_R} matrix
+#' to form the \code{R} matrix.
+#' Finally, the \code{R} matrix is subtracted from the \code{V_plus_R} matrix
+#' and saved as the \code{V} matrix.
+#' If there are no resource industries in the \code{V_plus_R} matrix,
+#' a warning is emitted,
+#' no \code{R} matrix is created, and
+#' no changes are made to the \code{V_plus_R} matrix.
 #'
-#'         # Items that belong in the final demand matrix.
+#' @param .sutdata a list or data frame containing use matrix(ces) and make matrix(ces)
+#' @param U_colname identifier for the use matrix (a string) \code{.sutdata}. Default is "\code{U}".
+#' @param V_plus_R_colname identifier for the make matrix in \code{.sutdata} (a string). Default is "\code{V_plus_R}".
+#' @param V_colname identifier for the make matrix (a string). Default is "\code{V}".
+#' @param R_colname identifier for the resource matrix (a string). Default is "\code{R}".
 #'
-#'         # Exports originated in the IEA data.
-#'         # They belong in the primary portion of the final demand matrix.
-#'         .$Ledger.side == "Supply" & startsWith(.$Flow, "Exports") ~                    "Y",
+#' @return a version of the \code{V_plus_R} matrix without resource industries and an \code{R} matrix
 #'
-#'         # Bunkers and Stock changes both originated in the IEA data.
-#'         # They have similar characteristics, namely that
-#'         # when these numbers are positive, they belong in the primary portion of the supply (V) matrix, but
-#'         # when they are negative, they belong in the primary portion of the final demand matrix (Y) with
-#'         # sign changed.
-#'         .$Ledger.side == "Supply" &
-#'           (startsWith(.$Flow, "International aviation bunkers") |
-#'              startsWith(.$Flow, "International marine bunkers") |
-#'              startsWith(.$Flow, "Stock changes")) &
-#'           .$E.ktoe >= 0 ~                                                           "V",
-#'         .$Ledger.side == "Supply" &
-#'           (startsWith(.$Flow, "International aviation bunkers") |
-#'              startsWith(.$Flow, "International marine bunkers") |
-#'              startsWith(.$Flow, "Stock changes")) &
-#'           .$E.ktoe < 0 ~                                                            "Y",
-#'         # Statistical differences originated in the IEA data, and
-#'         # they belong in the balancing portion of the Make (V) or final demand (Y) matrix,
-#'         # depending on the sign (+ or -).
-#'         .$Ledger.side == "Supply" &
-#'           startsWith(.$Flow, "Statistical differences") &
-#'           .$E.ktoe >= 0 ~                                                           "V",
-#'         .$Ledger.side == "Supply" &
-#'           startsWith(.$Flow, "Statistical differences") &
-#'           .$E.ktoe < 0 ~                                                            "Y",
-#'         # Losses originated in the IEA data, and
-#'         # they belong in the balancing submatrix of the final demand (Y) matrix.
-#'         .$Ledger.side == "Supply" &
-#'           .$Flow == "Losses" ~                                                       "Y",
+#' @export
 #'
-#'         # Items that belong in the Use (U) and Make (V) transaction matrices.
+#' @examples
+#' library(dplyr)
+#' library(magrittr)
+#' library(tidyr)
+#' UKEnergy2000mats %>%
+#'   spread(key = "matrix.name", value = "matrix") %>%
+#'   # Rename the V matrix, because it includes the R matrix.
+#'   rename(
+#'     V_plus_R = V
+#'   ) %>%
+#'   separate_RV()
+separate_RV <- function(.sutdata = NULL, U_colname = "U", V_plus_R_colname = "V_plus_R",
+                      V_colname = "V", R_colname = "R"){
+  extract_R_func <- function(U, V_plus_R){
+    r_industry_names <- resource_industries(U = U, V = V_plus_R, r_industries = "r_inds") %>% unlist()
+    if (length(r_industry_names) == 0) {
+      warning("No R created in extract_R")
+    } else {
+      new_R <- V_plus_R %>% select_rows_byname(retain_pattern = make_pattern(r_industry_names, pattern_type = "exact"))
+      new_V <- V_plus_R %>% select_rows_byname(remove_pattern = make_pattern(r_industry_names, pattern_type = "exact"))
+    }
+    list(new_V, new_R) %>% magrittr::set_names(c(V_colname, R_colname))
+  }
+  matsindf_apply(.sutdata, FUN = extract_R_func, U = U_colname, V_plus_R = V_plus_R_colname)
+}
+
+
+#' Execute \code{expect_known_value} interactively or during testing
 #'
-#'         # Production and Imports originated in the IEA data, and
-#'         # they belong in the primary portion of the Make matrix (V_p)
-#'         # Note that if we re-classify additional "Production" to an industry
-#'         # (as we have done for coal),
-#'         # we should add other production machines here (in addition to "Coal mines").
-#'         .$Ledger.side == "Supply" &
-#'           (startsWith(.$Flow, "Production") |
-#'              startsWith(.$Flow, "Imports")) ~                                           "V",
-#'         .$Ledger.side == "Supply" &
-#'           startsWith(.$Flow, "Coal mines") &
-#'           .$Flow.aggregation.point != "Energy industry own use" ~                    "V",
-#'         .$Ledger.side == "Supply" &
-#'           startsWith(.$Flow, "Oil and gas extraction") &
-#'           .$Flow.aggregation.point != "Energy industry own use" ~                    "V",
+#' \code{testthat::expect_known_value} is difficult to use,
+#' because working directories are different for interactive sessions and
+#' during \code{R cmd check}.
+#' This function abstracts those difficulties by using \code{testthat::is_testing()}
+#' and other system checks.
+#' The assumed directory for saved expected objects is "\code{tests/expectations}"
 #'
-#'         # Like Production, Transfers originated in the IEA data,
-#'         # and they are part of primary-->final transformations.
-#'         # Thus, Transfers belong in the _pf portion of the Use (U) and Make (V) matrices
-#'         # according to their sign.
-#'         .$Ledger.side == "Supply" & startsWith(.$Flow, "Transfers") & .$E.ktoe >= 0 ~         "V",
-#'         .$Ledger.side == "Supply" & startsWith(.$Flow, "Transfers") & .$E.ktoe <  0 ~         "U",
+#' @param actual_object an object created during a test
+#' @param expected_file_name the name of a file previously saved
+#'        against which \code{actual_object} will be tested.
+#'        This argument must be a string and should probably end in "\code{.rds}".
+#'        Do not include path information.
+#'        Example: "\code{expected_L.rds}".
+#' @param update tells whether to update the saved object
+#' @param check.attributes tells whether the test should also check attributes during the testing process
+#' @param expec_folder a string giving the path to expected values stored as objects
+#'        on disk.
+#'        Default is "\code{tests/expectations}"
 #'
-#'         # At this point, only Energy industry own use and Transformation processes
-#'         # should remain on the Supply side of the ledger.
+#' @return NULL (invisibly). This function is called for its side effect of executing \code{expect_known_value}.
+test_against_file <- function(actual_object, expected_file_name,
+                              update = FALSE, check.attributes = TRUE,
+                              expec_folder = file.path("tests", "expectations")){
+
+  # This is supposed to skip a test when it runs with environment variable NOT_CRAN set.
+  # But this functionality doesn't apparently work for me.
+  # skip_on_cran()
+
+  if (is_testing()) {
+    # testthat sets the working directory to the folder containing the test file.
+    # We want the ability to use these tests interactively, too,
+    # when the working directory will be the top level of this project.
+    # So change the working directory if we're testing.
+    # Save the current working directory, to be restored later
+    currwd <- getwd()
+    # Move the working directory up two levels, to the top level of this project.
+    setwd(file.path("..", ".."))
+  }
+
+  result <- expect_known_value(actual_object, file.path(expec_folder, expected_file_name),
+                                         update = update, check.attributes = check.attributes)
+
+  if (is_testing()) {
+    # Set working directory back to its original value
+    setwd(currwd)
+  }
+  invisible(result)
+}
+
+
+#' Tell whether ECC products are unit-homogenous
 #'
-#'         # Work on Energy industry own use.
+#' Returns \code{TRUE} if products are unit-homogeneous
+#' according to the \code{S_units} matrix and
+#' \code{FALSE} otherwise.
 #'
-#'         # Energy industry own use originates from the IEA data,
-#'         # where it typically indicates energy consumed by the energy industry
-#'         # when converting primary energy to final energy by, for example,
-#'         # Oil refineries.
-#'         # Thus, we tag these entries with U_EIOU.
-#'         .$Ledger.side == "Supply" &
-#'           startsWith(.$Flow.aggregation.point, "Energy industry own use") &
-#'           .$E.ktoe < 0 ~                                                            "U_EIOU",
+#' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
+#' @param S_units_colname the name of the column in \code{.sutdata} that contains
+#'        \code{S_units} matrices. Default is "\code{S_units}".
+#' @param keep_details if \code{TRUE}, per-product results are returned;
+#'        if \code{FALSE}, per-ECC results are returned.
+#' @param products_unit_homogeneous_colname the name of the output column
+#'        that tells whether products in \code{S_units} are unit-homogeneous.
+#'        Default is "\code{products_unit_homogeneous}".
 #'
-#'         # Work on Transformation processes.
+#' @return \code{.sutdata} with additional column "\code{products_unit_homogeneous}"
+#'         containing \code{TRUE} if products in \code{S_units} are unit-homogeneous, \code{FALSE} otherwise.
 #'
-#'         # Transformation process entries with EX.ktoe >= 0 belong in the Make (V) matrix.
+#' importFrom magrittr extract2
 #'
-#'         # If this entry is a Transformation process that makes energy (EX.ktoe >= 0) and
-#'         # the product is a useful energy,
-#'         # then this entry belongs in the final-->useful Make submatrix (V_fu).
-#'         .$Ledger.side == "Supply" &
-#'           .$Flow.aggregation.point == "Transformation processes" &
-#'           .$E.ktoe >= 0 ~                                                                "V",
+#' @export
 #'
-#'         # If this entry is a Transformation process that uses energy (EX.ktoe < 0),
-#'         # this entry belongs in the primary-->final Use submatrix (U_pf).
-#'         .$Ledger.side == "Supply" &
-#'           .$Flow.aggregation.point == "Transformation processes" &
-#'           .$E.ktoe < 0 ~                                                                 "U",
+#' @examples
+#' library(magrittr)
+#' UKEnergy2000mats %>%
+#'   spread(key = "matrix.name", value = "matrix") %>%
+#'   products_unit_homogeneous() %>%
+#'   extract2("products_unit_homogeneous")
+products_unit_homogeneous <- function(.sutdata = NULL,
+                                      # Input columns
+                                      S_units_colname = "S_units",
+                                      keep_details = FALSE,
+                                      # Output columns
+                                      products_unit_homogeneous_colname = "products_unit_homogeneous"){
+  products_unit_homogeneous_func <- function(S_units){
+    num_ones <- count_vals_inrows_byname(S_units, "==", 1)
+    out <- num_ones == 1
+    if (!keep_details) {
+      out <- all(out)
+    }
+    list(out) %>% magrittr::set_names(products_unit_homogeneous_colname)
+  }
+
+  matsindf_apply(.sutdata, FUN = products_unit_homogeneous_func, S_units = S_units_colname)
+}
+
+
+#' Tell whether each industry's inputs are unit-homogeneous
 #'
-#'         # Anything that hasn't been specified above will get an "NA".
-#'         # This is almost certainly an error.
-#'         # So be sure to check for "NA" values in the UVY column.
-#'         TRUE ~ "NA"
-#'       )
-#'     ) %>%
+#' Returns \code{TRUE} if each industry's inputs are unit-homogeneous.
 #'
-#'     mutate(
-#'       # Set TYPES of rows and columns for the matrices.
-#'       # Products are the Commodities, and Flows are the Industries
-#'       row = case_when(
-#'         startsWith(.$UVY, "U") | startsWith(.$UVY, "Y") ~ .$Product,
-#'         startsWith(.$UVY, "V")                          ~ .$Flow,
-#'         TRUE ~ "NA"
-#'       ),
-#'       col = case_when(
-#'         startsWith(.$UVY, "U") | startsWith(.$UVY, "Y") ~ .$Flow,
-#'         startsWith(.$UVY, "V")                          ~ .$Product,
-#'         TRUE ~ "NA"
-#'       ),
-#'       rowtype = case_when(
-#'         startsWith(.$UVY, "U") | startsWith(.$UVY, "Y") ~ "Commodity",
-#'         startsWith(.$UVY, "V")                          ~ "Industry",
-#'         TRUE ~ "NA"
-#'       ),
-#'       coltype = case_when(
-#'         startsWith(.$UVY, "U") | startsWith(.$UVY, "Y") ~ "Industry",
-#'         startsWith(.$UVY, "V")                          ~ "Commodity",
-#'         TRUE ~ "NA"
-#'       )
-#'     )
-#' }
+#' The \code{U_bar} matrix is queried for the number of non-zero entries in each column.
+#' If the number of non-zero entries in each column is exactly 1,
+#' industry inputs are unit-homogeneous.
+#' Note that \code{U_bar = \link[matsbyname]{matrixproduct_byname}(\link[matsbyname]{transpose_byname}(S_units), U)}.
+#'
+#' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
+#' @param U_colname the name of the column in \code{.sutdata} that contains
+#'        \code{U} matrices. Default is "\code{U}".
+#' @param S_units_colname the name of the column in \code{.sutdata} that contains
+#'        \code{S_units} matrices. Default is "\code{S_units}".
+#' @param keep_details if \code{TRUE}, per-product results are returned;
+#'        if \code{FALSE}, per-ECC results are returned.
+#' @param ins_unit_homogeneous_colname the name of the output column
+#'        that tells whether each industry's inputs are unit-homogeneous.
+#'        Default is "\code{inputs_unit_homogeneous}".
+#'
+#' @return \code{.sutdata} with additional column "\code{inputs_unit_homogeneous}"
+#'         containing \code{TRUE} if inputs to each energy conversion industry are unit-homogeneous, \code{FALSE} otherwise.
+#'
+#' @export
+#'
+#' @examples
+#' library(magrittr)
+#' library(tidyr)
+#' UKEnergy2000mats %>%
+#'   spread(key = "matrix.name", value = "matrix") %>%
+#'   inputs_unit_homogeneous()
+inputs_unit_homogeneous <- function(.sutdata = NULL,
+                                    # Input columns
+                                    U_colname = "U", S_units_colname = "S_units",
+                                    keep_details = FALSE,
+                                    # Output columns
+                                    ins_unit_homogeneous_colname = "inputs_unit_homogeneous"){
+  inputs_unit_homogeneous_func <- function(U, S_units){
+    U_bar <- transpose_byname(S_units) %>% matrixproduct_byname(U)
+    num_non_zero <- count_vals_incols_byname(U_bar, "!=", 0)
+    out <- num_non_zero == 1
+    if (!keep_details) {
+      out <- all(out)
+    }
+    list(out) %>% magrittr::set_names(ins_unit_homogeneous_colname)
+  }
+  matsindf_apply(.sutdata, FUN = inputs_unit_homogeneous_func, U = U_colname, S_units = S_units_colname)
+}
+
+
+#' Tell whether industry outputs are unit-homogeneous
+#'
+#' Returns \code{TRUE} if each industry's output are unit-homogeneous.
+#'
+#' The \code{V_bar} matrix is queried for the number of non-zero entries in each row.
+#' If the number of non-zero entries in each row is exactly 1,
+#' industry outputs are unit-homogeneous.
+#' Note that \code{V_bar = \link[matsbyname]{matrixproduct_byname}(V, S_units)}.
+#'
+#' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
+#' @param V_colname the name of the column in \code{.sutdata} that contains
+#'        \code{V} matrices. Default is "\code{V}".
+#' @param S_units_colname the name of the column in \code{.sutdata} that contains
+#'        \code{S_units} matrices. Default is "\code{S_units}".
+#' @param keep_details if \code{TRUE}, per-industry results are returned;
+#'        if \code{FALSE}, per-ECC results are returned.
+#' @param outs_unit_homogeneous_colname the name of the output column
+#'        that tells whether each industry's outputs are unit-homogeneous.
+#'        Default is "\code{outputs_unit_homogeneous}".
+#'
+#' @return \code{.sutdata} with additional column "\code{outputs_unit_homogeneous}"
+#'         containing \code{TRUE} if each industry's outputs are unit-homogeneous, \code{FALSE} otherwise.
+#'
+#' @export
+#'
+#' @examples
+#' library(magrittr)
+#' UKEnergy2000mats %>%
+#'   spread(key = "matrix.name", value = "matrix") %>%
+#'   outputs_unit_homogeneous()
+outputs_unit_homogeneous <- function(.sutdata = NULL,
+                                     # Input columns
+                                     V_colname = "V", S_units_colname = "S_units",
+                                     keep_details = FALSE,
+                                     # Output columns
+                                     outs_unit_homogeneous_colname = "outputs_unit_homogeneous"){
+
+  outputs_unit_homogeneous_func <- function(V, S_units){
+    V_bar <- matrixproduct_byname(V, S_units)
+    num_non_zero <- count_vals_inrows_byname(V_bar, "!=", 0)
+    out <- num_non_zero == 1
+    if (!keep_details) {
+      out <- all(out)
+    }
+    list(out) %>% magrittr::set_names(outs_unit_homogeneous_colname)
+  }
+  matsindf_apply(.sutdata, FUN = outputs_unit_homogeneous_func, V = V_colname, S_units = S_units_colname)
+}
+
+
+#' Tell whether industry flows (inputs and outputs) are unit-homogeneous
+#'
+#' Returns \code{TRUE} if each industry's flows (all inputs and outputs) are unit-homogeneous.
+#'
+#' The \code{V_bar} matrix is queried for the number of non-zero entries in each row.
+#' If the number of non-zero entries in each row is exactly 1,
+#' industry outputs are unit-homogeneous.
+#' Note that \code{V_bar = \link[matsbyname]{matrixproduct_byname}(V, S_units)}.
+#'
+#' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
+#' @param U_colname the name of the column in \code{.sutdata} that contains
+#'        \code{U} matrices. Default is "\code{U}".
+#' @param V_colname the name of the column in \code{.sutdata} that contains
+#'        \code{V} matrices. Default is "\code{V}".
+#' @param S_units_colname the name of the column in \code{.sutdata} that contains
+#'        \code{S_units} matrices. Default is "\code{S_units}".
+#' @param keep_details if \code{TRUE}, per-industry results are returned;
+#'        if \code{FALSE}, per-ECC results are returned.
+#' @param flows_unit_homogeneous_colname the name of the output column
+#'        that tells whether each industry's outputs are unit-homogeneous.
+#'        Default is "\code{flows_unit_homogeneous}".
+#'
+#' @return \code{.sutdata} with additional column "\code{flows_unit_homogeneous}" containing
+#'         \code{TRUE} if each industry's flows are unit-homogeneous,
+#'         \code{FALSE} if each industry's flows are unit-heterogeneous.
+#'
+#' @export
+#'
+#' @examples
+#' library(magrittr)
+#' library(tidyr)
+#' UKEnergy2000mats %>%
+#'   spread(key = "matrix.name", value = "matrix") %>%
+#'   flows_unit_homogeneous()
+flows_unit_homogeneous <- function(.sutdata = NULL,
+                                   # Input columns
+                                   U_colname = "U", V_colname = "V", S_units_colname = "S_units",
+                                   keep_details = FALSE,
+                                   # Output columns
+                                   flows_unit_homogeneous_colname = "flows_unit_homogeneous"){
+
+  flows_unit_homogeneous_func <- function(U, V, S_units){
+    U_bar <- matrixproduct_byname(transpose_byname(S_units), U)
+    V_bar <- matrixproduct_byname(V, S_units)
+    # Add V_bar and U_bar_T to obtain a matrix with industries in rows and units in columns.
+    sums_by_unit <- sum_byname(V_bar, transpose_byname(U_bar))
+    # If rows of sums_by_unit have 1 non-zero row, the inputs and outputs for the industry of that row are unit-homogeneous.
+    # If rows of sums_by_unit have more than 1 non-zero row, the inputs and outputs for the industry of that row are unit-inhomogeneous.
+    num_non_zero <- count_vals_inrows_byname(sums_by_unit, "!=", 0)
+    out <- num_non_zero == 1
+    if (!keep_details) {
+      out <- all(out)
+    }
+    list(out) %>% magrittr::set_names(flows_unit_homogeneous_colname)
+  }
+
+  matsindf_apply(.sutdata, FUN = flows_unit_homogeneous_func, U = U_colname, V = V_colname, S_units = S_units_colname)
+}
