@@ -105,9 +105,9 @@ context("Reconstructing PSUT matrices from new primary industries")
 ###########################################################
 
 test_that("new_R works as expected", {
-  doubleR <- UKEnergy2000mats %>%
+  doubleR <- PerfectSubmats %>%
     spread(key = "matrix.name", value = "matrix") %>%
-    # At present, the UKEnergy2000Mats has a V matrix that is the sum of both V and R.
+    # At present, PerfectSubmats has a V matrix that is the sum of both V and R.
     # Change to use the R matrix.
     rename(
       V_plus_R = V
