@@ -4,7 +4,7 @@ bibliography: vignettes/recca.bib
 ---
 
 <!-- Add later, after Travis is hooked up. -->
-<!-- [![Travis-CI Build Status](https://travis-ci.org/MatthewHeun/recca.svg?branch=master)](https://travis-ci.org/MatthewHeun/recca) -->
+<!-- [![Travis-CI Build Status](https://travis-ci.org/MatthewHeun/recca.svg?branch=master)](https://travis-ci.org/MatthewHeun/Recca) -->
 
 
 # Recca
@@ -20,9 +20,9 @@ You can install `Recca` from github with:
 ```{r gh-installation, eval = FALSE}
 # install devtools if not already installed
 # install.packages("devtools")
-devtools::install_github("MatthewHeun/recca")
+devtools::install_github("MatthewHeun/Recca")
 # To build vignettes locally, use
-devtools::install_github("MatthewHeun/recca", build_vignettes = TRUE)
+devtools::install_github("MatthewHeun/Recca", build_vignettes = TRUE)
 ```
 
 
@@ -35,7 +35,7 @@ The functions in this package were used in the paper
 ## More Information
 
 Find more information, including vignettes and function documentation at 
-<https://MatthewHeun.github.io/recca/>.
+<https://MatthewHeun.github.io/Recca/>.
 
 
 ## References
