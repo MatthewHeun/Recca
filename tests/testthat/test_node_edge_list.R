@@ -144,3 +144,4 @@ test_that("node_list works as expected", {
   expect_equal(filter(nl, Node == "Transport")$node_id, 11)
   expect_equal(filter(nl, Node == "Waste")$node_id, 13)
 })
+

@@ -36,6 +36,7 @@
 #' @export
 #'
 #' @examples
+#' library(dplyr)
 #' library(tidyr)
 #' library(magrittr)
 #' verify_SUT_energy_balance(UKEnergy2000mats %>%
@@ -98,7 +99,10 @@ verify_SUT_energy_balance <- function(.sutdata = NULL,
 #' @export
 #'
 #' @examples
-#' verify_SUT_energy_balance_with_units(UKEnergy2000mats)
+#' library(magrittr)
+#' library(tidyr)
+#' verify_SUT_energy_balance_with_units(UKEnergy2000mats %>%
+#'                                        spread(key = matrix.name, value = matrix))
 verify_SUT_energy_balance_with_units <- function(.sutdata = NULL,
                                                  # Input column names
                                                  U = "U", V = "V", Y = "Y", S_units = "S_units",
@@ -158,7 +162,10 @@ verify_SUT_energy_balance_with_units <- function(.sutdata = NULL,
 #' @export
 #'
 #' @examples
-#' verify_SUT_industry_production(UKEnergy2000mats)
+#' library(magrittr)
+#' library(tidyr)
+#' verify_SUT_industry_production(UKEnergy2000mats %>%
+#'                                  spread(key = matrix.name, value = matrix))
 verify_SUT_industry_production <- function(.sutdata = NULL,
                                            # Input column names
                                            U_colname = "U", V_colname = "V",
@@ -215,6 +222,8 @@ verify_SUT_industry_production <- function(.sutdata = NULL,
 #' @export
 #'
 #' @examples
+#' library(dplyr)
+#' library(magrittr)
 #' UKEnergy2000tidy %>%
 #'   filter(Last.stage %in% c("final", "useful")) %>%
 #'   group_by(Country, Year, Energy.type, Last.stage) %>%

@@ -19,6 +19,8 @@
 #'
 #' @examples
 #' library(dplyr)
+#' library(matsindf)
+#' library(Recca)
 #' S_units_from_tidy(UKEnergy2000tidy %>% group_by("Country", "Year", "Energy.type", "Last.stage"))
 S_units_from_tidy <- function(.tidydf, Product = "Product", Unit = "Unit", S_units = "S_units"){
   # Establish names
@@ -109,7 +111,12 @@ add_matnames_iea <- function(.DF,
                                                   "Stock changes"),
                              # Output column
                              matname = "matname",
-                             # Ouput identifiers for use, EIOU, make, and final demand matrices
+                             # Ouput identifiers for
+                             # use matrix excluding EIOU (U_excl_EIOU),
+                             # use matrix energy industry own use items (U_EIOU),
+                             # make (V), and
+                             # final demand (Y)
+                             # matrices.
                              U_excl_EIOU = "U_excl_EIOU",
                              U_EIOU = "U_EIOU",
                              V = "V",

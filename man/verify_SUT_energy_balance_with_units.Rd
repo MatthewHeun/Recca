@@ -4,8 +4,8 @@
 \alias{verify_SUT_energy_balance_with_units}
 \title{Confirm that an SUT-style data frame conserves energy.}
 \usage{
-verify_SUT_energy_balance_with_units(.sutdata = NULL, U = "U", V = "V",
-  Y = "Y", S_units = "S_units", tol = 1e-06,
+verify_SUT_energy_balance_with_units(.sutdata = NULL, U = "U",
+  V = "V", Y = "Y", S_units = "S_units", tol = 1e-06,
   SUT_prod_energy_balance = ".SUT_prod_energy_balance",
   SUT_ind_energy_balance = ".SUT_ind_energy_balance")
 }
@@ -46,5 +46,8 @@ Both product and industry energy balance are verified.
 Units (as supplied by the \code{S_units} matrix) are respected.
 }
 \examples{
-verify_SUT_energy_balance_with_units(UKEnergy2000mats)
+library(magrittr)
+library(tidyr)
+verify_SUT_energy_balance_with_units(UKEnergy2000mats \%>\%
+                                       spread(key = matrix.name, value = matrix))
 }

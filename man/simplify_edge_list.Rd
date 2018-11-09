@@ -4,8 +4,8 @@
 \alias{simplify_edge_list}
 \title{Simplify an edge list}
 \usage{
-simplify_edge_list(edge_list, from = "From", to = "To", value = "Value",
-  product = "Product")
+simplify_edge_list(edge_list, from = "From", to = "To",
+  value = "Value", product = "Product")
 }
 \arguments{
 \item{edge_list}{the edge list to be simplified}
@@ -28,7 +28,9 @@ Then, every "to" node for that product can have the product's "from" be its "fro
 See examples.
 }
 \examples{
-el <- data.frame(From = c("A", "Oil"), To = c("Oil", "C"), Value = c(42, 42), Product = c("Oil", "Oil"), stringsAsFactors = FALSE)
+el <- data.frame(From = c("A", "Oil"), To = c("Oil", "C"),
+                 Value = c(42, 42), Product = c("Oil", "Oil"),
+                 stringsAsFactors = FALSE)
 # Oil flows from A to C through its product node (Oil)
 el
 # Simplify to have Oil flow from A to C without the product node

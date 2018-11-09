@@ -43,6 +43,7 @@ This function should be called
 for its side-effect of testing whether energy is in balance in \code{.sutdata}.
 }
 \examples{
+library(dplyr)
 library(tidyr)
 library(magrittr)
 verify_SUT_energy_balance(UKEnergy2000mats \%>\%

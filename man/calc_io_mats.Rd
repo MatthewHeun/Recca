@@ -6,7 +6,8 @@
 \usage{
 calc_io_mats(.sutdata = NULL, U_colname = "U", V_colname = "V",
   Y_colname = "Y", S_units = "S_units", y_colname = "y",
-  q_colname = "q", g_colname = "g", W_colname = "W", Z_colname = "Z",
+  q_colname = "q", f_colname = "f", g_colname = "g",
+  W_colname = "W", K_colname = "K", Z_colname = "Z",
   C_colname = "C", D_colname = "D", A_colname = "A",
   L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp")
 }
@@ -33,6 +34,10 @@ Default is "\code{y}".
 Default is "\code{q}".
 \code{q} is calculated by \code{rowsums(U) + y}.}
 
+\item{f_colname}{the name of the output column containing \code{f} vectors.
+Default is "\code{f}".
+\code{f} is calculated by \code{colsums(U)}.}
+
 \item{g_colname}{the name of the output column containing \code{g} vectors.
 Default is "\code{g}".
 \code{g} is calculated by \code{rowsums(V)}.}
@@ -40,6 +45,10 @@ Default is "\code{g}".
 \item{W_colname}{the name of the output column containing \code{W} matrices.
 Default is "\code{W}".
 \code{W} is calculated by \code{transpose(V) - U}.}
+
+\item{K_colname}{the name of the output column containing \code{K} matrices.
+Default is "\code{K}".
+\code{K} is calculated by \code{U * f_hat_inv}.}
 
 \item{Z_colname}{the name of the output column containing \code{Z} matrices.
 Default is "\code{Z}".
@@ -68,7 +77,7 @@ Default is "\code{L_pxp}".
 \value{
 \code{.sutdata} with additional columns:
 \code{y_colname}, \code{q_colname}, \code{g_colname}, \code{W_colname},
-\code{Z_colname}, \code{D_colname}, \code{C_colname}, \code{A_colname},
+\code{Z_colname}, \code{D_colname}, \code{K_colname}, \code{C_colname}, \code{A_colname},
 \code{L_ixp_colname}, and \code{L_pxp_colname}.
 }
 \description{

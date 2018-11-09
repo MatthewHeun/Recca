@@ -23,7 +23,7 @@ waste_edges(Umat, Vmat, from = "From", to = "To", value = "Value",
 \item{waste}{the name of the waste product and the destination node for wastes. (Default is "\code{Waste}".)}
 }
 \value{
-
+waste energy edges computed from the \code{Umat} and \code{Vmat} matrices
 }
 \description{
 Waste edges are created from the \code{W} matrix.
@@ -33,6 +33,10 @@ The \code{waste} argument supplies both the name of the waste flow (default is "
 and the name of the destination of the waste flows.
 }
 \examples{
+library(dplyr)
+library(magrittr)
+library(matsbyname)
+library(tidyr)
 sutmats <- UKEnergy2000mats \%>\% spread(key = matrix.name, value = matrix)
 edge_list(sutmats)$`Edge list`[[1]] \%>\% filter(Product == "Waste")
 }

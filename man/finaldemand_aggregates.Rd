@@ -5,8 +5,8 @@
 \title{Final demand aggregate energy}
 \usage{
 finaldemand_aggregates(.sutdata, fd_sectors, U_colname = "U",
-  Y_colname = "Y", r_EIOU_colname = "r_EIOU", by = c("Total", "Product",
-  "Sector"), net_aggregate_demand_colname = "EX_fd_net.ktoe",
+  Y_colname = "Y", r_EIOU_colname = "r_EIOU", by = c("Total",
+  "Product", "Sector"), net_aggregate_demand_colname = "EX_fd_net.ktoe",
   gross_aggregate_demand_colname = "EX_fd_gross.ktoe")
 }
 \arguments{

@@ -4,8 +4,8 @@
 \alias{add_node_ids}
 \title{Add node ID numbers to an edge list}
 \usage{
-add_node_ids(edge_list, from = "From", to = "To", node_id = "node_id",
-  first_node = 0)
+add_node_ids(edge_list, from = "From", to = "To",
+  node_id = "node_id", first_node = 0)
 }
 \arguments{
 \item{edge_list}{the edge list to which node ID numbers are to be added}
@@ -32,6 +32,9 @@ The column names for the "\code{From}" and "\code{To}" nodes are created by \cod
 the value of the \code{from} and \code{to} arguments with the value of the \code{node_id} argument.
 }
 \examples{
+library(magrittr)
+library(matsbyname)
+library(tidyr)
 sutmats <- UKEnergy2000mats \%>\% spread(key = matrix.name, value = matrix)
 # Suppress adding node IDs
 elDF <- edge_list(sutmats, node_id = NULL)$`Edge list`[[1]]

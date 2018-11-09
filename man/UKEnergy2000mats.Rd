@@ -33,7 +33,7 @@ Leeds, England,
 13 November 2017.
 }
 \details{
-\code{UKEnergy2000mats} gives the make (\code{V}), use (\code{U}), and final demand (\code{Y}) matrices
+\code{UKEnergy2000mats} gives the use (\code{U}), make (\code{V}), and final demand (\code{Y}) matrices
 associated with \code{UKEnergy2000tidy}.
 These data are in \pkg{matsindf} format.
 }

@@ -217,12 +217,14 @@ finaldemand_aggregates_with_units <- function(.sutdata,
 #' @export
 #'
 #' @examples
+#' library(dplyr)
 #' library(magrittr)
-#' p_ind <- primary_industries(UKEnergy2000mats %>%
-#'   spread(key = matrix.name, value = matrix))[["p_industries"]][[1]]
+#' library(tidyr)
+#' r_ind <- resource_industries(UKEnergy2000mats %>%
+#'   spread(key = matrix.name, value = matrix))[["r_industries"]][[1]]
 #' UKEnergy2000tidy %>%
 #'   group_by(Country, Year, Energy.type, Last.stage) %>%
-#'   primary_aggregates_IEA(p_industries = p_ind)
+#'   primary_aggregates_IEA(p_industries = r_ind)
 primary_aggregates_IEA <- function(.ieadata,
                                    # Input information
                                    flow = "Flow",
@@ -283,6 +285,7 @@ primary_aggregates_IEA <- function(.ieadata,
 #' @importFrom dplyr full_join
 #' @importFrom dplyr group_vars
 #' @importFrom dplyr summarise
+#' @importFrom matsindf verify_cols_missing
 #'
 #' @export
 #'
@@ -290,6 +293,7 @@ primary_aggregates_IEA <- function(.ieadata,
 #'         two additional columns containing net and gross final demand.
 #'
 #' @examples
+#' library(dplyr)
 #' library(magrittr)
 #' # Works only when all entries are in same units.
 #' # When Last.stage is services, different units are involved.

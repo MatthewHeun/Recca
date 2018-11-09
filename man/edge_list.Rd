@@ -5,9 +5,10 @@
 \title{Create an edge list}
 \usage{
 edge_list(.sutdata = NULL, U = "U", V = "V", Y = "Y",
-  edge_list = "Edge list", from = "From", to = "To", value = "Value",
-  product = "Product", waste = "Waste", node_id = "node_id",
-  first_node = 0, edge_id = "edge_id", simplify_edges = TRUE)
+  edge_list = "Edge list", from = "From", to = "To",
+  value = "Value", product = "Product", waste = "Waste",
+  node_id = "node_id", first_node = 0, edge_id = "edge_id",
+  simplify_edges = TRUE)
 }
 \arguments{
 \item{.sutdata}{Optionally, a data frame containing columns named with the values of the \code{U}, \code{V}, and \code{Y} arguments.}
@@ -65,9 +66,12 @@ In that event, the node named after the product is removed,
 and destinations are connected to the sources.
 }
 \examples{
+library(magrittr)
+library(matsbyname)
+library(tidyr)
 sutmats <- UKEnergy2000mats \%>\% spread(key = matrix.name, value = matrix)
 # Don't simplify edges and don't include waste edges
-el_basic <- edge_list(sutmats, simplify_edges = FALSE, include_waste = FALSE)
+el_basic <- edge_list(sutmats, simplify_edges = FALSE)
 head(el_basic$`Edge list`[[1]])
 tail(el_basic$`Edge list`[[1]])
 # Simplify edges and include waste

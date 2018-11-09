@@ -8,9 +8,10 @@ add_matnames_iea(.DF, ledger_side = "Ledger.side", energy = "EX.ktoe",
   flow_aggregation_point = "Flow.aggregation.point", flow = "Flow",
   supply_side = "Supply", consumption_side = "Consumption",
   eiou = "Energy industry own use", neg_supply_in_fd = c("Exports",
-  "International aviation bunkers", "International marine bunkers", "Losses",
-  "Statistical differences", "Stock changes"), matname = "matname",
-  U_excl_EIOU = "U_excl_EIOU", U_EIOU = "U_EIOU", V = "V", Y = "Y")
+  "International aviation bunkers", "International marine bunkers",
+  "Losses", "Statistical differences", "Stock changes"),
+  matname = "matname", U_excl_EIOU = "U_excl_EIOU",
+  U_EIOU = "U_EIOU", V = "V", Y = "Y")
 }
 \arguments{
 \item{.DF}{a data frame with \code{ledger_side}, \code{energy}, \code{flow_aggregation_point},

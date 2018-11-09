@@ -9,10 +9,6 @@ library(matsbyname)
 library(matsindf)
 library(devtools)
 
-
-# Pull in functions to assist with cleaning the data
-# source(file.path("data-raw", "data_prep_utilities.R"))
-
 # Load the raw data from the .csv file
 UKEnergy2000tidy <- read.csv(system.file("extdata", "UKEnergy2000raw", "UKEnergy2000raw.csv",
                                          package = "Recca", mustWork = TRUE),
@@ -39,7 +35,7 @@ UKEnergy2000mats <- UKEnergy2000tidy %>%
 
   # Collapse to matrices
   group_by(Country, Year, Energy.type, Last.stage, matname) %>%
-  collapse_to_matrices(matnames = "matname", values = "EX.ktoe",
+  collapse_to_matrices(matnames = "matname", matvals = "EX.ktoe",
                        rownames = "rowname", colnames = "colname",
                        rowtypes = "rowtype", coltypes = "coltype") %>%
   rename(matrix.name = matname, matrix = EX.ktoe) %>%

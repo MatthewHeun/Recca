@@ -5,11 +5,11 @@
 \title{Total primary aggregate energy from IEA tables}
 \usage{
 primary_aggregates_IEA(.ieadata, flow = "Flow",
-  flow_aggregation_point = "Flow.aggregation.point", energy = "EX.ktoe",
-  p_industries = c("Production", "Coal mines", "Oil and gas extraction",
-  "Imports", "Exports", "International aviation bunkers",
-  "International marine bunkers", "Stock changes"),
-  eiou = "Energy industry own use",
+  flow_aggregation_point = "Flow.aggregation.point",
+  energy = "EX.ktoe", p_industries = c("Production", "Coal mines",
+  "Oil and gas extraction", "Imports", "Exports",
+  "International aviation bunkers", "International marine bunkers",
+  "Stock changes"), eiou = "Energy industry own use",
   aggregate_primary_colname = "EX_p_IEA.ktoe")
 }
 \arguments{
@@ -54,10 +54,12 @@ Thus, \code{.ieadata} should be grouped prior to sending into this function.
 Grouping columns are preserved on output.
 }
 \examples{
+library(dplyr)
 library(magrittr)
-p_ind <- primary_industries(UKEnergy2000mats \%>\%
-  spread(key = matrix.name, value = matrix))[["p_industries"]][[1]]
+library(tidyr)
+r_ind <- resource_industries(UKEnergy2000mats \%>\%
+  spread(key = matrix.name, value = matrix))[["r_industries"]][[1]]
 UKEnergy2000tidy \%>\%
   group_by(Country, Year, Energy.type, Last.stage) \%>\%
-  primary_aggregates_IEA(p_industries = p_ind)
+  primary_aggregates_IEA(p_industries = r_ind)
 }

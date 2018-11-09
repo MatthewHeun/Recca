@@ -2,7 +2,7 @@
 % Please edit documentation in R/embodied.R
 \name{calc_E}
 \alias{calc_E}
-\title{Calculate the E matrix for embodied energy calculations}
+\title{Calculate the \code{E} matrix for embodied energy calculations}
 \usage{
 calc_E(.iodata = NULL, g_colname = "g", W_colname = "W",
   U_EIOU_colname = "U_EIOU", E_colname = "E")
@@ -25,5 +25,5 @@ value added (\code{W}) matrices}
 \code{.iodata} with column \code{E_colname} added
 }
 \description{
-Calculate the E matrix for embodied energy calculations
+Calculate the \code{E} matrix for embodied energy calculations
 }

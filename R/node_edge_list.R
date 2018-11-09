@@ -42,12 +42,19 @@
 #'
 #' @return an edge list or a column of edge lists
 #'
+#' @importFrom matsindf mat_to_rowcolval
+#' @importFrom dplyr bind_rows
+#' @importFrom tidyr spread
+#'
 #' @export
 #'
 #' @examples
+#' library(magrittr)
+#' library(matsbyname)
+#' library(tidyr)
 #' sutmats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
 #' # Don't simplify edges and don't include waste edges
-#' el_basic <- edge_list(sutmats, simplify_edges = FALSE, include_waste = FALSE)
+#' el_basic <- edge_list(sutmats, simplify_edges = FALSE)
 #' head(el_basic$`Edge list`[[1]])
 #' tail(el_basic$`Edge list`[[1]])
 #' # Simplify edges and include waste
@@ -71,13 +78,13 @@ edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
     expandedUY <- list(Umat, Ymat) %>%
       lapply(FUN = function(m){
         # Convert all to tidy (row, col, value) format
-        mat_to_rowcolval(m, rownames = from, colnames = to, matvals = value, rowtype = "rowtype", coltype = "coltype", drop = 0)
+        mat_to_rowcolval(m, rownames = from, colnames = to, matvals = value, rowtypes = "rowtype", coltypes = "coltype", drop = 0)
       }) %>%
       bind_rows() %>%
       mutate(
         !!as.name(product) := !!as.name(from)
       )
-    expandedV <- mat_to_rowcolval(Vmat, rownames = from, colnames = to, matvals = value, rowtype = "rowtype", coltype = "coltype", drop = 0) %>%
+    expandedV <- mat_to_rowcolval(Vmat, rownames = from, colnames = to, matvals = value, rowtypes = "rowtype", coltypes = "coltype", drop = 0) %>%
       as.data.frame() %>%
       mutate(
         !!as.name(product) := !!as.name(to)
@@ -126,6 +133,9 @@ edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
 #' @export
 #'
 #' @examples
+#' library(magrittr)
+#' library(matsbyname)
+#' library(tidyr)
 #' sutmats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
 #' # Suppress adding node IDs
 #' elDF <- edge_list(sutmats, node_id = NULL)$`Edge list`[[1]]
@@ -138,11 +148,13 @@ add_node_ids <- function(edge_list, from = "From", to = "To", node_id = "node_id
   # Make a 1-column data frame containing all of the node names.
   NodeNameID <- data.frame(unique(c(edge_list[[from]], edge_list[[to]])), stringsAsFactors = FALSE) %>%
     # Set the name of the only column.
-    set_names(node_names) %>%
-    # Add node_ids
+    set_names(node_names)
+  n_node_names <- nrow(NodeNameID)
+  NodeNameID <- NodeNameID %>%
     mutate(
-      !!as.name(node_id) := seq.int(first_node, first_node + nrow(.) - 1)
+      !!as.name(node_id) := seq.int(first_node, first_node + n_node_names - 1)
     )
+
   # Add node IDs for the from nodes.
   edge_list <- left_join(edge_list,
                          NodeNameID %>%
@@ -175,6 +187,9 @@ add_node_ids <- function(edge_list, from = "From", to = "To", node_id = "node_id
 #' @export
 #'
 #' @examples
+#' library(tidyr)
+#' library(magrittr)
+#' library(matsbyname)
 #' sutmats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
 #' # Suppress adding edge IDs
 #' elDF <- edge_list(sutmats, edge_id = NULL)$`Edge list`[[1]]
@@ -205,7 +220,9 @@ add_edge_ids <- function(edge_list, edge_id = "edge_id"){
 #' @return a simplified edge list
 #'
 #' @examples
-#' el <- data.frame(From = c("A", "Oil"), To = c("Oil", "C"), Value = c(42, 42), Product = c("Oil", "Oil"), stringsAsFactors = FALSE)
+#' el <- data.frame(From = c("A", "Oil"), To = c("Oil", "C"),
+#'                  Value = c(42, 42), Product = c("Oil", "Oil"),
+#'                  stringsAsFactors = FALSE)
 #' # Oil flows from A to C through its product node (Oil)
 #' el
 #' # Simplify to have Oil flow from A to C without the product node
@@ -218,6 +235,8 @@ simplify_edge_list <- function(edge_list, from = "From", to = "To", value = "Val
   U_entries <- edge_list %>% filter(!!as.name(from) == !!as.name(product))
   # Get the entries that would have come from the V matrix.
   V_entries <- edge_list %>% filter(!!as.name(to) == !!as.name(product))
+  # Avoid a NOTE in R CMD check
+  num_V_entries <- NULL
   # Figure out which products can be simplified
   # An edge for a product can be simplified if it has only one "From",
   # i.e., the product has only one source.
@@ -277,9 +296,13 @@ simplify_edge_list <- function(edge_list, from = "From", to = "To", value = "Val
 #'
 #' @export
 #'
-#' @return
+#' @return waste energy edges computed from the \code{Umat} and \code{Vmat} matrices
 #'
 #' @examples
+#' library(dplyr)
+#' library(magrittr)
+#' library(matsbyname)
+#' library(tidyr)
 #' sutmats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
 #' edge_list(sutmats)$`Edge list`[[1]] %>% filter(Product == "Waste")
 waste_edges <- function(Umat, Vmat,
@@ -335,6 +358,9 @@ waste_edges <- function(Umat, Vmat,
 #' @export
 #'
 #' @examples
+#' library(magrittr)
+#' library(matsbyname)
+#' library(tidyr)
 #' sutmats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
 #' el <- edge_list(sutmats)$`Edge list`[[1]]
 #' node_list(el)

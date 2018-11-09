@@ -19,6 +19,9 @@ The edges in an edge list can have ID numbers.
 This functions adds a column of edge ID numbers.
 }
 \examples{
+library(tidyr)
+library(magrittr)
+library(matsbyname)
 sutmats <- UKEnergy2000mats \%>\% spread(key = matrix.name, value = matrix)
 # Suppress adding edge IDs
 elDF <- edge_list(sutmats, edge_id = NULL)$`Edge list`[[1]]
