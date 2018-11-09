@@ -220,80 +220,80 @@ new_k_ps <- function(.sutdata = NULL,
                  Z = Z_colname, D = D_colname, f_vec = f_colname)
 }
 
+
+#' Assess the effect of new levels of resources
 #'
-#' #' #' Assess the effect of new levels of resources
-#' #' #'
-#' #' #' This function calculates the effect of changing the resources available to an energy conversion chain.
-#' #' #' New versions of \code{U}, \code{V}, and \code{Y} matrices are returned
-#' #' #' as \code{U_prime}, \code{V_prime}, and \code{Y_prime}.
-#' #' #'
-#' #' #' Note that inputs \code{L_ixp_colname}, \code{L_pxp_colname},
-#' #' #' can be
-#' #' #' conveniently calculated by the function \code{\link{calc_io_mats}}.
-#' #' #'
-#' #' #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
-#' #' #' @param R_prime_colname the name of an input column in \code{.sutdata} containing a new resource matrix for the ECC.
-#' #' #' @param U_colname the name of a column in \code{.sutdata} containing \code{U} matrices for the base ECC.  Default is "\code{U}".
-#' #' #' @param V_colname the name of a column in \code{.sutdata} containing \code{V} matrices for the base ECC.  Default is "\code{V}".
-#' #' #' @param Y_colname the name of a column in \code{.sutdata} containing \code{Y} matrices for the base ECC.  Default is "\code{Y}".
-#' #' #' @param maxiter the maximum number of iterations. Default is 100.
-#' #' #' @param tol the maximum allowable change in any one entry of the \code{U} and \code{V} matrices
-#' #' #'        from one iteration to the next. Default is 1e-6.
-#' #' #' @param U_prime_colname the name of the output column that contains new Use (\code{U}) matrices.
-#' #' #'        Default is "\code{U_prime}".
-#' #' #' @param V_prime_colname the name of the output column that contains new Make (\code{V}) matrices.
-#' #' #'        Default is "\code{V_prime}".
-#' #' #' @param Y_Prime_colname the name of the output column that contains new Final Demand (\code{Y}) matrices.
-#' #' #'        Default is "\code{Y_prime}".
-#' #' #'
-#' #' #' @return \code{.sutdata} with additional columns \code{U_prime_colname}, \code{V_prime_colname}, and \code{Y_prime_colname}.
-#' #' #'
-#' #' #'
-#' #' #' @examples
-#' #' new_R <- function(.sutdata = NULL,
-#' #'                   # Input columns
-#' #'                   R_prime_colname = "R_prime",
-#' #'                   U_colname = "U", V_colname = "V", Y_colname = "Y", eta_i_colname = "eta_i",
-#' #'                   maxiter = 100, tol = 1e-6,
-#' #'                   # Output columns
-#' #'                   U_prime_colname = "U_prime", V_prime_colname = "V_prime", Y_Prime_colname = "Y_prime"){
-#' #'   new_R_func <- function(R_prime, U, V, q){
-#' #'     # Calculate some quantities that we'll use on each iteration.
-#' #'     q_hat_inv_times_U <- q %>% hatize_byname %>% invert_byname() %>% matrixproduct_byname(U)
-#' #'     # Set up an initial V_prime, which is a V matrix with all zeroes.
-#' #'     # The easiest way to make that matrix is to multiply V by 0.
-#' #'     V_prime <- elementproduct_byname(0, V)
-#' #'     # Set up an initial q_prime_hat
-#' #'     q_prime_hat <- sum_byname(colsums_byname(R_prime), colsums_byname(V_prime)) %>% hatize_byname()
-#' #'     # Use a do-while loop structure for this algorithm.
-#' #'     repeat {
-#' #'       # Step 1
-#' #'       U_prime <- matrixproduct_byname(q_prime_hat, q_hat_inv_times_U)
-#' #'       # Step 2
-#' #'       U_bar_prime <- transpose_byname(S_units) %>% matrixproduct_byname(U_prime)
-#' #'       # Step 3
-#' #'       i_U_bar_prime <- colsums(U_bar_prime)
-#' #'       # Step 4
-#' #'       i_U_bar_prime_hat <- hatize_byname(i_U_bar_prime)
-#' #'       # Step 5
-#' #'       g_prime <- rowsums_byname(i_U_bar_prime_hat)
-#' #'
-#' #'
-#' #'
-#' #'       if (a == b) {
-#' #'
-#' #'       }
-#' #'
-#' #'     }
-#' #'
-#' #'   }
-#' #'
-#' #'
-#' #'
-#' #'   matsindf_apply(.sutdata, FUN = new_R_func,
-#' #'                  )
-#' #'
-#' #' }
+#' This function calculates the effect of changing the resources available to an energy conversion chain.
+#' New versions of \code{U}, \code{V}, and \code{Y} matrices are returned
+#' as \code{U_prime}, \code{V_prime}, and \code{Y_prime}.
 #'
+#' Note that inputs \code{L_ixp_colname}, \code{L_pxp_colname},
+#' can be
+#' conveniently calculated by the function \code{\link{calc_io_mats}}.
+#'
+#' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
+#' @param R_prime_colname the name of an input column in \code{.sutdata} containing a new resource matrix for the ECC.
+#' @param U_colname the name of a column in \code{.sutdata} containing \code{U} matrices for the base ECC.  Default is "\code{U}".
+#' @param V_colname the name of a column in \code{.sutdata} containing \code{V} matrices for the base ECC.  Default is "\code{V}".
+#' @param Y_colname the name of a column in \code{.sutdata} containing \code{Y} matrices for the base ECC.  Default is "\code{Y}".
+#' @param maxiter the maximum number of iterations. Default is 100.
+#' @param tol the maximum allowable change in any one entry of the \code{U} and \code{V} matrices
+#'        from one iteration to the next. Default is 1e-6.
+#' @param U_prime_colname the name of the output column that contains new Use (\code{U}) matrices.
+#'        Default is "\code{U_prime}".
+#' @param V_prime_colname the name of the output column that contains new Make (\code{V}) matrices.
+#'        Default is "\code{V_prime}".
+#' @param Y_Prime_colname the name of the output column that contains new Final Demand (\code{Y}) matrices.
+#'        Default is "\code{Y_prime}".
+#'
+#' @return \code{.sutdata} with additional columns \code{U_prime_colname}, \code{V_prime_colname}, and \code{Y_prime_colname}.
+#'
+#'
+#' @examples
+new_R <- function(.sutdata = NULL,
+                  # Input columns
+                  R_prime_colname = "R_prime",
+                  U_colname = "U", V_colname = "V", Y_colname = "Y", eta_i_colname = "eta_i",
+                  maxiter = 100, tol = 1e-6,
+                  # Output columns
+                  U_prime_colname = "U_prime", V_prime_colname = "V_prime", Y_Prime_colname = "Y_prime"){
+  new_R_func <- function(R_prime, U, V, q){
+    # Calculate some quantities that we'll use on each iteration.
+    q_hat_inv_times_U <- q %>% hatize_byname %>% invert_byname() %>% matrixproduct_byname(U)
+    # Set up an initial V_prime, which is a V matrix with all zeroes.
+    # The easiest way to make that matrix is to multiply V by 0.
+    V_prime <- elementproduct_byname(0, V)
+    # Set up an initial q_prime_hat
+    q_prime_hat <- sum_byname(colsums_byname(R_prime), colsums_byname(V_prime)) %>% hatize_byname()
+    # Use a do-while loop structure for this algorithm.
+    repeat {
+      # Step 1
+      U_prime <- matrixproduct_byname(q_prime_hat, q_hat_inv_times_U)
+      # Step 2
+      U_bar_prime <- transpose_byname(S_units) %>% matrixproduct_byname(U_prime)
+      # Step 3
+      i_U_bar_prime <- colsums(U_bar_prime)
+      # Step 4
+      i_U_bar_prime_hat <- hatize_byname(i_U_bar_prime)
+      # Step 5
+      g_prime <- rowsums_byname(i_U_bar_prime_hat)
+
+
+
+      if (a == b) {
+
+      }
+
+    }
+
+  }
+
+
+
+  matsindf_apply(.sutdata, FUN = new_R_func,
+                 )
+
+}
+
 
 
