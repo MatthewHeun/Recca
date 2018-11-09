@@ -248,7 +248,6 @@ new_k_ps <- function(.sutdata = NULL,
 #'
 #' @return \code{.sutdata} with additional columns \code{U_prime_colname}, \code{V_prime_colname}, and \code{Y_prime_colname}.
 #'
-#' @export
 #'
 #' @examples
 new_R <- function(.sutdata = NULL,
