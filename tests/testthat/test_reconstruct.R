@@ -116,6 +116,8 @@ test_that("new_R works as expected", {
     # At this point, the matrices are they way we want them.
     # Calculate the input-output matrices which are inputs to the new_R function.
     calc_io_mats() %>%
+    # Calculate the efficiency of every industry in the ECC.
+    calc_eta_i() %>%
     # Make an R_prime matrix that gives twice the resource inputs to the economy.
     mutate(
       R_prime = elementproduct_byname(2, R)

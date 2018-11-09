@@ -6,8 +6,8 @@
 \usage{
 new_R(.sutdata = NULL, R_prime_colname = "R_prime", U_colname = "U",
   V_colname = "V", Y_colname = "Y", S_units_colname = "S_units",
-  q_colname = "q", eta_i_colname = "eta_i", maxiter = 100,
-  tol = 1e-06, U_prime_colname = "U_prime",
+  q_colname = "q", C_colname = "C", eta_i_colname = "eta_i",
+  maxiter = 100, tol = 1e-06, U_prime_colname = "U_prime",
   V_prime_colname = "V_prime", Y_Prime_colname = "Y_prime")
 }
 \arguments{
@@ -21,7 +21,16 @@ new_R(.sutdata = NULL, R_prime_colname = "R_prime", U_colname = "U",
 
 \item{Y_colname}{the name of a column in \code{.sutdata} containing \code{Y} matrices for the base ECC.  Default is "\code{Y}".}
 
-\item{maxiter}{the maximum number of iterations. Default is 100.}
+\item{S_units_colname}{the name of a column in \code{.sutdata} containing \code{S_units} matrices for the base ECC.  Default is "\code{S_units}".}
+
+\item{q_colname}{the name of a column in \code{.sutdata} containing \code{q} matrices for the base ECC.  Default is "\code{q}".}
+
+\item{C_colname}{the name of a column in \code{.sutdata} containing \code{C} matrices for the base ECC.  Default is "\code{C}".}
+
+\item{eta_i_colname}{the name of a column in \code{.sutdata} containing \code{eta_i} vectors for the base ECC.  Default is "\code{eta_i}".}
+
+\item{maxiter}{the maximum allowable number of iterations when calculating the effects of a new \code{R} matrix.
+Default is 100.}
 
 \item{tol}{the maximum allowable change in any one entry of the \code{U} and \code{V} matrices
 from one iteration to the next. Default is 1e-6.}
@@ -44,7 +53,9 @@ New versions of \code{U}, \code{V}, and \code{Y} matrices are returned
 as \code{U_prime}, \code{V_prime}, and \code{Y_prime}.
 }
 \details{
-Note that inputs \code{L_ixp_colname}, \code{L_pxp_colname},
+Note that inputs \code{U_colname}, \code{V_colname}, \code{Y_colname},
+\code{S_units_colname}, \code{q_colname}, and \code{C_colname}
 can be
-conveniently calculated by the function \code{\link{calc_io_mats}}.
+conveniently calculated by the function \code{\link{calc_io_mats}};
+\code{eta_i_colname} can be calculated with \code{\link{calc_eta_i}}.
 }
