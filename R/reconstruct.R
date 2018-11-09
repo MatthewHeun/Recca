@@ -317,7 +317,7 @@ new_R <- function(.sutdata = NULL,
       U_prime_prev <- U_prime
       V_prime_prev <- V_prime
     }
-    # Now calculate the Y_prime matrix
+    # After U_prime and V_prime are solved, calculate the Y_prime matrix
     y <- rowsums_byname(Y)
     y_hat_inv_Y <- matrixproduct_byname(y %>% hatize_byname() %>% invert_byname(), Y)
     y_prime <- difference_byname(q_prime, rowsums_byname(U_prime))
@@ -326,8 +326,6 @@ new_R <- function(.sutdata = NULL,
     # Return the new U, V, and Y matrices.
     list(U_prime, V_prime, Y_prime) %>% purrr::set_names(c(U_prime_colname, V_prime_colname, Y_Prime_colname))
   }
-
-
 
   matsindf_apply(.sutdata, FUN = new_R_func, U = U_colname, V = V_colname, Y = Y_colname, S_units = S_units_colname,
                  q = q_colname, C = C_colname, eta_i = eta_i_colname)
