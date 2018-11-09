@@ -248,16 +248,18 @@ new_k_ps <- function(.sutdata = NULL,
 #'
 #' @return \code{.sutdata} with additional columns \code{U_prime_colname}, \code{V_prime_colname}, and \code{Y_prime_colname}.
 #'
+#' @export
 #'
 #' @examples
 new_R <- function(.sutdata = NULL,
                   # Input columns
                   R_prime_colname = "R_prime",
-                  U_colname = "U", V_colname = "V", Y_colname = "Y", eta_i_colname = "eta_i",
+                  U_colname = "U", V_colname = "V", Y_colname = "Y", S_units_colname = "S_units",
+                  q_colname = "q", eta_i_colname = "eta_i",
                   maxiter = 100, tol = 1e-6,
                   # Output columns
                   U_prime_colname = "U_prime", V_prime_colname = "V_prime", Y_Prime_colname = "Y_prime"){
-  new_R_func <- function(R_prime, U, V, q){
+  new_R_func <- function(R_prime, U, V, Y, S_units, q, eta_i){
     # Calculate some quantities that we'll use on each iteration.
     q_hat_inv_times_U <- q %>% hatize_byname %>% invert_byname() %>% matrixproduct_byname(U)
     # Set up an initial V_prime, which is a V matrix with all zeroes.
@@ -266,33 +268,38 @@ new_R <- function(.sutdata = NULL,
     # Set up an initial q_prime_hat
     q_prime_hat <- sum_byname(colsums_byname(R_prime), colsums_byname(V_prime)) %>% hatize_byname()
     # Use a do-while loop structure for this algorithm.
+    iter <- 0
     repeat {
       # Step 1
       U_prime <- matrixproduct_byname(q_prime_hat, q_hat_inv_times_U)
       # Step 2
       U_bar_prime <- transpose_byname(S_units) %>% matrixproduct_byname(U_prime)
       # Step 3
-      i_U_bar_prime <- colsums(U_bar_prime)
+      i_U_bar_prime <- colsums_byname(U_bar_prime)
       # Step 4
       i_U_bar_prime_hat <- hatize_byname(i_U_bar_prime)
       # Step 5
       g_prime <- rowsums_byname(i_U_bar_prime_hat)
 
 
-
-      if (a == b) {
-
+      if (iter >= maxiter) {
+        break
       }
+      # Check convergence condition
+      # if (a == b) {
+      #
+      # }
+      iter <- iter + 1
 
     }
-
+    # Return the new U, V, and Y matrices.
+    list(U_prime, V_prime, Y_prime) %>% purrr::set_names(c(U_prime_colname, V_prime_colname, Y_Prime_colname))
   }
 
 
 
-  matsindf_apply(.sutdata, FUN = new_R_func,
-                 )
-
+  matsindf_apply(.sutdata, FUN = new_R_func, U = U_colname, V = V_colname, Y = Y_colname, S_units = S_units_colname,
+                 q = q_colname, eta_i = eta_i_colname)
 }
 
 
