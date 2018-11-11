@@ -259,6 +259,7 @@ test_against_file <- function(actual_object, expected_file_name,
 #'
 #' @examples
 #' library(magrittr)
+#' library(tidyr)
 #' UKEnergy2000mats %>%
 #'   spread(key = "matrix.name", value = "matrix") %>%
 #'   products_unit_homogeneous() %>%
@@ -359,6 +360,7 @@ inputs_unit_homogeneous <- function(.sutdata = NULL,
 #'
 #' @examples
 #' library(magrittr)
+#' library(tidyr)
 #' UKEnergy2000mats %>%
 #'   spread(key = "matrix.name", value = "matrix") %>%
 #'   outputs_unit_homogeneous()

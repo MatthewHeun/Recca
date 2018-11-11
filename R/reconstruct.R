@@ -257,6 +257,8 @@ new_k_ps <- function(.sutdata = NULL,
 #'
 #' @export
 #'
+#' @importFrom matsbyname equal_byname
+#'
 #' @examples
 new_R <- function(.sutdata = NULL,
                   # Input columns
@@ -270,7 +272,10 @@ new_R <- function(.sutdata = NULL,
     # Calculate some quantities that we'll use on each iteration.
 
     # q_hat_inv_times_U
-    q_hat_inv_times_U <- q %>% hatize_byname %>% invert_byname() %>% matrixproduct_byname(U)
+    q_hat_inv_times_U <- q %>% hatize_byname() %>% invert_byname() %>% matrixproduct_byname(U)
+
+    # Column sums of the R_prime matrix
+    iR_prime <- colsums_byname(R_prime)
 
     # Set up an initial V_prime, which is a V matrix with all zeroes.
     # The easiest way to make that matrix is to multiply V by 0.
@@ -285,7 +290,9 @@ new_R <- function(.sutdata = NULL,
     iter <- 0
     repeat {
       # Step 0: Calculate q_prime_hat
-      q_prime_hat <- sum_byname(colsums_byname(R_prime), colsums_byname(V_prime)) %>% hatize_byname()
+      # Note that we're making q_prime into a column vector. Purpose: compatibility with the calculation of y_prime later.
+      q_prime <- sum_byname(iR_prime, colsums_byname(V_prime)) %>% transpose_byname()
+      q_prime_hat <- q_prime %>% hatize_byname()
       # Step 1: Calculate U_prime
       U_prime <- matrixproduct_byname(q_prime_hat, q_hat_inv_times_U)
       # Step 2: Calculate U_bar_prime
@@ -317,7 +324,7 @@ new_R <- function(.sutdata = NULL,
       U_prime_prev <- U_prime
       V_prime_prev <- V_prime
     }
-    # After U_prime and V_prime are solved, calculate the Y_prime matrix
+    # After U_prime and V_prime have converged, calculate the Y_prime matrix
     y <- rowsums_byname(Y)
     y_hat_inv_Y <- matrixproduct_byname(y %>% hatize_byname() %>% invert_byname(), Y)
     y_prime <- difference_byname(q_prime, rowsums_byname(U_prime))

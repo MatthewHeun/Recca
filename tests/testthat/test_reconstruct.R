@@ -105,9 +105,12 @@ context("Reconstructing PSUT matrices from new primary industries")
 ###########################################################
 
 test_that("new_R works as expected", {
-  doubleR <- PerfectSubmats %>%
+  doubleR <- UKEnergy2000mats %>%
     spread(key = "matrix.name", value = "matrix") %>%
-    # At present, PerfectSubmats has a V matrix that is the sum of both V and R.
+    # When Last.stage is "services", we get units problems.
+    # Avoid by using only ECCs with "final" and "useful" as the Last.stage.
+    filter(Last.stage != "services") %>%
+    # At present, UKEnergy2000mats has V matrices that are the sum of both V and R.
     # Change to use the R matrix.
     rename(
       V_plus_R = V
@@ -127,14 +130,15 @@ test_that("new_R works as expected", {
     # given R_prime.
     # Each of the *_prime matrices should be 2x their originals,
     # because R_prime is 2x relative to R.
-    new_R()
+    new_R() %>%
+    mutate(
+      expected_U = elementproduct_byname(2, U),
+      expected_V = elementproduct_byname(2, V),
+      expected_Y = elementproduct_byname(2, Y)
+    )
 
-  for (i in 1:nrow(doubleR)) {
-    expectedU <- elementproduct_byname(2, doubleR$U[[i]])
-    expect_true(equal_byname(doubleR$U_prime[[i]], expectedU))
-    expectedV <- elementproduct_byname(2, doubleR$V[[i]])
-    expect_true(equal_byname(doubleR$V_prime[[i]], expectedV))
-    expectedY <- elementproduct_byname(2, doubleR$Y[[i]])
-    expect_true(equal_byname(doubleR$Y_prime[[i]], expectedY))
-  }
+  # Test that everything worked as expected
+  expect_equal(doubleR$U_prime, doubleR$expected_U)
+  expect_equal(doubleR$V_prime, doubleR$expected_V)
+  expect_equal(doubleR$Y_prime, doubleR$expected_Y)
 })

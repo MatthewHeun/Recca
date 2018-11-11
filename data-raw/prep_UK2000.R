@@ -1,6 +1,16 @@
 #
 # This script reads the raw UK2000 data and prepares it for use in the package.
 #
+# Workflow:
+#
+# (1) If any changes are made in UKEnergy2000raw.csv,
+# be sure to build the package before running this script.
+# Building the package will put the UKEnergy2000raw.csv file in the correct location
+# to be picked up by the System.file function.
+#
+# (2) Run this script so that use_data puts the *.rda files in the correct location.
+#
+# (3) Build again to make sure all *.rda data files are collected into the package.
 
 library(magrittr)
 library(dplyr)

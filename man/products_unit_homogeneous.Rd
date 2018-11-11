@@ -34,6 +34,7 @@ according to the \code{S_units} matrix and
 }
 \examples{
 library(magrittr)
+library(tidyr)
 UKEnergy2000mats \%>\%
   spread(key = "matrix.name", value = "matrix") \%>\%
   products_unit_homogeneous() \%>\%
