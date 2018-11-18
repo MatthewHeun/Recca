@@ -1,4 +1,5 @@
 * Now importing `magrittr` pipe at high level.
+* Now using `hatinv_byname` function instead of `hatize_byname` and `invert_byname` in succession.
 
 
 # Recca 0.1.9 (2018-11-08)
