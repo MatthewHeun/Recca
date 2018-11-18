@@ -63,7 +63,7 @@ new_Y <- function(.sutdata = NULL,
     q_prime_val <- matrixproduct_byname(L_pxp, y_prime_val)
     U_prime_val <- matrixproduct_byname(Z, hatize_byname(g_prime_val))
     V_prime_val <- matrixproduct_byname(D, hatize_byname(q_prime_val))
-    list(U_prime_val, V_prime_val) %>% purrr::set_names(c(U_prime_colname, V_prime_colname))
+    list(U_prime_val, V_prime_val) %>% magrittr::set_names(c(U_prime_colname, V_prime_colname))
   }
   matsindf_apply(.sutdata, FUN = new_Y_func,
                  Y_prime = Y_prime_colname, L_ixp = L_ixp_colname, L_pxp = L_pxp_colname,
@@ -208,7 +208,7 @@ new_k_ps <- function(.sutdata = NULL,
     U_prime <- difference_byname(U, U_prime_1) %>% sum_byname(U_prime_2)
     V_prime <- difference_byname(V, V_prime_1) %>% sum_byname(V_prime_2)
 
-    list(U_prime, V_prime) %>% purrr::set_names(c(U_prime_colname, V_prime_colname))
+    list(U_prime, V_prime) %>% magrittr::set_names(c(U_prime_colname, V_prime_colname))
   }
   matsindf_apply(.sutdata, FUN = new_k_ps_func,
                  k_prime_2 = k_prime_colname,
@@ -272,7 +272,7 @@ new_R <- function(.sutdata = NULL,
     # Calculate some quantities that we'll use on each iteration.
 
     # q_hat_inv_times_U
-    q_hat_inv_times_U <- q %>% hatize_byname() %>% invert_byname() %>% matrixproduct_byname(U)
+    q_hat_inv_times_U <- matrixproduct_byname(hatinv_byname(q), U)
 
     # Column sums of the R_prime matrix
     iR_prime <- colsums_byname(R_prime)
@@ -291,24 +291,24 @@ new_R <- function(.sutdata = NULL,
       # Step 0: Calculate q_prime_hat
       # Note that we're making q_prime into a column vector. Purpose: compatibility with the calculation of y_prime later.
       q_prime <- sum_byname(iR_prime, colsums_byname(V_prime)) %>% transpose_byname()
-      q_prime_hat <- q_prime %>% hatize_byname()
+      q_hat_prime <- q_prime %>% hatize_byname()
       # Index the iteration counter
       iter <- iter + 1
       # Step 1: Calculate U_prime
-      U_prime <- matrixproduct_byname(q_prime_hat, q_hat_inv_times_U)
+      U_prime <- matrixproduct_byname(q_hat_prime, q_hat_inv_times_U)
       # Step 2: Calculate U_bar_prime
       U_bar_prime <- transpose_byname(S_units) %>% matrixproduct_byname(U_prime)
       # ********************* Verify only one row. If more than one row, have more than one unit. **************
       # Step 3: Calculate column sums of U_bar_prime
       i_U_bar_prime <- colsums_byname(U_bar_prime)
       # Step 4: Calculate i_U_bar_prime_hat
-      i_U_bar_prime_hat <- hatize_byname(i_U_bar_prime)
+      i_U_bar_hat_prime <- hatize_byname(i_U_bar_prime)
       # Step 5: Calculate g_prime
-      g_prime <- matrixproduct_byname(i_U_bar_prime_hat, eta_i)
+      g_prime <- matrixproduct_byname(i_U_bar_hat_prime, eta_i)
       # Step 6: Calculate g_prime_hat
-      g_prime_hat <- hatize_byname(g_prime)
+      g_hat_prime <- hatize_byname(g_prime)
       # Step 7: Calculate V_prime
-      V_prime <- matrixproduct_byname(C, g_prime_hat) %>% transpose_byname()
+      V_prime <- matrixproduct_byname(C, g_hat_prime) %>% transpose_byname()
 
       # Check convergence condition
       if (equal_byname(U_prime, U_prime_prev) & equal_byname(V_prime, V_prime_prev)) {
@@ -330,7 +330,7 @@ new_R <- function(.sutdata = NULL,
     y_hat_prime <- hatize_byname(y)
     Y_prime <- matrixproduct_byname(y_hat_prime, y_hat_inv_Y)
     # Return the new U, V, and Y matrices.
-    list(U_prime, V_prime, Y_prime) %>% purrr::set_names(c(U_prime_colname, V_prime_colname, Y_Prime_colname))
+    list(U_prime, V_prime, Y_prime) %>% magrittr::set_names(c(U_prime_colname, V_prime_colname, Y_Prime_colname))
   }
 
   matsindf_apply(.sutdata, FUN = new_R_func, U = U_colname, V = V_colname, Y = Y_colname, S_units = S_units_colname,
