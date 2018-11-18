@@ -70,9 +70,9 @@ calc_io_mats <- function(.sutdata = NULL,
   io_func <- function(U, V, Y, S_units = NULL){
     # Clean the matrices, thereby avoiding situations where rows or columns of zeroes
     # cause a _hat_inv step to fail due to inverting a matrix with a row or column of zeroes.
-    U <- clean_byname(U, margin = c(1,2), clean_value = 0)
-    V <- clean_byname(V, margin = c(1,2), clean_value = 0)
-    Y <- clean_byname(Y, margin = c(1,2), clean_value = 0)
+    # U <- clean_byname(U, margin = c(1,2), clean_value = 0)
+    # V <- clean_byname(V, margin = c(1,2), clean_value = 0)
+    # Y <- clean_byname(Y, margin = c(1,2), clean_value = 0)
     yqfgW <- calc_yqfgW(U_colname = U, V_colname = V, Y_colname = Y, S_units = S_units,
                         y_colname = y_colname, q_colname = q_colname,
                         f_colname = f_colname, g_colname = g_colname,
@@ -192,7 +192,7 @@ calc_yqfgW <- function(.sutdata = NULL,
 #' \code{K_colname}, \code{C_colname},
 #' \code{D_colname}, and \code{A_colname} added
 #'
-#' @importFrom matsbyname hatize_byname
+#' @importFrom matsbyname hatinv_byname
 #' @importFrom matsbyname invert_byname
 #' @importFrom matsbyname matrixproduct_byname
 #' @importFrom matsbyname transpose_byname
@@ -208,15 +208,15 @@ calc_A <- function(.sutdata = NULL,
                    D_colname = "D", A_colname = "A"){
   A_func <- function(U, V, q, fvec, g){
     # The calculation of C and Z will fail when g contains NA values.
-    # NA values can be created when V has any industry whose outputs are inhomogeneous.
+    # NA values can be created when V has any industry whose outputs are unit inhomogeneous.
     # Test here if any entry in g is NA.
     # If so, the value for C will be assigned to NA.
     if (any(is.na(g))) {
       C_val <- NA_real_
       Z_val <- NA_real_
     } else {
-      C_val <- matrixproduct_byname(transpose_byname(V), hatize_byname(g) %>% invert_byname())
-      Z_val <- matrixproduct_byname(U, hatize_byname(g) %>% invert_byname())
+      C_val <- matrixproduct_byname(transpose_byname(V), hatinv_byname(g))
+      Z_val <- matrixproduct_byname(U, hatinv_byname(g))
     }
     # The calculation of K will fail when f contains NA values.
     # NA values can be created when U has any industry whose inputs are inhomogeneous.
@@ -225,9 +225,9 @@ calc_A <- function(.sutdata = NULL,
     if (any(is.na(fvec))) {
       K_val <- NA_real_
     } else {
-      K_val <- matrixproduct_byname(U, hatize_byname(fvec) %>% invert_byname())
+      K_val <- matrixproduct_byname(U, hatinv_byname(fvec))
     }
-    D_val <- matrixproduct_byname(V, hatize_byname(q) %>% invert_byname())
+    D_val <- matrixproduct_byname(V, hatinv_byname(q))
     A_val <- matrixproduct_byname(Z_val, D_val)
     # Put all output matrices in a list and return it.
     list(Z_val, K_val, C_val, D_val, A_val) %>%
