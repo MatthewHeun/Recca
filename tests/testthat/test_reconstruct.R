@@ -120,7 +120,8 @@ test_that("new_R works as expected", {
     calc_io_mats() %>%
     # Calculate the efficiency of every industry in the ECC.
     calc_eta_i() %>%
-    # Make an R_prime matrix that gives twice the resource inputs to the economy.
+    # Make an R_prime matrix that gives the same the resource inputs to the economy.
+    # For testing purposes!
     mutate(
       R_prime = R
     ) %>%
@@ -138,9 +139,11 @@ test_that("new_R works as expected", {
     )
 
   # Test that everything worked as expected
-  expect_equal(newRsameasoldR$U_prime, newRsameasoldR$expected_U)
-  expect_equal(newRsameasoldR$V_prime, newRsameasoldR$expected_V)
-  expect_equal(newRsameasoldR$Y_prime, newRsameasoldR$expected_Y)
+  for (i in 1:2) {
+    expect_equal(newRsameasoldR$U_prime[[i]], newRsameasoldR$expected_U[[i]])
+    expect_equal(newRsameasoldR$V_prime[[i]], newRsameasoldR$expected_V[[i]])
+    expect_equal(newRsameasoldR$Y_prime[[i]], newRsameasoldR$expected_Y[[i]])
+  }
 
   doubleR <- UKEnergy2000mats %>%
     spread(key = "matrix.name", value = "matrix") %>%
