@@ -1,3 +1,6 @@
+* Now importing `magrittr` pipe at high level.
+
+
 # Recca 0.1.9 (2018-11-08)
 
 * Breaking change: `reconstruct_UV` --> `new_Y`. 

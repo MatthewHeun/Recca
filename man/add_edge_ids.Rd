@@ -20,7 +20,6 @@ This functions adds a column of edge ID numbers.
 }
 \examples{
 library(tidyr)
-library(magrittr)
 library(matsbyname)
 sutmats <- UKEnergy2000mats \%>\% spread(key = matrix.name, value = matrix)
 # Suppress adding edge IDs

@@ -62,7 +62,6 @@ Grouping columns are preserved on output.
 }
 \examples{
 library(dplyr)
-library(magrittr)
 # Works only when all entries are in same units.
 # When Last.stage is services, different units are involved.
 # Thus, filter to rows in UKEnergy2000tidy where Last.stage is final or useful.

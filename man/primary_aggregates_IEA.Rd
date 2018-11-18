@@ -55,7 +55,6 @@ Grouping columns are preserved on output.
 }
 \examples{
 library(dplyr)
-library(magrittr)
 library(tidyr)
 r_ind <- resource_industries(UKEnergy2000mats \%>\%
   spread(key = matrix.name, value = matrix))[["r_industries"]][[1]]

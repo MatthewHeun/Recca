@@ -60,7 +60,6 @@ Default is "\code{Sector}".}
 Add row, column, row type, and column type metadata
 }
 \examples{
-library(magrittr)
 UKEnergy2000tidy \%>\%
   add_matnames_iea() \%>\%
   add_row_col_meta()

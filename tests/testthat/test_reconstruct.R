@@ -1,6 +1,5 @@
 library(dplyr)
 library(Hmisc)
-library(magrittr)
 library(matsbyname)
 library(matsindf)
 library(Recca)
@@ -105,6 +104,44 @@ context("Reconstructing PSUT matrices from new primary industries")
 ###########################################################
 
 test_that("new_R works as expected", {
+  newRsameasoldR <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    # When Last.stage is "services", we get units problems.
+    # Avoid by using only ECCs with "final" and "useful" as the Last.stage.
+    filter(Last.stage != "services") %>%
+    # At present, UKEnergy2000mats has V matrices that are the sum of both V and R.
+    # Change to use the R matrix.
+    rename(
+      V_plus_R = V
+    ) %>%
+    separate_RV() %>%
+    # At this point, the matrices are they way we want them.
+    # Calculate the input-output matrices which are inputs to the new_R function.
+    calc_io_mats() %>%
+    # Calculate the efficiency of every industry in the ECC.
+    calc_eta_i() %>%
+    # Make an R_prime matrix that gives twice the resource inputs to the economy.
+    mutate(
+      R_prime = R
+    ) %>%
+    # Now call the new_R function which will calculate
+    # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
+    # given R_prime.
+    # Each of the *_prime matrices should be 2x their originals,
+    # because R_prime is 2x relative to R.
+    new_R() %>%
+    mutate(
+      # When R_prime = R, we expect to recover same U, V, and Y.
+      expected_U = U,
+      expected_V = V,
+      expected_Y = Y
+    )
+
+  # Test that everything worked as expected
+  expect_equal(newRsameasoldR$U_prime, newRsameasoldR$expected_U)
+  expect_equal(newRsameasoldR$V_prime, newRsameasoldR$expected_V)
+  expect_equal(newRsameasoldR$Y_prime, newRsameasoldR$expected_Y)
+
   doubleR <- UKEnergy2000mats %>%
     spread(key = "matrix.name", value = "matrix") %>%
     # When Last.stage is "services", we get units problems.

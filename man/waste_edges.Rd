@@ -34,7 +34,6 @@ and the name of the destination of the waste flows.
 }
 \examples{
 library(dplyr)
-library(magrittr)
 library(matsbyname)
 library(tidyr)
 sutmats <- UKEnergy2000mats \%>\% spread(key = matrix.name, value = matrix)

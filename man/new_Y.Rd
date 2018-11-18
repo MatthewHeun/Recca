@@ -50,7 +50,6 @@ and input arguments should be single matrices or vectors.
 }
 \examples{
 library(dplyr)
-library(magrittr)
 library(matsbyname)
 library(tidyr)
 UKEnergy2000mats \%>\%

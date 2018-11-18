@@ -38,7 +38,6 @@ To calculate energy conversion final demand sector and product efficiencies, use
 \code{\link{calc_embodied_etas}} function.
 }
 \examples{
-library(magrittr)
 library(tidyr)
 UKEnergy2000mats \%>\%
   spread(key = "matrix.name", value = "matrix") \%>\%

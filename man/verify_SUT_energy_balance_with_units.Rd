@@ -46,7 +46,6 @@ Both product and industry energy balance are verified.
 Units (as supplied by the \code{S_units} matrix) are respected.
 }
 \examples{
-library(magrittr)
 library(tidyr)
 verify_SUT_energy_balance_with_units(UKEnergy2000mats \%>\%
                                        spread(key = matrix.name, value = matrix))

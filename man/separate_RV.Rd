@@ -46,7 +46,6 @@ no changes are made to the \code{V_plus_R} matrix.
 }
 \examples{
 library(dplyr)
-library(magrittr)
 library(tidyr)
 UKEnergy2000mats \%>\%
   spread(key = "matrix.name", value = "matrix") \%>\%

@@ -69,7 +69,6 @@ and input arguments should be single matrices or vectors.
 }
 \examples{
 library(dplyr)
-library(magrittr)
 library(matsbyname)
 library(tidyr)
 # To demonstrate calculating changes to an energy conversion chain due to changes

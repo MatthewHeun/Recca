@@ -38,7 +38,6 @@
 #'
 #' @examples
 #' library(dplyr)
-#' library(magrittr)
 #' library(matsbyname)
 #' library(tidyr)
 #' UKEnergy2000mats %>%
@@ -119,7 +118,6 @@ new_Y <- function(.sutdata = NULL,
 #'
 #' @examples
 #' library(dplyr)
-#' library(magrittr)
 #' library(matsbyname)
 #' library(tidyr)
 #' # To demonstrate calculating changes to an energy conversion chain due to changes
@@ -269,6 +267,8 @@ new_R <- function(.sutdata = NULL,
                   # Output columns
                   U_prime_colname = "U_prime", V_prime_colname = "V_prime", Y_Prime_colname = "Y_prime"){
   new_R_func <- function(R_prime, U, V, Y, S_units, q, C, eta_i){
+    iter <- 0
+
     # Calculate some quantities that we'll use on each iteration.
 
     # q_hat_inv_times_U
@@ -287,29 +287,28 @@ new_R <- function(.sutdata = NULL,
 
     # Step numbers correspond to the file UTEI_Sankey_Simple_ECC_downstream_Swim.xlsx
     # Use a do-while loop structure for this algorithm.
-    iter <- 0
     repeat {
       # Step 0: Calculate q_prime_hat
       # Note that we're making q_prime into a column vector. Purpose: compatibility with the calculation of y_prime later.
       q_prime <- sum_byname(iR_prime, colsums_byname(V_prime)) %>% transpose_byname()
       q_prime_hat <- q_prime %>% hatize_byname()
+      # Index the iteration counter
+      iter <- iter + 1
       # Step 1: Calculate U_prime
       U_prime <- matrixproduct_byname(q_prime_hat, q_hat_inv_times_U)
       # Step 2: Calculate U_bar_prime
       U_bar_prime <- transpose_byname(S_units) %>% matrixproduct_byname(U_prime)
+      # ********************* Verify only one row. If more than one row, have more than one unit. **************
       # Step 3: Calculate column sums of U_bar_prime
       i_U_bar_prime <- colsums_byname(U_bar_prime)
       # Step 4: Calculate i_U_bar_prime_hat
       i_U_bar_prime_hat <- hatize_byname(i_U_bar_prime)
       # Step 5: Calculate g_prime
-      g_prime <- matrixproduct_byname(rowsums_byname(i_U_bar_prime_hat), eta_i)
+      g_prime <- matrixproduct_byname(i_U_bar_prime_hat, eta_i)
       # Step 6: Calculate g_prime_hat
       g_prime_hat <- hatize_byname(g_prime)
       # Step 7: Calculate V_prime
       V_prime <- matrixproduct_byname(C, g_prime_hat) %>% transpose_byname()
-
-      # We have recalculated everything, so increment our iteration counter.
-      iter <- iter + 1
 
       # Check convergence condition
       if (equal_byname(U_prime, U_prime_prev) & equal_byname(V_prime, V_prime_prev)) {

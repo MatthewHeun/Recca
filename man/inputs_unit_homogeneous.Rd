@@ -38,7 +38,6 @@ industry inputs are unit-homogeneous.
 Note that \code{U_bar = \link[matsbyname]{matrixproduct_byname}(\link[matsbyname]{transpose_byname}(S_units), U)}.
 }
 \examples{
-library(magrittr)
 library(tidyr)
 UKEnergy2000mats \%>\%
   spread(key = "matrix.name", value = "matrix") \%>\%

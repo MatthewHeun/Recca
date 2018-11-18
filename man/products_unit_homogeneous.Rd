@@ -33,7 +33,6 @@ according to the \code{S_units} matrix and
 \code{FALSE} otherwise.
 }
 \examples{
-library(magrittr)
 library(tidyr)
 UKEnergy2000mats \%>\%
   spread(key = "matrix.name", value = "matrix") \%>\%

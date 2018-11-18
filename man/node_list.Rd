@@ -31,7 +31,6 @@ This function creates a node list from an edge list, as shown in the examples.
 See \code{\link{edge_list}} for a function to create edge lists.
 }
 \examples{
-library(magrittr)
 library(matsbyname)
 library(tidyr)
 sutmats <- UKEnergy2000mats \%>\% spread(key = matrix.name, value = matrix)

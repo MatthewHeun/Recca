@@ -107,7 +107,6 @@ starts_with_any_of <- function(x, target){
 #' @export
 #'
 #' @examples
-#' library(magrittr)
 #' library(tidyr)
 #' resource_industries(UKEnergy2000mats %>% spread(key = matrix.name, value = matrix))
 resource_industries <- function(.sutdata = NULL, U = "U", V = "V", r_industries = "r_industries"){
@@ -158,7 +157,6 @@ resource_industries <- function(.sutdata = NULL, U = "U", V = "V", r_industries 
 #'
 #' @examples
 #' library(dplyr)
-#' library(magrittr)
 #' library(tidyr)
 #' UKEnergy2000mats %>%
 #'   spread(key = "matrix.name", value = "matrix") %>%
@@ -258,7 +256,6 @@ test_against_file <- function(actual_object, expected_file_name,
 #' @export
 #'
 #' @examples
-#' library(magrittr)
 #' library(tidyr)
 #' UKEnergy2000mats %>%
 #'   spread(key = "matrix.name", value = "matrix") %>%
@@ -309,7 +306,6 @@ products_unit_homogeneous <- function(.sutdata = NULL,
 #' @export
 #'
 #' @examples
-#' library(magrittr)
 #' library(tidyr)
 #' UKEnergy2000mats %>%
 #'   spread(key = "matrix.name", value = "matrix") %>%
@@ -359,7 +355,6 @@ inputs_unit_homogeneous <- function(.sutdata = NULL,
 #' @export
 #'
 #' @examples
-#' library(magrittr)
 #' library(tidyr)
 #' UKEnergy2000mats %>%
 #'   spread(key = "matrix.name", value = "matrix") %>%
@@ -413,7 +408,6 @@ outputs_unit_homogeneous <- function(.sutdata = NULL,
 #' @export
 #'
 #' @examples
-#' library(magrittr)
 #' library(tidyr)
 #' UKEnergy2000mats %>%
 #'   spread(key = "matrix.name", value = "matrix") %>%

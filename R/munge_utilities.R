@@ -185,7 +185,6 @@ add_matnames_iea <- function(.DF,
 #' @export
 #'
 #' @examples
-#' library(magrittr)
 #' UKEnergy2000tidy %>%
 #'   add_matnames_iea() %>%
 #'   add_row_col_meta()
