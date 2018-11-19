@@ -90,5 +90,6 @@ doubleR <- UKEnergy2000mats \%>\%
   # given R_prime.
   # Each of the *_prime matrices should be 2x their originals,
   # because R_prime is 2x relative to R.
+  # Rows with Last.stage == "services" are NA.
   new_R_ps()
 }

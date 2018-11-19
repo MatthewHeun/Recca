@@ -287,6 +287,7 @@ new_k_ps <- function(.sutdata = NULL,
 #'   # given R_prime.
 #'   # Each of the *_prime matrices should be 2x their originals,
 #'   # because R_prime is 2x relative to R.
+#'   # Rows with Last.stage == "services" are NA.
 #'   new_R_ps()
 new_R_ps <- function(.sutdata = NULL,
                   # Input columns
