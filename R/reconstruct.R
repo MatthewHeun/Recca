@@ -225,7 +225,7 @@ new_k_ps <- function(.sutdata = NULL,
 #' This function calculates the effect of changing the resources available to an energy conversion chain.
 #' New versions of \code{U}, \code{V}, and \code{Y} matrices are returned
 #' as \code{U_prime}, \code{V_prime}, and \code{Y_prime}.
-#' This function assumes that each industry's inputs are perfectly-substitutable.
+#' This function assumes that each industry's inputs are perfectly substitutable (ps).
 #'
 #' Inputs \code{U_colname}, \code{V_colname}, \code{Y_colname},
 #' \code{S_units_colname}, \code{q_colname}, and \code{C_colname}
