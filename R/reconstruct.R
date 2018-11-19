@@ -258,7 +258,36 @@ new_k_ps <- function(.sutdata = NULL,
 #' @importFrom matsbyname equal_byname
 #'
 #' @examples
-new_R <- function(.sutdata = NULL,
+#' library(dplyr)
+#' library(matsbyname)
+#' library(tidyr)
+#' doubleR <- UKEnergy2000mats %>%
+#'   spread(key = "matrix.name", value = "matrix") %>%
+#'   # When Last.stage is "services", we get units problems.
+#'   # Avoid by using only ECCs with "final" and "useful" as the Last.stage.
+#'   filter(Last.stage != "services") %>%
+#'   # At present, UKEnergy2000mats has V matrices that are the sum of both V and R.
+#'   # Change to use the R matrix.
+#'   rename(
+#'     V_plus_R = V
+#'   ) %>%
+#'   separate_RV() %>%
+#'   # At this point, the matrices are they way we want them.
+#'   # Calculate the input-output matrices which are inputs to the new_R function.
+#'   calc_io_mats() %>%
+#'   # Calculate the efficiency of every industry in the ECC.
+#'   calc_eta_i() %>%
+#'   # Make an R_prime matrix that gives twice the resource inputs to the economy.
+#'   mutate(
+#'     R_prime = elementproduct_byname(2, R)
+#'   ) %>%
+#'   # Now call the new_R function which will calculate
+#'   # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
+#'   # given R_prime.
+#'   # Each of the *_prime matrices should be 2x their originals,
+#'   # because R_prime is 2x relative to R.
+#'   new_R_ps()
+new_R_ps <- function(.sutdata = NULL,
                   # Input columns
                   R_prime_colname = "R_prime",
                   U_colname = "U", V_colname = "V", Y_colname = "Y", S_units_colname = "S_units",
@@ -281,9 +310,17 @@ new_R <- function(.sutdata = NULL,
     # The easiest way to make that matrix is to multiply V by 0.
     V_prime <- elementproduct_byname(0, V)
 
+    # Values for y and Y_hat_inv * Y will be needed later.
+    y <- rowsums_byname(Y)
+    y_hat_inv_Y <- matrixproduct_byname(hatinv_byname(y, inf_to_zero = TRUE), Y)
+    # Set up a value for Y_prime.
+    # The easiest way to make Y_prime is to multiply Y by 0.
+    Y_prime <- elementproduct_byname(0, Y)
+
     # Set up "previous" matrices for convergence comparison
     U_prime_prev <- elementproduct_byname(0, U)
     V_prime_prev <- V_prime
+    Y_prime_prev <- Y_prime
 
     # Step numbers correspond to the file UTEI_Sankey_Simple_ECC_downstream_Swim.xlsx
     # Use a do-while loop structure for this algorithm.
@@ -309,9 +346,13 @@ new_R <- function(.sutdata = NULL,
       g_hat_prime <- hatize_byname(g_prime)
       # Step 7: Calculate V_prime
       V_prime <- matrixproduct_byname(C, g_hat_prime) %>% transpose_byname()
+      # Step 8: Calculate Y_prime
+      y_prime <- difference_byname(q_prime, rowsums_byname(U_prime))
+      y_hat_prime <- hatize_byname(y_prime)
+      Y_prime <- matrixproduct_byname(y_hat_prime, y_hat_inv_Y)
 
       # Check convergence condition
-      if (equal_byname(U_prime, U_prime_prev) & equal_byname(V_prime, V_prime_prev)) {
+      if (equal_byname(U_prime, U_prime_prev) & equal_byname(V_prime, V_prime_prev) & equal_byname(Y_prime, Y_prime_prev)) {
         break
       }
       # Check to see if we have exceeded the maximum number of iterations
@@ -322,13 +363,9 @@ new_R <- function(.sutdata = NULL,
       # Prepare for next iteration
       U_prime_prev <- U_prime
       V_prime_prev <- V_prime
+      Y_prime_prev <- Y_prime
     }
     # After U_prime and V_prime have converged, calculate the Y_prime matrix
-    y <- rowsums_byname(Y)
-    y_hat_inv_Y <- matrixproduct_byname(y %>% hatize_byname() %>% invert_byname(), Y)
-    y_prime <- difference_byname(q_prime, rowsums_byname(U_prime))
-    y_hat_prime <- hatize_byname(y)
-    Y_prime <- matrixproduct_byname(y_hat_prime, y_hat_inv_Y)
     # Return the new U, V, and Y matrices.
     list(U_prime, V_prime, Y_prime) %>% magrittr::set_names(c(U_prime_colname, V_prime_colname, Y_Prime_colname))
   }

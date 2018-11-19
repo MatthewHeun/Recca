@@ -256,6 +256,7 @@ test_against_file <- function(actual_object, expected_file_name,
 #' @export
 #'
 #' @examples
+#' library(magrittr)
 #' library(tidyr)
 #' UKEnergy2000mats %>%
 #'   spread(key = "matrix.name", value = "matrix") %>%

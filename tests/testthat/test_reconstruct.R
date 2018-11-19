@@ -70,7 +70,7 @@ test_that("reconstructing U and V from a new Y matrix works as expected", {
 
 
 ###########################################################
-context("Reconstructing PSUT matrices from perfect substitution")
+context("New perfectly substitutable inputs")
 ###########################################################
 
 test_that("new_k_ps works as expected", {
@@ -100,7 +100,7 @@ test_that("new_k_ps works as expected", {
 
 
 ###########################################################
-context("Reconstructing PSUT matrices from new primary industries")
+context("New primary industries")
 ###########################################################
 
 test_that("new_R works as expected", {
@@ -130,7 +130,13 @@ test_that("new_R works as expected", {
     # given R_prime.
     # Each of the *_prime matrices should be 2x their originals,
     # because R_prime is 2x relative to R.
-    new_R() %>%
+    new_R_ps() %>%
+    # Clean the rows of U_prime, because they contain Products that are not present in U.
+    mutate(
+      U_prime = clean_byname(U_prime, margin = 1),
+      Y_prime = clean_byname(Y_prime, margin = 1)
+    ) %>%
+    # Set up the expectations
     mutate(
       # When R_prime = R, we expect to recover same U, V, and Y.
       expected_U = U,
@@ -170,7 +176,12 @@ test_that("new_R works as expected", {
     # given R_prime.
     # Each of the *_prime matrices should be 2x their originals,
     # because R_prime is 2x relative to R.
-    new_R() %>%
+    new_R_ps() %>%
+    # Clean the rows of U_prime, because they contain Products that are not present in U.
+    mutate(
+      U_prime = clean_byname(U_prime, margin = 1),
+      Y_prime = clean_byname(Y_prime, margin = 1)
+    ) %>%
     mutate(
       expected_U = elementproduct_byname(2, U),
       expected_V = elementproduct_byname(2, V),
@@ -178,7 +189,9 @@ test_that("new_R works as expected", {
     )
 
   # Test that everything worked as expected
-  expect_equal(doubleR$U_prime, doubleR$expected_U)
-  expect_equal(doubleR$V_prime, doubleR$expected_V)
-  expect_equal(doubleR$Y_prime, doubleR$expected_Y)
+  for (i in 1:2) {
+    expect_equal(doubleR$U_prime[[i]], doubleR$expected_U[[i]])
+    expect_equal(doubleR$V_prime[[i]], doubleR$expected_V[[i]])
+    expect_equal(doubleR$Y_prime[[i]], doubleR$expected_Y[[i]])
+  }
 })
