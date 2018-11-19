@@ -62,6 +62,9 @@ The functions in `Recca` have default names for arguments which follow a standar
 It is recommended that the default names be used whenever possible, 
 thereby allowing cleaner code.
 
+"New" versions of vectors or matrices are given the suffix `_prime` in `Recca` functions.
+For example, the updated version of the use matrix is called `U_prime`.
+
 
 ## Background and setup
 
@@ -81,19 +84,31 @@ library(matsbyname)
 library(matsindf)
 library(Recca)
 library(tidyr)
-IO_mats <- UKEnergy2000mats %>% 
+UKEnergyMatsWithR <- UKEnergy2000mats %>% 
   spread(key = "matrix.name", value = "matrix") %>% 
   # The following code is necessary until R matrices are included
   # in the UKEnergy2000mats data frame.
   rename(
     V_plus_R = V
   ) %>%
-  separate_RV() %>% 
+  separate_RV()
+IO_mats <- UKEnergyMatsWithR %>% 
   # Obtain the I-O structure of the ECCs
   calc_io_mats()
 # Note additional columns appended to the data frame.
 glimpse(IO_mats)
 ```
+
+To look at the ECC, we can draw a Sankey diagram. 
+First, we need to make an edge list (`el`).
+
+```{r}
+EL <- UKEnergyMatsWithR %>% edge_list(V = "V_plus_R")
+glimpse(EL$`Edge list`[[1]])
+```
+
+A Sankey diagram for the first row of the data frame is given below.
+
 
 Wtih the I-O structure of the ECC determined
 (and represented by the $\colvec{q}$, $\colvec{f}$, and $\colvec{g}$ vectors and the 
@@ -104,6 +119,17 @@ we can use the `new_*` functions to ask "what if" questions.
 ## What if final demand changes? Function `new_Y()`
 
 The classic I-O question is "what if final demand ($\mat{Y}$) changes?"
+`Recca` has a function for that.
+Let's test it by doubling the final demand in every ECC.
+
+```{r}
+DoubleY <- IO_mats %>% 
+  mutate(
+    Y_prime = elementproduct_byname(2, Y)
+  ) %>% 
+  new_Y()
+glimpse(DoubleY)
+```
 
 
 ## What if perfectly-substitutable inputs to an intermediate industry change? Function `new_k_ps()`
