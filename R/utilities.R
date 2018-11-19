@@ -296,7 +296,7 @@ products_unit_homogeneous <- function(.sutdata = NULL,
 #' @param S_units_colname the name of the column in \code{.sutdata} that contains
 #'        \code{S_units} matrices. Default is "\code{S_units}".
 #' @param keep_details if \code{TRUE}, per-product results are returned;
-#'        if \code{FALSE}, per-ECC results are returned.
+#'        if \code{FALSE}, per-ECC results are returned. Default is \code{FALSE}.
 #' @param ins_unit_homogeneous_colname the name of the output column
 #'        that tells whether each industry's inputs are unit-homogeneous.
 #'        Default is "\code{inputs_unit_homogeneous}".
