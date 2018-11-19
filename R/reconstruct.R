@@ -298,6 +298,14 @@ new_R_ps <- function(.sutdata = NULL,
   new_R_func <- function(R_prime, U, V, Y, S_units, q, C, eta_i){
     iter <- 0
 
+    # Verify that inputs to each industry are unit-homogeneous
+    if (!(inputs_unit_homogeneous(U_colname = U, S_units_colname = S_units)[["inputs_unit_homogeneous"]])) {
+      # The method employed here works only when the units on input to all industries are same.
+      # If we have a situation where units are not all same, we will return NA
+      return(list(NA_real_, NA_real_, NA_real_) %>%
+               magrittr::set_names(c(U_prime_colname, V_prime_colname, Y_Prime_colname)))
+    }
+
     # Calculate some quantities that we'll use on each iteration.
 
     # q_hat_inv_times_U
@@ -335,7 +343,6 @@ new_R_ps <- function(.sutdata = NULL,
       U_prime <- matrixproduct_byname(q_hat_prime, q_hat_inv_times_U)
       # Step 2: Calculate U_bar_prime
       U_bar_prime <- transpose_byname(S_units) %>% matrixproduct_byname(U_prime)
-      # ********************* Verify only one row. If more than one row, have more than one unit. **************
       # Step 3: Calculate column sums of U_bar_prime
       i_U_bar_prime <- colsums_byname(U_bar_prime)
       # Step 4: Calculate i_U_bar_prime_hat
