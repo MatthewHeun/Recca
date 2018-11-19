@@ -374,7 +374,9 @@ new_R_ps <- function(.sutdata = NULL,
       V_prime_prev <- V_prime
       Y_prime_prev <- Y_prime
     }
-    # After U_prime and V_prime have converged, calculate the Y_prime matrix
+    # Verify that the ECC is in energy balance.
+    # verify_SUT_energy_balance_with_units(U = U, V = V, Y = Y, S_units = S_units)
+
     # Return the new U, V, and Y matrices.
     list(U_prime, V_prime, Y_prime) %>% magrittr::set_names(c(U_prime_colname, V_prime_colname, Y_Prime_colname))
   }
