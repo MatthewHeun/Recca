@@ -14,8 +14,11 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+library(dplyr)
+library(Recca)
 library(matsbyname)
 library(matsindf)
+library(tidyr)
 ```
 
 <!-- Establish some helpful LaTeX shortcuts for equations -->
@@ -46,20 +49,61 @@ of industry inputs.
 The `new_*` functions return the resource ($\mat{R}$), use ($\mat{U}$), make ($\mat{V}$), and final demand ($\mat{Y}$) matrices
 that would be present under the conditions given by arguments to the `new_*` functions.
 
-After some background information, each type of analysis is described in turn.
+After a short discussion of the design philosophy of the `Reccca` package followed by  
+some background information and setup, each type of analysis is described in turn.
 
 
-## Background
+## Design philosophy
 
-For the examples that follow, we'll use the `UKEnergy2000mats` data frame from the `Recca` package.
-Each `new_*` function requires basic knowledge about the I-O structure of the ECC.
-The simplest way to obtain that information 
+The functions in `Recca` are flexible and can be used with either a data frame as input
+(and names of columns as arguments to `Recca` function) or with matrices as inputs.
+Outputs are either named columns appended to the input data frame or named matrices in a list.
+The functions in `Recca` have default names for arguments which follow a standard nomenclature.
+It is recommended that the default names be used whenever possible, 
+thereby allowing cleaner code.
 
 
+## Background and setup
+
+For the examples that follow, we'll use the `UKEnergy2000mats` data frame.
+Each row of `UKEnergy2000mats` data frame represents 
+another version of a portion of the ECC for the UK in 2000.
+Each `new_*` function requires basic knowledge about the I-O structure of the ECCs
+in the form of named vectors and matrices.
+The `calc_io_mats` function is the simplest way to obtain the I-O structure
+which appears as additional columns appended at the right of the data frame.
+The names of the additional columns is given by 
+default argument values to the various `Recca` functions.
+
+```{r}
+library(dplyr)
+library(matsbyname)
+library(matsindf)
+library(Recca)
+library(tidyr)
+IO_mats <- UKEnergy2000mats %>% 
+  spread(key = "matrix.name", value = "matrix") %>% 
+  # The following code is necessary until R matrices are included
+  # in the UKEnergy2000mats data frame.
+  rename(
+    V_plus_R = V
+  ) %>%
+  separate_RV() %>% 
+  # Obtain the I-O structure of the ECCs
+  calc_io_mats()
+# Note additional columns appended to the data frame.
+glimpse(IO_mats)
+```
+
+Wtih the I-O structure of the ECC determined
+(and represented by the $\colvec{q}$, $\colvec{f}$, and $\colvec{g}$ vectors and the 
+$\mat{W}$, $\mat{Z}$, $\mat{K}$, $\mat{C}$, $\mat{D}$, $\mat{A}$, $\mat{L_{pxp}}$, and $\mat{L_{ixp}}$ matrices), 
+we can use the `new_*` functions to ask "what if" questions.
 
 
 ## What if final demand changes? Function `new_Y()`
 
+The classic I-O question is "what if final demand ($\mat{Y}$) changes?"
 
 
 ## What if perfectly-substitutable inputs to an intermediate industry change? Function `new_k_ps()`
