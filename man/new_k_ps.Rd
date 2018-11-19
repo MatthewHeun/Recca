@@ -52,6 +52,7 @@ This function calculates the effect of changing perfectly-substitutable (ps) inp
 to an intermediate industry.
 New versions of \code{U} and \code{V} matrices are returned
 as \code{U_prime} and \code{V_prime}.
+Changes are made upstream of the changed industry inputs.
 Final demand (\code{Y}) is unchanged.
 }
 \details{

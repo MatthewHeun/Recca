@@ -77,6 +77,7 @@ new_Y <- function(.sutdata = NULL,
 #' to an intermediate industry.
 #' New versions of \code{U} and \code{V} matrices are returned
 #' as \code{U_prime} and \code{V_prime}.
+#' Changes are made upstream of the changed industry inputs.
 #' Final demand (\code{Y}) is unchanged.
 #'
 #' Note that inputs \code{K_colname}, \code{L_ixp_colname}, \code{L_pxp_colname},
