@@ -52,13 +52,17 @@ Default is "\code{Y_prime}".}
 This function calculates the effect of changing the resources available to an energy conversion chain.
 New versions of \code{U}, \code{V}, and \code{Y} matrices are returned
 as \code{U_prime}, \code{V_prime}, and \code{Y_prime}.
+This function assumes that each industry's inputs are perfectly-substitutable.
 }
 \details{
-Note that inputs \code{U_colname}, \code{V_colname}, \code{Y_colname},
+Inputs \code{U_colname}, \code{V_colname}, \code{Y_colname},
 \code{S_units_colname}, \code{q_colname}, and \code{C_colname}
 can be
 conveniently calculated by the function \code{\link{calc_io_mats}};
 \code{eta_i_colname} can be calculated with \code{\link{calc_eta_i}}.
+
+Each industry must be unit-homogeneous on its inputs.
+If not, \code{NA} is returned as the result for \code{U_prime}, \code{V_prime}, and \code{Y_prime}.
 }
 \examples{
 library(dplyr)
@@ -66,9 +70,6 @@ library(matsbyname)
 library(tidyr)
 doubleR <- UKEnergy2000mats \%>\%
   spread(key = "matrix.name", value = "matrix") \%>\%
-  # When Last.stage is "services", we get units problems.
-  # Avoid by using only ECCs with "final" and "useful" as the Last.stage.
-  filter(Last.stage != "services") \%>\%
   # At present, UKEnergy2000mats has V matrices that are the sum of both V and R.
   # Change to use the R matrix.
   rename(
