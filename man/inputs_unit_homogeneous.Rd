@@ -18,7 +18,7 @@ inputs_unit_homogeneous(.sutdata = NULL, U_colname = "U",
 \code{S_units} matrices. Default is "\code{S_units}".}
 
 \item{keep_details}{if \code{TRUE}, per-product results are returned;
-if \code{FALSE}, per-ECC results are returned.}
+if \code{FALSE}, per-ECC results are returned. Default is \code{FALSE}.}
 
 \item{ins_unit_homogeneous_colname}{the name of the output column
 that tells whether each industry's inputs are unit-homogeneous.
@@ -38,7 +38,6 @@ industry inputs are unit-homogeneous.
 Note that \code{U_bar = \link[matsbyname]{matrixproduct_byname}(\link[matsbyname]{transpose_byname}(S_units), U)}.
 }
 \examples{
-library(magrittr)
 library(tidyr)
 UKEnergy2000mats \%>\%
   spread(key = "matrix.name", value = "matrix") \%>\%

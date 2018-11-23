@@ -24,13 +24,19 @@
 #'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
 #' @param Y_prime_colname the name of a column containing new final demand matrices
-#' that will be used to reconstruct the economy
+#'        that will be used to reconstruct the economy. Default is "\code{Y_prime}".
 #' @param L_ixp_colname the name of a column containing industry-by-product L matrices.
+#'        Default is "\code{L_ixp}".
 #' @param L_pxp_colname the name of a column containing product-by-product L matrices.
+#'        Default is "\code{L_pxp}".
 #' @param Z_colname the name of a column containing \code{Z} matrices.
+#'        Default is "\code{Z}".
 #' @param D_colname the name of a column containing \code{D} matrices.
+#'        Default is "\code{D}".
 #' @param U_prime_colname the name of the output column that contains new Use (\code{U}) matrices.
+#'        Default is "\code{U_prime}".
 #' @param V_prime_colname the name of the output column that contains new Make (\code{V}) matrices.
+#'        Default is "\code{V_prime}".
 #'
 #' @return \code{.sutdata} with additional columns \code{U_prime} and \code{V_prime}
 #'
@@ -38,7 +44,6 @@
 #'
 #' @examples
 #' library(dplyr)
-#' library(magrittr)
 #' library(matsbyname)
 #' library(tidyr)
 #' UKEnergy2000mats %>%
@@ -64,7 +69,7 @@ new_Y <- function(.sutdata = NULL,
     q_prime_val <- matrixproduct_byname(L_pxp, y_prime_val)
     U_prime_val <- matrixproduct_byname(Z, hatize_byname(g_prime_val))
     V_prime_val <- matrixproduct_byname(D, hatize_byname(q_prime_val))
-    list(U_prime_val, V_prime_val) %>% purrr::set_names(c(U_prime_colname, V_prime_colname))
+    list(U_prime_val, V_prime_val) %>% magrittr::set_names(c(U_prime_colname, V_prime_colname))
   }
   matsindf_apply(.sutdata, FUN = new_Y_func,
                  Y_prime = Y_prime_colname, L_ixp = L_ixp_colname, L_pxp = L_pxp_colname,
@@ -78,6 +83,7 @@ new_Y <- function(.sutdata = NULL,
 #' to an intermediate industry.
 #' New versions of \code{U} and \code{V} matrices are returned
 #' as \code{U_prime} and \code{V_prime}.
+#' Changes are made upstream of the changed industry inputs.
 #' Final demand (\code{Y}) is unchanged.
 #'
 #' Note that inputs \code{K_colname}, \code{L_ixp_colname}, \code{L_pxp_colname},
@@ -119,7 +125,6 @@ new_Y <- function(.sutdata = NULL,
 #'
 #' @examples
 #' library(dplyr)
-#' library(magrittr)
 #' library(matsbyname)
 #' library(tidyr)
 #' # To demonstrate calculating changes to an energy conversion chain due to changes
@@ -210,7 +215,7 @@ new_k_ps <- function(.sutdata = NULL,
     U_prime <- difference_byname(U, U_prime_1) %>% sum_byname(U_prime_2)
     V_prime <- difference_byname(V, V_prime_1) %>% sum_byname(V_prime_2)
 
-    list(U_prime, V_prime) %>% purrr::set_names(c(U_prime_colname, V_prime_colname))
+    list(U_prime, V_prime) %>% magrittr::set_names(c(U_prime_colname, V_prime_colname))
   }
   matsindf_apply(.sutdata, FUN = new_k_ps_func,
                  k_prime_2 = k_prime_colname,
@@ -220,80 +225,180 @@ new_k_ps <- function(.sutdata = NULL,
                  Z = Z_colname, D = D_colname, f_vec = f_colname)
 }
 
+
+#' Assess the effect of new levels of resources
 #'
-#' #' #' Assess the effect of new levels of resources
-#' #' #'
-#' #' #' This function calculates the effect of changing the resources available to an energy conversion chain.
-#' #' #' New versions of \code{U}, \code{V}, and \code{Y} matrices are returned
-#' #' #' as \code{U_prime}, \code{V_prime}, and \code{Y_prime}.
-#' #' #'
-#' #' #' Note that inputs \code{L_ixp_colname}, \code{L_pxp_colname},
-#' #' #' can be
-#' #' #' conveniently calculated by the function \code{\link{calc_io_mats}}.
-#' #' #'
-#' #' #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
-#' #' #' @param R_prime_colname the name of an input column in \code{.sutdata} containing a new resource matrix for the ECC.
-#' #' #' @param U_colname the name of a column in \code{.sutdata} containing \code{U} matrices for the base ECC.  Default is "\code{U}".
-#' #' #' @param V_colname the name of a column in \code{.sutdata} containing \code{V} matrices for the base ECC.  Default is "\code{V}".
-#' #' #' @param Y_colname the name of a column in \code{.sutdata} containing \code{Y} matrices for the base ECC.  Default is "\code{Y}".
-#' #' #' @param maxiter the maximum number of iterations. Default is 100.
-#' #' #' @param tol the maximum allowable change in any one entry of the \code{U} and \code{V} matrices
-#' #' #'        from one iteration to the next. Default is 1e-6.
-#' #' #' @param U_prime_colname the name of the output column that contains new Use (\code{U}) matrices.
-#' #' #'        Default is "\code{U_prime}".
-#' #' #' @param V_prime_colname the name of the output column that contains new Make (\code{V}) matrices.
-#' #' #'        Default is "\code{V_prime}".
-#' #' #' @param Y_Prime_colname the name of the output column that contains new Final Demand (\code{Y}) matrices.
-#' #' #'        Default is "\code{Y_prime}".
-#' #' #'
-#' #' #' @return \code{.sutdata} with additional columns \code{U_prime_colname}, \code{V_prime_colname}, and \code{Y_prime_colname}.
-#' #' #'
-#' #' #'
-#' #' #' @examples
-#' #' new_R <- function(.sutdata = NULL,
-#' #'                   # Input columns
-#' #'                   R_prime_colname = "R_prime",
-#' #'                   U_colname = "U", V_colname = "V", Y_colname = "Y", eta_i_colname = "eta_i",
-#' #'                   maxiter = 100, tol = 1e-6,
-#' #'                   # Output columns
-#' #'                   U_prime_colname = "U_prime", V_prime_colname = "V_prime", Y_Prime_colname = "Y_prime"){
-#' #'   new_R_func <- function(R_prime, U, V, q){
-#' #'     # Calculate some quantities that we'll use on each iteration.
-#' #'     q_hat_inv_times_U <- q %>% hatize_byname %>% invert_byname() %>% matrixproduct_byname(U)
-#' #'     # Set up an initial V_prime, which is a V matrix with all zeroes.
-#' #'     # The easiest way to make that matrix is to multiply V by 0.
-#' #'     V_prime <- elementproduct_byname(0, V)
-#' #'     # Set up an initial q_prime_hat
-#' #'     q_prime_hat <- sum_byname(colsums_byname(R_prime), colsums_byname(V_prime)) %>% hatize_byname()
-#' #'     # Use a do-while loop structure for this algorithm.
-#' #'     repeat {
-#' #'       # Step 1
-#' #'       U_prime <- matrixproduct_byname(q_prime_hat, q_hat_inv_times_U)
-#' #'       # Step 2
-#' #'       U_bar_prime <- transpose_byname(S_units) %>% matrixproduct_byname(U_prime)
-#' #'       # Step 3
-#' #'       i_U_bar_prime <- colsums(U_bar_prime)
-#' #'       # Step 4
-#' #'       i_U_bar_prime_hat <- hatize_byname(i_U_bar_prime)
-#' #'       # Step 5
-#' #'       g_prime <- rowsums_byname(i_U_bar_prime_hat)
-#' #'
-#' #'
-#' #'
-#' #'       if (a == b) {
-#' #'
-#' #'       }
-#' #'
-#' #'     }
-#' #'
-#' #'   }
-#' #'
-#' #'
-#' #'
-#' #'   matsindf_apply(.sutdata, FUN = new_R_func,
-#' #'                  )
-#' #'
-#' #' }
+#' This function calculates the effect of changing the resources available to an energy conversion chain.
+#' New versions of \code{U}, \code{V}, and \code{Y} matrices are returned
+#' as \code{U_prime}, \code{V_prime}, and \code{Y_prime}.
+#' This function assumes that each industry's inputs are perfectly substitutable (ps).
 #'
+#' Inputs \code{U_colname}, \code{V_colname}, \code{Y_colname},
+#' \code{S_units_colname}, \code{q_colname}, and \code{C_colname}
+#' can be
+#' conveniently calculated by the function \code{\link{calc_io_mats}};
+#' \code{eta_i_colname} can be calculated with \code{\link{calc_eta_i}}.
+#'
+#' Each industry must be unit-homogeneous on its inputs.
+#' If not, \code{NA} is returned as the result for \code{U_prime}, \code{V_prime}, and \code{Y_prime}.
+#'
+#' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
+#' @param R_prime_colname the name of an input column in \code{.sutdata} containing a new resource matrix for the ECC.
+#' @param U_colname the name of a column in \code{.sutdata} containing \code{U} matrices for the base ECC.  Default is "\code{U}".
+#' @param V_colname the name of a column in \code{.sutdata} containing \code{V} matrices for the base ECC.  Default is "\code{V}".
+#' @param Y_colname the name of a column in \code{.sutdata} containing \code{Y} matrices for the base ECC.  Default is "\code{Y}".
+#' @param S_units_colname the name of a column in \code{.sutdata} containing \code{S_units} matrices for the base ECC.  Default is "\code{S_units}".
+#' @param q_colname the name of a column in \code{.sutdata} containing \code{q} matrices for the base ECC.  Default is "\code{q}".
+#' @param C_colname the name of a column in \code{.sutdata} containing \code{C} matrices for the base ECC.  Default is "\code{C}".
+#' @param eta_i_colname the name of a column in \code{.sutdata} containing \code{eta_i} vectors for the base ECC.  Default is "\code{eta_i}".
+#' @param maxiter the maximum allowable number of iterations when calculating the effects of a new \code{R} matrix.
+#'        Default is 100.
+#' @param tol the maximum allowable change in any one entry of the \code{U}, \code{V}, and \code{Y} matrices
+#'        from one iteration to the next. Default is 0.
+#'        I.e., when two subsequent iterations must produce the same values,
+#'        the algorithm has converged.
+#' @param U_prime_colname the name of the output column that contains new Use (\code{U}) matrices.
+#'        Default is "\code{U_prime}".
+#' @param V_prime_colname the name of the output column that contains new Make (\code{V}) matrices.
+#'        Default is "\code{V_prime}".
+#' @param Y_Prime_colname the name of the output column that contains new Final Demand (\code{Y}) matrices.
+#'        Default is "\code{Y_prime}".
+#'
+#' @return \code{.sutdata} with additional columns \code{U_prime_colname}, \code{V_prime_colname}, and \code{Y_prime_colname}.
+#'
+#' @export
+#'
+#' @importFrom matsbyname abs_byname
+#' @importFrom matsbyname equal_byname
+#'
+#' @examples
+#' library(dplyr)
+#' library(matsbyname)
+#' library(tidyr)
+#' doubleR <- UKEnergy2000mats %>%
+#'   spread(key = "matrix.name", value = "matrix") %>%
+#'   # At present, UKEnergy2000mats has V matrices that are the sum of both V and R.
+#'   # Change to use the R matrix.
+#'   rename(
+#'     R_plus_V = V
+#'   ) %>%
+#'   separate_RV() %>%
+#'   # At this point, the matrices are they way we want them.
+#'   # Calculate the input-output matrices which are inputs to the new_R function.
+#'   calc_io_mats() %>%
+#'   # Calculate the efficiency of every industry in the ECC.
+#'   calc_eta_i() %>%
+#'   # Make an R_prime matrix that gives twice the resource inputs to the economy.
+#'   mutate(
+#'     R_prime = elementproduct_byname(2, R)
+#'   ) %>%
+#'   # Now call the new_R function which will calculate
+#'   # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
+#'   # given R_prime.
+#'   # Each of the *_prime matrices should be 2x their originals,
+#'   # because R_prime is 2x relative to R.
+#'   # Rows with Last.stage == "services" are NA.
+#'   new_R_ps()
+new_R_ps <- function(.sutdata = NULL,
+                  # Input columns
+                  R_prime_colname = "R_prime",
+                  U_colname = "U", V_colname = "V", Y_colname = "Y", S_units_colname = "S_units",
+                  q_colname = "q", C_colname = "C", eta_i_colname = "eta_i",
+                  maxiter = 100, tol = 0,
+                  # Output columns
+                  U_prime_colname = "U_prime", V_prime_colname = "V_prime", Y_Prime_colname = "Y_prime"){
+  new_R_func <- function(R_prime, U, V, Y, S_units, q, C, eta_i){
+    iter <- 0
+
+    # Verify that inputs to each industry are unit-homogeneous
+    if (!(inputs_unit_homogeneous(U_colname = U, S_units_colname = S_units)[["inputs_unit_homogeneous"]])) {
+      # The method employed here works only when the units on input to all industries are same.
+      # If we have a situation where units are not all same, we will return NA
+      return(list(NA_real_, NA_real_, NA_real_) %>%
+               magrittr::set_names(c(U_prime_colname, V_prime_colname, Y_Prime_colname)))
+    }
+
+    # Calculate some quantities that we'll use on each iteration.
+
+    # q_hat_inv_times_U
+    q_hat_inv_times_U <- matrixproduct_byname(hatinv_byname(q), U)
+
+    # Column sums of the R_prime matrix
+    iR_prime <- colsums_byname(R_prime)
+
+    # Set up an initial V_prime, which is a V matrix with all zeroes.
+    # The easiest way to make that matrix is to multiply V by 0.
+    V_prime <- elementproduct_byname(0, V)
+
+    # Values for y and Y_hat_inv * Y will be needed later.
+    y <- rowsums_byname(Y)
+    y_hat_inv_Y <- matrixproduct_byname(hatinv_byname(y, inf_to_zero = TRUE), Y)
+    # Set up a value for Y_prime.
+    # The easiest way to make Y_prime is to multiply Y by 0.
+    Y_prime <- elementproduct_byname(0, Y)
+
+    # Set up "previous" matrices for convergence comparison
+    U_prime_prev <- elementproduct_byname(0, U)
+    V_prime_prev <- V_prime
+    Y_prime_prev <- Y_prime
+
+    # Step numbers correspond to the file UTEI_Sankey_Simple_ECC_downstream_Swim.xlsx
+    # Use a do-while loop structure for this algorithm.
+    repeat {
+      # Step 0: Calculate q_prime_hat
+      # Note that we're making q_prime into a column vector. Purpose: compatibility with the calculation of y_prime later.
+      q_prime <- sum_byname(iR_prime, colsums_byname(V_prime)) %>% transpose_byname()
+      q_hat_prime <- q_prime %>% hatize_byname()
+      # Index the iteration counter
+      iter <- iter + 1
+      # Step 1: Calculate U_prime
+      U_prime <- matrixproduct_byname(q_hat_prime, q_hat_inv_times_U)
+      # Step 2: Calculate U_bar_prime
+      U_bar_prime <- transpose_byname(S_units) %>% matrixproduct_byname(U_prime)
+      # Step 3: Calculate column sums of U_bar_prime
+      i_U_bar_prime <- colsums_byname(U_bar_prime)
+      # Step 4: Calculate i_U_bar_prime_hat
+      i_U_bar_hat_prime <- hatize_byname(i_U_bar_prime)
+      # Step 5: Calculate g_prime
+      g_prime <- matrixproduct_byname(i_U_bar_hat_prime, eta_i)
+      # Step 6: Calculate g_prime_hat
+      g_hat_prime <- hatize_byname(g_prime)
+      # Step 7: Calculate V_prime
+      V_prime <- matrixproduct_byname(C, g_hat_prime) %>% transpose_byname()
+      # Step 8: Calculate Y_prime
+      y_prime <- difference_byname(q_prime, rowsums_byname(U_prime))
+      y_hat_prime <- hatize_byname(y_prime)
+      Y_prime <- matrixproduct_byname(y_hat_prime, y_hat_inv_Y)
+
+      # Check convergence condition
+      U_OK <- difference_byname(U_prime, U_prime_prev) %>% abs_byname() %>% compare_byname("<=", tol) %>% all()
+      V_OK <- difference_byname(V_prime, V_prime_prev) %>% abs_byname() %>% compare_byname("<=", tol) %>% all()
+      Y_OK <- difference_byname(Y_prime, Y_prime_prev) %>% abs_byname() %>% compare_byname("<=", tol) %>% all()
+      if (U_OK & V_OK & Y_OK) {
+        break
+      }
+
+      # Check to see if we have exceeded the maximum number of iterations
+      if (iter >= maxiter) {
+        warning(paste("maxiter =", maxiter, "reached without convergence in new_R"))
+        break
+      }
+      # Prepare for next iteration
+      U_prime_prev <- U_prime
+      V_prime_prev <- V_prime
+      Y_prime_prev <- Y_prime
+    }
+
+    # Verify that the ECC is in energy balance.
+    # verify_SUT_energy_balance_with_units(U = U, V = V, Y = Y, S_units = S_units)
+
+    # Return the new U, V, and Y matrices.
+    list(U_prime, V_prime, Y_prime) %>% magrittr::set_names(c(U_prime_colname, V_prime_colname, Y_Prime_colname))
+  }
+
+  matsindf_apply(.sutdata, FUN = new_R_func, U = U_colname, V = V_colname, Y = Y_colname, S_units = S_units_colname,
+                 q = q_colname, C = C_colname, eta_i = eta_i_colname)
+}
+
 
 

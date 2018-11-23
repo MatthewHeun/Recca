@@ -36,7 +36,6 @@ In that case, the return value is a list with a single item: \code{r_industries}
 which contains a vector of names of resource industries for the \code{U} and \code{V} matrices.
 }
 \examples{
-library(magrittr)
 library(tidyr)
 resource_industries(UKEnergy2000mats \%>\% spread(key = matrix.name, value = matrix))
 }

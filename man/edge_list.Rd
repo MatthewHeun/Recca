@@ -66,7 +66,6 @@ In that event, the node named after the product is removed,
 and destinations are connected to the sources.
 }
 \examples{
-library(magrittr)
 library(matsbyname)
 library(tidyr)
 sutmats <- UKEnergy2000mats \%>\% spread(key = matrix.name, value = matrix)

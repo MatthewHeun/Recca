@@ -38,7 +38,6 @@
 #' @examples
 #' library(dplyr)
 #' library(tidyr)
-#' library(magrittr)
 #' verify_SUT_energy_balance(UKEnergy2000mats %>%
 #'                             filter(Last.stage %in% c("final", "useful")) %>%
 #'                             spread(key = matrix.name, value = matrix),
@@ -86,11 +85,11 @@ verify_SUT_energy_balance <- function(.sutdata = NULL,
 #'
 #' @param .sutdata an SUT-style data frame containing columns
 #' \code{U}, \code{V}, \code{Y}, and \code{S_units}.
-#' @param U the name of the column that contains \code{U} matrices
-#' @param V the name of the column that contains \code{V} matrices
-#' @param Y the name of the column that contains \code{Y} matrices
-#' @param S_units the name of the column that contains \code{S_units} matrices
-#' @param tol the maximum amount by which energy can be out of balance
+#' @param U the name of the column that contains \code{U} matrices. Default is "\code{U}".
+#' @param V the name of the column that contains \code{V} matrices. Default is "\code{V}".
+#' @param Y the name of the column that contains \code{Y} matrices. Default is "\code{Y}".
+#' @param S_units the name of the column that contains \code{S_units} matrices. Default is "\code{S_units}".
+#' @param tol the maximum amount by which energy can be out of balance. Default is \code{1e-6}.
 #' @param SUT_prod_energy_balance the name of the output column that tells whether product balance is OK. Default is "\code{.SUT_prod_energy_balance}"
 #' @param SUT_ind_energy_balance the name of the output column that tells whether industry balance is OK. Default is "\code{.SUT_ind_energy_balance}"
 #'
@@ -99,7 +98,6 @@ verify_SUT_energy_balance <- function(.sutdata = NULL,
 #' @export
 #'
 #' @examples
-#' library(magrittr)
 #' library(tidyr)
 #' verify_SUT_energy_balance_with_units(UKEnergy2000mats %>%
 #'                                        spread(key = matrix.name, value = matrix))
@@ -123,10 +121,10 @@ verify_SUT_energy_balance_with_units <- function(.sutdata = NULL,
   }
   Out <- matsindf_apply(.sutdata, FUN = verify_func, U = U, V = V, Y = Y, S_units = S_units)
   if (!all(Out[[SUT_prod_energy_balance]] %>% as.logical())) {
-    warning(paste("Energy not conserved in verify_SUT_energy_balance_with_units. See column", SUT_prod_energy_balance))
+    warning(paste("Energy not conserved by product in verify_SUT_energy_balance_with_units. See column", SUT_prod_energy_balance))
   }
   if (!all(Out[[SUT_ind_energy_balance]] %>% as.logical())) {
-    warning(paste("Energy not conserved in verify_SUT_energy_balance_with_units. See column", SUT_ind_energy_balance))
+    warning(paste("Energy not conserved by industry in verify_SUT_energy_balance_with_units. See column", SUT_ind_energy_balance))
   }
   return(Out)
 }
@@ -162,7 +160,6 @@ verify_SUT_energy_balance_with_units <- function(.sutdata = NULL,
 #' @export
 #'
 #' @examples
-#' library(magrittr)
 #' library(tidyr)
 #' verify_SUT_industry_production(UKEnergy2000mats %>%
 #'                                  spread(key = matrix.name, value = matrix))
@@ -223,7 +220,6 @@ verify_SUT_industry_production <- function(.sutdata = NULL,
 #'
 #' @examples
 #' library(dplyr)
-#' library(magrittr)
 #' UKEnergy2000tidy %>%
 #'   filter(Last.stage %in% c("final", "useful")) %>%
 #'   group_by(Country, Year, Energy.type, Last.stage) %>%

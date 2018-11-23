@@ -108,10 +108,11 @@ calc_GH <- function(.iodata = NULL,
 #'
 #' @return \code{.iodata} with column \code{E_colname} added
 #'
-#' @importFrom matsbyname sum_byname
 #' @importFrom matsbyname clean_byname
-#' @importFrom matsbyname rowsums_byname
 #' @importFrom matsbyname difference_byname
+#' @importFrom matsbyname hatize_byname
+#' @importFrom matsbyname rowsums_byname
+#' @importFrom matsbyname sum_byname
 #'
 #' @export
 calc_E <- function(.iodata = NULL,

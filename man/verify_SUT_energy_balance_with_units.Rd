@@ -13,15 +13,15 @@ verify_SUT_energy_balance_with_units(.sutdata = NULL, U = "U",
 \item{.sutdata}{an SUT-style data frame containing columns
 \code{U}, \code{V}, \code{Y}, and \code{S_units}.}
 
-\item{U}{the name of the column that contains \code{U} matrices}
+\item{U}{the name of the column that contains \code{U} matrices. Default is "\code{U}".}
 
-\item{V}{the name of the column that contains \code{V} matrices}
+\item{V}{the name of the column that contains \code{V} matrices. Default is "\code{V}".}
 
-\item{Y}{the name of the column that contains \code{Y} matrices}
+\item{Y}{the name of the column that contains \code{Y} matrices. Default is "\code{Y}".}
 
-\item{S_units}{the name of the column that contains \code{S_units} matrices}
+\item{S_units}{the name of the column that contains \code{S_units} matrices. Default is "\code{S_units}".}
 
-\item{tol}{the maximum amount by which energy can be out of balance}
+\item{tol}{the maximum amount by which energy can be out of balance. Default is \code{1e-6}.}
 
 \item{SUT_prod_energy_balance}{the name of the output column that tells whether product balance is OK. Default is "\code{.SUT_prod_energy_balance}"}
 
@@ -46,7 +46,6 @@ Both product and industry energy balance are verified.
 Units (as supplied by the \code{S_units} matrix) are respected.
 }
 \examples{
-library(magrittr)
 library(tidyr)
 verify_SUT_energy_balance_with_units(UKEnergy2000mats \%>\%
                                        spread(key = matrix.name, value = matrix))

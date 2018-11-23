@@ -13,19 +13,25 @@ new_Y(.sutdata = NULL, Y_prime_colname = "Y_prime",
 \item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
 
 \item{Y_prime_colname}{the name of a column containing new final demand matrices
-that will be used to reconstruct the economy}
+that will be used to reconstruct the economy. Default is "\code{Y_prime}".}
 
-\item{L_ixp_colname}{the name of a column containing industry-by-product L matrices.}
+\item{L_ixp_colname}{the name of a column containing industry-by-product L matrices.
+Default is "\code{L_ixp}".}
 
-\item{L_pxp_colname}{the name of a column containing product-by-product L matrices.}
+\item{L_pxp_colname}{the name of a column containing product-by-product L matrices.
+Default is "\code{L_pxp}".}
 
-\item{Z_colname}{the name of a column containing \code{Z} matrices.}
+\item{Z_colname}{the name of a column containing \code{Z} matrices.
+Default is "\code{Z}".}
 
-\item{D_colname}{the name of a column containing \code{D} matrices.}
+\item{D_colname}{the name of a column containing \code{D} matrices.
+Default is "\code{D}".}
 
-\item{U_prime_colname}{the name of the output column that contains new Use (\code{U}) matrices.}
+\item{U_prime_colname}{the name of the output column that contains new Use (\code{U}) matrices.
+Default is "\code{U_prime}".}
 
-\item{V_prime_colname}{the name of the output column that contains new Make (\code{V}) matrices.}
+\item{V_prime_colname}{the name of the output column that contains new Make (\code{V}) matrices.
+Default is "\code{V_prime}".}
 }
 \value{
 \code{.sutdata} with additional columns \code{U_prime} and \code{V_prime}
@@ -50,7 +56,6 @@ and input arguments should be single matrices or vectors.
 }
 \examples{
 library(dplyr)
-library(magrittr)
 library(matsbyname)
 library(tidyr)
 UKEnergy2000mats \%>\%

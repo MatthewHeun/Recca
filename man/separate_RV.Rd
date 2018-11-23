@@ -2,31 +2,31 @@
 % Please edit documentation in R/utilities.R
 \name{separate_RV}
 \alias{separate_RV}
-\title{Separate resource (\code{R}) and make (\code{V}) matrices from make plus resource (\code{V_plus_R}) matrices}
+\title{Separate resource (\code{R}) and make (\code{V}) matrices from make plus resource (\code{R_plus_V}) matrices}
 \usage{
 separate_RV(.sutdata = NULL, U_colname = "U",
-  V_plus_R_colname = "V_plus_R", V_colname = "V", R_colname = "R")
+  R_plus_V_colname = "R_plus_V", R_colname = "R", V_colname = "V")
 }
 \arguments{
 \item{.sutdata}{a list or data frame containing use matrix(ces) and make matrix(ces)}
 
 \item{U_colname}{identifier for the use matrix (a string) \code{.sutdata}. Default is "\code{U}".}
 
-\item{V_plus_R_colname}{identifier for the make matrix in \code{.sutdata} (a string). Default is "\code{V_plus_R}".}
-
-\item{V_colname}{identifier for the make matrix (a string). Default is "\code{V}".}
+\item{R_plus_V_colname}{identifier for the make matrix in \code{.sutdata} (a string). Default is "\code{R_plus_V}".}
 
 \item{R_colname}{identifier for the resource matrix (a string). Default is "\code{R}".}
+
+\item{V_colname}{identifier for the make matrix (a string). Default is "\code{V}".}
 }
 \value{
-a version of the \code{V_plus_R} matrix without resource industries and an \code{R} matrix
+a version of the \code{R_plus_V} matrix without resource industries and an \code{R} matrix
 }
 \description{
 Resource industries are industries that make a product without using any products.
 Resource industries are identified by interrogating
-the use (\code{U}) and make (\code{V_plus_R}) matrices.
+the use (\code{U}) and make (\code{R_plus_V}) matrices.
 Resource industries have all zeroes in their column of the use matrix (\code{U})
-and at least one non-zero value in their row of the make (\code{V_plus_R}) matrix.
+and at least one non-zero value in their row of the make (\code{R_plus_V}) matrix.
 }
 \details{
 A resource matrix (\code{R}) has industries in rows and products in columns.
@@ -34,25 +34,24 @@ The elements of of \code{R} indicate extraction of resources from the biosphere.
 The industries of \code{R} are the reserves of the extracted products.
 
 This function uses the \code{\link{resource_industries}} function to
-identify the resource industries in the \code{V_plus_R} matrix.
-Thereafter, the function extracts the resource industries from the \code{V_plus_R} matrix
+identify the resource industries in the \code{R_plus_V} matrix.
+Thereafter, the function extracts the resource industries from the \code{R_plus_V} matrix
 to form the \code{R} matrix.
-Finally, the \code{R} matrix is subtracted from the \code{V_plus_R} matrix
+Finally, the \code{R} matrix is subtracted from the \code{R_plus_V} matrix
 and saved as the \code{V} matrix.
-If there are no resource industries in the \code{V_plus_R} matrix,
+If there are no resource industries in the \code{R_plus_V} matrix,
 a warning is emitted,
 no \code{R} matrix is created, and
-no changes are made to the \code{V_plus_R} matrix.
+no changes are made to the \code{R_plus_V} matrix.
 }
 \examples{
 library(dplyr)
-library(magrittr)
 library(tidyr)
 UKEnergy2000mats \%>\%
   spread(key = "matrix.name", value = "matrix") \%>\%
   # Rename the V matrix, because it includes the R matrix.
   rename(
-    V_plus_R = V
+    R_plus_V = V
   ) \%>\%
   separate_RV()
 }

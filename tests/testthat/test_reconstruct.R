@@ -1,11 +1,11 @@
 library(dplyr)
 library(Hmisc)
-library(magrittr)
 library(matsbyname)
 library(matsindf)
 library(Recca)
 library(testthat)
 library(tidyr)
+
 
 ###########################################################
 context("Reconstructing PSUT matrices from a new Y matrix")
@@ -70,7 +70,7 @@ test_that("reconstructing U and V from a new Y matrix works as expected", {
 
 
 ###########################################################
-context("Reconstructing PSUT matrices from perfect substitution")
+context("New perfectly substitutable inputs in k")
 ###########################################################
 
 test_that("new_k_ps works as expected", {
@@ -100,38 +100,131 @@ test_that("new_k_ps works as expected", {
 
 
 ###########################################################
-context("Reconstructing PSUT matrices from new primary industries")
+context("New primary industries")
 ###########################################################
 
-# test_that("new_R works as expected", {
-#   doubleR <- UKEnergy2000mats %>%
-#     spread(key = "matrix.name", value = "matrix") %>%
-#     # At present, the UKEnergy2000Mats has a V matrix that is the sum of both V and R.
-#     # Change to use the R matrix.
-#     rename(
-#       V_plus_R = V
-#     ) %>%
-#     separate_RV() %>%
-#     # At this point, the matrices are they way we want them.
-#     # Calculate the input-output matrices which are inputs to the new_R function.
-#     calc_io_mats() %>%
-#     # Make an R_prime matrix that gives twice the resource inputs to the economy.
-#     mutate(
-#       R_prime = elementproduct_byname(2, R)
-#     ) %>%
-#     # Now call the new_R function which will calculate
-#     # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
-#     # given R_prime.
-#     # Each of the *_prime matrices should be 2x their originals,
-#     # because R_prime is 2x relative to R.
-#     new_R()
-#
-#   for (i in 1:nrow(doubleR)) {
-#     expectedU <- elementproduct_byname(2, doubleR$U[[i]])
-#     expect_true(equal_byname(doubleR$U_prime[[i]], expectedU))
-#     expectedV <- elementproduct_byname(2, doubleR$V[[i]])
-#     expect_true(equal_byname(doubleR$V_prime[[i]], expectedV))
-#     expectedY <- elementproduct_byname(2, doubleR$Y[[i]])
-#     expect_true(equal_byname(doubleR$Y_prime[[i]], expectedY))
-#   }
-# })
+test_that("new_R works as expected", {
+  newRsameasoldR <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    # When Last.stage is "services", we get units problems.
+    # Avoid by using only ECCs with "final" and "useful" as the Last.stage.
+    filter(Last.stage != "services") %>%
+    # At present, UKEnergy2000mats has V matrices that are the sum of both V and R.
+    # Change to use the R matrix.
+    rename(
+      R_plus_V = V
+    ) %>%
+    separate_RV() %>%
+    # At this point, the matrices are they way we want them.
+    # Calculate the input-output matrices which are inputs to the new_R function.
+    calc_io_mats() %>%
+    # Calculate the efficiency of every industry in the ECC.
+    calc_eta_i() %>%
+    # Make an R_prime matrix that gives the same the resource inputs to the economy.
+    # For testing purposes!
+    mutate(
+      R_prime = R
+    ) %>%
+    # Now call the new_R function which will calculate
+    # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
+    # given R_prime.
+    # Each of the *_prime matrices should be 2x their originals,
+    # because R_prime is 2x relative to R.
+    new_R_ps() %>%
+    # Clean the rows of U_prime, because they contain Products that are not present in U.
+    mutate(
+      U_prime = clean_byname(U_prime, margin = 1),
+      Y_prime = clean_byname(Y_prime, margin = 1)
+    ) %>%
+    # Set up the expectations
+    mutate(
+      # When R_prime = R, we expect to recover same U, V, and Y.
+      expected_U = U,
+      expected_V = V,
+      expected_Y = Y
+    )
+
+  # Test that everything worked as expected
+  for (i in 1:2) {
+    expect_equal(newRsameasoldR$U_prime[[i]], newRsameasoldR$expected_U[[i]])
+    expect_equal(newRsameasoldR$V_prime[[i]], newRsameasoldR$expected_V[[i]])
+    expect_equal(newRsameasoldR$Y_prime[[i]], newRsameasoldR$expected_Y[[i]])
+  }
+
+  doubleR <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    # When Last.stage is "services", we get units problems.
+    # Avoid by using only ECCs with "final" and "useful" as the Last.stage.
+    filter(Last.stage != "services") %>%
+    # At present, UKEnergy2000mats has V matrices that are the sum of both V and R.
+    # Change to use the R matrix.
+    rename(
+      R_plus_V = V
+    ) %>%
+    separate_RV() %>%
+    # At this point, the matrices are they way we want them.
+    # Calculate the input-output matrices which are inputs to the new_R function.
+    calc_io_mats() %>%
+    # Calculate the efficiency of every industry in the ECC.
+    calc_eta_i() %>%
+    # Make an R_prime matrix that gives twice the resource inputs to the economy.
+    mutate(
+      R_prime = elementproduct_byname(2, R)
+    ) %>%
+    # Now call the new_R function which will calculate
+    # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
+    # given R_prime.
+    # Each of the *_prime matrices should be 2x their originals,
+    # because R_prime is 2x relative to R.
+    new_R_ps() %>%
+    # Clean the rows of U_prime, because they contain Products that are not present in U.
+    mutate(
+      U_prime = clean_byname(U_prime, margin = 1),
+      Y_prime = clean_byname(Y_prime, margin = 1)
+    ) %>%
+    mutate(
+      expected_U = elementproduct_byname(2, U),
+      expected_V = elementproduct_byname(2, V),
+      expected_Y = elementproduct_byname(2, Y)
+    )
+
+  # Test that everything worked as expected
+  for (i in 1:2) {
+    expect_equal(doubleR$U_prime[[i]], doubleR$expected_U[[i]])
+    expect_equal(doubleR$V_prime[[i]], doubleR$expected_V[[i]])
+    expect_equal(doubleR$Y_prime[[i]], doubleR$expected_Y[[i]])
+  }
+
+  # Test when the units on Products in U are not all same.
+  # Under those conditions, we expect that U_prime, V_prime, and Y_prime are all NA.
+  # Input units are not all same for the Last.stage = "services" cases.
+  # So don't filter out the "services" rows.
+  WithDiffUnits <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    # At present, UKEnergy2000mats has V matrices that are the sum of both V and R.
+    # Change to use the R matrix.
+    rename(
+      R_plus_V = V
+    ) %>%
+    separate_RV() %>%
+    # At this point, the matrices are they way we want them.
+    # Calculate the input-output matrices which are inputs to the new_R function.
+    calc_io_mats() %>%
+    # Calculate the efficiency of every industry in the ECC.
+    calc_eta_i() %>%
+    # Make an R_prime matrix that gives twice the resource inputs to the economy.
+    mutate(
+      R_prime = elementproduct_byname(2, R)
+    ) %>%
+    # Now call the new_R function which will calculate
+    # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
+    # given R_prime.
+    # Each of the *_prime matrices should be 2x their originals,
+    # because R_prime is 2x relative to R.
+    new_R_ps()
+  for (i in c(2,4)) {
+    expect_true(is.na(WithDiffUnits$U_prime[[i]]))
+    expect_true(is.na(WithDiffUnits$V_prime[[i]]))
+    expect_true(is.na(WithDiffUnits$Y_prime[[i]]))
+  }
+})

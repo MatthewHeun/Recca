@@ -31,7 +31,6 @@
 #' @importFrom tidyr spread
 #'
 #' @examples
-#' library(magrittr)
 #' library(tidyr)
 #' UKEnergy2000mats %>%
 #'   spread(key = "matrix.name", value = "matrix") %>%

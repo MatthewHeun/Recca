@@ -1,3 +1,5 @@
+*.html
+*.R
 recca-concordance.tex
 recca.log
 recca.synctex.gz

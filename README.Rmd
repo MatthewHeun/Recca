@@ -3,6 +3,11 @@ output: github_document
 bibliography: vignettes/recca.bib
 ---
 
+<!-- *********** -->
+<!-- Note: README.md is generated from README.Rmd.   -->
+<!-- Be sure to edit README.Rmd and generate the README.md file by Cmd/Ctl-shift-K -->
+<!-- *********** -->
+
 <!-- Add later, after Travis is hooked up. -->
 <!-- [![Travis-CI Build Status](https://travis-ci.org/MatthewHeun/recca.svg?branch=master)](https://travis-ci.org/MatthewHeun/Recca) -->
 

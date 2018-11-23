@@ -91,7 +91,7 @@ test_that("separate_RV works correctly", {
     # Rename the V matrix, because it includes the R matrix.
     # At some point, this rename step will be unnecessary because UKEnergy2000mats will be created with R separate from V
     rename(
-      V_plus_R = V
+      R_plus_V = V
     ) %>%
     separate_RV()
 
@@ -99,6 +99,24 @@ test_that("separate_RV works correctly", {
   for (i in 1:4) {
     expect_true(equal_byname(mats$R[[i]], expected$R[[i]]))
     expect_true(equal_byname(mats$V[[i]], expected$V[[i]]))
+  }
+})
+
+test_that("combine_RV works correctly", {
+  mats <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    rename(
+      R_plus_V = V
+    ) %>%
+    separate_RV() %>%
+    rename(
+      R_plus_V_expected = R_plus_V
+    ) %>%
+    combine_RV()
+
+  # Make sure that we get the expected values for R_plus_V matrices
+  for (i in 1:4) {
+    expect_true(equal_byname(mats$R_plus_V[[i]], mats$R_plus_V_expected[[i]]))
   }
 })
 
