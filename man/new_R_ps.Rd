@@ -75,7 +75,7 @@ doubleR <- UKEnergy2000mats \%>\%
   # At present, UKEnergy2000mats has V matrices that are the sum of both V and R.
   # Change to use the R matrix.
   rename(
-    V_plus_R = V
+    R_plus_V = V
   ) \%>\%
   separate_RV() \%>\%
   # At this point, the matrices are they way we want them.

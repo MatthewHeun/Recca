@@ -122,36 +122,36 @@ resource_industries <- function(.sutdata = NULL, U = "U", V = "V", r_industries 
 }
 
 
-#' Separate resource (\code{R}) and make (\code{V}) matrices from make plus resource (\code{V_plus_R}) matrices
+#' Separate resource (\code{R}) and make (\code{V}) matrices from make plus resource (\code{R_plus_V}) matrices
 #'
 #' Resource industries are industries that make a product without using any products.
 #' Resource industries are identified by interrogating
-#' the use (\code{U}) and make (\code{V_plus_R}) matrices.
+#' the use (\code{U}) and make (\code{R_plus_V}) matrices.
 #' Resource industries have all zeroes in their column of the use matrix (\code{U})
-#' and at least one non-zero value in their row of the make (\code{V_plus_R}) matrix.
+#' and at least one non-zero value in their row of the make (\code{R_plus_V}) matrix.
 #'
 #' A resource matrix (\code{R}) has industries in rows and products in columns.
 #' The elements of of \code{R} indicate extraction of resources from the biosphere.
 #' The industries of \code{R} are the reserves of the extracted products.
 #'
 #' This function uses the \code{\link{resource_industries}} function to
-#' identify the resource industries in the \code{V_plus_R} matrix.
-#' Thereafter, the function extracts the resource industries from the \code{V_plus_R} matrix
+#' identify the resource industries in the \code{R_plus_V} matrix.
+#' Thereafter, the function extracts the resource industries from the \code{R_plus_V} matrix
 #' to form the \code{R} matrix.
-#' Finally, the \code{R} matrix is subtracted from the \code{V_plus_R} matrix
+#' Finally, the \code{R} matrix is subtracted from the \code{R_plus_V} matrix
 #' and saved as the \code{V} matrix.
-#' If there are no resource industries in the \code{V_plus_R} matrix,
+#' If there are no resource industries in the \code{R_plus_V} matrix,
 #' a warning is emitted,
 #' no \code{R} matrix is created, and
-#' no changes are made to the \code{V_plus_R} matrix.
+#' no changes are made to the \code{R_plus_V} matrix.
 #'
 #' @param .sutdata a list or data frame containing use matrix(ces) and make matrix(ces)
 #' @param U_colname identifier for the use matrix (a string) \code{.sutdata}. Default is "\code{U}".
-#' @param V_plus_R_colname identifier for the make matrix in \code{.sutdata} (a string). Default is "\code{V_plus_R}".
-#' @param V_colname identifier for the make matrix (a string). Default is "\code{V}".
+#' @param R_plus_V_colname identifier for the make matrix in \code{.sutdata} (a string). Default is "\code{R_plus_V}".
 #' @param R_colname identifier for the resource matrix (a string). Default is "\code{R}".
+#' @param V_colname identifier for the make matrix (a string). Default is "\code{V}".
 #'
-#' @return a version of the \code{V_plus_R} matrix without resource industries and an \code{R} matrix
+#' @return a version of the \code{R_plus_V} matrix without resource industries and an \code{R} matrix
 #'
 #' @export
 #'
@@ -162,22 +162,56 @@ resource_industries <- function(.sutdata = NULL, U = "U", V = "V", r_industries 
 #'   spread(key = "matrix.name", value = "matrix") %>%
 #'   # Rename the V matrix, because it includes the R matrix.
 #'   rename(
-#'     V_plus_R = V
+#'     R_plus_V = V
 #'   ) %>%
 #'   separate_RV()
-separate_RV <- function(.sutdata = NULL, U_colname = "U", V_plus_R_colname = "V_plus_R",
-                      V_colname = "V", R_colname = "R"){
-  extract_R_func <- function(U, V_plus_R){
-    r_industry_names <- resource_industries(U = U, V = V_plus_R, r_industries = "r_inds") %>% unlist()
+separate_RV <- function(.sutdata = NULL,
+                        # Input columns
+                        U_colname = "U", R_plus_V_colname = "R_plus_V",
+                        # Output columns
+                        R_colname = "R", V_colname = "V"){
+  extract_R_func <- function(U, R_plus_V){
+    r_industry_names <- resource_industries(U = U, V = R_plus_V, r_industries = "r_inds") %>% unlist()
     if (length(r_industry_names) == 0) {
-      warning("No R created in extract_R")
+      warning("No R created in separate_RV")
     } else {
-      new_R <- V_plus_R %>% select_rows_byname(retain_pattern = make_pattern(r_industry_names, pattern_type = "exact"))
-      new_V <- V_plus_R %>% select_rows_byname(remove_pattern = make_pattern(r_industry_names, pattern_type = "exact"))
+      new_R <- R_plus_V %>% select_rows_byname(retain_pattern = make_pattern(r_industry_names, pattern_type = "exact"))
+      new_V <- R_plus_V %>% select_rows_byname(remove_pattern = make_pattern(r_industry_names, pattern_type = "exact"))
     }
     list(new_V, new_R) %>% magrittr::set_names(c(V_colname, R_colname))
   }
-  matsindf_apply(.sutdata, FUN = extract_R_func, U = U_colname, V_plus_R = V_plus_R_colname)
+  matsindf_apply(.sutdata, FUN = extract_R_func, U = U_colname, R_plus_V = R_plus_V_colname)
+}
+
+#' Combine resource (\code{R}) and make (\code{V}) matrices into a make plus resource (\code{R_plus_V}) matrix
+#'
+#' @param .sutdata a list or data frame containing use matrix(ces) and make matrix(ces)
+#' @param R_colname identifier for the resource matrix (a string). Default is "\code{R}".
+#' @param V_colname identifier for the make matrix (a string). Default is "\code{V}".
+#' @param R_plus_V_colname identifier for the make matrix in \code{.sutdata} (a string). Default is "\code{R_plus_V}".
+#'
+#' @return \code{sum_by_name(R, V)}
+#'
+#' @export
+#'
+#' @examples
+#' library(dplyr)
+#' library(tidyr)
+#' UKEnergy2000mats %>%
+#'   spread(key = "matrix.name", value = "matrix") %>%
+#'   # Delete next line when switch to using R everywhere
+#'   rename(R_plus_V = V) %>% separate_RV() %>% select(-R_plus_V) %>%
+#'   combine_RV()
+combine_RV <- function(.sutdata = NULL,
+                       # Input columns
+                       R_colname = "R", V_colname = "V",
+                       # Output columns
+                       R_plus_V_colname = "R_plus_V"){
+  combine_RV_func <- function(R, V){
+    R_plus_V <- sum_byname(R, V)
+    list(R_plus_V) %>% magrittr::set_names(c(R_plus_V_colname))
+  }
+  matsindf_apply(.sutdata, FUN = combine_RV_func, R = R_colname, V = V_colname)
 }
 
 

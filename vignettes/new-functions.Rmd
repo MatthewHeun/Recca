@@ -89,7 +89,7 @@ UKEnergyMatsWithR <- UKEnergy2000mats %>%
   # The following code is necessary until R matrices are included
   # in the UKEnergy2000mats data frame.
   rename(
-    V_plus_R = V
+    R_plus_V = V
   ) %>%
   separate_RV()
 IO_mats <- UKEnergyMatsWithR %>% 
@@ -103,7 +103,7 @@ To look at the ECC, we can draw a Sankey diagram.
 First, we need to make an edge list (`el`).
 
 ```{r}
-EL <- UKEnergyMatsWithR %>% edge_list(V = "V_plus_R")
+EL <- UKEnergyMatsWithR %>% edge_list(V = "R_plus_V")
 glimpse(EL$`Edge list`[[1]])
 ```
 
