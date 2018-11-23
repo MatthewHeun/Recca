@@ -253,8 +253,10 @@ new_k_ps <- function(.sutdata = NULL,
 #' @param eta_i_colname the name of a column in \code{.sutdata} containing \code{eta_i} vectors for the base ECC.  Default is "\code{eta_i}".
 #' @param maxiter the maximum allowable number of iterations when calculating the effects of a new \code{R} matrix.
 #'        Default is 100.
-#' @param tol the maximum allowable change in any one entry of the \code{U} and \code{V} matrices
-#'        from one iteration to the next. Default is 1e-6.
+#' @param tol the maximum allowable change in any one entry of the \code{U}, \code{V}, and \code{Y} matrices
+#'        from one iteration to the next. Default is 0.
+#'        I.e., when two subsequent iterations must produce the same values,
+#'        the algorithm has converged.
 #' @param U_prime_colname the name of the output column that contains new Use (\code{U}) matrices.
 #'        Default is "\code{U_prime}".
 #' @param V_prime_colname the name of the output column that contains new Make (\code{V}) matrices.
@@ -301,7 +303,7 @@ new_R_ps <- function(.sutdata = NULL,
                   R_prime_colname = "R_prime",
                   U_colname = "U", V_colname = "V", Y_colname = "Y", S_units_colname = "S_units",
                   q_colname = "q", C_colname = "C", eta_i_colname = "eta_i",
-                  maxiter = 100, tol = 1e-6,
+                  maxiter = 100, tol = 0,
                   # Output columns
                   U_prime_colname = "U_prime", V_prime_colname = "V_prime", Y_Prime_colname = "Y_prime"){
   new_R_func <- function(R_prime, U, V, Y, S_units, q, C, eta_i){
@@ -368,9 +370,13 @@ new_R_ps <- function(.sutdata = NULL,
       Y_prime <- matrixproduct_byname(y_hat_prime, y_hat_inv_Y)
 
       # Check convergence condition
-      if (equal_byname(U_prime, U_prime_prev) & equal_byname(V_prime, V_prime_prev) & equal_byname(Y_prime, Y_prime_prev)) {
+      U_OK <- difference_byname(U_prime, U_prime_prev) %>% abs_byname() %>% compare_byname("<=", tol) %>% all()
+      V_OK <- difference_byname(V_prime, V_prime_prev) %>% abs_byname() %>% compare_byname("<=", tol) %>% all()
+      Y_OK <- difference_byname(Y_prime, Y_prime_prev) %>% abs_byname() %>% compare_byname("<=", tol) %>% all()
+      if (U_OK & V_OK & Y_OK) {
         break
       }
+
       # Check to see if we have exceeded the maximum number of iterations
       if (iter >= maxiter) {
         warning(paste("maxiter =", maxiter, "reached without convergence in new_R"))
@@ -381,6 +387,7 @@ new_R_ps <- function(.sutdata = NULL,
       V_prime_prev <- V_prime
       Y_prime_prev <- Y_prime
     }
+
     # Verify that the ECC is in energy balance.
     # verify_SUT_energy_balance_with_units(U = U, V = V, Y = Y, S_units = S_units)
 

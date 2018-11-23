@@ -70,7 +70,7 @@ test_that("reconstructing U and V from a new Y matrix works as expected", {
 
 
 ###########################################################
-context("New perfectly substitutable inputs")
+context("New perfectly substitutable inputs in k")
 ###########################################################
 
 test_that("new_k_ps works as expected", {

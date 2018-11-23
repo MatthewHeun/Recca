@@ -7,7 +7,7 @@
 new_R_ps(.sutdata = NULL, R_prime_colname = "R_prime",
   U_colname = "U", V_colname = "V", Y_colname = "Y",
   S_units_colname = "S_units", q_colname = "q", C_colname = "C",
-  eta_i_colname = "eta_i", maxiter = 100, tol = 1e-06,
+  eta_i_colname = "eta_i", maxiter = 100, tol = 0,
   U_prime_colname = "U_prime", V_prime_colname = "V_prime",
   Y_Prime_colname = "Y_prime")
 }
@@ -33,8 +33,10 @@ new_R_ps(.sutdata = NULL, R_prime_colname = "R_prime",
 \item{maxiter}{the maximum allowable number of iterations when calculating the effects of a new \code{R} matrix.
 Default is 100.}
 
-\item{tol}{the maximum allowable change in any one entry of the \code{U} and \code{V} matrices
-from one iteration to the next. Default is 1e-6.}
+\item{tol}{the maximum allowable change in any one entry of the \code{U}, \code{V}, and \code{Y} matrices
+from one iteration to the next. Default is 0.
+I.e., when two subsequent iterations must produce the same values,
+the algorithm has converged.}
 
 \item{U_prime_colname}{the name of the output column that contains new Use (\code{U}) matrices.
 Default is "\code{U_prime}".}
