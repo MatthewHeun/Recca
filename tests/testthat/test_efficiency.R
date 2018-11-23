@@ -17,17 +17,23 @@ test_that("efficiencies are calculated correctly", {
     select(Country, Year, Energy.type, Last.stage, eta_i) %>%
     gather(key = matnames, value = matvals, eta_i) %>%
     expand_to_tidy() %>%
+    rename(eta_i = matvals) %>%
     mutate(
       # Make expected values
       expected = case_when(
         startsWith(rownames, "Resources - ") ~ Inf,
         Last.stage == "services" & endsWith(rownames, " dist.") ~ NA_real_,
         rownames %in% c("Cars", "Homes", "Rooms", "Trucks") ~ NA_real_,
-        TRUE ~ matvals
+        TRUE ~ eta_i
       )
     )
+  expect_equal(result$eta_i, result$expected)
 
-  expect_equal(result$matvals, result$expected)
+  # Test some specific values
+  expect_equal(result %>% filter(Last.stage == "final", rownames == "Crude dist.") %>% extract2("eta_i"), 0.98855359)
+  expect_equal(result %>% filter(Last.stage == "useful", rownames == "Power plants") %>% extract2("eta_i"), 0.39751553)
+  expect_equal(result %>% filter(Last.stage == "services", Energy.type == "E.ktoe", rownames == "Oil fields") %>% extract2("eta_i"), 0.94857713)
+  expect_equal(result %>% filter(Last.stage == "services", Energy.type == "X.ktoe", rownames == "Oil fields") %>% extract2("eta_i"), 0.94860812)
 
 })
 
