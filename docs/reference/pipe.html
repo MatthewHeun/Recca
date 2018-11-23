@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Energy consumption in the UK in 2000 — UKEnergy2000tidy • Recca</title>
+<title>Pipe operator — %&gt;% • Recca</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,19 +30,9 @@
 
 
 
-<meta property="og:title" content="Energy consumption in the UK in 2000 — UKEnergy2000tidy" />
+<meta property="og:title" content="Pipe operator — %&gt;%" />
 
-<meta property="og:description" content="A dataset containing approximations to
-some of the energy flows in the UK in the year 2000.
-These data first appeared as the example in
-Figures 3, 4, 6, 7, 10, 11, B.1, and B.2 of
-M.K. Heun, A. Owen, and P.E. Brockway.
-A physical supply-use table framework for energy analysis on the energy conversion chain.
-Sustainability Research Institute Paper 111,
-University of Leeds, School of Earth and Environment,
-Sustainability Research Institute,
-Leeds, England,
-13 November 2017." />
+<meta property="og:description" content="See magrittr::%&amp;gt;% for details." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -127,66 +117,25 @@ Leeds, England,
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Energy consumption in the UK in 2000</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MatthewHeun/Recca/blob/master/R/data.R'><code>R/data.R</code></a></small>
-    <div class="hidden name"><code>UKEnergy2000tidy.Rd</code></div>
+    <h1>Pipe operator</h1>
+    <small class="dont-index">Source: <a href='https://github.com/MatthewHeun/Recca/blob/master/R/utils-pipe.R'><code>R/utils-pipe.R</code></a></small>
+    <div class="hidden name"><code>pipe.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>A dataset containing approximations to
-some of the energy flows in the UK in the year 2000.
-These data first appeared as the example in
-Figures 3, 4, 6, 7, 10, 11, B.1, and B.2 of
-M.K. Heun, A. Owen, and P.E. Brockway.
-A physical supply-use table framework for energy analysis on the energy conversion chain.
-Sustainability Research Institute Paper 111,
-University of Leeds, School of Earth and Environment,
-Sustainability Research Institute,
-Leeds, England,
-13 November 2017.</p>
+    <p>See <code>magrittr::%&gt;%</code> for details.</p>
     
     </div>
 
-    <pre class="usage"><span class='no'>UKEnergy2000tidy</span></pre>
+    <pre class="usage"><span class='no'>lhs</span> <span class='kw'>%&gt;%</span> <span class='no'>rhs</span></pre>
         
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
-
-    <p>A data frame with 186 rows and 9 variables:</p><dl class='dl-horizontal'>
-  <dt>Country</dt><dd><p>country, GB (Great Britain, only one country)</p></dd>
-  <dt>Year</dt><dd><p>year, 2000 (only one year)</p></dd>
-  <dt>Ledger.side</dt><dd><p>Supply or Consumption</p></dd>
-  <dt>Flow.aggregation.point</dt><dd><p>tells where each row should be aggregated</p></dd>
-  <dt>Energy.type</dt><dd><p>E.ktoe (for energy) or X.ktoe (for exergy)</p></dd>
-  <dt>Last.stage</dt><dd><p>tells the final stage of the energy conversion chain: final, useful, or services</p></dd>
-  <dt>Flow</dt><dd><p>the Industry or Sector involved in this flow</p></dd>
-  <dt>Product</dt><dd><p>the energy product involved in this flow</p></dd>
-  <dt>EX.ktoe</dt><dd><p>value of the energy, exergy, or service flow in ktoe</p></dd>
-  <dt>Unit</dt><dd><p>unit in which quantity is expressed</p></dd>
-</dl>
-    
-    <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
-
-    <p><a href='http://www.see.leeds.ac.uk/fileadmin/Documents/research/sri/workingpapers/sri-wp111.pdf'>http://www.see.leeds.ac.uk/fileadmin/Documents/research/sri/workingpapers/sri-wp111.pdf</a></p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p><code>UKEnergy2000tidy</code> gives each non-zero entry in <code>UKEnergy2000mats</code>
-as a single column in a data frame.
-These data are in tidy format.</p>
-    
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      
-      <li><a href="#format">Format</a></li>
-
-      <li><a href="#source">Source</a></li>
-
-      <li><a href="#details">Details</a></li>
-          </ul>
+                </ul>
 
   </div>
 </div>
