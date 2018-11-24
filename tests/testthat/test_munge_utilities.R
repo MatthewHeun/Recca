@@ -5,6 +5,19 @@ context("Data prep utilities")
 ###########################################################
 
 test_that("add_matnames and add_row_col_meta works as expected", {
+  WithMatnames <- UKEnergy2000tidy %>%
+    add_matnames_iea() %>%
+    add_row_col_meta()
+  expect_equivalent(WithMatnames %>%
+                      filter(Ledger.side == "Supply", Energy.type == "E.ktoe", Last.stage == "final", Flow == "Resources - Crude", Product == "Crude") %>% select(matname, rowtype, coltype) %>% unlist(),
+                    c("V", "Industry", "Product"))
+  expect_equivalent(WithMatnames %>%
+                      filter(Ledger.side == "Consumption", Energy.type == "E.ktoe", Last.stage == "final", Flow == "Transport", Product == "Diesel - Dist.") %>% select(matname, rowtype, coltype) %>% unlist(),
+                    c("Y", "Product", "Industry"))
+
+  # *************** Add more tests here. ******************
+
+
   Recca:::test_against_file(UKEnergy2000tidy %>% add_matnames_iea() %>% add_row_col_meta(),
                             "expected_row_col_meta.rds",
                             update = FALSE)
