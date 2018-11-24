@@ -73,17 +73,32 @@ test_that("calculating y, q, f, g, W, A, and L works as expected", {
                       filter(Energy.type == "X.ktoe", Last.stage == "services", matnames == "L_pxp", rownames == "Crude - Dist.", colnames == "Petrol") %>% select(matvals) %>% unlist(),
                     1.1251085047589)
   expect_equivalent(L %>%
-                      filter(Energy.type == "X.ktoe", Last.stage == "services", matnames == "L_pxp", rownames == "Space heating [m3-K]", colnames == "Space heating [m3-K]") %>% select(matvals) %>% unlist(),
-                    1)
+                      filter(Energy.type == "E.ktoe", Last.stage == "services", matnames == "L_pxp", rownames == "Freight [tonne-km/year]", colnames == "LTH") %>% select(matvals) %>% unlist(),
+                    51918.7186937)
 })
 
 
 test_that("calculating IO matrices works as expected", {
   # Calculate all IO matrices
-  io_mats <- UKEnergy2000mats %>%
+  L_mats <- UKEnergy2000mats %>%
     spread(key = matrix.name, value = matrix) %>%
-    calc_io_mats()
-  Recca:::test_against_file(io_mats, "expected_iomats.rds", update = FALSE)
+    calc_io_mats() %>%
+    # Look at the L matrices, because they depend on everything else.
+    select(Country, Year, Energy.type, Last.stage, L_ixp, L_pxp) %>%
+    gather(key = "matnames", value = "matvals", L_ixp, L_pxp) %>%
+    expand_to_tidy(drop = 0)
+  expect_equivalent(L_mats %>%
+                      filter(Energy.type == "E.ktoe", Last.stage == "final", matnames == "L_ixp", rownames == "Power plants", colnames == "Crude - Fields") %>% select(matvals) %>% unlist(),
+                    0.0005505691)
+  expect_equivalent(L_mats %>%
+                      filter(Energy.type == "E.ktoe", Last.stage == "services", matnames == "L_pxp", rownames == "NG - Wells", colnames == "MD - Truck engines") %>% select(matvals) %>% unlist(),
+                    0.06720287)
+  expect_equivalent(L_mats %>%
+                      filter(Energy.type == "E.ktoe", Last.stage == "useful", matnames == "L_pxp", rownames == "Elect - Grid", colnames == "Light") %>% select(matvals) %>% unlist(),
+                    5.097294813549)
+  expect_equivalent(L_mats %>%
+                      filter(Energy.type == "X.ktoe", Last.stage == "services", matnames == "L_ixp", rownames == "Oil fields", colnames == "MD - Car engines") %>% select(matvals) %>% unlist(),
+                    10.84044405228)
 })
 
 
