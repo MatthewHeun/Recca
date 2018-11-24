@@ -70,10 +70,6 @@ test_that("embodied energy calculations works as expected", {
                     93.2008177323)
 
   # Focus on footprint matrices
-  F_fe <- M %>%
-    calc_F_footprint_effects() %>% View
-  Recca:::test_against_file(F_fe, "expected_F.rds", update = FALSE)
-
   F_fe <- emb_mats %>%
     select(Country, Year, Energy.type, Last.stage, F_footprint_p, F_effects_p, F_footprint_s, F_effects_s) %>%
     gather(key = "matnames", value = "matvals", F_footprint_p, F_effects_p, F_footprint_s, F_effects_s) %>%
@@ -104,12 +100,6 @@ test_that("embodied energy calculations works as expected", {
                     1)
 
   # Focus on efficiencies
-  # primary_machine_names <- c("Resources - Crude", "Resources - NG")
-  # embodied_etas <- F_fe %>%
-  #   calc_embodied_etas(primary_machine_names = primary_machine_names)
-  # Recca:::test_against_file(embodied_etas, "expected_embodied_etas.rds", update = FALSE)
-
-
   embodied_etas <- emb_mats %>%
     select(Country, Year, Energy.type, Last.stage, eta_p, eta_s) %>%
     gather(key = "matnames", value = "matvals", eta_p, eta_s) %>%
@@ -117,10 +107,15 @@ test_that("embodied energy calculations works as expected", {
   expect_equivalent(embodied_etas %>%
                       filter(Energy.type == "E.ktoe", Last.stage == "final", matnames == "eta_p", rownames == "Diesel - Dist.") %>% select(matvals) %>% unlist(),
                     0.81397293779504)
-
-
-
-
+  expect_equivalent(embodied_etas %>%
+                      filter(Energy.type == "E.ktoe", Last.stage == "services", matnames == "eta_p", rownames == "Space heating [m3-K]") %>% select(matvals) %>% unlist(),
+                    2833600.6039485)
+  expect_equivalent(embodied_etas %>%
+                      filter(Energy.type == "E.ktoe", Last.stage == "useful", matnames == "eta_s", rownames == "Transport") %>% select(matvals) %>% unlist(),
+                    0.48990686308539)
+  expect_equivalent(embodied_etas %>%
+                      filter(Energy.type == "X.ktoe", Last.stage == "services", matnames == "eta_p", rownames == "Illumination [lumen-hrs/yr]") %>% select(matvals) %>% unlist(),
+                    29203976824)
 })
 
 
