@@ -18,7 +18,7 @@ test_that("primary aggregates of SUT data work as expected", {
   # Define primary industries
   p_industries <- c("Resources - Crude", "Resources - NG")
 
-  # Primary total aggregates
+  # Primary TOTAL aggregates
   primary_total_aggregates_sut <- UKEnergy2000mats %>%
     spread(key = matrix.name, value = matrix) %>%
     primary_aggregates(p_industries = p_industries, by = "Total",
@@ -32,7 +32,7 @@ test_that("primary aggregates of SUT data work as expected", {
   expect_equivalent(primary_total_aggregates_sut %>% filter(Energy.type == "X.ktoe", Last.stage == "services") %>%
                       select("EX_total_agg.ktoe"), 98220)
 
-  # Primary product aggregates
+  # Primary PRODUCT aggregates
   primary_product_aggregates_sut <- UKEnergy2000mats %>%
     spread(key = matrix.name, value = matrix) %>%
     primary_aggregates(p_industries = p_industries, by = "Product",
@@ -45,7 +45,7 @@ test_that("primary aggregates of SUT data work as expected", {
   expect_equivalent(primary_product_aggregates_sut %>% filter(Energy.type == "X.ktoe" & rownames == "Crude") %>% select(matvals) %>% unlist(), 53500)
   expect_equivalent(primary_product_aggregates_sut %>% filter(Energy.type == "X.ktoe" & rownames == "NG") %>% select(matvals) %>% unlist(), 44720)
 
-  # Primary flow aggregates
+  # Primary FLOW aggregates
   primary_flow_aggregates_sut <- UKEnergy2000mats %>%
     spread(key = matrix.name, value = matrix) %>%
     primary_aggregates(p_industries = p_industries, by = "Flow",
@@ -63,7 +63,7 @@ test_that("final demand aggregates of SUT data work as expected", {
   # Define final demand sectors
   fd_sectors <- c("Residential", "Transport")
 
-  # Total final demand aggregates
+  # Final demand TOTAL aggregates
   final_demand_total_aggregates_sut <- UKEnergy2000mats %>%
     spread(key = matrix.name, value = matrix) %>%
     finaldemand_aggregates_with_units(fd_sectors = fd_sectors, by = "Total",
@@ -85,25 +85,61 @@ test_that("final demand aggregates of SUT data work as expected", {
                       filter(Last.stage == "services", Energy.type == "X.ktoe", matnames == "EX_total_net_agg.ktoe", colnames == "tonne-km/yr") %>% select(matvals) %>% unlist(),
                     142916629629)
 
-  # Final demand product aggregates
+  # Final demand PRODUCT aggregates
   final_demand_product_aggregates_sut <- UKEnergy2000mats %>%
     spread(key = matrix.name, value = matrix) %>%
     finaldemand_aggregates_with_units(fd_sectors = fd_sectors, by = "Product",
                                       net_aggregate_demand_colname = "EX_product_net_agg.ktoe",
-                                      gross_aggregate_demand_colname = "EX_product_gross_agg.ktoe")
-  Recca:::test_against_file(final_demand_product_aggregates_sut,
-                            "expected_final_demand_product_aggregates_sut.rds",
-                            update = FALSE)
+                                      gross_aggregate_demand_colname = "EX_product_gross_agg.ktoe") %>%
+    select(Country, Year, Last.stage, Energy.type, EX_product_net_agg.ktoe, EX_product_gross_agg.ktoe) %>%
+    gather(key = "matnames", value = "matvals", EX_product_net_agg.ktoe, EX_product_gross_agg.ktoe) %>%
+    expand_to_tidy(drop = 0)
+  expect_equivalent(final_demand_product_aggregates_sut %>%
+                      filter(Last.stage == "final", Energy.type == "E.ktoe", matnames == "EX_product_gross_agg.ktoe", rownames == "Crude - Dist.") %>% select(matvals) %>% unlist(),
+                    500)
+  expect_equivalent(final_demand_product_aggregates_sut %>%
+                      filter(Last.stage == "final", Energy.type == "E.ktoe", matnames == "EX_product_net_agg.ktoe", rownames == "Elect - Grid") %>% select(matvals) %>% unlist(),
+                    6000)
+  expect_equivalent(final_demand_product_aggregates_sut %>%
+                      filter(Last.stage == "useful", Energy.type == "E.ktoe", matnames == "EX_product_gross_agg.ktoe", rownames == "LTH") %>% select(matvals) %>% unlist(),
+                    20000)
+  expect_equivalent(final_demand_product_aggregates_sut %>%
+                      filter(Last.stage == "useful", Energy.type == "E.ktoe", matnames == "EX_product_net_agg.ktoe", rownames == "MD - Car engines") %>% select(matvals) %>% unlist(),
+                    3000.4)
+  expect_equivalent(final_demand_product_aggregates_sut %>%
+                      filter(Last.stage == "services", Energy.type == "E.ktoe", matnames == "EX_product_net_agg.ktoe", rownames == "Freight [tonne-km/year]") %>% select(matvals) %>% unlist(),
+                    142916629629)
+  expect_equivalent(final_demand_product_aggregates_sut %>%
+                      filter(Last.stage == "services", Energy.type == "X.ktoe", matnames == "EX_product_gross_agg.ktoe", rownames == "Space heating [m3-K]") %>% select(matvals) %>% unlist(),
+                    7.500000e+10)
 
-  # Final demand sector aggregates
+  # Final demand SECTOR aggregates
   final_demand_sector_aggregates_sut <- UKEnergy2000mats %>%
     spread(key = matrix.name, value = matrix) %>%
     finaldemand_aggregates_with_units(fd_sectors = fd_sectors, by = "Sector",
                                       net_aggregate_demand_colname = "EX_sector_net_agg.ktoe",
-                                      gross_aggregate_demand_colname = "EX_sector_gross_agg.ktoe")
-  Recca:::test_against_file(final_demand_sector_aggregates_sut,
-                            "expected_final_demand_sector_aggregates_sut.rds",
-                            update = FALSE)
+                                      gross_aggregate_demand_colname = "EX_sector_gross_agg.ktoe") %>%
+    select(Country, Year, Last.stage, Energy.type, EX_sector_net_agg.ktoe, EX_sector_gross_agg.ktoe) %>%
+    gather(key = "matnames", value = "matvals", EX_sector_net_agg.ktoe, EX_sector_gross_agg.ktoe) %>%
+    expand_to_tidy(drop = 0)
+  expect_equivalent(final_demand_sector_aggregates_sut %>%
+                      filter(Last.stage == "final", Energy.type == "E.ktoe", matnames == "EX_sector_gross_agg.ktoe", rownames == "Crude dist.") %>% select(matvals) %>% unlist(),
+                    550)
+  expect_equivalent(final_demand_sector_aggregates_sut %>%
+                      filter(Last.stage == "final", Energy.type == "E.ktoe", matnames == "EX_sector_net_agg.ktoe", rownames == "Residential") %>% select(matvals) %>% unlist(),
+                    31000)
+  expect_equivalent(final_demand_sector_aggregates_sut %>%
+                      filter(Last.stage == "useful", Energy.type == "E.ktoe", matnames == "EX_sector_gross_agg.ktoe", rownames == "Transport") %>% select(matvals) %>% unlist(),
+                    21714.9805)
+  expect_equivalent(final_demand_sector_aggregates_sut %>%
+                      filter(Last.stage == "useful", Energy.type == "E.ktoe", matnames == "EX_sector_net_agg.ktoe", rownames == "Residential") %>% select(matvals) %>% unlist(),
+                    4200.4)
+  expect_equivalent(final_demand_sector_aggregates_sut %>%
+                      filter(Last.stage == "services", Energy.type == "E.ktoe", matnames == "EX_sector_gross_agg.ktoe", rownames == "Gas wells & proc.") %>% select(matvals) %>% unlist(),
+                    75)
+  expect_equivalent(final_demand_sector_aggregates_sut %>%
+                      filter(Last.stage == "services", Energy.type == "X.ktoe", matnames == "EX_sector_net_agg.ktoe", rownames == "Transport", colnames == "tonne-km/yr") %>% select(matvals) %>% unlist(),
+                    142916629629)
 })
 
 test_that("primary_aggregates_IEA works as expected", {
