@@ -7,19 +7,75 @@ context("IO calculations")
 ###########################################################
 
 test_that("calculating y, q, f, g, W, A, and L works as expected", {
-  # Calculate y, q, f, g, and W from UKEnergy2000mats
-  yqfgW <- UKEnergy2000mats %>%
+  io_mats <- UKEnergy2000mats %>%
     spread(key = matrix.name, value = matrix) %>%
-    calc_yqfgW()
-  Recca:::test_against_file(yqfgW, "expected_yqfgW.rds", update = FALSE)
+    calc_yqfgW() %>%
+    calc_A() %>%
+    calc_L()
+  Recca:::test_against_file(io_mats, "expected_L.rds", update = FALSE)
 
-  # Calculate Z, D, C, and A matrices from yqfgW
-  A <- yqfgW %>% calc_A()
-  Recca:::test_against_file(A, "expected_A.rds", update = FALSE)
+  # Focus on y, q, f, g, and W
+  yqfgW <- io_mats %>%
+    select(Country, Year, Energy.type, Last.stage, y, q, f, g, W) %>%
+    gather(key = "matnames", value = "matvals", y, q, f, g, W) %>%
+    expand_to_tidy(drop = 0)
+  expect_equivalent(yqfgW %>%
+                      filter(Energy.type == "E.ktoe", Last.stage == "final", matnames == "f", rownames == "Crude dist.", colnames == "Product") %>% select(matvals) %>% unlist(),
+                    48050)
+  expect_equivalent(yqfgW %>%
+                      filter(Energy.type == "E.ktoe", Last.stage == "final", matnames == "W", rownames == "Crude - Fields", colnames == "Oil fields") %>% select(matvals) %>% unlist(),
+                    47500)
+  expect_equivalent(yqfgW %>%
+                      filter(Energy.type == "E.ktoe", Last.stage == "final", matnames == "g", rownames == "Resources - Crude", colnames == "Product") %>% select(matvals) %>% unlist(),
+                    50000)
+  expect_equivalent(yqfgW %>%
+                      filter(Energy.type == "E.ktoe", Last.stage == "services", matnames == "y", rownames == "Illumination [lumen-hrs/yr]", colnames == "Industry") %>% select(matvals) %>% unlist(),
+                    5e14)
+  expect_equivalent(yqfgW %>%
+                      filter(Energy.type == "X.ktoe", Last.stage == "services", matnames == "g", rownames == "Petrol dist.", colnames == "Product") %>% select(matvals) %>% unlist(),
+                    27820)
+  expect_equivalent(yqfgW %>%
+                      filter(Energy.type == "X.ktoe", Last.stage == "services", matnames == "y", rownames == "Space heating [m3-K]", colnames == "Industry") %>% select(matvals) %>% unlist(),
+                    7.5e10)
 
-  # Calculate L matrices (L_ixp and L_pxp)
-  L <- A %>% calc_L()
-  Recca:::test_against_file(L, "expected_L.rds", update = FALSE)
+  # Focus on C and A
+  CA <- io_mats %>%
+    select(Country, Year, Energy.type, Last.stage, C, A) %>%
+    gather(key = "matnames", value = "matvals", C, A) %>%
+    expand_to_tidy(drop = 0)
+  expect_equivalent(CA %>%
+                      filter(Energy.type == "E.ktoe", Last.stage == "final", matnames == "A", rownames == "Crude - Dist.", colnames == "Crude - Dist.") %>% select(matvals) %>% unlist(),
+                    0.01052632)
+  expect_equivalent(CA %>%
+                      filter(Energy.type == "E.ktoe", Last.stage == "useful", matnames == "A", rownames == "Elect - Grid", colnames == "Diesel") %>% select(matvals) %>% unlist(),
+                    0.001785714)
+  expect_equivalent(CA %>%
+                      filter(Energy.type == "X.ktoe", Last.stage == "services", matnames == "C", rownames == "Light", colnames == "Light fixtures") %>% select(matvals) %>% unlist(),
+                    1)
+  expect_equivalent(CA %>%
+                      filter(Energy.type == "X.ktoe", Last.stage == "services", matnames == "C", rownames == "Petrol", colnames == "Oil refineries") %>% select(matvals) %>% unlist(),
+                    0.63095238095238104)
+
+  # Focus on L matrices (L_ixp and L_pxp)
+  L <- io_mats %>%
+    select(Country, Year, Energy.type, Last.stage, L_ixp, L_pxp) %>%
+    gather(key = "matnames", value = "matvals", L_ixp, L_pxp) %>%
+    expand_to_tidy(drop = 0)
+  expect_equivalent(L %>%
+                      filter(Energy.type == "E.ktoe", Last.stage == "final", matnames == "L_ixp", rownames == "Resources - Crude", colnames == "Crude") %>% select(matvals) %>% unlist(),
+                    1)
+  expect_equivalent(L %>%
+                      filter(Energy.type == "E.ktoe", Last.stage == "services", matnames == "L_pxp", rownames == "Freight [tonne-km/year]", colnames == "Diesel - Dist.") %>% select(matvals) %>% unlist(),
+                    142100.9049224)
+  expect_equivalent(L %>%
+                      filter(Energy.type == "E.ktoe", Last.stage == "useful", matnames == "L_pxp", rownames == "Crude - Dist.", colnames == "NG - Dist.") %>% select(matvals) %>% unlist(),
+                    0.006179423)
+  expect_equivalent(L %>%
+                      filter(Energy.type == "X.ktoe", Last.stage == "services", matnames == "L_pxp", rownames == "Crude - Dist.", colnames == "Petrol") %>% select(matvals) %>% unlist(),
+                    1.1251085047589)
+  expect_equivalent(L %>%
+                      filter(Energy.type == "X.ktoe", Last.stage == "services", matnames == "L_pxp", rownames == "Space heating [m3-K]", colnames == "Space heating [m3-K]") %>% select(matvals) %>% unlist(),
+                    1)
 })
 
 
