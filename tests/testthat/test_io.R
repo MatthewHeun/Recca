@@ -12,7 +12,6 @@ test_that("calculating y, q, f, g, W, A, and L works as expected", {
     calc_yqfgW() %>%
     calc_A() %>%
     calc_L()
-  Recca:::test_against_file(io_mats, "expected_L.rds", update = FALSE)
 
   # Focus on y, q, f, g, and W
   yqfgW <- io_mats %>%
