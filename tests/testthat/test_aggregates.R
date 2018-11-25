@@ -22,7 +22,7 @@ test_that("primary aggregates of SUT data work as expected", {
   primary_total_aggregates_sut <- UKEnergy2000mats %>%
     spread(key = matrix.name, value = matrix) %>%
     primary_aggregates(p_industries = p_industries, by = "Total",
-                       aggregate_primary_colname = "EX_total_agg.ktoe")
+                       aggregate_primary = "EX_total_agg.ktoe")
   expect_equivalent(primary_total_aggregates_sut %>% filter(Last.stage == "final") %>%
                       select("EX_total_agg.ktoe"), 93000)
   expect_equivalent(primary_total_aggregates_sut %>% filter(Last.stage == "useful") %>%
@@ -36,7 +36,7 @@ test_that("primary aggregates of SUT data work as expected", {
   primary_product_aggregates_sut <- UKEnergy2000mats %>%
     spread(key = matrix.name, value = matrix) %>%
     primary_aggregates(p_industries = p_industries, by = "Product",
-                       aggregate_primary_colname = "EX_product_agg.ktoe") %>%
+                       aggregate_primary = "EX_product_agg.ktoe") %>%
     select(Country, Year, Last.stage, Energy.type, EX_product_agg.ktoe) %>%
     gather(key = "matnames", value = "matvals", EX_product_agg.ktoe) %>%
     expand_to_tidy(drop = 0)
@@ -49,7 +49,7 @@ test_that("primary aggregates of SUT data work as expected", {
   primary_flow_aggregates_sut <- UKEnergy2000mats %>%
     spread(key = matrix.name, value = matrix) %>%
     primary_aggregates(p_industries = p_industries, by = "Flow",
-                       aggregate_primary_colname = "EX_flow_agg.ktoe") %>%
+                       aggregate_primary = "EX_flow_agg.ktoe") %>%
     select(Country, Year, Last.stage, Energy.type, EX_flow_agg.ktoe) %>%
     gather(key = "matnames", value = "matvals", EX_flow_agg.ktoe) %>%
     expand_to_tidy(drop = 0)

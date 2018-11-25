@@ -33,5 +33,6 @@ URL: https://github.com/MatthewHeun/Recca
 BugReports: https://github.com/MatthewHeun/Recca/issues
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat
 VignetteBuilder: knitr

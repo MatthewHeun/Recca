@@ -31,12 +31,12 @@
 primary_aggregates <- function(.sutdata,
                                # Vector of primary industries
                                p_industries,
-                               # Input columns
+                               # Input names
                                V = "V",
                                Y = "Y",
                                by = c("Total", "Product", "Flow"),
-                               # Output columns,
-                               aggregate_primary_colname = "EX_p.ktoe"){
+                               # Output names
+                               aggregate_primary = "EX_p.ktoe"){
 
   by <- match.arg(by)
   aggfuncs <- list(total = "sumall_byname", product = "rowsums_byname", flow = "colsums_byname")
@@ -48,7 +48,7 @@ primary_aggregates <- function(.sutdata,
     # VT_p - Y_p. This is TPES in product x industry matrix format
     VT_p_minus_Y_p <- difference_byname(VT_p, Y_p)
     agg_primary <- agg_func(VT_p_minus_Y_p)
-    list(agg_primary) %>% set_names(aggregate_primary_colname)
+    list(agg_primary) %>% set_names(aggregate_primary)
   }
   matsindf_apply(.sutdata, FUN = prim_func, V_mat = V, Y_mat = Y)
 }
@@ -82,12 +82,12 @@ primary_aggregates <- function(.sutdata,
 #' @export
 finaldemand_aggregates <- function(.sutdata,
                                    fd_sectors,
-                                   # Input columns
+                                   # Input names
                                    U = "U",
                                    Y = "Y",
                                    r_EIOU = "r_EIOU",
                                    by = c("Total", "Product", "Sector"),
-                                   # Output columns
+                                   # Output names
                                    net_aggregate_demand = "EX_fd_net.ktoe",
                                    gross_aggregate_demand = "EX_fd_gross.ktoe"){
 
@@ -139,13 +139,13 @@ finaldemand_aggregates <- function(.sutdata,
 #' @export
 finaldemand_aggregates_with_units <- function(.sutdata,
                                               fd_sectors,
-                                              # Input columns
+                                              # Input names
                                               U = "U",
                                               Y = "Y",
                                               r_EIOU = "r_EIOU",
                                               S_units = "S_units",
                                               by = c("Total", "Product", "Sector"),
-                                              # Output columns
+                                              # Output names
                                               net_aggregate_demand,
                                               gross_aggregate_demand){
 
@@ -221,7 +221,7 @@ finaldemand_aggregates_with_units <- function(.sutdata,
 #'   group_by(Country, Year, Energy.type, Last.stage) %>%
 #'   primary_aggregates_IEA(p_industries = r_ind)
 primary_aggregates_IEA <- function(.ieadata,
-                                   # Input information
+                                   # Input names
                                    flow = "Flow",
                                    flow_aggregation_point = "Flow.aggregation.point",
                                    energy = "EX.ktoe",
@@ -229,7 +229,7 @@ primary_aggregates_IEA <- function(.ieadata,
                                                     "Imports", "Exports", "International aviation bunkers",
                                                     "International marine bunkers", "Stock changes"),
                                    eiou = "Energy industry own use",
-                                   # Output information
+                                   # Output name
                                    aggregate_primary = "EX_p_IEA.ktoe"){
   flow <- as.name(flow)
   flow_aggregation_point <- as.name(flow_aggregation_point)
@@ -298,14 +298,14 @@ primary_aggregates_IEA <- function(.ieadata,
 #'   filter(Last.stage %in% c("final", "useful")) %>%
 #'   finaldemand_aggregates_IEA()
 finaldemand_aggregates_IEA <- function(.ieadata,
-                                       # Input information
+                                       # Input names
                                        ledger_side = "Ledger.side",
                                        flow_aggregation_point = "Flow.aggregation.point",
                                        flow = "Flow",
                                        energy = "EX.ktoe",
                                        consumption = "Consumption",
                                        eiou = "Energy industry own use",
-                                       # Output information
+                                       # Output names
                                        aggregate_net_finaldemand = "EX_fd_net_IEA.ktoe",
                                        aggregate_gross_finaldemand = "EX_fd_gross_IEA.ktoe"){
   ledger_side <- as.name(ledger_side)
