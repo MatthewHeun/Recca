@@ -93,7 +93,12 @@ test_that("new_k_ps works as expected", {
 
   io_mats <- perfectsub_mats %>% calc_io_mats()
   K <- io_mats$K[[1]]
-  Recca:::test_against_file(K, "expected_K.rds", update = FALSE)
+  expect_equal(K["FF", "FF extraction"], 1)
+  expect_equal(K["FF elec", "Buildings"], 0.2725225225)
+  expect_equal(K["FF elec", "Electric transport"], 0.0251256281)
+  expect_equal(K["Ren elec", "Electric transport"], 0.97487437)
+  expect_equal(K["Ren elec", "Solar and wind plants"], 0.03)
+  expect_equal(K["Rens", "Solar and wind plants"], 0.97)
 
   # Figure out a new column vector for k_prime.
   k_prime_vec <- K[, "Electric transport", drop = FALSE]
@@ -108,8 +113,20 @@ test_that("new_k_ps works as expected", {
       k_prime = make_list(k_prime_vec, n = 1)
     )
   # Now do the calculation of U_prime and V_prime matrices.
-  new_UV <- new_k_ps(io_mats)
-  Recca:::test_against_file(new_UV, "expected_new_UV_from_new_k_ps.rds", update = FALSE)
+  new_UV <- io_mats %>%
+    new_k_ps() %>%
+    select(Country, Year, Energy.type, Last.stage, U_prime, V_prime) %>%
+    gather(key = "matnames", value = "matvals", U_prime, V_prime) %>%
+    expand_to_tidy(drop = 0)
+  expect_equivalent(new_UV %>%
+                      filter(Energy.type == "E.ktoe", Last.stage == "services", matnames == "U_prime", rownames == "FF elec", colnames == "Buildings") %>% select(matvals) %>% unlist(),
+                    12.1)
+  expect_equivalent(new_UV %>%
+                      filter(Energy.type == "E.ktoe", Last.stage == "services", matnames == "V_prime", rownames == "Buildings", colnames == "Bldg services") %>% select(matvals) %>% unlist(),
+                    25.2)
+  expect_equivalent(new_UV %>%
+                      filter(Energy.type == "E.ktoe", Last.stage == "services", matnames == "V_prime", rownames == "Resources - Rens", colnames == "Rens") %>% select(matvals) %>% unlist(),
+                    49.75)
 })
 
 
@@ -139,13 +156,13 @@ test_that("new_R works as expected", {
     mutate(
       R_prime = R
     ) %>%
-    # Now call the new_R function which will calculate
+    # Now call the new_R_ps function which will calculate
     # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
     # given R_prime.
-    # Each of the *_prime matrices should be 2x their originals,
-    # because R_prime is 2x relative to R.
+    # Each of the *_prime matrices should be same as their originals,
+    # because R_prime is equal to R.
     new_R_ps() %>%
-    # Clean the rows of U_prime, because they contain Products that are not present in U.
+    # Clean the rows of U_prime and Y_prime, because they contain Products that are not present in U.
     mutate(
       U_prime = clean_byname(U_prime, margin = 1),
       Y_prime = clean_byname(Y_prime, margin = 1)
@@ -160,9 +177,17 @@ test_that("new_R works as expected", {
 
   # Test that everything worked as expected
   for (i in 1:2) {
-    expect_equal(newRsameasoldR$U_prime[[i]], newRsameasoldR$expected_U[[i]])
-    expect_equal(newRsameasoldR$V_prime[[i]], newRsameasoldR$expected_V[[i]])
-    expect_equal(newRsameasoldR$Y_prime[[i]], newRsameasoldR$expected_Y[[i]])
+    expect_true(equal_byname(newRsameasoldR$U_prime[[i]], newRsameasoldR$expected_U[[i]]))
+    expect_true(equal_byname(newRsameasoldR$V_prime[[i]], newRsameasoldR$expected_V[[i]]))
+    expect_true(equal_byname(newRsameasoldR$Y_prime[[i]], newRsameasoldR$expected_Y[[i]]))
+    # expect_equivalent(newRsameasoldR$U_prime[[i]], newRsameasoldR$expected_U[[i]])
+    # expect_equivalent(newRsameasoldR$V_prime[[i]], newRsameasoldR$expected_V[[i]])
+    # expect_equivalent(newRsameasoldR$Y_prime[[i]], newRsameasoldR$expected_Y[[i]])
+    if (i == 2) {
+      print("")
+      print(newRsameasoldR$Y_prime[[2]])
+      print(newRsameasoldR$expected_Y[[2]])
+    }
   }
 
   doubleR <- UKEnergy2000mats %>%
@@ -242,3 +267,4 @@ test_that("new_R works as expected", {
     expect_true(is.na(WithDiffUnits$Y_prime[[i]]))
   }
 })
+
