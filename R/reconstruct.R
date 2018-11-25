@@ -372,12 +372,9 @@ new_R_ps <- function(.sutdata = NULL,
 
       # Check convergence condition
       # Calculate only as many differences as necessary.
-      Y_OK <- difference_byname(Y_prime, Y_prime_prev) %>% iszero_byname(tol = tol)
-      if (Y_OK) {
-        V_OK <- difference_byname(V_prime, V_prime_prev) %>% iszero_byname(tol = tol)
-        if (V_OK) {
-          U_OK <- difference_byname(U_prime, U_prime_prev) %>% iszero_byname(tol = tol)
-          if (U_OK) {
+      if (difference_byname(Y_prime, Y_prime_prev) %>% iszero_byname(tol = tol)) {
+        if (difference_byname(V_prime, V_prime_prev) %>% iszero_byname(tol = tol)) {
+          if (difference_byname(U_prime, U_prime_prev) %>% iszero_byname(tol = tol)) {
             # If we get here, all of U_prime, V_prime, and Y_prime
             # are same as their respective *_prev values within tol.
             # This is the stopping condition, so break.

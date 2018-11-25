@@ -180,15 +180,6 @@ test_that("new_R works as expected", {
     expect_true(equal_byname(newRsameasoldR$U_prime[[i]], newRsameasoldR$expected_U[[i]]))
     expect_true(equal_byname(newRsameasoldR$V_prime[[i]], newRsameasoldR$expected_V[[i]]))
     expect_true(equal_byname(newRsameasoldR$Y_prime[[i]], newRsameasoldR$expected_Y[[i]]))
-    # expect_equivalent(newRsameasoldR$U_prime[[i]], newRsameasoldR$expected_U[[i]])
-    # expect_equivalent(newRsameasoldR$V_prime[[i]], newRsameasoldR$expected_V[[i]])
-    # expect_equivalent(newRsameasoldR$Y_prime[[i]], newRsameasoldR$expected_Y[[i]])
-    if (i == 2) {
-      print("")
-      print(newRsameasoldR$Y_prime[[2]])
-      print(newRsameasoldR$expected_Y[[2]])
-      print(equal_byname(newRsameasoldR$Y_prime[[2]], newRsameasoldR$expected_Y[[2]]))
-    }
   }
 
   doubleR <- UKEnergy2000mats %>%
