@@ -187,6 +187,7 @@ test_that("new_R works as expected", {
       print("")
       print(newRsameasoldR$Y_prime[[2]])
       print(newRsameasoldR$expected_Y[[2]])
+      print(equal_byname(newRsameasoldR$Y_prime[[2]], newRsameasoldR$expected_Y[[2]]))
     }
   }
 
