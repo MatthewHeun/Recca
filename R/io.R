@@ -4,92 +4,65 @@
 #
 
 
-#' Calculate various input-output matrices
+#' Calculate several input-output matrices
 #'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
-#' @param U_colname the name of the column in \code{.sutdata} containing Use (\code{U}) matrices.
-#' Default is "\code{U}".
-#' @param V_colname the name of the column in \code{.sutdata} containing Make (\code{V}) matrices.
-#' Default is "\code{V}".
-#' @param Y_colname the name of the column in \code{.sutdata} containing final demand (\code{Y}) matrices.
-#' Default is "\code{Y}".
-#' @param S_units the name of the column in \code{.sutdata} containing unit summation (\code{S_units}) matrices.
-#' Default is "\code{S_units}".
-#' @param y_colname the name of the output column containing \code{y} vectors.
-#' Default is "\code{y}".
-#' \code{y} is calculated by \code{rowsums(Y)}.
-#' @param q_colname the name of the output column containing \code{q} vectors.
-#' Default is "\code{q}".
-#' \code{q} is calculated by \code{rowsums(U) + y}.
-#' @param f_colname the name of the output column containing \code{f} vectors.
-#' Default is "\code{f}".
-#' \code{f} is calculated by \code{colsums(U)}.
-#' @param g_colname the name of the output column containing \code{g} vectors.
-#' Default is "\code{g}".
-#' \code{g} is calculated by \code{rowsums(V)}.
-#' @param W_colname the name of the output column containing \code{W} matrices.
-#' Default is "\code{W}".
-#' \code{W} is calculated by \code{transpose(V) - U}.
-#' @param K_colname the name of the output column containing \code{K} matrices.
-#' Default is "\code{K}".
-#' \code{K} is calculated by \code{U * f_hat_inv}.
-#' @param Z_colname the name of the output column containing \code{Z} matrices.
-#' Default is "\code{Z}".
-#' \code{Z} is calculated by \code{U * g_hat_inv}.
-#' @param C_colname the name of the output column containing \code{C} matrices.
-#' \code{C} is calculated by \code{transpose(V) * g_hat_inv}.
-#' Default is "\code{C}".
-#' @param D_colname the name of the output column containing \code{D} matrices.
-#' Default is "\code{D}".
-#' \code{D} is calculated by \code{V * q_hat_inv}.
-#' @param A_colname the name of the output column containing \code{A} matrices.
-#' Default is "\code{A}".
-#' \code{A} is calculated by \code{Z * D}.
-#' @param L_ixp_colname the name of the output column containing industry-by-product L matrices.
-#' Default is "\code{L_ixp}".
-#' \code{L_ixp} is calculated by \code{D * L_pxp}.
-#' @param L_pxp_colname the name of the output column containing product-by-product L matrices.
-#' Default is "\code{L_pxp}".
-#' \code{L_pxp} is calculated by \code{(I - Z*D)^-1}.
+#' @param U use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".
+#' @param V make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "\code{V}".
+#' @param Y final demand (\code{Y}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Y}".
+#' @param S_units \code{S_units} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{S_units}".
+#' @param y final demand (\code{y}) vector or name of the column in \code{.sutmats} that contains same. Default is "\code{y}".
+#'        \code{y} is calculated by \code{rowsums(Y)}.
+#' @param q \code{q} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{q}".
+#'        \code{q} is calculated by \code{rowsums(U) + y}.
+#' @param f \code{f} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{r}".
+#'        \code{f} is calculated by \code{colsums(U)}.
+#' @param g \code{g} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{g}".
+#'        \code{g} is calculated by \code{rowsums(V)}.
+#' @param W \code{W} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{W}".
+#'        \code{W} is calculated by \code{transpose(V) - U}.
+#' @param K \code{K} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{K}".
+#'        \code{K} is calculated by \code{U * f_hat_inv}.
+#' @param Z \code{Z} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Z}".
+#'        \code{W} is calculated by \code{U * g_hat_inv}.
+#' @param C \code{C} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{C}".
+#'        \code{C} is calculated by \code{transpose(V) * g_hat_inv}.
+#' @param D \code{D} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{D}".
+#'        \code{D} is calculated by \code{V * q_hat_inv}.
+#' @param A \code{A} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{A}".
+#'        \code{A} is calculated by \code{Z * D}.
+#' @param L_ixp \code{L_ixp} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{L_ixp}".
+#'        \code{L_ixp} is calculated by \code{D * L_pxp}.
+#' @param L_pxp \code{L_pxp} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{L_pxp}".
+#'        \code{L_pxp} is calculated by \code{(I - Z*D)^-1}.
 #'
-#' @return \code{.sutdata} with additional columns:
-#' \code{y_colname}, \code{q_colname}, \code{g_colname}, \code{W_colname},
-#' \code{Z_colname}, \code{D_colname}, \code{K_colname}, \code{C_colname}, \code{A_colname},
-#' \code{L_ixp_colname}, and \code{L_pxp_colname}.
+#' @return a list or data frame containing input-output matrices
 #'
 #' @export
 calc_io_mats <- function(.sutdata = NULL,
-                         # Input columns
-                         U_colname = "U", V_colname = "V", Y_colname = "Y", S_units = "S_units",
-                         # Output columns
-                         y_colname = "y", q_colname = "q",
-                         f_colname = "f", g_colname = "g",
-                         W_colname = "W", K_colname = "K",
-                         Z_colname = "Z", C_colname = "C", D_colname = "D", A_colname = "A",
-                         L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp"){
-  io_func <- function(U, V, Y, S_units = NULL){
-    # Clean the matrices, thereby avoiding situations where rows or columns of zeroes
-    # cause a _hat_inv step to fail due to inverting a matrix with a row or column of zeroes.
-    # U <- clean_byname(U, margin = c(1,2), clean_value = 0)
-    # V <- clean_byname(V, margin = c(1,2), clean_value = 0)
-    # Y <- clean_byname(Y, margin = c(1,2), clean_value = 0)
-    yqfgW <- calc_yqfgW(U_colname = U, V_colname = V, Y_colname = Y, S_units = S_units,
-                        y_colname = y_colname, q_colname = q_colname,
-                        f_colname = f_colname, g_colname = g_colname,
-                        W_colname = W_colname)
-    q <- yqfgW$q
-    f <- yqfgW$f
-    g <- yqfgW$g
-    ZKCDA <- calc_A(U_colname = U, V_colname = V, q_colname = q, f_colname = f, g_colname = g,
-                    Z_colname = Z_colname, C_colname = C_colname, D_colname = D_colname, A_colname = A_colname)
-    D <- ZKCDA$D
-    A <- ZKCDA$A
-    L <- calc_L(D_colname = D, A_colname = A,
-                L_ixp_colname = L_ixp_colname, L_pxp_colname = L_pxp_colname)
+                         # Input names
+                         U = "U", V = "V", Y = "Y", S_units = "S_units",
+                         # Output names
+                         y = "y", q = "q", f = "f", g = "g", W = "W", K = "K",
+                         Z = "Z", C = "C", D = "D", A = "A", L_ixp = "L_ixp", L_pxp = "L_pxp"){
+  io_func <- function(U_mat, V_mat, Y_mat, S_units_mat = NULL){
+    yqfgW <- calc_yqfgW(U_colname = U_mat, V_colname = V_mat, Y_colname = Y_mat, S_units = S_units_mat,
+                        y_colname = y, q_colname = q,
+                        f_colname = f, g_colname = g,
+                        W_colname = W)
+    q_vec <- yqfgW[[q]]
+    f_vec <- yqfgW[[f]]
+    g_vec <- yqfgW[[g]]
+    ZKCDA <- calc_A(U_colname = U_mat, V_colname = V_mat, q_colname = q_vec, f_colname = f_vec, g_colname = g_vec,
+                    Z_colname = Z, C_colname = C, D_colname = D, A_colname = A)
+    D_mat <- ZKCDA[[D]]
+    A_mat <- ZKCDA[[A]]
+    L_mats <- calc_L(D_colname = D_mat, A_colname = A_mat,
+                     L_ixp_colname = L_ixp, L_pxp_colname = L_pxp)
     # Set names and return
-    c(yqfgW, ZKCDA, L) %>% magrittr::set_names(c(names(yqfgW), names(ZKCDA), names(L)))
+    c(yqfgW, ZKCDA, L_mats) %>% magrittr::set_names(c(names(yqfgW), names(ZKCDA), names(L_mats)))
   }
-  matsindf_apply(.sutdata, FUN = io_func, U = U_colname, V = V_colname, Y = Y_colname, S_units = S_units)
+  matsindf_apply(.sutdata, FUN = io_func, U_mat = U, V_mat = V, Y_mat = Y, S_units_mat = S_units)
 }
 
 
@@ -97,7 +70,7 @@ calc_io_mats <- function(.sutdata = NULL,
 #'
 #' Note that a necessary condition for calculating the \code{f} and \code{g} vectors is that
 #' the U_bar and V_bar matrices should have only one entry per column and row, respectively,
-#' meaning that all products input into a given industry need to be unit homogeneous
+#' meaning that all products entering a given industry need to be unit homogeneous
 #' before we can calculate the \code{f} vector and
 #' all products of a given industry are measured in the same units
 #' before we can calculate the \code{g} vector.

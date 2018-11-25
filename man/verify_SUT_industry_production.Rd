@@ -4,8 +4,8 @@
 \alias{verify_SUT_industry_production}
 \title{Confirm that all Industries in an SUT-style data frame produce energy.}
 \usage{
-verify_SUT_industry_production(.sutmats = NULL, U_colname = "U",
-  V_colname = "V", industry_production_OK = ".industry_production_OK",
+verify_SUT_industry_production(.sutmats = NULL, U = "U", V = "V",
+  industry_production_OK = ".industry_production_OK",
   problem_industries = ".problem_industries")
 }
 \arguments{
@@ -13,9 +13,9 @@ verify_SUT_industry_production(.sutmats = NULL, U_colname = "U",
 (typically \code{Country}, \code{Year}, \code{Ledger.side}, \code{Product}, etc.)
 and columns of SUT matrices, including \code{U} and \code{V}.}
 
-\item{U_colname}{the name of the column of use matrices. Default is "\code{U}".}
+\item{U}{use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".}
 
-\item{V_colname}{the name of the column of make matrices. Default is "\code{V}".}
+\item{V}{make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "\code{V}".}
 
 \item{industry_production_OK}{the name of the column in the output that
 tells whether all industries produce something. Default is "\code{.industry_production_OK}".}

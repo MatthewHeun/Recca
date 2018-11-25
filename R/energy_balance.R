@@ -39,11 +39,11 @@
 #'                             spread(key = matrix.name, value = matrix),
 #'                           tol = 1e-4)
 verify_SUT_energy_balance <- function(.sutmats = NULL,
-                                      # Input column names
+                                      # Input names
                                       U = "U", V = "V", Y = "Y",
                                       # Tolerance
                                       tol = 1e-6,
-                                      # Output column name
+                                      # Output name
                                       SUT_energy_balance = ".SUT_energy_balance"){
   verify_func <- function(U_mat, V_mat, Y_mat){
     U_sums <- rowsums_byname(U_mat)
@@ -81,13 +81,13 @@ verify_SUT_energy_balance <- function(.sutmats = NULL,
 #'
 #' @param .sutmats an SUT-style data frame containing columns
 #' \code{U}, \code{V}, \code{Y}, and \code{S_units}.
-#' @param U the name of the column that contains \code{U} matrices. Default is "\code{U}".
-#' @param V the name of the column that contains \code{V} matrices. Default is "\code{V}".
-#' @param Y the name of the column that contains \code{Y} matrices. Default is "\code{Y}".
-#' @param S_units the name of the column that contains \code{S_units} matrices. Default is "\code{S_units}".
+#' @param U use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".
+#' @param V make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "\code{V}".
+#' @param Y final demand (\code{Y}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Y}".
+#' @param S_units \code{S_units} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{S_units}".
 #' @param tol the maximum amount by which energy can be out of balance. Default is \code{1e-6}.
-#' @param SUT_prod_energy_balance the name of the output column that tells whether product balance is OK. Default is "\code{.SUT_prod_energy_balance}"
-#' @param SUT_ind_energy_balance the name of the output column that tells whether industry balance is OK. Default is "\code{.SUT_ind_energy_balance}"
+#' @param SUT_prod_energy_balance the name for booleans telling if product energy is in balance. Default is "\code{.SUT_prod_energy_balance}".
+#' @param SUT_ind_energy_balance the name for booleans telling if product energy is in balance. Default is "\code{.SUT_inds_energy_balance}".
 #'
 #' @return \code{.sutmats} with additional columns.
 #'
@@ -98,11 +98,11 @@ verify_SUT_energy_balance <- function(.sutmats = NULL,
 #' verify_SUT_energy_balance_with_units(UKEnergy2000mats %>%
 #'                                        spread(key = matrix.name, value = matrix))
 verify_SUT_energy_balance_with_units <- function(.sutmats = NULL,
-                                                 # Input column names
+                                                 # Input names
                                                  U = "U", V = "V", Y = "Y", S_units = "S_units",
                                                  # Tolerance
                                                  tol = 1e-6,
-                                                 # Output column names
+                                                 # Output names
                                                  SUT_prod_energy_balance = ".SUT_prod_energy_balance",
                                                  SUT_ind_energy_balance = ".SUT_ind_energy_balance"){
   verify_func <- function(U, V, Y, S_units){
@@ -144,8 +144,8 @@ verify_SUT_energy_balance_with_units <- function(.sutmats = NULL,
 #' @param .sutmats an SUT-style data frame containing metadata columns
 #' (typically \code{Country}, \code{Year}, \code{Ledger.side}, \code{Product}, etc.)
 #' and columns of SUT matrices, including \code{U} and \code{V}.
-#' @param U_colname the name of the column of use matrices. Default is "\code{U}".
-#' @param V_colname the name of the column of make matrices. Default is "\code{V}".
+#' @param U use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".
+#' @param V make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "\code{V}".
 #' @param industry_production_OK the name of the column in the output that
 #'        tells whether all industries produce something. Default is "\code{.industry_production_OK}".
 #' @param problem_industries the name of the column in the output that
@@ -161,17 +161,17 @@ verify_SUT_energy_balance_with_units <- function(.sutmats = NULL,
 #'                                  spread(key = matrix.name, value = matrix))
 verify_SUT_industry_production <- function(.sutmats = NULL,
                                            # Input column names
-                                           U_colname = "U", V_colname = "V",
+                                           U = "U", V = "V",
                                            # Output column names
                                            industry_production_OK = ".industry_production_OK",
                                            problem_industries = ".problem_industries"){
-  verify_func <- function(U, V){
-    check <- rowsums_byname(V) %>% complete_rows_cols(mat = transpose_byname(U), margin = 1)
+  verify_func <- function(U_mat, V_mat){
+    check <- rowsums_byname(V_mat) %>% complete_rows_cols(mat = transpose_byname(U_mat), margin = 1)
     OK <- !any(check == 0)
     problems <- rownames(check)[which(check == 0)]
     list(OK, problems) %>% set_names(c(industry_production_OK, problem_industries))
   }
-  Out <- matsindf_apply(.sutmats, FUN = verify_func, U = U_colname, V = V_colname)
+  Out <- matsindf_apply(.sutmats, FUN = verify_func, U_mat = U, V_mat = V)
   if (!all(Out[[industry_production_OK]] %>% as.logical())) {
     warning(paste("There are some industries that consume but do not produce energy. See column", industry_production_OK))
   }

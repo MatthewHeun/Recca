@@ -99,7 +99,7 @@ calc_GH <- function(.iomats = NULL,
 #' @param g final demand (\code{g}) vector or name of the column in \code{.iomats} containing same. Default is "\code{g}".
 #' @param W product-by-industry value added (\code{W}) matrix or name of the column in \code{.iomats} containing same. Default is "\code{W}".
 #' @param U_EIOU energy industry own use matrix or name of the column in \code{.iomats} containing same. Default is "\code{U_EIOU}".
-#' @param E_colname the name for the \code{E} matrix on output. Default is "\code{E}".
+#' @param E the name for the \code{E} matrix on output. Default is "\code{E}".
 #'        \code{E} is calculated by \code{W * g_hat_inv}.
 #'
 #' @return list or data frame containing \code{E} matrices

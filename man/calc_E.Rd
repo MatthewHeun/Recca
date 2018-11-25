@@ -17,7 +17,7 @@ calc_E(.iomats = NULL, g = "g", W = "W", U_EIOU = "U_EIOU",
 
 \item{U_EIOU}{energy industry own use matrix or name of the column in \code{.iomats} containing same. Default is "\code{U_EIOU}".}
 
-\item{E_colname}{the name for the \code{E} matrix on output. Default is "\code{E}".
+\item{E}{the name for the \code{E} matrix on output. Default is "\code{E}".
 \code{E} is calculated by \code{W * g_hat_inv}.}
 }
 \value{
