@@ -53,8 +53,8 @@ calc_io_mats <- function(.sutdata = NULL,
     q_vec <- yqfgW[[q]]
     f_vec <- yqfgW[[f]]
     g_vec <- yqfgW[[g]]
-    ZKCDA <- calc_A(U_colname = U_mat, V_colname = V_mat, q_colname = q_vec, f_colname = f_vec, g_colname = g_vec,
-                    Z_colname = Z, C_colname = C, D_colname = D, A_colname = A)
+    ZKCDA <- calc_A(U = U_mat, V = V_mat, q = q_vec, f = f_vec, g = g_vec,
+                    Z = Z, C = C, D = D, A = A)
     D_mat <- ZKCDA[[D]]
     A_mat <- ZKCDA[[A]]
     L_mats <- calc_L(D_colname = D_mat, A_colname = A_mat,
@@ -145,25 +145,24 @@ calc_yqfgW <- function(.sutdata = NULL,
 #' Calculate \code{Z}, \code{D}, \code{C}, and \code{A} matrices
 #'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
-#' @param U_colname the name of the column in \code{.sutdata} containing Use (\code{U}) matrices.
-#' @param V_colname the name of the column in \code{.sutdata} containing Make (\code{V}) matrices.
-#' @param q_colname the name of the column in \code{.sutdata} containing \code{q} vectors.
-#' @param f_colname the name of the column in \code{.sutdata} containing \code{f} vectors.
-#' @param g_colname the name of the column in \code{.sutdata} containing \code{g} vectors.
-#' @param Z_colname the name of the output column containing \code{Z} matrices.
-#' \code{Z} is calculated by \code{U * g_hat_inv}.
-#' @param K_colname the name of the output column containing \code{K} matrices.
-#' \code{K} is calculated by \code{U * f_hat_inv}.
-#' @param C_colname the name of the output column containing \code{C} matrices.
-#' \code{C} is calculated by \code{transpose(V) * g_hat_inv}.
-#' @param D_colname the name of the output column containing \code{D} matrices.
-#' \code{D} is calculated by \code{V * q_hat_inv}.
-#' @param A_colname the name of the output column containing \code{A} matrices.
-#' \code{A} is calculated by \code{Z * D}.
+#' @param U use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".
+#' @param V make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "\code{V}".
+#' @param q \code{q} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{q}".
+#' @param f \code{f} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{r}".
+#' @param g \code{g} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{g}".
+#' @param Z \code{Z} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Z}".
+#'        \code{W} is calculated by \code{U * g_hat_inv}.
+#' @param K \code{K} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{K}".
+#'        \code{K} is calculated by \code{U * f_hat_inv}.
+#' @param C \code{C} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{C}".
+#'        \code{C} is calculated by \code{transpose(V) * g_hat_inv}.
+#' @param D \code{D} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{D}".
+#'        \code{D} is calculated by \code{V * q_hat_inv}.
+#' @param A \code{A} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{A}".
+#'        \code{A} is calculated by \code{Z * D}.
 #'
-#' @return \code{.sutdata} with columns \code{Z_colname},
-#' \code{K_colname}, \code{C_colname},
-#' \code{D_colname}, and \code{A_colname} added
+#' @return a list or data frame containing \code{Z},
+#' \code{K}, \code{C}, \code{D}, and \code{A} matrices.
 #'
 #' @importFrom matsbyname hatinv_byname
 #' @importFrom matsbyname invert_byname
@@ -173,40 +172,38 @@ calc_yqfgW <- function(.sutdata = NULL,
 #'
 #' @export
 calc_A <- function(.sutdata = NULL,
-                   # Input columns
-                   U_colname = "U", V_colname = "V",
-                   q_colname = "q", f_colname = "f", g_colname = "g",
-                   # Output columns
-                   Z_colname = "Z", K_colname = "K", C_colname = "C",
-                   D_colname = "D", A_colname = "A"){
-  A_func <- function(U, V, q, fvec, g){
+                   # Input names
+                   U = "U", V = "V", q = "q", f = "f", g = "g",
+                   # Output names
+                   Z = "Z", K = "K", C = "C", D = "D", A = "A"){
+  A_func <- function(U_mat, V_mat, q_vec, f_vec, g_vec){
     # The calculation of C and Z will fail when g contains NA values.
     # NA values can be created when V has any industry whose outputs are unit inhomogeneous.
     # Test here if any entry in g is NA.
     # If so, the value for C will be assigned to NA.
-    if (any(is.na(g))) {
-      C_val <- NA_real_
-      Z_val <- NA_real_
+    if (any(is.na(g_vec))) {
+      C_mat <- NA_real_
+      Z_mat <- NA_real_
     } else {
-      C_val <- matrixproduct_byname(transpose_byname(V), hatinv_byname(g))
-      Z_val <- matrixproduct_byname(U, hatinv_byname(g))
+      C_mat <- matrixproduct_byname(transpose_byname(V_mat), hatinv_byname(g_vec))
+      Z_mat <- matrixproduct_byname(U_mat, hatinv_byname(g_vec))
     }
     # The calculation of K will fail when f contains NA values.
     # NA values can be created when U has any industry whose inputs are inhomogeneous.
     # Test here if any entry in f is NA.
     # If so, the value for K will be assigned NA.
-    if (any(is.na(fvec))) {
-      K_val <- NA_real_
+    if (any(is.na(f_vec))) {
+      K_mat <- NA_real_
     } else {
-      K_val <- matrixproduct_byname(U, hatinv_byname(fvec))
+      K_mat <- matrixproduct_byname(U_mat, hatinv_byname(f_vec))
     }
-    D_val <- matrixproduct_byname(V, hatinv_byname(q))
-    A_val <- matrixproduct_byname(Z_val, D_val)
+    D_mat <- matrixproduct_byname(V_mat, hatinv_byname(q_vec))
+    A_mat <- matrixproduct_byname(Z_mat, D_mat)
     # Put all output matrices in a list and return it.
-    list(Z_val, K_val, C_val, D_val, A_val) %>%
-      magrittr::set_names(c(Z_colname, K_colname, C_colname, D_colname, A_colname))
+    list(Z_mat, K_mat, C_mat, D_mat, A_mat) %>%
+      magrittr::set_names(c(Z, K, C, D, A))
   }
-  matsindf_apply(.sutdata, FUN = A_func, U = U_colname, V = V_colname, q = q_colname, fvec = f_colname, g = g_colname)
+  matsindf_apply(.sutdata, FUN = A_func, U_mat = U, V_mat = V, q_vec = q, f_vec = f, g_vec = g)
 }
 
 
