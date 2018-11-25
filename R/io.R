@@ -57,8 +57,8 @@ calc_io_mats <- function(.sutdata = NULL,
                     Z = Z, C = C, D = D, A = A)
     D_mat <- ZKCDA[[D]]
     A_mat <- ZKCDA[[A]]
-    L_mats <- calc_L(D_colname = D_mat, A_colname = A_mat,
-                     L_ixp_colname = L_ixp, L_pxp_colname = L_pxp)
+    L_mats <- calc_L(D = D_mat, A = A_mat,
+                     L_ixp = L_ixp, L_pxp = L_pxp)
     # Set names and return
     c(yqfgW, ZKCDA, L_mats) %>% magrittr::set_names(c(names(yqfgW), names(ZKCDA), names(L_mats)))
   }
@@ -162,7 +162,7 @@ calc_yqfgW <- function(.sutdata = NULL,
 #'        \code{A} is calculated by \code{Z * D}.
 #'
 #' @return a list or data frame containing \code{Z},
-#' \code{K}, \code{C}, \code{D}, and \code{A} matrices.
+#' \code{K}, \code{C}, \code{D}, and \code{A} matrices
 #'
 #' @importFrom matsbyname hatinv_byname
 #' @importFrom matsbyname invert_byname
@@ -210,28 +210,27 @@ calc_A <- function(.sutdata = NULL,
 #' Calculates total requirements matrices (\code{L_pxp} and \code{L_ixp})
 #'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
-#' @param D_colname the name of the column in \code{.sutdata} containing the \code{D} matrix.
-#' @param A_colname the name of the column in \code{.sutdata} containing the \code{A} matrix.
-#' @param L_ixp_colname the name of the output column containing the industry-by-product L matrix.
-#' \code{L_ixp} is calculated by \code{D * L_pxp}.
-#' @param L_pxp_colname the name of the output column containing the product-by-product L matrix.
-#' \code{L_pxp} is calculated by \code{(I - Z*D)^-1}.
+#' @param D \code{D} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{D}".
+#' @param A \code{A} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{A}".
+#' @param L_ixp \code{L_ixp} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{L_ixp}".
+#'        \code{L_ixp} is calculated by \code{D * L_pxp}.
+#' @param L_pxp \code{L_pxp} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{L_pxp}".
+#'        \code{L_pxp} is calculated by \code{(I - Z*D)^-1}.
 #'
-#' @return \code{.sutdata} with columns \code{L_ixp_colname} and \code{L_pxp_colname} added
+#' @return a list or data frame containing \code{L_pxp} and \code{L_ixp} matrices
 #'
 #' @importFrom matsbyname Iminus_byname
 #'
 #' @export
 calc_L <- function(.sutdata = NULL,
-                   # Input columns
-                   D_colname = "D", A_colname = "A",
-                   # Output columns
-                   L_pxp_colname = "L_pxp", L_ixp_colname = "L_ixp"){
-  L_func <- function(D, A){
-    L_pxp_val <- Iminus_byname(A) %>% invert_byname()
-    L_ixp_val <- matrixproduct_byname(D, L_pxp_val)
-    list(L_pxp_val, L_ixp_val) %>%
-      magrittr::set_names(c(L_pxp_colname, L_ixp_colname))
+                   # Input names
+                   D = "D", A = "A",
+                   # Output names
+                   L_pxp = "L_pxp", L_ixp = "L_ixp"){
+  L_func <- function(D_mat, A_mat){
+    L_pxp_mat <- Iminus_byname(A_mat) %>% invert_byname()
+    L_ixp_mat <- matrixproduct_byname(D_mat, L_pxp_mat)
+    list(L_pxp_mat, L_ixp_mat) %>% magrittr::set_names(c(L_pxp, L_ixp))
   }
-  matsindf_apply(.sutdata, FUN = L_func, D = D_colname, A = A_colname)
+  matsindf_apply(.sutdata, FUN = L_func, D_mat = D, A_mat = A)
 }

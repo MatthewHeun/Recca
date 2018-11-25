@@ -4,24 +4,24 @@
 \alias{calc_L}
 \title{Calculates total requirements matrices (\code{L_pxp} and \code{L_ixp})}
 \usage{
-calc_L(.sutdata = NULL, D_colname = "D", A_colname = "A",
-  L_pxp_colname = "L_pxp", L_ixp_colname = "L_ixp")
+calc_L(.sutdata = NULL, D = "D", A = "A", L_pxp = "L_pxp",
+  L_ixp = "L_ixp")
 }
 \arguments{
 \item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
 
-\item{D_colname}{the name of the column in \code{.sutdata} containing the \code{D} matrix.}
+\item{D}{\code{D} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{D}".}
 
-\item{A_colname}{the name of the column in \code{.sutdata} containing the \code{A} matrix.}
+\item{A}{\code{A} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{A}".}
 
-\item{L_pxp_colname}{the name of the output column containing the product-by-product L matrix.
+\item{L_pxp}{\code{L_pxp} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{L_pxp}".
 \code{L_pxp} is calculated by \code{(I - Z*D)^-1}.}
 
-\item{L_ixp_colname}{the name of the output column containing the industry-by-product L matrix.
+\item{L_ixp}{\code{L_ixp} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{L_ixp}".
 \code{L_ixp} is calculated by \code{D * L_pxp}.}
 }
 \value{
-\code{.sutdata} with columns \code{L_ixp_colname} and \code{L_pxp_colname} added
+a list or data frame containing \code{L_pxp} and \code{L_ixp} matrices
 }
 \description{
 Calculates total requirements matrices (\code{L_pxp} and \code{L_ixp})

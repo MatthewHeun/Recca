@@ -37,7 +37,7 @@ calc_A(.sutdata = NULL, U = "U", V = "V", q = "q", f = "f",
 }
 \value{
 a list or data frame containing \code{Z},
-\code{K}, \code{C}, \code{D}, and \code{A} matrices.
+\code{K}, \code{C}, \code{D}, and \code{A} matrices
 }
 \description{
 Calculate \code{Z}, \code{D}, \code{C}, and \code{A} matrices
