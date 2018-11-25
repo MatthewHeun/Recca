@@ -4,13 +4,13 @@
 \alias{verify_SUT_energy_balance_with_units}
 \title{Confirm that an SUT-style data frame conserves energy.}
 \usage{
-verify_SUT_energy_balance_with_units(.sutdata = NULL, U = "U",
+verify_SUT_energy_balance_with_units(.sutmats = NULL, U = "U",
   V = "V", Y = "Y", S_units = "S_units", tol = 1e-06,
   SUT_prod_energy_balance = ".SUT_prod_energy_balance",
   SUT_ind_energy_balance = ".SUT_ind_energy_balance")
 }
 \arguments{
-\item{.sutdata}{an SUT-style data frame containing columns
+\item{.sutmats}{an SUT-style data frame containing columns
 \code{U}, \code{V}, \code{Y}, and \code{S_units}.}
 
 \item{U}{the name of the column that contains \code{U} matrices. Default is "\code{U}".}
@@ -28,19 +28,19 @@ verify_SUT_energy_balance_with_units(.sutdata = NULL, U = "U",
 \item{SUT_ind_energy_balance}{the name of the output column that tells whether industry balance is OK. Default is "\code{.SUT_ind_energy_balance}"}
 }
 \value{
-\code{.sutdata} with additional columns.
+\code{.sutmats} with additional columns.
 }
 \description{
-If energy is in balance for every row, \code{.sutdata} is returned with two additional columns, and
+If energy is in balance for every row, \code{.sutmats} is returned with two additional columns, and
 execution returns to the caller.
 If energy balance is not observed for one or more rows,
 a warning is emitted, and
-columns named \code{SUT_prod_energy_blance} and \code{SUT_ind_energy_blance} are added to \code{.sutdata}.
+columns named \code{SUT_prod_energy_blance} and \code{SUT_ind_energy_blance} are added to \code{.sutmats}.
 \code{FALSE} indicates energy is not in balance.
 }
 \details{
 This function should be called
-for its side-effect of testing whether energy is in balance in \code{.sutdata}.
+for its side-effect of testing whether energy is in balance in \code{.sutmats}.
 
 Both product and industry energy balance are verified.
 Units (as supplied by the \code{S_units} matrix) are respected.
