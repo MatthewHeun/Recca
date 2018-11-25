@@ -371,11 +371,16 @@ new_R_ps <- function(.sutdata = NULL,
       Y_prime <- matrixproduct_byname(y_hat_prime, y_hat_inv_Y)
 
       # Check convergence condition
-      U_OK <- difference_byname(U_prime, U_prime_prev) %>% abs_byname() %>% compare_byname("<=", tol) %>% all()
-      V_OK <- difference_byname(V_prime, V_prime_prev) %>% abs_byname() %>% compare_byname("<=", tol) %>% all()
-      Y_OK <- difference_byname(Y_prime, Y_prime_prev) %>% abs_byname() %>% compare_byname("<=", tol) %>% all()
-      if (U_OK & V_OK & Y_OK) {
-        break
+      # Calculate only as many differences as necessary.
+      if (difference_byname(Y_prime, Y_prime_prev) %>% iszero_byname(tol = tol)) {
+        if (difference_byname(V_prime, V_prime_prev) %>% iszero_byname(tol = tol)) {
+          if (difference_byname(U_prime, U_prime_prev) %>% iszero_byname(tol = tol)) {
+            # If we get here, all of U_prime, V_prime, and Y_prime
+            # are same as their respective *_prev values within tol.
+            # This is the stopping condition, so break.
+            break
+          }
+        }
       }
 
       # Check to see if we have exceeded the maximum number of iterations
