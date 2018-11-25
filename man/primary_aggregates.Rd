@@ -17,9 +17,9 @@ columns of the final demand matrix (\code{Y}).
 Entries in \code{Y_p} will be subtracted from entries in \code{V_p} to obtain
 the total primary energy aggregate.}
 
-\item{V}{the name of the column in \code{.sutdata} containing make (\code{V}) matrices.}
+\item{V}{make (\code{V}) matrix or the name of the column in \code{.sutdata} containing same}
 
-\item{Y}{the name of the column in \code{.sutdata} containing final demand (\code{Y}) matrices.}
+\item{Y}{final demand (\code{Y}) matrix or the name of the column in \code{.sutdata} containing same}
 
 \item{by}{one of \code{Total}, \code{Product}, or \code{Flow} to indicate the desired aggregation:
 \itemize{
@@ -28,11 +28,10 @@ the total primary energy aggregate.}
   \item{\code{Flow}: aggregation by type of flow (Production, Imports, Exports, etc.)}
 }}
 
-\item{aggregate_primary_colname}{the name of the output column containing aggregates of primary energy.}
+\item{aggregate_primary}{the name for aggregates of primary energy on output}
 }
 \value{
-a data frame containing columns of
-the aggregate primary energy for each row of \code{.sutdata}.
+a list or data frame containing aggregate primary energy
 }
 \description{
 Calculates aggregate primary energy from a data frame of Supply-Use matrices.

@@ -13,18 +13,17 @@
 #'        columns of the final demand matrix (\code{Y}).
 #'        Entries in \code{Y_p} will be subtracted from entries in \code{V_p} to obtain
 #'        the total primary energy aggregate.
-#' @param V the name of the column in \code{.sutdata} containing make (\code{V}) matrices.
-#' @param Y the name of the column in \code{.sutdata} containing final demand (\code{Y}) matrices.
+#' @param V make (\code{V}) matrix or the name of the column in \code{.sutdata} containing same
+#' @param Y final demand (\code{Y}) matrix or the name of the column in \code{.sutdata} containing same
 #' @param by one of \code{Total}, \code{Product}, or \code{Flow} to indicate the desired aggregation:
 #' \itemize{
 #'   \item{\code{Total}: aggregation over both Product and Flow (the default)}
 #'   \item{\code{Product}: aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.)}
 #'   \item{\code{Flow}: aggregation by type of flow (Production, Imports, Exports, etc.)}
 #' }
-#' @param aggregate_primary_colname the name of the output column containing aggregates of primary energy.
+#' @param aggregate_primary the name for aggregates of primary energy on output
 #'
-#' @return a data frame containing columns of
-#' the aggregate primary energy for each row of \code{.sutdata}.
+#' @return a list or data frame containing aggregate primary energy
 #'
 #' @importFrom matsbyname select_cols_byname
 #'
@@ -63,20 +62,19 @@ primary_aggregates <- function(.sutdata,
 #'
 #' @param .sutdata a data frame with columns of matrices from a supply-use analysis.
 #' @param fd_sectors a vector of names of sectors in final demand.
-#' @param U the name of the column in \code{.sutdata} containing Use (\code{U}) matrices.
-#' @param Y the name of the column in \code{.sutdata} containing final demand (\code{Y}) matrices.
-#' @param r_EIOU the name of the colum that holds ratios of EIOU to total input for each Machine and Product.
+#' @param U use (\code{U}) matrix or name of the column in \code{.sutdata} containing same
+#' @param Y final demand (\code{Y}) matrix or name of the column in \code{.sutdata} containing same
+#' @param r_EIOU matrix of ratios of EIOU for the make (\code{U}) matrix or name of the column in \code{.sutdata} containing same
 #' @param by one of "Product", "Sector", or "Total" to indicate the desired aggregation:
 #' "Product" for aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.),
 #' "Sector" for aggregation by final demand sector (Agriculture/forestry, Domestic navigation, etc.), or
 #' "Total" for aggregation over both Product and Sector (the default).
-#' @param net_aggregate_demand the name of the output column containing aggregates of net energy demand.
-#' Each entry in this column is \code{sumall(Y_fd)}.
-#' @param gross_aggregate_demand the name of the output column containing aggregates of gross energy demand.
-#' Each entry in this column is calculated by \code{sumall(Y_fd)} + \code{sumall(U_EIOU)}.
+#' @param net_aggregate_demand the name of net energy demand on output.
+#' Each entry is \code{sumall(Y_fd)}.
+#' @param gross_aggregate_demand the name of gross energy demand on output.
+#' Each entry is calculated by \code{sumall(Y_fd)} + \code{sumall(U_EIOU)}.
 #'
-#' @return \code{.sutdata} with columns \code{net_aggregate_demand} and
-#' \code{gross_aggregate_demand} added
+#' @return a list or data frame containing \code{net_aggregate_demand} and \code{gross_aggregate_demand}
 #'
 #' @importFrom matsbyname elementproduct_byname
 #' @importFrom matsbyname select_cols_byname
@@ -122,21 +120,19 @@ finaldemand_aggregates <- function(.sutdata,
 #'
 #' @param .sutdata a data frame with columns of matrices from a supply-use analysis.
 #' @param fd_sectors a vector of names of sectors in final demand.
-#' @param U the name of the column in \code{.sutdata} containing Use (\code{U}) matrices.
-#' @param Y the name of the column in \code{.sutdata} containing final demand (\code{Y}) matrices.
-#' @param r_EIOU the name of the column that holds ratios of EIOU to total input for each Machine and Product.
+#' @param U use (\code{U}) matrix or name of the column in \code{.sutdata} containing same
+#' @param Y final demand (\code{Y}) matrix or name of the column in \code{.sutdata} containing same
+#' @param r_EIOU matrix of ratios of EIOU for the make (\code{U}) matrix or name of the column in \code{.sutdata} containing same
 #' @param S_units the name of the column in \code{.sutdata} containing \code{S_units} matrices.
 #' @param by one of "Product", "Sector", or "Total" to indicate the desired aggregation:
 #' "Product" for aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.),
 #' "Sector" for aggregation by final demand sector (Agriculture/forestry, Domestic navigation, etc.), or
 #' "Total" for aggregation over both Product and Sector (the default).
-#' @param net_aggregate_demand the name of the output column containing aggregates of net energy demand.
-#' This column excludes energy industry own use.
-#' @param gross_aggregate_demand the name of the output column containing aggregates of gross energy demand.
-#' This column includes energy industry own use.
+#' @param net_aggregate_demand the name of net energy demand (which excludes energy industry own use) on output.
+#' @param gross_aggregate_demand the name of gross energy demand (which includes energy industry own use) on output.
 #'
-#' @return a data frame containing net aggregate energy demand
-#' and gross aggregate energy demand for each row of \code{.sutdata}.
+#' @return a list or data frame containing net aggregate energy demand
+#' and gross aggregate energy demand
 #'
 #' @importFrom matsbyname select_cols_byname
 #'

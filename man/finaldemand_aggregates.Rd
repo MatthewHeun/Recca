@@ -14,26 +14,25 @@ finaldemand_aggregates(.sutdata, fd_sectors, U = "U", Y = "Y",
 
 \item{fd_sectors}{a vector of names of sectors in final demand.}
 
-\item{U}{the name of the column in \code{.sutdata} containing Use (\code{U}) matrices.}
+\item{U}{use (\code{U}) matrix or name of the column in \code{.sutdata} containing same}
 
-\item{Y}{the name of the column in \code{.sutdata} containing final demand (\code{Y}) matrices.}
+\item{Y}{final demand (\code{Y}) matrix or name of the column in \code{.sutdata} containing same}
 
-\item{r_EIOU}{the name of the colum that holds ratios of EIOU to total input for each Machine and Product.}
+\item{r_EIOU}{matrix of ratios of EIOU for the make (\code{U}) matrix or name of the column in \code{.sutdata} containing same}
 
 \item{by}{one of "Product", "Sector", or "Total" to indicate the desired aggregation:
 "Product" for aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.),
 "Sector" for aggregation by final demand sector (Agriculture/forestry, Domestic navigation, etc.), or
 "Total" for aggregation over both Product and Sector (the default).}
 
-\item{net_aggregate_demand}{the name of the output column containing aggregates of net energy demand.
-Each entry in this column is \code{sumall(Y_fd)}.}
+\item{net_aggregate_demand}{the name of net energy demand on output.
+Each entry is \code{sumall(Y_fd)}.}
 
-\item{gross_aggregate_demand}{the name of the output column containing aggregates of gross energy demand.
-Each entry in this column is calculated by \code{sumall(Y_fd)} + \code{sumall(U_EIOU)}.}
+\item{gross_aggregate_demand}{the name of gross energy demand on output.
+Each entry is calculated by \code{sumall(Y_fd)} + \code{sumall(U_EIOU)}.}
 }
 \value{
-\code{.sutdata} with columns \code{net_aggregate_demand} and
-\code{gross_aggregate_demand} added
+a list or data frame containing \code{net_aggregate_demand} and \code{gross_aggregate_demand}
 }
 \description{
 Calculates aggregate final demand energy from a data frame of Supply-Use matrices.
