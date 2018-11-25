@@ -40,7 +40,7 @@ calc_eta_i <- function(.sutdata,
                        U = "U", V = "V", S_units = "S_units",
                        # Outputs
                        eta_i = "eta_i"){
-    eta_func <- function(U_mat, V_mat, S_units_mat){
+  eta_func <- function(U_mat, V_mat, S_units_mat){
 
     result_var <- "result"
     units_OK <- flows_unit_homogeneous(U_colname = U_mat, V_colname = V_mat, S_units_colname = S_units_mat,
