@@ -120,7 +120,7 @@ test_that("calculating IO matrices works as expected", {
                       0, 1), byrow = TRUE,
                     nrow = 2, ncol = 2, dimnames = list(c("p1", "p2"), c("m", "K")))
 
-  yqfgW <- calc_yqfgW(U_colname = U, V_colname = V, Y_colname = Y, S_units = S_units)
+  yqfgW <- calc_yqfgW(U = U, V = V, Y = Y, S_units = S_units)
   # Because the units are not homogeneous, we should receive NA values for f and g vectors.
   f <- yqfgW$f
   expect_true(is.na(f[1, 1]))
