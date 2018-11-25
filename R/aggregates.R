@@ -13,8 +13,8 @@
 #'        columns of the final demand matrix (\code{Y}).
 #'        Entries in \code{Y_p} will be subtracted from entries in \code{V_p} to obtain
 #'        the total primary energy aggregate.
-#' @param V_colname the name of the column in \code{.sutdata} containing make (\code{V}) matrices.
-#' @param Y_colname the name of the column in \code{.sutdata} containing final demand (\code{Y}) matrices.
+#' @param V the name of the column in \code{.sutdata} containing make (\code{V}) matrices.
+#' @param Y the name of the column in \code{.sutdata} containing final demand (\code{Y}) matrices.
 #' @param by one of \code{Total}, \code{Product}, or \code{Flow} to indicate the desired aggregation:
 #' \itemize{
 #'   \item{\code{Total}: aggregation over both Product and Flow (the default)}
@@ -33,8 +33,8 @@ primary_aggregates <- function(.sutdata,
                                # Vector of primary industries
                                p_industries,
                                # Input columns
-                               V_colname = "V",
-                               Y_colname = "Y",
+                               V = "V",
+                               Y = "Y",
                                by = c("Total", "Product", "Flow"),
                                # Output columns,
                                aggregate_primary_colname = "EX_p.ktoe"){
@@ -43,15 +43,15 @@ primary_aggregates <- function(.sutdata,
   aggfuncs <- list(total = "sumall_byname", product = "rowsums_byname", flow = "colsums_byname")
   agg_func <- match.fun(aggfuncs[[tolower(by)]])
 
-  prim_func <- function(V, Y){
-    VT_p <- transpose_byname(V) %>% select_cols_byname(retain_pattern = make_pattern(row_col_names = p_industries, pattern_type = "leading"))
-    Y_p <- Y %>% select_cols_byname(retain_pattern = make_pattern(row_col_names = p_industries, pattern_type = "leading"))
+  prim_func <- function(V_mat, Y_mat){
+    VT_p <- transpose_byname(V_mat) %>% select_cols_byname(retain_pattern = make_pattern(row_col_names = p_industries, pattern_type = "leading"))
+    Y_p <- Y_mat %>% select_cols_byname(retain_pattern = make_pattern(row_col_names = p_industries, pattern_type = "leading"))
     # VT_p - Y_p. This is TPES in product x industry matrix format
     VT_p_minus_Y_p <- difference_byname(VT_p, Y_p)
     agg_primary <- agg_func(VT_p_minus_Y_p)
     list(agg_primary) %>% set_names(aggregate_primary_colname)
   }
-  matsindf_apply(.sutdata, FUN = prim_func, V = V_colname, Y = Y_colname)
+  matsindf_apply(.sutdata, FUN = prim_func, V_mat = V, Y_mat = Y)
 }
 
 
@@ -63,20 +63,20 @@ primary_aggregates <- function(.sutdata,
 #'
 #' @param .sutdata a data frame with columns of matrices from a supply-use analysis.
 #' @param fd_sectors a vector of names of sectors in final demand.
-#' @param U_colname the name of the column in \code{.sutdata} containing Use (\code{U}) matrices.
-#' @param Y_colname the name of the column in \code{.sutdata} containing final demand (\code{Y}) matrices.
-#' @param r_EIOU_colname the name of the colum that holds ratios of EIOU to total input for each Machine and Product.
+#' @param U the name of the column in \code{.sutdata} containing Use (\code{U}) matrices.
+#' @param Y the name of the column in \code{.sutdata} containing final demand (\code{Y}) matrices.
+#' @param r_EIOU the name of the colum that holds ratios of EIOU to total input for each Machine and Product.
 #' @param by one of "Product", "Sector", or "Total" to indicate the desired aggregation:
 #' "Product" for aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.),
 #' "Sector" for aggregation by final demand sector (Agriculture/forestry, Domestic navigation, etc.), or
 #' "Total" for aggregation over both Product and Sector (the default).
-#' @param net_aggregate_demand_colname the name of the output column containing aggregates of net energy demand.
+#' @param net_aggregate_demand the name of the output column containing aggregates of net energy demand.
 #' Each entry in this column is \code{sumall(Y_fd)}.
-#' @param gross_aggregate_demand_colname the name of the output column containing aggregates of gross energy demand.
+#' @param gross_aggregate_demand the name of the output column containing aggregates of gross energy demand.
 #' Each entry in this column is calculated by \code{sumall(Y_fd)} + \code{sumall(U_EIOU)}.
 #'
-#' @return \code{.sutdata} with columns \code{net_aggregate_demand_colname} and
-#' \code{gross_aggregate_demand_colname} added
+#' @return \code{.sutdata} with columns \code{net_aggregate_demand} and
+#' \code{gross_aggregate_demand} added
 #'
 #' @importFrom matsbyname elementproduct_byname
 #' @importFrom matsbyname select_cols_byname
@@ -85,13 +85,13 @@ primary_aggregates <- function(.sutdata,
 finaldemand_aggregates <- function(.sutdata,
                                    fd_sectors,
                                    # Input columns
-                                   U_colname = "U",
-                                   Y_colname = "Y",
-                                   r_EIOU_colname = "r_EIOU",
+                                   U = "U",
+                                   Y = "Y",
+                                   r_EIOU = "r_EIOU",
                                    by = c("Total", "Product", "Sector"),
                                    # Output columns
-                                   net_aggregate_demand_colname = "EX_fd_net.ktoe",
-                                   gross_aggregate_demand_colname = "EX_fd_gross.ktoe"){
+                                   net_aggregate_demand = "EX_fd_net.ktoe",
+                                   gross_aggregate_demand = "EX_fd_gross.ktoe"){
 
   by <- match.arg(by)
 
@@ -99,9 +99,9 @@ finaldemand_aggregates <- function(.sutdata,
   aggfuncs <- list(Total = "sumall_byname", Product = "rowsums_byname", Sector = "colsums_byname")
   agg_func <- match.fun(aggfuncs[[by]])
 
-  fd_func <- function(U, Y, r_EIOU){
-    U_EIOU <- elementproduct_byname(r_EIOU, U)
-    net <- Y %>% select_cols_byname(retain_pattern = make_pattern(row_col_names = fd_sectors, pattern_type = "leading")) %>% agg_func()
+  fd_func <- function(U_mat, Y_mat, r_EIOU_mat){
+    U_EIOU <- elementproduct_byname(r_EIOU_mat, U_mat)
+    net <- Y_mat %>% select_cols_byname(retain_pattern = make_pattern(row_col_names = fd_sectors, pattern_type = "leading")) %>% agg_func()
     gross <- sum_byname(net, agg_func(U_EIOU))
     if (by == "Sector") {
       # If "Sector" aggregation is requested, the results will be row vectors.
@@ -109,9 +109,9 @@ finaldemand_aggregates <- function(.sutdata,
       net <- transpose_byname(net)
       gross <- transpose_byname(gross)
     }
-    list(net, gross) %>% set_names(c(net_aggregate_demand_colname, gross_aggregate_demand_colname))
+    list(net, gross) %>% magrittr::set_names(c(net_aggregate_demand, gross_aggregate_demand))
   }
-  matsindf_apply(.sutdata, FUN = fd_func, U = U_colname, Y = Y_colname, r_EIOU = r_EIOU_colname)
+  matsindf_apply(.sutdata, FUN = fd_func, U_mat = U, Y_mat = Y, r_EIOU_mat = r_EIOU)
 }
 
 #' Final demand aggregate energy with units
@@ -130,9 +130,9 @@ finaldemand_aggregates <- function(.sutdata,
 #' "Product" for aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.),
 #' "Sector" for aggregation by final demand sector (Agriculture/forestry, Domestic navigation, etc.), or
 #' "Total" for aggregation over both Product and Sector (the default).
-#' @param net_aggregate_demand_colname the name of the output column containing aggregates of net energy demand.
+#' @param net_aggregate_demand the name of the output column containing aggregates of net energy demand.
 #' This column excludes energy industry own use.
-#' @param gross_aggregate_demand_colname the name of the output column containing aggregates of gross energy demand.
+#' @param gross_aggregate_demand the name of the output column containing aggregates of gross energy demand.
 #' This column includes energy industry own use.
 #'
 #' @return a data frame containing net aggregate energy demand
@@ -150,23 +150,23 @@ finaldemand_aggregates_with_units <- function(.sutdata,
                                               S_units = "S_units",
                                               by = c("Total", "Product", "Sector"),
                                               # Output columns
-                                              net_aggregate_demand_colname,
-                                              gross_aggregate_demand_colname){
+                                              net_aggregate_demand,
+                                              gross_aggregate_demand){
 
   by <- match.arg(by)
 
-  fd_func <- function(U, Y, r_EIOU, S_units){
-    U_EIOU <- elementproduct_byname(r_EIOU, U)
+  fd_func <- function(U_mat, Y_mat, r_EIOU_mat, S_units_mat){
+    U_EIOU <- elementproduct_byname(r_EIOU_mat, U_mat)
     if (by == "Product") {
-      net <- rowsums_byname(Y)
+      net <- rowsums_byname(Y_mat)
       gross <- sum_byname(rowsums_byname(U_EIOU), net)
     } else {
       # by is "Total" or "Sector".
-      U_EIOU_bar <- matrixproduct_byname(transpose_byname(S_units), U_EIOU)
+      U_EIOU_bar <- matrixproduct_byname(transpose_byname(S_units_mat), U_EIOU)
       net <- matrixproduct_byname(
-        transpose_byname(S_units),
-        Y %>% select_cols_byname(retain_pattern = make_pattern(row_col_names = fd_sectors,
-                                                               pattern_type = "leading")))
+        transpose_byname(S_units_mat),
+        Y_mat %>% select_cols_byname(retain_pattern = make_pattern(row_col_names = fd_sectors,
+                                                                   pattern_type = "leading")))
       gross <- sum_byname(U_EIOU_bar, net)
       net <- transpose_byname(net)
       gross <- transpose_byname(gross)
@@ -175,9 +175,9 @@ finaldemand_aggregates_with_units <- function(.sutdata,
       net <- colsums_byname(net)
       gross <- colsums_byname(gross)
     }
-    list(net, gross) %>% set_names(c(net_aggregate_demand_colname, gross_aggregate_demand_colname))
+    list(net, gross) %>% set_names(c(net_aggregate_demand, gross_aggregate_demand))
   }
-  matsindf_apply(.sutdata, FUN = fd_func, U = U, Y = Y, r_EIOU = r_EIOU, S_units = S_units)
+  matsindf_apply(.sutdata, FUN = fd_func, U_mat = U, Y_mat = Y, r_EIOU_mat = r_EIOU, S_units_mat = S_units)
 }
 
 
@@ -207,7 +207,7 @@ finaldemand_aggregates_with_units <- function(.sutdata,
 #'        "Stock changes")}"
 #' @param eiou the string that identifies energy industry own use in the \code{Flow.aggregation.point} column.
 #'        Default is "\code{Energy industry own use}".
-#' @param aggregate_primary_colname the name of the aggregate primary energy
+#' @param aggregate_primary the name of the aggregate primary energy
 #'        column to be created in the output data frame.
 #'        Default is "\code{EX_p_IEA.ktoe}".
 #'
@@ -234,14 +234,14 @@ primary_aggregates_IEA <- function(.ieadata,
                                                     "International marine bunkers", "Stock changes"),
                                    eiou = "Energy industry own use",
                                    # Output information
-                                   aggregate_primary_colname = "EX_p_IEA.ktoe"){
+                                   aggregate_primary = "EX_p_IEA.ktoe"){
   flow <- as.name(flow)
   flow_aggregation_point <- as.name(flow_aggregation_point)
   energy <- as.name(energy)
-  aggregate_primary_colname <- as.name(aggregate_primary_colname)
+  aggregate_primary <- as.name(aggregate_primary)
   .ieadata %>%
     filter(starts_with_any_of(!!flow, p_industries), !startsWith(!!flow_aggregation_point, eiou)) %>%
-    summarise(!!aggregate_primary_colname := sum(!!energy))
+    summarise(!!aggregate_primary := sum(!!energy))
 }
 
 
@@ -276,9 +276,9 @@ primary_aggregates_IEA <- function(.ieadata,
 #'        Default is "\code{Consumption}".
 #' @param eiou the identifier for energy industry own use in the \code{flow_aggregation_point} column.
 #'        Default is "\code{Energy industry own use}".
-#' @param aggregate_net_finaldemand_colname the name of the output column containing aggregates of net final demand.
+#' @param aggregate_net_finaldemand the name of the output column containing aggregates of net final demand.
 #'        Default is "\code{EX_fd_net_IEA.ktoe}".
-#' @param aggregate_gross_finaldemand_colname the name of the output column containing aggregates of gross final demand.
+#' @param aggregate_gross_finaldemand the name of the output column containing aggregates of gross final demand.
 #'        Default is "\code{EX_fd_gross_IEA.ktoe}".
 #'
 #' @importFrom dplyr full_join
@@ -310,8 +310,8 @@ finaldemand_aggregates_IEA <- function(.ieadata,
                                        consumption = "Consumption",
                                        eiou = "Energy industry own use",
                                        # Output information
-                                       aggregate_net_finaldemand_colname = "EX_fd_net_IEA.ktoe",
-                                       aggregate_gross_finaldemand_colname = "EX_fd_gross_IEA.ktoe"){
+                                       aggregate_net_finaldemand = "EX_fd_net_IEA.ktoe",
+                                       aggregate_gross_finaldemand = "EX_fd_gross_IEA.ktoe"){
   ledger_side <- as.name(ledger_side)
   flow_aggregation_point <- as.name(flow_aggregation_point)
   flow <- as.name(flow)
@@ -324,7 +324,7 @@ finaldemand_aggregates_IEA <- function(.ieadata,
   net <- .ieadata %>%
     filter(starts_with_any_of(!!ledger_side, consumption)) %>%
     summarise(
-      !!aggregate_net_finaldemand_colname := sum(!!energy)
+      !!aggregate_net_finaldemand := sum(!!energy)
     )
   # Now calculate additional energy, gross - net = eiou
   gross_less_net <- .ieadata %>%
@@ -338,7 +338,7 @@ finaldemand_aggregates_IEA <- function(.ieadata,
   # Add net and gross_less_net to obtain gross and return the resulting data frame.
   full_join(net, gross_less_net, by = group_vars(.ieadata)) %>%
     mutate(
-      !!as.name(aggregate_gross_finaldemand_colname) := !!as.name(aggregate_net_finaldemand_colname) + !!diff_colname
+      !!as.name(aggregate_gross_finaldemand) := !!as.name(aggregate_net_finaldemand) + !!diff_colname
     ) %>%
     select(-(!!diff_colname))
 }

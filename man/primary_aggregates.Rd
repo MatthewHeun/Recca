@@ -4,8 +4,8 @@
 \alias{primary_aggregates}
 \title{Primary aggregate energy}
 \usage{
-primary_aggregates(.sutdata, p_industries, V_colname = "V",
-  Y_colname = "Y", by = c("Total", "Product", "Flow"),
+primary_aggregates(.sutdata, p_industries, V = "V", Y = "Y",
+  by = c("Total", "Product", "Flow"),
   aggregate_primary_colname = "EX_p.ktoe")
 }
 \arguments{
@@ -17,9 +17,9 @@ columns of the final demand matrix (\code{Y}).
 Entries in \code{Y_p} will be subtracted from entries in \code{V_p} to obtain
 the total primary energy aggregate.}
 
-\item{V_colname}{the name of the column in \code{.sutdata} containing make (\code{V}) matrices.}
+\item{V}{the name of the column in \code{.sutdata} containing make (\code{V}) matrices.}
 
-\item{Y_colname}{the name of the column in \code{.sutdata} containing final demand (\code{Y}) matrices.}
+\item{Y}{the name of the column in \code{.sutdata} containing final demand (\code{Y}) matrices.}
 
 \item{by}{one of \code{Total}, \code{Product}, or \code{Flow} to indicate the desired aggregation:
 \itemize{

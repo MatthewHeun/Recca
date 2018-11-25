@@ -67,8 +67,8 @@ test_that("final demand aggregates of SUT data work as expected", {
   final_demand_total_aggregates_sut <- UKEnergy2000mats %>%
     spread(key = matrix.name, value = matrix) %>%
     finaldemand_aggregates_with_units(fd_sectors = fd_sectors, by = "Total",
-                       net_aggregate_demand_colname = "EX_total_net_agg.ktoe",
-                       gross_aggregate_demand_colname = "EX_total_gross_agg.ktoe") %>%
+                       net_aggregate_demand = "EX_total_net_agg.ktoe",
+                       gross_aggregate_demand = "EX_total_gross_agg.ktoe") %>%
     select(Country, Year, Last.stage, Energy.type, EX_total_net_agg.ktoe, EX_total_gross_agg.ktoe) %>%
     gather(key = "matnames", value = "matvals", EX_total_net_agg.ktoe, EX_total_gross_agg.ktoe) %>%
     expand_to_tidy(drop = 0)
@@ -89,8 +89,8 @@ test_that("final demand aggregates of SUT data work as expected", {
   final_demand_product_aggregates_sut <- UKEnergy2000mats %>%
     spread(key = matrix.name, value = matrix) %>%
     finaldemand_aggregates_with_units(fd_sectors = fd_sectors, by = "Product",
-                                      net_aggregate_demand_colname = "EX_product_net_agg.ktoe",
-                                      gross_aggregate_demand_colname = "EX_product_gross_agg.ktoe") %>%
+                                      net_aggregate_demand = "EX_product_net_agg.ktoe",
+                                      gross_aggregate_demand = "EX_product_gross_agg.ktoe") %>%
     select(Country, Year, Last.stage, Energy.type, EX_product_net_agg.ktoe, EX_product_gross_agg.ktoe) %>%
     gather(key = "matnames", value = "matvals", EX_product_net_agg.ktoe, EX_product_gross_agg.ktoe) %>%
     expand_to_tidy(drop = 0)
@@ -117,8 +117,8 @@ test_that("final demand aggregates of SUT data work as expected", {
   final_demand_sector_aggregates_sut <- UKEnergy2000mats %>%
     spread(key = matrix.name, value = matrix) %>%
     finaldemand_aggregates_with_units(fd_sectors = fd_sectors, by = "Sector",
-                                      net_aggregate_demand_colname = "EX_sector_net_agg.ktoe",
-                                      gross_aggregate_demand_colname = "EX_sector_gross_agg.ktoe") %>%
+                                      net_aggregate_demand = "EX_sector_net_agg.ktoe",
+                                      gross_aggregate_demand = "EX_sector_gross_agg.ktoe") %>%
     select(Country, Year, Last.stage, Energy.type, EX_sector_net_agg.ktoe, EX_sector_gross_agg.ktoe) %>%
     gather(key = "matnames", value = "matvals", EX_sector_net_agg.ktoe, EX_sector_gross_agg.ktoe) %>%
     expand_to_tidy(drop = 0)

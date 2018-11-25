@@ -8,8 +8,8 @@ finaldemand_aggregates_IEA(.ieadata, ledger_side = "Ledger.side",
   flow_aggregation_point = "Flow.aggregation.point", flow = "Flow",
   energy = "EX.ktoe", consumption = "Consumption",
   eiou = "Energy industry own use",
-  aggregate_net_finaldemand_colname = "EX_fd_net_IEA.ktoe",
-  aggregate_gross_finaldemand_colname = "EX_fd_gross_IEA.ktoe")
+  aggregate_net_finaldemand = "EX_fd_net_IEA.ktoe",
+  aggregate_gross_finaldemand = "EX_fd_gross_IEA.ktoe")
 }
 \arguments{
 \item{.ieadata}{a data frame with columns of IEA data.}
@@ -32,10 +32,10 @@ Default is "\code{Consumption}".}
 \item{eiou}{the identifier for energy industry own use in the \code{flow_aggregation_point} column.
 Default is "\code{Energy industry own use}".}
 
-\item{aggregate_net_finaldemand_colname}{the name of the output column containing aggregates of net final demand.
+\item{aggregate_net_finaldemand}{the name of the output column containing aggregates of net final demand.
 Default is "\code{EX_fd_net_IEA.ktoe}".}
 
-\item{aggregate_gross_finaldemand_colname}{the name of the output column containing aggregates of gross final demand.
+\item{aggregate_gross_finaldemand}{the name of the output column containing aggregates of gross final demand.
 Default is "\code{EX_fd_gross_IEA.ktoe}".}
 }
 \value{

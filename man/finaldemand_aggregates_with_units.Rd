@@ -6,8 +6,7 @@
 \usage{
 finaldemand_aggregates_with_units(.sutdata, fd_sectors, U = "U",
   Y = "Y", r_EIOU = "r_EIOU", S_units = "S_units", by = c("Total",
-  "Product", "Sector"), net_aggregate_demand_colname,
-  gross_aggregate_demand_colname)
+  "Product", "Sector"), net_aggregate_demand, gross_aggregate_demand)
 }
 \arguments{
 \item{.sutdata}{a data frame with columns of matrices from a supply-use analysis.}
@@ -27,10 +26,10 @@ finaldemand_aggregates_with_units(.sutdata, fd_sectors, U = "U",
 "Sector" for aggregation by final demand sector (Agriculture/forestry, Domestic navigation, etc.), or
 "Total" for aggregation over both Product and Sector (the default).}
 
-\item{net_aggregate_demand_colname}{the name of the output column containing aggregates of net energy demand.
+\item{net_aggregate_demand}{the name of the output column containing aggregates of net energy demand.
 This column excludes energy industry own use.}
 
-\item{gross_aggregate_demand_colname}{the name of the output column containing aggregates of gross energy demand.
+\item{gross_aggregate_demand}{the name of the output column containing aggregates of gross energy demand.
 This column includes energy industry own use.}
 }
 \value{
