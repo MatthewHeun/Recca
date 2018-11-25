@@ -14,13 +14,18 @@ test_that("add_matnames and add_row_col_meta works as expected", {
   expect_equivalent(WithMatnames %>%
                       filter(Ledger.side == "Consumption", Energy.type == "E.ktoe", Last.stage == "final", Flow == "Transport", Product == "Diesel - Dist.") %>% select(matname, rowtype, coltype) %>% unlist(),
                     c("Y", "Product", "Industry"))
-
-  # *************** Add more tests here. ******************
-
-
-  Recca:::test_against_file(UKEnergy2000tidy %>% add_matnames_iea() %>% add_row_col_meta(),
-                            "expected_row_col_meta.rds",
-                            update = FALSE)
+  expect_equivalent(WithMatnames %>%
+                      filter(Ledger.side == "Supply", Energy.type == "E.ktoe", Last.stage == "services", Flow == "Car engines", Product == "MD - Car engines") %>% select(matname, rowtype, coltype) %>% unlist(),
+                    c("V", "Industry", "Product"))
+  expect_equivalent(WithMatnames %>%
+                      filter(Ledger.side == "Supply", Energy.type == "E.ktoe", Last.stage == "useful", Flow == "Diesel dist.", Product == "Diesel") %>% select(matname, rowtype, coltype) %>% unlist(),
+                    c("U_excl_EIOU", "Product", "Industry"))
+  expect_equivalent(WithMatnames %>%
+                      filter(Ledger.side == "Supply", Flow.aggregation.point == "Energy industry own use", Energy.type == "E.ktoe", Last.stage == "final", Flow == "Petrol dist.", Product == "Petrol - Dist.") %>% select(matname, rowtype, coltype) %>% unlist(),
+                    c("U_EIOU", "Product", "Industry"))
+  expect_equivalent(WithMatnames %>%
+                      filter(Ledger.side == "Consumption", Energy.type == "X.ktoe", Last.stage == "services", Flow == "Residential", Product == "Space heating [m3-K]") %>% select(matname, rowtype, coltype) %>% unlist(),
+                    c("Y", "Product", "Industry"))
 })
 
 test_that("add_matnames works correctly with a prefixed Flow", {
@@ -58,7 +63,25 @@ test_that("verify_cols_missing works with a single value", {
 })
 
 test_that("S_units_from_tidy works as expected", {
-  Recca:::test_against_file(S_units_from_tidy(UKEnergy2000tidy %>% group_by(Country, Year, Energy.type, Last.stage)),
-                            "expected_S_units.rds",
-                            update = FALSE)
+
+  S_units_expanded <- UKEnergy2000tidy %>%
+    group_by(Country, Year, Energy.type, Last.stage) %>%
+    S_units_from_tidy() %>%
+    gather(key = "matnames", value = "matvals", S_units) %>%
+    expand_to_tidy()
+  expect_equivalent(S_units_expanded %>%
+                      filter(Energy.type == "E.ktoe", Last.stage == "final", rownames == "Crude", colnames == "ktoe") %>% select(matvals) %>% unlist(),
+                    1)
+  expect_equivalent(S_units_expanded %>%
+                      filter(Energy.type == "E.ktoe", Last.stage == "services", rownames == "Crude", colnames == "lumen-hrs/yr") %>% select(matvals) %>% unlist(),
+                    0)
+  expect_equivalent(S_units_expanded %>%
+                      filter(Energy.type == "E.ktoe", Last.stage == "services", rownames == "Freight [tonne-km/year]", colnames == "tonne-km/yr") %>% select(matvals) %>% unlist(),
+                    1)
+  expect_equivalent(S_units_expanded %>%
+                      filter(Energy.type == "X.ktoe", Last.stage == "services", rownames == "MD - Car engines", colnames == "passenger-km/yr") %>% select(matvals) %>% unlist(),
+                    0)
+  expect_equivalent(S_units_expanded %>%
+                      filter(Energy.type == "X.ktoe", Last.stage == "services", rownames == "Space heating [m3-K]", colnames == "tonne-km/yr") %>% select(matvals) %>% unlist(),
+                    0)
 })
