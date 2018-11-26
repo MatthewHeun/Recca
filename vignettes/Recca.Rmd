@@ -55,13 +55,20 @@ It is recommended that the default names be used whenever possible,
 thereby allowing cleaner code.
 
 
-## Determine the I-O structure of an Energy Conversion Chain (ECC) with individual matrices
+## Determine the I-O structure of an Energy Conversion Chain (ECC)
+
+### With individual matrices
 
 To determine the I-O structure of an ECC, use the `calc_io_mats` function.
 
 ```{r}
 library(tidyr)
-mats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
+mats <- UKEnergy2000mats %>% 
+  spread(key = matrix.name, value = matrix) %>% 
+  mutate(
+    Last.stage = factor(Last.stage, levels = c("final", "useful", "services"))
+  ) %>% 
+  arrange(Last.stage) # Put rows in a natural order
 # Use the calc_io_mats function with individual matrices, 
 # each taken from the UKEnergy2000mats data frame.
 U <- mats$U[[1]]
@@ -81,8 +88,7 @@ IO_list[["y"]]
 IO_list[["L_ixp"]]
 ```
 
-
-## Determine the I-O structure of an Energy Conversion Chain (ECC) for a data frame
+### Using a data frame
 
 Most `Recca` functions can also operate on a data frame.
 When a data frame is supplied to a `Recca` function in the `.sutmats` argument, 
