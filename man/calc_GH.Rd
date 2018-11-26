@@ -4,26 +4,25 @@
 \alias{calc_GH}
 \title{Calculate the \code{G} and \code{H} matrices for embodied energy calculations}
 \usage{
-calc_GH(.iodata = NULL, Y_colname = "Y", L_ixp_colname = "L_ixp",
-  G_colname = "G", H_colname = "H")
+calc_GH(.iomats = NULL, Y = "Y", L_ixp = "L_ixp", G = "G",
+  H = "H")
 }
 \arguments{
-\item{.iodata}{a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.
-\code{.iodata} will likely have been obtained from the \code{calc_io_mats} function.}
+\item{.iomats}{a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.
+\code{.iomats} will likely have been obtained from the \code{\link{calc_io_mats}} function.}
 
-\item{Y_colname}{the name of the column in \code{.iodata} containing final demand (\code{Y}) matrices.}
+\item{Y}{final demand (\code{Y}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{Y}".}
 
-\item{L_ixp_colname}{the name of the column in \code{.iodata} containing Industry-by-Product
-Leontief (\code{L_ixp}) matrices.}
+\item{L_ixp}{industry-by-product Leontief (\code{L_ixp}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{L_ixp}".}
 
-\item{G_colname}{the name of the output column containing \code{G} matrices.
+\item{G}{name for the \code{G} matrix on output. Default is "\code{G}".
 \code{G} is calculated by \code{L_ixp * y_hat}.}
 
-\item{H_colname}{the name of the output column containing \code{H} matrices.
+\item{H}{name for the \code{H} matrix on output. Default is "\code{H}".
 \code{G} is calculated by \code{L_ixp * Y}.}
 }
 \value{
-\code{.iodata} with columns \code{G_colname} and \code{H_colname} added.
+a list or data frame containing \code{G} and \code{H} matrices.
 }
 \description{
 Calculate the \code{G} and \code{H} matrices for embodied energy calculations

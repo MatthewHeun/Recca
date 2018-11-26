@@ -4,20 +4,20 @@
 \alias{combine_RV}
 \title{Combine resource (\code{R}) and make (\code{V}) matrices into a make plus resource (\code{R_plus_V}) matrix}
 \usage{
-combine_RV(.sutdata = NULL, R_colname = "R", V_colname = "V",
-  R_plus_V_colname = "R_plus_V")
+combine_RV(.sutmats = NULL, R = "R", V = "V",
+  R_plus_V = "R_plus_V")
 }
 \arguments{
-\item{.sutdata}{a list or data frame containing use matrix(ces) and make matrix(ces)}
+\item{.sutmats}{a list or data frame containing use matrix(ces) and make matrix(ces)}
 
-\item{R_colname}{identifier for the resource matrix (a string). Default is "\code{R}".}
+\item{R}{an \code{R} matrix or name of a column in \code{.sutmats} that contains same. Default is "\code{R}".}
 
-\item{V_colname}{identifier for the make matrix (a string). Default is "\code{V}".}
+\item{V}{a make (\code{V}) matrix or name of a column in \code{.sutmats} that contains same. Default is "\code{V}".}
 
-\item{R_plus_V_colname}{identifier for the make matrix in \code{.sutdata} (a string). Default is "\code{R_plus_V}".}
+\item{R_plus_V}{name for \code{R_plus_V} matrix on output. Default is "\code{R_plus_V}".}
 }
 \value{
-\code{sum_by_name(R, V)}
+a list or data frame containing \code{R_plus_V}
 }
 \description{
 Combine resource (\code{R}) and make (\code{V}) matrices into a make plus resource (\code{R_plus_V}) matrix

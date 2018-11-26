@@ -4,35 +4,33 @@
 \alias{calc_F_footprint_effects}
 \title{Upstream footprint and downstream effects matrices}
 \usage{
-calc_F_footprint_effects(.Mdata = NULL, M_p_colname = "M_p",
-  M_s_colname = "M_s", F_footprint_p_colname = "F_footprint_p",
-  F_effects_p_colname = "F_effects_p",
-  F_footprint_s_colname = "F_footprint_s",
-  F_effects_s_colname = "F_effects_s")
+calc_F_footprint_effects(.Mmats = NULL, M_p = "M_p", M_s = "M_s",
+  F_footprint_p = "F_footprint_p", F_effects_p = "F_effects_p",
+  F_footprint_s = "F_footprint_s", F_effects_s = "F_effects_s")
 }
 \arguments{
-\item{.Mdata}{a data frame containing a column of embodied matrices}
+\item{.Mmats}{a data frame containing a column of embodied matrices}
 
-\item{M_p_colname}{the name of the column in \code{.Mdata} containing embodied product  matrices (default is \strong{"M_p"})}
+\item{M_p}{embodied product matrix or name of the column in \code{.Mmats} containing same. Default is "\code{M_p}".}
 
-\item{M_s_colname}{the name of the column in \code{.Mdata} containing embodied sector matrices (default is \strong{"M_s"})}
+\item{M_s}{embodied sector matrix or name of the column in \code{.Mmats} containing same. Default is "\code{M_s}".}
 
-\item{F_footprint_p_colname}{the name of the column in the output containing \strong{F_footprint_p} matrices (as a string)}
+\item{F_footprint_p}{the name for \code{F_footprint_p} matrices on output. Default is "\code{F_footprint_p}".}
 
-\item{F_effects_p_colname}{the name of the column in the output containing \strong{F_effects_p} matrices (as a string)}
+\item{F_effects_p}{the name for \code{F_effects_p} matrices on output. Default is "\code{F_effects_p}".}
 
-\item{F_footprint_s_colname}{the name of the column in the output containing \strong{F_footprint_s} matrices (as a string)}
+\item{F_footprint_s}{the name for \code{F_footprint_s} matrices on output. Default is "\code{F_footprint_s}".}
 
-\item{F_effects_s_colname}{the name of the column in the output containing \strong{F_effects_s} matrices (as a string)}
+\item{F_effects_s}{the name for \code{F_effects_s} matrices on output. Default is "\code{F_effects_s}".}
 }
 \value{
-\code{.Mdata} with columns \code{F_footprint_p}, \code{F_effects_p},
-\code{F_footprint_s}, and \code{F_effects_s} added
+a list or data frame containing \code{F_footprint_p}, \code{F_effects_p},
+\code{F_footprint_s}, and \code{F_effects_s} matrices
 }
 \description{
-Calculates upstream footprint matrices (\strong{F_footprint_p}, \strong{F_footprint_s})
-and downstream effects matrices (\strong{F_effects_p}, \strong{F_effects_s})
-given an embodied matries \strong{M_p} and \strong{M_s}.
-Column sums of \strong{F_footprint} are 1.
-Row sums of \strong{F_effects} are 1.
+Calculates upstream footprint matrices (\code{F_footprint_p}, \code{F_footprint_s})
+and downstream effects matrices (\code{F_effects_p}, \code{F_effects_s})
+given an embodied matries \code{M_p} and \code{M_s}.
+Column sums of \code{F_footprint} are 1.
+Row sums of \code{F_effects} are 1.
 }

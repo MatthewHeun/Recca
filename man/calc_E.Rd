@@ -4,25 +4,24 @@
 \alias{calc_E}
 \title{Calculate the \code{E} matrix for embodied energy calculations}
 \usage{
-calc_E(.iodata = NULL, g_colname = "g", W_colname = "W",
-  U_EIOU_colname = "U_EIOU", E_colname = "E")
+calc_E(.iomats = NULL, g = "g", W = "W", U_EIOU = "U_EIOU",
+  E = "E")
 }
 \arguments{
-\item{.iodata}{a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.
-\code{.iodata} will likely have been obtained from the \code{calc_io_mats} function.}
+\item{.iomats}{a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.
+\code{.iomats} will likely have been obtained from the \code{\link{calc_io_mats}} function.}
 
-\item{g_colname}{the name of the column in \code{.iodata} containing final demand (\code{g}) vectors}
+\item{g}{final demand (\code{g}) vector or name of the column in \code{.iomats} containing same. Default is "\code{g}".}
 
-\item{W_colname}{the name of the column in \code{.iodata} containing Product-by-Industry
-value added (\code{W}) matrices}
+\item{W}{product-by-industry value added (\code{W}) matrix or name of the column in \code{.iomats} containing same. Default is "\code{W}".}
 
-\item{U_EIOU_colname}{the name of the column in \code{.iodata} containing energy industry own use matrices}
+\item{U_EIOU}{energy industry own use matrix or name of the column in \code{.iomats} containing same. Default is "\code{U_EIOU}".}
 
-\item{E_colname}{the name of the output column containing \code{E} matrices.
+\item{E}{the name for the \code{E} matrix on output. Default is "\code{E}".
 \code{E} is calculated by \code{W * g_hat_inv}.}
 }
 \value{
-\code{.iodata} with column \code{E_colname} added
+list or data frame containing \code{E} matrices
 }
 \description{
 Calculate the \code{E} matrix for embodied energy calculations

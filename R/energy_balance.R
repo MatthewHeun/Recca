@@ -6,9 +6,9 @@
 
 #' Confirm that an SUT-style data frame conserves energy.
 #'
-#' Energy balances are confirmed by Product (within \code{tol}) for every row in \code{.sutdata}.
+#' Energy balances are confirmed by Product (within \code{tol}) for every row in \code{.sutmats}.
 #'
-#' If energy is in balance for every row, \code{.sutdata} is returned with an additional column, and
+#' If energy is in balance for every row, \code{.sutmats} is returned with an additional column, and
 #' execution returns to the caller.
 #' If energy balance is not observed for one or more of the rows,
 #' a warning is emitted, and
@@ -16,20 +16,16 @@
 #' indicates where the problem occurred, with \code{FALSE}
 #' showing where energy is not in balance.
 #'
-#' This function should be called
-#' for its side-effect of testing whether energy is in balance in \code{.sutdata}.
-#'
-#' @param .sutdata an SUT-style data frame with columns of matrices,
+#' @param .sutmats an SUT-style data frame with columns of matrices,
 #'        including \code{U}, \code{V}, and \code{Y} columns.
-#' @param U_colname the name of the column that contains \code{U} matrices. Default is "\code{U}".
-#' @param V_colname the name of the column that contains \code{V} matrices. Default is "\code{V}".
-#' @param Y_colname the name of the column that contsins \code{Y} matrices. Default is "\code{Y}".
-#' @param SUT_energy_balance the name of the output column. Default is "\code{.SUT_energy_balance}".
+#' @param U use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".
+#' @param V make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "\code{V}".
+#' @param Y final demand (\code{Y}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Y}".
+#' @param SUT_energy_balance the name for booleans telling if energy is in balance. Default is "\code{.SUT_energy_balance}".
 #' @param tol the maximum amount by which Supply and Consumption can be out of balance.
 #'        Default is \code{1e-6}.
 #'
-#' @return \code{.sutdata}. If energy balance is not observed,
-#'         an additional column is added showing the row on which energy is not balanced.
+#' @return a list or data frame saying whether \code{.sutmats} are in balance.
 #'
 #' @importFrom matsbyname complete_rows_cols
 #'
@@ -42,27 +38,27 @@
 #'                             filter(Last.stage %in% c("final", "useful")) %>%
 #'                             spread(key = matrix.name, value = matrix),
 #'                           tol = 1e-4)
-verify_SUT_energy_balance <- function(.sutdata = NULL,
-                                      # Input column names
-                                      U_colname = "U", V_colname = "V", Y_colname = "Y",
+verify_SUT_energy_balance <- function(.sutmats = NULL,
+                                      # Input names
+                                      U = "U", V = "V", Y = "Y",
                                       # Tolerance
                                       tol = 1e-6,
-                                      # Output column name
+                                      # Output name
                                       SUT_energy_balance = ".SUT_energy_balance"){
-  verify_func <- function(U, V, Y){
-    V_sums <- transpose_byname(V) %>% rowsums_byname()
-    U_sums <- rowsums_byname(U)
-    Y_sums <- rowsums_byname(Y)
+  verify_func <- function(U_mat, V_mat, Y_mat){
+    U_sums <- rowsums_byname(U_mat)
+    V_sums <- transpose_byname(V_mat) %>% rowsums_byname()
+    Y_sums <- rowsums_byname(Y_mat)
     err <- difference_byname(V_sums, U_sums) %>% difference_byname(Y_sums)
     OK <- err %>% iszero_byname(tol) %>% as.logical()
     if (!OK) {
-      return(list(FALSE) %>% set_names(SUT_energy_balance))
+      return(list(FALSE) %>% magrittr::set_names(SUT_energy_balance))
     }
-    list(TRUE) %>% set_names(SUT_energy_balance)
+    list(TRUE) %>% magrittr::set_names(SUT_energy_balance)
   }
-  Out <- matsindf_apply(.sutdata, FUN = verify_func, U = U_colname, V = V_colname, Y = Y_colname)
+  Out <- matsindf_apply(.sutmats, FUN = verify_func, U_mat = U, V_mat = V, Y_mat = Y)
   if (!all(Out[[SUT_energy_balance]] %>% as.logical())) {
-    warning(paste("Energy not conserved in verify_SUT_energy_balance. See column", SUT_energy_balance))
+    warning(paste("Energy not conserved in verify_SUT_energy_balance. See", SUT_energy_balance))
   }
   return(Out)
 }
@@ -70,30 +66,30 @@ verify_SUT_energy_balance <- function(.sutdata = NULL,
 
 #' Confirm that an SUT-style data frame conserves energy.
 #'
-#' If energy is in balance for every row, \code{.sutdata} is returned with two additional columns, and
+#' If energy is in balance for every row, \code{.sutmats} is returned with two additional columns, and
 #' execution returns to the caller.
 #' If energy balance is not observed for one or more rows,
 #' a warning is emitted, and
-#' columns named \code{SUT_prod_energy_blance} and \code{SUT_ind_energy_blance} are added to \code{.sutdata}.
+#' columns named \code{SUT_prod_energy_blance} and \code{SUT_ind_energy_blance} are added to \code{.sutmats}.
 #' \code{FALSE} indicates energy is not in balance.
 #'
 #' This function should be called
-#' for its side-effect of testing whether energy is in balance in \code{.sutdata}.
+#' for its side-effect of testing whether energy is in balance in \code{.sutmats}.
 #'
 #' Both product and industry energy balance are verified.
 #' Units (as supplied by the \code{S_units} matrix) are respected.
 #'
-#' @param .sutdata an SUT-style data frame containing columns
+#' @param .sutmats an SUT-style data frame containing columns
 #' \code{U}, \code{V}, \code{Y}, and \code{S_units}.
-#' @param U the name of the column that contains \code{U} matrices. Default is "\code{U}".
-#' @param V the name of the column that contains \code{V} matrices. Default is "\code{V}".
-#' @param Y the name of the column that contains \code{Y} matrices. Default is "\code{Y}".
-#' @param S_units the name of the column that contains \code{S_units} matrices. Default is "\code{S_units}".
+#' @param U use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".
+#' @param V make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "\code{V}".
+#' @param Y final demand (\code{Y}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Y}".
+#' @param S_units \code{S_units} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{S_units}".
 #' @param tol the maximum amount by which energy can be out of balance. Default is \code{1e-6}.
-#' @param SUT_prod_energy_balance the name of the output column that tells whether product balance is OK. Default is "\code{.SUT_prod_energy_balance}"
-#' @param SUT_ind_energy_balance the name of the output column that tells whether industry balance is OK. Default is "\code{.SUT_ind_energy_balance}"
+#' @param SUT_prod_energy_balance the name for booleans telling if product energy is in balance. Default is "\code{.SUT_prod_energy_balance}".
+#' @param SUT_ind_energy_balance the name for booleans telling if product energy is in balance. Default is "\code{.SUT_inds_energy_balance}".
 #'
-#' @return \code{.sutdata} with additional columns.
+#' @return \code{.sutmats} with additional columns.
 #'
 #' @export
 #'
@@ -101,12 +97,12 @@ verify_SUT_energy_balance <- function(.sutdata = NULL,
 #' library(tidyr)
 #' verify_SUT_energy_balance_with_units(UKEnergy2000mats %>%
 #'                                        spread(key = matrix.name, value = matrix))
-verify_SUT_energy_balance_with_units <- function(.sutdata = NULL,
-                                                 # Input column names
+verify_SUT_energy_balance_with_units <- function(.sutmats = NULL,
+                                                 # Input names
                                                  U = "U", V = "V", Y = "Y", S_units = "S_units",
                                                  # Tolerance
                                                  tol = 1e-6,
-                                                 # Output column names
+                                                 # Output names
                                                  SUT_prod_energy_balance = ".SUT_prod_energy_balance",
                                                  SUT_ind_energy_balance = ".SUT_ind_energy_balance"){
   verify_func <- function(U, V, Y, S_units){
@@ -119,7 +115,7 @@ verify_SUT_energy_balance_with_units <- function(.sutdata = NULL,
     indOK <- difference_byname(V_bar, transpose_byname(W_bar)) %>% difference_byname(transpose_byname(U_bar)) %>% iszero_byname(tol = tol)
     list(prodOK, indOK) %>% set_names(c(SUT_prod_energy_balance, SUT_ind_energy_balance))
   }
-  Out <- matsindf_apply(.sutdata, FUN = verify_func, U = U, V = V, Y = Y, S_units = S_units)
+  Out <- matsindf_apply(.sutmats, FUN = verify_func, U = U, V = V, Y = Y, S_units = S_units)
   if (!all(Out[[SUT_prod_energy_balance]] %>% as.logical())) {
     warning(paste("Energy not conserved by product in verify_SUT_energy_balance_with_units. See column", SUT_prod_energy_balance))
   }
@@ -141,21 +137,21 @@ verify_SUT_energy_balance_with_units <- function(.sutdata = NULL,
 #' This function emits a warning if an Industry in the \code{U} matrix
 #' is found to consume energy but not make energy.
 #' Look at the \code{industry_production_OK} column of the output to see which rows of
-#' \code{.sutdata} exhibit the problem.
+#' \code{.sutmats} exhibit the problem.
 #' Look at the \code{problem_industries} column of the output to see which industries
 #' exhibit this problem.
 #'
-#' @param .sutdata an SUT-style data frame containing metadata columns
+#' @param .sutmats an SUT-style data frame containing metadata columns
 #' (typically \code{Country}, \code{Year}, \code{Ledger.side}, \code{Product}, etc.)
 #' and columns of SUT matrices, including \code{U} and \code{V}.
-#' @param U_colname the name of the column of use matrices. Default is "\code{U}".
-#' @param V_colname the name of the column of make matrices. Default is "\code{V}".
+#' @param U use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".
+#' @param V make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "\code{V}".
 #' @param industry_production_OK the name of the column in the output that
 #'        tells whether all industries produce something. Default is "\code{.industry_production_OK}".
 #' @param problem_industries the name of the column in the output that
 #'        tells which transformation processes consume energy but do not produce anything.
 #'
-#' @return \code{.sutdata} with added column named with the value of \code{industry_production_OK}.
+#' @return \code{.sutmats} with added column named with the value of \code{industry_production_OK}.
 #'
 #' @export
 #'
@@ -163,19 +159,19 @@ verify_SUT_energy_balance_with_units <- function(.sutdata = NULL,
 #' library(tidyr)
 #' verify_SUT_industry_production(UKEnergy2000mats %>%
 #'                                  spread(key = matrix.name, value = matrix))
-verify_SUT_industry_production <- function(.sutdata = NULL,
+verify_SUT_industry_production <- function(.sutmats = NULL,
                                            # Input column names
-                                           U_colname = "U", V_colname = "V",
+                                           U = "U", V = "V",
                                            # Output column names
                                            industry_production_OK = ".industry_production_OK",
                                            problem_industries = ".problem_industries"){
-  verify_func <- function(U, V){
-    check <- rowsums_byname(V) %>% complete_rows_cols(mat = transpose_byname(U), margin = 1)
+  verify_func <- function(U_mat, V_mat){
+    check <- rowsums_byname(V_mat) %>% complete_rows_cols(mat = transpose_byname(U_mat), margin = 1)
     OK <- !any(check == 0)
     problems <- rownames(check)[which(check == 0)]
     list(OK, problems) %>% set_names(c(industry_production_OK, problem_industries))
   }
-  Out <- matsindf_apply(.sutdata, FUN = verify_func, U = U_colname, V = V_colname)
+  Out <- matsindf_apply(.sutmats, FUN = verify_func, U_mat = U, V_mat = V)
   if (!all(Out[[industry_production_OK]] %>% as.logical())) {
     warning(paste("There are some industries that consume but do not produce energy. See column", industry_production_OK))
   }
