@@ -15,13 +15,13 @@ test_that("reconstructing U and V from single matrices works as expected", {
   alliomats <- UKEnergy2000mats %>%
     spread(key = matrix.name, value = matrix) %>%
     calc_io_mats()
-  allUV <- new_Y(alliomats, Y_prime_colname = "Y")
+  allUV <- new_Y(alliomats, Y_prime = "Y")
   for (i in 1:nrow(allUV)) {
-    UV <- new_Y(Y_prime_colname = alliomats$Y[[i]],
-                L_ixp_colname = alliomats$L_ixp[[i]],
-                L_pxp_colname = alliomats$L_pxp[[i]],
-                Z_colname = alliomats$Z[[i]],
-                D_colname = alliomats$D[[i]])
+    UV <- new_Y(Y_prime = alliomats$Y[[i]],
+                L_ixp = alliomats$L_ixp[[i]],
+                L_pxp = alliomats$L_pxp[[i]],
+                Z = alliomats$Z[[i]],
+                D = alliomats$D[[i]])
     expect_equal(UV$U_prime, allUV$U_prime[[i]])
     expect_equal(UV$V_prime, allUV$V_prime[[i]])
   }

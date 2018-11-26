@@ -4,48 +4,48 @@
 \alias{new_k_ps}
 \title{Assess the effect of changing perfectly substitutable intermediate inputs to an industry}
 \usage{
-new_k_ps(.sutdata = NULL, k_prime_colname = "k_prime",
-  U_colname = "U", V_colname = "V", Y_colname = "Y",
-  K_colname = "K", L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp",
-  Z_colname = "Z", D_colname = "D", f_colname = "f",
-  U_prime_colname = "U_prime", V_prime_colname = "V_prime")
+new_k_ps(.sutmats = NULL, k_prime = "k_prime", U = "U", V = "V",
+  Y = "Y", K = "K", L_ixp = "L_ixp", L_pxp = "L_pxp", Z = "Z",
+  D = "D", f = "f", U_prime = "U_prime", V_prime = "V_prime")
 }
 \arguments{
-\item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
+\item{.sutmats}{a data frame of supply-use table matrices with matrices arranged in columns.}
 
-\item{k_prime_colname}{the name of a column in \code{.sutdata} containing vectors representing new
-columns of the \code{K} matrix in each row of \code{.sutdata}.
-Each entry in the \code{k_prime} column of \code{.sutdata} must be a single-column matrix, and
-the name of the single column must match the name of one of the columns of matrix \code{K}.}
+\item{k_prime}{a new column vector for the \code{K} matrix representing new
+inputs to an industry or name of a column in \code{.sutmats} containing same.
+Default is "\code{k_prime}".
+The name of the single \code{k_prime} column must match the name of one of the columns of matrix \code{K}.}
 
-\item{U_colname}{the name of a column in \code{.sutdata} containing \code{U} matrices for the base ECC.  Default is "\code{U}".}
+\item{U}{use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".}
 
-\item{V_colname}{the name of a column in \code{.sutdata} containing \code{V} matrices for the base ECC.  Default is "\code{V}".}
+\item{V}{make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "\code{V}".}
 
-\item{Y_colname}{the name of a column in \code{.sutdata} containing \code{Y} matrices for the base ECC.  Default is "\code{Y}".}
+\item{Y}{final demand (\code{Y}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Y}".}
 
-\item{K_colname}{the name of a column in \code{.sutdata} containing product-by-industry \code{K} matrices.  Default is "\code{K}".
+\item{K}{a \code{K} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{K}".
 \code{K} consists of columns that sum to 1.
 Elements of \code{K} indicate the fraction of total input to industries (in columns)
 provided by products (in rows).
 \code{K} can be calculated by \code{\link{calc_io_mats}}.}
 
-\item{L_ixp_colname}{the name of a column in \code{.sutdata} containing \code{L_ixp} matrices for the base ECC.  Default is "\code{L_ixp}".}
+\item{L_ixp}{an (\code{L_ixp}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{L_ixp}".}
 
-\item{L_pxp_colname}{the name of a column in \code{.sutdata} containing \code{L_pxp} matrices for the base ECC.  Default is "\code{L_pxp}".}
+\item{L_pxp}{an (\code{L_pxp}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{L_pxp}".}
 
-\item{Z_colname}{the name of a column in \code{.sutadata} containing \code{Z} matrices for the base ECC.  Default is "\code{Z}".}
+\item{Z}{an (\code{Z}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Z}".}
 
-\item{D_colname}{the name of a column in \code{.sutadata} containing \code{D} matrices for the base ECC.  Default is "\code{D}".}
+\item{D}{an (\code{D}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{D}".}
+
+\item{f}{an (\code{f}) vector or name of the column in \code{.sutmats} that contains same. Default is "\code{f}".}
+
+\item{U_prime}{name for the \code{U_prime} matrix on output. Default is "\code{U_prime}".}
+
+\item{V_prime}{name for the \code{V_prime} matrix on output. Default is "\code{V_prime}".}
 
 \item{f_colname}{the name of a column in \code{.sutadata} containing \code{f} vectors for the base ECC.  Default is "\code{f}".}
-
-\item{U_prime_colname}{the name of the output column that contains new Use (\code{U}) matrices.  Default is "\code{U_prime}".}
-
-\item{V_prime_colname}{the name of the output column that contains new Make (\code{V}) matrices.  Default is "\code{V_prime}".}
 }
 \value{
-\code{.sutdata} with additional columns \code{U_prime_colname} and \code{V_prime_colname}
+a list or data frame containing \code{U_prime} and \code{V_prime} matrices
 }
 \description{
 This function calculates the effect of changing perfectly-substitutable (ps) inputs
@@ -53,19 +53,19 @@ to an intermediate industry.
 New versions of \code{U} and \code{V} matrices are returned
 as \code{U_prime} and \code{V_prime}.
 Changes are made upstream of the changed industry inputs.
-Final demand (\code{Y}) is unchanged.
+The final demand matrix (\code{Y}) is unchanged.
 }
 \details{
-Note that inputs \code{K_colname}, \code{L_ixp_colname}, \code{L_pxp_colname},
-\code{Z_colname}, \code{D_colname}, and \code{f_colname} can be
+Note that inputs \code{K}, \code{L_ixp}, \code{L_pxp},
+\code{Z}, \code{D}, and \code{f} can be
 conveniently calculated by the function \code{\link{calc_io_mats}}.
 
 Internally, this function uses \code{\link[matsindf]{matsindf_apply}},
 and documentation assumes that
-\code{.sutdata} is not \code{NULL} and is a data frame.
-If \code{.sutdata} is present, output is a data frame with columns named by string values of output arguments, and
-input arguments should be character strings that name columns in \code{.sutdata}.
-If \code{.sutdata} is \code{NULL} (the default), output is a list with items named by output strings,
+\code{.sutmats} is not \code{NULL} and is a data frame.
+If \code{.sutmats} is present, output is a data frame with columns named by string values of output arguments, and
+input arguments should be character strings that name columns in \code{.sutmats}.
+If \code{.sutmats} is \code{NULL} (the default), output is a list with items named by output strings,
 and input arguments should be single matrices or vectors.
 }
 \examples{

@@ -19,19 +19,19 @@ calc_yqfgW(.sutdata = NULL, U = "U", V = "V", Y = "Y",
 
 \item{S_units}{\code{S_units} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{S_units}".}
 
-\item{y}{final demand (\code{y}) vector or name of the column in \code{.sutmats} that contains same. Default is "\code{y}".
+\item{y}{name for \code{y} vector on output. Default is "\code{y}".
 \code{y} is calculated by \code{rowsums(Y)}.}
 
-\item{q}{\code{q} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{q}".
+\item{q}{name for \code{q} vector on output. Default is "\code{q}".
 \code{q} is calculated by \code{rowsums(U) + y}.}
 
-\item{f}{\code{f} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{r}".
+\item{f}{name for \code{f} vector on output. Default is "\code{f}".
 \code{f} is calculated by \code{colsums(U)}.}
 
-\item{g}{\code{g} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{g}".
+\item{g}{name for \code{g} vector on output. Default is "\code{g}".
 \code{g} is calculated by \code{rowsums(V)}.}
 
-\item{W}{\code{W} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{W}".
+\item{W}{name for \code{W} matrix on output. Default is "\code{W}".
 \code{W} is calculated by \code{transpose(V) - U}.}
 }
 \value{

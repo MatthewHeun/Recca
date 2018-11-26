@@ -11,29 +11,29 @@
 #' @param V make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "\code{V}".
 #' @param Y final demand (\code{Y}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Y}".
 #' @param S_units \code{S_units} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{S_units}".
-#' @param y final demand (\code{y}) vector or name of the column in \code{.sutmats} that contains same. Default is "\code{y}".
+#' @param y name for \code{y} vector on output. Default is "\code{y}".
 #'        \code{y} is calculated by \code{rowsums(Y)}.
-#' @param q \code{q} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{q}".
+#' @param q name for \code{q} vector on output. Default is "\code{q}".
 #'        \code{q} is calculated by \code{rowsums(U) + y}.
-#' @param f \code{f} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{r}".
+#' @param f name for \code{f} vector on output. Default is "\code{f}".
 #'        \code{f} is calculated by \code{colsums(U)}.
-#' @param g \code{g} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{g}".
+#' @param g name for \code{g} vector on output. Default is "\code{g}".
 #'        \code{g} is calculated by \code{rowsums(V)}.
-#' @param W \code{W} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{W}".
+#' @param W name for \code{W} matrix on output. Default is "\code{W}".
 #'        \code{W} is calculated by \code{transpose(V) - U}.
-#' @param K \code{K} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{K}".
+#' @param K name for \code{K} matrix on output. Default is "\code{K}".
 #'        \code{K} is calculated by \code{U * f_hat_inv}.
-#' @param Z \code{Z} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Z}".
-#'        \code{W} is calculated by \code{U * g_hat_inv}.
-#' @param C \code{C} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{C}".
+#' @param Z name for \code{Z} matrix on output. Default is "\code{Z}".
+#'        \code{Z} is calculated by \code{U * g_hat_inv}.
+#' @param C name for \code{C} matrix on output. Default is "\code{C}".
 #'        \code{C} is calculated by \code{transpose(V) * g_hat_inv}.
-#' @param D \code{D} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{D}".
+#' @param D name for \code{D} matrix on output. Default is "\code{D}".
 #'        \code{D} is calculated by \code{V * q_hat_inv}.
-#' @param A \code{A} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{A}".
+#' @param A name for \code{A} matrix on output. Default is "\code{A}".
 #'        \code{A} is calculated by \code{Z * D}.
-#' @param L_ixp \code{L_ixp} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{L_ixp}".
+#' @param L_ixp name for \code{L_ixp} matrix on output. Default is "\code{L_ixp}".
 #'        \code{L_ixp} is calculated by \code{D * L_pxp}.
-#' @param L_pxp \code{L_pxp} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{L_pxp}".
+#' @param L_pxp name for \code{L_pxp} matrix on output. Default is "\code{L_pxp}".
 #'        \code{L_pxp} is calculated by \code{(I - Z*D)^-1}.
 #'
 #' @return a list or data frame containing input-output matrices
@@ -83,15 +83,15 @@ calc_io_mats <- function(.sutdata = NULL,
 #' @param V make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "\code{V}".
 #' @param Y final demand (\code{Y}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Y}".
 #' @param S_units \code{S_units} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{S_units}".
-#' @param y final demand (\code{y}) vector or name of the column in \code{.sutmats} that contains same. Default is "\code{y}".
+#' @param y name for \code{y} vector on output. Default is "\code{y}".
 #'        \code{y} is calculated by \code{rowsums(Y)}.
-#' @param f \code{f} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{r}".
-#'        \code{f} is calculated by \code{colsums(U)}.
-#' @param g \code{g} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{g}".
-#'        \code{g} is calculated by \code{rowsums(V)}.
-#' @param q \code{q} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{q}".
+#' @param q name for \code{q} vector on output. Default is "\code{q}".
 #'        \code{q} is calculated by \code{rowsums(U) + y}.
-#' @param W \code{W} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{W}".
+#' @param f name for \code{f} vector on output. Default is "\code{f}".
+#'        \code{f} is calculated by \code{colsums(U)}.
+#' @param g name for \code{g} vector on output. Default is "\code{g}".
+#'        \code{g} is calculated by \code{rowsums(V)}.
+#' @param W name for \code{W} matrix on output. Default is "\code{W}".
 #'        \code{W} is calculated by \code{transpose(V) - U}.
 #'
 #' @importFrom matsbyname count_vals_incols_byname
@@ -150,15 +150,15 @@ calc_yqfgW <- function(.sutdata = NULL,
 #' @param q \code{q} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{q}".
 #' @param f \code{f} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{r}".
 #' @param g \code{g} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{g}".
-#' @param Z \code{Z} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Z}".
-#'        \code{W} is calculated by \code{U * g_hat_inv}.
-#' @param K \code{K} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{K}".
+#' @param Z name for \code{Z} matrix on output. Default is "\code{Z}".
+#'        \code{Z} is calculated by \code{U * g_hat_inv}.
+#' @param K name for \code{K} matrix on output. Default is "\code{K}".
 #'        \code{K} is calculated by \code{U * f_hat_inv}.
-#' @param C \code{C} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{C}".
+#' @param C name for \code{C} matrix on output. Default is "\code{C}".
 #'        \code{C} is calculated by \code{transpose(V) * g_hat_inv}.
-#' @param D \code{D} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{D}".
+#' @param D name for \code{D} matrix on output. Default is "\code{D}".
 #'        \code{D} is calculated by \code{V * q_hat_inv}.
-#' @param A \code{A} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{A}".
+#' @param A name for \code{A} matrix on output. Default is "\code{A}".
 #'        \code{A} is calculated by \code{Z * D}.
 #'
 #' @return a list or data frame containing \code{Z},
@@ -212,9 +212,9 @@ calc_A <- function(.sutdata = NULL,
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
 #' @param D \code{D} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{D}".
 #' @param A \code{A} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{A}".
-#' @param L_ixp \code{L_ixp} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{L_ixp}".
+#' @param L_ixp name for \code{L_ixp} matrix on output. Default is "\code{L_ixp}".
 #'        \code{L_ixp} is calculated by \code{D * L_pxp}.
-#' @param L_pxp \code{L_pxp} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{L_pxp}".
+#' @param L_pxp name for \code{L_pxp} matrix on output. Default is "\code{L_pxp}".
 #'        \code{L_pxp} is calculated by \code{(I - Z*D)^-1}.
 #'
 #' @return a list or data frame containing \code{L_pxp} and \code{L_ixp} matrices

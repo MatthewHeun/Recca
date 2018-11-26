@@ -4,7 +4,7 @@
 \alias{new_R_ps}
 \title{Assess the effect of new levels of resources}
 \usage{
-new_R_ps(.sutdata = NULL, R_prime_colname = "R_prime",
+new_R_ps(.sutmats = NULL, R_prime_colname = "R_prime",
   U_colname = "U", V_colname = "V", Y_colname = "Y",
   S_units_colname = "S_units", q_colname = "q", C_colname = "C",
   eta_i_colname = "eta_i", maxiter = 100, tol = 0,
@@ -12,23 +12,23 @@ new_R_ps(.sutdata = NULL, R_prime_colname = "R_prime",
   Y_Prime_colname = "Y_prime")
 }
 \arguments{
-\item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
+\item{.sutmats}{a data frame of supply-use table matrices with matrices arranged in columns.}
 
-\item{R_prime_colname}{the name of an input column in \code{.sutdata} containing a new resource matrix for the ECC.}
+\item{R_prime_colname}{the name of an input column in \code{.sutmats} containing a new resource matrix for the ECC.}
 
-\item{U_colname}{the name of a column in \code{.sutdata} containing \code{U} matrices for the base ECC.  Default is "\code{U}".}
+\item{U_colname}{the name of a column in \code{.sutmats} containing \code{U} matrices for the base ECC.  Default is "\code{U}".}
 
-\item{V_colname}{the name of a column in \code{.sutdata} containing \code{V} matrices for the base ECC.  Default is "\code{V}".}
+\item{V_colname}{the name of a column in \code{.sutmats} containing \code{V} matrices for the base ECC.  Default is "\code{V}".}
 
-\item{Y_colname}{the name of a column in \code{.sutdata} containing \code{Y} matrices for the base ECC.  Default is "\code{Y}".}
+\item{Y_colname}{the name of a column in \code{.sutmats} containing \code{Y} matrices for the base ECC.  Default is "\code{Y}".}
 
-\item{S_units_colname}{the name of a column in \code{.sutdata} containing \code{S_units} matrices for the base ECC.  Default is "\code{S_units}".}
+\item{S_units_colname}{the name of a column in \code{.sutmats} containing \code{S_units} matrices for the base ECC.  Default is "\code{S_units}".}
 
-\item{q_colname}{the name of a column in \code{.sutdata} containing \code{q} matrices for the base ECC.  Default is "\code{q}".}
+\item{q_colname}{the name of a column in \code{.sutmats} containing \code{q} matrices for the base ECC.  Default is "\code{q}".}
 
-\item{C_colname}{the name of a column in \code{.sutdata} containing \code{C} matrices for the base ECC.  Default is "\code{C}".}
+\item{C_colname}{the name of a column in \code{.sutmats} containing \code{C} matrices for the base ECC.  Default is "\code{C}".}
 
-\item{eta_i_colname}{the name of a column in \code{.sutdata} containing \code{eta_i} vectors for the base ECC.  Default is "\code{eta_i}".}
+\item{eta_i_colname}{the name of a column in \code{.sutmats} containing \code{eta_i} vectors for the base ECC.  Default is "\code{eta_i}".}
 
 \item{maxiter}{the maximum allowable number of iterations when calculating the effects of a new \code{R} matrix.
 Default is 100.}
@@ -48,7 +48,7 @@ Default is "\code{V_prime}".}
 Default is "\code{Y_prime}".}
 }
 \value{
-\code{.sutdata} with additional columns \code{U_prime_colname}, \code{V_prime_colname}, and \code{Y_prime_colname}.
+\code{.sutmats} with additional columns \code{U_prime_colname}, \code{V_prime_colname}, and \code{Y_prime_colname}.
 }
 \description{
 This function calculates the effect of changing the resources available to an energy conversion chain.

@@ -20,19 +20,19 @@ calc_A(.sutdata = NULL, U = "U", V = "V", q = "q", f = "f",
 
 \item{g}{\code{g} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{g}".}
 
-\item{Z}{\code{Z} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Z}".
-\code{W} is calculated by \code{U * g_hat_inv}.}
+\item{Z}{name for \code{Z} matrix on output. Default is "\code{Z}".
+\code{Z} is calculated by \code{U * g_hat_inv}.}
 
-\item{K}{\code{K} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{K}".
+\item{K}{name for \code{K} matrix on output. Default is "\code{K}".
 \code{K} is calculated by \code{U * f_hat_inv}.}
 
-\item{C}{\code{C} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{C}".
+\item{C}{name for \code{C} matrix on output. Default is "\code{C}".
 \code{C} is calculated by \code{transpose(V) * g_hat_inv}.}
 
-\item{D}{\code{D} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{D}".
+\item{D}{name for \code{D} matrix on output. Default is "\code{D}".
 \code{D} is calculated by \code{V * q_hat_inv}.}
 
-\item{A}{\code{A} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{A}".
+\item{A}{name for \code{A} matrix on output. Default is "\code{A}".
 \code{A} is calculated by \code{Z * D}.}
 }
 \value{

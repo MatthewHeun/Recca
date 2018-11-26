@@ -20,40 +20,40 @@ calc_io_mats(.sutdata = NULL, U = "U", V = "V", Y = "Y",
 
 \item{S_units}{\code{S_units} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{S_units}".}
 
-\item{y}{final demand (\code{y}) vector or name of the column in \code{.sutmats} that contains same. Default is "\code{y}".
+\item{y}{name for \code{y} vector on output. Default is "\code{y}".
 \code{y} is calculated by \code{rowsums(Y)}.}
 
-\item{q}{\code{q} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{q}".
+\item{q}{name for \code{q} vector on output. Default is "\code{q}".
 \code{q} is calculated by \code{rowsums(U) + y}.}
 
-\item{f}{\code{f} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{r}".
+\item{f}{name for \code{f} vector on output. Default is "\code{f}".
 \code{f} is calculated by \code{colsums(U)}.}
 
-\item{g}{\code{g} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{g}".
+\item{g}{name for \code{g} vector on output. Default is "\code{g}".
 \code{g} is calculated by \code{rowsums(V)}.}
 
-\item{W}{\code{W} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{W}".
+\item{W}{name for \code{W} matrix on output. Default is "\code{W}".
 \code{W} is calculated by \code{transpose(V) - U}.}
 
-\item{K}{\code{K} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{K}".
+\item{K}{name for \code{K} matrix on output. Default is "\code{K}".
 \code{K} is calculated by \code{U * f_hat_inv}.}
 
-\item{Z}{\code{Z} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Z}".
-\code{W} is calculated by \code{U * g_hat_inv}.}
+\item{Z}{name for \code{Z} matrix on output. Default is "\code{Z}".
+\code{Z} is calculated by \code{U * g_hat_inv}.}
 
-\item{C}{\code{C} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{C}".
+\item{C}{name for \code{C} matrix on output. Default is "\code{C}".
 \code{C} is calculated by \code{transpose(V) * g_hat_inv}.}
 
-\item{D}{\code{D} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{D}".
+\item{D}{name for \code{D} matrix on output. Default is "\code{D}".
 \code{D} is calculated by \code{V * q_hat_inv}.}
 
-\item{A}{\code{A} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{A}".
+\item{A}{name for \code{A} matrix on output. Default is "\code{A}".
 \code{A} is calculated by \code{Z * D}.}
 
-\item{L_ixp}{\code{L_ixp} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{L_ixp}".
+\item{L_ixp}{name for \code{L_ixp} matrix on output. Default is "\code{L_ixp}".
 \code{L_ixp} is calculated by \code{D * L_pxp}.}
 
-\item{L_pxp}{\code{L_pxp} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{L_pxp}".
+\item{L_pxp}{name for \code{L_pxp} matrix on output. Default is "\code{L_pxp}".
 \code{L_pxp} is calculated by \code{(I - Z*D)^-1}.}
 }
 \value{

@@ -4,37 +4,29 @@
 \alias{new_Y}
 \title{Reconstruct an economy given a new final demand matrix}
 \usage{
-new_Y(.sutdata = NULL, Y_prime_colname = "Y_prime",
-  L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp", Z_colname = "Z",
-  D_colname = "D", U_prime_colname = "U_prime",
-  V_prime_colname = "V_prime")
+new_Y(.sutmats = NULL, Y_prime = "Y_prime", L_ixp = "L_ixp",
+  L_pxp = "L_pxp", Z = "Z", D = "D", U_prime = "U_prime",
+  V_prime = "V_prime")
 }
 \arguments{
-\item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
+\item{.sutmats}{a data frame of supply-use table matrices with matrices arranged in columns.}
 
-\item{Y_prime_colname}{the name of a column containing new final demand matrices
-that will be used to reconstruct the economy. Default is "\code{Y_prime}".}
+\item{Y_prime}{a new final demand matrix or name of a column in \code{.sutmats} containing same. Default is "\code{Y_prime}".}
 
-\item{L_ixp_colname}{the name of a column containing industry-by-product L matrices.
-Default is "\code{L_ixp}".}
+\item{L_ixp}{an \code{L_ixp} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{L_ixp}".}
 
-\item{L_pxp_colname}{the name of a column containing product-by-product L matrices.
-Default is "\code{L_pxp}".}
+\item{L_pxp}{an \code{L_pxp} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{L_pxp}".}
 
-\item{Z_colname}{the name of a column containing \code{Z} matrices.
-Default is "\code{Z}".}
+\item{Z}{a \code{Z} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{Z}".}
 
-\item{D_colname}{the name of a column containing \code{D} matrices.
-Default is "\code{D}".}
+\item{D}{a \code{D} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{D}".}
 
-\item{U_prime_colname}{the name of the output column that contains new Use (\code{U}) matrices.
-Default is "\code{U_prime}".}
+\item{U_prime}{the name for new \code{U} matrices. Default is "\code{U_prime}".}
 
-\item{V_prime_colname}{the name of the output column that contains new Make (\code{V}) matrices.
-Default is "\code{V_prime}".}
+\item{V_prime}{the name for new \code{V} matrices. Default is "\code{V_prime}".}
 }
 \value{
-\code{.sutdata} with additional columns \code{U_prime} and \code{V_prime}
+a list or data frame with \code{U_prime} and \code{V_prime} matrices
 }
 \description{
 When the final demand matrix changes from \code{Y} to \code{Y_prime},
@@ -42,16 +34,16 @@ this function calculates new use (\code{U_prime}) and make (\code{V_prime}) matr
 that would be required to meet the new final demand (\code{Y_prime}).
 }
 \details{
-Note that inputs \code{L_ixp_colname}, \code{L_pxp_colname},
-\code{Z_colname}, and \code{D_colname} can be
+Note that inputs \code{L_ixp}, \code{L_pxp},
+\code{Z}, and \code{D} can be
 conveniently calculated by the function \code{\link{calc_io_mats}}.
 
 Internally, this function uses \code{\link[matsindf]{matsindf_apply}},
 and documentation assumes that
-\code{.sutdata} is not \code{NULL} and is a data frame.
-If \code{.sutdata} is present, output is a data frame with columns named by string values of output arguments, and
-input arguments should be character strings that name columns in \code{.sutdata}.
-If \code{.sutdata} is \code{NULL} (the default), output is a list with items named by output strings,
+\code{.sutmats} is not \code{NULL} and is a data frame.
+If \code{.sutmats} is present, output is a data frame with columns named by string values of output arguments, and
+input arguments should be character strings that name columns in \code{.sutmats}.
+If \code{.sutmats} is \code{NULL} (the default), output is a list with items named by output strings,
 and input arguments should be single matrices or vectors.
 }
 \examples{
