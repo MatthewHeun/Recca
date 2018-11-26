@@ -22,6 +22,7 @@ knitr::opts_chunk$set(
 library(dplyr)
 library(matsbyname)
 library(matsindf)
+library(Recca)
 library(tidyr)
 library(tibble)
 ```
@@ -35,6 +36,89 @@ energy and exergy analysis of energy conversion chains.
 `Recca` makes extensive use of a matrix-based PSUT analysis technique
 that first appeared in Heun, Owen, and Brockway 
 [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
+
+
+## Data for examples
+
+For the examples that follow, we'll use the `UKEnergy2000mats` data frame.
+Each row of `UKEnergy2000mats` data frame represents 
+another version of a portion of the ECC for the UK in 2000.
+
+
+## Design philosophy
+
+The functions in `Recca` are flexible and can be used with either a data frame as input
+(and names of columns as arguments to `Recca` function) or with matrices as inputs.
+Outputs are either named columns appended to the input data frame or named matrices in a list.
+The functions in `Recca` have default names for arguments which follow a standard nomenclature.
+It is recommended that the default names be used whenever possible, 
+thereby allowing cleaner code.
+
+
+## Determine the I-O structure of an Energy Conversion Chain (ECC) with individual matrices
+
+To determine the I-O structure of an ECC, use the `calc_io_mats` function.
+
+```{r}
+library(tidyr)
+mats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
+# Use the calc_io_mats function with individual matrices, 
+# each taken from the UKEnergy2000mats data frame.
+U <- mats$U[[1]]
+V <- mats$V[[1]]
+Y <- mats$Y[[1]]
+S_units <- mats$S_units[[1]]
+IO_list <- calc_io_mats(U = U, V = V, Y = Y, S_units = S_units)
+```
+
+Most `Recca` functions return a list when called with individual matrices as arguments.
+The `calc_io_mats` function returns several I-O matrices in a list.
+
+```{r}
+class(IO_list)
+names(IO_list)
+IO_list[["y"]]
+IO_list[["L_ixp"]]
+```
+
+
+## Determine the I-O structure of an Energy Conversion Chain (ECC) for a data frame
+
+Most `Recca` functions can also operate on a data frame.
+When a data frame is supplied to a `Recca` function in the `.sutmats` argument, 
+most other input arguments must be strings 
+that identify the names of appropriate columns in `.sutmats` containing vectors or matrices.
+Helpfully, the default values for other input arguments conforms to a standard nomenclature.
+If you're using the standard nomenclature, 
+most `Recca` functions can be called without any arguments, yielding very clean code.
+
+To illustrate the above features of `Recca` functions, 
+we'll operate on the entire `UKEnergy2000mats` data frame, 
+calculating appropriate I-O matrices for each row.
+
+```{r}
+# This code is very clean, because we rely upon names for columns
+# given by the default arguments to calc_io_mats.
+IO_df <- mats %>% calc_io_mats()
+```
+
+By inspecting `IO_df`, we can see that, for example, 
+one `y` vector and one `L_ixp` matrix was calculated for 
+each row of `mats`.
+
+```{r}
+class(IO_df)
+names(IO_df)
+glimpse(IO_df)
+# We find the y vector from the the previous example.
+IO_df[["y"]][[1]]
+# But there are other y vectors for each row of the data frame.
+IO_df[["y"]][[2]]
+IO_df[["y"]][[3]]
+IO_df[["y"]][[4]]
+```
+
+
 
 
 
