@@ -302,7 +302,7 @@ new_R_ps <- function(.sutmats = NULL,
     iter <- 0
 
     # Verify that inputs to each industry are unit-homogeneous
-    if (!(inputs_unit_homogeneous(U_colname = U_mat, S_units_colname = S_units_mat)[["inputs_unit_homogeneous"]])) {
+    if (!(inputs_unit_homogeneous(U = U_mat, S_units = S_units_mat)[[".inputs_unit_homogeneous"]])) {
       # The method employed here works only when the units on input to all industries are same.
       # If we have a situation where units are not all same, we will return NA
       return(list(NA_real_, NA_real_, NA_real_) %>%

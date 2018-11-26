@@ -4,28 +4,25 @@
 \alias{flows_unit_homogeneous}
 \title{Tell whether industry flows (inputs and outputs) are unit-homogeneous}
 \usage{
-flows_unit_homogeneous(.sutdata = NULL, U_colname = "U",
-  V_colname = "V", S_units_colname = "S_units", keep_details = FALSE,
-  flows_unit_homogeneous_colname = "flows_unit_homogeneous")
+flows_unit_homogeneous(.sutdata = NULL, U = "U", V = "V",
+  S_units = "S_units", keep_details = FALSE,
+  flows_unit_homogeneous = ".flows_unit_homogeneous")
 }
 \arguments{
-\item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
+\item{U}{a use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".}
 
-\item{U_colname}{the name of the column in \code{.sutdata} that contains
-\code{U} matrices. Default is "\code{U}".}
+\item{V}{a make (\code{V}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{V}".}
 
-\item{V_colname}{the name of the column in \code{.sutdata} that contains
-\code{V} matrices. Default is "\code{V}".}
-
-\item{S_units_colname}{the name of the column in \code{.sutdata} that contains
-\code{S_units} matrices. Default is "\code{S_units}".}
+\item{S_units}{an \code{S_units} matrix or name of a column in \code{.sutmats} that contains same. Default is "\code{S_units}".}
 
 \item{keep_details}{if \code{TRUE}, per-industry results are returned;
 if \code{FALSE}, per-ECC results are returned.}
 
-\item{flows_unit_homogeneous_colname}{the name of the output column
+\item{flows_unit_homogeneous}{the name of the output column
 that tells whether each industry's outputs are unit-homogeneous.
-Default is "\code{flows_unit_homogeneous}".}
+Default is "\code{.flows_unit_homogeneous}".}
+
+\item{.sutmats}{a data frame of supply-use table matrices with matrices arranged in columns.}
 }
 \value{
 \code{.sutdata} with additional column "\code{flows_unit_homogeneous}" containing

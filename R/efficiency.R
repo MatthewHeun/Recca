@@ -43,8 +43,8 @@ calc_eta_i <- function(.sutdata,
   eta_func <- function(U_mat, V_mat, S_units_mat){
 
     result_var <- "result"
-    units_OK <- flows_unit_homogeneous(U_colname = U_mat, V_colname = V_mat, S_units_colname = S_units_mat,
-                                       flows_unit_homogeneous_colname = result_var, keep_details = TRUE)[[result_var]]
+    units_OK <- flows_unit_homogeneous(U = U_mat, V = V_mat, S_units = S_units_mat,
+                                       flows_unit_homogeneous = result_var, keep_details = TRUE)[[result_var]]
 
     f_vec <- colsums_byname(U_mat) %>% transpose_byname()
     g_vec <- rowsums_byname(V_mat)

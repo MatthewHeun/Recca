@@ -4,22 +4,22 @@
 \alias{separate_RV}
 \title{Separate resource (\code{R}) and make (\code{V}) matrices from make plus resource (\code{R_plus_V}) matrices}
 \usage{
-separate_RV(.sutdata = NULL, U_colname = "U",
-  R_plus_V_colname = "R_plus_V", R_colname = "R", V_colname = "V")
+separate_RV(.sutmats = NULL, U = "U", R_plus_V = "R_plus_V",
+  R = "R", V = "V")
 }
 \arguments{
+\item{U}{a use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".}
+
+\item{R_plus_V}{an \code{R_plus_V} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{R_plus_V}".}
+
+\item{R}{name for resource (\code{R}) matrix on output. Default is "\code{R}".}
+
+\item{V}{name for make (\code{V}) matrix on output. Default is "\code{V}".}
+
 \item{.sutdata}{a list or data frame containing use matrix(ces) and make matrix(ces)}
-
-\item{U_colname}{identifier for the use matrix (a string) \code{.sutdata}. Default is "\code{U}".}
-
-\item{R_plus_V_colname}{identifier for the make matrix in \code{.sutdata} (a string). Default is "\code{R_plus_V}".}
-
-\item{R_colname}{identifier for the resource matrix (a string). Default is "\code{R}".}
-
-\item{V_colname}{identifier for the make matrix (a string). Default is "\code{V}".}
 }
 \value{
-a version of the \code{R_plus_V} matrix without resource industries and an \code{R} matrix
+a list or data frame containing \code{R} and \code{V} matrices
 }
 \description{
 Resource industries are industries that make a product without using any products.
