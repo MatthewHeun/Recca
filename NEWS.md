@@ -1,8 +1,10 @@
 * Now importing `magrittr` pipe at high level.
 * Now using `hatinv_byname` function instead of `hatize_byname` and `invert_byname` in succession.
-* Standardizing argument names to `Recca` functions: none named `*_colname` any more.
-  The new approach yields better code when calling functions with individual matrices.
-  And the default values for column names (when using functions to operate a data frame),
+* Breaking change: arguments to `Recca` functions are no longer named `*_colname`.
+  I'm standardizing argument names.
+  The new approach yields better code when calling functions with individual matrices:
+  every matrix needs to be named.
+  And when using functions to operate on a data frame the default values for column names
   mean that data frames can be piped to functions that are called with no parameters.
   In all ways, the new argument naming convention is more elegant than the previous `*_colname` approach.
 
@@ -12,11 +14,9 @@
 * Breaking change: `reconstruct_UV` --> `new_Y`. 
   This change allows for several `new_*` functions that assess changes to the ECC
   when some part of the ECC changes.
-
 * New function `new_k_ps` assesses changes to the ECC when 
   proportion of inputs to an industry change 
   under the assumption of perfect substitution.
-
 * New functions `products_unit_homogeneous`, `inputs_unit_homogeneous`, and `outputs_unit_homogeneous`
   test whether products, inputs to all industries, and outputs from all industries are unit-homogeneous.
 
