@@ -21,7 +21,9 @@
 #' library(dplyr)
 #' library(matsindf)
 #' library(Recca)
-#' S_units_from_tidy(UKEnergy2000tidy %>% group_by("Country", "Year", "Energy.type", "Last.stage"))
+#' UKEnergy2000tidy %>%
+#'   group_by("Country", "Year", "Energy.type", "Last.stage") %>%
+#'   S_units_from_tidy()
 S_units_from_tidy <- function(.tidydf, Product = "Product", Unit = "Unit", S_units = "S_units"){
   # Establish names
   Unit <- as.name(Unit)
@@ -92,7 +94,8 @@ S_units_from_tidy <- function(.tidydf, Product = "Product", Unit = "Unit", S_uni
 #' @importFrom dplyr case_when
 #'
 #' @examples
-#' add_matnames_iea(UKEnergy2000tidy)
+#' UKEnergy2000tidy %>%
+#'   add_matnames_iea()
 add_matnames_iea <- function(.DF,
                              # Input columns
                              ledger_side = "Ledger.side",

@@ -86,7 +86,7 @@
       <h1>Recca</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2018-11-25</h4>
+            <h4 class="date">2018-11-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/master/vignettes/Recca.Rmd"><code>vignettes/Recca.Rmd</code></a></small>
       <div class="hidden name"><code>Recca.Rmd</code></div>
@@ -99,7 +99,7 @@
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p><code>Recca</code> (<code>R</code> Energy Conversion Chain Analysis) is an <code>R</code> package that enables energy and exergy analysis of energy conversion chains. <code>Recca</code> makes extensive use of a matrix-based PSUT analysis technique that first appeared in Heun, Owen, and Brockway <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>.</p>
+<p><code>Recca</code> (<code>R</code> Energy Conversion Chain Analysis) is an <code>R</code> package that enables energy and exergy analysis of energy conversion chains. <code>Recca</code> makes extensive use of a matrix-based PSUT analysis technique that first appeared in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>.</p>
 </div>
 <div id="data-for-examples" class="section level2">
 <h2 class="hasAnchor">
@@ -118,117 +118,117 @@
 <h3 class="hasAnchor">
 <a href="#with-individual-matrices" class="anchor"></a>With individual matrices</h3>
 <p>To determine the I-O structure of an ECC, use the <code>calc_io_mats</code> function.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(tidyr)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">mats &lt;-<span class="st"> </span>UKEnergy2000mats <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="https://tidyr.tidyverse.org/reference/spread.html">spread</a></span>(<span class="dt">key =</span> matrix.name, <span class="dt">value =</span> matrix) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="st">  </span><span class="kw">mutate</span>(</a>
-<a class="sourceLine" id="cb1-5" data-line-number="5">    <span class="dt">Last.stage =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">factor</a></span>(Last.stage, <span class="dt">levels =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"final"</span>, <span class="st">"useful"</span>, <span class="st">"services"</span>)),</a>
-<a class="sourceLine" id="cb1-6" data-line-number="6">    <span class="dt">Energy.type =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">factor</a></span>(Energy.type, <span class="dt">levels =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"E.ktoe"</span>, <span class="st">"X.ktoe"</span>))</a>
-<a class="sourceLine" id="cb1-7" data-line-number="7">  ) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="st">  </span><span class="kw">arrange</span>(Last.stage, Energy.type) <span class="co"># Put rows in a natural order</span></a>
-<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="co"># Use the calc_io_mats function with individual matrices, </span></a>
-<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="co"># each taken from the UKEnergy2000mats data frame.</span></a>
-<a class="sourceLine" id="cb1-11" data-line-number="11">U &lt;-<span class="st"> </span>mats<span class="op">$</span>U[[<span class="dv">1</span>]]</a>
-<a class="sourceLine" id="cb1-12" data-line-number="12">V &lt;-<span class="st"> </span>mats<span class="op">$</span>V[[<span class="dv">1</span>]]</a>
-<a class="sourceLine" id="cb1-13" data-line-number="13">Y &lt;-<span class="st"> </span>mats<span class="op">$</span>Y[[<span class="dv">1</span>]]</a>
-<a class="sourceLine" id="cb1-14" data-line-number="14">S_units &lt;-<span class="st"> </span>mats<span class="op">$</span>S_units[[<span class="dv">1</span>]]</a>
-<a class="sourceLine" id="cb1-15" data-line-number="15">IO_list &lt;-<span class="st"> </span><span class="kw"><a href="../reference/calc_io_mats.html">calc_io_mats</a></span>(<span class="dt">U =</span> U, <span class="dt">V =</span> V, <span class="dt">Y =</span> Y, <span class="dt">S_units =</span> S_units)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(tidyr)
+mats &lt;-<span class="st"> </span>UKEnergy2000mats <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://tidyr.tidyverse.org/reference/spread.html">spread</a></span>(<span class="dt">key =</span> matrix.name, <span class="dt">value =</span> matrix) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(
+    <span class="dt">Last.stage =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">factor</a></span>(Last.stage, <span class="dt">levels =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"final"</span>, <span class="st">"useful"</span>, <span class="st">"services"</span>)),
+    <span class="dt">Energy.type =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">factor</a></span>(Energy.type, <span class="dt">levels =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"E.ktoe"</span>, <span class="st">"X.ktoe"</span>))
+  ) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">arrange</span>(Last.stage, Energy.type) <span class="co"># Put rows in a natural order</span>
+<span class="co"># Use the calc_io_mats function with individual matrices, </span>
+<span class="co"># each taken from the UKEnergy2000mats data frame.</span>
+U &lt;-<span class="st"> </span>mats<span class="op">$</span>U[[<span class="dv">1</span>]]
+V &lt;-<span class="st"> </span>mats<span class="op">$</span>V[[<span class="dv">1</span>]]
+Y &lt;-<span class="st"> </span>mats<span class="op">$</span>Y[[<span class="dv">1</span>]]
+S_units &lt;-<span class="st"> </span>mats<span class="op">$</span>S_units[[<span class="dv">1</span>]]
+IO_list &lt;-<span class="st"> </span><span class="kw"><a href="../reference/calc_io_mats.html">calc_io_mats</a></span>(<span class="dt">U =</span> U, <span class="dt">V =</span> V, <span class="dt">Y =</span> Y, <span class="dt">S_units =</span> S_units)</code></pre></div>
 <p>Most <code>Recca</code> functions return a list when called with individual matrices as arguments. The <code>calc_io_mats</code> function returns several I-O matrices in a list.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/class">class</a></span>(IO_list)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co">#&gt; [1] "list"</span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(IO_list)</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">#&gt;  [1] "y"     "q"     "f"     "g"     "W"     "Z"     "K"     "C"    </span></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">#&gt;  [9] "D"     "A"     "L_pxp" "L_ixp"</span></a>
-<a class="sourceLine" id="cb2-6" data-line-number="6">IO_list[[<span class="st">"y"</span>]]</a>
-<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co">#&gt;                Industry</span></a>
-<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">#&gt; Diesel - Dist.    14750</span></a>
-<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="co">#&gt; Elect - Grid       6000</span></a>
-<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="co">#&gt; NG - Dist.        25000</span></a>
-<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="co">#&gt; Petrol - Dist.    26000</span></a>
-<a class="sourceLine" id="cb2-12" data-line-number="12"><span class="co">#&gt; attr(,"rowtype")</span></a>
-<a class="sourceLine" id="cb2-13" data-line-number="13"><span class="co">#&gt; [1] "Product"</span></a>
-<a class="sourceLine" id="cb2-14" data-line-number="14"><span class="co">#&gt; attr(,"coltype")</span></a>
-<a class="sourceLine" id="cb2-15" data-line-number="15"><span class="co">#&gt; [1] "Industry"</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/class">class</a></span>(IO_list)
+<span class="co">#&gt; [1] "list"</span>
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(IO_list)
+<span class="co">#&gt;  [1] "y"     "q"     "f"     "g"     "W"     "Z"     "K"     "C"    </span>
+<span class="co">#&gt;  [9] "D"     "A"     "L_pxp" "L_ixp"</span>
+IO_list[[<span class="st">"y"</span>]]
+<span class="co">#&gt;                Industry</span>
+<span class="co">#&gt; Diesel - Dist.    14750</span>
+<span class="co">#&gt; Elect - Grid       6000</span>
+<span class="co">#&gt; NG - Dist.        25000</span>
+<span class="co">#&gt; Petrol - Dist.    26000</span>
+<span class="co">#&gt; attr(,"rowtype")</span>
+<span class="co">#&gt; [1] "Product"</span>
+<span class="co">#&gt; attr(,"coltype")</span>
+<span class="co">#&gt; [1] "Industry"</span></code></pre></div>
 </div>
 <div id="using-a-data-frame" class="section level3">
 <h3 class="hasAnchor">
 <a href="#using-a-data-frame" class="anchor"></a>Using a data frame</h3>
 <p>Most <code>Recca</code> functions can also operate on a data frame. When a data frame is supplied to a <code>Recca</code> function in the <code>.sutmats</code> argument, most other input arguments must be strings that identify the names of appropriate columns in <code>.sutmats</code> containing vectors or matrices. Helpfully, the default values for other input arguments conforms to a standard nomenclature. If you’re using the standard nomenclature, most <code>Recca</code> functions can be called without any arguments. This approach yields very clean piped code, because we rely upon names for input and output columns given by the default arguments to <code>calc_io_mats</code>.</p>
 <p>To illustrate the above features of <code>Recca</code> functions, we’ll apply the <code>calc_io_mats</code> function to the entire <code>UKEnergy2000mats</code> data frame, calculating appropriate I-O matrices for each row. Used in this way, <code>Recca</code> functions act like specialized <code><a href="http://dplyr.tidyverse.org/reference/mutate.html">dplyr::mutate</a></code> functions, with new columns added to the right side of the data frame supplied to the <code>.sutmats</code> argument.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">IO_df &lt;-<span class="st"> </span>mats <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/calc_io_mats.html">calc_io_mats</a></span>()</a></code></pre></div>
-<p>By inspecting <code>IO_df</code>, we can see, for example, that one <span class="math inline">\(\mathbf{y}\)</span> vector was calculated for each row of <code>mats</code>. The same is true for all I-O matrices calculated by <code>calc_io_mats</code>.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/class">class</a></span>(IO_df)</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="co">#&gt; [1] "data.frame"</span></a>
-<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(IO_df)</a>
-<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">#&gt;  [1] "Country"     "Year"        "Energy.type" "Last.stage"  "r_EIOU"     </span></a>
-<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="co">#&gt;  [6] "S_units"     "U"           "V"           "Y"           "y"          </span></a>
-<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="co">#&gt; [11] "q"           "f"           "g"           "W"           "Z"          </span></a>
-<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">#&gt; [16] "K"           "C"           "D"           "A"           "L_pxp"      </span></a>
-<a class="sourceLine" id="cb4-8" data-line-number="8"><span class="co">#&gt; [21] "L_ixp"</span></a>
-<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="kw">glimpse</span>(IO_df)</a>
-<a class="sourceLine" id="cb4-10" data-line-number="10"><span class="co">#&gt; Observations: 4</span></a>
-<a class="sourceLine" id="cb4-11" data-line-number="11"><span class="co">#&gt; Variables: 21</span></a>
-<a class="sourceLine" id="cb4-12" data-line-number="12"><span class="co">#&gt; $ Country     &lt;chr&gt; "GB", "GB", "GB", "GB"</span></a>
-<a class="sourceLine" id="cb4-13" data-line-number="13"><span class="co">#&gt; $ Year        &lt;int&gt; 2000, 2000, 2000, 2000</span></a>
-<a class="sourceLine" id="cb4-14" data-line-number="14"><span class="co">#&gt; $ Energy.type &lt;fct&gt; E.ktoe, E.ktoe, E.ktoe, X.ktoe</span></a>
-<a class="sourceLine" id="cb4-15" data-line-number="15"><span class="co">#&gt; $ Last.stage  &lt;fct&gt; final, useful, services, services</span></a>
-<a class="sourceLine" id="cb4-16" data-line-number="16"><span class="co">#&gt; $ r_EIOU      &lt;list&gt; [&lt;0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,...</span></a>
-<a class="sourceLine" id="cb4-17" data-line-number="17"><span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1&gt;, &lt;1, 1, 1, ...</span></a>
-<a class="sourceLine" id="cb4-18" data-line-number="18"><span class="co">#&gt; $ U           &lt;list&gt; [&lt;0, 500, 47500, 0, 25, 0, 25, 0, 0, 0, 0, 0, 0, ...</span></a>
-<a class="sourceLine" id="cb4-19" data-line-number="19"><span class="co">#&gt; $ V           &lt;list&gt; [&lt;0, 0, 0, 0, 0, 0, 0, 0, 0, 50000, 0, 47500, 0, ...</span></a>
-<a class="sourceLine" id="cb4-20" data-line-number="20"><span class="co">#&gt; $ Y           &lt;list&gt; [&lt;0, 6000, 25000, 0, 14750, 0, 0, 26000&gt;, &lt;1200.0...</span></a>
-<a class="sourceLine" id="cb4-21" data-line-number="21"><span class="co">#&gt; $ y           &lt;list&gt; [&lt;14750, 6000, 25000, 26000&gt;, &lt;1200.00, 20000.00,...</span></a>
-<a class="sourceLine" id="cb4-22" data-line-number="22"><span class="co">#&gt; $ q           &lt;list&gt; [&lt;50000, 47500, 50000, 20500, 15500, 6400, 6275, ...</span></a>
-<a class="sourceLine" id="cb4-23" data-line-number="23"><span class="co">#&gt; $ f           &lt;list&gt; [&lt;48050, 15850, 6400, 45075, 41050, 52575, 52075,...</span></a>
-<a class="sourceLine" id="cb4-24" data-line-number="24"><span class="co">#&gt; $ g           &lt;list&gt; [&lt;47500, 15500, 6275, 43000, 41000, 50000, 47000,...</span></a>
-<a class="sourceLine" id="cb4-25" data-line-number="25"><span class="co">#&gt; $ W           &lt;list&gt; [&lt;0, 47000, -47500, 0, -25, 0, -25, 0, 0, 0, 0, 0...</span></a>
-<a class="sourceLine" id="cb4-26" data-line-number="26"><span class="co">#&gt; $ Z           &lt;list&gt; [&lt;0.0000000000, 0.0105263158, 1.0000000000, 0.000...</span></a>
-<a class="sourceLine" id="cb4-27" data-line-number="27"><span class="co">#&gt; $ K           &lt;list&gt; [&lt;0.0000000000, 0.0104058273, 0.9885535900, 0.000...</span></a>
-<a class="sourceLine" id="cb4-28" data-line-number="28"><span class="co">#&gt; $ C           &lt;list&gt; [&lt;0.0000000, 1.0000000, 0.0000000, 0.0000000, 0.0...</span></a>
-<a class="sourceLine" id="cb4-29" data-line-number="29"><span class="co">#&gt; $ D           &lt;list&gt; [&lt;0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0,...</span></a>
-<a class="sourceLine" id="cb4-30" data-line-number="30"><span class="co">#&gt; $ A           &lt;list&gt; [&lt;0.0000000000, 0.0000000000, 0.0000000000, 0.000...</span></a>
-<a class="sourceLine" id="cb4-31" data-line-number="31"><span class="co">#&gt; $ L_pxp       &lt;list&gt; [&lt;1.0000000000, 0.0000000000, 0.0000000000, 0.000...</span></a>
-<a class="sourceLine" id="cb4-32" data-line-number="32"><span class="co">#&gt; $ L_ixp       &lt;list&gt; [&lt;0.0000000000, 0.0000000000, 0.0000000000, 0.000...</span></a>
-<a class="sourceLine" id="cb4-33" data-line-number="33">IO_df[[<span class="st">"y"</span>]][[<span class="dv">1</span>]]</a>
-<a class="sourceLine" id="cb4-34" data-line-number="34"><span class="co">#&gt;                Industry</span></a>
-<a class="sourceLine" id="cb4-35" data-line-number="35"><span class="co">#&gt; Diesel - Dist.    14750</span></a>
-<a class="sourceLine" id="cb4-36" data-line-number="36"><span class="co">#&gt; Elect - Grid       6000</span></a>
-<a class="sourceLine" id="cb4-37" data-line-number="37"><span class="co">#&gt; NG - Dist.        25000</span></a>
-<a class="sourceLine" id="cb4-38" data-line-number="38"><span class="co">#&gt; Petrol - Dist.    26000</span></a>
-<a class="sourceLine" id="cb4-39" data-line-number="39"><span class="co">#&gt; attr(,"rowtype")</span></a>
-<a class="sourceLine" id="cb4-40" data-line-number="40"><span class="co">#&gt; [1] "Product"</span></a>
-<a class="sourceLine" id="cb4-41" data-line-number="41"><span class="co">#&gt; attr(,"coltype")</span></a>
-<a class="sourceLine" id="cb4-42" data-line-number="42"><span class="co">#&gt; [1] "Industry"</span></a>
-<a class="sourceLine" id="cb4-43" data-line-number="43">IO_df[[<span class="st">"y"</span>]][[<span class="dv">2</span>]]</a>
-<a class="sourceLine" id="cb4-44" data-line-number="44"><span class="co">#&gt;                    Industry</span></a>
-<a class="sourceLine" id="cb4-45" data-line-number="45"><span class="co">#&gt; Light               1200.00</span></a>
-<a class="sourceLine" id="cb4-46" data-line-number="46"><span class="co">#&gt; LTH                20000.00</span></a>
-<a class="sourceLine" id="cb4-47" data-line-number="47"><span class="co">#&gt; MD - Car engines    3000.40</span></a>
-<a class="sourceLine" id="cb4-48" data-line-number="48"><span class="co">#&gt; MD - Truck engines  1714.98</span></a>
-<a class="sourceLine" id="cb4-49" data-line-number="49"><span class="co">#&gt; attr(,"rowtype")</span></a>
-<a class="sourceLine" id="cb4-50" data-line-number="50"><span class="co">#&gt; [1] "Product"</span></a>
-<a class="sourceLine" id="cb4-51" data-line-number="51"><span class="co">#&gt; attr(,"coltype")</span></a>
-<a class="sourceLine" id="cb4-52" data-line-number="52"><span class="co">#&gt; [1] "Industry"</span></a>
-<a class="sourceLine" id="cb4-53" data-line-number="53">IO_df[[<span class="st">"y"</span>]][[<span class="dv">3</span>]]</a>
-<a class="sourceLine" id="cb4-54" data-line-number="54"><span class="co">#&gt;                                 Industry</span></a>
-<a class="sourceLine" id="cb4-55" data-line-number="55"><span class="co">#&gt; Freight [tonne-km/year]     1.429166e+11</span></a>
-<a class="sourceLine" id="cb4-56" data-line-number="56"><span class="co">#&gt; Illumination [lumen-hrs/yr] 5.000000e+14</span></a>
-<a class="sourceLine" id="cb4-57" data-line-number="57"><span class="co">#&gt; Passenger [passenger-km/yr] 5.000000e+11</span></a>
-<a class="sourceLine" id="cb4-58" data-line-number="58"><span class="co">#&gt; Space heating [m3-K]        7.500000e+10</span></a>
-<a class="sourceLine" id="cb4-59" data-line-number="59"><span class="co">#&gt; attr(,"rowtype")</span></a>
-<a class="sourceLine" id="cb4-60" data-line-number="60"><span class="co">#&gt; [1] "Product"</span></a>
-<a class="sourceLine" id="cb4-61" data-line-number="61"><span class="co">#&gt; attr(,"coltype")</span></a>
-<a class="sourceLine" id="cb4-62" data-line-number="62"><span class="co">#&gt; [1] "Industry"</span></a>
-<a class="sourceLine" id="cb4-63" data-line-number="63">IO_df[[<span class="st">"y"</span>]][[<span class="dv">4</span>]]</a>
-<a class="sourceLine" id="cb4-64" data-line-number="64"><span class="co">#&gt;                                 Industry</span></a>
-<a class="sourceLine" id="cb4-65" data-line-number="65"><span class="co">#&gt; Freight [tonne-km/year]     1.429166e+11</span></a>
-<a class="sourceLine" id="cb4-66" data-line-number="66"><span class="co">#&gt; Illumination [lumen-hrs/yr] 5.000000e+14</span></a>
-<a class="sourceLine" id="cb4-67" data-line-number="67"><span class="co">#&gt; Passenger [passenger-km/yr] 5.000000e+11</span></a>
-<a class="sourceLine" id="cb4-68" data-line-number="68"><span class="co">#&gt; Space heating [m3-K]        7.500000e+10</span></a>
-<a class="sourceLine" id="cb4-69" data-line-number="69"><span class="co">#&gt; attr(,"rowtype")</span></a>
-<a class="sourceLine" id="cb4-70" data-line-number="70"><span class="co">#&gt; [1] "Product"</span></a>
-<a class="sourceLine" id="cb4-71" data-line-number="71"><span class="co">#&gt; attr(,"coltype")</span></a>
-<a class="sourceLine" id="cb4-72" data-line-number="72"><span class="co">#&gt; [1] "Industry"</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">IO_df &lt;-<span class="st"> </span>mats <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/calc_io_mats.html">calc_io_mats</a></span>()</code></pre></div>
+<p>By inspecting <code>IO_df</code>, we can see, for example, that one <span class="math inline">\({\mathbf{y}}\)</span> vector was calculated for each row of <code>mats</code>. The same is true for all I-O matrices calculated by <code>calc_io_mats</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/class">class</a></span>(IO_df)
+<span class="co">#&gt; [1] "data.frame"</span>
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(IO_df)
+<span class="co">#&gt;  [1] "Country"     "Year"        "Energy.type" "Last.stage"  "r_EIOU"     </span>
+<span class="co">#&gt;  [6] "S_units"     "U"           "V"           "Y"           "y"          </span>
+<span class="co">#&gt; [11] "q"           "f"           "g"           "W"           "Z"          </span>
+<span class="co">#&gt; [16] "K"           "C"           "D"           "A"           "L_pxp"      </span>
+<span class="co">#&gt; [21] "L_ixp"</span>
+<span class="kw">glimpse</span>(IO_df)
+<span class="co">#&gt; Observations: 4</span>
+<span class="co">#&gt; Variables: 21</span>
+<span class="co">#&gt; $ Country     &lt;chr&gt; "GB", "GB", "GB", "GB"</span>
+<span class="co">#&gt; $ Year        &lt;int&gt; 2000, 2000, 2000, 2000</span>
+<span class="co">#&gt; $ Energy.type &lt;fct&gt; E.ktoe, E.ktoe, E.ktoe, X.ktoe</span>
+<span class="co">#&gt; $ Last.stage  &lt;fct&gt; final, useful, services, services</span>
+<span class="co">#&gt; $ r_EIOU      &lt;list&gt; [&lt;0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,...</span>
+<span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1&gt;, &lt;1, 1, 1, ...</span>
+<span class="co">#&gt; $ U           &lt;list&gt; [&lt;0, 500, 47500, 0, 25, 0, 25, 0, 0, 0, 0, 0, 0, ...</span>
+<span class="co">#&gt; $ V           &lt;list&gt; [&lt;0, 0, 0, 0, 0, 0, 0, 0, 0, 50000, 0, 47500, 0, ...</span>
+<span class="co">#&gt; $ Y           &lt;list&gt; [&lt;0, 6000, 25000, 0, 14750, 0, 0, 26000&gt;, &lt;1200.0...</span>
+<span class="co">#&gt; $ y           &lt;list&gt; [&lt;14750, 6000, 25000, 26000&gt;, &lt;1200.00, 20000.00,...</span>
+<span class="co">#&gt; $ q           &lt;list&gt; [&lt;50000, 47500, 50000, 20500, 15500, 6400, 6275, ...</span>
+<span class="co">#&gt; $ f           &lt;list&gt; [&lt;48050, 15850, 6400, 45075, 41050, 52575, 52075,...</span>
+<span class="co">#&gt; $ g           &lt;list&gt; [&lt;47500, 15500, 6275, 43000, 41000, 50000, 47000,...</span>
+<span class="co">#&gt; $ W           &lt;list&gt; [&lt;0, 47000, -47500, 0, -25, 0, -25, 0, 0, 0, 0, 0...</span>
+<span class="co">#&gt; $ Z           &lt;list&gt; [&lt;0.0000000000, 0.0105263158, 1.0000000000, 0.000...</span>
+<span class="co">#&gt; $ K           &lt;list&gt; [&lt;0.0000000000, 0.0104058273, 0.9885535900, 0.000...</span>
+<span class="co">#&gt; $ C           &lt;list&gt; [&lt;0.0000000, 1.0000000, 0.0000000, 0.0000000, 0.0...</span>
+<span class="co">#&gt; $ D           &lt;list&gt; [&lt;0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0,...</span>
+<span class="co">#&gt; $ A           &lt;list&gt; [&lt;0.0000000000, 0.0000000000, 0.0000000000, 0.000...</span>
+<span class="co">#&gt; $ L_pxp       &lt;list&gt; [&lt;1.0000000000, 0.0000000000, 0.0000000000, 0.000...</span>
+<span class="co">#&gt; $ L_ixp       &lt;list&gt; [&lt;0.0000000000, 0.0000000000, 0.0000000000, 0.000...</span>
+IO_df[[<span class="st">"y"</span>]][[<span class="dv">1</span>]]
+<span class="co">#&gt;                Industry</span>
+<span class="co">#&gt; Diesel - Dist.    14750</span>
+<span class="co">#&gt; Elect - Grid       6000</span>
+<span class="co">#&gt; NG - Dist.        25000</span>
+<span class="co">#&gt; Petrol - Dist.    26000</span>
+<span class="co">#&gt; attr(,"rowtype")</span>
+<span class="co">#&gt; [1] "Product"</span>
+<span class="co">#&gt; attr(,"coltype")</span>
+<span class="co">#&gt; [1] "Industry"</span>
+IO_df[[<span class="st">"y"</span>]][[<span class="dv">2</span>]]
+<span class="co">#&gt;                    Industry</span>
+<span class="co">#&gt; Light               1200.00</span>
+<span class="co">#&gt; LTH                20000.00</span>
+<span class="co">#&gt; MD - Car engines    3000.40</span>
+<span class="co">#&gt; MD - Truck engines  1714.98</span>
+<span class="co">#&gt; attr(,"rowtype")</span>
+<span class="co">#&gt; [1] "Product"</span>
+<span class="co">#&gt; attr(,"coltype")</span>
+<span class="co">#&gt; [1] "Industry"</span>
+IO_df[[<span class="st">"y"</span>]][[<span class="dv">3</span>]]
+<span class="co">#&gt;                                 Industry</span>
+<span class="co">#&gt; Freight [tonne-km/year]     1.429166e+11</span>
+<span class="co">#&gt; Illumination [lumen-hrs/yr] 5.000000e+14</span>
+<span class="co">#&gt; Passenger [passenger-km/yr] 5.000000e+11</span>
+<span class="co">#&gt; Space heating [m3-K]        7.500000e+10</span>
+<span class="co">#&gt; attr(,"rowtype")</span>
+<span class="co">#&gt; [1] "Product"</span>
+<span class="co">#&gt; attr(,"coltype")</span>
+<span class="co">#&gt; [1] "Industry"</span>
+IO_df[[<span class="st">"y"</span>]][[<span class="dv">4</span>]]
+<span class="co">#&gt;                                 Industry</span>
+<span class="co">#&gt; Freight [tonne-km/year]     1.429166e+11</span>
+<span class="co">#&gt; Illumination [lumen-hrs/yr] 5.000000e+14</span>
+<span class="co">#&gt; Passenger [passenger-km/yr] 5.000000e+11</span>
+<span class="co">#&gt; Space heating [m3-K]        7.500000e+10</span>
+<span class="co">#&gt; attr(,"rowtype")</span>
+<span class="co">#&gt; [1] "Product"</span>
+<span class="co">#&gt; attr(,"coltype")</span>
+<span class="co">#&gt; [1] "Industry"</span></code></pre></div>
 </div>
 </div>
 <div id="conclusion" class="section level2">
@@ -241,7 +241,7 @@
 <a href="#references" class="anchor"></a>References</h2>
 <div id="refs" class="references">
 <div id="ref-Heun:2018">
-<p>Heun, Matthew Kuperus, Anne Owen, and Paul E. Brockway. 2018. “A Physical Supply-Use Table Framework for Energy Analysis on the Energy Conversion Chain.” <em>Applied Energy</em> 226 (September):1134–62. <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="uri">https://doi.org/10.1016/j.apenergy.2018.05.109</a>.</p>
+<p>Heun, Matthew Kuperus, Anne Owen, and Paul E. Brockway. 2018. “A Physical Supply-Use Table Framework for Energy Analysis on the Energy Conversion Chain.” <em>Applied Energy</em> 226 (September): 1134–62. doi:<a href="https://doi.org/10.1016/j.apenergy.2018.05.109">10.1016/j.apenergy.2018.05.109</a>.</p>
 </div>
 </div>
 </div>
