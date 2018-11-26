@@ -27,6 +27,15 @@ library(tidyr)
 library(tibble)
 ```
 
+<!-- Establish some helpful LaTeX shortcuts for equations -->
+\newcommand{\transpose}[1]{#1^\mathrm{T}}
+\newcommand{\inverse}[1]{#1^{\mathrm{-}1}}
+\newcommand{\mat}[1]{\mathbf{#1}}
+\newcommand{\colvec}[1]{\mathbf{#1}}
+\newcommand{\rowvec}[1]{\transpose{\colvec{#1}}}
+\newcommand{\inversetranspose}[1]{\transpose{\left( \inverse{\mat{#1}} \right)}}
+\newcommand{\transposeinverse}[1]{\inverse{\left( \transpose{\mat{#1}} \right)}}
+\newcommand{\hatinv}[1]{\inverse{\widehat{#1}}}
 
 ## Introduction
 
@@ -66,9 +75,10 @@ library(tidyr)
 mats <- UKEnergy2000mats %>% 
   spread(key = matrix.name, value = matrix) %>% 
   mutate(
-    Last.stage = factor(Last.stage, levels = c("final", "useful", "services"))
+    Last.stage = factor(Last.stage, levels = c("final", "useful", "services")),
+    Energy.type = factor(Energy.type, levels = c("E.ktoe", "X.ktoe"))
   ) %>% 
-  arrange(Last.stage) # Put rows in a natural order
+  arrange(Last.stage, Energy.type) # Put rows in a natural order
 # Use the calc_io_mats function with individual matrices, 
 # each taken from the UKEnergy2000mats data frame.
 U <- mats$U[[1]]
@@ -85,7 +95,6 @@ The `calc_io_mats` function returns several I-O matrices in a list.
 class(IO_list)
 names(IO_list)
 IO_list[["y"]]
-IO_list[["L_ixp"]]
 ```
 
 ### Using a data frame
@@ -101,24 +110,24 @@ most `Recca` functions can be called without any arguments, yielding very clean 
 To illustrate the above features of `Recca` functions, 
 we'll operate on the entire `UKEnergy2000mats` data frame, 
 calculating appropriate I-O matrices for each row.
+The resulting code is very clean, 
+because we rely upon names for columns
+given by the default arguments to calc_io_mats.
 
 ```{r}
-# This code is very clean, because we rely upon names for columns
-# given by the default arguments to calc_io_mats.
 IO_df <- mats %>% calc_io_mats()
 ```
 
-By inspecting `IO_df`, we can see that, for example, 
-one `y` vector and one `L_ixp` matrix was calculated for 
+By inspecting `IO_df`, we can see, for example, 
+that one $\colvec{y}$ vector was calculated for 
 each row of `mats`.
+The same is true for all I-O matrices calculated by `calc_io_mats`.
 
 ```{r}
 class(IO_df)
 names(IO_df)
 glimpse(IO_df)
-# We find the y vector from the the previous example.
 IO_df[["y"]][[1]]
-# But there are other y vectors for each row of the data frame.
 IO_df[["y"]][[2]]
 IO_df[["y"]][[3]]
 IO_df[["y"]][[4]]
