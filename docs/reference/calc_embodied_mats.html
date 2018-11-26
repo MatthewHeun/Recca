@@ -128,100 +128,95 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>calc_embodied_mats</span>(<span class='kw'>.iodata</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>Y_colname</span> <span class='kw'>=</span> <span class='st'>"Y"</span>, <span class='kw'>q_colname</span> <span class='kw'>=</span> <span class='st'>"q"</span>,
-  <span class='kw'>L_ixp_colname</span> <span class='kw'>=</span> <span class='st'>"L_ixp"</span>, <span class='kw'>g_colname</span> <span class='kw'>=</span> <span class='st'>"g"</span>, <span class='kw'>W_colname</span> <span class='kw'>=</span> <span class='st'>"W"</span>,
-  <span class='kw'>U_EIOU_colname</span> <span class='kw'>=</span> <span class='st'>"U_EIOU"</span>, <span class='kw'>G_colname</span> <span class='kw'>=</span> <span class='st'>"G"</span>, <span class='kw'>H_colname</span> <span class='kw'>=</span> <span class='st'>"H"</span>,
-  <span class='kw'>E_colname</span> <span class='kw'>=</span> <span class='st'>"E"</span>, <span class='kw'>M_p_colname</span> <span class='kw'>=</span> <span class='st'>"M_p"</span>, <span class='kw'>M_s_colname</span> <span class='kw'>=</span> <span class='st'>"M_s"</span>,
-  <span class='kw'>F_footprint_p_colname</span> <span class='kw'>=</span> <span class='st'>"F_footprint_p"</span>,
-  <span class='kw'>F_effects_p_colname</span> <span class='kw'>=</span> <span class='st'>"F_effects_p"</span>,
-  <span class='kw'>F_footprint_s_colname</span> <span class='kw'>=</span> <span class='st'>"F_footprint_s"</span>,
-  <span class='kw'>F_effects_s_colname</span> <span class='kw'>=</span> <span class='st'>"F_effects_s"</span>)</pre>
+    <pre class="usage"><span class='fu'>calc_embodied_mats</span>(<span class='kw'>.iomats</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>Y</span> <span class='kw'>=</span> <span class='st'>"Y"</span>, <span class='kw'>q</span> <span class='kw'>=</span> <span class='st'>"q"</span>,
+  <span class='kw'>L_ixp</span> <span class='kw'>=</span> <span class='st'>"L_ixp"</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='st'>"g"</span>, <span class='kw'>W</span> <span class='kw'>=</span> <span class='st'>"W"</span>, <span class='kw'>U_EIOU</span> <span class='kw'>=</span> <span class='st'>"U_EIOU"</span>, <span class='kw'>G</span> <span class='kw'>=</span> <span class='st'>"G"</span>,
+  <span class='kw'>H</span> <span class='kw'>=</span> <span class='st'>"H"</span>, <span class='kw'>E</span> <span class='kw'>=</span> <span class='st'>"E"</span>, <span class='kw'>M_p</span> <span class='kw'>=</span> <span class='st'>"M_p"</span>, <span class='kw'>M_s</span> <span class='kw'>=</span> <span class='st'>"M_s"</span>,
+  <span class='kw'>F_footprint_p</span> <span class='kw'>=</span> <span class='st'>"F_footprint_p"</span>, <span class='kw'>F_effects_p</span> <span class='kw'>=</span> <span class='st'>"F_effects_p"</span>,
+  <span class='kw'>F_footprint_s</span> <span class='kw'>=</span> <span class='st'>"F_footprint_s"</span>, <span class='kw'>F_effects_s</span> <span class='kw'>=</span> <span class='st'>"F_effects_s"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>.iodata</th>
+      <th>.iomats</th>
       <td><p>a data frame containing matrices that describe the Input-Output structure
 (using the supply-use table format) of an Energy Conversion Chain.
-<code>.iodata</code> will likely have been obtained from the <code>calc_io_mats</code> function.</p></td>
+<code>.iomats</code> will likely have been obtained from the <code><a href='calc_io_mats.html'>calc_io_mats</a></code> function.</p></td>
     </tr>
     <tr>
-      <th>Y_colname</th>
-      <td><p>the name of the column in <code>.iodata</code> containing final demand (<code>Y</code>) matrices.</p></td>
+      <th>Y</th>
+      <td><p>final demand (<code>Y</code>) matrix or name of the column in <code>.iodata</code> containing same. Default is "<code>Y</code>".</p></td>
     </tr>
     <tr>
-      <th>q_colname</th>
-      <td><p>the name of the column in <code>.iodata</code> containing final demand (<code>q</code>) vectors.</p></td>
+      <th>q</th>
+      <td><p>final demand (<code>q</code>) vector or name of the column in <code>.iodata</code> containing same. Default is "<code>q</code>".</p></td>
     </tr>
     <tr>
-      <th>L_ixp_colname</th>
-      <td><p>the name of the column in <code>.iodata</code> containing Industry-by-Product
-Leontief (<code>L_ixp</code>) matrices.</p></td>
+      <th>L_ixp</th>
+      <td><p>industry-by-product Leontief (<code>L_ixp</code>) matrix or name of the column in <code>.iodata</code> containing same. Default is "<code>L_ixp</code>"</p></td>
     </tr>
     <tr>
-      <th>g_colname</th>
-      <td><p>the name of the output column containing <code>g</code> vectors.</p></td>
+      <th>g</th>
+      <td><p>name of the <code>g</code> vector on output. Default is "<code>g</code>".</p></td>
     </tr>
     <tr>
-      <th>W_colname</th>
-      <td><p>the name of the output column containing <code>W</code> matrices.</p></td>
+      <th>W</th>
+      <td><p>name of the <code>W</code> matrix on output. Default is "<code>W</code>".</p></td>
     </tr>
     <tr>
-      <th>U_EIOU_colname</th>
-      <td><p>the name of the output column containing <code>U_EIOU</code> matrices.</p></td>
+      <th>U_EIOU</th>
+      <td><p>name of the <code>U_EIOU</code> matrices on output. Default is "<code>U_EIOU</code>".</p></td>
     </tr>
     <tr>
-      <th>G_colname</th>
-      <td><p>the name of the output column containing <code>G</code> matrices.
-<code>G</code> is calculated by <code>L_ixp * y_hat</code>.</p></td>
+      <th>G</th>
+      <td><p>name of the <code>G</code> matrix on output.
+<code>G</code> is calculated by <code>L_ixp * y_hat</code>. Default is "<code>G</code>".</p></td>
     </tr>
     <tr>
-      <th>H_colname</th>
-      <td><p>the name of the output column containing <code>H</code> matrices.
+      <th>H</th>
+      <td><p>name of the <code>H</code> matrix on output.
 <code>H</code> is calculated by <code>L_ixp * Y</code>.</p></td>
     </tr>
     <tr>
-      <th>E_colname</th>
-      <td><p>the name of the output column containing <code>E</code> matrices.
+      <th>E</th>
+      <td><p>name of <code>E</code> matrix on output. Default is "<code>E</code>".
 <code>E</code> is calculated by <code>W * g_hat_inv</code>.</p></td>
     </tr>
     <tr>
-      <th>M_p_colname</th>
-      <td><p>the name of the output column containing <code>M_p</code> matrices.
+      <th>M_p</th>
+      <td><p>name of the <code>M_p</code> matrix on output. Default is "<code>M_p</code>".
 <code>M_p</code> is formed from column sums of positive entries in the various Qx matrices</p></td>
     </tr>
     <tr>
-      <th>M_s_colname</th>
-      <td><p>the name of the output column containing <code>M_s</code> matrices.
+      <th>M_s</th>
+      <td><p>name of the <code>M_s</code> matrix on output. Default is "<code>M_s</code>".
 <code>M_s</code> is constructed by <code>M_p * q_hat_inv * Y</code>.</p></td>
     </tr>
     <tr>
-      <th>F_footprint_p_colname</th>
-      <td><p>the name of the output column containing <code>F_footprint_p</code> matrices.
-<code>F</code><code>_footprint_p</code> is calculated by <code>M_p</code> (<code>M_p</code>^T<code>i</code>)_hat_inv.</p></td>
+      <th>F_footprint_p</th>
+      <td><p>name of the <code>F_footprint_p</code> matrix on output. Default is "<code>F_footprint_p</code>".
+<code>F_footprint_p</code> is calculated by <code>M_p * (M_p^T * i)_hat_inv</code>.</p></td>
     </tr>
     <tr>
-      <th>F_effects_p_colname</th>
-      <td><p>the name of the output column containing <code>F_effects_p</code> matrices.
-<code>F</code><code>_effects_p</code> is calculated by <code>M_p i</code>_hat_inv <code>M_p</code>.</p></td>
+      <th>F_effects_p</th>
+      <td><p>name of the <code>F_effects_p</code> matrix on output. Default is "<code>F_effects_p</code>".
+<code>F_effects_p</code> is calculated by <code>(M_p * i)_hat_inv * M_p</code>.</p></td>
     </tr>
     <tr>
-      <th>F_footprint_s_colname</th>
-      <td><p>the name of the output column containing <code>F_footprint_s</code> matrices.
-<code>F</code><code>_footprint_s</code> is calculated by <code>M_s</code> (<code>M_s</code>^T<code>i</code>)_hat_inv.</p></td>
+      <th>F_footprint_s</th>
+      <td><p>name of the <code>F_footprint_s</code> matrix on output. Default is "<code>F_footprint_s</code>".
+<code>F_footprint_s</code> is calculated by <code>M_s * (M_s^T *i)_hat_inv</code>.</p></td>
     </tr>
     <tr>
-      <th>F_effects_s_colname</th>
-      <td><p>the name of the output column containing <code>F_effects_s</code> matrices.
-<code>F</code><code>_effects_p</code> is calculated by <code>M_s i</code>_hat_inv <code>M_s</code>.</p></td>
+      <th>F_effects_s</th>
+      <td><p>name of the <code>F_effects_s</code> matrix on output. Default is "<code>F_effects_s</code>".
+<code>F_effects_s</code> is calculated by <code>(M_s * i)_hat_inv * M_s</code>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>.iodata</code> with columns
-<code>G_colname</code>, <code>H_colname</code>, <code>E_colname</code>, and <code>Q_colname</code> added</p>
+    <p>a list or data frame containing embodied energy matrices</p>
     
 
   </div>

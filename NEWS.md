@@ -7,6 +7,7 @@
   And when using functions to operate on a data frame the default values for column names
   mean that data frames can be piped to functions that are called with no parameters.
   In all ways, the new argument naming convention is more elegant than the previous `*_colname` approach.
+* Building a vignette that describes the package.
 
 
 # Recca 0.1.9 (2018-11-08)

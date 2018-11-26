@@ -128,41 +128,40 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>calc_GH</span>(<span class='kw'>.iodata</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>Y_colname</span> <span class='kw'>=</span> <span class='st'>"Y"</span>, <span class='kw'>L_ixp_colname</span> <span class='kw'>=</span> <span class='st'>"L_ixp"</span>,
-  <span class='kw'>G_colname</span> <span class='kw'>=</span> <span class='st'>"G"</span>, <span class='kw'>H_colname</span> <span class='kw'>=</span> <span class='st'>"H"</span>)</pre>
+    <pre class="usage"><span class='fu'>calc_GH</span>(<span class='kw'>.iomats</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>Y</span> <span class='kw'>=</span> <span class='st'>"Y"</span>, <span class='kw'>L_ixp</span> <span class='kw'>=</span> <span class='st'>"L_ixp"</span>, <span class='kw'>G</span> <span class='kw'>=</span> <span class='st'>"G"</span>,
+  <span class='kw'>H</span> <span class='kw'>=</span> <span class='st'>"H"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>.iodata</th>
+      <th>.iomats</th>
       <td><p>a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.
-<code>.iodata</code> will likely have been obtained from the <code>calc_io_mats</code> function.</p></td>
+<code>.iomats</code> will likely have been obtained from the <code><a href='calc_io_mats.html'>calc_io_mats</a></code> function.</p></td>
     </tr>
     <tr>
-      <th>Y_colname</th>
-      <td><p>the name of the column in <code>.iodata</code> containing final demand (<code>Y</code>) matrices.</p></td>
+      <th>Y</th>
+      <td><p>final demand (<code>Y</code>) matrix or name of the column in <code>.iodata</code> containing same. Default is "<code>Y</code>".</p></td>
     </tr>
     <tr>
-      <th>L_ixp_colname</th>
-      <td><p>the name of the column in <code>.iodata</code> containing Industry-by-Product
-Leontief (<code>L_ixp</code>) matrices.</p></td>
+      <th>L_ixp</th>
+      <td><p>industry-by-product Leontief (<code>L_ixp</code>) matrix or name of the column in <code>.iodata</code> containing same. Default is "<code>L_ixp</code>".</p></td>
     </tr>
     <tr>
-      <th>G_colname</th>
-      <td><p>the name of the output column containing <code>G</code> matrices.
+      <th>G</th>
+      <td><p>name for the <code>G</code> matrix on output. Default is "<code>G</code>".
 <code>G</code> is calculated by <code>L_ixp * y_hat</code>.</p></td>
     </tr>
     <tr>
-      <th>H_colname</th>
-      <td><p>the name of the output column containing <code>H</code> matrices.
+      <th>H</th>
+      <td><p>name for the <code>H</code> matrix on output. Default is "<code>H</code>".
 <code>G</code> is calculated by <code>L_ixp * Y</code>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>.iodata</code> with columns <code>G_colname</code> and <code>H_colname</code> added.</p>
+    <p>a list or data frame containing <code>G</code> and <code>H</code> matrices.</p>
     
 
   </div>

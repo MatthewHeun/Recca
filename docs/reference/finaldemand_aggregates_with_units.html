@@ -134,8 +134,7 @@ The calculation does not include balancing items (Losses and Statistical differe
 
     <pre class="usage"><span class='fu'>finaldemand_aggregates_with_units</span>(<span class='no'>.sutdata</span>, <span class='no'>fd_sectors</span>, <span class='kw'>U</span> <span class='kw'>=</span> <span class='st'>"U"</span>,
   <span class='kw'>Y</span> <span class='kw'>=</span> <span class='st'>"Y"</span>, <span class='kw'>r_EIOU</span> <span class='kw'>=</span> <span class='st'>"r_EIOU"</span>, <span class='kw'>S_units</span> <span class='kw'>=</span> <span class='st'>"S_units"</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Total"</span>,
-  <span class='st'>"Product"</span>, <span class='st'>"Sector"</span>), <span class='no'>net_aggregate_demand_colname</span>,
-  <span class='no'>gross_aggregate_demand_colname</span>)</pre>
+  <span class='st'>"Product"</span>, <span class='st'>"Sector"</span>), <span class='no'>net_aggregate_demand</span>, <span class='no'>gross_aggregate_demand</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -150,15 +149,15 @@ The calculation does not include balancing items (Losses and Statistical differe
     </tr>
     <tr>
       <th>U</th>
-      <td><p>the name of the column in <code>.sutdata</code> containing Use (<code>U</code>) matrices.</p></td>
+      <td><p>use (<code>U</code>) matrix or name of the column in <code>.sutdata</code> containing same</p></td>
     </tr>
     <tr>
       <th>Y</th>
-      <td><p>the name of the column in <code>.sutdata</code> containing final demand (<code>Y</code>) matrices.</p></td>
+      <td><p>final demand (<code>Y</code>) matrix or name of the column in <code>.sutdata</code> containing same</p></td>
     </tr>
     <tr>
       <th>r_EIOU</th>
-      <td><p>the name of the column that holds ratios of EIOU to total input for each Machine and Product.</p></td>
+      <td><p>matrix of ratios of EIOU for the make (<code>U</code>) matrix or name of the column in <code>.sutdata</code> containing same</p></td>
     </tr>
     <tr>
       <th>S_units</th>
@@ -172,21 +171,19 @@ The calculation does not include balancing items (Losses and Statistical differe
 "Total" for aggregation over both Product and Sector (the default).</p></td>
     </tr>
     <tr>
-      <th>net_aggregate_demand_colname</th>
-      <td><p>the name of the output column containing aggregates of net energy demand.
-This column excludes energy industry own use.</p></td>
+      <th>net_aggregate_demand</th>
+      <td><p>the name of net energy demand (which excludes energy industry own use) on output.</p></td>
     </tr>
     <tr>
-      <th>gross_aggregate_demand_colname</th>
-      <td><p>the name of the output column containing aggregates of gross energy demand.
-This column includes energy industry own use.</p></td>
+      <th>gross_aggregate_demand</th>
+      <td><p>the name of gross energy demand (which includes energy industry own use) on output.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a data frame containing net aggregate energy demand
-and gross aggregate energy demand for each row of <code>.sutdata</code>.</p>
+    <p>a list or data frame containing net aggregate energy demand
+and gross aggregate energy demand</p>
     
 
   </div>

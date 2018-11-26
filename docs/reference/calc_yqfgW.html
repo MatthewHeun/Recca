@@ -34,7 +34,7 @@
 
 <meta property="og:description" content="Note that a necessary condition for calculating the f and g vectors is that
 the U_bar and V_bar matrices should have only one entry per column and row, respectively,
-meaning that all products input into a given industry need to be unit homogeneous
+meaning that all products entering a given industry need to be unit homogeneous
 before we can calculate the f vector and
 all products of a given industry are measured in the same units
 before we can calculate the g vector.
@@ -134,7 +134,7 @@ The checks for unit homogenity are performed only when an S_units matrix is pres
     
     <p>Note that a necessary condition for calculating the <code>f</code> and <code>g</code> vectors is that
 the U_bar and V_bar matrices should have only one entry per column and row, respectively,
-meaning that all products input into a given industry need to be unit homogeneous
+meaning that all products entering a given industry need to be unit homogeneous
 before we can calculate the <code>f</code> vector and
 all products of a given industry are measured in the same units
 before we can calculate the <code>g</code> vector.
@@ -144,10 +144,9 @@ The checks for unit homogenity are performed only when an <code>S_units</code> m
     
     </div>
 
-    <pre class="usage"><span class='fu'>calc_yqfgW</span>(<span class='kw'>.sutdata</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>U_colname</span> <span class='kw'>=</span> <span class='st'>"U"</span>, <span class='kw'>V_colname</span> <span class='kw'>=</span> <span class='st'>"V"</span>,
-  <span class='kw'>Y_colname</span> <span class='kw'>=</span> <span class='st'>"Y"</span>, <span class='kw'>S_units</span> <span class='kw'>=</span> <span class='st'>"S_units"</span>, <span class='kw'>y_colname</span> <span class='kw'>=</span> <span class='st'>"y"</span>,
-  <span class='kw'>q_colname</span> <span class='kw'>=</span> <span class='st'>"q"</span>, <span class='kw'>f_colname</span> <span class='kw'>=</span> <span class='st'>"f"</span>, <span class='kw'>g_colname</span> <span class='kw'>=</span> <span class='st'>"g"</span>,
-  <span class='kw'>W_colname</span> <span class='kw'>=</span> <span class='st'>"W"</span>)</pre>
+    <pre class="usage"><span class='fu'>calc_yqfgW</span>(<span class='kw'>.sutdata</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>U</span> <span class='kw'>=</span> <span class='st'>"U"</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>, <span class='kw'>Y</span> <span class='kw'>=</span> <span class='st'>"Y"</span>,
+  <span class='kw'>S_units</span> <span class='kw'>=</span> <span class='st'>"S_units"</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='st'>"y"</span>, <span class='kw'>q</span> <span class='kw'>=</span> <span class='st'>"q"</span>, <span class='kw'>f</span> <span class='kw'>=</span> <span class='st'>"f"</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='st'>"g"</span>,
+  <span class='kw'>W</span> <span class='kw'>=</span> <span class='st'>"W"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -157,52 +156,52 @@ The checks for unit homogenity are performed only when an <code>S_units</code> m
       <td><p>a data frame of supply-use table matrices with matrices arranged in columns.</p></td>
     </tr>
     <tr>
-      <th>U_colname</th>
-      <td><p>the name of the column in <code>.sutdata</code> containing Use (<code>U</code>) matrices.</p></td>
+      <th>U</th>
+      <td><p>use (<code>U</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "<code>U</code>".</p></td>
     </tr>
     <tr>
-      <th>V_colname</th>
-      <td><p>the name of the column in <code>.sutdata</code> containing Make (<code>V</code>) matrices.</p></td>
+      <th>V</th>
+      <td><p>make (<code>V</code>) matrix or name of the column in <code>.sutmats</code>that contains same. Default is "<code>V</code>".</p></td>
     </tr>
     <tr>
-      <th>Y_colname</th>
-      <td><p>the name of the column in <code>.sutdata</code> containing final demand (<code>Y</code>) matrices.</p></td>
+      <th>Y</th>
+      <td><p>final demand (<code>Y</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "<code>Y</code>".</p></td>
     </tr>
     <tr>
       <th>S_units</th>
-      <td><p>the name of the column in <code>.sutdata</code> containing <code>S_units</code> matrices.</p></td>
+      <td><p><code>S_units</code> matrix or name of the column in <code>.sutmats</code> that contains same. Default is "<code>S_units</code>".</p></td>
     </tr>
     <tr>
-      <th>y_colname</th>
-      <td><p>the name of the output column containing <code>y</code> vectors.
-<code>y</code> is calculated by <code>rowsums_byname(Y)</code>.</p></td>
+      <th>y</th>
+      <td><p>name for <code>y</code> vector on output. Default is "<code>y</code>".
+<code>y</code> is calculated by <code>rowsums(Y)</code>.</p></td>
     </tr>
     <tr>
-      <th>q_colname</th>
-      <td><p>the name of the output column containing <code>q</code> vectors.
-<code>q</code> is calculated by <code>rowsums_byname(U) + y</code>.</p></td>
+      <th>q</th>
+      <td><p>name for <code>q</code> vector on output. Default is "<code>q</code>".
+<code>q</code> is calculated by <code>rowsums(U) + y</code>.</p></td>
     </tr>
     <tr>
-      <th>f_colname</th>
-      <td><p>the name of the output column containing <code>f</code> vectors.
-<code>f</code> is calculated by <code>colsums_byname(U)</code>.</p></td>
+      <th>f</th>
+      <td><p>name for <code>f</code> vector on output. Default is "<code>f</code>".
+<code>f</code> is calculated by <code>colsums(U)</code>.</p></td>
     </tr>
     <tr>
-      <th>g_colname</th>
-      <td><p>the name of the output column containing <code>g</code> vectors.
-<code>g</code> is calculated by <code>rowsums_byname(V)</code>.</p></td>
+      <th>g</th>
+      <td><p>name for <code>g</code> vector on output. Default is "<code>g</code>".
+<code>g</code> is calculated by <code>rowsums(V)</code>.</p></td>
     </tr>
     <tr>
-      <th>W_colname</th>
-      <td><p>the name of the output column containing <code>W</code> matrices.
-<code>W</code> is calculated by <code>transpose_byname(V) - U</code>.</p></td>
+      <th>W</th>
+      <td><p>name for <code>W</code> matrix on output. Default is "<code>W</code>".
+<code>W</code> is calculated by <code>transpose(V) - U</code>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>.sutdata</code> with columns <code>y_colname</code>, <code>q_colname</code>,
-         <code>f_colname</code>, <code>g_colname</code>, and <code>W_colname</code> added</p>
+    <p>a list or data frame containing <code>y</code>, <code>q</code>,
+         <code>f</code>, <code>g</code>, and <code>W</code>.</p>
     
 
   </div>

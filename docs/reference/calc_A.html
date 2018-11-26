@@ -128,10 +128,8 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>calc_A</span>(<span class='kw'>.sutdata</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>U_colname</span> <span class='kw'>=</span> <span class='st'>"U"</span>, <span class='kw'>V_colname</span> <span class='kw'>=</span> <span class='st'>"V"</span>,
-  <span class='kw'>q_colname</span> <span class='kw'>=</span> <span class='st'>"q"</span>, <span class='kw'>f_colname</span> <span class='kw'>=</span> <span class='st'>"f"</span>, <span class='kw'>g_colname</span> <span class='kw'>=</span> <span class='st'>"g"</span>,
-  <span class='kw'>Z_colname</span> <span class='kw'>=</span> <span class='st'>"Z"</span>, <span class='kw'>K_colname</span> <span class='kw'>=</span> <span class='st'>"K"</span>, <span class='kw'>C_colname</span> <span class='kw'>=</span> <span class='st'>"C"</span>,
-  <span class='kw'>D_colname</span> <span class='kw'>=</span> <span class='st'>"D"</span>, <span class='kw'>A_colname</span> <span class='kw'>=</span> <span class='st'>"A"</span>)</pre>
+    <pre class="usage"><span class='fu'>calc_A</span>(<span class='kw'>.sutdata</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>U</span> <span class='kw'>=</span> <span class='st'>"U"</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>, <span class='kw'>q</span> <span class='kw'>=</span> <span class='st'>"q"</span>, <span class='kw'>f</span> <span class='kw'>=</span> <span class='st'>"f"</span>,
+  <span class='kw'>g</span> <span class='kw'>=</span> <span class='st'>"g"</span>, <span class='kw'>Z</span> <span class='kw'>=</span> <span class='st'>"Z"</span>, <span class='kw'>K</span> <span class='kw'>=</span> <span class='st'>"K"</span>, <span class='kw'>C</span> <span class='kw'>=</span> <span class='st'>"C"</span>, <span class='kw'>D</span> <span class='kw'>=</span> <span class='st'>"D"</span>, <span class='kw'>A</span> <span class='kw'>=</span> <span class='st'>"A"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -141,57 +139,56 @@
       <td><p>a data frame of supply-use table matrices with matrices arranged in columns.</p></td>
     </tr>
     <tr>
-      <th>U_colname</th>
-      <td><p>the name of the column in <code>.sutdata</code> containing Use (<code>U</code>) matrices.</p></td>
+      <th>U</th>
+      <td><p>use (<code>U</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "<code>U</code>".</p></td>
     </tr>
     <tr>
-      <th>V_colname</th>
-      <td><p>the name of the column in <code>.sutdata</code> containing Make (<code>V</code>) matrices.</p></td>
+      <th>V</th>
+      <td><p>make (<code>V</code>) matrix or name of the column in <code>.sutmats</code>that contains same. Default is "<code>V</code>".</p></td>
     </tr>
     <tr>
-      <th>q_colname</th>
-      <td><p>the name of the column in <code>.sutdata</code> containing <code>q</code> vectors.</p></td>
+      <th>q</th>
+      <td><p><code>q</code> vector or name of the column in <code>.sutmats</code> that contains same. Default is "<code>q</code>".</p></td>
     </tr>
     <tr>
-      <th>f_colname</th>
-      <td><p>the name of the column in <code>.sutdata</code> containing <code>f</code> vectors.</p></td>
+      <th>f</th>
+      <td><p><code>f</code> vector or name of the column in <code>.sutmats</code> that contains same. Default is "<code>r</code>".</p></td>
     </tr>
     <tr>
-      <th>g_colname</th>
-      <td><p>the name of the column in <code>.sutdata</code> containing <code>g</code> vectors.</p></td>
+      <th>g</th>
+      <td><p><code>g</code> vector or name of the column in <code>.sutmats</code> that contains same. Default is "<code>g</code>".</p></td>
     </tr>
     <tr>
-      <th>Z_colname</th>
-      <td><p>the name of the output column containing <code>Z</code> matrices.
+      <th>Z</th>
+      <td><p>name for <code>Z</code> matrix on output. Default is "<code>Z</code>".
 <code>Z</code> is calculated by <code>U * g_hat_inv</code>.</p></td>
     </tr>
     <tr>
-      <th>K_colname</th>
-      <td><p>the name of the output column containing <code>K</code> matrices.
+      <th>K</th>
+      <td><p>name for <code>K</code> matrix on output. Default is "<code>K</code>".
 <code>K</code> is calculated by <code>U * f_hat_inv</code>.</p></td>
     </tr>
     <tr>
-      <th>C_colname</th>
-      <td><p>the name of the output column containing <code>C</code> matrices.
+      <th>C</th>
+      <td><p>name for <code>C</code> matrix on output. Default is "<code>C</code>".
 <code>C</code> is calculated by <code>transpose(V) * g_hat_inv</code>.</p></td>
     </tr>
     <tr>
-      <th>D_colname</th>
-      <td><p>the name of the output column containing <code>D</code> matrices.
+      <th>D</th>
+      <td><p>name for <code>D</code> matrix on output. Default is "<code>D</code>".
 <code>D</code> is calculated by <code>V * q_hat_inv</code>.</p></td>
     </tr>
     <tr>
-      <th>A_colname</th>
-      <td><p>the name of the output column containing <code>A</code> matrices.
+      <th>A</th>
+      <td><p>name for <code>A</code> matrix on output. Default is "<code>A</code>".
 <code>A</code> is calculated by <code>Z * D</code>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>.sutdata</code> with columns <code>Z_colname</code>,
-<code>K_colname</code>, <code>C_colname</code>,
-<code>D_colname</code>, and <code>A_colname</code> added</p>
+    <p>a list or data frame containing <code>Z</code>,
+<code>K</code>, <code>C</code>, <code>D</code>, and <code>A</code> matrices</p>
     
 
   </div>

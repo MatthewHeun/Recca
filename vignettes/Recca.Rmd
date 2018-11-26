@@ -43,7 +43,7 @@ library(tibble)
 is an `R` package that enables
 energy and exergy analysis of energy conversion chains.
 `Recca` makes extensive use of a matrix-based PSUT analysis technique
-that first appeared in Heun, Owen, and Brockway 
+that first appeared in 
 [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
 
 

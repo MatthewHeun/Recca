@@ -32,7 +32,7 @@
 
 <meta property="og:title" content="Confirm that an SUT-style data frame conserves energy. — verify_SUT_energy_balance" />
 
-<meta property="og:description" content="Energy balances are confirmed by Product (within tol) for every row in .sutdata." />
+<meta property="og:description" content="Energy balances are confirmed by Product (within tol) for every row in .sutmats." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -124,33 +124,32 @@
 
     <div class="ref-description">
     
-    <p>Energy balances are confirmed by Product (within <code>tol</code>) for every row in <code>.sutdata</code>.</p>
+    <p>Energy balances are confirmed by Product (within <code>tol</code>) for every row in <code>.sutmats</code>.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>verify_SUT_energy_balance</span>(<span class='kw'>.sutdata</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>U_colname</span> <span class='kw'>=</span> <span class='st'>"U"</span>,
-  <span class='kw'>V_colname</span> <span class='kw'>=</span> <span class='st'>"V"</span>, <span class='kw'>Y_colname</span> <span class='kw'>=</span> <span class='st'>"Y"</span>, <span class='kw'>tol</span> <span class='kw'>=</span> <span class='fl'>1e-06</span>,
-  <span class='kw'>SUT_energy_balance</span> <span class='kw'>=</span> <span class='st'>".SUT_energy_balance"</span>)</pre>
+    <pre class="usage"><span class='fu'>verify_SUT_energy_balance</span>(<span class='kw'>.sutmats</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>U</span> <span class='kw'>=</span> <span class='st'>"U"</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>,
+  <span class='kw'>Y</span> <span class='kw'>=</span> <span class='st'>"Y"</span>, <span class='kw'>tol</span> <span class='kw'>=</span> <span class='fl'>1e-06</span>, <span class='kw'>SUT_energy_balance</span> <span class='kw'>=</span> <span class='st'>".SUT_energy_balance"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>.sutdata</th>
+      <th>.sutmats</th>
       <td><p>an SUT-style data frame with columns of matrices,
 including <code>U</code>, <code>V</code>, and <code>Y</code> columns.</p></td>
     </tr>
     <tr>
-      <th>U_colname</th>
-      <td><p>the name of the column that contains <code>U</code> matrices. Default is "<code>U</code>".</p></td>
+      <th>U</th>
+      <td><p>use (<code>U</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "<code>U</code>".</p></td>
     </tr>
     <tr>
-      <th>V_colname</th>
-      <td><p>the name of the column that contains <code>V</code> matrices. Default is "<code>V</code>".</p></td>
+      <th>V</th>
+      <td><p>make (<code>V</code>) matrix or name of the column in <code>.sutmats</code>that contains same. Default is "<code>V</code>".</p></td>
     </tr>
     <tr>
-      <th>Y_colname</th>
-      <td><p>the name of the column that contsins <code>Y</code> matrices. Default is "<code>Y</code>".</p></td>
+      <th>Y</th>
+      <td><p>final demand (<code>Y</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "<code>Y</code>".</p></td>
     </tr>
     <tr>
       <th>tol</th>
@@ -159,26 +158,23 @@ Default is <code>1e-6</code>.</p></td>
     </tr>
     <tr>
       <th>SUT_energy_balance</th>
-      <td><p>the name of the output column. Default is "<code>.SUT_energy_balance</code>".</p></td>
+      <td><p>the name for booleans telling if energy is in balance. Default is "<code>.SUT_energy_balance</code>".</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>.sutdata</code>. If energy balance is not observed,
-        an additional column is added showing the row on which energy is not balanced.</p>
+    <p>a list or data frame saying whether <code>.sutmats</code> are in balance.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>If energy is in balance for every row, <code>.sutdata</code> is returned with an additional column, and
+    <p>If energy is in balance for every row, <code>.sutmats</code> is returned with an additional column, and
 execution returns to the caller.
 If energy balance is not observed for one or more of the rows,
 a warning is emitted, and
 the additional column (<code>SUT_energy_blance</code>)
 indicates where the problem occurred, with <code>FALSE</code>
 showing where energy is not in balance.</p>
-<p>This function should be called
-for its side-effect of testing whether energy is in balance in <code>.sutdata</code>.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

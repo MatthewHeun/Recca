@@ -142,7 +142,7 @@ but it is meant to operate on tidy SUT-style data frames.</p>
   <span class='st'>"Oil and gas extraction"</span>, <span class='st'>"Imports"</span>, <span class='st'>"Exports"</span>,
   <span class='st'>"International aviation bunkers"</span>, <span class='st'>"International marine bunkers"</span>,
   <span class='st'>"Stock changes"</span>), <span class='kw'>eiou</span> <span class='kw'>=</span> <span class='st'>"Energy industry own use"</span>,
-  <span class='kw'>aggregate_primary_colname</span> <span class='kw'>=</span> <span class='st'>"EX_p_IEA.ktoe"</span>)</pre>
+  <span class='kw'>aggregate_primary</span> <span class='kw'>=</span> <span class='st'>"EX_p_IEA.ktoe"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -178,7 +178,7 @@ Default is "<code>Flow.aggregation.point</code>".</p></td>
 Default is "<code>Energy industry own use</code>".</p></td>
     </tr>
     <tr>
-      <th>aggregate_primary_colname</th>
+      <th>aggregate_primary</th>
       <td><p>the name of the aggregate primary energy
 column to be created in the output data frame.
 Default is "<code>EX_p_IEA.ktoe</code>".</p></td>
@@ -188,7 +188,7 @@ Default is "<code>EX_p_IEA.ktoe</code>".</p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>a data frame containing the grouping columns of <code>.ieadata</code>
-        as well as a column named with the value of <code>aggregate_primary_colname</code>.</p>
+        as well as a column named with the value of <code>aggregate_primary</code>.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 

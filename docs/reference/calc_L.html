@@ -128,8 +128,8 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>calc_L</span>(<span class='kw'>.sutdata</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>D_colname</span> <span class='kw'>=</span> <span class='st'>"D"</span>, <span class='kw'>A_colname</span> <span class='kw'>=</span> <span class='st'>"A"</span>,
-  <span class='kw'>L_pxp_colname</span> <span class='kw'>=</span> <span class='st'>"L_pxp"</span>, <span class='kw'>L_ixp_colname</span> <span class='kw'>=</span> <span class='st'>"L_ixp"</span>)</pre>
+    <pre class="usage"><span class='fu'>calc_L</span>(<span class='kw'>.sutdata</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>D</span> <span class='kw'>=</span> <span class='st'>"D"</span>, <span class='kw'>A</span> <span class='kw'>=</span> <span class='st'>"A"</span>, <span class='kw'>L_pxp</span> <span class='kw'>=</span> <span class='st'>"L_pxp"</span>,
+  <span class='kw'>L_ixp</span> <span class='kw'>=</span> <span class='st'>"L_ixp"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -139,28 +139,28 @@
       <td><p>a data frame of supply-use table matrices with matrices arranged in columns.</p></td>
     </tr>
     <tr>
-      <th>D_colname</th>
-      <td><p>the name of the column in <code>.sutdata</code> containing the <code>D</code> matrix.</p></td>
+      <th>D</th>
+      <td><p><code>D</code> matrix or name of the column in <code>.sutmats</code> that contains same. Default is "<code>D</code>".</p></td>
     </tr>
     <tr>
-      <th>A_colname</th>
-      <td><p>the name of the column in <code>.sutdata</code> containing the <code>A</code> matrix.</p></td>
+      <th>A</th>
+      <td><p><code>A</code> matrix or name of the column in <code>.sutmats</code> that contains same. Default is "<code>A</code>".</p></td>
     </tr>
     <tr>
-      <th>L_pxp_colname</th>
-      <td><p>the name of the output column containing the product-by-product L matrix.
+      <th>L_pxp</th>
+      <td><p>name for <code>L_pxp</code> matrix on output. Default is "<code>L_pxp</code>".
 <code>L_pxp</code> is calculated by <code>(I - Z*D)^-1</code>.</p></td>
     </tr>
     <tr>
-      <th>L_ixp_colname</th>
-      <td><p>the name of the output column containing the industry-by-product L matrix.
+      <th>L_ixp</th>
+      <td><p>name for <code>L_ixp</code> matrix on output. Default is "<code>L_ixp</code>".
 <code>L_ixp</code> is calculated by <code>D * L_pxp</code>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>.sutdata</code> with columns <code>L_ixp_colname</code> and <code>L_pxp_colname</code> added</p>
+    <p>a list or data frame containing <code>L_pxp</code> and <code>L_ixp</code> matrices</p>
     
 
   </div>

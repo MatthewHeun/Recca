@@ -128,40 +128,39 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>calc_E</span>(<span class='kw'>.iodata</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>g_colname</span> <span class='kw'>=</span> <span class='st'>"g"</span>, <span class='kw'>W_colname</span> <span class='kw'>=</span> <span class='st'>"W"</span>,
-  <span class='kw'>U_EIOU_colname</span> <span class='kw'>=</span> <span class='st'>"U_EIOU"</span>, <span class='kw'>E_colname</span> <span class='kw'>=</span> <span class='st'>"E"</span>)</pre>
+    <pre class="usage"><span class='fu'>calc_E</span>(<span class='kw'>.iomats</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='st'>"g"</span>, <span class='kw'>W</span> <span class='kw'>=</span> <span class='st'>"W"</span>, <span class='kw'>U_EIOU</span> <span class='kw'>=</span> <span class='st'>"U_EIOU"</span>,
+  <span class='kw'>E</span> <span class='kw'>=</span> <span class='st'>"E"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>.iodata</th>
+      <th>.iomats</th>
       <td><p>a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.
-<code>.iodata</code> will likely have been obtained from the <code>calc_io_mats</code> function.</p></td>
+<code>.iomats</code> will likely have been obtained from the <code><a href='calc_io_mats.html'>calc_io_mats</a></code> function.</p></td>
     </tr>
     <tr>
-      <th>g_colname</th>
-      <td><p>the name of the column in <code>.iodata</code> containing final demand (<code>g</code>) vectors</p></td>
+      <th>g</th>
+      <td><p>final demand (<code>g</code>) vector or name of the column in <code>.iomats</code> containing same. Default is "<code>g</code>".</p></td>
     </tr>
     <tr>
-      <th>W_colname</th>
-      <td><p>the name of the column in <code>.iodata</code> containing Product-by-Industry
-value added (<code>W</code>) matrices</p></td>
+      <th>W</th>
+      <td><p>product-by-industry value added (<code>W</code>) matrix or name of the column in <code>.iomats</code> containing same. Default is "<code>W</code>".</p></td>
     </tr>
     <tr>
-      <th>U_EIOU_colname</th>
-      <td><p>the name of the column in <code>.iodata</code> containing energy industry own use matrices</p></td>
+      <th>U_EIOU</th>
+      <td><p>energy industry own use matrix or name of the column in <code>.iomats</code> containing same. Default is "<code>U_EIOU</code>".</p></td>
     </tr>
     <tr>
-      <th>E_colname</th>
-      <td><p>the name of the output column containing <code>E</code> matrices.
+      <th>E</th>
+      <td><p>the name for the <code>E</code> matrix on output. Default is "<code>E</code>".
 <code>E</code> is calculated by <code>W * g_hat_inv</code>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>.iodata</code> with column <code>E_colname</code> added</p>
+    <p>list or data frame containing <code>E</code> matrices</p>
     
 
   </div>

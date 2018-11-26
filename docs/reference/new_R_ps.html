@@ -134,92 +134,87 @@ This function assumes that each industry's inputs are perfectly substitutable (p
     
     </div>
 
-    <pre class="usage"><span class='fu'>new_R_ps</span>(<span class='kw'>.sutdata</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>R_prime_colname</span> <span class='kw'>=</span> <span class='st'>"R_prime"</span>,
-  <span class='kw'>U_colname</span> <span class='kw'>=</span> <span class='st'>"U"</span>, <span class='kw'>V_colname</span> <span class='kw'>=</span> <span class='st'>"V"</span>, <span class='kw'>Y_colname</span> <span class='kw'>=</span> <span class='st'>"Y"</span>,
-  <span class='kw'>S_units_colname</span> <span class='kw'>=</span> <span class='st'>"S_units"</span>, <span class='kw'>q_colname</span> <span class='kw'>=</span> <span class='st'>"q"</span>, <span class='kw'>C_colname</span> <span class='kw'>=</span> <span class='st'>"C"</span>,
-  <span class='kw'>eta_i_colname</span> <span class='kw'>=</span> <span class='st'>"eta_i"</span>, <span class='kw'>maxiter</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>tol</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-  <span class='kw'>U_prime_colname</span> <span class='kw'>=</span> <span class='st'>"U_prime"</span>, <span class='kw'>V_prime_colname</span> <span class='kw'>=</span> <span class='st'>"V_prime"</span>,
-  <span class='kw'>Y_Prime_colname</span> <span class='kw'>=</span> <span class='st'>"Y_prime"</span>)</pre>
+    <pre class="usage"><span class='fu'>new_R_ps</span>(<span class='kw'>.sutmats</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>R_prime</span> <span class='kw'>=</span> <span class='st'>"R_prime"</span>, <span class='kw'>U</span> <span class='kw'>=</span> <span class='st'>"U"</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>,
+  <span class='kw'>Y</span> <span class='kw'>=</span> <span class='st'>"Y"</span>, <span class='kw'>S_units</span> <span class='kw'>=</span> <span class='st'>"S_units"</span>, <span class='kw'>q</span> <span class='kw'>=</span> <span class='st'>"q"</span>, <span class='kw'>C</span> <span class='kw'>=</span> <span class='st'>"C"</span>,
+  <span class='kw'>eta_i</span> <span class='kw'>=</span> <span class='st'>"eta_i"</span>, <span class='kw'>maxiter</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>tol</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>U_prime</span> <span class='kw'>=</span> <span class='st'>"U_prime"</span>,
+  <span class='kw'>V_prime</span> <span class='kw'>=</span> <span class='st'>"V_prime"</span>, <span class='kw'>Y_prime</span> <span class='kw'>=</span> <span class='st'>"Y_prime"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>.sutdata</th>
+      <th>.sutmats</th>
       <td><p>a data frame of supply-use table matrices with matrices arranged in columns.</p></td>
     </tr>
     <tr>
-      <th>R_prime_colname</th>
-      <td><p>the name of an input column in <code>.sutdata</code> containing a new resource matrix for the ECC.</p></td>
+      <th>R_prime</th>
+      <td><p>a new resource matrix or name of a column in <code>.sutmats</code> containing same. Default is "<code>R_prime</code>".</p></td>
     </tr>
     <tr>
-      <th>U_colname</th>
-      <td><p>the name of a column in <code>.sutdata</code> containing <code>U</code> matrices for the base ECC.  Default is "<code>U</code>".</p></td>
+      <th>U</th>
+      <td><p>use (<code>U</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "<code>U</code>".</p></td>
     </tr>
     <tr>
-      <th>V_colname</th>
-      <td><p>the name of a column in <code>.sutdata</code> containing <code>V</code> matrices for the base ECC.  Default is "<code>V</code>".</p></td>
+      <th>V</th>
+      <td><p>make (<code>V</code>) matrix or name of the column in <code>.sutmats</code>that contains same. Default is "<code>V</code>".</p></td>
     </tr>
     <tr>
-      <th>Y_colname</th>
-      <td><p>the name of a column in <code>.sutdata</code> containing <code>Y</code> matrices for the base ECC.  Default is "<code>Y</code>".</p></td>
+      <th>Y</th>
+      <td><p>final demand (<code>Y</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "<code>Y</code>".</p></td>
     </tr>
     <tr>
-      <th>S_units_colname</th>
-      <td><p>the name of a column in <code>.sutdata</code> containing <code>S_units</code> matrices for the base ECC.  Default is "<code>S_units</code>".</p></td>
+      <th>S_units</th>
+      <td><p><code>S_units</code> matrix or name of the column in <code>.sutmats</code> that contains same. Default is "<code>S_units</code>".</p></td>
     </tr>
     <tr>
-      <th>q_colname</th>
-      <td><p>the name of a column in <code>.sutdata</code> containing <code>q</code> matrices for the base ECC.  Default is "<code>q</code>".</p></td>
+      <th>q</th>
+      <td><p><code>q</code> vector or name of the column in <code>.sutmats</code> that contains same. Default is "<code>q</code>".</p></td>
     </tr>
     <tr>
-      <th>C_colname</th>
-      <td><p>the name of a column in <code>.sutdata</code> containing <code>C</code> matrices for the base ECC.  Default is "<code>C</code>".</p></td>
+      <th>C</th>
+      <td><p>a <code>C</code> matrix or name of a column in <code>.sutmats</code> containing same. Default is "<code>C</code>".</p></td>
     </tr>
     <tr>
-      <th>eta_i_colname</th>
-      <td><p>the name of a column in <code>.sutdata</code> containing <code>eta_i</code> vectors for the base ECC.  Default is "<code>eta_i</code>".</p></td>
+      <th>eta_i</th>
+      <td><p>an <code>eta_i</code> vector or name of a column in <code>.sutmats</code> containing same. Default is "<code>eta_i</code>".</p></td>
     </tr>
     <tr>
       <th>maxiter</th>
       <td><p>the maximum allowable number of iterations when calculating the effects of a new <code>R</code> matrix.
-Default is 100.</p></td>
+Default is <code>100</code>.</p></td>
     </tr>
     <tr>
       <th>tol</th>
       <td><p>the maximum allowable change in any one entry of the <code>U</code>, <code>V</code>, and <code>Y</code> matrices
-from one iteration to the next. Default is 0.
-I.e., when two subsequent iterations must produce the same values,
+from one iteration to the next. Default is 0,
+i.e., when two subsequent iterations produce the same values,
 the algorithm has converged.</p></td>
     </tr>
     <tr>
-      <th>U_prime_colname</th>
-      <td><p>the name of the output column that contains new Use (<code>U</code>) matrices.
-Default is "<code>U_prime</code>".</p></td>
+      <th>U_prime</th>
+      <td><p>name for the <code>U_prime</code> matrix on output. Default is "<code>U_prime</code>".</p></td>
     </tr>
     <tr>
-      <th>V_prime_colname</th>
-      <td><p>the name of the output column that contains new Make (<code>V</code>) matrices.
-Default is "<code>V_prime</code>".</p></td>
+      <th>V_prime</th>
+      <td><p>name for the <code>V_prime</code> matrix on output. Default is "<code>V_prime</code>".</p></td>
     </tr>
     <tr>
-      <th>Y_Prime_colname</th>
-      <td><p>the name of the output column that contains new Final Demand (<code>Y</code>) matrices.
-Default is "<code>Y_prime</code>".</p></td>
+      <th>Y_prime</th>
+      <td><p>name for the <code>Y_prime</code> matrix on output. Default is "<code>Y_prime</code>".</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>.sutdata</code> with additional columns <code>U_prime_colname</code>, <code>V_prime_colname</code>, and <code>Y_prime_colname</code>.</p>
+    <p>a list or data frame containing <code>U_prime</code>, <code>V_prime</code>, and <code>Y_prime</code> matrices</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Inputs <code>U_colname</code>, <code>V_colname</code>, <code>Y_colname</code>,
-<code>S_units_colname</code>, <code>q_colname</code>, and <code>C_colname</code>
+    <p>Inputs <code>U</code>, <code>V</code>, <code>Y</code>,
+<code>S_units</code>, <code>q</code>, and <code>C</code>
 can be
 conveniently calculated by the function <code><a href='calc_io_mats.html'>calc_io_mats</a></code>;
-<code>eta_i_colname</code> can be calculated with <code><a href='calc_eta_i.html'>calc_eta_i</a></code>.</p>
+<code>eta_i</code> can be calculated with <code><a href='calc_eta_i.html'>calc_eta_i</a></code>.</p>
 <p>Each industry must be unit-homogeneous on its inputs.
 If not, <code>NA</code> is returned as the result for <code>U_prime</code>, <code>V_prime</code>, and <code>Y_prime</code>.</p>
     
