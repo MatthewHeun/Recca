@@ -62,3 +62,11 @@ a list or data frame containing input-output matrices
 \description{
 Calculate several input-output matrices
 }
+\examples{
+library(dplyr)
+library(tidyr)
+UKEnergy2000mats \%>\%
+  spread(key = matrix.name, value = matrix) \%>\%
+  select(Country, Year, Energy.type, Last.stage, U, V, Y, r_EIOU, S_units) \%>\%
+  calc_io_mats()
+}

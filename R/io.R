@@ -39,6 +39,14 @@
 #' @return a list or data frame containing input-output matrices
 #'
 #' @export
+#'
+#' @examples
+#' library(dplyr)
+#' library(tidyr)
+#' UKEnergy2000mats %>%
+#'   spread(key = matrix.name, value = matrix) %>%
+#'   select(Country, Year, Energy.type, Last.stage, U, V, Y, r_EIOU, S_units) %>%
+#'   calc_io_mats()
 calc_io_mats <- function(.sutdata = NULL,
                          # Input names
                          U = "U", V = "V", Y = "Y", S_units = "S_units",
