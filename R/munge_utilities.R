@@ -61,6 +61,9 @@ S_units_from_tidy <- function(.tidydf, Product = "Product", Unit = "Unit", S_uni
 #' In a reasonable workflow, this function would be followed by a call to
 #' \link{add_row_col_meta} and \link[matsindf]{collapse_to_matrices}.
 #'
+#' This function respects groups when identifying entires in the resource matrix (\code{R}).
+#' So be sure to group \code{.DF} before calling this function, if that is warranted.
+#'
 #' @param .DF a data frame with \code{ledger_side}, \code{energy}, \code{flow_aggregation_point},
 #'        and \code{flow} columns.
 #' @param ledger_side the name of the column in \code{.DF} that contains ledger side
@@ -79,10 +82,12 @@ S_units_from_tidy <- function(.tidydf, Product = "Product", Unit = "Unit", S_uni
 #'        Default is "\code{"Energy industry own use"}.
 #' @param neg_supply_in_fd identifiers for \code{flow} items that, when negative,
 #'        are entries in the final demand (\code{Y}) matrix.
+#' @param use_R tells whether to use a separate resources matrix (\code{R}). Default is "\code{FALSE}", for now.
 #' @param matname the name of the output column containing the name of the matrix
 #'        to which a row's value belongs (a string). Default is "\code{matname}".
 #' @param U_excl_EIOU the name for the use matrix that excludes energy industry own use (a string). Default is "\code{U_excl_EIOU}".
 #' @param U_EIOU the name for the energy industry own use matrix. Default is "\code{U_EIOU}".
+#' @param R the name for the resource matrix (a string). Default is "\code{R}".
 #' @param V the name for the make matrix (a string). Default is "\code{V}".
 #' @param Y the name for the final demand matrix (a string). Default is "\code{Y}".
 #'
@@ -90,12 +95,16 @@ S_units_from_tidy <- function(.tidydf, Product = "Product", Unit = "Unit", S_uni
 #'
 #' @export
 #'
-#' @importFrom dplyr mutate
+#' @importFrom dplyr anti_join
 #' @importFrom dplyr case_when
+#' @importFrom dplyr mutate
 #'
 #' @examples
+#' library(dplyr)
 #' UKEnergy2000tidy %>%
-#'   add_matnames_iea()
+#'   group_by(Country, Year, Energy.type, Last.stage) %>%
+#'   add_matnames_iea() %>%
+#'   glimpse()
 add_matnames_iea <- function(.DF,
                              # Input columns
                              ledger_side = "Ledger.side",
@@ -112,6 +121,8 @@ add_matnames_iea <- function(.DF,
                                                   "Losses",
                                                   "Statistical differences",
                                                   "Stock changes"),
+                             # Mode switch
+                             use_R = FALSE,
                              # Output column
                              matname = "matname",
                              # Ouput identifiers for
@@ -120,10 +131,8 @@ add_matnames_iea <- function(.DF,
                              # make (V), and
                              # final demand (Y)
                              # matrices.
-                             U_excl_EIOU = "U_excl_EIOU",
-                             U_EIOU = "U_EIOU",
-                             V = "V",
-                             Y = "Y"){
+                             U_excl_EIOU = "U_excl_EIOU", U_EIOU = "U_EIOU",
+                             R = "R", V = "V", Y = "Y"){
   ledger_side <- as.name(ledger_side)
   energy <- as.name(energy)
   flow <- as.name(flow)
@@ -131,7 +140,7 @@ add_matnames_iea <- function(.DF,
 
   verify_cols_missing(.DF, matname)
 
-  .DF %>%
+  out <- .DF %>%
     mutate(
       !!matname := case_when(
         # All Consumption items belong in the final demand (Y) matrix.
@@ -151,6 +160,48 @@ add_matnames_iea <- function(.DF,
         TRUE ~ NA_character_
       )
     )
+  if (use_R) {
+    gvars <- group_vars(out)
+    # Need to split R matrix entries from V matrix entries.
+    matname <- as.name(matname)
+    # Find all the rows that identify outputs of an ECC industry.
+    output_rows <- out %>%
+      filter(!!matname == V)
+    # Find all the rows that identify inputs to an ECC industry.
+    input_rows <- out %>%
+      filter(!!matname == Y | !!energy < 0) %>%
+      mutate(
+        !!energy := abs(!!energy)
+      )
+    # Resource industries are those industries (Flows) that have outputs but no inputs.
+    industries_with_outputs <- output_rows %>%
+      select(!!!gvars, !!flow)
+    industries_with_inputs <- input_rows %>%
+      select(!!!gvars, !!flow) %>%
+      unique()
+    # The next line subtracts (by group!) all industries with inputs from the industries_with_outputs data frame,
+    # leaving only industries who have outputs but no inputs.
+    resource_rows <- anti_join(industries_with_outputs, industries_with_inputs, by = c(gvars, as.character(flow))) %>%
+      mutate(
+        # The rows in the resource_rows data frame belong in the resources matrix,
+        # so we give them the R matrix name.
+        .R = TRUE
+      )
+    # The following full_join puts a .R column in the out data frame.
+    # The .R column will have TRUE where matname needs to be changed from its current value to R
+    # The .R column will have NA where matname should not be changed.
+    .R_col <- as.name(".R")
+    verify_cols_missing(out, .R_col)
+    out <- full_join(out, resource_rows, by = c(gvars, as.character(flow))) %>%
+      mutate(
+        !!matname := case_when(
+          !!.R_col ~ R,
+          TRUE ~ matname
+        )
+      ) %>%
+      select(-!!.R_col)
+  }
+  return(out)
 }
 
 #' Add row, column, row type, and column type metadata

@@ -9,9 +9,9 @@ add_matnames_iea(.DF, ledger_side = "Ledger.side", energy = "EX.ktoe",
   supply_side = "Supply", consumption_side = "Consumption",
   eiou = "Energy industry own use", neg_supply_in_fd = c("Exports",
   "International aviation bunkers", "International marine bunkers",
-  "Losses", "Statistical differences", "Stock changes"),
+  "Losses", "Statistical differences", "Stock changes"), use_R = FALSE,
   matname = "matname", U_excl_EIOU = "U_excl_EIOU",
-  U_EIOU = "U_EIOU", V = "V", Y = "Y")
+  U_EIOU = "U_EIOU", R = "R", V = "V", Y = "Y")
 }
 \arguments{
 \item{.DF}{a data frame with \code{ledger_side}, \code{energy}, \code{flow_aggregation_point},
@@ -41,12 +41,16 @@ Default is "\code{"Energy industry own use"}.}
 \item{neg_supply_in_fd}{identifiers for \code{flow} items that, when negative,
 are entries in the final demand (\code{Y}) matrix.}
 
+\item{use_R}{tells whether to use a separate resources matrix (\code{R}). Default is "\code{FALSE}", for now.}
+
 \item{matname}{the name of the output column containing the name of the matrix
 to which a row's value belongs (a string). Default is "\code{matname}".}
 
 \item{U_excl_EIOU}{the name for the use matrix that excludes energy industry own use (a string). Default is "\code{U_excl_EIOU}".}
 
 \item{U_EIOU}{the name for the energy industry own use matrix. Default is "\code{U_EIOU}".}
+
+\item{R}{the name for the resource matrix (a string). Default is "\code{R}".}
 
 \item{V}{the name for the make matrix (a string). Default is "\code{V}".}
 
@@ -64,7 +68,14 @@ and terminology, although \code{.DF} does not necessarily need to contain IEA da
 \details{
 In a reasonable workflow, this function would be followed by a call to
 \link{add_row_col_meta} and \link[matsindf]{collapse_to_matrices}.
+
+This function respects groups when identifying entires in the resource matrix (\code{R}).
+So be sure to group \code{.DF} before calling this function, if that is warranted.
 }
 \examples{
-add_matnames_iea(UKEnergy2000tidy)
+library(dplyr)
+UKEnergy2000tidy \%>\%
+  group_by(Country, Year, Energy.type, Last.stage) \%>\%
+  add_matnames_iea() \%>\%
+  glimpse()
 }

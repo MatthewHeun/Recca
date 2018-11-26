@@ -27,5 +27,7 @@ The \code{.tidydf} should be grouped as needed.
 library(dplyr)
 library(matsindf)
 library(Recca)
-S_units_from_tidy(UKEnergy2000tidy \%>\% group_by("Country", "Year", "Energy.type", "Last.stage"))
+UKEnergy2000tidy \%>\%
+  group_by("Country", "Year", "Energy.type", "Last.stage") \%>\%
+  S_units_from_tidy()
 }
