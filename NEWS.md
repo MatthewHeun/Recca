@@ -1,5 +1,5 @@
 * Now importing `magrittr` pipe at high level.
-* Now using `hatinv_byname` function instead of `hatize_byname` and `invert_byname` in succession.
+* Now using `hatinv_byname` function instead of `hatize_byname %>% invert_byname`.
 * Breaking change: arguments to `Recca` functions are no longer named `*_colname`.
   I'm standardizing argument names.
   The new approach yields better code when calling functions with individual matrices:
@@ -72,7 +72,6 @@
 * `calc_io_mats`: 
   calculate input-output (PSUT version) matrices, including `y`, `q`, `g`, `W`, 
   `Z`, `D`, `C`, `A`, `L_ixp`, and `L_pxp`.
-  
 * `reconstruct_UV`:
   Reconstruct the energy conversion chain (new `U` and `V` matrices) from a new final demand matrix (`Y`)
 
