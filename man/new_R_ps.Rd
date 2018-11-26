@@ -4,51 +4,46 @@
 \alias{new_R_ps}
 \title{Assess the effect of new levels of resources}
 \usage{
-new_R_ps(.sutmats = NULL, R_prime_colname = "R_prime",
-  U_colname = "U", V_colname = "V", Y_colname = "Y",
-  S_units_colname = "S_units", q_colname = "q", C_colname = "C",
-  eta_i_colname = "eta_i", maxiter = 100, tol = 0,
-  U_prime_colname = "U_prime", V_prime_colname = "V_prime",
-  Y_Prime_colname = "Y_prime")
+new_R_ps(.sutmats = NULL, R_prime = "R_prime", U = "U", V = "V",
+  Y = "Y", S_units = "S_units", q = "q", C = "C",
+  eta_i = "eta_i", maxiter = 100, tol = 0, U_prime = "U_prime",
+  V_prime = "V_prime", Y_prime = "Y_prime")
 }
 \arguments{
 \item{.sutmats}{a data frame of supply-use table matrices with matrices arranged in columns.}
 
-\item{R_prime_colname}{the name of an input column in \code{.sutmats} containing a new resource matrix for the ECC.}
+\item{R_prime}{a new resource matrix or name of a column in \code{.sutmats} containing same. Default is "\code{R_prime}".}
 
-\item{U_colname}{the name of a column in \code{.sutmats} containing \code{U} matrices for the base ECC.  Default is "\code{U}".}
+\item{U}{use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".}
 
-\item{V_colname}{the name of a column in \code{.sutmats} containing \code{V} matrices for the base ECC.  Default is "\code{V}".}
+\item{V}{make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "\code{V}".}
 
-\item{Y_colname}{the name of a column in \code{.sutmats} containing \code{Y} matrices for the base ECC.  Default is "\code{Y}".}
+\item{Y}{final demand (\code{Y}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Y}".}
 
-\item{S_units_colname}{the name of a column in \code{.sutmats} containing \code{S_units} matrices for the base ECC.  Default is "\code{S_units}".}
+\item{S_units}{\code{S_units} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{S_units}".}
 
-\item{q_colname}{the name of a column in \code{.sutmats} containing \code{q} matrices for the base ECC.  Default is "\code{q}".}
+\item{q}{\code{q} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{q}".}
 
-\item{C_colname}{the name of a column in \code{.sutmats} containing \code{C} matrices for the base ECC.  Default is "\code{C}".}
+\item{C}{a \code{C} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{C}".}
 
-\item{eta_i_colname}{the name of a column in \code{.sutmats} containing \code{eta_i} vectors for the base ECC.  Default is "\code{eta_i}".}
+\item{eta_i}{an \code{eta_i} vector or name of a column in \code{.sutmats} containing same. Default is "\code{eta_i}".}
 
 \item{maxiter}{the maximum allowable number of iterations when calculating the effects of a new \code{R} matrix.
-Default is 100.}
+Default is \code{100}.}
 
 \item{tol}{the maximum allowable change in any one entry of the \code{U}, \code{V}, and \code{Y} matrices
-from one iteration to the next. Default is 0.
-I.e., when two subsequent iterations must produce the same values,
+from one iteration to the next. Default is 0,
+i.e., when two subsequent iterations produce the same values,
 the algorithm has converged.}
 
-\item{U_prime_colname}{the name of the output column that contains new Use (\code{U}) matrices.
-Default is "\code{U_prime}".}
+\item{U_prime}{name for the \code{U_prime} matrix on output. Default is "\code{U_prime}".}
 
-\item{V_prime_colname}{the name of the output column that contains new Make (\code{V}) matrices.
-Default is "\code{V_prime}".}
+\item{V_prime}{name for the \code{V_prime} matrix on output. Default is "\code{V_prime}".}
 
-\item{Y_Prime_colname}{the name of the output column that contains new Final Demand (\code{Y}) matrices.
-Default is "\code{Y_prime}".}
+\item{Y_prime}{name for the \code{Y_prime} matrix on output. Default is "\code{Y_prime}".}
 }
 \value{
-\code{.sutmats} with additional columns \code{U_prime_colname}, \code{V_prime_colname}, and \code{Y_prime_colname}.
+a list or data frame containing \code{U_prime}, \code{V_prime}, and \code{Y_prime} matrices
 }
 \description{
 This function calculates the effect of changing the resources available to an energy conversion chain.
@@ -57,11 +52,11 @@ as \code{U_prime}, \code{V_prime}, and \code{Y_prime}.
 This function assumes that each industry's inputs are perfectly substitutable (ps).
 }
 \details{
-Inputs \code{U_colname}, \code{V_colname}, \code{Y_colname},
-\code{S_units_colname}, \code{q_colname}, and \code{C_colname}
+Inputs \code{U}, \code{V}, \code{Y},
+\code{S_units}, \code{q}, and \code{C}
 can be
 conveniently calculated by the function \code{\link{calc_io_mats}};
-\code{eta_i_colname} can be calculated with \code{\link{calc_eta_i}}.
+\code{eta_i} can be calculated with \code{\link{calc_eta_i}}.
 
 Each industry must be unit-homogeneous on its inputs.
 If not, \code{NA} is returned as the result for \code{U_prime}, \code{V_prime}, and \code{Y_prime}.
