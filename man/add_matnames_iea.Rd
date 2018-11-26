@@ -71,6 +71,9 @@ In a reasonable workflow, this function would be followed by a call to
 
 This function respects groups when identifying entires in the resource matrix (\code{R}).
 So be sure to group \code{.DF} before calling this function, if that is warranted.
+
+Internally, this function adds a temporary column to \code{.DF} called "\code{.R}".
+An error will occur if \code{.DF} already has a column named "\code{.R}".
 }
 \examples{
 library(dplyr)

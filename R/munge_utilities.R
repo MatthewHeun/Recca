@@ -64,6 +64,9 @@ S_units_from_tidy <- function(.tidydf, Product = "Product", Unit = "Unit", S_uni
 #' This function respects groups when identifying entires in the resource matrix (\code{R}).
 #' So be sure to group \code{.DF} before calling this function, if that is warranted.
 #'
+#' Internally, this function adds a temporary column to \code{.DF} called "\code{.R}".
+#' An error will occur if \code{.DF} already has a column named "\code{.R}".
+#'
 #' @param .DF a data frame with \code{ledger_side}, \code{energy}, \code{flow_aggregation_point},
 #'        and \code{flow} columns.
 #' @param ledger_side the name of the column in \code{.DF} that contains ledger side
