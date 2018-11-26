@@ -53,17 +53,10 @@ After a short discussion of the design philosophy of the `Reccca` package follow
 some background information and setup, each type of analysis is described in turn.
 
 
-## Design philosophy
-
-The functions in `Recca` are flexible and can be used with either a data frame as input
-(and names of columns as arguments to `Recca` function) or with matrices as inputs.
-Outputs are either named columns appended to the input data frame or named matrices in a list.
-The functions in `Recca` have default names for arguments which follow a standard nomenclature.
-It is recommended that the default names be used whenever possible, 
-thereby allowing cleaner code.
+## Nomenclature
 
 "New" versions of vectors or matrices are given the suffix `_prime` in `Recca` functions.
-For example, the updated version of the use matrix is called `U_prime`.
+For example, the updated version of the use ($\mat{U}$) matrix is called `U_prime`.
 
 
 ## Background and setup
