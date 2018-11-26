@@ -1,5 +1,10 @@
 * Now importing `magrittr` pipe at high level.
 * Now using `hatinv_byname` function instead of `hatize_byname` and `invert_byname` in succession.
+* Standardizing argument names to `Recca` functions: none named `*_colname` any more.
+  The new approach yields better code when calling functions with individual matrices.
+  And the default values for column names (when using functions to operate a data frame),
+  mean that data frames can be piped to functions that are called with no parameters.
+  In all ways, the new argument naming convention is more elegant than the previous `*_colname` approach.
 
 
 # Recca 0.1.9 (2018-11-08)
