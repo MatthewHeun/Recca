@@ -32,17 +32,15 @@ provided by products (in rows).
 
 \item{L_pxp}{an (\code{L_pxp}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{L_pxp}".}
 
-\item{Z}{an (\code{Z}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Z}".}
+\item{Z}{a \code{Z} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Z}".}
 
-\item{D}{an (\code{D}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{D}".}
+\item{D}{a \code{D} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{D}".}
 
-\item{f}{an (\code{f}) vector or name of the column in \code{.sutmats} that contains same. Default is "\code{f}".}
+\item{f}{an \code{f} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{f}".}
 
 \item{U_prime}{name for the \code{U_prime} matrix on output. Default is "\code{U_prime}".}
 
 \item{V_prime}{name for the \code{V_prime} matrix on output. Default is "\code{V_prime}".}
-
-\item{f_colname}{the name of a column in \code{.sutadata} containing \code{f} vectors for the base ECC.  Default is "\code{f}".}
 }
 \value{
 a list or data frame containing \code{U_prime} and \code{V_prime} matrices

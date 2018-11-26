@@ -8,6 +8,8 @@ separate_RV(.sutmats = NULL, U = "U", R_plus_V = "R_plus_V",
   R = "R", V = "V")
 }
 \arguments{
+\item{.sutmats}{a list or data frame containing use matrix(ces) and make matrix(ces)}
+
 \item{U}{a use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".}
 
 \item{R_plus_V}{an \code{R_plus_V} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{R_plus_V}".}
@@ -15,8 +17,6 @@ separate_RV(.sutmats = NULL, U = "U", R_plus_V = "R_plus_V",
 \item{R}{name for resource (\code{R}) matrix on output. Default is "\code{R}".}
 
 \item{V}{name for make (\code{V}) matrix on output. Default is "\code{V}".}
-
-\item{.sutdata}{a list or data frame containing use matrix(ces) and make matrix(ces)}
 }
 \value{
 a list or data frame containing \code{R} and \code{V} matrices

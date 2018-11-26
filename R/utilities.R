@@ -147,7 +147,7 @@ resource_industries <- function(.sutdata = NULL, U = "U", V = "V", r_industries 
 #' no \code{R} matrix is created, and
 #' no changes are made to the \code{R_plus_V} matrix.
 #'
-#' @param .sutdata a list or data frame containing use matrix(ces) and make matrix(ces)
+#' @param .sutmats a list or data frame containing use matrix(ces) and make matrix(ces)
 #' @param U a use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".
 #' @param R_plus_V an \code{R_plus_V} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{R_plus_V}".
 #' @param R name for resource (\code{R}) matrix on output. Default is "\code{R}".
@@ -388,7 +388,7 @@ outputs_unit_homogeneous <- function(.sutmats = NULL,
 #' UKEnergy2000mats %>%
 #'   spread(key = "matrix.name", value = "matrix") %>%
 #'   flows_unit_homogeneous()
-flows_unit_homogeneous <- function(.sutdata = NULL,
+flows_unit_homogeneous <- function(.sutmats = NULL,
                                    # Input names
                                    U = "U", V = "V", S_units = "S_units",
                                    keep_details = FALSE,
@@ -410,5 +410,5 @@ flows_unit_homogeneous <- function(.sutdata = NULL,
     list(out) %>% magrittr::set_names(flows_unit_homogeneous)
   }
 
-  matsindf_apply(.sutdata, FUN = flows_unit_homogeneous_func, U_mat = U, V_mat = V, S_units_mat = S_units)
+  matsindf_apply(.sutmats, FUN = flows_unit_homogeneous_func, U_mat = U, V_mat = V, S_units_mat = S_units)
 }

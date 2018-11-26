@@ -37,7 +37,7 @@ Default is "\code{EX_p_IEA.ktoe}".}
 }
 \value{
 a data frame containing the grouping columns of \code{.ieadata}
-        as well as a column named with the value of \code{aggregate_primary_colname}.
+        as well as a column named with the value of \code{aggregate_primary}.
 }
 \description{
 Calculates total aggregate primary energy from a data frame of IEA data.

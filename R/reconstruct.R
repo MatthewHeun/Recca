@@ -106,10 +106,9 @@ new_Y <- function(.sutmats = NULL,
 #'        \code{K} can be calculated by \code{\link{calc_io_mats}}.
 #' @param L_ixp an (\code{L_ixp}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{L_ixp}".
 #' @param L_pxp an (\code{L_pxp}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{L_pxp}".
-#' @param Z an (\code{Z}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Z}".
-#' @param D an (\code{D}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{D}".
-#' @param f_colname the name of a column in \code{.sutadata} containing \code{f} vectors for the base ECC.  Default is "\code{f}".
-#' @param f an (\code{f}) vector or name of the column in \code{.sutmats} that contains same. Default is "\code{f}".
+#' @param Z a \code{Z} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Z}".
+#' @param D a \code{D} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{D}".
+#' @param f an \code{f} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{f}".
 #' @param U_prime name for the \code{U_prime} matrix on output. Default is "\code{U_prime}".
 #' @param V_prime name for the \code{V_prime} matrix on output. Default is "\code{V_prime}".
 #'

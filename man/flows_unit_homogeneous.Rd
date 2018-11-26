@@ -4,11 +4,13 @@
 \alias{flows_unit_homogeneous}
 \title{Tell whether industry flows (inputs and outputs) are unit-homogeneous}
 \usage{
-flows_unit_homogeneous(.sutdata = NULL, U = "U", V = "V",
+flows_unit_homogeneous(.sutmats = NULL, U = "U", V = "V",
   S_units = "S_units", keep_details = FALSE,
   flows_unit_homogeneous = ".flows_unit_homogeneous")
 }
 \arguments{
+\item{.sutmats}{a data frame of supply-use table matrices with matrices arranged in columns.}
+
 \item{U}{a use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".}
 
 \item{V}{a make (\code{V}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{V}".}
@@ -21,8 +23,6 @@ if \code{FALSE}, per-ECC results are returned.}
 \item{flows_unit_homogeneous}{the name of the output column
 that tells whether each industry's outputs are unit-homogeneous.
 Default is "\code{.flows_unit_homogeneous}".}
-
-\item{.sutmats}{a data frame of supply-use table matrices with matrices arranged in columns.}
 }
 \value{
 \code{.sutdata} with additional column "\code{flows_unit_homogeneous}" containing
