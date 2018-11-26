@@ -105,14 +105,16 @@ most other input arguments must be strings
 that identify the names of appropriate columns in `.sutmats` containing vectors or matrices.
 Helpfully, the default values for other input arguments conforms to a standard nomenclature.
 If you're using the standard nomenclature, 
-most `Recca` functions can be called without any arguments, yielding very clean code.
+most `Recca` functions can be called without any arguments.
+This approach yields very clean piped code, 
+because we rely upon names for input and output columns
+given by the default arguments to `calc_io_mats`.
 
 To illustrate the above features of `Recca` functions, 
-we'll operate on the entire `UKEnergy2000mats` data frame, 
+we'll apply the `calc_io_mats` function to the entire `UKEnergy2000mats` data frame, 
 calculating appropriate I-O matrices for each row.
-The resulting code is very clean, 
-because we rely upon names for columns
-given by the default arguments to calc_io_mats.
+Used in this way, `Recca` functions act like specialized `dplyr::mutate` functions,
+with new columns added to the right side of the data frame supplied to the `.sutmats` argument.
 
 ```{r}
 IO_df <- mats %>% calc_io_mats()
