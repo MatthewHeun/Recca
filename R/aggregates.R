@@ -13,6 +13,7 @@
 #'        columns of the final demand matrix (\code{Y}).
 #'        Entries in \code{Y_p} will be subtracted from entries in \code{V_p} to obtain
 #'        the total primary energy aggregate.
+#' @param R resources (\code{R}) matrix or the name of the column in \code{.sutdata} containing same
 #' @param V make (\code{V}) matrix or the name of the column in \code{.sutdata} containing same
 #' @param Y final demand (\code{Y}) matrix or the name of the column in \code{.sutdata} containing same
 #' @param by one of \code{Total}, \code{Product}, or \code{Flow} to indicate the desired aggregation:
@@ -32,6 +33,7 @@ primary_aggregates <- function(.sutdata,
                                # Vector of primary industries
                                p_industries,
                                # Input names
+                               R = "R",
                                V = "V",
                                Y = "Y",
                                by = c("Total", "Product", "Flow"),
