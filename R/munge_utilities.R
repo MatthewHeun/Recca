@@ -213,7 +213,8 @@ add_matnames_iea <- function(.DF,
 #' @param matname the name of the column in \code{.DF} that contains names of matrices
 #'        (a string).  Default is "\code{matname}".
 #' @param U the name for use matrices (a string). Default is "\code{U}".
-#' @param U_EIOU the name for energy industry own use matrices (a string). Defulat is "\code{U_EIOU}".
+#' @param U_EIOU the name for energy industry own use matrices (a string). Default is "\code{U_EIOU}".
+#' @param R the name for resource matrices (a string). Default is "\code{R}".
 #' @param V the name for make matrices (a string). Default is "\code{V}".
 #' @param Y the name for final demand matrices (a string). Default is "\code{Y}".
 #' @param product the name of the column in \code{.DF} where Product names
@@ -225,7 +226,9 @@ add_matnames_iea <- function(.DF,
 #' @param product_type the name that identifies energy carriers (a string).
 #'        Default is "\code{Product}".
 #' @param sector_type the name that identifies final demand sectors (a string).
-#'        Default is "\code{Sector}".
+#'        Default is "\code{Industry}".
+#' @param resource_type the name that identifies resource sectors (a string).
+#'        Default is "\code{Industry}".
 #' @param rowname the name of the output column that contains row names for matrices
 #'        (a string). Default is "\code{rowname}".
 #' @param colname the name of the output column that contains column names for matrices
@@ -252,10 +255,10 @@ add_row_col_meta <- function(.DF,
                              product = "Product", flow = "Flow",
                              # Expected matrix names in the matname column
                              U = "U", U_EIOU = "U_EIOU",
-                             V = "V", Y = "Y",
+                             R = "R", V = "V", Y = "Y",
                              # Row and column Type identifiers
                              industry_type = "Industry", product_type = "Product",
-                             sector_type = "Industry",
+                             sector_type = "Industry", resource_type = "Industry",
                              # Output columns
                              rowname = "rowname", colname = "colname",
                              rowtype = "rowtype", coltype = "coltype"){
@@ -273,6 +276,7 @@ add_row_col_meta <- function(.DF,
     mutate(
       !!rowname := case_when(
         startsWith(!!matname, U) ~ !!product,
+        !!matname == R ~ !!flow,
         !!matname == V ~ !!flow,
         !!matname == Y ~ !!product,
         TRUE ~ NA_character_
@@ -280,17 +284,20 @@ add_row_col_meta <- function(.DF,
       !!colname := case_when(
         startsWith(!!matname, U) ~ !!flow,
         !!matname == V ~ !!product,
+        !!matname == R ~ !!product,
         !!matname == Y ~ !!flow,
         TRUE ~ NA_character_
       ),
       !!rowtype := case_when(
         startsWith(!!matname, U) ~ product_type,
+        !!matname == R ~ resource_type,
         !!matname == V ~ industry_type,
         !!matname == Y ~ product_type,
         TRUE ~ NA_character_
       ),
       !!coltype := case_when(
         startsWith(!!matname, U) ~ industry_type,
+        !!matname == R ~ product_type,
         !!matname == V ~ product_type,
         !!matname == Y ~ sector_type,
         TRUE ~ NA_character_

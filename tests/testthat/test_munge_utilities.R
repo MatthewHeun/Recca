@@ -53,6 +53,16 @@ test_that("add_matnames identifies resource industries correctly", {
     filter(starts_with_any_of(Flow, "Resources - ")) %>%
     mutate(matname = "R")
   expect_equal(WithR, Expected)
+  # Check that rowname is correct for resource rows.
+  WithRmeta <- WithR %>% add_row_col_meta()
+  # Ensure that the rowname is correct
+  expect_equal(WithRmeta$rowname, WithRmeta$Flow)
+  # Ensure that the colname is correct
+  expect_equal(WithRmeta$colname, WithRmeta$Product)
+  # Ensure that the rowtype is correct
+  expect_equal(WithRmeta$rowtype, rep("Industry", 8))
+  # Ensure that the coltype is correct
+  expect_equal(WithRmeta$coltype, rep("Product", 8))
 })
 
 test_that("verify_cols_missing works when either strings or names are provided", {
