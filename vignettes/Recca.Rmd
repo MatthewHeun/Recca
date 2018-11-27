@@ -58,7 +58,7 @@ For data in the format of `UKEnergy2000tidy`,
 we can create `S_units` matrices for each grouping.
 
 ```{r}
-library(dplyr)
+library(tibble)
 S_units <- UKEnergy2000tidy %>%
   group_by(Country, Year, Energy.type, Last.stage) %>%
   S_units_from_tidy()
