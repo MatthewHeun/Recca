@@ -60,6 +60,8 @@ UKEnergy2000mats <- UKEnergy2000tidy %>%
   select(-U_EIOU, -U_excl_EIOU) %>%
   # Add S_units matrices
   left_join(S_units, by = c("Country", "Year", "Energy.type", "Last.stage")) %>%
-  gather(key = matrix.name, value = matrix, R, U, V, Y, r_EIOU, S_units)
+  # When convert to using R everywhere, be sure to add R to the list of gathered columns below.
+  # gather(key = matrix.name, value = matrix, R, U, V, Y, r_EIOU, S_units)
+  gather(key = matrix.name, value = matrix, U, V, Y, r_EIOU, S_units)
 
 use_data(UKEnergy2000mats, overwrite = TRUE)
