@@ -4,7 +4,7 @@
 \alias{primary_aggregates}
 \title{Primary aggregate energy}
 \usage{
-primary_aggregates(.sutdata, p_industries, V = "V", Y = "Y",
+primary_aggregates(.sutdata, p_industries, R = "R", V = "V", Y = "Y",
   by = c("Total", "Product", "Flow"), aggregate_primary = "EX_p.ktoe")
 }
 \arguments{
@@ -15,6 +15,8 @@ These industries will appear in rows of the make matrix (\code{V}) and
 columns of the final demand matrix (\code{Y}).
 Entries in \code{Y_p} will be subtracted from entries in \code{V_p} to obtain
 the total primary energy aggregate.}
+
+\item{R}{resources (\code{R}) matrix or the name of the column in \code{.sutdata} containing same}
 
 \item{V}{make (\code{V}) matrix or the name of the column in \code{.sutdata} containing same}
 
