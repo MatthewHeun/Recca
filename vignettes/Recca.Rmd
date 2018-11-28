@@ -45,9 +45,21 @@ energy and exergy analysis of energy conversion chains.
 `Recca` makes extensive use of a matrix-based PSUT analysis technique
 that first appeared in 
 [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
+This vignette walks through the calculations from [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109),
+using section headings from the paper and section numbers in parentheses.
 
 
-## Data for examples
+## Design philosophy
+
+The functions in `Recca` are flexible and can be used with either a data frame as input
+(and names of columns as arguments to `Recca` function) or with matrices as inputs.
+Outputs are either named columns appended to the input data frame or named matrices in a list.
+The functions in `Recca` have default names for arguments which follow a standard nomenclature.
+It is recommended that the default names be used whenever possible, 
+thereby allowing cleaner code.
+
+
+## PSUT matrix construction (2.2.2)
 
 For the examples that follow, we'll use the `UKEnergy2000tidy` data frame.
 Each row of `UKEnergy2000tidy` data frame represents 
@@ -117,14 +129,6 @@ that is available in the `Recca` package.
 Te rest of this vignette uses the `UKEnergy2000mats` data frame.
 
 
-## Design philosophy
-
-The functions in `Recca` are flexible and can be used with either a data frame as input
-(and names of columns as arguments to `Recca` function) or with matrices as inputs.
-Outputs are either named columns appended to the input data frame or named matrices in a list.
-The functions in `Recca` have default names for arguments which follow a standard nomenclature.
-It is recommended that the default names be used whenever possible, 
-thereby allowing cleaner code.
 
 
 ## Determine the I-O structure of an Energy Conversion Chain (ECC)
@@ -188,7 +192,7 @@ IO_df <- mats %>% calc_io_mats()
 
 By inspecting `IO_df`, we can see, for example, 
 that one $\colvec{y}$ vector was calculated for 
-each row of `mats`.
+each of the four rows of `mats`.
 The same is true for all I-O matrices calculated by `calc_io_mats`.
 
 ```{r}
@@ -196,10 +200,9 @@ class(IO_df)
 names(IO_df)
 glimpse(IO_df)
 IO_df[["y"]][[1]]
-IO_df[["y"]][[2]]
-IO_df[["y"]][[3]]
 IO_df[["y"]][[4]]
 ```
+
 
 
 
