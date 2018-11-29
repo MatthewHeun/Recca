@@ -1,6 +1,16 @@
 #
 # This script reads the raw UK2000 data and prepares it for use in the package.
 #
+# Workflow:
+#
+# (1) If any changes are made in UKEnergy2000raw.csv,
+# be sure to build the package before running this script.
+# Building the package will put the UKEnergy2000raw.csv file in the correct location
+# to be picked up by the System.file function.
+#
+# (2) Run this script so that use_data puts the *.rda files in the correct location.
+#
+# (3) Build again to make sure all *.rda data files are collected into the package.
 
 library(magrittr)
 library(dplyr)
@@ -50,6 +60,8 @@ UKEnergy2000mats <- UKEnergy2000tidy %>%
   select(-U_EIOU, -U_excl_EIOU) %>%
   # Add S_units matrices
   left_join(S_units, by = c("Country", "Year", "Energy.type", "Last.stage")) %>%
+  # When convert to using R everywhere, be sure to add R to the list of gathered columns below.
+  # gather(key = matrix.name, value = matrix, R, U, V, Y, r_EIOU, S_units)
   gather(key = matrix.name, value = matrix, U, V, Y, r_EIOU, S_units)
 
 use_data(UKEnergy2000mats, overwrite = TRUE)

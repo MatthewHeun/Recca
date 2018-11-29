@@ -4,18 +4,18 @@
 \alias{verify_SUT_industry_production}
 \title{Confirm that all Industries in an SUT-style data frame produce energy.}
 \usage{
-verify_SUT_industry_production(.sutdata = NULL, U_colname = "U",
-  V_colname = "V", industry_production_OK = ".industry_production_OK",
+verify_SUT_industry_production(.sutmats = NULL, U = "U", V = "V",
+  industry_production_OK = ".industry_production_OK",
   problem_industries = ".problem_industries")
 }
 \arguments{
-\item{.sutdata}{an SUT-style data frame containing metadata columns
+\item{.sutmats}{an SUT-style data frame containing metadata columns
 (typically \code{Country}, \code{Year}, \code{Ledger.side}, \code{Product}, etc.)
 and columns of SUT matrices, including \code{U} and \code{V}.}
 
-\item{U_colname}{the name of the column of use matrices. Default is "\code{U}".}
+\item{U}{use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".}
 
-\item{V_colname}{the name of the column of make matrices. Default is "\code{V}".}
+\item{V}{make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "\code{V}".}
 
 \item{industry_production_OK}{the name of the column in the output that
 tells whether all industries produce something. Default is "\code{.industry_production_OK}".}
@@ -24,7 +24,7 @@ tells whether all industries produce something. Default is "\code{.industry_prod
 tells which transformation processes consume energy but do not produce anything.}
 }
 \value{
-\code{.sutdata} with added column named with the value of \code{industry_production_OK}.
+\code{.sutmats} with added column named with the value of \code{industry_production_OK}.
 }
 \description{
 If a transformation process industry consumes energy (in the \code{U} matrix)
@@ -36,12 +36,11 @@ And final demand sectors consume energy but do not produce any.)
 This function emits a warning if an Industry in the \code{U} matrix
 is found to consume energy but not make energy.
 Look at the \code{industry_production_OK} column of the output to see which rows of
-\code{.sutdata} exhibit the problem.
+\code{.sutmats} exhibit the problem.
 Look at the \code{problem_industries} column of the output to see which industries
 exhibit this problem.
 }
 \examples{
-library(magrittr)
 library(tidyr)
 verify_SUT_industry_production(UKEnergy2000mats \%>\%
                                  spread(key = matrix.name, value = matrix))

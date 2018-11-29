@@ -4,45 +4,44 @@
 \alias{calc_yqfgW}
 \title{Calculate \code{y}, \code{f}, \code{g}, and \code{q} vectors and the \code{W} matrix}
 \usage{
-calc_yqfgW(.sutdata = NULL, U_colname = "U", V_colname = "V",
-  Y_colname = "Y", S_units = "S_units", y_colname = "y",
-  q_colname = "q", f_colname = "f", g_colname = "g",
-  W_colname = "W")
+calc_yqfgW(.sutdata = NULL, U = "U", V = "V", Y = "Y",
+  S_units = "S_units", y = "y", q = "q", f = "f", g = "g",
+  W = "W")
 }
 \arguments{
 \item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
 
-\item{U_colname}{the name of the column in \code{.sutdata} containing Use (\code{U}) matrices.}
+\item{U}{use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".}
 
-\item{V_colname}{the name of the column in \code{.sutdata} containing Make (\code{V}) matrices.}
+\item{V}{make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "\code{V}".}
 
-\item{Y_colname}{the name of the column in \code{.sutdata} containing final demand (\code{Y}) matrices.}
+\item{Y}{final demand (\code{Y}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Y}".}
 
-\item{S_units}{the name of the column in \code{.sutdata} containing \code{S_units} matrices.}
+\item{S_units}{\code{S_units} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{S_units}".}
 
-\item{y_colname}{the name of the output column containing \code{y} vectors.
-\code{y} is calculated by \code{rowsums_byname(Y)}.}
+\item{y}{name for \code{y} vector on output. Default is "\code{y}".
+\code{y} is calculated by \code{rowsums(Y)}.}
 
-\item{q_colname}{the name of the output column containing \code{q} vectors.
-\code{q} is calculated by \code{rowsums_byname(U) + y}.}
+\item{q}{name for \code{q} vector on output. Default is "\code{q}".
+\code{q} is calculated by \code{rowsums(U) + y}.}
 
-\item{f_colname}{the name of the output column containing \code{f} vectors.
-\code{f} is calculated by \code{colsums_byname(U)}.}
+\item{f}{name for \code{f} vector on output. Default is "\code{f}".
+\code{f} is calculated by \code{colsums(U)}.}
 
-\item{g_colname}{the name of the output column containing \code{g} vectors.
-\code{g} is calculated by \code{rowsums_byname(V)}.}
+\item{g}{name for \code{g} vector on output. Default is "\code{g}".
+\code{g} is calculated by \code{rowsums(V)}.}
 
-\item{W_colname}{the name of the output column containing \code{W} matrices.
-\code{W} is calculated by \code{transpose_byname(V) - U}.}
+\item{W}{name for \code{W} matrix on output. Default is "\code{W}".
+\code{W} is calculated by \code{transpose(V) - U}.}
 }
 \value{
-\code{.sutdata} with columns \code{y_colname}, \code{q_colname},
-         \code{f_colname}, \code{g_colname}, and \code{W_colname} added
+a list or data frame containing \code{y}, \code{q},
+         \code{f}, \code{g}, and \code{W}.
 }
 \description{
 Note that a necessary condition for calculating the \code{f} and \code{g} vectors is that
 the U_bar and V_bar matrices should have only one entry per column and row, respectively,
-meaning that all products input into a given industry need to be unit homogeneous
+meaning that all products entering a given industry need to be unit homogeneous
 before we can calculate the \code{f} vector and
 all products of a given industry are measured in the same units
 before we can calculate the \code{g} vector.

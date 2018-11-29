@@ -4,48 +4,42 @@
 \alias{verify_SUT_energy_balance}
 \title{Confirm that an SUT-style data frame conserves energy.}
 \usage{
-verify_SUT_energy_balance(.sutdata = NULL, U_colname = "U",
-  V_colname = "V", Y_colname = "Y", tol = 1e-06,
-  SUT_energy_balance = ".SUT_energy_balance")
+verify_SUT_energy_balance(.sutmats = NULL, U = "U", V = "V",
+  Y = "Y", tol = 1e-06, SUT_energy_balance = ".SUT_energy_balance")
 }
 \arguments{
-\item{.sutdata}{an SUT-style data frame with columns of matrices,
+\item{.sutmats}{an SUT-style data frame with columns of matrices,
 including \code{U}, \code{V}, and \code{Y} columns.}
 
-\item{U_colname}{the name of the column that contains \code{U} matrices. Default is "\code{U}".}
+\item{U}{use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".}
 
-\item{V_colname}{the name of the column that contains \code{V} matrices. Default is "\code{V}".}
+\item{V}{make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "\code{V}".}
 
-\item{Y_colname}{the name of the column that contsins \code{Y} matrices. Default is "\code{Y}".}
+\item{Y}{final demand (\code{Y}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Y}".}
 
 \item{tol}{the maximum amount by which Supply and Consumption can be out of balance.
 Default is \code{1e-6}.}
 
-\item{SUT_energy_balance}{the name of the output column. Default is "\code{.SUT_energy_balance}".}
+\item{SUT_energy_balance}{the name for booleans telling if energy is in balance. Default is "\code{.SUT_energy_balance}".}
 }
 \value{
-\code{.sutdata}. If energy balance is not observed,
-        an additional column is added showing the row on which energy is not balanced.
+a list or data frame saying whether \code{.sutmats} are in balance.
 }
 \description{
-Energy balances are confirmed by Product (within \code{tol}) for every row in \code{.sutdata}.
+Energy balances are confirmed by Product (within \code{tol}) for every row in \code{.sutmats}.
 }
 \details{
-If energy is in balance for every row, \code{.sutdata} is returned with an additional column, and
+If energy is in balance for every row, \code{.sutmats} is returned with an additional column, and
 execution returns to the caller.
 If energy balance is not observed for one or more of the rows,
 a warning is emitted, and
 the additional column (\code{SUT_energy_blance})
 indicates where the problem occurred, with \code{FALSE}
 showing where energy is not in balance.
-
-This function should be called
-for its side-effect of testing whether energy is in balance in \code{.sutdata}.
 }
 \examples{
 library(dplyr)
 library(tidyr)
-library(magrittr)
 verify_SUT_energy_balance(UKEnergy2000mats \%>\%
                             filter(Last.stage \%in\% c("final", "useful")) \%>\%
                             spread(key = matrix.name, value = matrix),

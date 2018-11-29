@@ -4,26 +4,23 @@
 \alias{products_unit_homogeneous}
 \title{Tell whether ECC products are unit-homogenous}
 \usage{
-products_unit_homogeneous(.sutdata = NULL, S_units_colname = "S_units",
+products_unit_homogeneous(.sutmats = NULL, S_units = "S_units",
   keep_details = FALSE,
-  products_unit_homogeneous_colname = "products_unit_homogeneous")
+  products_unit_homogeneous = ".products_unit_homogeneous")
 }
 \arguments{
-\item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
+\item{.sutmats}{a data frame of supply-use table matrices with matrices arranged in columns.}
 
-\item{S_units_colname}{the name of the column in \code{.sutdata} that contains
-\code{S_units} matrices. Default is "\code{S_units}".}
+\item{S_units}{an \code{S_units} matrix or name of a column in \code{.sutmats} that contains same. Default is "\code{S_units}".}
 
 \item{keep_details}{if \code{TRUE}, per-product results are returned;
 if \code{FALSE}, per-ECC results are returned.}
 
-\item{products_unit_homogeneous_colname}{the name of the output column
-that tells whether products in \code{S_units} are unit-homogeneous.
-Default is "\code{products_unit_homogeneous}".}
+\item{products_unit_homogeneous}{name for the boolean that tells whether products in \code{S_units} are unit-homogeneous on output.
+Default is "\code{.products_unit_homogeneous}".}
 }
 \value{
-\code{.sutdata} with additional column "\code{products_unit_homogeneous}"
-        containing \code{TRUE} if products in \code{S_units} are unit-homogeneous, \code{FALSE} otherwise.
+a list or data frame containing \code{TRUE} if products in \code{S_units} are unit-homogeneous, \code{FALSE} otherwise.
 
 importFrom magrittr extract2
 }
@@ -34,8 +31,9 @@ according to the \code{S_units} matrix and
 }
 \examples{
 library(magrittr)
+library(tidyr)
 UKEnergy2000mats \%>\%
   spread(key = "matrix.name", value = "matrix") \%>\%
   products_unit_homogeneous() \%>\%
-  extract2("products_unit_homogeneous")
+  extract2(".products_unit_homogeneous")
 }

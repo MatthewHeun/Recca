@@ -22,10 +22,20 @@ knitr::opts_chunk$set(
 library(dplyr)
 library(matsbyname)
 library(matsindf)
+library(Recca)
 library(tidyr)
 library(tibble)
 ```
 
+<!-- Establish some helpful LaTeX shortcuts for equations -->
+\newcommand{\transpose}[1]{#1^\mathrm{T}}
+\newcommand{\inverse}[1]{#1^{\mathrm{-}1}}
+\newcommand{\mat}[1]{\mathbf{#1}}
+\newcommand{\colvec}[1]{\mathbf{#1}}
+\newcommand{\rowvec}[1]{\transpose{\colvec{#1}}}
+\newcommand{\inversetranspose}[1]{\transpose{\left( \inverse{\mat{#1}} \right)}}
+\newcommand{\transposeinverse}[1]{\inverse{\left( \transpose{\mat{#1}} \right)}}
+\newcommand{\hatinv}[1]{\inverse{\widehat{#1}}}
 
 ## Introduction
 
@@ -33,8 +43,189 @@ library(tibble)
 is an `R` package that enables
 energy and exergy analysis of energy conversion chains.
 `Recca` makes extensive use of a matrix-based PSUT analysis technique
-that first appeared in Heun, Owen, and Brockway 
+that first appeared in 
 [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
+This vignette walks through the calculations from [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109),
+using section headings from the paper and section numbers in parentheses.
+
+
+## Design philosophy
+
+The functions in `Recca` are flexible and can be used with either
+(a) matrices as inputs 
+(with individual matrices as arguments to `Recca` functions)
+or 
+(b) a data frame as input
+(with names of data frame columns, as strings, as arguments to `Recca` functions).
+Outputs are either 
+named matrices in a list
+or
+named columns appended to the input data frame, respectively.
+The functions in `Recca` have default names for arguments which follow a standard nomenclature.
+It is recommended that the default matrix names be used whenever possible, 
+thereby allowing cleaner code.
+
+
+## PSUT matrices---[Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 2.2.2
+
+For the examples that follow, we'll use the `UKEnergy2000tidy` data frame.
+Each row of `UKEnergy2000tidy` data frame represents 
+another datum for a portion of the ECC for the UK in 2000.
+`UKEnergy2000tidy` is in a format similar to data from the IEA or other organizations.
+
+For data in the format of `UKEnergy2000tidy`, 
+we can create `S_units` matrices for each grouping.
+
+```{r}
+library(tibble)
+S_units <- UKEnergy2000tidy %>%
+  group_by(Country, Year, Energy.type, Last.stage) %>%
+  S_units_from_tidy()
+glimpse(S_units)
+```
+
+And we can identify which entries belong in the
+resource ($\mat{R}$), use ($\mat{U}$), make ($\mat{V}$), and
+final demand ($\mat{Y}$) matrices 
+with the `add_matnames_iea` and `add_row_col_meta` functions.
+
+```{r}
+WithNames <- UKEnergy2000tidy %>%
+  # Add a column indicating the matrix in which this entry belongs (U, V, or Y).
+  add_matnames_iea(use_R = TRUE) %>%
+  # Add metadata columns for row names, column names, row types, and column types.
+  add_row_col_meta() %>% 
+  # Eliminate columns we no longer need
+  select(-Ledger.side, -Flow.aggregation.point, -Flow, -Product) %>%
+  mutate(
+    # Ensure that all energy values are positive, as required for analysis.
+    EX.ktoe = abs(EX.ktoe)
+  )
+head(WithNames)
+```
+
+After identifying the matrices, rownames, colnames, rowtypes, and coltypes, 
+we can collapse all data to matrices and add `S_units`.
+
+```{r}
+AsMats <- WithNames %>%
+  # Collapse to matrices using functions in the matsindf package
+  group_by(Country, Year, Energy.type, Last.stage, matname) %>%
+  collapse_to_matrices(matnames = "matname", matvals = "EX.ktoe",
+                       rownames = "rowname", colnames = "colname",
+                       rowtypes = "rowtype", coltypes = "coltype") %>%
+  rename(matrix.name = matname, matrix = EX.ktoe) %>%
+  spread(key = matrix.name, value = matrix) %>%
+  # Do a little more cleanup
+  mutate(
+    # Create full U matrix
+    U = sum_byname(U_excl_EIOU, U_EIOU),
+    # Create r_EIOU, a matrix that identifies the ratio of EIOU to other energy consumed.
+    r_EIOU = elementquotient_byname(U_EIOU, U),
+    r_EIOU = replaceNaN_byname(r_EIOU, val = 0)
+  ) %>%
+  select(-U_EIOU, -U_excl_EIOU) %>%
+  # Add S_units matrices
+  left_join(S_units, by = c("Country", "Year", "Energy.type", "Last.stage")) %>%
+  gather(key = matrix.name, value = matrix, R, U, V, Y, r_EIOU, S_units)
+glimpse(AsMats)
+```
+
+The `AsMats` data frame is essentially the same as the `Recca::UKEnergy2000mats` data frame.
+The remainder of this vignette uses the `UKEnergy2000mats` data frame.
+
+
+## I-O structure---[Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 2.2.4
+
+
+### With individual matrices
+
+To determine the I-O structure of an ECC, use the `calc_io_mats` function.
+
+```{r}
+library(tidyr)
+mats <- UKEnergy2000mats %>% 
+  spread(key = matrix.name, value = matrix) %>% 
+  # Put rows in a natural order
+  mutate(
+    Last.stage = factor(Last.stage, levels = c("final", "useful", "services")),
+    Energy.type = factor(Energy.type, levels = c("E.ktoe", "X.ktoe"))
+  ) %>% 
+  arrange(Last.stage, Energy.type) 
+# Use the calc_io_mats function with individual matrices, 
+# each taken from the first row of the UKEnergy2000mats data frame.
+U <- mats$U[[1]]
+V <- mats$V[[1]]
+Y <- mats$Y[[1]]
+S_units <- mats$S_units[[1]]
+IO_list <- calc_io_mats(U = U, V = V, Y = Y, S_units = S_units)
+```
+
+Most `Recca` functions return a list when called with individual matrices as arguments.
+The `calc_io_mats` function gives several I-O matrices in its returned list.
+
+```{r}
+class(IO_list)
+names(IO_list)
+IO_list[["y"]]
+```
+
+### From a `matsindf`-style data frame
+
+Most `Recca` functions can also operate on a `matsindf`-style data frame.
+(A `matsindf`-style data frame has matrices in cells of a data frame.
+See the `matsindf` package for additional information.)
+When a data frame is supplied to a `Recca` function in the `.sutmats` argument, 
+most other input arguments must be strings 
+that identify the names of appropriate columns in `.sutmats` containing 
+named vectors or matrices.
+Helpfully, the default values for other input arguments conform to a standard nomenclature.
+When using the standard nomenclature, 
+most `Recca` functions can use the default arguments
+for input and output columns.
+This approach yields very clean piped code, as shown below.
+
+To illustrate the above features of `Recca` functions, 
+we'll apply the `calc_io_mats` function to the entire `UKEnergy2000mats` data frame, 
+calculating appropriate I-O matrices for each row.
+Used in this way, `Recca` functions act like specialized `dplyr::mutate` functions,
+with new columns added to the right side of the data frame supplied to the `.sutmats` argument.
+
+```{r}
+IO_df <- mats %>% calc_io_mats()
+```
+
+By inspecting `IO_df`, we can see, for example, 
+that one $\colvec{y}$ vector was calculated for 
+each of the four rows of `mats`.
+The same is true for all I-O matrices calculated by `calc_io_mats`.
+
+```{r}
+class(IO_df)
+names(IO_df)
+glimpse(IO_df)
+IO_df[["y"]][[1]]
+IO_df[["y"]][[4]]
+```
+
+For the remainder of this vignette, 
+operations will be performed on the entire `UKEnergy2000mats` data frame.
+But readers should remember that functions can be called on 
+individual matrices, as well.
+
+
+## Changes in final demand---[Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 2.2.5
+
+
+## Net energy analysis---[Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 3.1
+
+
+## Efficiencies---[Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 3.2
+
+
+## Energy footprints---[Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 3.3
+
+
 
 
 

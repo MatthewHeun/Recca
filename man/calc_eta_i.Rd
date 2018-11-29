@@ -4,19 +4,19 @@
 \alias{calc_eta_i}
 \title{Calculate industry efficiencies}
 \usage{
-calc_eta_i(.sutdata, U_colname = "U", V_colname = "V",
-  S_units_colname = "S_units", eta_i_colname = "eta_i")
+calc_eta_i(.sutmats, U = "U", V = "V", S_units = "S_units",
+  eta_i = "eta_i")
 }
 \arguments{
-\item{.sutdata}{a data frame containing columns for \code{U}, \code{V}, and \code{S_units} matrices}
+\item{.sutmats}{a data frame containing columns for \code{U}, \code{V}, and \code{S_units} matrices}
 
-\item{U_colname}{a string for the name of a column of \code{U} matrices in \code{.sutmats}. (Default is "\code{U}".)}
+\item{U}{a string for the name of a column of \code{U} matrices in \code{.sutmats}. (Default is "\code{U}".)}
 
-\item{V_colname}{a string for the name of a column of \code{V} matrices in \code{.sutmats}. (Default is "\code{V}".)}
+\item{V}{a string for the name of a column of \code{V} matrices in \code{.sutmats}. (Default is "\code{V}".)}
 
-\item{S_units_colname}{a string for the name of a column of \code{S_units} matrices in \code{.sutmats}. (Default is "\code{S_units}".)}
+\item{S_units}{a string for the name of a column of \code{S_units} matrices in \code{.sutmats}. (Default is "\code{S_units}".)}
 
-\item{eta_i_colname}{the name of the industry efficiency column in output. Default is "\code{eta_i}".}
+\item{eta_i}{the name of the industry efficiency column in output. Default is "\code{eta_i}".}
 }
 \value{
 \code{.sutmats} with an additional column "\code{eta_i}"
@@ -38,7 +38,6 @@ To calculate energy conversion final demand sector and product efficiencies, use
 \code{\link{calc_embodied_etas}} function.
 }
 \examples{
-library(magrittr)
 library(tidyr)
 UKEnergy2000mats \%>\%
   spread(key = "matrix.name", value = "matrix") \%>\%

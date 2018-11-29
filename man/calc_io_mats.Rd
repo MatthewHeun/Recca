@@ -2,84 +2,71 @@
 % Please edit documentation in R/io.R
 \name{calc_io_mats}
 \alias{calc_io_mats}
-\title{Calculate various input-output matrices}
+\title{Calculate several input-output matrices}
 \usage{
-calc_io_mats(.sutdata = NULL, U_colname = "U", V_colname = "V",
-  Y_colname = "Y", S_units = "S_units", y_colname = "y",
-  q_colname = "q", f_colname = "f", g_colname = "g",
-  W_colname = "W", K_colname = "K", Z_colname = "Z",
-  C_colname = "C", D_colname = "D", A_colname = "A",
-  L_ixp_colname = "L_ixp", L_pxp_colname = "L_pxp")
+calc_io_mats(.sutdata = NULL, U = "U", V = "V", Y = "Y",
+  S_units = "S_units", y = "y", q = "q", f = "f", g = "g",
+  W = "W", K = "K", Z = "Z", C = "C", D = "D", A = "A",
+  L_ixp = "L_ixp", L_pxp = "L_pxp")
 }
 \arguments{
 \item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
 
-\item{U_colname}{the name of the column in \code{.sutdata} containing Use (\code{U}) matrices.
-Default is "\code{U}".}
+\item{U}{use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".}
 
-\item{V_colname}{the name of the column in \code{.sutdata} containing Make (\code{V}) matrices.
-Default is "\code{V}".}
+\item{V}{make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "\code{V}".}
 
-\item{Y_colname}{the name of the column in \code{.sutdata} containing final demand (\code{Y}) matrices.
-Default is "\code{Y}".}
+\item{Y}{final demand (\code{Y}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Y}".}
 
-\item{S_units}{the name of the column in \code{.sutdata} containing unit summation (\code{S_units}) matrices.
-Default is "\code{S_units}".}
+\item{S_units}{\code{S_units} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{S_units}".}
 
-\item{y_colname}{the name of the output column containing \code{y} vectors.
-Default is "\code{y}".
+\item{y}{name for \code{y} vector on output. Default is "\code{y}".
 \code{y} is calculated by \code{rowsums(Y)}.}
 
-\item{q_colname}{the name of the output column containing \code{q} vectors.
-Default is "\code{q}".
+\item{q}{name for \code{q} vector on output. Default is "\code{q}".
 \code{q} is calculated by \code{rowsums(U) + y}.}
 
-\item{f_colname}{the name of the output column containing \code{f} vectors.
-Default is "\code{f}".
+\item{f}{name for \code{f} vector on output. Default is "\code{f}".
 \code{f} is calculated by \code{colsums(U)}.}
 
-\item{g_colname}{the name of the output column containing \code{g} vectors.
-Default is "\code{g}".
+\item{g}{name for \code{g} vector on output. Default is "\code{g}".
 \code{g} is calculated by \code{rowsums(V)}.}
 
-\item{W_colname}{the name of the output column containing \code{W} matrices.
-Default is "\code{W}".
+\item{W}{name for \code{W} matrix on output. Default is "\code{W}".
 \code{W} is calculated by \code{transpose(V) - U}.}
 
-\item{K_colname}{the name of the output column containing \code{K} matrices.
-Default is "\code{K}".
+\item{K}{name for \code{K} matrix on output. Default is "\code{K}".
 \code{K} is calculated by \code{U * f_hat_inv}.}
 
-\item{Z_colname}{the name of the output column containing \code{Z} matrices.
-Default is "\code{Z}".
+\item{Z}{name for \code{Z} matrix on output. Default is "\code{Z}".
 \code{Z} is calculated by \code{U * g_hat_inv}.}
 
-\item{C_colname}{the name of the output column containing \code{C} matrices.
-\code{C} is calculated by \code{transpose(V) * g_hat_inv}.
-Default is "\code{C}".}
+\item{C}{name for \code{C} matrix on output. Default is "\code{C}".
+\code{C} is calculated by \code{transpose(V) * g_hat_inv}.}
 
-\item{D_colname}{the name of the output column containing \code{D} matrices.
-Default is "\code{D}".
+\item{D}{name for \code{D} matrix on output. Default is "\code{D}".
 \code{D} is calculated by \code{V * q_hat_inv}.}
 
-\item{A_colname}{the name of the output column containing \code{A} matrices.
-Default is "\code{A}".
+\item{A}{name for \code{A} matrix on output. Default is "\code{A}".
 \code{A} is calculated by \code{Z * D}.}
 
-\item{L_ixp_colname}{the name of the output column containing industry-by-product L matrices.
-Default is "\code{L_ixp}".
+\item{L_ixp}{name for \code{L_ixp} matrix on output. Default is "\code{L_ixp}".
 \code{L_ixp} is calculated by \code{D * L_pxp}.}
 
-\item{L_pxp_colname}{the name of the output column containing product-by-product L matrices.
-Default is "\code{L_pxp}".
+\item{L_pxp}{name for \code{L_pxp} matrix on output. Default is "\code{L_pxp}".
 \code{L_pxp} is calculated by \code{(I - Z*D)^-1}.}
 }
 \value{
-\code{.sutdata} with additional columns:
-\code{y_colname}, \code{q_colname}, \code{g_colname}, \code{W_colname},
-\code{Z_colname}, \code{D_colname}, \code{K_colname}, \code{C_colname}, \code{A_colname},
-\code{L_ixp_colname}, and \code{L_pxp_colname}.
+a list or data frame containing input-output matrices
 }
 \description{
-Calculate various input-output matrices
+Calculate several input-output matrices
+}
+\examples{
+library(dplyr)
+library(tidyr)
+UKEnergy2000mats \%>\%
+  spread(key = matrix.name, value = matrix) \%>\%
+  select(Country, Year, Energy.type, Last.stage, U, V, Y, r_EIOU, S_units) \%>\%
+  calc_io_mats()
 }

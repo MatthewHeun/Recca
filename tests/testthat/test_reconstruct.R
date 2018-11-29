@@ -1,11 +1,11 @@
 library(dplyr)
 library(Hmisc)
-library(magrittr)
 library(matsbyname)
 library(matsindf)
 library(Recca)
 library(testthat)
 library(tidyr)
+
 
 ###########################################################
 context("Reconstructing PSUT matrices from a new Y matrix")
@@ -15,13 +15,13 @@ test_that("reconstructing U and V from single matrices works as expected", {
   alliomats <- UKEnergy2000mats %>%
     spread(key = matrix.name, value = matrix) %>%
     calc_io_mats()
-  allUV <- new_Y(alliomats, Y_prime_colname = "Y")
+  allUV <- new_Y(alliomats, Y_prime = "Y")
   for (i in 1:nrow(allUV)) {
-    UV <- new_Y(Y_prime_colname = alliomats$Y[[i]],
-                L_ixp_colname = alliomats$L_ixp[[i]],
-                L_pxp_colname = alliomats$L_pxp[[i]],
-                Z_colname = alliomats$Z[[i]],
-                D_colname = alliomats$D[[i]])
+    UV <- new_Y(Y_prime = alliomats$Y[[i]],
+                L_ixp = alliomats$L_ixp[[i]],
+                L_pxp = alliomats$L_pxp[[i]],
+                Z = alliomats$Z[[i]],
+                D = alliomats$D[[i]])
     expect_equal(UV$U_prime, allUV$U_prime[[i]])
     expect_equal(UV$V_prime, allUV$V_prime[[i]])
   }
@@ -64,13 +64,27 @@ test_that("reconstructing U and V from a new Y matrix works as expected", {
     mutate(
       Y_prime = list(Y_prime_finalE, Y_prime_servicesE, Y_prime_usefulE, Y_prime_servicesX)
     ) %>%
-    new_Y()
-  Recca:::test_against_file(Reconstructed_Residential, "expected_Reconstructed_Residential.rds", update = FALSE)
+    new_Y() %>%
+    select(Country, Year, Energy.type, Last.stage, U_prime, V_prime) %>%
+    gather(key = "matnames", value = "matvals", U_prime, V_prime) %>%
+    expand_to_tidy(drop = 0)
+  expect_equivalent(Reconstructed_Residential %>%
+                      filter(Energy.type == "E.ktoe", Last.stage == "final", matnames == "U_prime", rownames == "Crude - Dist.", colnames == "Crude dist.") %>% select(matvals) %>% unlist(),
+                    0.3481179450)
+  expect_equivalent(Reconstructed_Residential %>%
+                      filter(Energy.type == "E.ktoe", Last.stage == "useful", matnames == "V_prime", rownames == "Truck engines", colnames == "MD - Truck engines") %>% select(matvals) %>% unlist(),
+                    7.748625)
+  expect_equivalent(Reconstructed_Residential %>%
+                      filter(Energy.type == "X.ktoe", Last.stage == "services", matnames == "V_prime", rownames == "Gas wells & proc.", colnames == "NG - Wells") %>% select(matvals) %>% unlist(),
+                    16220.3637987185)
+  expect_equivalent(Reconstructed_Residential %>%
+                      filter(Energy.type == "X.ktoe", Last.stage == "services", matnames == "U_prime", rownames == "Elect", colnames == "Elect. grid") %>% select(matvals) %>% unlist(),
+                    6238.6014610456)
 })
 
 
 ###########################################################
-context("Reconstructing PSUT matrices from perfect substitution")
+context("New perfectly substitutable inputs in k")
 ###########################################################
 
 test_that("new_k_ps works as expected", {
@@ -79,7 +93,12 @@ test_that("new_k_ps works as expected", {
 
   io_mats <- perfectsub_mats %>% calc_io_mats()
   K <- io_mats$K[[1]]
-  Recca:::test_against_file(K, "expected_K.rds", update = FALSE)
+  expect_equal(K["FF", "FF extraction"], 1)
+  expect_equal(K["FF elec", "Buildings"], 0.2725225225)
+  expect_equal(K["FF elec", "Electric transport"], 0.0251256281)
+  expect_equal(K["Ren elec", "Electric transport"], 0.97487437)
+  expect_equal(K["Ren elec", "Solar and wind plants"], 0.03)
+  expect_equal(K["Rens", "Solar and wind plants"], 0.97)
 
   # Figure out a new column vector for k_prime.
   k_prime_vec <- K[, "Electric transport", drop = FALSE]
@@ -94,44 +113,209 @@ test_that("new_k_ps works as expected", {
       k_prime = make_list(k_prime_vec, n = 1)
     )
   # Now do the calculation of U_prime and V_prime matrices.
-  new_UV <- new_k_ps(io_mats)
-  Recca:::test_against_file(new_UV, "expected_new_UV_from_new_k_ps.rds", update = FALSE)
+  new_UV <- io_mats %>%
+    new_k_ps() %>%
+    select(Country, Year, Energy.type, Last.stage, U_prime, V_prime) %>%
+    gather(key = "matnames", value = "matvals", U_prime, V_prime) %>%
+    expand_to_tidy(drop = 0)
+  expect_equivalent(new_UV %>%
+                      filter(Energy.type == "E.ktoe", Last.stage == "services", matnames == "U_prime", rownames == "FF elec", colnames == "Buildings") %>% select(matvals) %>% unlist(),
+                    12.1)
+  expect_equivalent(new_UV %>%
+                      filter(Energy.type == "E.ktoe", Last.stage == "services", matnames == "V_prime", rownames == "Buildings", colnames == "Bldg services") %>% select(matvals) %>% unlist(),
+                    25.2)
+  expect_equivalent(new_UV %>%
+                      filter(Energy.type == "E.ktoe", Last.stage == "services", matnames == "V_prime", rownames == "Resources - Rens", colnames == "Rens") %>% select(matvals) %>% unlist(),
+                    49.75)
+})
+
+test_that("1-industry ECC works with new_k_ps", {
+  # This test arises from interactions with Jianwei Du at University of Texas at Austin.
+  # To investigate the issues that Jianwei raised,
+  # I'll make the simplest possible ECC that retains the features to be tested,
+  # a minimum working example (MWE).
+  # This example has two resource industries (R1 and R2),
+  # one intermediate industry (I), and
+  # two final demand sectors (Y1 and Y2).
+  # R1 makes product R1p.  R2 makes product R2p.  I makes product Ip.
+  #
+  # Here are the U, V, Y, and S_units matrices.
+
+  U <- matrix(c(0, 0, 10,
+                0, 0, 10,
+                0, 0,  0),
+              byrow = TRUE, nrow = 3, ncol = 3,
+              dimnames = list(c("R1p", "R2p", "Ip"), c("R1", "R2", "I"))) %>%
+    setrowtype("Products") %>% setcoltype("Industries")
+
+  V <- matrix(c(10,  0, 0,
+                0, 10, 0,
+                0,  0, 4),
+              byrow = TRUE, nrow = 3, ncol = 3,
+              dimnames = list(c("R1", "R2", "I"), c("R1p", "R2p", "Ip"))) %>%
+    setrowtype("Industries") %>% setcoltype("Products")
+
+  Y <- matrix(c(0, 0,
+                0, 0,
+                2, 2),
+              byrow = TRUE, nrow = 3, ncol = 2,
+              dimnames = list(c("R1p", "R2p", "Ip"), c("Y1", "Y2"))) %>%
+    setrowtype("Products") %>% setcoltype("Industries")
+
+  S_units <- matrix(c(1,
+                      1,
+                      1),
+                    byrow = TRUE, nrow = 3, ncol = 1,
+                    dimnames = list(c("R1p", "R2p", "Ip"), c("quad"))) %>%
+    setrowtype("Products") %>% setcoltype("Units")
+
+  # Now calculate the IO matrices
+  iomats <- calc_io_mats(U = U, V = V, Y = Y, S_units = S_units)
+
+  # Recalculate the matrices with updated k column
+  new_k <- matrix(c(1,
+                    0),
+                  byrow = TRUE, nrow = 2, ncol = 1,
+                  dimnames = list(c("R1p", "R2p"), c("I"))) %>%
+    setrowtype("Products") %>% setcoltype("Industries")
+  prime1 <- new_k_ps(c(iomats, list(U = U, V = V, Y = Y, S_units = S_units, k_prime = new_k)))
+  expect_equal(prime1$U_prime["R1p", "I"], 20)
+  expect_equal(prime1$U_prime["R2p", "I"], 0)
+  expect_equal(prime1$V_prime["R1", "R1p"], 20)
+  expect_equal(prime1$V_prime["R2", "R2p"], 0)
+
+
+
 })
 
 
 ###########################################################
-context("Reconstructing PSUT matrices from new primary industries")
+context("New primary industries")
 ###########################################################
 
-# test_that("new_R works as expected", {
-#   doubleR <- UKEnergy2000mats %>%
-#     spread(key = "matrix.name", value = "matrix") %>%
-#     # At present, the UKEnergy2000Mats has a V matrix that is the sum of both V and R.
-#     # Change to use the R matrix.
-#     rename(
-#       V_plus_R = V
-#     ) %>%
-#     separate_RV() %>%
-#     # At this point, the matrices are they way we want them.
-#     # Calculate the input-output matrices which are inputs to the new_R function.
-#     calc_io_mats() %>%
-#     # Make an R_prime matrix that gives twice the resource inputs to the economy.
-#     mutate(
-#       R_prime = elementproduct_byname(2, R)
-#     ) %>%
-#     # Now call the new_R function which will calculate
-#     # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
-#     # given R_prime.
-#     # Each of the *_prime matrices should be 2x their originals,
-#     # because R_prime is 2x relative to R.
-#     new_R()
-#
-#   for (i in 1:nrow(doubleR)) {
-#     expectedU <- elementproduct_byname(2, doubleR$U[[i]])
-#     expect_true(equal_byname(doubleR$U_prime[[i]], expectedU))
-#     expectedV <- elementproduct_byname(2, doubleR$V[[i]])
-#     expect_true(equal_byname(doubleR$V_prime[[i]], expectedV))
-#     expectedY <- elementproduct_byname(2, doubleR$Y[[i]])
-#     expect_true(equal_byname(doubleR$Y_prime[[i]], expectedY))
-#   }
-# })
+test_that("new_R works as expected", {
+  newRsameasoldR <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    # When Last.stage is "services", we get units problems.
+    # Avoid by using only ECCs with "final" and "useful" as the Last.stage.
+    filter(Last.stage != "services") %>%
+    # At present, UKEnergy2000mats has V matrices that are the sum of both V and R.
+    # Change to use the R matrix.
+    rename(
+      R_plus_V = V
+    ) %>%
+    separate_RV() %>%
+    # At this point, the matrices are they way we want them.
+    # Calculate the input-output matrices which are inputs to the new_R function.
+    calc_io_mats() %>%
+    # Calculate the efficiency of every industry in the ECC.
+    calc_eta_i() %>%
+    # Make an R_prime matrix that gives the same the resource inputs to the economy.
+    # For testing purposes!
+    mutate(
+      R_prime = R
+    ) %>%
+    # Now call the new_R_ps function which will calculate
+    # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
+    # given R_prime.
+    # Each of the *_prime matrices should be same as their originals,
+    # because R_prime is equal to R.
+    new_R_ps() %>%
+    # Clean the rows of U_prime and Y_prime, because they contain Products that are not present in U.
+    mutate(
+      U_prime = clean_byname(U_prime, margin = 1),
+      Y_prime = clean_byname(Y_prime, margin = 1)
+    ) %>%
+    # Set up the expectations
+    mutate(
+      # When R_prime = R, we expect to recover same U, V, and Y.
+      expected_U = U,
+      expected_V = V,
+      expected_Y = Y
+    )
+
+  # Test that everything worked as expected
+  for (i in 1:2) {
+    expect_true(equal_byname(newRsameasoldR$U_prime[[i]], newRsameasoldR$expected_U[[i]]))
+    expect_true(equal_byname(newRsameasoldR$V_prime[[i]], newRsameasoldR$expected_V[[i]]))
+    expect_true(equal_byname(newRsameasoldR$Y_prime[[i]], newRsameasoldR$expected_Y[[i]]))
+  }
+
+  doubleR <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    # When Last.stage is "services", we get units problems.
+    # Avoid by using only ECCs with "final" and "useful" as the Last.stage.
+    filter(Last.stage != "services") %>%
+    # At present, UKEnergy2000mats has V matrices that are the sum of both V and R.
+    # Change to use the R matrix.
+    rename(
+      R_plus_V = V
+    ) %>%
+    separate_RV() %>%
+    # At this point, the matrices are they way we want them.
+    # Calculate the input-output matrices which are inputs to the new_R function.
+    calc_io_mats() %>%
+    # Calculate the efficiency of every industry in the ECC.
+    calc_eta_i() %>%
+    # Make an R_prime matrix that gives twice the resource inputs to the economy.
+    mutate(
+      R_prime = elementproduct_byname(2, R)
+    ) %>%
+    # Now call the new_R function which will calculate
+    # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
+    # given R_prime.
+    # Each of the *_prime matrices should be 2x their originals,
+    # because R_prime is 2x relative to R.
+    new_R_ps() %>%
+    # Clean the rows of U_prime, because they contain Products that are not present in U.
+    mutate(
+      U_prime = clean_byname(U_prime, margin = 1),
+      Y_prime = clean_byname(Y_prime, margin = 1)
+    ) %>%
+    mutate(
+      expected_U = elementproduct_byname(2, U),
+      expected_V = elementproduct_byname(2, V),
+      expected_Y = elementproduct_byname(2, Y)
+    )
+
+  # Test that everything worked as expected
+  for (i in 1:2) {
+    expect_equal(doubleR$U_prime[[i]], doubleR$expected_U[[i]])
+    expect_equal(doubleR$V_prime[[i]], doubleR$expected_V[[i]])
+    expect_equal(doubleR$Y_prime[[i]], doubleR$expected_Y[[i]])
+  }
+
+  # Test when the units on Products in U are not all same.
+  # Under those conditions, we expect that U_prime, V_prime, and Y_prime are all NA.
+  # Input units are not all same for the Last.stage = "services" cases.
+  # So don't filter out the "services" rows.
+  WithDiffUnits <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    # At present, UKEnergy2000mats has V matrices that are the sum of both V and R.
+    # Change to use the R matrix.
+    rename(
+      R_plus_V = V
+    ) %>%
+    separate_RV() %>%
+    # At this point, the matrices are they way we want them.
+    # Calculate the input-output matrices which are inputs to the new_R function.
+    calc_io_mats() %>%
+    # Calculate the efficiency of every industry in the ECC.
+    calc_eta_i() %>%
+    # Make an R_prime matrix that gives twice the resource inputs to the economy.
+    mutate(
+      R_prime = elementproduct_byname(2, R)
+    ) %>%
+    # Now call the new_R function which will calculate
+    # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
+    # given R_prime.
+    # Each of the *_prime matrices should be 2x their originals,
+    # because R_prime is 2x relative to R.
+    new_R_ps()
+  for (i in c(2,4)) {
+    expect_true(is.na(WithDiffUnits$U_prime[[i]]))
+    expect_true(is.na(WithDiffUnits$V_prime[[i]]))
+    expect_true(is.na(WithDiffUnits$Y_prime[[i]]))
+  }
+})
+

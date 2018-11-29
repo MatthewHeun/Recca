@@ -10,14 +10,14 @@ resource_industries(.sutdata = NULL, U = "U", V = "V",
 \arguments{
 \item{.sutdata}{a list or data frame containing use matrix(ces) and make matrix(ces)}
 
-\item{U}{identifier for the use matrix (a string). Default is "\code{U}".}
+\item{U}{use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".}
 
-\item{V}{identifier for the make matrix (a string). Default is "\code{V}".}
+\item{V}{make (\code{V}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{V}".}
 
-\item{r_industries}{name for the resource industries vector (a string). Default is "\code{r_industries}".}
+\item{r_industries}{name for the \code{r_industries} vector on output. Default is "\code{r_industries}".}
 }
 \value{
-\code{.sutdata} with an additional column (named with the value of the \code{p_industries} argument)
+a list or data frame with \code{.sutdata} with an additional column (named with the value of the \code{p_industries} argument)
         containing the resource industries for each row
 }
 \description{
@@ -36,7 +36,8 @@ In that case, the return value is a list with a single item: \code{r_industries}
 which contains a vector of names of resource industries for the \code{U} and \code{V} matrices.
 }
 \examples{
-library(magrittr)
 library(tidyr)
-resource_industries(UKEnergy2000mats \%>\% spread(key = matrix.name, value = matrix))
+UKEnergy2000mats \%>\%
+  spread(key = matrix.name, value = matrix) \%>\%
+  resource_industries()
 }
