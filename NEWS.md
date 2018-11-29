@@ -6,6 +6,15 @@
   every matrix needs to be named.
   And when using functions to operate on a data frame the default values for column names
   mean that data frames can be piped to functions that are called with no parameters.
+  Furthermore, this change allows lists output from previous functions 
+  to be used in later function calls without name changes. 
+  For example, `f1` produces a list `l` with named item `z`, and 
+  `z` is an input to `f2`. 
+  The previous naming convention would require user mapping `z` to `z_colname`:
+  `f2(z_colname = l$z)`.
+  The new naming convention allows
+  `f2(l)`, because `l` contains named item `z`, and `f2` has an argument new named `z`
+  (where it had been named `z_colname` before).
   In all ways, the new argument naming convention is more elegant than the previous `*_colname` approach.
 * Building a vignette that describes the package.
 
