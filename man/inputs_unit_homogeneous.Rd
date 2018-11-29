@@ -4,29 +4,28 @@
 \alias{inputs_unit_homogeneous}
 \title{Tell whether each industry's inputs are unit-homogeneous}
 \usage{
-inputs_unit_homogeneous(.sutdata = NULL, U_colname = "U",
-  S_units_colname = "S_units", keep_details = FALSE,
-  ins_unit_homogeneous_colname = "inputs_unit_homogeneous")
+inputs_unit_homogeneous(.sutmats = NULL, U = "U",
+  S_units = "S_units", keep_details = FALSE,
+  ins_unit_homogeneous = ".inputs_unit_homogeneous")
 }
 \arguments{
-\item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
+\item{.sutmats}{a data frame of supply-use table matrices with matrices arranged in columns.}
 
-\item{U_colname}{the name of the column in \code{.sutdata} that contains
-\code{U} matrices. Default is "\code{U}".}
+\item{U}{a use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".}
 
-\item{S_units_colname}{the name of the column in \code{.sutdata} that contains
-\code{S_units} matrices. Default is "\code{S_units}".}
+\item{S_units}{an \code{S_units} matrix or name of a column in \code{.sutmats} that contains same. Default is "\code{S_units}".}
 
 \item{keep_details}{if \code{TRUE}, per-product results are returned;
 if \code{FALSE}, per-ECC results are returned. Default is \code{FALSE}.}
 
-\item{ins_unit_homogeneous_colname}{the name of the output column
-that tells whether each industry's inputs are unit-homogeneous.
-Default is "\code{inputs_unit_homogeneous}".}
+\item{ins_unit_homogeneous}{name of the output boolean that
+tells whether each industry's inputs are unit-homogeneous.
+Default is "\code{.inputs_unit_homogeneous}".}
 }
 \value{
-\code{.sutdata} with additional column "\code{inputs_unit_homogeneous}"
-        containing \code{TRUE} if inputs to each energy conversion industry are unit-homogeneous, \code{FALSE} otherwise.
+a list or data frame containing
+        \code{TRUE} if inputs to each energy conversion industry are unit-homogeneous,
+        \code{FALSE} otherwise.
 }
 \description{
 Returns \code{TRUE} if each industry's inputs are unit-homogeneous.

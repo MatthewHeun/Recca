@@ -4,29 +4,28 @@
 \alias{outputs_unit_homogeneous}
 \title{Tell whether industry outputs are unit-homogeneous}
 \usage{
-outputs_unit_homogeneous(.sutdata = NULL, V_colname = "V",
-  S_units_colname = "S_units", keep_details = FALSE,
-  outs_unit_homogeneous_colname = "outputs_unit_homogeneous")
+outputs_unit_homogeneous(.sutmats = NULL, V = "V",
+  S_units = "S_units", keep_details = FALSE,
+  outs_unit_homogeneous = ".outputs_unit_homogeneous")
 }
 \arguments{
-\item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
+\item{.sutmats}{a data frame of supply-use table matrices with matrices arranged in columns.}
 
-\item{V_colname}{the name of the column in \code{.sutdata} that contains
-\code{V} matrices. Default is "\code{V}".}
+\item{V}{a make (\code{V}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{V}".}
 
-\item{S_units_colname}{the name of the column in \code{.sutdata} that contains
-\code{S_units} matrices. Default is "\code{S_units}".}
+\item{S_units}{an \code{S_units} matrix or name of a column in \code{.sutmats} that contains same. Default is "\code{S_units}".}
 
 \item{keep_details}{if \code{TRUE}, per-industry results are returned;
 if \code{FALSE}, per-ECC results are returned.}
 
-\item{outs_unit_homogeneous_colname}{the name of the output column
+\item{outs_unit_homogeneous}{the name of the output column
 that tells whether each industry's outputs are unit-homogeneous.
-Default is "\code{outputs_unit_homogeneous}".}
+Default is "\code{.outputs_unit_homogeneous}".}
 }
 \value{
-\code{.sutdata} with additional column "\code{outputs_unit_homogeneous}"
-        containing \code{TRUE} if each industry's outputs are unit-homogeneous, \code{FALSE} otherwise.
+a list or data frame containing
+        \code{TRUE} if outputs from each energy conversion industry are unit-homogeneous,
+        \code{FALSE} otherwise.
 }
 \description{
 Returns \code{TRUE} if each industry's output are unit-homogeneous.

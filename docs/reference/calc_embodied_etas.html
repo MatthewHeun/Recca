@@ -139,45 +139,44 @@ This function calculates both.
     </div>
 
     <pre class="usage"><span class='fu'>calc_embodied_etas</span>(<span class='kw'>.embodiedmats</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>primary_machine_names</span>,
-  <span class='kw'>Y_colname</span> <span class='kw'>=</span> <span class='st'>"Y"</span>, <span class='kw'>G_colname</span> <span class='kw'>=</span> <span class='st'>"G"</span>, <span class='kw'>H_colname</span> <span class='kw'>=</span> <span class='st'>"H"</span>,
-  <span class='kw'>eta_p_colname</span> <span class='kw'>=</span> <span class='st'>"eta_p"</span>, <span class='kw'>eta_s_colname</span> <span class='kw'>=</span> <span class='st'>"eta_s"</span>)</pre>
+  <span class='kw'>Y</span> <span class='kw'>=</span> <span class='st'>"Y"</span>, <span class='kw'>G</span> <span class='kw'>=</span> <span class='st'>"G"</span>, <span class='kw'>H</span> <span class='kw'>=</span> <span class='st'>"H"</span>, <span class='kw'>eta_p</span> <span class='kw'>=</span> <span class='st'>"eta_p"</span>, <span class='kw'>eta_s</span> <span class='kw'>=</span> <span class='st'>"eta_s"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.embodiedmats</th>
-      <td><p>a data frame containing columns of <strong>Y</strong>, <strong>G</strong>, and <strong>H</strong> matrices</p></td>
+      <td><p>a data frame containing columns of <code>Y</code>, <code>G</code>, and <code>H</code> matrices</p></td>
     </tr>
     <tr>
       <th>primary_machine_names</th>
-      <td><p>a list of strings representing names of Industries whose output is counted in TPES</p></td>
+      <td><p>a list of strings representing names of Industries whose output is counted in Total Primary Energy Supply (TPES)</p></td>
     </tr>
     <tr>
-      <th>Y_colname</th>
-      <td><p>a string for the name of a column of Y matrices in <code>.embodiedmats</code> (default is <code>Y</code>)</p></td>
+      <th>Y</th>
+      <td><p>final demand <code>Y</code> matrix or name of a column in <code>.embodiedmats</code> containing same. Default is "<code>Y</code>".</p></td>
     </tr>
     <tr>
-      <th>G_colname</th>
-      <td><p>a string for the name of a column of G matrices in <code>.embodiedmats</code> (default is <code>G</code>)</p></td>
+      <th>G</th>
+      <td><p><code>G</code> matrix or name of a column in <code>.embodiedmats</code> containing same. Default is "<code>G</code>".</p></td>
     </tr>
     <tr>
-      <th>H_colname</th>
-      <td><p>a string for the name of a column of H matrices in <code>.embodiedmats</code> (default is <code>H</code>)</p></td>
+      <th>H</th>
+      <td><p><code>H</code> matrix or name of a column in <code>.embodiedmats</code> containing same. Default is "<code>H</code>".</p></td>
     </tr>
     <tr>
-      <th>eta_p_colname</th>
-      <td><p>a string for the name of the output column containing vectors of product-based efficiencies</p></td>
+      <th>eta_p</th>
+      <td><p>the name for product-based efficiencies on output. Default is "<code>eta_p</code>".</p></td>
     </tr>
     <tr>
-      <th>eta_s_colname</th>
-      <td><p>a string for the name of the output column containing vectors of final-demand-sector-based efficiencies</p></td>
+      <th>eta_s</th>
+      <td><p>the name for final-demand-sector-based efficiencies on output. Default is "<code>eta_s</code>".</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>.embodiedmats</code> with columns <code>eta_p_colname</code> and <code>eta_s_colname</code> added</p>
+    <p>a list or data frame containing embodied energy efficiencies</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 

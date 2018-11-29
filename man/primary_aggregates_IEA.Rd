@@ -10,7 +10,7 @@ primary_aggregates_IEA(.ieadata, flow = "Flow",
   "Oil and gas extraction", "Imports", "Exports",
   "International aviation bunkers", "International marine bunkers",
   "Stock changes"), eiou = "Energy industry own use",
-  aggregate_primary_colname = "EX_p_IEA.ktoe")
+  aggregate_primary = "EX_p_IEA.ktoe")
 }
 \arguments{
 \item{.ieadata}{the data frame containing an IEA table}
@@ -31,13 +31,13 @@ Default is "\code{Flow.aggregation.point}".}
 \item{eiou}{the string that identifies energy industry own use in the \code{Flow.aggregation.point} column.
 Default is "\code{Energy industry own use}".}
 
-\item{aggregate_primary_colname}{the name of the aggregate primary energy
+\item{aggregate_primary}{the name of the aggregate primary energy
 column to be created in the output data frame.
 Default is "\code{EX_p_IEA.ktoe}".}
 }
 \value{
 a data frame containing the grouping columns of \code{.ieadata}
-        as well as a column named with the value of \code{aggregate_primary_colname}.
+        as well as a column named with the value of \code{aggregate_primary}.
 }
 \description{
 Calculates total aggregate primary energy from a data frame of IEA data.

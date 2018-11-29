@@ -5,10 +5,11 @@
 \title{Add row, column, row type, and column type metadata}
 \usage{
 add_row_col_meta(.DF, matname = "matname", product = "Product",
-  flow = "Flow", U = "U", U_EIOU = "U_EIOU", V = "V", Y = "Y",
-  industry_type = "Industry", product_type = "Product",
-  sector_type = "Industry", rowname = "rowname", colname = "colname",
-  rowtype = "rowtype", coltype = "coltype")
+  flow = "Flow", U = "U", U_EIOU = "U_EIOU", R = "R", V = "V",
+  Y = "Y", industry_type = "Industry", product_type = "Product",
+  sector_type = "Industry", resource_type = "Industry",
+  rowname = "rowname", colname = "colname", rowtype = "rowtype",
+  coltype = "coltype")
 }
 \arguments{
 \item{.DF}{a data frame containing \code{matname_colname}.}
@@ -24,7 +25,9 @@ is found (a string). Default is "\code{Flow}".}
 
 \item{U}{the name for use matrices (a string). Default is "\code{U}".}
 
-\item{U_EIOU}{the name for energy industry own use matrices (a string). Defulat is "\code{U_EIOU}".}
+\item{U_EIOU}{the name for energy industry own use matrices (a string). Default is "\code{U_EIOU}".}
+
+\item{R}{the name for resource matrices (a string). Default is "\code{R}".}
 
 \item{V}{the name for make matrices (a string). Default is "\code{V}".}
 
@@ -37,7 +40,10 @@ and transformation processes (a string). Default is "\code{Industry}".}
 Default is "\code{Product}".}
 
 \item{sector_type}{the name that identifies final demand sectors (a string).
-Default is "\code{Sector}".}
+Default is "\code{Industry}".}
+
+\item{resource_type}{the name that identifies resource sectors (a string).
+Default is "\code{Industry}".}
 
 \item{rowname}{the name of the output column that contains row names for matrices
 (a string). Default is "\code{rowname}".}

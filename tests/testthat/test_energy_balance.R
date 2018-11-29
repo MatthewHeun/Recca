@@ -24,10 +24,10 @@ test_that("SUT matrix energy balance fails when a number has changed", {
   U <- mats$U[[1]]
   V <- mats$V[[1]]
   Y <- mats$Y[[1]]
-  expect_equal(verify_SUT_energy_balance(U_colname = U, V_colname = V, Y_colname = Y),
+  expect_equal(verify_SUT_energy_balance(U = U, V = V, Y = Y),
                list(.SUT_energy_balance = TRUE))
   Y[2, 2] <- 42 # Replace a 0 with a value
-  expect_warning(verify_SUT_energy_balance(U_colname = U, V_colname = V, Y_colname = Y),
+  expect_warning(verify_SUT_energy_balance(U = U, V = V, Y = Y),
                  "Energy not conserved")
 })
 
@@ -48,7 +48,7 @@ test_that("all SUT industries are producing energy", {
   U <- UKspread$U[[1]]
   V <- UKspread$V[[1]]
   V[1, 2] <- 0 # Zero out production of Crude - Dist. from Crude dist.
-  expect_warning(result <- verify_SUT_industry_production(U_colname = U, V_colname = V),
+  expect_warning(result <- verify_SUT_industry_production(U = U, V = V),
                  "There are some industries that consume but do not produce energy.")
   expect_false(result$.industry_production_OK)
   expect_equal(expected = "Crude dist.", result$.problem_industries)
@@ -59,7 +59,7 @@ test_that("SUT energy balance works with single matrices", {
   U <- UKspread$U[[1]]
   V <- UKspread$V[[1]]
   Y <- UKspread$Y[[1]]
-  expect_silent(verify_SUT_energy_balance(U_colname = U, V_colname = V, Y_colname = Y))
+  expect_silent(verify_SUT_energy_balance(U = U, V = V, Y = Y))
 })
 
 

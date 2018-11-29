@@ -42,6 +42,28 @@ test_that("add_matnames works correctly with a prefixed Flow", {
   expect_equal(UVY[["UVY"]][[n_rows]], "Y")
 })
 
+test_that("add_matnames identifies resource industries correctly", {
+  # Run the add_matnames_iea function with use_R = TRUE
+  WithR <- UKEnergy2000tidy %>%
+    group_by(Country, Year, Energy.type, Last.stage) %>%
+    add_matnames_iea(use_R = TRUE) %>%
+    filter(matname == "R")
+  # We expect that every flow from a "Resources - *" industry will end up in the R matrix.
+  Expected <- UKEnergy2000tidy %>%
+    filter(starts_with_any_of(Flow, "Resources - ")) %>%
+    mutate(matname = "R")
+  expect_equal(WithR, Expected)
+  # Check that rowname is correct for resource rows.
+  WithRmeta <- WithR %>% add_row_col_meta()
+  # Ensure that the rowname is correct
+  expect_equal(WithRmeta$rowname, WithRmeta$Flow)
+  # Ensure that the colname is correct
+  expect_equal(WithRmeta$colname, WithRmeta$Product)
+  # Ensure that the rowtype is correct
+  expect_equal(WithRmeta$rowtype, rep("Industry", 8))
+  # Ensure that the coltype is correct
+  expect_equal(WithRmeta$coltype, rep("Product", 8))
+})
 
 test_that("verify_cols_missing works when either strings or names are provided", {
   df <- data.frame(a = c(1,2), b = c(3,4))

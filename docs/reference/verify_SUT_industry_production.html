@@ -41,7 +41,7 @@ And final demand sectors consume energy but do not produce any.)
 This function emits a warning if an Industry in the U matrix
 is found to consume energy but not make energy.
 Look at the industry_production_OK column of the output to see which rows of
-.sutdata exhibit the problem.
+.sutmats exhibit the problem.
 Look at the problem_industries column of the output to see which industries
 exhibit this problem." />
 <meta name="twitter:card" content="summary" />
@@ -144,32 +144,32 @@ And final demand sectors consume energy but do not produce any.)
 This function emits a warning if an Industry in the <code>U</code> matrix
 is found to consume energy but not make energy.
 Look at the <code>industry_production_OK</code> column of the output to see which rows of
-<code>.sutdata</code> exhibit the problem.
+<code>.sutmats</code> exhibit the problem.
 Look at the <code>problem_industries</code> column of the output to see which industries
 exhibit this problem.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>verify_SUT_industry_production</span>(<span class='kw'>.sutdata</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>U_colname</span> <span class='kw'>=</span> <span class='st'>"U"</span>,
-  <span class='kw'>V_colname</span> <span class='kw'>=</span> <span class='st'>"V"</span>, <span class='kw'>industry_production_OK</span> <span class='kw'>=</span> <span class='st'>".industry_production_OK"</span>,
+    <pre class="usage"><span class='fu'>verify_SUT_industry_production</span>(<span class='kw'>.sutmats</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>U</span> <span class='kw'>=</span> <span class='st'>"U"</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>,
+  <span class='kw'>industry_production_OK</span> <span class='kw'>=</span> <span class='st'>".industry_production_OK"</span>,
   <span class='kw'>problem_industries</span> <span class='kw'>=</span> <span class='st'>".problem_industries"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>.sutdata</th>
+      <th>.sutmats</th>
       <td><p>an SUT-style data frame containing metadata columns
 (typically <code>Country</code>, <code>Year</code>, <code>Ledger.side</code>, <code>Product</code>, etc.)
 and columns of SUT matrices, including <code>U</code> and <code>V</code>.</p></td>
     </tr>
     <tr>
-      <th>U_colname</th>
-      <td><p>the name of the column of use matrices. Default is "<code>U</code>".</p></td>
+      <th>U</th>
+      <td><p>use (<code>U</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "<code>U</code>".</p></td>
     </tr>
     <tr>
-      <th>V_colname</th>
-      <td><p>the name of the column of make matrices. Default is "<code>V</code>".</p></td>
+      <th>V</th>
+      <td><p>make (<code>V</code>) matrix or name of the column in <code>.sutmats</code>that contains same. Default is "<code>V</code>".</p></td>
     </tr>
     <tr>
       <th>industry_production_OK</th>
@@ -185,7 +185,7 @@ tells which transformation processes consume energy but do not produce anything.
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>.sutdata</code> with added column named with the value of <code>industry_production_OK</code>.</p>
+    <p><code>.sutmats</code> with added column named with the value of <code>industry_production_OK</code>.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

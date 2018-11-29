@@ -128,57 +128,55 @@ Row sums of F_effects are 1." />
 
     <div class="ref-description">
     
-    <p>Calculates upstream footprint matrices (<strong>F_footprint_p</strong>, <strong>F_footprint_s</strong>)
-and downstream effects matrices (<strong>F_effects_p</strong>, <strong>F_effects_s</strong>)
-given an embodied matries <strong>M_p</strong> and <strong>M_s</strong>.
-Column sums of <strong>F_footprint</strong> are 1.
-Row sums of <strong>F_effects</strong> are 1.</p>
+    <p>Calculates upstream footprint matrices (<code>F_footprint_p</code>, <code>F_footprint_s</code>)
+and downstream effects matrices (<code>F_effects_p</code>, <code>F_effects_s</code>)
+given an embodied matries <code>M_p</code> and <code>M_s</code>.
+Column sums of <code>F_footprint</code> are 1.
+Row sums of <code>F_effects</code> are 1.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>calc_F_footprint_effects</span>(<span class='kw'>.Mdata</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>M_p_colname</span> <span class='kw'>=</span> <span class='st'>"M_p"</span>,
-  <span class='kw'>M_s_colname</span> <span class='kw'>=</span> <span class='st'>"M_s"</span>, <span class='kw'>F_footprint_p_colname</span> <span class='kw'>=</span> <span class='st'>"F_footprint_p"</span>,
-  <span class='kw'>F_effects_p_colname</span> <span class='kw'>=</span> <span class='st'>"F_effects_p"</span>,
-  <span class='kw'>F_footprint_s_colname</span> <span class='kw'>=</span> <span class='st'>"F_footprint_s"</span>,
-  <span class='kw'>F_effects_s_colname</span> <span class='kw'>=</span> <span class='st'>"F_effects_s"</span>)</pre>
+    <pre class="usage"><span class='fu'>calc_F_footprint_effects</span>(<span class='kw'>.Mmats</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>M_p</span> <span class='kw'>=</span> <span class='st'>"M_p"</span>, <span class='kw'>M_s</span> <span class='kw'>=</span> <span class='st'>"M_s"</span>,
+  <span class='kw'>F_footprint_p</span> <span class='kw'>=</span> <span class='st'>"F_footprint_p"</span>, <span class='kw'>F_effects_p</span> <span class='kw'>=</span> <span class='st'>"F_effects_p"</span>,
+  <span class='kw'>F_footprint_s</span> <span class='kw'>=</span> <span class='st'>"F_footprint_s"</span>, <span class='kw'>F_effects_s</span> <span class='kw'>=</span> <span class='st'>"F_effects_s"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>.Mdata</th>
+      <th>.Mmats</th>
       <td><p>a data frame containing a column of embodied matrices</p></td>
     </tr>
     <tr>
-      <th>M_p_colname</th>
-      <td><p>the name of the column in <code>.Mdata</code> containing embodied product  matrices (default is <strong>"M_p"</strong>)</p></td>
+      <th>M_p</th>
+      <td><p>embodied product matrix or name of the column in <code>.Mmats</code> containing same. Default is "<code>M_p</code>".</p></td>
     </tr>
     <tr>
-      <th>M_s_colname</th>
-      <td><p>the name of the column in <code>.Mdata</code> containing embodied sector matrices (default is <strong>"M_s"</strong>)</p></td>
+      <th>M_s</th>
+      <td><p>embodied sector matrix or name of the column in <code>.Mmats</code> containing same. Default is "<code>M_s</code>".</p></td>
     </tr>
     <tr>
-      <th>F_footprint_p_colname</th>
-      <td><p>the name of the column in the output containing <strong>F_footprint_p</strong> matrices (as a string)</p></td>
+      <th>F_footprint_p</th>
+      <td><p>the name for <code>F_footprint_p</code> matrices on output. Default is "<code>F_footprint_p</code>".</p></td>
     </tr>
     <tr>
-      <th>F_effects_p_colname</th>
-      <td><p>the name of the column in the output containing <strong>F_effects_p</strong> matrices (as a string)</p></td>
+      <th>F_effects_p</th>
+      <td><p>the name for <code>F_effects_p</code> matrices on output. Default is "<code>F_effects_p</code>".</p></td>
     </tr>
     <tr>
-      <th>F_footprint_s_colname</th>
-      <td><p>the name of the column in the output containing <strong>F_footprint_s</strong> matrices (as a string)</p></td>
+      <th>F_footprint_s</th>
+      <td><p>the name for <code>F_footprint_s</code> matrices on output. Default is "<code>F_footprint_s</code>".</p></td>
     </tr>
     <tr>
-      <th>F_effects_s_colname</th>
-      <td><p>the name of the column in the output containing <strong>F_effects_s</strong> matrices (as a string)</p></td>
+      <th>F_effects_s</th>
+      <td><p>the name for <code>F_effects_s</code> matrices on output. Default is "<code>F_effects_s</code>".</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>.Mdata</code> with columns <code>F_footprint_p</code>, <code>F_effects_p</code>,
-<code>F_footprint_s</code>, and <code>F_effects_s</code> added</p>
+    <p>a list or data frame containing <code>F_footprint_p</code>, <code>F_effects_p</code>,
+<code>F_footprint_s</code>, and <code>F_effects_s</code> matrices</p>
     
 
   </div>

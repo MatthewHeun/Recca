@@ -15,13 +15,13 @@ test_that("reconstructing U and V from single matrices works as expected", {
   alliomats <- UKEnergy2000mats %>%
     spread(key = matrix.name, value = matrix) %>%
     calc_io_mats()
-  allUV <- new_Y(alliomats, Y_prime_colname = "Y")
+  allUV <- new_Y(alliomats, Y_prime = "Y")
   for (i in 1:nrow(allUV)) {
-    UV <- new_Y(Y_prime_colname = alliomats$Y[[i]],
-                L_ixp_colname = alliomats$L_ixp[[i]],
-                L_pxp_colname = alliomats$L_pxp[[i]],
-                Z_colname = alliomats$Z[[i]],
-                D_colname = alliomats$D[[i]])
+    UV <- new_Y(Y_prime = alliomats$Y[[i]],
+                L_ixp = alliomats$L_ixp[[i]],
+                L_pxp = alliomats$L_pxp[[i]],
+                Z = alliomats$Z[[i]],
+                D = alliomats$D[[i]])
     expect_equal(UV$U_prime, allUV$U_prime[[i]])
     expect_equal(UV$V_prime, allUV$V_prime[[i]])
   }
@@ -127,6 +127,65 @@ test_that("new_k_ps works as expected", {
   expect_equivalent(new_UV %>%
                       filter(Energy.type == "E.ktoe", Last.stage == "services", matnames == "V_prime", rownames == "Resources - Rens", colnames == "Rens") %>% select(matvals) %>% unlist(),
                     49.75)
+})
+
+test_that("1-industry ECC works with new_k_ps", {
+  # This test arises from interactions with Jianwei Du at University of Texas at Austin.
+  # To investigate the issues that Jianwei raised,
+  # I'll make the simplest possible ECC that retains the features to be tested,
+  # a minimum working example (MWE).
+  # This example has two resource industries (R1 and R2),
+  # one intermediate industry (I), and
+  # two final demand sectors (Y1 and Y2).
+  # R1 makes product R1p.  R2 makes product R2p.  I makes product Ip.
+  #
+  # Here are the U, V, Y, and S_units matrices.
+
+  U <- matrix(c(0, 0, 10,
+                0, 0, 10,
+                0, 0,  0),
+              byrow = TRUE, nrow = 3, ncol = 3,
+              dimnames = list(c("R1p", "R2p", "Ip"), c("R1", "R2", "I"))) %>%
+    setrowtype("Products") %>% setcoltype("Industries")
+
+  V <- matrix(c(10,  0, 0,
+                0, 10, 0,
+                0,  0, 4),
+              byrow = TRUE, nrow = 3, ncol = 3,
+              dimnames = list(c("R1", "R2", "I"), c("R1p", "R2p", "Ip"))) %>%
+    setrowtype("Industries") %>% setcoltype("Products")
+
+  Y <- matrix(c(0, 0,
+                0, 0,
+                2, 2),
+              byrow = TRUE, nrow = 3, ncol = 2,
+              dimnames = list(c("R1p", "R2p", "Ip"), c("Y1", "Y2"))) %>%
+    setrowtype("Products") %>% setcoltype("Industries")
+
+  S_units <- matrix(c(1,
+                      1,
+                      1),
+                    byrow = TRUE, nrow = 3, ncol = 1,
+                    dimnames = list(c("R1p", "R2p", "Ip"), c("quad"))) %>%
+    setrowtype("Products") %>% setcoltype("Units")
+
+  # Now calculate the IO matrices
+  iomats <- calc_io_mats(U = U, V = V, Y = Y, S_units = S_units)
+
+  # Recalculate the matrices with updated k column
+  new_k <- matrix(c(1,
+                    0),
+                  byrow = TRUE, nrow = 2, ncol = 1,
+                  dimnames = list(c("R1p", "R2p"), c("I"))) %>%
+    setrowtype("Products") %>% setcoltype("Industries")
+  prime1 <- new_k_ps(c(iomats, list(U = U, V = V, Y = Y, S_units = S_units, k_prime = new_k)))
+  expect_equal(prime1$U_prime["R1p", "I"], 20)
+  expect_equal(prime1$U_prime["R2p", "I"], 0)
+  expect_equal(prime1$V_prime["R1", "R1p"], 20)
+  expect_equal(prime1$V_prime["R2", "R2p"], 0)
+
+
+
 })
 
 

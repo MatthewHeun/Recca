@@ -128,26 +128,24 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>inputs_unit_homogeneous</span>(<span class='kw'>.sutdata</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>U_colname</span> <span class='kw'>=</span> <span class='st'>"U"</span>,
-  <span class='kw'>S_units_colname</span> <span class='kw'>=</span> <span class='st'>"S_units"</span>, <span class='kw'>keep_details</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>ins_unit_homogeneous_colname</span> <span class='kw'>=</span> <span class='st'>"inputs_unit_homogeneous"</span>)</pre>
+    <pre class="usage"><span class='fu'>inputs_unit_homogeneous</span>(<span class='kw'>.sutmats</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>U</span> <span class='kw'>=</span> <span class='st'>"U"</span>,
+  <span class='kw'>S_units</span> <span class='kw'>=</span> <span class='st'>"S_units"</span>, <span class='kw'>keep_details</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>ins_unit_homogeneous</span> <span class='kw'>=</span> <span class='st'>".inputs_unit_homogeneous"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>.sutdata</th>
+      <th>.sutmats</th>
       <td><p>a data frame of supply-use table matrices with matrices arranged in columns.</p></td>
     </tr>
     <tr>
-      <th>U_colname</th>
-      <td><p>the name of the column in <code>.sutdata</code> that contains
-<code>U</code> matrices. Default is "<code>U</code>".</p></td>
+      <th>U</th>
+      <td><p>a use (<code>U</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "<code>U</code>".</p></td>
     </tr>
     <tr>
-      <th>S_units_colname</th>
-      <td><p>the name of the column in <code>.sutdata</code> that contains
-<code>S_units</code> matrices. Default is "<code>S_units</code>".</p></td>
+      <th>S_units</th>
+      <td><p>an <code>S_units</code> matrix or name of a column in <code>.sutmats</code> that contains same. Default is "<code>S_units</code>".</p></td>
     </tr>
     <tr>
       <th>keep_details</th>
@@ -155,17 +153,18 @@
 if <code>FALSE</code>, per-ECC results are returned. Default is <code>FALSE</code>.</p></td>
     </tr>
     <tr>
-      <th>ins_unit_homogeneous_colname</th>
-      <td><p>the name of the output column
-that tells whether each industry's inputs are unit-homogeneous.
-Default is "<code>inputs_unit_homogeneous</code>".</p></td>
+      <th>ins_unit_homogeneous</th>
+      <td><p>name of the output boolean that
+tells whether each industry's inputs are unit-homogeneous.
+Default is "<code>.inputs_unit_homogeneous</code>".</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>.sutdata</code> with additional column "<code>inputs_unit_homogeneous</code>"
-        containing <code>TRUE</code> if inputs to each energy conversion industry are unit-homogeneous, <code>FALSE</code> otherwise.</p>
+    <p>a list or data frame containing
+        <code>TRUE</code> if inputs to each energy conversion industry are unit-homogeneous,
+        <code>FALSE</code> otherwise.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
@@ -209,11 +208,11 @@ Note that <code>U_bar = <a href='https://www.rdocumentation.org/packages/matsbyn
 #&gt; 2 0.000000e+00, 5.000000e+14, 0.000000e+00, 7.500000e+10, 1.429166e+11, 0.000000e+00, 5.000000e+11, 0.000000e+00
 #&gt; 3                                                    1200.00, 0.00, 3000.40, 0.00, 0.00, 20000.00, 0.00, 1714.98
 #&gt; 4 0.000000e+00, 5.000000e+14, 0.000000e+00, 7.500000e+10, 1.429166e+11, 0.000000e+00, 5.000000e+11, 0.000000e+00
-#&gt;   inputs_unit_homogeneous
-#&gt; 1                    TRUE
-#&gt; 2                   FALSE
-#&gt; 3                    TRUE
-#&gt; 4                   FALSE</div></pre>
+#&gt;   .inputs_unit_homogeneous
+#&gt; 1                     TRUE
+#&gt; 2                    FALSE
+#&gt; 3                     TRUE
+#&gt; 4                    FALSE</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

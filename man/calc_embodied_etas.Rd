@@ -5,26 +5,25 @@
 \title{Embodied energy efficiencies}
 \usage{
 calc_embodied_etas(.embodiedmats = NULL, primary_machine_names,
-  Y_colname = "Y", G_colname = "G", H_colname = "H",
-  eta_p_colname = "eta_p", eta_s_colname = "eta_s")
+  Y = "Y", G = "G", H = "H", eta_p = "eta_p", eta_s = "eta_s")
 }
 \arguments{
-\item{.embodiedmats}{a data frame containing columns of \strong{Y}, \strong{G}, and \strong{H} matrices}
+\item{.embodiedmats}{a data frame containing columns of \code{Y}, \code{G}, and \code{H} matrices}
 
-\item{primary_machine_names}{a list of strings representing names of Industries whose output is counted in TPES}
+\item{primary_machine_names}{a list of strings representing names of Industries whose output is counted in Total Primary Energy Supply (TPES)}
 
-\item{Y_colname}{a string for the name of a column of Y matrices in \code{.embodiedmats} (default is \code{Y})}
+\item{Y}{final demand \code{Y} matrix or name of a column in \code{.embodiedmats} containing same. Default is "\code{Y}".}
 
-\item{G_colname}{a string for the name of a column of G matrices in \code{.embodiedmats} (default is \code{G})}
+\item{G}{\code{G} matrix or name of a column in \code{.embodiedmats} containing same. Default is "\code{G}".}
 
-\item{H_colname}{a string for the name of a column of H matrices in \code{.embodiedmats} (default is \code{H})}
+\item{H}{\code{H} matrix or name of a column in \code{.embodiedmats} containing same. Default is "\code{H}".}
 
-\item{eta_p_colname}{a string for the name of the output column containing vectors of product-based efficiencies}
+\item{eta_p}{the name for product-based efficiencies on output. Default is "\code{eta_p}".}
 
-\item{eta_s_colname}{a string for the name of the output column containing vectors of final-demand-sector-based efficiencies}
+\item{eta_s}{the name for final-demand-sector-based efficiencies on output. Default is "\code{eta_s}".}
 }
 \value{
-\code{.embodiedmats} with columns \code{eta_p_colname} and \code{eta_s_colname} added
+a list or data frame containing embodied energy efficiencies
 }
 \description{
 Embodied energy efficiencies are based on the total upstream primary energy demand

@@ -1,5 +1,22 @@
 * Now importing `magrittr` pipe at high level.
-* Now using `hatinv_byname` function instead of `hatize_byname` and `invert_byname` in succession.
+* Now using `hatinv_byname` function instead of `hatize_byname %>% invert_byname`.
+* Breaking change: arguments to `Recca` functions are no longer named `*_colname`.
+  I'm standardizing argument names.
+  The new approach yields better code when calling functions with individual matrices:
+  every matrix needs to be named.
+  And when using functions to operate on a data frame the default values for column names
+  mean that data frames can be piped to functions that are called with no parameters.
+  Furthermore, this change allows lists output from previous functions 
+  to be used in later function calls without name changes. 
+  For example, `f1` produces a list `l` with named item `z`, and 
+  `z` is an input to `f2`. 
+  The previous naming convention would require user mapping `z` to `z_colname`:
+  `f2(z_colname = l$z)`.
+  The new naming convention allows
+  `f2(l)`, because `l` contains named item `z`, and `f2` has an argument new named `z`
+  (where it had been named `z_colname` before).
+  In all ways, the new argument naming convention is more elegant than the previous `*_colname` approach.
+* Building a vignette that describes the package.
 
 
 # Recca 0.1.9 (2018-11-08)
@@ -7,11 +24,9 @@
 * Breaking change: `reconstruct_UV` --> `new_Y`. 
   This change allows for several `new_*` functions that assess changes to the ECC
   when some part of the ECC changes.
-
 * New function `new_k_ps` assesses changes to the ECC when 
   proportion of inputs to an industry change 
   under the assumption of perfect substitution.
-
 * New functions `products_unit_homogeneous`, `inputs_unit_homogeneous`, and `outputs_unit_homogeneous`
   test whether products, inputs to all industries, and outputs from all industries are unit-homogeneous.
 
@@ -62,13 +77,10 @@
 
 # Recca 0.1.1 (2018-04-16)
 
-## Many new functions
-
-* `calc_io_mats`: 
+* New function `calc_io_mats`: 
   calculate input-output (PSUT version) matrices, including `y`, `q`, `g`, `W`, 
   `Z`, `D`, `C`, `A`, `L_ixp`, and `L_pxp`.
-  
-* `reconstruct_UV`:
+* New function `reconstruct_UV`:
   Reconstruct the energy conversion chain (new `U` and `V` matrices) from a new final demand matrix (`Y`)
 
 

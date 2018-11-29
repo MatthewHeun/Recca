@@ -132,10 +132,10 @@ The calculation does not include balancing items (Losses and Statistical differe
     
     </div>
 
-    <pre class="usage"><span class='fu'>finaldemand_aggregates</span>(<span class='no'>.sutdata</span>, <span class='no'>fd_sectors</span>, <span class='kw'>U_colname</span> <span class='kw'>=</span> <span class='st'>"U"</span>,
-  <span class='kw'>Y_colname</span> <span class='kw'>=</span> <span class='st'>"Y"</span>, <span class='kw'>r_EIOU_colname</span> <span class='kw'>=</span> <span class='st'>"r_EIOU"</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Total"</span>,
-  <span class='st'>"Product"</span>, <span class='st'>"Sector"</span>), <span class='kw'>net_aggregate_demand_colname</span> <span class='kw'>=</span> <span class='st'>"EX_fd_net.ktoe"</span>,
-  <span class='kw'>gross_aggregate_demand_colname</span> <span class='kw'>=</span> <span class='st'>"EX_fd_gross.ktoe"</span>)</pre>
+    <pre class="usage"><span class='fu'>finaldemand_aggregates</span>(<span class='no'>.sutdata</span>, <span class='no'>fd_sectors</span>, <span class='kw'>U</span> <span class='kw'>=</span> <span class='st'>"U"</span>, <span class='kw'>Y</span> <span class='kw'>=</span> <span class='st'>"Y"</span>,
+  <span class='kw'>r_EIOU</span> <span class='kw'>=</span> <span class='st'>"r_EIOU"</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Total"</span>, <span class='st'>"Product"</span>, <span class='st'>"Sector"</span>),
+  <span class='kw'>net_aggregate_demand</span> <span class='kw'>=</span> <span class='st'>"EX_fd_net.ktoe"</span>,
+  <span class='kw'>gross_aggregate_demand</span> <span class='kw'>=</span> <span class='st'>"EX_fd_gross.ktoe"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -149,16 +149,16 @@ The calculation does not include balancing items (Losses and Statistical differe
       <td><p>a vector of names of sectors in final demand.</p></td>
     </tr>
     <tr>
-      <th>U_colname</th>
-      <td><p>the name of the column in <code>.sutdata</code> containing Use (<code>U</code>) matrices.</p></td>
+      <th>U</th>
+      <td><p>use (<code>U</code>) matrix or name of the column in <code>.sutdata</code> containing same</p></td>
     </tr>
     <tr>
-      <th>Y_colname</th>
-      <td><p>the name of the column in <code>.sutdata</code> containing final demand (<code>Y</code>) matrices.</p></td>
+      <th>Y</th>
+      <td><p>final demand (<code>Y</code>) matrix or name of the column in <code>.sutdata</code> containing same</p></td>
     </tr>
     <tr>
-      <th>r_EIOU_colname</th>
-      <td><p>the name of the colum that holds ratios of EIOU to total input for each Machine and Product.</p></td>
+      <th>r_EIOU</th>
+      <td><p>matrix of ratios of EIOU for the make (<code>U</code>) matrix or name of the column in <code>.sutdata</code> containing same</p></td>
     </tr>
     <tr>
       <th>by</th>
@@ -168,21 +168,20 @@ The calculation does not include balancing items (Losses and Statistical differe
 "Total" for aggregation over both Product and Sector (the default).</p></td>
     </tr>
     <tr>
-      <th>net_aggregate_demand_colname</th>
-      <td><p>the name of the output column containing aggregates of net energy demand.
-Each entry in this column is <code>sumall(Y_fd)</code>.</p></td>
+      <th>net_aggregate_demand</th>
+      <td><p>the name of net energy demand on output.
+Each entry is <code>sumall(Y_fd)</code>.</p></td>
     </tr>
     <tr>
-      <th>gross_aggregate_demand_colname</th>
-      <td><p>the name of the output column containing aggregates of gross energy demand.
-Each entry in this column is calculated by <code>sumall(Y_fd)</code> + <code>sumall(U_EIOU)</code>.</p></td>
+      <th>gross_aggregate_demand</th>
+      <td><p>the name of gross energy demand on output.
+Each entry is calculated by <code>sumall(Y_fd)</code> + <code>sumall(U_EIOU)</code>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>.sutdata</code> with columns <code>net_aggregate_demand_colname</code> and
-<code>gross_aggregate_demand_colname</code> added</p>
+    <p>a list or data frame containing <code>net_aggregate_demand</code> and <code>gross_aggregate_demand</code></p>
     
 
   </div>

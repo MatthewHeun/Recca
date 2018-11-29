@@ -4,109 +4,105 @@
 
 #' Calculate various embodied energy matrices
 #'
-#' @param .iodata a data frame containing matrices that describe the Input-Output structure
+#' @param .iomats a data frame containing matrices that describe the Input-Output structure
 #' (using the supply-use table format) of an Energy Conversion Chain.
-#' \code{.iodata} will likely have been obtained from the \code{calc_io_mats} function.
-#' @param Y_colname the name of the column in \code{.iodata} containing final demand (\code{Y}) matrices.
-#' @param q_colname the name of the column in \code{.iodata} containing final demand (\code{q}) vectors.
-#' @param L_ixp_colname the name of the column in \code{.iodata} containing Industry-by-Product
-#' Leontief (\code{L_ixp}) matrices.
-#' @param g_colname the name of the output column containing \code{g} vectors.
-#' @param W_colname the name of the output column containing \code{W} matrices.
-#' @param U_EIOU_colname the name of the output column containing \code{U_EIOU} matrices.
-#' @param G_colname the name of the output column containing \code{G} matrices.
-#' \code{G} is calculated by \code{L_ixp * y_hat}.
-#' @param H_colname the name of the output column containing \code{H} matrices.
-#' \code{H} is calculated by \code{L_ixp * Y}.
-#' @param E_colname the name of the output column containing \code{E} matrices.
-#' \code{E} is calculated by \code{W * g_hat_inv}.
-#' @param M_p_colname the name of the output column containing \code{M_p} matrices.
-#' \code{M_p} is formed from column sums of positive entries in the various Qx matrices
-#' @param M_s_colname the name of the output column containing \code{M_s} matrices.
-#' \code{M_s} is constructed by \code{M_p * q_hat_inv * Y}.
-#' @param F_footprint_p_colname the name of the output column containing \code{F_footprint_p} matrices.
-#' \code{F}\code{_footprint_p} is calculated by \code{M_p} (\code{M_p}^T\code{i})_hat_inv.
-#' @param F_effects_p_colname the name of the output column containing \code{F_effects_p} matrices.
-#' \code{F}\code{_effects_p} is calculated by \code{M_p i}_hat_inv \code{M_p}.
-#' @param F_footprint_s_colname the name of the output column containing \code{F_footprint_s} matrices.
-#' \code{F}\code{_footprint_s} is calculated by \code{M_s} (\code{M_s}^T\code{i})_hat_inv.
-#' @param F_effects_s_colname the name of the output column containing \code{F_effects_s} matrices.
-#' \code{F}\code{_effects_p} is calculated by \code{M_s i}_hat_inv \code{M_s}.
+#' \code{.iomats} will likely have been obtained from the \code{\link{calc_io_mats}} function.
+#' @param Y final demand (\code{Y}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{Y}".
+#' @param q final demand (\code{q}) vector or name of the column in \code{.iodata} containing same. Default is "\code{q}".
+#' @param L_ixp industry-by-product Leontief (\code{L_ixp}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{L_ixp}"
+#' @param g name of the \code{g} vector on output. Default is "\code{g}".
+#' @param W name of the \code{W} matrix on output. Default is "\code{W}".
+#' @param U_EIOU name of the \code{U_EIOU} matrices on output. Default is "\code{U_EIOU}".
+#' @param G name of the \code{G} matrix on output.
+#'        \code{G} is calculated by \code{L_ixp * y_hat}. Default is "\code{G}".
+#' @param H name of the \code{H} matrix on output.
+#'        \code{H} is calculated by \code{L_ixp * Y}.
+#' @param E name of \code{E} matrix on output. Default is "\code{E}".
+#'        \code{E} is calculated by \code{W * g_hat_inv}.
+#' @param M_p name of the \code{M_p} matrix on output. Default is "\code{M_p}".
+#'        \code{M_p} is formed from column sums of positive entries in the various Qx matrices
+#' @param M_s name of the \code{M_s} matrix on output. Default is "\code{M_s}".
+#'        \code{M_s} is constructed by \code{M_p * q_hat_inv * Y}.
+#' @param F_footprint_p name of the \code{F_footprint_p} matrix on output. Default is "\code{F_footprint_p}".
+#'        \code{F_footprint_p} is calculated by \code{M_p * (M_p^T * i)_hat_inv}.
+#' @param F_effects_p name of the \code{F_effects_p} matrix on output. Default is "\code{F_effects_p}".
+#'        \code{F_effects_p} is calculated by \code{(M_p * i)_hat_inv * M_p}.
+#' @param F_footprint_s name of the \code{F_footprint_s} matrix on output. Default is "\code{F_footprint_s}".
+#'        \code{F_footprint_s} is calculated by \code{M_s * (M_s^T *i)_hat_inv}.
+#' @param F_effects_s name of the \code{F_effects_s} matrix on output. Default is "\code{F_effects_s}".
+#'        \code{F_effects_s} is calculated by \code{(M_s * i)_hat_inv * M_s}.
 #'
-#' @return \code{.iodata} with columns
-#' \code{G_colname}, \code{H_colname}, \code{E_colname}, and \code{Q_colname} added
+#' @return a list or data frame containing embodied energy matrices
 #'
 #' @export
-calc_embodied_mats <- function(.iodata = NULL,
-                               # Input columns
-                               Y_colname = "Y", q_colname = "q",
-                               L_ixp_colname = "L_ixp", g_colname = "g", W_colname = "W", U_EIOU_colname = "U_EIOU",
-                               # Output columns
-                               G_colname = "G", H_colname = "H", E_colname = "E",
-                               M_p_colname = "M_p", M_s_colname = "M_s",
-                               F_footprint_p_colname = "F_footprint_p", F_effects_p_colname = "F_effects_p",
-                               F_footprint_s_colname = "F_footprint_s", F_effects_s_colname = "F_effects_s"){
-  embodied_func <- function(Y, q, L_ixp, g, W, U_EIOU){
-    GH_list <- calc_GH(Y_colname = Y, L_ixp_colname = L_ixp,
-                       G_colname = G_colname, H_colname = H_colname)
-    G <- GH_list$G
-    E_list <- calc_E(g_colname = g, W_colname = W, U_EIOU_colname = U_EIOU,
-                     E_colname = E_colname)
-    E <- E_list$E
-    M_list <- calc_M(Y_colname = Y, q_colname = q, G_colname = G, E_colname = E,
-                     M_p_colname = M_p_colname, M_s_colname = M_s_colname)
-    M_p <- M_list$M_p
-    M_s <- M_list$M_s
-    F_list <- calc_F_footprint_effects(M_p_colname = M_p, M_s_colname = M_s,
-                                     F_footprint_p_colname = F_footprint_p_colname, F_effects_p_colname = F_effects_p_colname,
-                                     F_footprint_s_colname = F_footprint_s_colname, F_effects_s_colname = F_effects_s_colname)
+calc_embodied_mats <- function(.iomats = NULL,
+                               # Input names
+                               Y = "Y", q = "q",
+                               L_ixp = "L_ixp", g = "g", W = "W", U_EIOU = "U_EIOU",
+                               # Output names
+                               G = "G", H = "H", E = "E",
+                               M_p = "M_p", M_s = "M_s",
+                               F_footprint_p = "F_footprint_p", F_effects_p = "F_effects_p",
+                               F_footprint_s = "F_footprint_s", F_effects_s = "F_effects_s"){
+  embodied_func <- function(Y_mat, q_vec, L_ixp_mat, g_vec, W_mat, U_EIOU_mat){
+    GH_list <- calc_GH(Y = Y_mat, L_ixp = L_ixp_mat,
+                       G = G, H = H)
+    G_mat <- GH_list[[G]]
+    E_list <- calc_E(g = g_vec, W = W_mat, U_EIOU = U_EIOU_mat,
+                     E = E)
+    E_mat <- E_list[[E]]
+    M_list <- calc_M(Y = Y_mat, q = q_vec, G = G_mat, E = E_mat,
+                     M_p = M_p, M_s = M_s)
+    M_p_mat <- M_list[[M_p]]
+    M_s_mat <- M_list[[M_s]]
+    F_list <- calc_F_footprint_effects(M_p = M_p_mat, M_s = M_s_mat,
+                                     F_footprint_p = F_footprint_p, F_effects_p = F_effects_p,
+                                     F_footprint_s = F_footprint_s, F_effects_s = F_effects_s)
     c(GH_list, E_list, M_list, F_list) %>% set_names(c(names(GH_list), names(E_list), names(M_list), names(F_list)))
   }
-  matsindf_apply(.iodata, FUN = embodied_func, Y = Y_colname, q = q_colname,
-                 L_ixp = L_ixp_colname, g = g_colname, W = W_colname, U_EIOU = U_EIOU_colname)
+  matsindf_apply(.iomats, FUN = embodied_func, Y_mat = Y, q_vec = q,
+                 L_ixp_mat = L_ixp, g_vec = g, W_mat = W, U_EIOU_mat = U_EIOU)
 }
 
 #' Calculate the \code{G} and \code{H} matrices for embodied energy calculations
 #'
-#' @param .iodata a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.
-#' \code{.iodata} will likely have been obtained from the \code{calc_io_mats} function.
-#' @param Y_colname the name of the column in \code{.iodata} containing final demand (\code{Y}) matrices.
-#' @param L_ixp_colname the name of the column in \code{.iodata} containing Industry-by-Product
-#' Leontief (\code{L_ixp}) matrices.
-#' @param G_colname the name of the output column containing \code{G} matrices.
-#' \code{G} is calculated by \code{L_ixp * y_hat}.
-#' @param H_colname the name of the output column containing \code{H} matrices.
-#' \code{G} is calculated by \code{L_ixp * Y}.
+#' @param .iomats a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.
+#' \code{.iomats} will likely have been obtained from the \code{\link{calc_io_mats}} function.
+#' @param Y final demand (\code{Y}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{Y}".
+#' @param L_ixp industry-by-product Leontief (\code{L_ixp}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{L_ixp}".
+#' @param G name for the \code{G} matrix on output. Default is "\code{G}".
+#'        \code{G} is calculated by \code{L_ixp * y_hat}.
+#' @param H name for the \code{H} matrix on output. Default is "\code{H}".
+#'        \code{G} is calculated by \code{L_ixp * Y}.
 #'
-#' @return \code{.iodata} with columns \code{G_colname} and \code{H_colname} added.
+#' @return a list or data frame containing \code{G} and \code{H} matrices.
 #'
 #' @export
-calc_GH <- function(.iodata = NULL,
+calc_GH <- function(.iomats = NULL,
                     # Input columns
-                    Y_colname = "Y", L_ixp_colname = "L_ixp",
+                    Y = "Y", L_ixp = "L_ixp",
                     # Output columns
-                    G_colname = "G", H_colname = "H"){
-  GH_func <- function(Y, L_ixp){
+                    G = "G", H = "H"){
+  GH_func <- function(Y_mat, L_ixp_mat){
     y <- rowsums_byname(Y)
-    G <- matrixproduct_byname(L_ixp, hatize_byname(y))
-    H <- matrixproduct_byname(L_ixp, Y)
-    list(G, H) %>% set_names(c(G_colname, H_colname))
+    G_mat <- matrixproduct_byname(L_ixp, hatize_byname(y))
+    H_mat <- matrixproduct_byname(L_ixp, Y)
+    list(G_mat, H_mat) %>% set_names(c(G, H))
   }
-  matsindf_apply(.iodata, FUN = GH_func, Y = Y_colname, L_ixp = L_ixp_colname)
+  matsindf_apply(.iomats, FUN = GH_func, Y_mat = Y, L_ixp_mat = L_ixp)
 }
 
 #' Calculate the \code{E} matrix for embodied energy calculations
 #'
-#' @param .iodata a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.
-#' \code{.iodata} will likely have been obtained from the \code{calc_io_mats} function.
-#' @param g_colname the name of the column in \code{.iodata} containing final demand (\code{g}) vectors
-#' @param W_colname the name of the column in \code{.iodata} containing Product-by-Industry
-#' value added (\code{W}) matrices
-#' @param U_EIOU_colname the name of the column in \code{.iodata} containing energy industry own use matrices
-#' @param E_colname the name of the output column containing \code{E} matrices.
-#' \code{E} is calculated by \code{W * g_hat_inv}.
+#' @param .iomats a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.
+#' \code{.iomats} will likely have been obtained from the \code{\link{calc_io_mats}} function.
+#' @param g final demand (\code{g}) vector or name of the column in \code{.iomats} containing same. Default is "\code{g}".
+#' @param W product-by-industry value added (\code{W}) matrix or name of the column in \code{.iomats} containing same. Default is "\code{W}".
+#' @param U_EIOU energy industry own use matrix or name of the column in \code{.iomats} containing same. Default is "\code{U_EIOU}".
+#' @param E the name for the \code{E} matrix on output. Default is "\code{E}".
+#'        \code{E} is calculated by \code{W * g_hat_inv}.
 #'
-#' @return \code{.iodata} with column \code{E_colname} added
+#' @return list or data frame containing \code{E} matrices
 #'
 #' @importFrom matsbyname clean_byname
 #' @importFrom matsbyname difference_byname
@@ -115,43 +111,43 @@ calc_GH <- function(.iodata = NULL,
 #' @importFrom matsbyname sum_byname
 #'
 #' @export
-calc_E <- function(.iodata = NULL,
-                   # Input columns
-                   g_colname = "g", W_colname = "W", U_EIOU_colname = "U_EIOU",
-                   # Output columns
-                   E_colname = "E"){
-  E_func <- function(g, W, U_EIOU){
-    E <- matrixproduct_byname(sum_byname(W, U_EIOU), g %>% hatize_byname() %>% invert_byname())
-    list(E) %>% set_names(E_colname)
+calc_E <- function(.iomats = NULL,
+                   # Input names
+                   g = "g", W = "W", U_EIOU = "U_EIOU",
+                   # Output name
+                   E = "E"){
+  E_func <- function(g_vec, W_mat, U_EIOU_mat){
+    E_mat <- matrixproduct_byname(sum_byname(W_mat, U_EIOU_mat), g_vec %>% hatinv_byname())
+    list(E_mat) %>% set_names(E)
   }
-  matsindf_apply(.iodata, FUN = E_func, g = g_colname, W = W_colname, U_EIOU = U_EIOU_colname)
+  matsindf_apply(.iomats, FUN = E_func, g_vec = g, W_mat = W, U_EIOU_mat = U_EIOU)
 }
 
 
-#' Add embodied matrices colums to a data frame
+#' Calculate embodied energy matrices
 #'
-#' @param .YqGHEdata a data frame containing columns with \code{q} vectors
-#' and \code{Y}, \code{G}, \code{H}, and \code{E} matrices.
-#' \code{.YqGEdata} will likely have been obtained from the \code{calc_G} and \code{calc_E} functions.
-#' @param Y_colname the name of the output column containing \code{Y} matrices.
-#' \code{Y} is the final demand matrix.
-#' @param q_colname the name of the output column containing \code{q} column vectors.
-#' \code{q} is calculated by \code{Ui} + \code{y}.
-#' @param G_colname the name of the output column containing \code{G} matrices.
-#' \code{G} is calculated by \code{L_ixp} * \code{y_hat}.
-#' @param E_colname the name of the output column containing \code{E} matrices.
-#' \code{E} is calculated by \code{W} * \code{g_hat_inv}.
-#' @param tol the allowable energy balance error.
 #' \code{Q} is calculated by \code{e_hat * G},
 #' but the e_hat column contains lists of matrices,
 #' so the \code{Q} column will also contain lists of matrices.
 #' In each list, there is one Q matrix for each Product in the Energy Conversion Chain.
-#' @param M_p_colname the name of the output column containing matrices of embodied energy in products.
-#' These matrices contain embodied products in rows and embodying products in columns.
-#' @param M_s_colname the name of the output column containing matrices of embodied energy consumed by final demand sectors.
-#' These matrices contain embodied products in rows and consuming final demand sectors in columns.
+
+#' @param .YqGHEdata a data frame containing columns with \code{q} vectors
+#' and \code{Y}, \code{G}, \code{H}, and \code{E} matrices.
+#' \code{.YqGEdata} will likely have been obtained from the \code{\link{calc_GH}} and \code{\link{calc_E}} functions.
+#' @param Y final demand (\code{Y}) matrix or name of the column in \code{.YqHGEdata} containing same. Default is "\code{Y}".
+#' @param q \code{q} column vector or name of the column in \code{.YqHGEdata} containing same. Default is "\code{q}".
+#'        \code{q} is calculated by \code{U*i + y}.
+#' @param G \code{G} matrix or name of the column in \code{.YqHGEdata} containing same. Default is "\code{G}".
+#'        \code{G} is calculated by \code{L_ixp * y_hat}.
+#' @param E \code{E} matrix or name of the column in \code{.YqHGEdata} containing same. Default is "\code{E}".
+#'        \code{E} is calculated by \code{W * g_hat_inv}.
+#' @param tol the allowable energy balance error.
+#' @param M_p the name for matrices of embodied energy in products on output. Default is "\code{M_p}".
+#'        These matrices contain embodied products in rows and embodying products in columns.
+#' @param M_s the name for matrices of embodied energy consumed by final demand sectors. Default is "\code{M_s}".
+#'        These matrices contain embodied products in rows and consuming final demand sectors in columns.
 #'
-#' @return \code{.YqGHEdata} with columns \code{Q_colname}, \code{M_p_colname}, and \code{M_s_colname} added
+#' @return a list or data frame of embodied energy matrices
 #'
 #' @importFrom matsbyname list_of_rows_or_cols
 #' @importFrom matsbyname make_list
@@ -165,21 +161,21 @@ calc_E <- function(.iodata = NULL,
 #'
 #' @export
 calc_M <- function(.YqGHEdata = NULL,
-                   # Input columns
-                   Y_colname = "Y", q_colname = "q", G_colname = "G", E_colname = "E",
+                   # Input names
+                   Y = "Y", q = "q", G = "G", E = "E",
                    tol = 1e-4,
-                   # Output columns
-                   M_p_colname = "M_p", M_s_colname = "M_s"){
-  M_func <- function(Y, q, G, E){
+                   # Output names
+                   M_p = "M_p", M_s = "M_s"){
+  M_func <- function(Y_mat, q_vec, G_mat, E_mat){
     # Form one e vector for each row of the E matrix.
     # All vectors for a given row of the data frame are stored in a list
     # in the e_colname column of the data frame.
-    e <- list_of_rows_or_cols(E, margin = 1)
+    e_vecs <- list_of_rows_or_cols(E_mat, margin = 1)
     # Form one e_hat matrix for each e vector in each list.
     # !!e_hat_colname := hatize_byname(!!as.name(e_colname)),
-    e_hat_list <- lapply(e, FUN = hatize_byname)
+    e_hat_list <- lapply(e_vecs, FUN = hatize_byname)
     # Calculate Q matrices
-    G_list <- make_list(G, n = length(e_hat_list), lenx = 1)
+    G_list <- make_list(G_mat, n = length(e_hat_list), lenx = 1)
     Q_list <- Map(matrixproduct_byname, e_hat_list, G_list)
     # We're looking for embodied energy, which are positive entries in the Q matrices.
     # Set negative entries in the Q matrices to zero
@@ -202,71 +198,65 @@ calc_M <- function(.YqGHEdata = NULL,
     Qposcolsums_list <- lapply(Qpos_list, FUN = colsums_byname)
     # rbind the column sums of each Qpos in Qposcolsums_list into a matrix,
     # with row names taken from the name of the Q matrix whose column sums comprise the row.
-    M_p <- do.call(rbind, Qposcolsums_list) %>%
+    M_p_mat <- do.call(rbind, Qposcolsums_list) %>%
       setrownames_byname(names(Qposcolsums_list)) %>%
-      setrowtype(rowtype(E)) %>% setcoltype(rowtype(E))
+      setrowtype(rowtype(E_mat)) %>% setcoltype(rowtype(E_mat))
     # Calculate the "per-sector" embodied energy.
-    M_s <- matrixproduct_byname(M_p, q %>% hatize_byname() %>% invert_byname() %>% matrixproduct_byname(Y))
+    M_s_mat <- matrixproduct_byname(M_p_mat, q_vec %>% hatinv_byname() %>% matrixproduct_byname(Y_mat))
     # Verify energy balance for embodied matrices (M_p)
     # It should be that q - rowsums(M_p) = 0
-    err = q %>% setcolnames_byname("err") %>% setcoltype("err") %>%
-      difference_byname(rowsums_byname(M_p) %>% setcolnames_byname("err") %>% setcoltype("err"))
+    err = q_vec %>% setcolnames_byname("err") %>% setcoltype("err") %>%
+      difference_byname(rowsums_byname(M_p_mat) %>% setcolnames_byname("err") %>% setcoltype("err"))
     M_p_energy_balance_OK = iszero_byname(err, tol = tol)
     stopifnot(M_p_energy_balance_OK)
     # Everything has checked out. Build our list and return.
-    list(M_p, M_s) %>% set_names(c(M_p_colname, M_s_colname))
+    list(M_p_mat, M_s_mat) %>% magrittr::set_names(c(M_p, M_s))
   }
-  matsindf_apply(.YqGHEdata, FUN = M_func, Y = Y_colname, q = q_colname, G = G_colname, E = E_colname)
+  matsindf_apply(.YqGHEdata, FUN = M_func, Y_mat = Y, q_vec = q, G_mat = G, E_mat = E)
 }
 
 #' Upstream footprint and downstream effects matrices
 #'
-#' Calculates upstream footprint matrices (\strong{F_footprint_p}, \strong{F_footprint_s})
-#' and downstream effects matrices (\strong{F_effects_p}, \strong{F_effects_s})
-#' given an embodied matries \strong{M_p} and \strong{M_s}.
-#' Column sums of \strong{F_footprint} are 1.
-#' Row sums of \strong{F_effects} are 1.
+#' Calculates upstream footprint matrices (\code{F_footprint_p}, \code{F_footprint_s})
+#' and downstream effects matrices (\code{F_effects_p}, \code{F_effects_s})
+#' given an embodied matries \code{M_p} and \code{M_s}.
+#' Column sums of \code{F_footprint} are 1.
+#' Row sums of \code{F_effects} are 1.
 #'
-#' @param .Mdata a data frame containing a column of embodied matrices
-#' @param M_p_colname the name of the column in \code{.Mdata} containing embodied product  matrices (default is \strong{"M_p"})
-#' @param M_s_colname the name of the column in \code{.Mdata} containing embodied sector matrices (default is \strong{"M_s"})
-#' @param F_footprint_p_colname the name of the column in the output containing \strong{F_footprint_p} matrices (as a string)
-#' @param F_effects_p_colname the name of the column in the output containing \strong{F_effects_p} matrices (as a string)
-#' @param F_footprint_s_colname the name of the column in the output containing \strong{F_footprint_s} matrices (as a string)
-#' @param F_effects_s_colname the name of the column in the output containing \strong{F_effects_s} matrices (as a string)
+#' @param .Mmats a data frame containing a column of embodied matrices
+#' @param M_p embodied product matrix or name of the column in \code{.Mmats} containing same. Default is "\code{M_p}".
+#' @param M_s embodied sector matrix or name of the column in \code{.Mmats} containing same. Default is "\code{M_s}".
+#' @param F_footprint_p the name for \code{F_footprint_p} matrices on output. Default is "\code{F_footprint_p}".
+#' @param F_effects_p the name for \code{F_effects_p} matrices on output. Default is "\code{F_effects_p}".
+#' @param F_footprint_s the name for \code{F_footprint_s} matrices on output. Default is "\code{F_footprint_s}".
+#' @param F_effects_s the name for \code{F_effects_s} matrices on output. Default is "\code{F_effects_s}".
 #'
-#' @return \code{.Mdata} with columns \code{F_footprint_p}, \code{F_effects_p},
-#' \code{F_footprint_s}, and \code{F_effects_s} added
+#' @return a list or data frame containing \code{F_footprint_p}, \code{F_effects_p},
+#' \code{F_footprint_s}, and \code{F_effects_s} matrices
 #'
 #' @importFrom matsbyname colsums_byname
 #' @importFrom matsbyname iszero_byname
 #'
 #' @export
-#'
-calc_F_footprint_effects <- function(.Mdata = NULL,
-                                     # Input columns
-                                     M_p_colname = "M_p",
-                                     M_s_colname = "M_s",
-                                     # Output columns
-                                     F_footprint_p_colname = "F_footprint_p",
-                                     F_effects_p_colname = "F_effects_p",
-                                     F_footprint_s_colname = "F_footprint_s",
-                                     F_effects_s_colname = "F_effects_s"){
-  F_func <- function(M_p, M_s){
-    # Note that clean_byname() removes zeroes and avoids errors when inverting the matrices.
-    F_footprint_p <- matrixproduct_byname(M_p,
-                                          colsums_byname(M_p) %>% clean_byname() %>% hatize_byname() %>% invert_byname())
-
-    F_effects_p <- matrixproduct_byname(rowsums_byname(M_p) %>% clean_byname() %>% hatize_byname() %>% invert_byname(),
-                                        M_p)
-    F_footprint_s <- matrixproduct_byname(M_s,
-                                          colsums_byname(M_s) %>% clean_byname() %>% hatize_byname() %>% invert_byname())
-    F_effects_s <- matrixproduct_byname(rowsums_byname(M_s) %>% clean_byname() %>% hatize_byname() %>% invert_byname(),
-                                        M_s)
+calc_F_footprint_effects <- function(.Mmats = NULL,
+                                     # Input names
+                                     M_p = "M_p",
+                                     M_s = "M_s",
+                                     # Output names
+                                     F_footprint_p = "F_footprint_p",
+                                     F_effects_p = "F_effects_p",
+                                     F_footprint_s = "F_footprint_s",
+                                     F_effects_s = "F_effects_s"){
+  F_func <- function(M_p_mat, M_s_mat){
+    # Note that inf_to_zero replaces Inf by zero when doing hatinv.
+    F_footprint_p_mat <- matrixproduct_byname(M_p_mat, colsums_byname(M_p_mat) %>% hatinv_byname(inf_to_zero = TRUE))
+    F_effects_p_mat <- matrixproduct_byname(rowsums_byname(M_p_mat) %>% hatinv_byname(inf_to_zero = TRUE), M_p_mat)
+    F_footprint_s_mat <- matrixproduct_byname(M_s_mat, colsums_byname(M_s_mat) %>% hatinv_byname(inf_to_zero = TRUE))
+    F_effects_s_mat <- matrixproduct_byname(rowsums_byname(M_s_mat) %>% hatinv_byname(inf_to_zero = TRUE), M_s_mat)
     # Run some tests to make sure everything is working.
     # Start with footpring matrices
-    colsums_F_footprint_p <- colsums_byname(F_footprint_p)
-    colsums_F_footprint_s <- colsums_byname(F_footprint_s)
+    colsums_F_footprint_p <- colsums_byname(F_footprint_p_mat)
+    colsums_F_footprint_s <- colsums_byname(F_footprint_s_mat)
     err_F_footprint_p <- difference_byname(colsums_F_footprint_p, 1)
     err_F_footprint_s <- difference_byname(colsums_F_footprint_s, 1)
     F_footprint_p_OK <- iszero_byname(err_F_footprint_p)
@@ -274,8 +264,8 @@ calc_F_footprint_effects <- function(.Mdata = NULL,
     stopifnot(F_footprint_p_OK)
     stopifnot(F_footprint_s_OK)
     # Also check effects matrices
-    rowsums_F_effects_p <- rowsums_byname(F_effects_p)
-    rowsums_F_effects_s <- rowsums_byname(F_effects_s)
+    rowsums_F_effects_p <- rowsums_byname(F_effects_p_mat)
+    rowsums_F_effects_s <- rowsums_byname(F_effects_s_mat)
     err_F_effects_p <- difference_byname(rowsums_F_effects_p, 1)
     err_F_effects_s <- difference_byname(rowsums_F_effects_s, 1)
     F_effects_p_OK <- iszero_byname(err_F_effects_p)
@@ -284,10 +274,10 @@ calc_F_footprint_effects <- function(.Mdata = NULL,
     stopifnot(F_effects_s_OK)
 
     # Everything checked out, so make our outgoing list and return it.
-    list(F_footprint_p, F_effects_p, F_footprint_s, F_effects_s) %>%
-      magrittr::set_names(c(F_footprint_p_colname, F_effects_p_colname, F_footprint_s_colname, F_effects_s_colname))
+    list(F_footprint_p_mat, F_effects_p_mat, F_footprint_s_mat, F_effects_s_mat) %>%
+      magrittr::set_names(c(F_footprint_p, F_effects_p, F_footprint_s, F_effects_s))
   }
-  matsindf_apply(.Mdata, FUN = F_func, M_p = M_p_colname, M_s = M_s_colname)
+  matsindf_apply(.Mmats, FUN = F_func, M_p_mat = M_p, M_s_mat = M_s)
 }
 
 #' Embodied energy efficiencies
@@ -304,15 +294,15 @@ calc_F_footprint_effects <- function(.Mdata = NULL,
 #' To calculate energy conversion industry efficiencies, use the
 #' \code{\link{calc_eta_i}} function.
 #'
-#' @param .embodiedmats a data frame containing columns of \strong{Y}, \strong{G}, and \strong{H} matrices
-#' @param primary_machine_names a list of strings representing names of Industries whose output is counted in TPES
-#' @param Y_colname a string for the name of a column of Y matrices in \code{.embodiedmats} (default is \code{Y})
-#' @param G_colname a string for the name of a column of G matrices in \code{.embodiedmats} (default is \code{G})
-#' @param H_colname a string for the name of a column of H matrices in \code{.embodiedmats} (default is \code{H})
-#' @param eta_p_colname a string for the name of the output column containing vectors of product-based efficiencies
-#' @param eta_s_colname a string for the name of the output column containing vectors of final-demand-sector-based efficiencies
+#' @param .embodiedmats a data frame containing columns of \code{Y}, \code{G}, and \code{H} matrices
+#' @param primary_machine_names a list of strings representing names of Industries whose output is counted in Total Primary Energy Supply (TPES)
+#' @param Y final demand \code{Y} matrix or name of a column in \code{.embodiedmats} containing same. Default is "\code{Y}".
+#' @param G \code{G} matrix or name of a column in \code{.embodiedmats} containing same. Default is "\code{G}".
+#' @param H \code{H} matrix or name of a column in \code{.embodiedmats} containing same. Default is "\code{H}".
+#' @param eta_p the name for product-based efficiencies on output. Default is "\code{eta_p}".
+#' @param eta_s the name for final-demand-sector-based efficiencies on output. Default is "\code{eta_s}".
 #'
-#' @return \code{.embodiedmats} with columns \code{eta_p_colname} and \code{eta_s_colname} added
+#' @return a list or data frame containing embodied energy efficiencies
 #'
 #' @importFrom matsbyname elementquotient_byname
 #' @importFrom matsbyname select_rows_byname
@@ -323,22 +313,22 @@ calc_embodied_etas <- function(.embodiedmats = NULL,
                                # Input information
                                primary_machine_names,
                                # Input columns of .embodiedmats
-                               Y_colname = "Y", G_colname = "G", H_colname = "H",
+                               Y = "Y", G = "G", H = "H",
                                # Output columns
-                               eta_p_colname = "eta_p", eta_s_colname = "eta_s"){
-  eta_func <- function(Y, G, H){
-    eta_p <- elementquotient_byname(
-      rowsums_byname(Y) %>% transpose_byname(),
-      G %>% select_rows_byname(retain_pattern = make_pattern(primary_machine_names, pattern_type = "leading")) %>% colsums_byname()
+                               eta_p = "eta_p", eta_s = "eta_s"){
+  eta_func <- function(Y_mat, G_mat, H_mat){
+    eta_p_vec <- elementquotient_byname(
+      rowsums_byname(Y_mat) %>% transpose_byname(),
+      G_mat %>% select_rows_byname(retain_pattern = make_pattern(primary_machine_names, pattern_type = "leading")) %>% colsums_byname()
     ) %>%
       transpose_byname() # Make it a column vector
-    eta_s <- elementquotient_byname(
-      colsums_byname(Y) %>% setrownames_byname("row") %>% setrowtype("row"),
-      H %>% select_rows_byname(retain_pattern = make_pattern(primary_machine_names, pattern_type = "leading")) %>%
+    eta_s_vec <- elementquotient_byname(
+      colsums_byname(Y_mat) %>% setrownames_byname("row") %>% setrowtype("row"),
+      H_mat %>% select_rows_byname(retain_pattern = make_pattern(primary_machine_names, pattern_type = "leading")) %>%
         colsums_byname() %>% setrownames_byname("row") %>% setrowtype("row")
     ) %>%
       transpose_byname() # Make it a column vector
-    list(eta_p, eta_s) %>% set_names(eta_p_colname, eta_s_colname)
+    list(eta_p_vec, eta_s_vec) %>% set_names(eta_p, eta_s)
   }
-  matsindf_apply(.embodiedmats, FUN = eta_func, Y = Y_colname, G = G_colname, H = H_colname)
+  matsindf_apply(.embodiedmats, FUN = eta_func, Y_mat = Y, G_mat = G, H_mat = H)
 }

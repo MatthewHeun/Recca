@@ -132,21 +132,20 @@ according to the <code>S_units</code> matrix and
     
     </div>
 
-    <pre class="usage"><span class='fu'>products_unit_homogeneous</span>(<span class='kw'>.sutdata</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>S_units_colname</span> <span class='kw'>=</span> <span class='st'>"S_units"</span>,
+    <pre class="usage"><span class='fu'>products_unit_homogeneous</span>(<span class='kw'>.sutmats</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>S_units</span> <span class='kw'>=</span> <span class='st'>"S_units"</span>,
   <span class='kw'>keep_details</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>products_unit_homogeneous_colname</span> <span class='kw'>=</span> <span class='st'>"products_unit_homogeneous"</span>)</pre>
+  <span class='kw'>products_unit_homogeneous</span> <span class='kw'>=</span> <span class='st'>".products_unit_homogeneous"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>.sutdata</th>
+      <th>.sutmats</th>
       <td><p>a data frame of supply-use table matrices with matrices arranged in columns.</p></td>
     </tr>
     <tr>
-      <th>S_units_colname</th>
-      <td><p>the name of the column in <code>.sutdata</code> that contains
-<code>S_units</code> matrices. Default is "<code>S_units</code>".</p></td>
+      <th>S_units</th>
+      <td><p>an <code>S_units</code> matrix or name of a column in <code>.sutmats</code> that contains same. Default is "<code>S_units</code>".</p></td>
     </tr>
     <tr>
       <th>keep_details</th>
@@ -154,17 +153,15 @@ according to the <code>S_units</code> matrix and
 if <code>FALSE</code>, per-ECC results are returned.</p></td>
     </tr>
     <tr>
-      <th>products_unit_homogeneous_colname</th>
-      <td><p>the name of the output column
-that tells whether products in <code>S_units</code> are unit-homogeneous.
-Default is "<code>products_unit_homogeneous</code>".</p></td>
+      <th>products_unit_homogeneous</th>
+      <td><p>name for the boolean that tells whether products in <code>S_units</code> are unit-homogeneous on output.
+Default is "<code>.products_unit_homogeneous</code>".</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>.sutdata</code> with additional column "<code>products_unit_homogeneous</code>"
-        containing <code>TRUE</code> if products in <code>S_units</code> are unit-homogeneous, <code>FALSE</code> otherwise.</p>
+    <p>a list or data frame containing <code>TRUE</code> if products in <code>S_units</code> are unit-homogeneous, <code>FALSE</code> otherwise.</p>
 <p>importFrom magrittr extract2</p>
     
 
@@ -174,7 +171,7 @@ Default is "<code>products_unit_homogeneous</code>".</p></td>
 <span class='no'>UKEnergy2000mats</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='st'>"matrix.name"</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>"matrix"</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'>products_unit_homogeneous</span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://www.rdocumentation.org/packages/magrittr/topics/aliases'>extract2</a></span>(<span class='st'>"products_unit_homogeneous"</span>)</div><div class='output co'>#&gt; [[1]]
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/magrittr/topics/aliases'>extract2</a></span>(<span class='st'>".products_unit_homogeneous"</span>)</div><div class='output co'>#&gt; [[1]]
 #&gt; [1] TRUE
 #&gt; 
 #&gt; [[2]]

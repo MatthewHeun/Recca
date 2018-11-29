@@ -140,21 +140,21 @@
     </tr>
     <tr>
       <th>U</th>
-      <td><p>identifier for the use matrix (a string). Default is "<code>U</code>".</p></td>
+      <td><p>use (<code>U</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "<code>U</code>".</p></td>
     </tr>
     <tr>
       <th>V</th>
-      <td><p>identifier for the make matrix (a string). Default is "<code>V</code>".</p></td>
+      <td><p>make (<code>V</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "<code>V</code>".</p></td>
     </tr>
     <tr>
       <th>r_industries</th>
-      <td><p>name for the resource industries vector (a string). Default is "<code>r_industries</code>".</p></td>
+      <td><p>name for the <code>r_industries</code> vector on output. Default is "<code>r_industries</code>".</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>.sutdata</code> with an additional column (named with the value of the <code>p_industries</code> argument)
+    <p>a list or data frame with <code>.sutdata</code> with an additional column (named with the value of the <code>p_industries</code> argument)
         containing the resource industries for each row</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
@@ -172,7 +172,9 @@ which contains a vector of names of resource industries for the <code>U</code> a
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>tidyr</span>)
-<span class='fu'>resource_industries</span>(<span class='no'>UKEnergy2000mats</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='no'>matrix.name</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='no'>matrix</span>))</div><div class='output co'>#&gt;   Country Year Energy.type Last.stage
+<span class='no'>UKEnergy2000mats</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='no'>matrix.name</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='no'>matrix</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'>resource_industries</span>()</div><div class='output co'>#&gt;   Country Year Energy.type Last.stage
 #&gt; 1      GB 2000      E.ktoe      final
 #&gt; 2      GB 2000      E.ktoe   services
 #&gt; 3      GB 2000      E.ktoe     useful
