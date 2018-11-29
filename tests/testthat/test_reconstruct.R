@@ -129,7 +129,7 @@ test_that("new_k_ps works as expected", {
                     49.75)
 })
 
-test_that("simple ECC works with new_k_ps", {
+test_that("1-industry ECC works with new_k_ps", {
   # This test arises from interactions with Jianwei Du at University of Texas at Austin.
   # To investigate the issues that Jianwei raised,
   # I'll make the simplest possible ECC that retains the features to be tested,
