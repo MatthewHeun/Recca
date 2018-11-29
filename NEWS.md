@@ -1,3 +1,5 @@
+# Recca 0.1.10 (2018-11-29)
+
 * Now importing `magrittr` pipe at high level.
 * Now using `hatinv_byname` function instead of `hatize_byname %>% invert_byname`.
 * Breaking change: arguments to `Recca` functions are no longer named `*_colname`.
@@ -17,6 +19,8 @@
   (where it had been named `z_colname` before).
   In all ways, the new argument naming convention is more elegant than the previous `*_colname` approach.
 * Building a vignette that describes the package.
+* New test for a simple, 1-industry ECC.
+* Now up to 316 tests.
 
 
 # Recca 0.1.9 (2018-11-08)
