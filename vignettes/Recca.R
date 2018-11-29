@@ -11,6 +11,7 @@ library(tidyr)
 library(tibble)
 
 ## ------------------------------------------------------------------------
+library(tibble)
 S_units <- UKEnergy2000tidy %>%
   group_by(Country, Year, Energy.type, Last.stage) %>%
   S_units_from_tidy()
@@ -57,13 +58,14 @@ glimpse(AsMats)
 library(tidyr)
 mats <- UKEnergy2000mats %>% 
   spread(key = matrix.name, value = matrix) %>% 
+  # Put rows in a natural order
   mutate(
     Last.stage = factor(Last.stage, levels = c("final", "useful", "services")),
     Energy.type = factor(Energy.type, levels = c("E.ktoe", "X.ktoe"))
   ) %>% 
-  arrange(Last.stage, Energy.type) # Put rows in a natural order
+  arrange(Last.stage, Energy.type) 
 # Use the calc_io_mats function with individual matrices, 
-# each taken from the UKEnergy2000mats data frame.
+# each taken from the first row of the UKEnergy2000mats data frame.
 U <- mats$U[[1]]
 V <- mats$V[[1]]
 Y <- mats$Y[[1]]
@@ -83,7 +85,5 @@ class(IO_df)
 names(IO_df)
 glimpse(IO_df)
 IO_df[["y"]][[1]]
-IO_df[["y"]][[2]]
-IO_df[["y"]][[3]]
 IO_df[["y"]][[4]]
 

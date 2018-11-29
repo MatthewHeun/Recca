@@ -128,7 +128,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>primary_aggregates</span>(<span class='no'>.sutdata</span>, <span class='no'>p_industries</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>, <span class='kw'>Y</span> <span class='kw'>=</span> <span class='st'>"Y"</span>,
+    <pre class="usage"><span class='fu'>primary_aggregates</span>(<span class='no'>.sutdata</span>, <span class='no'>p_industries</span>, <span class='kw'>R</span> <span class='kw'>=</span> <span class='st'>"R"</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>, <span class='kw'>Y</span> <span class='kw'>=</span> <span class='st'>"Y"</span>,
   <span class='kw'>by</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Total"</span>, <span class='st'>"Product"</span>, <span class='st'>"Flow"</span>), <span class='kw'>aggregate_primary</span> <span class='kw'>=</span> <span class='st'>"EX_p.ktoe"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -145,6 +145,10 @@ These industries will appear in rows of the make matrix (<code>V</code>) and
 columns of the final demand matrix (<code>Y</code>).
 Entries in <code>Y_p</code> will be subtracted from entries in <code>V_p</code> to obtain
 the total primary energy aggregate.</p></td>
+    </tr>
+    <tr>
+      <th>R</th>
+      <td><p>resources (<code>R</code>) matrix or the name of the column in <code>.sutdata</code> containing same</p></td>
     </tr>
     <tr>
       <th>V</th>

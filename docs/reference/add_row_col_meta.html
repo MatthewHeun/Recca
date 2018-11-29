@@ -129,10 +129,11 @@
     </div>
 
     <pre class="usage"><span class='fu'>add_row_col_meta</span>(<span class='no'>.DF</span>, <span class='kw'>matname</span> <span class='kw'>=</span> <span class='st'>"matname"</span>, <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>,
-  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>, <span class='kw'>U</span> <span class='kw'>=</span> <span class='st'>"U"</span>, <span class='kw'>U_EIOU</span> <span class='kw'>=</span> <span class='st'>"U_EIOU"</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>, <span class='kw'>Y</span> <span class='kw'>=</span> <span class='st'>"Y"</span>,
-  <span class='kw'>industry_type</span> <span class='kw'>=</span> <span class='st'>"Industry"</span>, <span class='kw'>product_type</span> <span class='kw'>=</span> <span class='st'>"Product"</span>,
-  <span class='kw'>sector_type</span> <span class='kw'>=</span> <span class='st'>"Industry"</span>, <span class='kw'>rowname</span> <span class='kw'>=</span> <span class='st'>"rowname"</span>, <span class='kw'>colname</span> <span class='kw'>=</span> <span class='st'>"colname"</span>,
-  <span class='kw'>rowtype</span> <span class='kw'>=</span> <span class='st'>"rowtype"</span>, <span class='kw'>coltype</span> <span class='kw'>=</span> <span class='st'>"coltype"</span>)</pre>
+  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>, <span class='kw'>U</span> <span class='kw'>=</span> <span class='st'>"U"</span>, <span class='kw'>U_EIOU</span> <span class='kw'>=</span> <span class='st'>"U_EIOU"</span>, <span class='kw'>R</span> <span class='kw'>=</span> <span class='st'>"R"</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>,
+  <span class='kw'>Y</span> <span class='kw'>=</span> <span class='st'>"Y"</span>, <span class='kw'>industry_type</span> <span class='kw'>=</span> <span class='st'>"Industry"</span>, <span class='kw'>product_type</span> <span class='kw'>=</span> <span class='st'>"Product"</span>,
+  <span class='kw'>sector_type</span> <span class='kw'>=</span> <span class='st'>"Industry"</span>, <span class='kw'>resource_type</span> <span class='kw'>=</span> <span class='st'>"Industry"</span>,
+  <span class='kw'>rowname</span> <span class='kw'>=</span> <span class='st'>"rowname"</span>, <span class='kw'>colname</span> <span class='kw'>=</span> <span class='st'>"colname"</span>, <span class='kw'>rowtype</span> <span class='kw'>=</span> <span class='st'>"rowtype"</span>,
+  <span class='kw'>coltype</span> <span class='kw'>=</span> <span class='st'>"coltype"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -162,7 +163,11 @@ is found (a string). Default is "<code>Flow</code>".</p></td>
     </tr>
     <tr>
       <th>U_EIOU</th>
-      <td><p>the name for energy industry own use matrices (a string). Defulat is "<code>U_EIOU</code>".</p></td>
+      <td><p>the name for energy industry own use matrices (a string). Default is "<code>U_EIOU</code>".</p></td>
+    </tr>
+    <tr>
+      <th>R</th>
+      <td><p>the name for resource matrices (a string). Default is "<code>R</code>".</p></td>
     </tr>
     <tr>
       <th>V</th>
@@ -185,7 +190,12 @@ Default is "<code>Product</code>".</p></td>
     <tr>
       <th>sector_type</th>
       <td><p>the name that identifies final demand sectors (a string).
-Default is "<code>Sector</code>".</p></td>
+Default is "<code>Industry</code>".</p></td>
+    </tr>
+    <tr>
+      <th>resource_type</th>
+      <td><p>the name that identifies resource sectors (a string).
+Default is "<code>Industry</code>".</p></td>
     </tr>
     <tr>
       <th>rowname</th>
