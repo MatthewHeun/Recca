@@ -51,15 +51,22 @@ using section headings from the paper and section numbers in parentheses.
 
 ## Design philosophy
 
-The functions in `Recca` are flexible and can be used with either a data frame as input
-(and names of columns as arguments to `Recca` function) or with matrices as inputs.
-Outputs are either named columns appended to the input data frame or named matrices in a list.
+The functions in `Recca` are flexible and can be used with either
+(a) matrices as inputs 
+(with individual matrices as arguments to `Recca` functions)
+or 
+(b) a data frame as input
+(with names of data frame columns, as strings, as arguments to `Recca` functions).
+Outputs are either 
+named matrices in a list
+or
+named columns appended to the input data frame, respectively.
 The functions in `Recca` have default names for arguments which follow a standard nomenclature.
-It is recommended that the default names be used whenever possible, 
+It is recommended that the default matrix names be used whenever possible, 
 thereby allowing cleaner code.
 
 
-## PSUT matrix construction (2.2.2)
+## PSUT matrices---[Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 2.2.2
 
 For the examples that follow, we'll use the `UKEnergy2000tidy` data frame.
 Each row of `UKEnergy2000tidy` data frame represents 
@@ -124,14 +131,12 @@ AsMats <- WithNames %>%
 glimpse(AsMats)
 ```
 
-The `AsMats` data frame is essentially the same as the `UKEnergy2000mats` data frame
-that is available in the `Recca` package.
-Te rest of this vignette uses the `UKEnergy2000mats` data frame.
+The `AsMats` data frame is essentially the same as the `Recca::UKEnergy2000mats` data frame.
+The remainder of this vignette uses the `UKEnergy2000mats` data frame.
 
 
+## I-O structure---[Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 2.2.4
 
-
-## Determine the I-O structure of an Energy Conversion Chain (ECC)
 
 ### With individual matrices
 
@@ -203,6 +208,22 @@ IO_df[["y"]][[1]]
 IO_df[["y"]][[4]]
 ```
 
+For the remainder of this vignette, 
+operations will be performed on the entire `UKEnergy2000mats` data frame.
+But readers should remember that functions can be called on 
+individual matrices, as well.
+
+
+## Changes in final demand---[Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 2.2.5
+
+
+## Net energy analysis---[Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 3.1
+
+
+## Efficiencies---[Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 3.2
+
+
+## Energy footprints---[Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 3.3
 
 
 
