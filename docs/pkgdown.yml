@@ -3,5 +3,6 @@ pkgdown: 1.2.0
 pkgdown_sha: ~
 articles:
   Recca: Recca.html
+  new-function-interaction: new-function-interaction.html
   new-functions: new-functions.html
 
