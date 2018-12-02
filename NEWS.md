@@ -1,3 +1,8 @@
+# Recca 0.1.12 (2018-12-02)
+
+* Added a vignette discussing interactions among `new_*` functions.
+
+
 # Recca 0.1.11 (2018-12-02)
 
 * Updates to embodied energy calculations
