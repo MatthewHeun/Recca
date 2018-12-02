@@ -1,3 +1,9 @@
+# Recca 0.1.11 (2018-12-02)
+
+* Updates to embodied energy calculations
+  to conform to updated `matsbyname::hatinv_byname()` which handles `0` values better.
+
+
 # Recca 0.1.10 (2018-11-29)
 
 * Now importing `magrittr` pipe at high level.
