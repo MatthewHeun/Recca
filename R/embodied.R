@@ -249,10 +249,10 @@ calc_F_footprint_effects <- function(.Mmats = NULL,
                                      F_effects_s = "F_effects_s"){
   F_func <- function(M_p_mat, M_s_mat){
     # Note that inf_to_zero replaces Inf by zero when doing hatinv.
-    F_footprint_p_mat <- matrixproduct_byname(M_p_mat, colsums_byname(M_p_mat) %>% hatinv_byname(inf_to_zero = TRUE))
-    F_effects_p_mat <- matrixproduct_byname(rowsums_byname(M_p_mat) %>% hatinv_byname(inf_to_zero = TRUE), M_p_mat)
-    F_footprint_s_mat <- matrixproduct_byname(M_s_mat, colsums_byname(M_s_mat) %>% hatinv_byname(inf_to_zero = TRUE))
-    F_effects_s_mat <- matrixproduct_byname(rowsums_byname(M_s_mat) %>% hatinv_byname(inf_to_zero = TRUE), M_s_mat)
+    F_footprint_p_mat <- matrixproduct_byname(M_p_mat, colsums_byname(M_p_mat) %>% hatinv_byname())
+    F_effects_p_mat <- matrixproduct_byname(rowsums_byname(M_p_mat) %>% hatinv_byname(), M_p_mat)
+    F_footprint_s_mat <- matrixproduct_byname(M_s_mat, colsums_byname(M_s_mat) %>% hatinv_byname())
+    F_effects_s_mat <- matrixproduct_byname(rowsums_byname(M_s_mat) %>% hatinv_byname(), M_s_mat)
     # Run some tests to make sure everything is working.
     # Start with footpring matrices
     colsums_F_footprint_p <- colsums_byname(F_footprint_p_mat)
