@@ -322,7 +322,7 @@ new_R_ps <- function(.sutmats = NULL,
 
     # Values for y and Y_hat_inv * Y will be needed later.
     y_vec <- rowsums_byname(Y_mat)
-    y_hat_inv_Y <- matrixproduct_byname(hatinv_byname(y_vec, inf_to_zero = TRUE), Y_mat)
+    y_hat_inv_Y <- matrixproduct_byname(hatinv_byname(y_vec), Y_mat)
     # Set up a value for Y_prime.
     # The easiest way to make Y_prime is to multiply Y by 0.
     Y_prime_mat <- elementproduct_byname(0, Y_mat)
