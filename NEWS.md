@@ -1,3 +1,13 @@
+# Recca 0.1.13 (2018-12-21)
+
+* `calc_F_footprint_effects()` now cleans rows and columns 
+  (deletes rows and columns containing all 0s)
+  before calculating row and column fractions.
+* `calc_F_footprint_effects()` now calculates row and column fractions
+  using `matsbyname::fractionize_byname()`, 
+  providing a speed boost.
+
+
 # Recca 0.1.12 (2018-12-02)
 
 * Added a vignette discussing interactions among `new_*` functions.
@@ -12,7 +22,8 @@
 # Recca 0.1.10 (2018-11-29)
 
 * Now importing `magrittr` pipe at high level.
-* Now using `hatinv_byname` function instead of `hatize_byname %>% invert_byname`.
+* Now using `matsbyname::hatinv_byname()` function 
+  instead of `matsbyname::hatize_byname() %>% matsbyname::invert_byname()`.
 * Breaking change: arguments to `Recca` functions are no longer named `*_colname`.
   I'm standardizing argument names.
   The new approach yields better code when calling functions with individual matrices:
