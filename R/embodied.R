@@ -235,6 +235,7 @@ calc_M <- function(.YqGHEdata = NULL,
 #' \code{F_footprint_s}, and \code{F_effects_s} matrices
 #'
 #' @importFrom matsbyname colsums_byname
+#' @importFrom matsbyname fractionize_byname
 #' @importFrom matsbyname iszero_byname
 #'
 #' @export
@@ -248,16 +249,10 @@ calc_F_footprint_effects <- function(.Mmats = NULL,
                                      F_footprint_s = "F_footprint_s",
                                      F_effects_s = "F_effects_s"){
   F_func <- function(M_p_mat, M_s_mat){
-    # F_footprint_p_mat <- matrixproduct_byname(M_p_mat, colsums_byname(M_p_mat) %>% hatinv_byname())
+    # Cleaning zero rows and columns before fractionizing to avoid Inf values.
     F_footprint_p_mat <- fractionize_byname(clean_byname(M_p_mat, margin = 2), margin = 2)
-
-    # F_effects_p_mat <- matrixproduct_byname(rowsums_byname(M_p_mat) %>% hatinv_byname(), M_p_mat)
     F_effects_p_mat <- fractionize_byname(clean_byname(M_p_mat, margin = 1), margin = 1)
-
-    # F_footprint_s_mat <- matrixproduct_byname(M_s_mat, colsums_byname(M_s_mat) %>% hatinv_byname())
     F_footprint_s_mat <- fractionize_byname(clean_byname(M_s_mat, margin = 2), margin = 2)
-
-    # F_effects_s_mat <- matrixproduct_byname(rowsums_byname(M_s_mat) %>% hatinv_byname(), M_s_mat)
     F_effects_s_mat <- fractionize_byname(clean_byname(M_s_mat, margin = 1), margin = 1)
 
     # Run some tests to make sure everything is working.
