@@ -134,7 +134,7 @@ between sequantial function calls.
 ### Without recalculating the structure of the ECC
 
 Now let's change final demand, saying that consumption by Y1 doubles.
-But we'll call `new_Y()` *without* recalculating the structure of the ECC with the `calc_io_mats` function.
+But we'll call `new_Y()` *without* recalculating the structure of the ECC with the `calc_io_mats()` function.
 
 ```{r}
 Y_prime <- matrix(c(0, 0,
