@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.13</span>
       </span>
     </div>
 
@@ -89,7 +89,7 @@
       <h1>new_* function interactions</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2018-12-02</h4>
+            <h4 class="date">2018-12-21</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/master/vignettes/new-function-interaction.Rmd"><code>vignettes/new-function-interaction.Rmd</code></a></small>
       <div class="hidden name"><code>new-function-interaction.Rmd</code></div>
@@ -151,8 +151,8 @@ The R2 industry makes product R2p. Industry I makes product Ip. Product Ip is co
 <a class="sourceLine" id="cb2-11" data-line-number="11">}</a></code></pre></div>
 <p>A Sankey diagram that shows the base energy conversion chain is shown below.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">make_sankey</span>(<span class="dt">U =</span> U, <span class="dt">V =</span> V, <span class="dt">Y =</span> Y)</a></code></pre></div>
-<div id="htmlwidget-c8f05915e07fcbab0e96" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-c8f05915e07fcbab0e96">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[2,2,10,10]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":20,"fontFamily":null,"nodeWidth":15,"nodePadding":14,"units":"Quads","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":500,"sinksRight":true}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-e8448e4a9be00d339890" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-e8448e4a9be00d339890">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[2,2,10,10]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":20,"fontFamily":null,"nodeWidth":15,"nodePadding":14,"units":"Quads","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":500,"sinksRight":true}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="adjust-inputs-to-industry-i" class="section level2">
 <h2 class="hasAnchor">
@@ -168,8 +168,8 @@ The R2 industry makes product R2p. Industry I makes product Ip. Product Ip is co
 <a class="sourceLine" id="cb4-8" data-line-number="8">change_input_proportions &lt;-<span class="st"> </span><span class="kw"><a href="../reference/new_k_ps.html">new_k_ps</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(iomats, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">U =</span> U, <span class="dt">V =</span> V, <span class="dt">Y =</span> Y, <span class="dt">S_units =</span> S_units, </a>
 <a class="sourceLine" id="cb4-9" data-line-number="9">                                                    <span class="dt">k_prime =</span> k_prime)))</a>
 <a class="sourceLine" id="cb4-10" data-line-number="10"><span class="kw">make_sankey</span>(<span class="dt">U =</span> change_input_proportions<span class="op">$</span>U_prime, <span class="dt">V =</span> change_input_proportions<span class="op">$</span>V_prime, <span class="dt">Y =</span> Y)</a></code></pre></div>
-<div id="htmlwidget-2480e0cd011d8789094a" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-2480e0cd011d8789094a">{"x":{"links":{"source":[0,0,1],"target":[2,3,0],"value":[2,2,20]},"nodes":{"name":["I","R1","Y1","Y2"],"group":["I","R1","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":20,"fontFamily":null,"nodeWidth":15,"nodePadding":14,"units":"Quads","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":500,"sinksRight":true}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-eab6cc57122722fe00d7" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-eab6cc57122722fe00d7">{"x":{"links":{"source":[0,0,1],"target":[2,3,0],"value":[2,2,20]},"nodes":{"name":["I","R1","Y1","Y2"],"group":["I","R1","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":20,"fontFamily":null,"nodeWidth":15,"nodePadding":14,"units":"Quads","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":500,"sinksRight":true}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="change-final-demand" class="section level2">
 <h2 class="hasAnchor">
@@ -178,7 +178,7 @@ The R2 industry makes product R2p. Industry I makes product Ip. Product Ip is co
 <div id="without-recalculating-the-structure-of-the-ecc" class="section level3">
 <h3 class="hasAnchor">
 <a href="#without-recalculating-the-structure-of-the-ecc" class="anchor"></a>Without recalculating the structure of the ECC</h3>
-<p>Now let’s change final demand, saying that consumption by Y1 doubles. But we’ll call <code><a href="../reference/new_Y.html">new_Y()</a></code> <em>without</em> recalculating the structure of the ECC with the <code>calc_io_mats</code> function.</p>
+<p>Now let’s change final demand, saying that consumption by Y1 doubles. But we’ll call <code><a href="../reference/new_Y.html">new_Y()</a></code> <em>without</em> recalculating the structure of the ECC with the <code><a href="../reference/calc_io_mats.html">calc_io_mats()</a></code> function.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">Y_prime &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>, <span class="dv">0</span>,</a>
 <a class="sourceLine" id="cb5-2" data-line-number="2">                    <span class="dv">0</span>, <span class="dv">0</span>, </a>
 <a class="sourceLine" id="cb5-3" data-line-number="3">                    <span class="dv">4</span>, <span class="dv">2</span>),</a>
@@ -188,8 +188,8 @@ The R2 industry makes product R2p. Industry I makes product Ip. Product Ip is co
 <a class="sourceLine" id="cb5-7" data-line-number="7">change_final_demand &lt;-<span class="st"> </span><span class="kw"><a href="../reference/new_Y.html">new_Y</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(iomats, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">Y_prime =</span> Y_prime)))</a>
 <a class="sourceLine" id="cb5-8" data-line-number="8"><span class="kw">make_sankey</span>(<span class="dt">U =</span> change_final_demand<span class="op">$</span>U_prime, <span class="dt">V =</span> change_final_demand<span class="op">$</span>V_prime, </a>
 <a class="sourceLine" id="cb5-9" data-line-number="9">            <span class="dt">Y =</span> change_final_demand<span class="op">$</span>Y_prime)</a></code></pre></div>
-<div id="htmlwidget-2f143b9b1d59d34c8d50" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-2f143b9b1d59d34c8d50">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[4,2,15,15]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":20,"fontFamily":null,"nodeWidth":15,"nodePadding":14,"units":"Quads","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":500,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>Industry I is back to using both R1p and R2p in a 50/50 split to make its output. Both R1p and R2p now supply 15 quads to I to account for increased final demand.</p>
+<div id="htmlwidget-c493ba83e2f6f32dc7ba" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c493ba83e2f6f32dc7ba">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[4,2,15,15]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":20,"fontFamily":null,"nodeWidth":15,"nodePadding":14,"units":"Quads","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":500,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>Industry I is back to using both R1p and R2p in a 50/50 split to make its output. Both R1p and R2p now supply 15 quads to I to account for increased final demand.</p>
 <p>The <code><a href="../reference/new_Y.html">new_Y()</a></code> function is performing exactly as expected, given that <code>iomats</code> was supplied to <code><a href="../reference/new_Y.html">new_Y()</a></code>. <code>iomats</code> contains information about an ECC in which industry I’s inputs are split 50/50 between R1p and R2p. So when <code><a href="../reference/new_Y.html">new_Y()</a></code> calculates a new ECC, it assumes that industry I’s needs are a 50/50 split between R1p and R2p.</p>
 <p>In fact, it would be a mistake to think that <code><a href="../reference/new_Y.html">new_Y()</a></code> would give anything but a 50/50 split between R1p and R2p when using the <code>iomats</code> description of the ECC.</p>
 </div>
@@ -204,8 +204,8 @@ The R2 industry makes product R2p. Industry I makes product Ip. Product Ip is co
 <a class="sourceLine" id="cb6-5" data-line-number="5"><span class="kw">make_sankey</span>(<span class="dt">U =</span> change_final_demand2<span class="op">$</span>U_prime, </a>
 <a class="sourceLine" id="cb6-6" data-line-number="6">            <span class="dt">V =</span> change_final_demand2<span class="op">$</span>V_prime, </a>
 <a class="sourceLine" id="cb6-7" data-line-number="7">            <span class="dt">Y =</span> change_final_demand2<span class="op">$</span>Y_prime)</a></code></pre></div>
-<div id="htmlwidget-85690bfcc32243f05c4c" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-85690bfcc32243f05c4c">{"x":{"links":{"source":[0,0,1],"target":[2,3,0],"value":[4,2,30]},"nodes":{"name":["I","R1","Y1","Y2"],"group":["I","R1","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":20,"fontFamily":null,"nodeWidth":15,"nodePadding":14,"units":"Quads","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":500,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>The Sankey diagram above shows that we have successfully increased the demand from <code>Y1</code> while ensuring that all inputs to industry I come from R1p. The “trick” is to recalculate the input-output structure of the ECC between the two steps.</p>
+<div id="htmlwidget-0a3526a90cbf433e6f94" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-0a3526a90cbf433e6f94">{"x":{"links":{"source":[0,0,1],"target":[2,3,0],"value":[4,2,30]},"nodes":{"name":["I","R1","Y1","Y2"],"group":["I","R1","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":20,"fontFamily":null,"nodeWidth":15,"nodePadding":14,"units":"Quads","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":500,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>The Sankey diagram above shows that we have successfully increased the demand from <code>Y1</code> while ensuring that all inputs to industry I come from R1p. The “trick” is to recalculate the input-output structure of the ECC between the two steps.</p>
 </div>
 </div>
 <div id="conclusion" class="section level1">

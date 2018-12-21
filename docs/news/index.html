@@ -60,7 +60,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.13</span>
       </span>
     </div>
 
@@ -121,6 +121,16 @@
       <small>Source: <a href='https://github.com/MatthewHeun/Recca/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="recca-0-1-13-2018-12-21" class="section level1">
+<h1 class="page-header">
+<a href="#recca-0-1-13-2018-12-21" class="anchor"></a>Recca 0.1.13 (2018-12-21)</h1>
+<ul>
+<li>
+<code><a href="../reference/calc_F_footprint_effects.html">calc_F_footprint_effects()</a></code> now cleans rows and columns (deletes rows and columns containing all 0s) before calculating row and column fractions.</li>
+<li>
+<code><a href="../reference/calc_F_footprint_effects.html">calc_F_footprint_effects()</a></code> now calculates row and column fractions using <code><a href="https://www.rdocumentation.org/packages/matsbyname/topics/fractionize_byname">matsbyname::fractionize_byname()</a></code>, providing a speed boost.</li>
+</ul>
+</div>
     <div id="recca-0-1-12-2018-12-02" class="section level1">
 <h1 class="page-header">
 <a href="#recca-0-1-12-2018-12-02" class="anchor"></a>Recca 0.1.12 (2018-12-02)</h1>
@@ -140,7 +150,7 @@
 <a href="#recca-0-1-10-2018-11-29" class="anchor"></a>Recca 0.1.10 (2018-11-29)</h1>
 <ul>
 <li>Now importing <code>magrittr</code> pipe at high level.</li>
-<li>Now using <code>hatinv_byname</code> function instead of <code>hatize_byname %&gt;% invert_byname</code>.</li>
+<li>Now using <code><a href="https://www.rdocumentation.org/packages/matsbyname/topics/hatinv_byname">matsbyname::hatinv_byname()</a></code> function instead of <code>matsbyname::hatize_byname() %&gt;% matsbyname::invert_byname()</code>.</li>
 <li>Breaking change: arguments to <code>Recca</code> functions are no longer named <code>*_colname</code>. I’m standardizing argument names. The new approach yields better code when calling functions with individual matrices: every matrix needs to be named. And when using functions to operate on a data frame the default values for column names mean that data frames can be piped to functions that are called with no parameters. Furthermore, this change allows lists output from previous functions to be used in later function calls without name changes. For example, <code>f1</code> produces a list <code>l</code> with named item <code>z</code>, and <code>z</code> is an input to <code>f2</code>. The previous naming convention would require user mapping <code>z</code> to <code>z_colname</code>: <code>f2(z_colname = l$z)</code>. The new naming convention allows <code>f2(l)</code>, because <code>l</code> contains named item <code>z</code>, and <code>f2</code> has an argument new named <code>z</code> (where it had been named <code>z_colname</code> before). In all ways, the new argument naming convention is more elegant than the previous <code>*_colname</code> approach.</li>
 <li>Building a vignette that describes the package.</li>
 <li>New test for a simple, 1-industry ECC.</li>
@@ -241,6 +251,7 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#recca-0-1-13-2018-12-21">0.1.13</a></li>
         <li><a href="#recca-0-1-12-2018-12-02">0.1.12</a></li>
         <li><a href="#recca-0-1-11-2018-12-02">0.1.11</a></li>
         <li><a href="#recca-0-1-10-2018-11-29">0.1.10</a></li>
