@@ -248,21 +248,32 @@ calc_F_footprint_effects <- function(.Mmats = NULL,
                                      F_footprint_s = "F_footprint_s",
                                      F_effects_s = "F_effects_s"){
   F_func <- function(M_p_mat, M_s_mat){
-    # Note that inf_to_zero replaces Inf by zero when doing hatinv.
-    F_footprint_p_mat <- matrixproduct_byname(M_p_mat, colsums_byname(M_p_mat) %>% hatinv_byname())
-    F_effects_p_mat <- matrixproduct_byname(rowsums_byname(M_p_mat) %>% hatinv_byname(), M_p_mat)
-    F_footprint_s_mat <- matrixproduct_byname(M_s_mat, colsums_byname(M_s_mat) %>% hatinv_byname())
-    F_effects_s_mat <- matrixproduct_byname(rowsums_byname(M_s_mat) %>% hatinv_byname(), M_s_mat)
+    # F_footprint_p_mat <- matrixproduct_byname(M_p_mat, colsums_byname(M_p_mat) %>% hatinv_byname())
+    F_footprint_p_mat <- fractionize_byname(clean_byname(M_p_mat, margin = 2), margin = 2)
+
+    # F_effects_p_mat <- matrixproduct_byname(rowsums_byname(M_p_mat) %>% hatinv_byname(), M_p_mat)
+    F_effects_p_mat <- fractionize_byname(clean_byname(M_p_mat, margin = 1), margin = 1)
+
+    # F_footprint_s_mat <- matrixproduct_byname(M_s_mat, colsums_byname(M_s_mat) %>% hatinv_byname())
+    F_footprint_s_mat <- fractionize_byname(clean_byname(M_s_mat, margin = 2), margin = 2)
+
+    # F_effects_s_mat <- matrixproduct_byname(rowsums_byname(M_s_mat) %>% hatinv_byname(), M_s_mat)
+    F_effects_s_mat <- fractionize_byname(clean_byname(M_s_mat, margin = 1), margin = 1)
+
     # Run some tests to make sure everything is working.
-    # Start with footpring matrices
+    # Start with footprint matrices
     colsums_F_footprint_p <- colsums_byname(F_footprint_p_mat)
     colsums_F_footprint_s <- colsums_byname(F_footprint_s_mat)
     err_F_footprint_p <- difference_byname(colsums_F_footprint_p, 1)
     err_F_footprint_s <- difference_byname(colsums_F_footprint_s, 1)
     F_footprint_p_OK <- iszero_byname(err_F_footprint_p)
+    if (!F_footprint_p_OK) {
+      stop("F_footprint_p_OK is not true.")
+    }
     F_footprint_s_OK <- iszero_byname(err_F_footprint_s)
-    stopifnot(F_footprint_p_OK)
-    stopifnot(F_footprint_s_OK)
+    if (!F_footprint_s_OK) {
+      stop("F_footprint_s_OK is not true.")
+    }
     # Also check effects matrices
     rowsums_F_effects_p <- rowsums_byname(F_effects_p_mat)
     rowsums_F_effects_s <- rowsums_byname(F_effects_s_mat)
@@ -270,8 +281,13 @@ calc_F_footprint_effects <- function(.Mmats = NULL,
     err_F_effects_s <- difference_byname(rowsums_F_effects_s, 1)
     F_effects_p_OK <- iszero_byname(err_F_effects_p)
     F_effects_s_OK <- iszero_byname(err_F_effects_s)
-    stopifnot(F_effects_p_OK)
-    stopifnot(F_effects_s_OK)
+    if (!F_effects_p_OK) {
+      stop("F_effects_p_OK is not true.")
+    }
+    F_footprint_s_OK <- iszero_byname(err_F_footprint_s)
+    if (!F_effects_s_OK) {
+      stop("F_effects_s_OK is not true.")
+    }
 
     # Everything checked out, so make our outgoing list and return it.
     list(F_footprint_p_mat, F_effects_p_mat, F_footprint_s_mat, F_effects_s_mat) %>%
