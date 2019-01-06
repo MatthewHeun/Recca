@@ -66,13 +66,20 @@
 #' elmats <- edge_list(U = sutmats$U[[1]], V = sutmats$V[[1]], Y = sutmats$Y[[1]])
 #' head(elmats[["Edge list"]])
 #' tail(elmats[["Edge list"]])
-edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
+edge_list <- function(.sutdata = NULL, R = "R", U = "U", V = "V", Y = "Y",
                       edge_list = "Edge list",
                       from = "From", to = "To", value = "Value", product = "Product", waste = "Waste",
                       node_id = "node_id", first_node = 0,
                       edge_id = "edge_id", simplify_edges = TRUE){
-  el_func <- function(U_mat, V_mat, Y_mat){
-    # At this point, U_mat, V_mat, and Y_mat should be single matrices.
+  el_func <- function(R_mat, U_mat, V_mat, Y_mat){
+    # At this point, R_mat, U_mat, V_mat, and Y_mat should be single matrices.
+    # But R_mat may be missing, in which case V_mat is actually R_mat + V_mat, and they need to be separated.
+    if (missing(R_mat)) {
+      res <- separate_RV(U = U_mat, R_plus_V = V_mat)
+      R_mat <- res[["R"]]
+      V_mat <- res[["V"]]
+    }
+    # U and Y have the same sense: Products-by-Industries, so expand them together.
     expandedUY <- list(U_mat, Y_mat) %>%
       lapply(FUN = function(m){
         # Convert all to tidy (row, col, value) format
@@ -82,12 +89,16 @@ edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
       mutate(
         !!as.name(product) := !!as.name(from)
       )
-    expandedV <- mat_to_rowcolval(V_mat, rownames = from, colnames = to, matvals = value, rowtypes = "rowtype", coltypes = "coltype", drop = 0) %>%
-      as.data.frame() %>%
+    # R and V have the same sense: Industries-by-Products, so expand them together.
+    expandedRV <- list(R_mat, V_mat) %>%
+      lapply(FUN = function(m){
+        mat_to_rowcolval(m, rownames = from, colnames = to, matvals = value, rowtypes = "rowtype", coltypes = "coltype", drop = 0)
+      }) %>%
+      bind_rows() %>%
       mutate(
         !!as.name(product) := !!as.name(to)
       )
-    el <- bind_rows(expandedUY, expandedV) %>%
+    el <- bind_rows(expandedUY, expandedRV) %>%
       select(-rowtype, -coltype)
     if (!is.null(waste)) {
       el <- bind_rows(el, waste_edges(U_mat = U_mat, V_mat = V_mat,
@@ -108,7 +119,7 @@ edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
     }
     list(el) %>% set_names(edge_list)
   }
-  matsindf_apply(.sutdata, FUN = el_func, U_mat = U, V_mat = V, Y_mat = Y)
+  matsindf_apply(.sutdata, FUN = el_func, R_mat = R, U_mat = U, V_mat = V, Y_mat = Y)
 }
 
 
