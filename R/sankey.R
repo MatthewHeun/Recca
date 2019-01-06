@@ -1,0 +1,47 @@
+library(networkD3)
+
+
+#' Make a Sankey diagram
+#'
+#' @param .sutmats an optional data frame
+#' @param R a resource matrix or the name of the column in \code{.sutmats} containing \code{R} matrices
+#' @param U a use matrix or the name of the column in \code{.sutmats} containing \code{U} matrices
+#' @param V a make matrix or the name of the column in \code{.sutmats} containing \code{V} matrices
+#' @param Y a final demand matrix or the name of the column in \code{.sutmats} containing \code{Y} matrices
+#' @param simplify_edges a boolean which tells whether edges should be simplified.
+#'        Applies to every row of \code{.sutmats} if \code{.sutmats} is specified.
+#' @param Sankey the name of the output Sankey diagram or the name of the column in \code{.sutmats} containing Sankey diagrams
+#'
+#' @return a Sankey diagram
+#'
+#' @export
+#'
+#' @examples
+#' library(networkD3)
+#' library(tidyr)
+#' UKEnergy2000mats %>%
+#'   spread(key = "matrix.name", value = "matrix") %>%
+#'   rename(
+#'     R_plus_V = V
+#'   ) %>%
+#'   separate_RV() %>%
+#'   make_sankey()
+make_sankey <- function(.sutmats = NULL, R = "R", U = "U", V = "V", Y = "Y", simplify_edges = TRUE,
+                        sankey = "Sankey"){
+  sankey_func <- function(R_mat, U_mat, V_mat, Y_mat, sankey){
+    # When I convert everything to using R matrices, need to change this code.
+    if (!is.null(R_mat)) {
+      V_plus_R <- sum_byname(R_mat, V_mat)
+    }
+    el <- edge_list(U = U, V = V_plus_R, Y = Y, simplify_edges = simplify_edges)[["Edge list"]]
+    nl <- node_list(el)
+    s <- sankeyNetwork(Links = el, Nodes = nl,
+                       Source = "From_node_id", Target = "To_node_id", Value = "Value",
+                       NodeID = "Node", units = "Quads",
+                       # LinkGroup = "type",
+                       # colourScale = mycolor, fontSize = 20, nodeWidth = 30,
+                       iterations = 500, nodePadding = 14, fontSize = 20)
+    list(s) %>% magrittr::set_names(sankey)
+  }
+  matsindf_apply(.sutmats, FUN = sankey_func, R_mat = R, U_mat = U, V_mat = V, Y_mat = Y, sankey = sankey)
+}
