@@ -19,6 +19,8 @@ library(networkD3)
 #' @export
 #'
 #' @examples
+#' library(dplyr)
+#' library(magrittr)
 #' library(networkD3)
 #' library(tidyr)
 #' UKEnergy2000mats %>%
@@ -27,15 +29,20 @@ library(networkD3)
 #'     R_plus_V = V
 #'   ) %>%
 #'   separate_RV() %>%
-#'   make_sankey()
+#'   make_sankey() %>%
+#'   extract2("Sankey") %>%
+#'   extract2(1)
 make_sankey <- function(.sutmats = NULL, R = "R", U = "U", V = "V", Y = "Y", simplify_edges = TRUE,
                         sankey = "Sankey"){
-  sankey_func <- function(R_mat, U_mat, V_mat, Y_mat, sankey){
+  sankey_func <- function(R_mat = NULL, U_mat, V_mat, Y_mat){
     # When I convert everything to using R matrices, need to change this code.
-    if (!is.null(R_mat)) {
-      V_plus_R <- sum_byname(R_mat, V_mat)
+    if (is.null(R_mat)) {
+      # If R is missing, need to extract it from V
+      res <- separate_RV(U = U_mat, R_plus_V = V_mat)
+      R_mat <- res$R
+      V_mat <- res$V
     }
-    el <- edge_list(U = U, V = V_plus_R, Y = Y, simplify_edges = simplify_edges)[["Edge list"]]
+    el <- edge_list(R = R_mat, U = U_mat, V = V_mat, Y = Y_mat, simplify_edges = simplify_edges)[["Edge list"]]
     nl <- node_list(el)
     s <- sankeyNetwork(Links = el, Nodes = nl,
                        Source = "From_node_id", Target = "To_node_id", Value = "Value",
@@ -45,5 +52,5 @@ make_sankey <- function(.sutmats = NULL, R = "R", U = "U", V = "V", Y = "Y", sim
                        iterations = 500, nodePadding = 14, fontSize = 20)
     list(s) %>% magrittr::set_names(sankey)
   }
-  matsindf_apply(.sutmats, FUN = sankey_func, R_mat = R, U_mat = U, V_mat = V, Y_mat = Y, sankey = sankey)
+  matsindf_apply(.sutmats, FUN = sankey_func, R_mat = R, U_mat = U, V_mat = V, Y_mat = Y)
 }
