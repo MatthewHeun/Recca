@@ -21,7 +21,7 @@ make_sankey(.sutmats = NULL, R = "R", U = "U", V = "V", Y = "Y",
 \item{simplify_edges}{a boolean which tells whether edges should be simplified.
 Applies to every row of \code{.sutmats} if \code{.sutmats} is specified.}
 
-\item{Sankey}{the name of the output Sankey diagram or the name of the column in \code{.sutmats} containing Sankey diagrams}
+\item{sankey}{the name of the output Sankey diagram or the name of the column in \code{.sutmats} containing Sankey diagrams}
 }
 \value{
 a Sankey diagram
