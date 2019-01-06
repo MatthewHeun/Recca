@@ -71,6 +71,15 @@ which appears as additional columns appended at the right of the data frame.
 The names of the additional columns is given by 
 default argument values to the various `Recca` functions.
 
+
+### Calculating the $\mat{R}$ matrix
+
+Earlier versions of `Recca` included the resource matrix ($\mat{R}$) 
+in the make ($\mat{V}$) matrix.
+To separate the resource matrix $\mat{R}$ from the make matrix ($\mat{V}$),
+use the `separate_RV()` function.
+
+
 ```{r}
 library(dplyr)
 library(matsbyname)
@@ -85,11 +94,6 @@ UKEnergyMatsWithR <- UKEnergy2000mats %>%
     R_plus_V = V
   ) %>%
   separate_RV()
-IO_mats <- UKEnergyMatsWithR %>% 
-  # Obtain the I-O structure of the ECCs
-  calc_io_mats()
-# Note additional columns appended to the data frame.
-glimpse(IO_mats)
 ```
 
 To look at the ECC, we can draw a Sankey diagram. 
@@ -103,9 +107,24 @@ glimpse(EL$`Edge list`[[1]])
 A Sankey diagram for the first row of the data frame is given below.
 
 
-Wtih the I-O structure of the ECC determined
+### Calculate the input-output structure of the ECC
+
+The first step in any "what-if" analysis is to calculate the input-output 
+structure of the energy conversion chain.
+The `calc_io_mats()` function adds several columns to the `UKEnergyMatsWithR` data frame.
+
+```{r}
+IO_mats <- UKEnergyMatsWithR %>% 
+  # Obtain the I-O structure of the ECCs
+  calc_io_mats()
+# Note additional columns appended to the data frame.
+glimpse(IO_mats)
+```
+
+With the I-O structure of the ECC determined
 (and represented by the $\colvec{q}$, $\colvec{f}$, and $\colvec{g}$ vectors and the 
-$\mat{W}$, $\mat{Z}$, $\mat{K}$, $\mat{C}$, $\mat{D}$, $\mat{A}$, $\mat{L_{pxp}}$, and $\mat{L_{ixp}}$ matrices), 
+$\mat{W}$, $\mat{Z}$, $\mat{K}$, $\mat{C}$, $\mat{D}$, $\mat{A}$, 
+$\mat{L_{pxp}}$, and $\mat{L_{ixp}}$ matrices), 
 we can use the `new_*` functions to ask "what if" questions.
 
 
@@ -128,55 +147,32 @@ glimpse(DoubleY)
 ## What if perfectly-substitutable inputs to an intermediate industry change? Function `new_k_ps()`
 
 
-## What if natural resource inputs to the ECC change? Function `new_R_ps()`
+## What if resources change? Function `new_R_ps()`
+
+Both `newY()` and `new_k_ps()` estimate upstream effects of a change. 
+`new_R_ps()` estimates downstream effects of a change in the
+rate of resource extraction.
 
 
-## Original text from `use_vignette()`
+### Resource matrices and vectors
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
+Resource extraction is given by the $\mat{R}$ matrix or
+by the $\colvec{r}$ vector.
+The resource matrix ($\mat{R}$) is Industry$\times$Product.
+Its industries are usually named `Resources-<Product>`,
+where `<Product>` is the name of the Product produced by that industry.
+The resource vector ($\colvec{r}$) is a Product$\times$1 column vector
+containing Products that are resources.
 
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
 
-## Vignette Info
 
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+```{r}
 
-## Styles
-
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
-
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
 ```
 
-You can enable figure captions by `fig_caption: yes` in YAML:
 
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
 
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
 
-## More Examples
+## Conclusion
 
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
 
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
-```
-
-Also a quote using `>`:
-
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
