@@ -4,7 +4,7 @@
 \alias{edge_list}
 \title{Create an edge list}
 \usage{
-edge_list(.sutdata = NULL, U = "U", V = "V", Y = "Y",
+edge_list(.sutdata = NULL, R = "R", U = "U", V = "V", Y = "Y",
   edge_list = "Edge list", from = "From", to = "To",
   value = "Value", product = "Product", waste = "Waste",
   node_id = "node_id", first_node = 0, edge_id = "edge_id",
