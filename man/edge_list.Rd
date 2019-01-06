@@ -68,7 +68,8 @@ and destinations are connected to the sources.
 \examples{
 library(matsbyname)
 library(tidyr)
-sutmats <- UKEnergy2000mats \%>\% spread(key = matrix.name, value = matrix)
+sutmats <- UKEnergy2000mats \%>\%
+  spread(key = matrix.name, value = matrix)
 # Don't simplify edges and don't include waste edges
 el_basic <- edge_list(sutmats, simplify_edges = FALSE)
 head(el_basic$`Edge list`[[1]])
