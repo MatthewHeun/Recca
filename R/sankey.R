@@ -10,9 +10,11 @@ library(networkD3)
 #' @param Y a final demand matrix or the name of the column in \code{.sutmats} containing \code{Y} matrices
 #' @param simplify_edges a boolean which tells whether edges should be simplified.
 #'        Applies to every row of \code{.sutmats} if \code{.sutmats} is specified.
-#' @param Sankey the name of the output Sankey diagram or the name of the column in \code{.sutmats} containing Sankey diagrams
+#' @param sankey the name of the output Sankey diagram or the name of the column in \code{.sutmats} containing Sankey diagrams
 #'
 #' @return a Sankey diagram
+#'
+#' @importFrom networkD3 sankeyNetwork
 #'
 #' @export
 #'
