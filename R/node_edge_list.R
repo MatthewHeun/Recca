@@ -51,7 +51,8 @@
 #' @examples
 #' library(matsbyname)
 #' library(tidyr)
-#' sutmats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
+#' sutmats <- UKEnergy2000mats %>%
+#'   spread(key = matrix.name, value = matrix)
 #' # Don't simplify edges and don't include waste edges
 #' el_basic <- edge_list(sutmats, simplify_edges = FALSE)
 #' head(el_basic$`Edge list`[[1]])
@@ -70,8 +71,6 @@ edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
                       from = "From", to = "To", value = "Value", product = "Product", waste = "Waste",
                       node_id = "node_id", first_node = 0,
                       edge_id = "edge_id", simplify_edges = TRUE){
-  # Figure out which Products have only one source and one destination.
-  # These are the flows that can be collapsed in the edge list.
   el_func <- function(Umat, Vmat, Ymat){
     # At this point, Umat, Vmat, and Ymat should be single matrices.
     expandedUY <- list(Umat, Ymat) %>%
@@ -97,6 +96,8 @@ edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
                                       waste = waste))
     }
     if (simplify_edges) {
+      # Figure out which Products have only one source and one destination.
+      # These are the flows that can be collapsed in the edge list.
       el <- simplify_edge_list(el, from, to, value, product)
     }
     if (!is.null(edge_id)) {
