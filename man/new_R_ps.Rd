@@ -80,7 +80,7 @@ doubleR <- UKEnergy2000mats \%>\%
   calc_eta_i() \%>\%
   # Make an R_prime matrix that gives twice the resource inputs to the economy.
   mutate(
-    R_prime = elementproduct_byname(2, R)
+    R_prime = hadamardproduct_byname(2, R)
   ) \%>\%
   # Now call the new_R function which will calculate
   # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)

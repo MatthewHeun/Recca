@@ -45,7 +45,7 @@
 #'   calc_io_mats() %>%
 #'   mutate(
 #'     # Give new Y matrices that are double the existing Y matrices
-#'     Y_prime = elementproduct_byname(2, Y)
+#'     Y_prime = hadamardproduct_byname(2, Y)
 #'   ) %>%
 #'   # Should give U_prime and V_prime matrices that are double the existing U and V matrices
 #'   new_Y()
@@ -280,7 +280,7 @@ new_k_ps <- function(.sutmats = NULL,
 #'   calc_eta_i() %>%
 #'   # Make an R_prime matrix that gives twice the resource inputs to the economy.
 #'   mutate(
-#'     R_prime = elementproduct_byname(2, R)
+#'     R_prime = hadamardproduct_byname(2, R)
 #'   ) %>%
 #'   # Now call the new_R function which will calculate
 #'   # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
@@ -318,17 +318,17 @@ new_R_ps <- function(.sutmats = NULL,
 
     # Set up an initial V_prime, which is a V matrix with all zeroes.
     # The easiest way to make that matrix is to multiply V by 0.
-    V_prime_mat <- elementproduct_byname(0, V_mat)
+    V_prime_mat <- hadamardproduct_byname(0, V_mat)
 
     # Values for y and Y_hat_inv * Y will be needed later.
     y_vec <- rowsums_byname(Y_mat)
     y_hat_inv_Y <- matrixproduct_byname(hatinv_byname(y_vec), Y_mat)
     # Set up a value for Y_prime.
     # The easiest way to make Y_prime is to multiply Y by 0.
-    Y_prime_mat <- elementproduct_byname(0, Y_mat)
+    Y_prime_mat <- hadamardproduct_byname(0, Y_mat)
 
     # Set up "previous" matrices for convergence comparison
-    U_prime_mat_prev <- elementproduct_byname(0, U_mat)
+    U_prime_mat_prev <- hadamardproduct_byname(0, U_mat)
     V_prime_mat_prev <- V_prime_mat
     Y_prime_mat_prev <- Y_prime_mat
 

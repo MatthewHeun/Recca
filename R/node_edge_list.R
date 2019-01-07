@@ -16,9 +16,10 @@
 #' and destinations are connected to the sources.
 #'
 #' @param .sutdata Optionally, a data frame containing columns named with the values of the \code{U}, \code{V}, and \code{Y} arguments.
-#' @param U a use matrix of the name of a column in \code{.sutdata} containing use matrices. (Default is "\code{U}".)
-#' @param V a make matrix of the name of a column in \code{.sutdata} containing make matrices. (Default is "\code{V}".)
-#' @param Y a final demand matrix of the name of a column in \code{.sutdata} containing final demant matrices. (Default is "\code{Y}".)
+#' @param R a resource matrix or the name of a column in \code{.sutdata} containing resource matrices. (Default is "\code{R}".)
+#' @param U a use matrix or the name of a column in \code{.sutdata} containing use matrices. (Default is "\code{U}".)
+#' @param V a make matrix or the name of a column in \code{.sutdata} containing make matrices. (Default is "\code{V}".)
+#' @param Y a final demand matrix or the name of a column in \code{.sutdata} containing final demant matrices. (Default is "\code{Y}".)
 #' @param edge_list the name of the column in the output data frame containing edge lists.
 #'                  Or the name of the item in the return list if .sutdata is not specified.
 #'                  (Default is "\code{Edge list}".)
@@ -66,14 +67,21 @@
 #' elmats <- edge_list(U = sutmats$U[[1]], V = sutmats$V[[1]], Y = sutmats$Y[[1]])
 #' head(elmats[["Edge list"]])
 #' tail(elmats[["Edge list"]])
-edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
+edge_list <- function(.sutdata = NULL, R = "R", U = "U", V = "V", Y = "Y",
                       edge_list = "Edge list",
                       from = "From", to = "To", value = "Value", product = "Product", waste = "Waste",
                       node_id = "node_id", first_node = 0,
                       edge_id = "edge_id", simplify_edges = TRUE){
-  el_func <- function(Umat, Vmat, Ymat){
-    # At this point, Umat, Vmat, and Ymat should be single matrices.
-    expandedUY <- list(Umat, Ymat) %>%
+  el_func <- function(R_mat, U_mat, V_mat, Y_mat){
+    # At this point, R_mat, U_mat, V_mat, and Y_mat should be single matrices.
+    # But R_mat may be missing, in which case V_mat is actually R_mat + V_mat, and they need to be separated.
+    if (missing(R_mat)) {
+      res <- separate_RV(U = U_mat, R_plus_V = V_mat)
+      R_mat <- res[["R"]]
+      V_mat <- res[["V"]]
+    }
+    # U and Y have the same sense: Products-by-Industries, so expand them together.
+    expandedUY <- list(U_mat, Y_mat) %>%
       lapply(FUN = function(m){
         # Convert all to tidy (row, col, value) format
         mat_to_rowcolval(m, rownames = from, colnames = to, matvals = value, rowtypes = "rowtype", coltypes = "coltype", drop = 0)
@@ -82,15 +90,19 @@ edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
       mutate(
         !!as.name(product) := !!as.name(from)
       )
-    expandedV <- mat_to_rowcolval(Vmat, rownames = from, colnames = to, matvals = value, rowtypes = "rowtype", coltypes = "coltype", drop = 0) %>%
-      as.data.frame() %>%
+    # R and V have the same sense: Industries-by-Products, so expand them together.
+    expandedRV <- list(R_mat, V_mat) %>%
+      lapply(FUN = function(m){
+        mat_to_rowcolval(m, rownames = from, colnames = to, matvals = value, rowtypes = "rowtype", coltypes = "coltype", drop = 0)
+      }) %>%
+      bind_rows() %>%
       mutate(
         !!as.name(product) := !!as.name(to)
       )
-    el <- bind_rows(expandedUY, expandedV) %>%
+    el <- bind_rows(expandedUY, expandedRV) %>%
       select(-rowtype, -coltype)
     if (!is.null(waste)) {
-      el <- bind_rows(el, waste_edges(Umat = Umat, Vmat = Vmat,
+      el <- bind_rows(el, waste_edges(U_mat = U_mat, V_mat = V_mat,
                                       from = from, to = to,
                                       value = value, product = product,
                                       waste = waste))
@@ -108,7 +120,7 @@ edge_list <- function(.sutdata = NULL, U = "U", V = "V", Y = "Y",
     }
     list(el) %>% set_names(edge_list)
   }
-  matsindf_apply(.sutdata, FUN = el_func, Umat = U, Vmat = V, Ymat = Y)
+  matsindf_apply(.sutdata, FUN = el_func, R_mat = R, U_mat = U, V_mat = V, Y_mat = Y)
 }
 
 
@@ -284,8 +296,8 @@ simplify_edge_list <- function(edge_list, from = "From", to = "To", value = "Val
 #' The \code{waste} argument supplies both the name of the waste flow (default is "\code{Waste}")
 #' and the name of the destination of the waste flows.
 #'
-#' @param Umat a use matrix.
-#' @param Vmat a make matrix.
+#' @param U_mat a use matrix.
+#' @param V_mat a make matrix.
 #' @param from the name of the edge list column containing source nodes. (Default is "\code{From}".)
 #' @param to the name of the edge list column containing destination nodes. (Default is "\code{To}".)
 #' @param value the name of the edge list column containing magnitudes of the flows. (Default is "\code{Value}".)
@@ -302,13 +314,13 @@ simplify_edge_list <- function(edge_list, from = "From", to = "To", value = "Val
 #' library(tidyr)
 #' sutmats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
 #' edge_list(sutmats)$`Edge list`[[1]] %>% filter(Product == "Waste")
-waste_edges <- function(Umat, Vmat,
+waste_edges <- function(U_mat, V_mat,
                         from = "From", to = "To",
                         value = "Value", product = "Product",
                         waste = "Waste") {
   # Create edges for the waste sectors in a data frame.
   # Start by calculating the W matrix (V^T - U)
-  difference_byname(transpose_byname(Vmat), Umat) %>%
+  difference_byname(transpose_byname(V_mat), U_mat) %>%
     # The column sums of the W matrix contain positive and negative numbers.
     # We're interested in the negative numbers, because those are industries that are generating waste.
     # Positive numbers arise from industries that extract free gifts from nature.

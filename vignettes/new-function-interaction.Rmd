@@ -14,9 +14,9 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+library(magrittr)
 library(matsbyname)
 library(Recca)
-library(networkD3) # for sankey diagram
 ```
 
 ## Introduction
@@ -46,7 +46,9 @@ Product Ip is consumed by final demand sectors Y1 and Y2.
 The use (U), make (V), final demand (Y), and unit summation (S_units) matrices are given below.
 
 ```{r}
+library(magrittr)
 library(matsbyname)
+library(Recca)
 U <- matrix(c(0, 0, 10,
               0, 0, 10,
               0, 0,  0),
@@ -78,25 +80,13 @@ S_units <- matrix(c(1,
 
 We'll use Sankey diagrams to visualize several ECCs. 
 The `make_sankey()` function creates the diagrams.
-
-```{r}
-library(networkD3)
-make_sankey <- function(U, V, Y, simplify_edges = TRUE){
-  el <- edge_list(U = U, V = V, Y = Y, simplify_edges = simplify_edges)[["Edge list"]]
-  nl <- node_list(el)
-  sankeyNetwork(Links = el, Nodes = nl, 
-                Source = "From_node_id", Target = "To_node_id", Value = "Value", 
-                NodeID = "Node", units = "Quads", 
-                # LinkGroup = "type", 
-                # colourScale = mycolor, fontSize = 20, nodeWidth = 30, 
-                iterations = 500, nodePadding = 14, fontSize = 20)
-}
-```
-
 A Sankey diagram that shows the base energy conversion chain is shown below.
+`make_sankey()` returns a list with a named item "Sankey" that we must extract
+to insert the diagram into this vignette.
 
 ```{r}
-make_sankey(U = U, V = V, Y = Y)
+make_sankey(U = U, V = V, Y = Y) %>% 
+  extract2("Sankey")
 ```
 
 
@@ -118,7 +108,8 @@ k_prime <- matrix(c(1,
   setrowtype("Products") %>% setcoltype("Industries")
 change_input_proportions <- new_k_ps(c(iomats, list(U = U, V = V, Y = Y, S_units = S_units, 
                                                     k_prime = k_prime)))
-make_sankey(U = change_input_proportions$U_prime, V = change_input_proportions$V_prime, Y = Y)
+make_sankey(U = change_input_proportions$U_prime, V = change_input_proportions$V_prime, Y = Y) %>% 
+  extract2("Sankey")
 ```
 
 
@@ -145,7 +136,8 @@ Y_prime <- matrix(c(0, 0,
   setrowtype("Products") %>% setcoltype("Industries")
 change_final_demand <- new_Y(c(iomats, list(Y_prime = Y_prime)))
 make_sankey(U = change_final_demand$U_prime, V = change_final_demand$V_prime, 
-            Y = change_final_demand$Y_prime)
+            Y = change_final_demand$Y_prime) %>% 
+  extract2("Sankey")
 ```
 
 Industry I is back to using both R1p and R2p in a 50/50 split to make its output.
@@ -178,7 +170,8 @@ iomats2 <- calc_io_mats(U = change_input_proportions$U_prime,
 change_final_demand2 <- new_Y(c(iomats2, list(Y_prime = Y_prime)))
 make_sankey(U = change_final_demand2$U_prime, 
             V = change_final_demand2$V_prime, 
-            Y = change_final_demand2$Y_prime)
+            Y = change_final_demand2$Y_prime) %>% 
+  extract2("Sankey")
 ```
 
 The Sankey diagram above shows that we have successfully increased the demand from `Y1` while 

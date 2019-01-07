@@ -78,7 +78,7 @@ primary_aggregates <- function(.sutdata,
 #'
 #' @return a list or data frame containing \code{net_aggregate_demand} and \code{gross_aggregate_demand}
 #'
-#' @importFrom matsbyname elementproduct_byname
+#' @importFrom matsbyname hadamardproduct_byname
 #' @importFrom matsbyname select_cols_byname
 #'
 #' @export
@@ -100,7 +100,7 @@ finaldemand_aggregates <- function(.sutdata,
   agg_func <- match.fun(aggfuncs[[by]])
 
   fd_func <- function(U_mat, Y_mat, r_EIOU_mat){
-    U_EIOU <- elementproduct_byname(r_EIOU_mat, U_mat)
+    U_EIOU <- hadamardproduct_byname(r_EIOU_mat, U_mat)
     net <- Y_mat %>% select_cols_byname(retain_pattern = make_pattern(row_col_names = fd_sectors, pattern_type = "leading")) %>% agg_func()
     gross <- sum_byname(net, agg_func(U_EIOU))
     if (by == "Sector") {
@@ -154,7 +154,7 @@ finaldemand_aggregates_with_units <- function(.sutdata,
   by <- match.arg(by)
 
   fd_func <- function(U_mat, Y_mat, r_EIOU_mat, S_units_mat){
-    U_EIOU <- elementproduct_byname(r_EIOU_mat, U_mat)
+    U_EIOU <- hadamardproduct_byname(r_EIOU_mat, U_mat)
     if (by == "Product") {
       net <- rowsums_byname(Y_mat)
       gross <- sum_byname(rowsums_byname(U_EIOU), net)

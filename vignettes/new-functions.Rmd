@@ -137,7 +137,7 @@ Let's test it by doubling the final demand in every ECC.
 ```{r}
 DoubleY <- IO_mats %>% 
   mutate(
-    Y_prime = elementproduct_byname(2, Y)
+    Y_prime = hadamardproduct_byname(2, Y)
   ) %>% 
   new_Y()
 glimpse(DoubleY)
@@ -149,8 +149,9 @@ glimpse(DoubleY)
 
 ## What if resources change? Function `new_R_ps()`
 
-Both `newY()` and `new_k_ps()` estimate upstream effects of a change. 
-`new_R_ps()` estimates downstream effects of a change in the
+Both `newY()` and `new_k_ps()` estimate upstream effects of a change to the 
+energy conversion change (ECC). 
+`new_R_ps()` estimates *downstream* effects of a change in the
 rate of resource extraction.
 
 
@@ -161,15 +162,41 @@ by the $\colvec{r}$ vector.
 The resource matrix ($\mat{R}$) is Industry$\times$Product.
 Its industries are usually named `Resources-<Product>`,
 where `<Product>` is the name of the Product produced by that industry.
-The resource vector ($\colvec{r}$) is a Product$\times$1 column vector
-containing Products that are resources.
-
-
+(`clean_byname()` removes `0` rows and columns for clarity.)
 
 ```{r}
-
+UKEnergyMatsWithR$R[[1]] %>% 
+  clean_byname()
 ```
 
+The resource vector ($\colvec{r}$) is a Product column vector
+containing Products that are resources.
+
+```{r}
+rvecs <- UKEnergyMatsWithR %>% 
+  transmute(
+    r = clean_byname(R) %>% 
+      colsums_byname() %>% 
+      transpose_byname()
+  )
+rvecs$r[[1]]
+```
+
+The baseline $\mat{R}$ matrix is shown above.
+Let's reduce `Resources - Crude` by 50 % and estimate the effect
+on the rest of the ECC.
+To execute this reduction, we'll use the `matsbyname::elementapply_byname()` function.
+
+```{r}
+half <- function(x){
+  x/2
+}
+HalfCrude <- UKEnergyMatsWithR %>% 
+  mutate(
+    newR = elementapply_byname(half, a = R, row = "Resources - Crude", col = "Crude")
+  )
+HalfCrude$newR[[1]] %>% clean_byname()
+```
 
 
 

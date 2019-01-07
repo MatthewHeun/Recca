@@ -48,7 +48,7 @@ calc_eta_i <- function(.sutmats,
 
     f_vec <- colsums_byname(U_mat) %>% transpose_byname()
     g_vec <- rowsums_byname(V_mat)
-    eta_vec <- elementquotient_byname(g_vec, f_vec)
+    eta_vec <- quotient_byname(g_vec, f_vec)
     # Make sure that units_OK and eta have same rows by completing the rows (industries) relative to one another
     completed <- complete_and_sort(units_OK, eta_vec, margin = 1)
     # The complete_and_sort function converts the TRUE/FALSE values in units_OK to 1/0.
