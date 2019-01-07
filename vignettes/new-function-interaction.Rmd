@@ -81,6 +81,8 @@ S_units <- matrix(c(1,
 We'll use Sankey diagrams to visualize several ECCs. 
 The `make_sankey()` function creates the diagrams.
 A Sankey diagram that shows the base energy conversion chain is shown below.
+`make_sankey()` returns a list with a named item "Sankey" that we must extract
+to insert the diagram into this vignette.
 
 ```{r}
 make_sankey(U = U, V = V, Y = Y) %>% 
