@@ -13,11 +13,13 @@ edge_list(.sutdata = NULL, R = "R", U = "U", V = "V", Y = "Y",
 \arguments{
 \item{.sutdata}{Optionally, a data frame containing columns named with the values of the \code{U}, \code{V}, and \code{Y} arguments.}
 
-\item{U}{a use matrix of the name of a column in \code{.sutdata} containing use matrices. (Default is "\code{U}".)}
+\item{R}{a resource matrix or the name of a column in \code{.sutdata} containing resource matrices. (Default is "\code{R}".)}
 
-\item{V}{a make matrix of the name of a column in \code{.sutdata} containing make matrices. (Default is "\code{V}".)}
+\item{U}{a use matrix or the name of a column in \code{.sutdata} containing use matrices. (Default is "\code{U}".)}
 
-\item{Y}{a final demand matrix of the name of a column in \code{.sutdata} containing final demant matrices. (Default is "\code{Y}".)}
+\item{V}{a make matrix or the name of a column in \code{.sutdata} containing make matrices. (Default is "\code{V}".)}
+
+\item{Y}{a final demand matrix or the name of a column in \code{.sutdata} containing final demant matrices. (Default is "\code{Y}".)}
 
 \item{edge_list}{the name of the column in the output data frame containing edge lists.
 Or the name of the item in the return list if .sutdata is not specified.

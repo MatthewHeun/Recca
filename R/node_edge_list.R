@@ -16,9 +16,10 @@
 #' and destinations are connected to the sources.
 #'
 #' @param .sutdata Optionally, a data frame containing columns named with the values of the \code{U}, \code{V}, and \code{Y} arguments.
-#' @param U a use matrix of the name of a column in \code{.sutdata} containing use matrices. (Default is "\code{U}".)
-#' @param V a make matrix of the name of a column in \code{.sutdata} containing make matrices. (Default is "\code{V}".)
-#' @param Y a final demand matrix of the name of a column in \code{.sutdata} containing final demant matrices. (Default is "\code{Y}".)
+#' @param R a resource matrix or the name of a column in \code{.sutdata} containing resource matrices. (Default is "\code{R}".)
+#' @param U a use matrix or the name of a column in \code{.sutdata} containing use matrices. (Default is "\code{U}".)
+#' @param V a make matrix or the name of a column in \code{.sutdata} containing make matrices. (Default is "\code{V}".)
+#' @param Y a final demand matrix or the name of a column in \code{.sutdata} containing final demant matrices. (Default is "\code{Y}".)
 #' @param edge_list the name of the column in the output data frame containing edge lists.
 #'                  Or the name of the item in the return list if .sutdata is not specified.
 #'                  (Default is "\code{Edge list}".)
