@@ -30,6 +30,8 @@ a Sankey diagram
 Make a Sankey diagram
 }
 \examples{
+library(dplyr)
+library(magrittr)
 library(networkD3)
 library(tidyr)
 UKEnergy2000mats \%>\%
@@ -38,5 +40,7 @@ UKEnergy2000mats \%>\%
     R_plus_V = V
   ) \%>\%
   separate_RV() \%>\%
-  make_sankey()
+  make_sankey() \%>\%
+  extract2("Sankey") \%>\%
+  extract2(1)
 }
