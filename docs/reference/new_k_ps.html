@@ -250,7 +250,7 @@ and input arguments should be single matrices or vectors.</p>
 <span class='no'>k_prime_vec</span>[<span class='st'>"Ren elec"</span>, <span class='st'>"Electric transport"</span>] <span class='kw'>&lt;-</span> <span class='fl'>0.5</span>
 <span class='co'># Add k_prime_vec to the io_mats data frame.</span>
 <span class='no'>io_mats</span> <span class='kw'>&lt;-</span> <span class='no'>io_mats</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='http://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(
     <span class='co'># Set up a new k_prime vector for Electric transport.</span>
     <span class='co'># That vector will be used for the infininte substitution calculation.</span>
     <span class='kw'>k_prime</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/matsbyname/topics/select_cols_byname'>select_cols_byname</a></span>(<span class='no'>K</span>, <span class='kw'>retain_pattern</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/matsbyname/topics/make_pattern'>make_pattern</a></span>(<span class='st'>"Electric transport"</span>,
@@ -283,7 +283,7 @@ and input arguments should be single matrices or vectors.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
 </div>
       </footer>
    </div>
