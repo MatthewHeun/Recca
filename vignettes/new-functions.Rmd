@@ -185,6 +185,7 @@ rvecs$r[[1]]
 The baseline $\mat{R}$ matrix is shown above.
 Let's reduce `Resources - Crude` by 50 % and estimate the effect
 on the rest of the ECC.
+To execute this reduction, we'll use the `matsbyname::elementapply_byname()` function.
 
 ```{r}
 half <- function(x){
