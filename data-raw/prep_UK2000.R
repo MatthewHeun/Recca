@@ -54,7 +54,7 @@ UKEnergy2000mats <- UKEnergy2000tidy %>%
   mutate(
     # Create full U matrix
     U = sum_byname(U_excl_EIOU, U_EIOU),
-    r_EIOU = elementquotient_byname(U_EIOU, U),
+    r_EIOU = quotient_byname(U_EIOU, U),
     r_EIOU = replaceNaN_byname(r_EIOU, val = 0)
   ) %>%
   select(-U_EIOU, -U_excl_EIOU) %>%

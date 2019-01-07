@@ -259,7 +259,7 @@ test_that("new_R works as expected", {
     calc_eta_i() %>%
     # Make an R_prime matrix that gives twice the resource inputs to the economy.
     mutate(
-      R_prime = elementproduct_byname(2, R)
+      R_prime = hadamardproduct_byname(2, R)
     ) %>%
     # Now call the new_R function which will calculate
     # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
@@ -273,9 +273,9 @@ test_that("new_R works as expected", {
       Y_prime = clean_byname(Y_prime, margin = 1)
     ) %>%
     mutate(
-      expected_U = elementproduct_byname(2, U),
-      expected_V = elementproduct_byname(2, V),
-      expected_Y = elementproduct_byname(2, Y)
+      expected_U = hadamardproduct_byname(2, U),
+      expected_V = hadamardproduct_byname(2, V),
+      expected_Y = hadamardproduct_byname(2, Y)
     )
 
   # Test that everything worked as expected
@@ -304,7 +304,7 @@ test_that("new_R works as expected", {
     calc_eta_i() %>%
     # Make an R_prime matrix that gives twice the resource inputs to the economy.
     mutate(
-      R_prime = elementproduct_byname(2, R)
+      R_prime = hadamardproduct_byname(2, R)
     ) %>%
     # Now call the new_R function which will calculate
     # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
