@@ -2,7 +2,7 @@
 
 library(Recca)
 library(testthat)
-library(tidy)
+library(tidyr)
 
 ###########################################################
 context("Sankey")
