@@ -172,7 +172,7 @@ separate_RV <- function(.sutmats = NULL,
                         U = "U", R_plus_V = "R_plus_V",
                         # Output names
                         R = "R", V = "V"){
-  extract_R_func <- function(U_mat, R_plus_V_mat){
+  separate_RV_func <- function(U_mat, R_plus_V_mat){
     r_industry_names <- resource_industries(U = U_mat, V = R_plus_V_mat, r_industries = "r_inds") %>% unlist()
     if (length(r_industry_names) == 0) {
       warning("No R created in separate_RV")
@@ -182,7 +182,7 @@ separate_RV <- function(.sutmats = NULL,
     }
     list(new_R_mat, new_V_mat) %>% magrittr::set_names(c(R, V))
   }
-  matsindf_apply(.sutmats, FUN = extract_R_func, U_mat = U, R_plus_V_mat = R_plus_V)
+  matsindf_apply(.sutmats, FUN = separate_RV_func, U_mat = U, R_plus_V_mat = R_plus_V)
 }
 
 #' Combine resource (\code{R}) and make (\code{V}) matrices into a make plus resource (\code{R_plus_V}) matrix

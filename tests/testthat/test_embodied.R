@@ -16,7 +16,7 @@ test_that("embodied energy calculations works as expected", {
     select(Country, Year, Energy.type, Last.stage, U, V, Y, r_EIOU, S_units) %>%
     calc_io_mats() %>%
     mutate(
-      U_EIOU = elementproduct_byname(r_EIOU, U)
+      U_EIOU = hadamardproduct_byname(r_EIOU, U)
     ) %>%
     calc_embodied_mats() %>%
     calc_embodied_etas(primary_machine_names = primary_machine_names)

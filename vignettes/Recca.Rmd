@@ -121,7 +121,7 @@ AsMats <- WithNames %>%
     # Create full U matrix
     U = sum_byname(U_excl_EIOU, U_EIOU),
     # Create r_EIOU, a matrix that identifies the ratio of EIOU to other energy consumed.
-    r_EIOU = elementquotient_byname(U_EIOU, U),
+    r_EIOU = quotient_byname(U_EIOU, U),
     r_EIOU = replaceNaN_byname(r_EIOU, val = 0)
   ) %>%
   select(-U_EIOU, -U_excl_EIOU) %>%

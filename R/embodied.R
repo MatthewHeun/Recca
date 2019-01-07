@@ -315,7 +315,7 @@ calc_F_footprint_effects <- function(.Mmats = NULL,
 #'
 #' @return a list or data frame containing embodied energy efficiencies
 #'
-#' @importFrom matsbyname elementquotient_byname
+#' @importFrom matsbyname quotient_byname
 #' @importFrom matsbyname select_rows_byname
 #' @importFrom matsbyname make_pattern
 #'
@@ -328,12 +328,12 @@ calc_embodied_etas <- function(.embodiedmats = NULL,
                                # Output columns
                                eta_p = "eta_p", eta_s = "eta_s"){
   eta_func <- function(Y_mat, G_mat, H_mat){
-    eta_p_vec <- elementquotient_byname(
+    eta_p_vec <- quotient_byname(
       rowsums_byname(Y_mat) %>% transpose_byname(),
       G_mat %>% select_rows_byname(retain_pattern = make_pattern(primary_machine_names, pattern_type = "leading")) %>% colsums_byname()
     ) %>%
       transpose_byname() # Make it a column vector
-    eta_s_vec <- elementquotient_byname(
+    eta_s_vec <- quotient_byname(
       colsums_byname(Y_mat) %>% setrownames_byname("row") %>% setrowtype("row"),
       H_mat %>% select_rows_byname(retain_pattern = make_pattern(primary_machine_names, pattern_type = "leading")) %>%
         colsums_byname() %>% setrownames_byname("row") %>% setrowtype("row")

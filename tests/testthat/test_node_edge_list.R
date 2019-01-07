@@ -1,3 +1,8 @@
+library(dplyr)
+library(testthat)
+library(tidyr)
+
+
 ###########################################################
 context("Edge list")
 ###########################################################
@@ -69,10 +74,10 @@ test_that("waste_edges works as expected", {
                     2075)
 
   # Test waste_edges when only matrices are specified
-  Umat <- sutmats$U[[1]]
-  Vmat <- sutmats$V[[1]]
-  Ymat <- sutmats$Y[[1]]
-  el_final <- edge_list(U = Umat, V = Vmat, Y = Ymat)[["Edge list"]]
+  U_mat <- sutmats$U[[1]]
+  V_mat <- sutmats$V[[1]]
+  Y_mat <- sutmats$Y[[1]]
+  el_final <- edge_list(U = U_mat, V = V_mat, Y = Y_mat)[["Edge list"]]
   expect_equivalent(el_final %>%
                       filter(From == "Crude dist.", To == "Crude dist.", Product == "Crude - Dist.") %>%
                       select(Value),
