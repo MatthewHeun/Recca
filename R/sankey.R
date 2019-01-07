@@ -1,6 +1,3 @@
-library(networkD3)
-
-
 #' Make a Sankey diagram
 #'
 #' @param .sutmats an optional data frame
