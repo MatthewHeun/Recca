@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 )
 library(dplyr)
 library(Recca)
+library(magrittr)
 library(matsbyname)
 library(matsindf)
 library(tidyr)
@@ -82,6 +83,7 @@ use the `separate_RV()` function.
 
 ```{r}
 library(dplyr)
+library(magrittr)
 library(matsbyname)
 library(matsindf)
 library(Recca)
@@ -94,17 +96,17 @@ UKEnergyMatsWithR <- UKEnergy2000mats %>%
     R_plus_V = V
   ) %>%
   separate_RV()
+glimpse(UKEnergyMatsWithR)
 ```
 
 To look at the ECC, we can draw a Sankey diagram. 
-First, we need to make an edge list (`el`).
+A Sankey diagram for the first row of the data frame is given below.
 
 ```{r}
-EL <- UKEnergyMatsWithR %>% edge_list(V = "R_plus_V")
-glimpse(EL$`Edge list`[[1]])
+make_sankey(UKEnergyMatsWithR) %>% 
+  extract2("Sankey") %>% 
+  extract2(1)
 ```
-
-A Sankey diagram for the first row of the data frame is given below.
 
 
 ### Calculate the input-output structure of the ECC
