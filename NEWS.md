@@ -1,3 +1,6 @@
+* `new-functions` vignette now has Sankey diagram.
+
+
 # Recca 0.1.14 (2019-01-14)
 
 * New function `make_sankey()` does what it says: makes a Sankey diagram.
