@@ -102,7 +102,7 @@ glimpse(UKEnergyMatsWithR)
 To look at the ECC, we can draw a Sankey diagram. 
 A Sankey diagram for the first row of the data frame is given below.
 
-```{r}
+```{r, fig.width = 7, fig.height = 4}
 make_sankey(UKEnergyMatsWithR) %>% 
   extract2("Sankey") %>% 
   extract2(1)
