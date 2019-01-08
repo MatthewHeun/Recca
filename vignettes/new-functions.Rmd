@@ -3,6 +3,7 @@ title: "new_* functions"
 author: "Matthew Kuperus Heun"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+bibliography: recca.bib
 vignette: >
   %\VignetteIndexEntry{new_* functions}
   %\VignetteEngine{knitr::rmarkdown}
@@ -38,48 +39,48 @@ library(tidyr)
 Historically, input-output (I-O) analysis has been used to analyze "what-if" scenarios involving
 changes to the production structure of an economy. 
 A common scenario asks "how will will the structure of intermediate industries
-(represented by matrices $\mat{U}$ and $\mat{V}$) change when final demand (represented by matrix $\mat{Y}$) changes?"
-Leontief's early work answered this question via a matrix inversion that now bears his name,
-the "Leontief inverse ($\mat{L}$)." 
+(represented by $\mat{U}$ and $\mat{V}$ matrices) change when final demand (represented by the $\mat{Y}$ matrix) changes?"
+In the economic arena, Leontief's early work answered this question 
+via a matrix inversion that now bears his name,
+the "Leontief inverse ($\mat{L}$)" [@Leontief:1941].
 Analysts with an I-O background will know the famous equation $\mat{L} = (\mat{I} - \mat{A})^{-1}$.
 
 The `Recca` package provides functions that perform several "what if" analyses for the analyst.
 Each function has the name `new_*`, where `*` indicates the changed matrix or portion of the ECC.
 Some functions have the name `new_*_ps` to indicate the functions assume perfect substitution (`ps`)
-of industry inputs.
+of industry inputs throughout the ECC.
 The `new_*` functions return the resource ($\mat{R}$), use ($\mat{U}$), make ($\mat{V}$), and final demand ($\mat{Y}$) matrices
 that would be present under the conditions given by arguments to the `new_*` functions.
-
-After a short discussion of the design philosophy of the `Reccca` package followed by  
-some background information and setup, each type of analysis is described in turn.
-
-
-## Nomenclature
-
-"New" versions of vectors or matrices are given the suffix `_prime` in `Recca` functions.
+Arguments for "new" versions of vectors or matrices are given the suffix `_prime` in the `new_*` functions.
 For example, the updated version of the use ($\mat{U}$) matrix is called `U_prime`.
-
-
-## Background and setup
 
 For the examples that follow, we'll use the `UKEnergy2000mats` data frame.
 Each row of `UKEnergy2000mats` data frame represents 
 another version of a portion of the ECC for the UK in 2000.
-Each `new_*` function requires basic knowledge about the I-O structure of the ECCs
-in the form of named vectors and matrices.
-The `calc_io_mats` function is the simplest way to obtain the I-O structure
-which appears as additional columns appended at the right of the data frame.
-The names of the additional columns is given by 
-default argument values to the various `Recca` functions.
+
+After a short discussion of the inputs to the `new_*` functions, 
+each type of analysis is described in turn.
 
 
-### Calculating the $\mat{R}$ matrix
+## Inputs to `new_*` functions
 
+Inputs to the `new_*` functions include
+matrices that describe the ECC and 
+matrices that describe the input-output structure of the ECC.
+
+
+### $\mat{R}$, $\mat{U}$, $\mat{V}$, and $\mat{Y}$ matrices
+
+The `new_*` functions take as inputs 
+resource ($\mat{R}$), 
+use ($\mat{U}$), 
+make ($\mat{V}$), and 
+final demand ($\mat{Y}$) matrices
+that describe the ECC.
 Earlier versions of `Recca` included the resource matrix ($\mat{R}$) 
-in the make ($\mat{V}$) matrix.
+with the make ($\mat{V}$) matrix.
 To separate the resource matrix $\mat{R}$ from the make matrix ($\mat{V}$),
 use the `separate_RV()` function.
-
 
 ```{r}
 library(dplyr)
@@ -100,16 +101,21 @@ glimpse(UKEnergyMatsWithR)
 ```
 
 To look at the ECC, we can draw a Sankey diagram. 
-A Sankey diagram for the first row of the data frame is given below.
+A Sankey diagram for the first row of the `UKEnergyMatsWithR` data frame is given below.
 
 ```{r, fig.width = 7, fig.height = 4}
-make_sankey(UKEnergyMatsWithR) %>% 
-  extract2("Sankey") %>% 
-  extract2(1)
+make_sankey(UKEnergyMatsWithR) %>% extract2("Sankey") %>% extract2(1)
 ```
 
 
-### Calculate the input-output structure of the ECC
+### Input-output structure of the ECC
+
+Each `new_*` function requires basic knowledge about the I-O structure of the ECCs
+in the form of named vectors and matrices.
+The `calc_io_mats` function is the simplest way to obtain the I-O structure
+which appears as additional columns appended at the right of the data frame.
+(The names of the additional columns are given by 
+arguments to the `calc_io_mats()` function.)
 
 The first step in any "what-if" analysis is to calculate the input-output 
 structure of the energy conversion chain.
@@ -205,3 +211,4 @@ HalfCrude$newR[[1]] %>% clean_byname()
 ## Conclusion
 
 
+## References
