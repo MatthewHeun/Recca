@@ -1,5 +1,13 @@
 #' Make a Sankey diagram
 #'
+#' A Sankey diagram is a flow diagram in which the width of the lines is proportional
+#' to the rate of energy flow.
+#' Sankey diagrams are a helpful way to visualize energy flows in an energy conversion chain (ECC).
+#'
+#' At present, this function uses the `networkD3` package to draw the Sankey diagram.
+#'
+#' If any of R, U, V, or Y is \code{NA}, \code{NA} is returned.
+#'
 #' @param .sutmats an optional data frame
 #' @param R a resource matrix or the name of the column in \code{.sutmats} containing \code{R} matrices
 #' @param U a use matrix or the name of the column in \code{.sutmats} containing \code{U} matrices
@@ -10,8 +18,6 @@
 #' @param sankey the name of the output Sankey diagram or the name of the column in \code{.sutmats} containing Sankey diagrams
 #'
 #' @return a Sankey diagram
-#'
-#' @importFrom networkD3 sankeyNetwork
 #'
 #' @export
 #'
@@ -32,6 +38,9 @@
 make_sankey <- function(.sutmats = NULL, R = "R", U = "U", V = "V", Y = "Y", simplify_edges = TRUE,
                         sankey = "Sankey"){
   sankey_func <- function(R_mat = NULL, U_mat, V_mat, Y_mat){
+    if (is.na(R_mat) || is.na(U_mat) || is.na(V_mat) || is.na(Y_mat)) {
+      return(NA)
+    }
     # When I convert everything to using R matrices, need to change this code.
     if (is.null(R_mat)) {
       # If R is missing, need to extract it from V
@@ -41,7 +50,7 @@ make_sankey <- function(.sutmats = NULL, R = "R", U = "U", V = "V", Y = "Y", sim
     }
     el <- edge_list(R = R_mat, U = U_mat, V = V_mat, Y = Y_mat, simplify_edges = simplify_edges)[["Edge list"]]
     nl <- node_list(el)
-    s <- sankeyNetwork(Links = el, Nodes = nl,
+    s <- networkD3::sankeyNetwork(Links = el, Nodes = nl,
                        Source = "From_node_id", Target = "To_node_id", Value = "Value",
                        NodeID = "Node", units = "Quads",
                        # LinkGroup = "type",
