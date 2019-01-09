@@ -227,10 +227,39 @@ After re-calculating the `HalfCrude` ECC
 we can visualize the effect of lower crude oil availability
 with a modified Sankey diagram.
 
+First, we have the original Sankey diagram.
+
+```{r, fig.width = 7, fig.height = 4}
+make_sankey(UKEnergyMatsWithR) %>% 
+  extract2("Sankey") %>% # Extracts the "Sankey" column
+  extract2(1) # Extracts the first row of the "Sankey" column
+```
+
+And here is the modified Sankey diagram showing the smaller `Resources - Crude` extraction rate.
+
 ```{r, fig.width = 7, fig.height = 4}
 make_sankey(HalfCrude, R = "R_prime", U = "U_prime", V = "V_prime", Y = "Y_prime") %>% 
   extract2("Sankey") %>% # Extracts the "Sankey" column
   extract2(1) # Extracts the first row of the "Sankey" column
+```
+
+Note that both ECCs are in complete energy balance.
+
+```{r}
+UKEnergyMatsWithR %>% 
+  verify_SUT_energy_balance_with_units(S_units = "S_units", U = "U", V = "R_plus_V", Y = "Y") %>% 
+  select(Country, Year, Energy.type, Last.stage, .SUT_prod_energy_balance, .SUT_ind_energy_balance)
+```
+
+
+```{r}
+HalfCrude %>% 
+  filter(!is.na(K)) %>% 
+  mutate(
+    R_plus_V_prime = sum_byname(R_prime, V_prime)
+  ) %>% 
+  verify_SUT_energy_balance(U = "U_prime", V = "R_plus_V_prime", Y = "Y_prime") %>% 
+  select(Country, Year, Energy.type, Last.stage, .SUT_energy_balance)
 ```
 
 The Sankey diagram clearly shows that 
