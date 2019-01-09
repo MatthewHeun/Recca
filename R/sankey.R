@@ -3,10 +3,11 @@
 #' A Sankey diagram is a flow diagram in which the width of the lines is proportional
 #' to the rate of energy flow.
 #' Sankey diagrams are a helpful way to visualize energy flows in an energy conversion chain (ECC).
+#' This function takes a matrix description of an ECC and produces a Sankey diagram.
 #'
 #' At present, this function uses the `networkD3` package to draw the Sankey diagram.
 #'
-#' If any of R, U, V, or Y is \code{NA}, \code{NA} is returned.
+#' If any of \code{R}, \code{U}, \code{V}, or \code{Y} is \code{NA}, \code{NA} is returned.
 #'
 #' @param .sutmats an optional data frame
 #' @param R a resource matrix or the name of the column in \code{.sutmats} containing \code{R} matrices
