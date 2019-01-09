@@ -38,8 +38,16 @@
 make_sankey <- function(.sutmats = NULL, R = "R", U = "U", V = "V", Y = "Y", simplify_edges = TRUE,
                         sankey = "Sankey"){
   sankey_func <- function(R_mat = NULL, U_mat, V_mat, Y_mat){
-    if (is.na(R_mat) || is.na(U_mat) || is.na(V_mat) || is.na(Y_mat)) {
-      return(NA)
+    # Check for NA values. If any NA values are found, need to return NA.
+    # But we can't check R_mat for NA if it is NULL.
+    if (is.null(R_mat)) {
+      if (is.na(U_mat) || is.na(V_mat) || is.na(Y_mat)) {
+        return(NA)
+      }
+    } else {
+      if (is.na(R_mat) || is.na(U_mat) || is.na(V_mat) || is.na(Y_mat)) {
+        return(NA)
+      }
     }
     # When I convert everything to using R matrices, need to change this code.
     if (is.null(R_mat)) {
