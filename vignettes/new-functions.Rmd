@@ -104,7 +104,9 @@ To look at the ECC, we can draw a Sankey diagram.
 A Sankey diagram for the first row of the `UKEnergyMatsWithR` data frame is given below.
 
 ```{r, fig.width = 7, fig.height = 4}
-make_sankey(UKEnergyMatsWithR) %>% extract2("Sankey") %>% extract2(1)
+make_sankey(UKEnergyMatsWithR) %>% 
+  extract2("Sankey") %>% # Extracts the "Sankey" column
+  extract2(1) # Extracts the first row of the "Sankey" column
 ```
 
 
@@ -168,7 +170,7 @@ rate of resource extraction.
 Resource extraction is given by the $\mat{R}$ matrix or
 by the $\colvec{r}$ vector.
 The resource matrix ($\mat{R}$) is Industry$\times$Product.
-Its industries are usually named `Resources-<Product>`,
+Its industries are usually named `Resources - <Product>`,
 where `<Product>` is the name of the Product produced by that industry.
 (`clean_byname()` removes `0` rows and columns for clarity.)
 
@@ -191,21 +193,49 @@ rvecs$r[[1]]
 ```
 
 The baseline $\mat{R}$ matrix is shown above.
-Let's reduce `Resources - Crude` by 50 % and estimate the effect
-on the rest of the ECC.
+We can calculate the efficiency of every Industry in the ECC
+using the `calc_eta_i()` function.
+Let's say we want to estimate the effect of 
+a 50 % reduction in production of crude oil. 
+So, we cut `Resources - Crude` in half.
 To execute this reduction, we'll use the `matsbyname::elementapply_byname()` function.
 
 ```{r}
 half <- function(x){
   x/2
 }
-HalfCrude <- UKEnergyMatsWithR %>% 
+HalfCrude <- IO_mats %>% 
+  calc_eta_i() %>% 
   mutate(
-    newR = elementapply_byname(half, a = R, row = "Resources - Crude", col = "Crude")
+    R_prime = elementapply_byname(half, a = R, row = "Resources - Crude", col = "Crude")
   )
-HalfCrude$newR[[1]] %>% clean_byname()
+HalfCrude$R_prime[[1]] %>% clean_byname()
 ```
 
+Now we use the `new_R()` function to estimate changes in the ECC.
+But we need to calculate the efficiency of all sectors in the ECC first
+using the `calc_eta_i()` function.
+
+```{r}
+HalfCrude <- HalfCrude %>% 
+  new_R_ps()
+glimpse(HalfCrude)
+```
+
+After re-calculating the `HalfCrude` ECC
+(specifically, after calculating `U_prime`, `V_prime`, and `Y_prime`),
+we can visualize the effect of lower crude oil availability
+with a modified Sankey diagram.
+
+```{r, fig.width = 7, fig.height = 4}
+make_sankey(HalfCrude, R = "R_prime", U = "U_prime", V = "V_prime", Y = "Y_prime") %>% 
+  extract2("Sankey") %>% # Extracts the "Sankey" column
+  extract2(1) # Extracts the first row of the "Sankey" column
+```
+
+The Sankey diagram clearly shows that 
+reducing the availability of crude oil (`Resources - crude`)
+means that less `Transport` final demand can be satisfied.
 
 
 ## Conclusion
