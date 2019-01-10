@@ -81,7 +81,7 @@ matrices that describe the ECC and
 matrices that describe the input-output structure of the ECC.
 
 
-### $\mat{R}$, $\mat{U}$, $\mat{V}$, and $\mat{Y}$ matrices
+### Matrices that describe the ECC
 
 The `new_*` functions take as inputs 
 resource ($\mat{R}$), 
@@ -115,7 +115,7 @@ make_sankey(UKEnergyMatsWithR) %>%
 ```
 
 
-### Input-output structure of the ECC
+### Matrices that describe the input-output structure of the ECC
 
 Each `new_*` function requires basic knowledge about the I-O structure of the ECCs
 in the form of named vectors and matrices.
@@ -146,7 +146,8 @@ we can use the `new_*` functions to ask "what if" questions.
 ## What if final demand changes? Function `new_Y()`
 
 The classic I-O question is "what if final demand ($\mat{Y}$) changes?"
-`Recca` has a function for that.
+`Recca` has a function for that, `new_Y()`.
+The `new_Y()` function looks upstream in the ECC to determine the effects of a change in fina demand.
 To demonstrate, we'll double the `Residential` final demand 
 for electricity from the grid (`Elect - Grid`) in our ECC.
 
@@ -164,6 +165,15 @@ DoubleRes$Y_prime[[1]]
 ```
 
 Now we can use the `new_Y()` function to estimate the ECC with the larger final demand for residential electricity.
+The original Sankey diagram is:
+
+```{r, fig.width = 7, fig.height = 4}
+make_sankey(UKEnergyMatsWithR) %>% 
+  extract2("Sankey") %>% # Extracts the "Sankey" column
+  extract2(1) # Extracts the first row of the "Sankey" column
+```
+
+The new Sankey diagram is:
 
 ```{r, fig.width = 7, fig.height = 4}
 DoubleRes <- DoubleRes %>% 
@@ -173,23 +183,24 @@ make_sankey(DoubleRes, U = "U_prime", V = "V_prime", Y = "Y_prime") %>%
   extract2(1)
 ```
 
-Output from the electric grid is clearly larger now, and 
-so is the upstream demand for natural gas. 
-
-## What if perfectly-substitutable inputs to an intermediate industry change? Function `new_k_ps()`
+Output from the electric grid is clearly larger now than before.
+Also, upstream demand for natural gas is now larger than the upstream demand for crude,
+whereas in the original Sankey diagram, demand for crude was larger than the demand for natural gas.
 
 
 ## What if resources change? Function `new_R_ps()`
 
-Both `newY()` and `new_k_ps()` estimate upstream effects of a change to the 
-energy conversion change (ECC). 
-`new_R_ps()` estimates *downstream* effects of a change in the
-rate of resource extraction.
+`newY()` estimates the upstream effects of a change to final demand.
+But what if we want to understand the downstream effects of a change in resource availability?
+The function `new_R_ps()` supplies the answer. 
+`new_R_ps()` takes as input the input-output structure of an ECC 
+and the efficiency of every intermediate industry.
+After discussing the resource matrix and resoure vectors, 
 
 
 ### Resource matrices and vectors
 
-Resource extraction is given by the $\mat{R}$ matrix or
+The rate of resource extraction is given by the $\mat{R}$ matrix or
 by the $\colvec{r}$ vector.
 The resource matrix ($\mat{R}$) is Industry$\times$Product.
 Its industries are usually named `Resources - <Product>`,
@@ -214,11 +225,14 @@ rvecs <- UKEnergyMatsWithR %>%
 rvecs$r[[1]]
 ```
 
+
+### Industry effiencies and a new resource matrix
+
 The baseline $\mat{R}$ matrix is shown above.
 We can calculate the efficiency of every Industry in the ECC
 using the `calc_eta_i()` function.
 Let's say we want to estimate the effect of 
-a 50 % reduction in production of crude oil. 
+a 50 % reduction in the production rate of crude oil. 
 So, we cut `Resources - Crude` in half.
 To execute this reduction, we'll use the `matsbyname::elementapply_byname()` function.
 
@@ -289,14 +303,100 @@ reducing the availability of crude oil (`Resources - crude`)
 means that less `Transport` final demand can be satisfied.
 
 
+## What if perfectly-substitutable inputs to an intermediate industry change? Function `new_k_ps()`
+
+`new_Y()` estimates the upstream effects of a change in final demand.
+`new_R_ps()` estimates the downstream effects of a change in resource availability.
+But what if we want to estimate the effects of a change to the inputs of an intermediate industry?
+If those inputs are perfectly substitutable, 
+the `new_k_ps()` function provides an answer. 
+
+To demonstrate `new_k_ps()`, we'll create a very simple energy conversion chain.
+(The `UKEnergyMatsWithR` ECC doesn't have the characteristic that we need, 
+namely that an internediate industry has at least two reasonable-sized inputs.)
+This ECC has two resource industries (R1 and R2),
+one intermediate industry (I), and
+two final demand sectors (Y1 and Y2).
+The R1 industry makes product R1p.  
+The R2 industry makes product R2p. 
+Industry I makes product Ip.
+Product Ip is consumed by final demand sectors Y1 and Y2.
+
+The use (U), make (V), final demand (Y), and unit summation (S_units) matrices are given below.
+
+```{r}
+U <- matrix(c(0, 0, 10,
+              0, 0, 10,
+              0, 0,  0),
+            byrow = TRUE, nrow = 3, ncol = 3,
+            dimnames = list(c("R1p", "R2p", "Ip"), c("R1", "R2", "I"))) %>% 
+  setrowtype("Products") %>% setcoltype("Industries")
+
+V <- matrix(c(10,  0, 0,
+               0, 10, 0, 
+               0,  0, 4), 
+            byrow = TRUE, nrow = 3, ncol = 3, 
+            dimnames = list(c("R1", "R2", "I"), c("R1p", "R2p", "Ip"))) %>% 
+  setrowtype("Industries") %>% setcoltype("Products")
+
+Y <- matrix(c(0, 0,
+              0, 0, 
+              2, 2),
+            byrow = TRUE, nrow = 3, ncol = 2,
+            dimnames = list(c("R1p", "R2p", "Ip"), c("Y1", "Y2"))) %>% 
+  setrowtype("Products") %>% setcoltype("Industries")
+
+S_units <- matrix(c(1, 
+                    1, 
+                    1), 
+                  byrow = TRUE, nrow = 3, ncol = 1,
+                  dimnames = list(c("R1p", "R2p", "Ip"), c("quad"))) %>% 
+  setrowtype("Products") %>% setcoltype("Units")
+```
+
+The Sankey diagram for this simple ECC is given below.
+
+```{r, fig.width = 7, fig.height = 4}
+make_sankey(U = U, V = V, Y = Y) %>% 
+  extract2("Sankey")
+```
+
+We can change the proportion of inputs to industry I using `new_k_ps()`.
+To do so, we must first calculate the input-output structure of the ECC 
+using the `calc_io_mats()` function.
+Then, we call the `new_k_ps()` function with a new k vector
+that indicates industry I now uses 75/25 mixture of `R1` and `R2` instead of a 50/50 split between `R1` and `R2`.
+
+```{r, fig.width = 7, fig.height = 4}
+simple_iomats <- calc_io_mats(U = U, V = V, Y = Y, S_units = S_units)
+k_prime <- matrix(c(0.75,
+                    0.25), 
+                  byrow = TRUE, nrow = 2, ncol = 1,
+                  dimnames = list(c("R1p", "R2p"), c("I"))) %>% 
+  setrowtype("Products") %>% setcoltype("Industries")
+change_input_proportions <- new_k_ps(c(simple_iomats, list(U = U, V = V, Y = Y, S_units = S_units, 
+                                                    k_prime = k_prime)))
+make_sankey(U = change_input_proportions$U_prime, V = change_input_proportions$V_prime, Y = Y) %>% 
+  extract2("Sankey")
+```
+
+If there were additional upstream industries, 
+they would also change in response to the new ratio of inputs to industry `I`. 
+The rate of resource extraction needed to supply `R1` would grow.
+The rate of resource extraction needed to supply `R2` would shrink.
+
 
 ## Conclusion
 
 `Recca` has three functions that allow an analyst to estimate the effect of changes to an ECC.
-`new_Y()` make changes upstream of final demand.
-`new_k_ps()` make changes upstream of an intermediate industry.
-`new_R_ps()` makes changes downstream from resource extraction.
-The `new_*` functions will assist energy and exergy analyses through societies.
+
+* `new_Y()` estimates changes upstream of final demand.
+* `new_R_ps()` estimates changes downstream from resource extraction.
+* `new_k_ps()` estimates changes upstream of inputs to an intermediate industry.
+
+The first of these functions (`new_Y()`) was demonstrated in 
+[Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
+The second and third functions (`new_R_ps()` and `new_k_ps()`) are shown here for the first time.
 
 
 ## References
