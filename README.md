@@ -1,21 +1,17 @@
 
 <!-- *********** -->
-
 <!-- Note: README.md is generated from README.Rmd.   -->
-
 <!-- Be sure to edit README.Rmd and generate the README.md file by Cmd/Ctl-shift-K -->
-
 <!-- *********** -->
-
 <!-- Add later, after Travis is hooked up. -->
-
 <!-- [![Travis-CI Build Status](https://travis-ci.org/MatthewHeun/recca.svg?branch=master)](https://travis-ci.org/MatthewHeun/Recca) -->
-
-# Recca
+Recca
+=====
 
 The `R` package `Recca` provides R Energy Conversion Chain Analysis.
 
-## Installation
+Installation
+------------
 
 You can install `Recca` from github with:
 
@@ -27,27 +23,17 @@ devtools::install_github("MatthewHeun/Recca")
 devtools::install_github("MatthewHeun/Recca", build_vignettes = TRUE)
 ```
 
-## History
+History
+-------
 
-The functions in this package were used in the paper [Heun et al.
-(2018)](https://doi.org/10.1016/j.apenergy.2018.05.109).
+The functions in this package were used in the paper [Heun et al. (2018)](https://doi.org/10.1016/j.apenergy.2018.05.109).
 
-## More Information
+More Information
+----------------
 
-Find more information, including vignettes and function documentation at
-<https://MatthewHeun.github.io/Recca/>.
+Find more information, including vignettes and function documentation at <https://MatthewHeun.github.io/Recca/>.
 
-## References
+References
+----------
 
-<div id="refs" class="references">
-
-<div id="ref-Heun:2018">
-
-Heun, Matthew Kuperus, Anne Owen, and Paul E. Brockway. 2018. “A
-Physical Supply-Use Table Framework for Energy Analysis on the Energy
-Conversion Chain.” *Applied Energy* 226 (September):1134–62.
-<https://doi.org/10.1016/j.apenergy.2018.05.109>.
-
-</div>
-
-</div>
+Heun, Matthew Kuperus, Anne Owen, and Paul E. Brockway. 2018. “A Physical Supply-Use Table Framework for Energy Analysis on the Energy Conversion Chain.” *Applied Energy* 226 (September): 1134–62. doi:[10.1016/j.apenergy.2018.05.109](https://doi.org/10.1016/j.apenergy.2018.05.109).

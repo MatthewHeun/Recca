@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.14</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.15</span>
       </span>
     </div>
 
@@ -89,7 +89,7 @@
       <h1>Recca</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2019-01-07</h4>
+            <h4 class="date">2019-01-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/master/vignettes/Recca.Rmd"><code>vignettes/Recca.Rmd</code></a></small>
       <div class="hidden name"><code>Recca.Rmd</code></div>
@@ -99,6 +99,7 @@
     
     
 <!-- Establish some helpful LaTeX shortcuts for equations -->
+
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
@@ -109,16 +110,17 @@
 <a href="#design-philosophy" class="anchor"></a>Design philosophy</h2>
 <p>The functions in <code>Recca</code> are flexible and can be used with either (a) matrices as inputs (with individual matrices as arguments to <code>Recca</code> functions) or (b) a data frame as input (with names of data frame columns, as strings, as arguments to <code>Recca</code> functions). Outputs are either named matrices in a list or named columns appended to the input data frame, respectively. The functions in <code>Recca</code> have default names for arguments which follow a standard nomenclature. It is recommended that the default matrix names be used whenever possible, thereby allowing cleaner code.</p>
 </div>
-<div id="psut-matricesheun-et-al---heun2018-section-2-2-2" class="section level2">
+<div id="psut-matrices" class="section level2">
 <h2 class="hasAnchor">
-<a href="#psut-matricesheun-et-al---heun2018-section-2-2-2" class="anchor"></a>PSUT matrices—<a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 2.2.2</h2>
+<a href="#psut-matrices" class="anchor"></a>PSUT matrices</h2>
+<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 2.2.2.)</p>
 <p>For the examples that follow, we’ll use the <code>UKEnergy2000tidy</code> data frame. Each row of <code>UKEnergy2000tidy</code> data frame represents another datum for a portion of the ECC for the UK in 2000. <code>UKEnergy2000tidy</code> is in a format similar to data from the IEA or other organizations.</p>
 <p>For data in the format of <code>UKEnergy2000tidy</code>, we can create <code>S_units</code> matrices for each grouping.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(tibble)</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2">S_units &lt;-<span class="st"> </span>UKEnergy2000tidy <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb1-3" data-line-number="3"><span class="st">  </span><span class="kw">group_by</span>(Country, Year, Energy.type, Last.stage) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb1-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="../reference/S_units_from_tidy.html">S_units_from_tidy</a></span>()</a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="kw"><a href="https://www.rdocumentation.org/packages/tibble/topics/glimpse">glimpse</a></span>(S_units)</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="kw"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span>(S_units)</a>
 <a class="sourceLine" id="cb1-6" data-line-number="6"><span class="co">#&gt; Observations: 4</span></a>
 <a class="sourceLine" id="cb1-7" data-line-number="7"><span class="co">#&gt; Variables: 5</span></a>
 <a class="sourceLine" id="cb1-8" data-line-number="8"><span class="co">#&gt; $ Country     &lt;chr&gt; "GB", "GB", "GB", "GB"</span></a>
@@ -174,7 +176,7 @@
 <a class="sourceLine" id="cb3-18" data-line-number="18"><span class="st">  </span><span class="co"># Add S_units matrices</span></a>
 <a class="sourceLine" id="cb3-19" data-line-number="19"><span class="st">  </span><span class="kw">left_join</span>(S_units, <span class="dt">by =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Country"</span>, <span class="st">"Year"</span>, <span class="st">"Energy.type"</span>, <span class="st">"Last.stage"</span>)) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb3-20" data-line-number="20"><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> matrix.name, <span class="dt">value =</span> matrix, R, U, V, Y, r_EIOU, S_units)</a>
-<a class="sourceLine" id="cb3-21" data-line-number="21"><span class="kw"><a href="https://www.rdocumentation.org/packages/tibble/topics/glimpse">glimpse</a></span>(AsMats)</a>
+<a class="sourceLine" id="cb3-21" data-line-number="21"><span class="kw"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span>(AsMats)</a>
 <a class="sourceLine" id="cb3-22" data-line-number="22"><span class="co">#&gt; Observations: 24</span></a>
 <a class="sourceLine" id="cb3-23" data-line-number="23"><span class="co">#&gt; Variables: 6</span></a>
 <a class="sourceLine" id="cb3-24" data-line-number="24"><span class="co">#&gt; $ Country     &lt;chr&gt; "GB", "GB", "GB", "GB", "GB", "GB", "GB", "GB", "GB"…</span></a>
@@ -185,9 +187,10 @@
 <a class="sourceLine" id="cb3-29" data-line-number="29"><span class="co">#&gt; $ matrix      &lt;list&gt; [&lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;,…</span></a></code></pre></div>
 <p>The <code>AsMats</code> data frame is essentially the same as the <code><a href="../reference/UKEnergy2000mats.html">Recca::UKEnergy2000mats</a></code> data frame. The remainder of this vignette uses the <code>UKEnergy2000mats</code> data frame.</p>
 </div>
-<div id="i-o-structureheun-et-al---heun2018-section-2-2-4" class="section level2">
+<div id="i-o-structure" class="section level2">
 <h2 class="hasAnchor">
-<a href="#i-o-structureheun-et-al---heun2018-section-2-2-4" class="anchor"></a>I-O structure—<a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 2.2.4</h2>
+<a href="#i-o-structure" class="anchor"></a>I-O structure</h2>
+<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 2.2.4.)</p>
 <div id="with-individual-matrices" class="section level3">
 <h3 class="hasAnchor">
 <a href="#with-individual-matrices" class="anchor"></a>With individual matrices</h3>
@@ -240,7 +243,7 @@
 <a class="sourceLine" id="cb7-6" data-line-number="6"><span class="co">#&gt; [11] "q"           "f"           "g"           "W"           "Z"          </span></a>
 <a class="sourceLine" id="cb7-7" data-line-number="7"><span class="co">#&gt; [16] "K"           "C"           "D"           "A"           "L_pxp"      </span></a>
 <a class="sourceLine" id="cb7-8" data-line-number="8"><span class="co">#&gt; [21] "L_ixp"</span></a>
-<a class="sourceLine" id="cb7-9" data-line-number="9"><span class="kw"><a href="https://www.rdocumentation.org/packages/tibble/topics/glimpse">glimpse</a></span>(IO_df)</a>
+<a class="sourceLine" id="cb7-9" data-line-number="9"><span class="kw"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span>(IO_df)</a>
 <a class="sourceLine" id="cb7-10" data-line-number="10"><span class="co">#&gt; Observations: 4</span></a>
 <a class="sourceLine" id="cb7-11" data-line-number="11"><span class="co">#&gt; Variables: 21</span></a>
 <a class="sourceLine" id="cb7-12" data-line-number="12"><span class="co">#&gt; $ Country     &lt;chr&gt; "GB", "GB", "GB", "GB"</span></a>
@@ -287,21 +290,25 @@
 <p>For the remainder of this vignette, operations will be performed on the entire <code>UKEnergy2000mats</code> data frame. But readers should remember that functions can be called on individual matrices, as well.</p>
 </div>
 </div>
-<div id="changes-in-final-demandheun-et-al---heun2018-section-2-2-5" class="section level2">
+<div id="changes-in-final-demand" class="section level2">
 <h2 class="hasAnchor">
-<a href="#changes-in-final-demandheun-et-al---heun2018-section-2-2-5" class="anchor"></a>Changes in final demand—<a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 2.2.5</h2>
+<a href="#changes-in-final-demand" class="anchor"></a>Changes in final demand</h2>
+<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 2.2.5.)</p>
 </div>
-<div id="net-energy-analysisheun-et-al---heun2018-section-3-1" class="section level2">
+<div id="net-energy-analysis" class="section level2">
 <h2 class="hasAnchor">
-<a href="#net-energy-analysisheun-et-al---heun2018-section-3-1" class="anchor"></a>Net energy analysis—<a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 3.1</h2>
+<a href="#net-energy-analysis" class="anchor"></a>Net energy analysis</h2>
+<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 3.1.)</p>
 </div>
-<div id="efficienciesheun-et-al---heun2018-section-3-2" class="section level2">
+<div id="efficiencies" class="section level2">
 <h2 class="hasAnchor">
-<a href="#efficienciesheun-et-al---heun2018-section-3-2" class="anchor"></a>Efficiencies—<a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 3.2</h2>
+<a href="#efficiencies" class="anchor"></a>Efficiencies</h2>
+<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 3.2.)</p>
 </div>
-<div id="energy-footprintsheun-et-al---heun2018-section-3-3" class="section level2">
+<div id="energy-footprints" class="section level2">
 <h2 class="hasAnchor">
-<a href="#energy-footprintsheun-et-al---heun2018-section-3-3" class="anchor"></a>Energy footprints—<a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 3.3</h2>
+<a href="#energy-footprints" class="anchor"></a>Energy footprints</h2>
+<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 3.3.)</p>
 </div>
 <div id="conclusion" class="section level2">
 <h2 class="hasAnchor">
@@ -326,18 +333,12 @@
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#introduction">Introduction</a></li>
       <li><a href="#design-philosophy">Design philosophy</a></li>
-      <li>
-<a href="#psut-matricesheun-et-al---heun2018-section-2-2-2">PSUT matrices—</a><a href="https://doi-org/10-1016/j-apenergy-2018-05-109">Heun et al. <span class="citation">(2018)</span></a>, Section 2.2.2</li>
-      <li>
-<a href="#i-o-structureheun-et-al---heun2018-section-2-2-4">I-O structure—</a><a href="https://doi-org/10-1016/j-apenergy-2018-05-109">Heun et al. <span class="citation">(2018)</span></a>, Section 2.2.4</li>
-      <li>
-<a href="#changes-in-final-demandheun-et-al---heun2018-section-2-2-5">Changes in final demand—</a><a href="https://doi-org/10-1016/j-apenergy-2018-05-109">Heun et al. <span class="citation">(2018)</span></a>, Section 2.2.5</li>
-      <li>
-<a href="#net-energy-analysisheun-et-al---heun2018-section-3-1">Net energy analysis—</a><a href="https://doi-org/10-1016/j-apenergy-2018-05-109">Heun et al. <span class="citation">(2018)</span></a>, Section 3.1</li>
-      <li>
-<a href="#efficienciesheun-et-al---heun2018-section-3-2">Efficiencies—</a><a href="https://doi-org/10-1016/j-apenergy-2018-05-109">Heun et al. <span class="citation">(2018)</span></a>, Section 3.2</li>
-      <li>
-<a href="#energy-footprintsheun-et-al---heun2018-section-3-3">Energy footprints—</a><a href="https://doi-org/10-1016/j-apenergy-2018-05-109">Heun et al. <span class="citation">(2018)</span></a>, Section 3.3</li>
+      <li><a href="#psut-matrices">PSUT matrices</a></li>
+      <li><a href="#i-o-structure">I-O structure</a></li>
+      <li><a href="#changes-in-final-demand">Changes in final demand</a></li>
+      <li><a href="#net-energy-analysis">Net energy analysis</a></li>
+      <li><a href="#efficiencies">Efficiencies</a></li>
+      <li><a href="#energy-footprints">Energy footprints</a></li>
       <li><a href="#conclusion">Conclusion</a></li>
       <li><a href="#references">References</a></li>
       </ul>

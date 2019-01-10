@@ -1,4 +1,10 @@
-# Recca 0.1.14 (2019-01-14)
+# Recca 0.1.15 (2019-01-09)
+
+* First draft of `new-functions` vignette now complete, including demonstrations of 
+  `new_R_ps()` and `new_k_ps()` functions.
+
+
+# Recca 0.1.14 (2019-01-07)
 
 * New function `make_sankey()` does what it says: makes a Sankey diagram.
   `make_sankey()` is the first function that optionally uses the resource (`R`) matrix.

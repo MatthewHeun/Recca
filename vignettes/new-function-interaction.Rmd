@@ -93,10 +93,10 @@ make_sankey(U = U, V = V, Y = Y) %>%
 ## Adjust inputs to industry I
 
 We can change the proportion of inputs to industry I using `new_k_ps()`.
-To do so, we must first calculat the input-output structure of the ECC 
+To do so, we must first calculate the input-output structure of the ECC 
 using the `calc_io_mats()` function.
 Then, we call the `new_k_ps()` function with a new k vector
-that indicates industry I now uses 20 quads of R1 instead of a 50/50 split between R1 and R2.
+that indicates industry I now uses 20 quads of `R1` instead of a 50/50 split between `R1` and `R2`.
 
 ```{r}
 library(Recca)
