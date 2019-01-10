@@ -66,7 +66,9 @@ It is recommended that the default matrix names be used whenever possible,
 thereby allowing cleaner code.
 
 
-## PSUT matrices---[Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 2.2.2
+## PSUT matrices
+
+(Reference [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 2.2.2.)
 
 For the examples that follow, we'll use the `UKEnergy2000tidy` data frame.
 Each row of `UKEnergy2000tidy` data frame represents 
@@ -135,7 +137,9 @@ The `AsMats` data frame is essentially the same as the `Recca::UKEnergy2000mats`
 The remainder of this vignette uses the `UKEnergy2000mats` data frame.
 
 
-## I-O structure---[Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 2.2.4
+## I-O structure
+
+(Reference [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 2.2.4.)
 
 
 ### With individual matrices
@@ -214,16 +218,23 @@ But readers should remember that functions can be called on
 individual matrices, as well.
 
 
-## Changes in final demand---[Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 2.2.5
+## Changes in final demand
+
+(Reference [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 2.2.5.)
 
 
-## Net energy analysis---[Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 3.1
+## Net energy analysis
+(Reference [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 3.1.)
 
 
-## Efficiencies---[Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 3.2
+## Efficiencies
+
+(Reference [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 3.2.)
 
 
-## Energy footprints---[Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 3.3
+## Energy footprints
+
+(Reference [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 3.3.)
 
 
 

@@ -143,7 +143,7 @@ $\mat{L_{pxp}}$, and $\mat{L_{ixp}}$ matrices),
 we can use the `new_*` functions to ask "what if" questions.
 
 
-## What if final demand changes? Function `new_Y()`
+## What if final demand changes? Function new_Y()
 
 The classic I-O question is "what if final demand ($\mat{Y}$) changes?"
 `Recca` has a function for that, `new_Y()`.
@@ -188,7 +188,7 @@ Also, upstream demand for natural gas is now larger than the upstream demand for
 whereas in the original Sankey diagram, demand for crude was larger than the demand for natural gas.
 
 
-## What if resources change? Function `new_R_ps()`
+## What if resources change? Function new_R_ps()
 
 `newY()` estimates the upstream effects of a change to final demand.
 But what if we want to understand the downstream effects of a change in resource availability?
@@ -303,7 +303,7 @@ reducing the availability of crude oil (`Resources - crude`)
 means that less `Transport` final demand can be satisfied.
 
 
-## What if perfectly-substitutable inputs to an intermediate industry change? Function `new_k_ps()`
+## What if perfectly-substitutable inputs to an intermediate industry change? Function new_k_ps()
 
 `new_Y()` estimates the upstream effects of a change in final demand.
 `new_R_ps()` estimates the downstream effects of a change in resource availability.
