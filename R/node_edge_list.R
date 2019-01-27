@@ -29,6 +29,8 @@
 #' @param product the name of the edge list column containing the product of the edge list flow. (Default is "\code{Product}".)
 #' @param waste the name of the waste product and the destination node for wastes.
 #'              Set \code{NULL} to suppress addition of waste edges. (Default is "\code{Waste}".)
+#' @param rowtypes the name of the rowtypes. (Default is "\code{rowtype}".)
+#' @param coltypes the name of the rowtypes. (Default is "\code{coltype}".)
 #' @param node_id the base name of node ID columns.
 #'                Set \code{NULL} to suppress addition of node ID numbers.
 #'                (Default is "\code{node_id}".)
@@ -42,10 +44,6 @@
 #'                       (Default is \code{TRUE}.)
 #'
 #' @return an edge list or a column of edge lists
-#'
-#' @importFrom matsindf mat_to_rowcolval
-#' @importFrom dplyr bind_rows
-#' @importFrom tidyr spread
 #'
 #' @export
 #'
@@ -70,6 +68,7 @@
 edge_list <- function(.sutdata = NULL, R = "R", U = "U", V = "V", Y = "Y",
                       edge_list = "Edge list",
                       from = "From", to = "To", value = "Value", product = "Product", waste = "Waste",
+                      rowtypes = "rowtype", coltypes = "coltype",
                       node_id = "node_id", first_node = 0,
                       edge_id = "edge_id", simplify_edges = TRUE){
   el_func <- function(R_mat, U_mat, V_mat, Y_mat){
@@ -84,28 +83,29 @@ edge_list <- function(.sutdata = NULL, R = "R", U = "U", V = "V", Y = "Y",
     expandedUY <- list(U_mat, Y_mat) %>%
       lapply(FUN = function(m){
         # Convert all to tidy (row, col, value) format
-        mat_to_rowcolval(m, rownames = from, colnames = to, matvals = value, rowtypes = "rowtype", coltypes = "coltype", drop = 0)
+        matsindf::mat_to_rowcolval(m, rownames = from, colnames = to, matvals = value, rowtypes = rowtypes, coltypes = coltypes, drop = 0)
       }) %>%
-      bind_rows() %>%
-      mutate(
+      dplyr::bind_rows() %>%
+      dplyr::mutate(
         !!as.name(product) := !!as.name(from)
       )
     # R and V have the same sense: Industries-by-Products, so expand them together.
     expandedRV <- list(R_mat, V_mat) %>%
       lapply(FUN = function(m){
-        mat_to_rowcolval(m, rownames = from, colnames = to, matvals = value, rowtypes = "rowtype", coltypes = "coltype", drop = 0)
+        matsindf::mat_to_rowcolval(m, rownames = from, colnames = to, matvals = value, rowtypes = rowtypes, coltypes = coltypes, drop = 0)
       }) %>%
-      bind_rows() %>%
-      mutate(
+      dplyr::bind_rows() %>%
+      dplyr::mutate(
         !!as.name(product) := !!as.name(to)
       )
-    el <- bind_rows(expandedUY, expandedRV) %>%
-      select(-rowtype, -coltype)
+    el <- dplyr::bind_rows(expandedUY, expandedRV) %>%
+      # dplyr::select(-rowtype, -coltype)
+      dplyr::select(-!!rowtypes, -!!coltypes)
     if (!is.null(waste)) {
-      el <- bind_rows(el, waste_edges(U_mat = U_mat, V_mat = V_mat,
-                                      from = from, to = to,
-                                      value = value, product = product,
-                                      waste = waste))
+      el <- dplyr::bind_rows(el, waste_edges(U_mat = U_mat, V_mat = V_mat,
+                                             from = from, to = to,
+                                             value = value, product = product,
+                                             waste = waste))
     }
     if (simplify_edges) {
       # Figure out which Products have only one source and one destination.
@@ -118,9 +118,9 @@ edge_list <- function(.sutdata = NULL, R = "R", U = "U", V = "V", Y = "Y",
     if (!is.null(node_id)) {
       el <- add_node_ids(el, from = from, to = to, node_id = node_id, first_node = first_node)
     }
-    list(el) %>% set_names(edge_list)
+    list(el) %>% magrittr::set_names(edge_list)
   }
-  matsindf_apply(.sutdata, FUN = el_func, R_mat = R, U_mat = U, V_mat = V, Y_mat = Y)
+  matsindf::matsindf_apply(.sutdata, FUN = el_func, R_mat = R, U_mat = U, V_mat = V, Y_mat = Y)
 }
 
 
@@ -159,28 +159,28 @@ add_node_ids <- function(edge_list, from = "From", to = "To", node_id = "node_id
   # Make a 1-column data frame containing all of the node names.
   NodeNameID <- data.frame(unique(c(edge_list[[from]], edge_list[[to]])), stringsAsFactors = FALSE) %>%
     # Set the name of the only column.
-    set_names(node_names)
+    magrittr::set_names(node_names)
   n_node_names <- nrow(NodeNameID)
   NodeNameID <- NodeNameID %>%
-    mutate(
+    dplyr::mutate(
       !!as.name(node_id) := seq.int(first_node, first_node + n_node_names - 1)
     )
 
   # Add node IDs for the from nodes.
-  edge_list <- left_join(edge_list,
-                         NodeNameID %>%
-                           rename(
-                             !!as.name(from) := !!as.name(node_names),
-                             !!as.name(from_id) := !!as.name(node_id)
-                           ),
-                         by = from)
-  edge_list <- left_join(edge_list,
-                         NodeNameID %>%
-                           rename(
-                             !!as.name(to) := !!as.name(node_names),
-                             !!as.name(to_id) := !!as.name(node_id)
-                           ),
-                         by = to)
+  edge_list <- dplyr::left_join(edge_list,
+                                NodeNameID %>%
+                                  dplyr::rename(
+                                    !!as.name(from) := !!as.name(node_names),
+                                    !!as.name(from_id) := !!as.name(node_id)
+                                  ),
+                                by = from)
+  edge_list <- dplyr::left_join(edge_list,
+                                NodeNameID %>%
+                                  dplyr::rename(
+                                    !!as.name(to) := !!as.name(node_names),
+                                    !!as.name(to_id) := !!as.name(node_id)
+                                  ),
+                                by = to)
   return(edge_list)
 }
 
@@ -206,7 +206,7 @@ add_node_ids <- function(edge_list, from = "From", to = "To", node_id = "node_id
 #' add_node_ids(elDF)
 add_edge_ids <- function(edge_list, edge_id = "edge_id"){
   edge_list %>%
-    mutate(
+    dplyr::mutate(
       !!as.name(edge_id) := seq.int(nrow(edge_list))
     )
 }
@@ -242,9 +242,9 @@ simplify_edge_list <- function(edge_list, from = "From", to = "To", value = "Val
   # One contains the portion of the edge_list that comes from the use (U) matrix.
   # The other contains the portion of the edge_list that comes from the make (V) matris.
   # Get the entries that would have come from the U matrix.
-  U_entries <- edge_list %>% filter(!!as.name(from) == !!as.name(product))
+  U_entries <- edge_list %>% dplyr::filter(!!as.name(from) == !!as.name(product))
   # Get the entries that would have come from the V matrix.
-  V_entries <- edge_list %>% filter(!!as.name(to) == !!as.name(product))
+  V_entries <- edge_list %>% dplyr::filter(!!as.name(to) == !!as.name(product))
   # Avoid a NOTE in R CMD check
   num_V_entries <- NULL
   # Figure out which products can be simplified
@@ -252,16 +252,16 @@ simplify_edge_list <- function(edge_list, from = "From", to = "To", value = "Val
   # i.e., the product has only one source.
   # We find this information from the make (V) matrix entries
   products_to_simplify <- V_entries %>%
-    group_by(!!as.name(product)) %>%
-    summarise(num_V_entries = length(!!as.name(product))) %>%
-    filter(num_V_entries == 1) %>%
-    select(!!as.name(product)) %>%
+    dplyr::group_by(!!as.name(product)) %>%
+    dplyr::summarise(num_V_entries = length(!!as.name(product))) %>%
+    dplyr::filter(num_V_entries == 1) %>%
+    dplyr::select(!!as.name(product)) %>%
     unlist() %>%
-    set_names(NULL)
+    magrittr::set_names(NULL)
   # Now simplify the products in the U matrix entries by changing their from value.
   Simplified_U_entries <- lapply(products_to_simplify, FUN = function(p) {
     # Find the row in V_entries that pertain to product p
-    V_entries_p <- V_entries %>% filter(!!as.name(product) == p)
+    V_entries_p <- V_entries %>% dplyr::filter(!!as.name(product) == p)
     # Verify that there is only one row.
     stopifnot(nrow(V_entries_p) == 1)
     # Get the source of product p
@@ -269,24 +269,24 @@ simplify_edge_list <- function(edge_list, from = "From", to = "To", value = "Val
     # Change the sources of all nodes that receive this product
     # to be the single source of the product instead of p itself.
     U_entries %>%
-      filter(!!as.name(product) == p) %>%
-      mutate(
-        !!as.name(from) := case_when(
+      dplyr::filter(!!as.name(product) == p) %>%
+      dplyr::mutate(
+        !!as.name(from) := dplyr::case_when(
           !!as.name(product) == p ~ source,
           TRUE ~ !!as.name(product)
         )
       )
   }) %>%
     # rbind all of these together
-    bind_rows() %>%
+    dplyr::bind_rows() %>%
     # Now rbind with rows in U_entries that aren't simplified
-    bind_rows(U_entries %>% filter(!(!!as.name(product) %in% products_to_simplify)))
+    dplyr::bind_rows(U_entries %>% dplyr::filter(!(!!as.name(product) %in% products_to_simplify)))
 
   # Now remove all of the simplified products from the make (V) matrix rows.
-  Reduced_V_entries <- V_entries %>% filter(!(!!as.name(product) %in% products_to_simplify))
+  Reduced_V_entries <- V_entries %>% dplyr::filter(!(!!as.name(product) %in% products_to_simplify))
 
   # Recombine U_entries and V_entries to make the full edge list and return it.
-  bind_rows(Simplified_U_entries, Reduced_V_entries)
+  dplyr::bind_rows(Simplified_U_entries, Reduced_V_entries)
 }
 
 #' Create waste energy edges for an edge map
@@ -320,30 +320,30 @@ waste_edges <- function(U_mat, V_mat,
                         waste = "Waste") {
   # Create edges for the waste sectors in a data frame.
   # Start by calculating the W matrix (V^T - U)
-  difference_byname(transpose_byname(V_mat), U_mat) %>%
+  matsbyname::difference_byname(transpose_byname(V_mat), U_mat) %>%
     # The column sums of the W matrix contain positive and negative numbers.
     # We're interested in the negative numbers, because those are industries that are generating waste.
     # Positive numbers arise from industries that extract free gifts from nature.
-    colsums_byname() %>%
+    matsbyname::colsums_byname() %>%
     # industry names are column names of W. Put those as row names of the matrix by transposing.
-    transpose_byname() %>%
+    matsbyname::transpose_byname() %>%
     # As a data frame, we can filter and do other useful things.
     # Furthermore, the edge list is a data frame, anyway.
     as.data.frame() %>%
     # The only column in this data frame contains the values of the waste heat flows.
     # So call it by the desired value argument.
-    set_names(value) %>%
+    magrittr::set_names(value) %>%
     # The row names are the industry from which waste is generated.
     # Put that in the from column.
-    rownames_to_column(from) %>%
+    tibble::rownames_to_column(from) %>%
     # Select only those industries that have waste.
-    filter(!!as.name(value) < 0) %>%
-    mutate(
+    dplyr::filter(!!as.name(value) < 0) %>%
+    dplyr::mutate(
       !!as.name(value) := abs(!!as.name(value)),
       !!as.name(to) := waste,
       !!as.name(product) := waste
     ) %>%
-    select(from, to, value, product)
+    dplyr::select(from, to, value, product)
 }
 
 
@@ -376,18 +376,18 @@ node_list <- function(edge_list, from = "From", to = "To", node = "Node", node_i
   fromID <- paste0(from, "_", node_id)
   toID <- paste0(to, "_", node_id)
   fromIDs <- edge_list %>%
-    select(!!as.name(from), !!as.name(fromID)) %>%
-    rename(
+    dplyr::select(!!as.name(from), !!as.name(fromID)) %>%
+    dplyr::rename(
       !!as.name(node) := !!as.name(from),
       !!as.name(node_id) := !!as.name(fromID)
     )
   toIDs <- edge_list %>%
-    select(!!as.name(to), !!as.name(toID)) %>%
-    rename(
+    dplyr::select(!!as.name(to), !!as.name(toID)) %>%
+    dplyr::rename(
       !!as.name(node) := !!as.name(to),
       !!as.name(node_id) := !!as.name(toID)
     )
-  bind_rows(fromIDs, toIDs) %>%
+  dplyr::bind_rows(fromIDs, toIDs) %>%
     unique()
 }
 
@@ -397,18 +397,18 @@ node_list <- function(edge_list, from = "From", to = "To", node = "Node", node_i
 #     fromID <- paste0(from, "_", node_id)
 #     toID <- paste0(to, "_", node_id)
 #     fromIDs <- el %>%
-#       select(!!as.name(from), !!as.name(fromID)) %>%
-#       rename(
+#       dplyr::select(!!as.name(from), !!as.name(fromID)) %>%
+#       dplyr::rename(
 #         !!as.name(node) := !!as.name(from),
 #         !!as.name(node_id) := !!as.name(fromID)
 #       )
 #     toIDs <- el %>%
-#       select(!!as.name(to), !!as.name(toID)) %>%
-#       rename(
+#       dplyr::select(!!as.name(to), !!as.name(toID)) %>%
+#       dplyr::rename(
 #         !!as.name(node) := !!as.name(to),
 #         !!as.name(node_id) := !!as.name(toID)
 #       )
-#     list(bind_rows(fromIDs, toIDs) %>% unique()) %>% set_names(el)
+#     list(dplyr::bind_rows(fromIDs, toIDs) %>% unique()) %>% magrittr::set_names(el)
 #   }
 #   matsindf_apply(.sutmats, FUN = nl_func, el = edge_list)
 # }

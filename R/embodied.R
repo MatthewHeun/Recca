@@ -58,7 +58,7 @@ calc_embodied_mats <- function(.iomats = NULL,
     F_list <- calc_F_footprint_effects(M_p = M_p_mat, M_s = M_s_mat,
                                      F_footprint_p = F_footprint_p, F_effects_p = F_effects_p,
                                      F_footprint_s = F_footprint_s, F_effects_s = F_effects_s)
-    c(GH_list, E_list, M_list, F_list) %>% set_names(c(names(GH_list), names(E_list), names(M_list), names(F_list)))
+    c(GH_list, E_list, M_list, F_list) %>% magrittr::set_names(c(names(GH_list), names(E_list), names(M_list), names(F_list)))
   }
   matsindf_apply(.iomats, FUN = embodied_func, Y_mat = Y, q_vec = q,
                  L_ixp_mat = L_ixp, g_vec = g, W_mat = W, U_EIOU_mat = U_EIOU)
@@ -84,10 +84,10 @@ calc_GH <- function(.iomats = NULL,
                     # Output columns
                     G = "G", H = "H"){
   GH_func <- function(Y_mat, L_ixp_mat){
-    y <- rowsums_byname(Y)
-    G_mat <- matrixproduct_byname(L_ixp, hatize_byname(y))
-    H_mat <- matrixproduct_byname(L_ixp, Y)
-    list(G_mat, H_mat) %>% set_names(c(G, H))
+    y <- matsbyname::rowsums_byname(Y)
+    G_mat <- matsbyname::matrixproduct_byname(L_ixp, matsbyname::hatize_byname(y))
+    H_mat <- matsbyname::matrixproduct_byname(L_ixp, Y)
+    list(G_mat, H_mat) %>% magrittr::set_names(c(G, H))
   }
   matsindf_apply(.iomats, FUN = GH_func, Y_mat = Y, L_ixp_mat = L_ixp)
 }
@@ -104,12 +104,6 @@ calc_GH <- function(.iomats = NULL,
 #'
 #' @return list or data frame containing \code{E} matrices
 #'
-#' @importFrom matsbyname clean_byname
-#' @importFrom matsbyname difference_byname
-#' @importFrom matsbyname hatize_byname
-#' @importFrom matsbyname rowsums_byname
-#' @importFrom matsbyname sum_byname
-#'
 #' @export
 calc_E <- function(.iomats = NULL,
                    # Input names
@@ -117,8 +111,8 @@ calc_E <- function(.iomats = NULL,
                    # Output name
                    E = "E"){
   E_func <- function(g_vec, W_mat, U_EIOU_mat){
-    E_mat <- matrixproduct_byname(sum_byname(W_mat, U_EIOU_mat), g_vec %>% hatinv_byname())
-    list(E_mat) %>% set_names(E)
+    E_mat <- matsbyname::matrixproduct_byname(matsbyname::sum_byname(W_mat, U_EIOU_mat), g_vec %>% matsbyname::hatinv_byname())
+    list(E_mat) %>% magrittr::set_names(E)
   }
   matsindf_apply(.iomats, FUN = E_func, g_vec = g, W_mat = W, U_EIOU_mat = U_EIOU)
 }
@@ -149,12 +143,6 @@ calc_E <- function(.iomats = NULL,
 #'
 #' @return a list or data frame of embodied energy matrices
 #'
-#' @importFrom matsbyname list_of_rows_or_cols
-#' @importFrom matsbyname make_list
-#' @importFrom matsbyname setrowtype
-#' @importFrom matsbyname setcoltype
-#' @importFrom matsbyname rowtype
-#' @importFrom matsbyname coltype
 #' @importFrom matsbyname colsums_byname
 #' @importFrom matsbyname setrownames_byname
 #' @importFrom matsbyname setcolnames_byname
@@ -170,12 +158,12 @@ calc_M <- function(.YqGHEdata = NULL,
     # Form one e vector for each row of the E matrix.
     # All vectors for a given row of the data frame are stored in a list
     # in the e_colname column of the data frame.
-    e_vecs <- list_of_rows_or_cols(E_mat, margin = 1)
+    e_vecs <- matsbyname::list_of_rows_or_cols(E_mat, margin = 1)
     # Form one e_hat matrix for each e vector in each list.
-    # !!e_hat_colname := hatize_byname(!!as.name(e_colname)),
-    e_hat_list <- lapply(e_vecs, FUN = hatize_byname)
+    # !!e_hat_colname := matsbyname::hatize_byname(!!as.name(e_colname)),
+    e_hat_list <- lapply(e_vecs, FUN = matsbyname::hatize_byname)
     # Calculate Q matrices
-    G_list <- make_list(G_mat, n = length(e_hat_list), lenx = 1)
+    G_list <- matsbyname::make_list(G_mat, n = length(e_hat_list), lenx = 1)
     Q_list <- Map(matrixproduct_byname, e_hat_list, G_list)
     # We're looking for embodied energy, which are positive entries in the Q matrices.
     # Set negative entries in the Q matrices to zero
@@ -189,8 +177,8 @@ calc_M <- function(.YqGHEdata = NULL,
                        # At this point, we have another copy of our matrix with
                        # all negative elements set to zero.
                        # Ensure that row and column types of m are preserved.
-                       setrowtype(rowtype(m)) %>%
-                       setcoltype(coltype(m))
+                       matsbyname::setrowtype(matsbyname::rowtype(m)) %>%
+                       matsbyname::setcoltype(matsbyname::coltype(m))
                    })
     # Calculate column sums for each matrix in Qpos_list.
     # These column sums give the amount of energy of the type given by
@@ -199,15 +187,17 @@ calc_M <- function(.YqGHEdata = NULL,
     # rbind the column sums of each Qpos in Qposcolsums_list into a matrix,
     # with row names taken from the name of the Q matrix whose column sums comprise the row.
     M_p_mat <- do.call(rbind, Qposcolsums_list) %>%
-      setrownames_byname(names(Qposcolsums_list)) %>%
-      setrowtype(rowtype(E_mat)) %>% setcoltype(rowtype(E_mat))
+      matsbyname::setrownames_byname(names(Qposcolsums_list)) %>%
+      matsbyname::setrowtype(matsbyname::rowtype(E_mat)) %>% matsbyname::setcoltype(matsbyname::rowtype(E_mat))
     # Calculate the "per-sector" embodied energy.
-    M_s_mat <- matrixproduct_byname(M_p_mat, q_vec %>% hatinv_byname() %>% matrixproduct_byname(Y_mat))
+    M_s_mat <- matsbyname::matrixproduct_byname(M_p_mat, q_vec %>% matsbyname::hatinv_byname() %>% matsbyname::matrixproduct_byname(Y_mat))
     # Verify energy balance for embodied matrices (M_p)
     # It should be that q - rowsums(M_p) = 0
-    err = q_vec %>% setcolnames_byname("err") %>% setcoltype("err") %>%
-      difference_byname(rowsums_byname(M_p_mat) %>% setcolnames_byname("err") %>% setcoltype("err"))
-    M_p_energy_balance_OK = iszero_byname(err, tol = tol)
+    err = q_vec %>% matsbyname::setcolnames_byname("err") %>% matsbyname::setcoltype("err") %>%
+      matsbyname::difference_byname(matsbyname::rowsums_byname(M_p_mat) %>%
+                                      matsbyname::setcolnames_byname("err") %>%
+                                      matsbyname::setcoltype("err"))
+    M_p_energy_balance_OK = matsbyname::iszero_byname(err, tol = tol)
     stopifnot(M_p_energy_balance_OK)
     # Everything has checked out. Build our list and return.
     list(M_p_mat, M_s_mat) %>% magrittr::set_names(c(M_p, M_s))
@@ -250,18 +240,18 @@ calc_F_footprint_effects <- function(.Mmats = NULL,
                                      F_effects_s = "F_effects_s"){
   F_func <- function(M_p_mat, M_s_mat){
     # Cleaning zero rows and columns before fractionizing to avoid Inf values.
-    F_footprint_p_mat <- fractionize_byname(clean_byname(M_p_mat, margin = 2), margin = 2)
-    F_effects_p_mat <- fractionize_byname(clean_byname(M_p_mat, margin = 1), margin = 1)
-    F_footprint_s_mat <- fractionize_byname(clean_byname(M_s_mat, margin = 2), margin = 2)
-    F_effects_s_mat <- fractionize_byname(clean_byname(M_s_mat, margin = 1), margin = 1)
+    F_footprint_p_mat <- fractionize_byname(matsbyname::clean_byname(M_p_mat, margin = 2), margin = 2)
+    F_effects_p_mat <- fractionize_byname(matsbyname::clean_byname(M_p_mat, margin = 1), margin = 1)
+    F_footprint_s_mat <- fractionize_byname(matsbyname::clean_byname(M_s_mat, margin = 2), margin = 2)
+    F_effects_s_mat <- fractionize_byname(matsbyname::clean_byname(M_s_mat, margin = 1), margin = 1)
 
     # Run some tests to make sure everything is working.
     # Start with footprint matrices
-    colsums_F_footprint_p <- colsums_byname(F_footprint_p_mat)
-    colsums_F_footprint_s <- colsums_byname(F_footprint_s_mat)
-    err_F_footprint_p <- difference_byname(colsums_F_footprint_p, 1)
-    err_F_footprint_s <- difference_byname(colsums_F_footprint_s, 1)
-    F_footprint_p_OK <- iszero_byname(err_F_footprint_p)
+    colsums_F_footprint_p <- matsbyname::colsums_byname(F_footprint_p_mat)
+    colsums_F_footprint_s <- matsbyname::colsums_byname(F_footprint_s_mat)
+    err_F_footprint_p <- matsbyname::difference_byname(colsums_F_footprint_p, 1)
+    err_F_footprint_s <- matsbyname::difference_byname(colsums_F_footprint_s, 1)
+    F_footprint_p_OK <- matsbyname::iszero_byname(err_F_footprint_p)
     if (!F_footprint_p_OK) {
       stop("F_footprint_p_OK is not true.")
     }
@@ -270,16 +260,16 @@ calc_F_footprint_effects <- function(.Mmats = NULL,
       stop("F_footprint_s_OK is not true.")
     }
     # Also check effects matrices
-    rowsums_F_effects_p <- rowsums_byname(F_effects_p_mat)
-    rowsums_F_effects_s <- rowsums_byname(F_effects_s_mat)
-    err_F_effects_p <- difference_byname(rowsums_F_effects_p, 1)
-    err_F_effects_s <- difference_byname(rowsums_F_effects_s, 1)
-    F_effects_p_OK <- iszero_byname(err_F_effects_p)
-    F_effects_s_OK <- iszero_byname(err_F_effects_s)
+    rowsums_F_effects_p <- matsbyname::rowsums_byname(F_effects_p_mat)
+    rowsums_F_effects_s <- matsbyname::rowsums_byname(F_effects_s_mat)
+    err_F_effects_p <- matsbyname::difference_byname(rowsums_F_effects_p, 1)
+    err_F_effects_s <- matsbyname::difference_byname(rowsums_F_effects_s, 1)
+    F_effects_p_OK <- matsbyname::iszero_byname(err_F_effects_p)
+    F_effects_s_OK <- matsbyname::iszero_byname(err_F_effects_s)
     if (!F_effects_p_OK) {
       stop("F_effects_p_OK is not true.")
     }
-    F_footprint_s_OK <- iszero_byname(err_F_footprint_s)
+    F_footprint_s_OK <- matsbyname::iszero_byname(err_F_footprint_s)
     if (!F_effects_s_OK) {
       stop("F_effects_s_OK is not true.")
     }
@@ -328,18 +318,19 @@ calc_embodied_etas <- function(.embodiedmats = NULL,
                                # Output columns
                                eta_p = "eta_p", eta_s = "eta_s"){
   eta_func <- function(Y_mat, G_mat, H_mat){
-    eta_p_vec <- quotient_byname(
-      rowsums_byname(Y_mat) %>% transpose_byname(),
-      G_mat %>% select_rows_byname(retain_pattern = make_pattern(primary_machine_names, pattern_type = "leading")) %>% colsums_byname()
+    eta_p_vec <- matsbyname::quotient_byname(
+      matsbyname::rowsums_byname(Y_mat) %>% matsbyname::transpose_byname(),
+      G_mat %>% matsbyname::select_rows_byname(retain_pattern = make_pattern(primary_machine_names, pattern_type = "leading")) %>%
+        matsbyname::colsums_byname()
     ) %>%
-      transpose_byname() # Make it a column vector
-    eta_s_vec <- quotient_byname(
-      colsums_byname(Y_mat) %>% setrownames_byname("row") %>% setrowtype("row"),
+      matsbyname::transpose_byname() # Make it a column vector
+    eta_s_vec <- matsbyname::quotient_byname(
+      matsbyname::colsums_byname(Y_mat) %>% matsbyname::setrownames_byname("row") %>% matsbyname::setrowtype("row"),
       H_mat %>% select_rows_byname(retain_pattern = make_pattern(primary_machine_names, pattern_type = "leading")) %>%
-        colsums_byname() %>% setrownames_byname("row") %>% setrowtype("row")
+        matsbyname::colsums_byname() %>% matsbyname::setrownames_byname("row") %>% matsbyname::setrowtype("row")
     ) %>%
-      transpose_byname() # Make it a column vector
-    list(eta_p_vec, eta_s_vec) %>% set_names(eta_p, eta_s)
+      matsbyname::transpose_byname() # Make it a column vector
+    list(eta_p_vec, eta_s_vec) %>% magrittr::set_names(c(eta_p, eta_s))
   }
   matsindf_apply(.embodiedmats, FUN = eta_func, Y_mat = Y, G_mat = G, H_mat = H)
 }

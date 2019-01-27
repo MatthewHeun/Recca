@@ -21,8 +21,6 @@
 #'         If \code{target} is a vector or list, the return value is the same length as \code{target}
 #'         and contains the result of applying the test to each item in \code{target}.
 #'
-#' @importFrom Hmisc escapeRegex
-#'
 #' @export
 #'
 #' @examples
@@ -75,7 +73,7 @@ starts_with_any_of <- function(x, target){
   sapply(x, FUN = function(one_x){
     grepl(paste(paste0("^", Hmisc::escapeRegex(target)), collapse = "|"), one_x)
   }) %>%
-    set_names(NULL)
+    magrittr::set_names(NULL)
 }
 
 
@@ -102,8 +100,6 @@ starts_with_any_of <- function(x, target){
 #' @return a list or data frame with \code{.sutdata} with an additional column (named with the value of the \code{p_industries} argument)
 #'         containing the resource industries for each row
 #'
-#' @importFrom matsbyname sort_rows_cols
-#'
 #' @export
 #'
 #' @examples
@@ -113,10 +109,11 @@ starts_with_any_of <- function(x, target){
 #'   resource_industries()
 resource_industries <- function(.sutdata = NULL, U = "U", V = "V", r_industries = "r_industries"){
   r_industries_func <- function(U_mat, V_mat){
-    completed_cols_U <- complete_rows_cols(a = U_mat, mat = transpose_byname(V_mat), margin = 2) %>% sort_rows_cols()
+    completed_cols_U <- matsbyname::complete_rows_cols(a = U_mat, mat = matsbyname::transpose_byname(V_mat), margin = 2) %>%
+      matsbyname::sort_rows_cols()
     zero_cols_U_inds <- completed_cols_U %>%
-      colsums_byname() %>%
-      compare_byname("==", 0) %>%
+      matsbyname::colsums_byname() %>%
+      matsbyname::compare_byname("==", 0) %>%
       which()
     list(dimnames(completed_cols_U)[[2]][zero_cols_U_inds]) %>% magrittr::set_names(r_industries)
   }
@@ -210,7 +207,7 @@ combine_RV <- function(.sutmats = NULL,
                        # Output name
                        R_plus_V = "R_plus_V"){
   combine_RV_func <- function(R_mat, V_mat){
-    R_plus_V_mat <- sum_byname(R_mat, V_mat)
+    R_plus_V_mat <- matsbyname::sum_byname(R_mat, V_mat)
     list(R_plus_V_mat) %>% magrittr::set_names(c(R_plus_V))
   }
   matsindf_apply(.sutmats, FUN = combine_RV_func, R_mat = R, V_mat = V)
@@ -396,13 +393,13 @@ flows_unit_homogeneous <- function(.sutmats = NULL,
                                    flows_unit_homogeneous = ".flows_unit_homogeneous"){
 
   flows_unit_homogeneous_func <- function(U_mat, V_mat, S_units_mat){
-    U_bar <- matrixproduct_byname(transpose_byname(S_units_mat), U_mat)
-    V_bar <- matrixproduct_byname(V_mat, S_units_mat)
+    U_bar <- matsbyname::matrixproduct_byname(matsbyname::transpose_byname(S_units_mat), U_mat)
+    V_bar <- matsbyname::matrixproduct_byname(V_mat, S_units_mat)
     # Add V_bar and U_bar_T to obtain a matrix with industries in rows and units in columns.
-    sums_by_unit <- sum_byname(V_bar, transpose_byname(U_bar))
+    sums_by_unit <- matsbyname::sum_byname(V_bar, matsbyname::transpose_byname(U_bar))
     # If rows of sums_by_unit have 1 non-zero row, the inputs and outputs for the industry of that row are unit-homogeneous.
     # If rows of sums_by_unit have more than 1 non-zero row, the inputs and outputs for the industry of that row are unit-inhomogeneous.
-    num_non_zero <- count_vals_inrows_byname(sums_by_unit, "!=", 0)
+    num_non_zero <- matsbyname::count_vals_inrows_byname(sums_by_unit, "!=", 0)
     out <- num_non_zero == 1
     if (!keep_details) {
       out <- all(out)

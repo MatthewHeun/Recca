@@ -51,7 +51,7 @@ PerfectSubmats <- PerfectSubtidy %>%
   rename(matrix.name = matname, matrix = EX.ktoe) %>%
   spread(key = matrix.name, value = matrix) %>%
 
-  mutate(
+  dplyr::mutate(
     # Create full U matrix
     U = sum_byname(U_excl_EIOU, U_EIOU),
     r_EIOU = quotient_byname(U_EIOU, U),

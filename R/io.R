@@ -119,24 +119,24 @@ calc_yqfgW <- function(.sutdata = NULL,
                        f = "f", g = "g",
                        W = "W"){
   yqfgw_func <- function(U_mat, V_mat, Y_mat, S_units_mat = NULL){
-    y_vec <- rowsums_byname(Y_mat)
-    q_vec <- sum_byname(rowsums_byname(U_mat), y_vec)
-    f_vec <- colsums_byname(U_mat) %>% transpose_byname() # vectors are always column vectors
-    g_vec <- rowsums_byname(V_mat)
-    W_mat <- difference_byname(transpose_byname(V_mat), U_mat)
+    y_vec <- matsbyname::rowsums_byname(Y_mat)
+    q_vec <- matsbyname::sum_byname(matsbyname::rowsums_byname(U_mat), y_vec)
+    f_vec <- matsbyname::colsums_byname(U_mat) %>% matsbyname::transpose_byname() # vectors are always column vectors
+    g_vec <- matsbyname::rowsums_byname(V_mat)
+    W_mat <- matsbyname::difference_byname(matsbyname::transpose_byname(V_mat), U_mat)
     # Deal with any unit homogenity issues for f and g.
     if (!is.null(S_units_mat)) {
-      U_bar <- matrixproduct_byname(transpose_byname(S_units_mat), U_mat)
-      U_bar_units_OK <- count_vals_incols_byname(U_bar, "!=", 0) %>%
-        compare_byname("<=", 1) %>%
-        transpose_byname()
+      U_bar <- matsbyname::matrixproduct_byname(matsbyname::transpose_byname(S_units_mat), U_mat)
+      U_bar_units_OK <- matsbyname::count_vals_incols_byname(U_bar, "!=", 0) %>%
+        matsbyname::compare_byname("<=", 1) %>%
+        matsbyname::transpose_byname()
       # When we have an Industry whose inputs are not unit-homogeneous,
       # the value for that Industry in the f vector is nonsensical.
       # Replace with NA.
       f_vec[which(!U_bar_units_OK)] <- NA_real_
 
-      V_bar <- matrixproduct_byname(V_mat, S_units_mat)
-      V_bar_units_OK <- count_vals_inrows_byname(V_bar, "!=", 0) %>%
+      V_bar <- matsbyname::matrixproduct_byname(V_mat, S_units_mat)
+      V_bar_units_OK <- matsbyname::count_vals_inrows_byname(V_bar, "!=", 0) %>%
         compare_byname("<=", 1)
       # When we have an Industry whose outputs are not unit-homogeneous,
       # the value for that Industry in the g vector is nonsensical.
