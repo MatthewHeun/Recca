@@ -42,8 +42,8 @@ test_that("reconstructing U and V from a new Y matrix works as expected", {
       U_diff = difference_byname(U_prime, U),
       V_diff = difference_byname(V_prime, V),
       # The differences should be the 0 matrix, within tolerance
-      UOK = iszero_byname(U_diff, tol = 5e-5),
-      VOK = iszero_byname(V_diff, tol = 5e-5)
+      UOK = matsbyname::iszero_byname(U_diff, tol = 5e-5),
+      VOK = matsbyname::iszero_byname(V_diff, tol = 5e-5)
     )
   expect_true(all(as.logical(Reconstructed$UOK)))
   expect_true(all(as.logical(Reconstructed$VOK)))

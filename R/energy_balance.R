@@ -113,10 +113,10 @@ verify_SUT_energy_balance_with_units <- function(.sutmats = NULL,
     W_bar <- matsbyname::matrixproduct_byname(matsbyname::transpose_byname(S_units), W)
     prodOK <- matsbyname::difference_byname(matsbyname::rowsums_byname(W), y) %>% matsbyname::iszero_byname(tol = tol)
     indOK <- matsbyname::difference_byname(V_bar, matsbyname::transpose_byname(W_bar)) %>%
-      matsbyname::difference_byname(matsbyname::transpose_byname(U_bar)) %>% iszero_byname(tol = tol)
+      matsbyname::difference_byname(matsbyname::transpose_byname(U_bar)) %>% matsbyname::iszero_byname(tol = tol)
     list(prodOK, indOK) %>% magrittr::set_names(c(SUT_prod_energy_balance, SUT_ind_energy_balance))
   }
-  Out <- matsindf_apply(.sutmats, FUN = verify_func, U = U, V = V, Y = Y, S_units = S_units)
+  Out <- matsindf::matsindf_apply(.sutmats, FUN = verify_func, U = U, V = V, Y = Y, S_units = S_units)
   if (!all(Out[[SUT_prod_energy_balance]] %>% as.logical())) {
     warning(paste("Energy not conserved by product in verify_SUT_energy_balance_with_units. See column", SUT_prod_energy_balance))
   }
@@ -173,7 +173,7 @@ verify_SUT_industry_production <- function(.sutmats = NULL,
     problems <- rownames(check)[which(check == 0)]
     list(OK, problems) %>% magrittr::set_names(c(industry_production_OK, problem_industries))
   }
-  Out <- matsindf_apply(.sutmats, FUN = verify_func, U_mat = U, V_mat = V)
+  Out <- matsindf::matsindf_apply(.sutmats, FUN = verify_func, U_mat = U, V_mat = V)
   if (!all(Out[[industry_production_OK]] %>% as.logical())) {
     warning(paste("There are some industries that consume but do not produce energy. See column", industry_production_OK))
   }

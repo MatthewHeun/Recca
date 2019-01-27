@@ -43,15 +43,17 @@ primary_aggregates <- function(.sutdata,
   agg_func <- match.fun(aggfuncs[[tolower(by)]])
 
   prim_func <- function(V_mat, Y_mat){
-    VT_p <- transpose_byname(V_mat) %>%
-      matsbyname::select_cols_byname(retain_pattern = make_pattern(row_col_names = p_industries, pattern_type = "leading"))
-    Y_p <- Y_mat %>% matsbyname::select_cols_byname(retain_pattern = make_pattern(row_col_names = p_industries, pattern_type = "leading"))
+    VT_p <- matsbyname::transpose_byname(V_mat) %>%
+      matsbyname::select_cols_byname(retain_pattern =
+                                       matsbyname::make_pattern(row_col_names = p_industries, pattern_type = "leading"))
+    Y_p <- Y_mat %>% matsbyname::select_cols_byname(retain_pattern =
+                                                      matsbyname::make_pattern(row_col_names = p_industries, pattern_type = "leading"))
     # VT_p - Y_p. This is TPES in product x industry matrix format
     VT_p_minus_Y_p <- matsbyname::difference_byname(VT_p, Y_p)
     agg_primary <- agg_func(VT_p_minus_Y_p)
     list(agg_primary) %>% magrittr::set_names(aggregate_primary)
   }
-  matsindf_apply(.sutdata, FUN = prim_func, V_mat = V, Y_mat = Y)
+  matsindf::matsindf_apply(.sutdata, FUN = prim_func, V_mat = V, Y_mat = Y)
 }
 
 
@@ -98,18 +100,19 @@ finaldemand_aggregates <- function(.sutdata,
   fd_func <- function(U_mat, Y_mat, r_EIOU_mat){
     U_EIOU <- matsbyname::hadamardproduct_byname(r_EIOU_mat, U_mat)
     net <- Y_mat %>%
-      matsbyname::select_cols_byname(retain_pattern = make_pattern(row_col_names = fd_sectors, pattern_type = "leading")) %>%
+      matsbyname::select_cols_byname(retain_pattern =
+                                       matsbyname::make_pattern(row_col_names = fd_sectors, pattern_type = "leading")) %>%
       agg_func()
     gross <- matsbyname::sum_byname(net, agg_func(U_EIOU))
     if (by == "Sector") {
       # If "Sector" aggregation is requested, the results will be row vectors.
       # Convert to column vectors.
-      net <- transpose_byname(net)
-      gross <- transpose_byname(gross)
+      net <- matsbyname::transpose_byname(net)
+      gross <- matsbyname::transpose_byname(gross)
     }
     list(net, gross) %>% magrittr::set_names(c(net_aggregate_demand, gross_aggregate_demand))
   }
-  matsindf_apply(.sutdata, FUN = fd_func, U_mat = U, Y_mat = Y, r_EIOU_mat = r_EIOU)
+  matsindf::matsindf_apply(.sutdata, FUN = fd_func, U_mat = U, Y_mat = Y, r_EIOU_mat = r_EIOU)
 }
 
 #' Final demand aggregate energy with units
@@ -160,8 +163,9 @@ finaldemand_aggregates_with_units <- function(.sutdata,
       net <- matsbyname::matrixproduct_byname(
         matsbyname::transpose_byname(S_units_mat),
         Y_mat %>%
-          matsbyname::select_cols_byname(retain_pattern = make_pattern(row_col_names = fd_sectors,
-                                                                       pattern_type = "leading")))
+          matsbyname::select_cols_byname(retain_pattern =
+                                           matsbyname::make_pattern(row_col_names = fd_sectors,
+                                                                    pattern_type = "leading")))
       gross <- matsbyname::sum_byname(U_EIOU_bar, net)
       net <- matsbyname::transpose_byname(net)
       gross <- matsbyname::transpose_byname(gross)
@@ -172,7 +176,7 @@ finaldemand_aggregates_with_units <- function(.sutdata,
     }
     list(net, gross) %>% magrittr::set_names(c(net_aggregate_demand, gross_aggregate_demand))
   }
-  matsindf_apply(.sutdata, FUN = fd_func, U_mat = U, Y_mat = Y, r_EIOU_mat = r_EIOU, S_units_mat = S_units)
+  matsindf::matsindf_apply(.sutdata, FUN = fd_func, U_mat = U, Y_mat = Y, r_EIOU_mat = r_EIOU, S_units_mat = S_units)
 }
 
 

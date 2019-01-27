@@ -117,7 +117,7 @@ resource_industries <- function(.sutdata = NULL, U = "U", V = "V", r_industries 
       which()
     list(dimnames(completed_cols_U)[[2]][zero_cols_U_inds]) %>% magrittr::set_names(r_industries)
   }
-  matsindf_apply(.sutdata, FUN = r_industries_func, U_mat = U, V_mat = V)
+  matsindf::matsindf_apply(.sutdata, FUN = r_industries_func, U_mat = U, V_mat = V)
 }
 
 
@@ -174,12 +174,16 @@ separate_RV <- function(.sutmats = NULL,
     if (length(r_industry_names) == 0) {
       warning("No R created in separate_RV")
     } else {
-      new_R_mat <- R_plus_V_mat %>% select_rows_byname(retain_pattern = make_pattern(r_industry_names, pattern_type = "exact"))
-      new_V_mat <- R_plus_V_mat %>% select_rows_byname(remove_pattern = make_pattern(r_industry_names, pattern_type = "exact"))
+      new_R_mat <- R_plus_V_mat %>%
+        matsbyname::select_rows_byname(retain_pattern = matsbyname::make_pattern(r_industry_names,
+                                                                                 pattern_type = "exact"))
+      new_V_mat <- R_plus_V_mat %>%
+        matsbyname::select_rows_byname(remove_pattern = matsbyname::make_pattern(r_industry_names,
+                                                                                 pattern_type = "exact"))
     }
     list(new_R_mat, new_V_mat) %>% magrittr::set_names(c(R, V))
   }
-  matsindf_apply(.sutmats, FUN = separate_RV_func, U_mat = U, R_plus_V_mat = R_plus_V)
+  matsindf::matsindf_apply(.sutmats, FUN = separate_RV_func, U_mat = U, R_plus_V_mat = R_plus_V)
 }
 
 #' Combine resource (\code{R}) and make (\code{V}) matrices into a make plus resource (\code{R_plus_V}) matrix
@@ -210,7 +214,7 @@ combine_RV <- function(.sutmats = NULL,
     R_plus_V_mat <- matsbyname::sum_byname(R_mat, V_mat)
     list(R_plus_V_mat) %>% magrittr::set_names(c(R_plus_V))
   }
-  matsindf_apply(.sutmats, FUN = combine_RV_func, R_mat = R, V_mat = V)
+  matsindf::matsindf_apply(.sutmats, FUN = combine_RV_func, R_mat = R, V_mat = V)
 }
 
 
@@ -247,14 +251,14 @@ products_unit_homogeneous <- function(.sutmats = NULL,
                                       # Output names
                                       products_unit_homogeneous = ".products_unit_homogeneous"){
   products_unit_homogeneous_func <- function(S_units_mat){
-    num_ones <- count_vals_inrows_byname(S_units_mat, "==", 1)
+    num_ones <- matsbyname::count_vals_inrows_byname(S_units_mat, "==", 1)
     out <- num_ones == 1
     if (!keep_details) {
       out <- all(out)
     }
     list(out) %>% magrittr::set_names(products_unit_homogeneous)
   }
-  matsindf_apply(.sutmats, FUN = products_unit_homogeneous_func, S_units_mat = S_units)
+  matsindf::matsindf_apply(.sutmats, FUN = products_unit_homogeneous_func, S_units_mat = S_units)
 }
 
 
@@ -294,15 +298,15 @@ inputs_unit_homogeneous <- function(.sutmats = NULL,
                                     # Output names
                                     ins_unit_homogeneous = ".inputs_unit_homogeneous"){
   inputs_unit_homogeneous_func <- function(U_mat, S_units_mat){
-    U_bar <- transpose_byname(S_units_mat) %>% matrixproduct_byname(U_mat)
-    num_non_zero <- count_vals_incols_byname(U_bar, "!=", 0)
+    U_bar <- matsbyname::transpose_byname(S_units_mat) %>% matsbyname::matrixproduct_byname(U_mat)
+    num_non_zero <- matsbyname::count_vals_incols_byname(U_bar, "!=", 0)
     out <- num_non_zero == 1
     if (!keep_details) {
       out <- all(out)
     }
     list(out) %>% magrittr::set_names(ins_unit_homogeneous)
   }
-  matsindf_apply(.sutmats, FUN = inputs_unit_homogeneous_func, U_mat = U, S_units_mat = S_units)
+  matsindf::matsindf_apply(.sutmats, FUN = inputs_unit_homogeneous_func, U_mat = U, S_units_mat = S_units)
 }
 
 
@@ -343,15 +347,15 @@ outputs_unit_homogeneous <- function(.sutmats = NULL,
                                      outs_unit_homogeneous = ".outputs_unit_homogeneous"){
 
   outputs_unit_homogeneous_func <- function(V_mat, S_units_mat){
-    V_bar <- matrixproduct_byname(V_mat, S_units_mat)
-    num_non_zero <- count_vals_inrows_byname(V_bar, "!=", 0)
+    V_bar <- matsbyname::matrixproduct_byname(V_mat, S_units_mat)
+    num_non_zero <- matsbyname::count_vals_inrows_byname(V_bar, "!=", 0)
     out <- num_non_zero == 1
     if (!keep_details) {
       out <- all(out)
     }
     list(out) %>% magrittr::set_names(outs_unit_homogeneous)
   }
-  matsindf_apply(.sutmats, FUN = outputs_unit_homogeneous_func, V_mat = V, S_units_mat = S_units)
+  matsindf::matsindf_apply(.sutmats, FUN = outputs_unit_homogeneous_func, V_mat = V, S_units_mat = S_units)
 }
 
 
@@ -407,5 +411,5 @@ flows_unit_homogeneous <- function(.sutmats = NULL,
     list(out) %>% magrittr::set_names(flows_unit_homogeneous)
   }
 
-  matsindf_apply(.sutmats, FUN = flows_unit_homogeneous_func, U_mat = U, V_mat = V, S_units_mat = S_units)
+  matsindf::matsindf_apply(.sutmats, FUN = flows_unit_homogeneous_func, U_mat = U, V_mat = V, S_units_mat = S_units)
 }

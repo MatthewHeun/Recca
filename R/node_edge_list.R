@@ -320,7 +320,7 @@ waste_edges <- function(U_mat, V_mat,
                         waste = "Waste") {
   # Create edges for the waste sectors in a data frame.
   # Start by calculating the W matrix (V^T - U)
-  matsbyname::difference_byname(transpose_byname(V_mat), U_mat) %>%
+  matsbyname::difference_byname(matsbyname::transpose_byname(V_mat), U_mat) %>%
     # The column sums of the W matrix contain positive and negative numbers.
     # We're interested in the negative numbers, because those are industries that are generating waste.
     # Positive numbers arise from industries that extract free gifts from nature.
@@ -410,6 +410,6 @@ node_list <- function(edge_list, from = "From", to = "To", node = "Node", node_i
 #       )
 #     list(dplyr::bind_rows(fromIDs, toIDs) %>% unique()) %>% magrittr::set_names(el)
 #   }
-#   matsindf_apply(.sutmats, FUN = nl_func, el = edge_list)
+#   matsindf::matsindf_apply(.sutmats, FUN = nl_func, el = edge_list)
 # }
 

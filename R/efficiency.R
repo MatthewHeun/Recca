@@ -58,5 +58,5 @@ calc_eta_i <- function(.sutmats,
     list(eta_vec) %>% magrittr::set_names(eta_i)
   }
 
-  matsindf_apply(.sutmats, FUN = eta_func, U_mat = U, V_mat = V, S_units_mat = S_units)
+  matsindf::matsindf_apply(.sutmats, FUN = eta_func, U_mat = U, V_mat = V, S_units_mat = S_units)
 }

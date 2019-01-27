@@ -67,5 +67,5 @@ make_sankey <- function(.sutmats = NULL, R = "R", U = "U", V = "V", Y = "Y", sim
                        iterations = 500, nodePadding = 14, fontSize = 20)
     list(s) %>% magrittr::set_names(sankey)
   }
-  matsindf_apply(.sutmats, FUN = sankey_func, R_mat = R, U_mat = U, V_mat = V, Y_mat = Y)
+  matsindf::matsindf_apply(.sutmats, FUN = sankey_func, R_mat = R, U_mat = U, V_mat = V, Y_mat = Y)
 }

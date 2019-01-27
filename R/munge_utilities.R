@@ -10,10 +10,6 @@
 #'
 #' @return a data frame containing grouping variables and a new \code{S_unit} column
 #'
-#' @importFrom dplyr groups
-#' @importFrom dplyr do
-#' @importFrom matsindf collapse_to_matrices
-#'
 #' @export
 #'
 #' @examples
@@ -33,17 +29,17 @@ S_units_from_tidy <- function(.tidydf, Product = "Product", Unit = "Unit", S_uni
 
   matsindf::verify_cols_missing(.tidydf, c(S_units, val, rowtype, coltype))
 
-  dplyr::select(.tidydf, !!!groups(.tidydf), !!Product, !!Unit) %>%
-    do(unique(.data)) %>%
+  dplyr::select(.tidydf, !!!dplyr::groups(.tidydf), !!Product, !!Unit) %>%
+    dplyr::do(unique(.data)) %>%
     dplyr::mutate(
       !!as.name(val) := 1,
       !!as.name(S_units) := S_units,
       !!as.name(rowtype) := "Product",
       !!as.name(coltype) := "Unit"
     ) %>%
-    collapse_to_matrices(matnames = S_units, matvals = val,
-                         rownames = as.character(Product), colnames = as.character(Unit),
-                         rowtypes = rowtype, coltypes = coltype) %>%
+    matsindf::collapse_to_matrices(matnames = S_units, matvals = val,
+                                   rownames = as.character(Product), colnames = as.character(Unit),
+                                   rowtypes = rowtype, coltypes = coltype) %>%
     dplyr::rename(
       !!as.name(S_units) := !!as.name(val)
     )
@@ -97,10 +93,6 @@ S_units_from_tidy <- function(.tidydf, Product = "Product", Unit = "Unit", S_uni
 #'
 #' @export
 #'
-#' @importFrom dplyr anti_join
-#' @importFrom dplyr case_when
-#' @importFrom dplyr mutate
-#'
 #' @examples
 #' library(dplyr)
 #' UKEnergy2000tidy %>%
@@ -144,7 +136,7 @@ add_matnames_iea <- function(.DF,
 
   out <- .DF %>%
     dplyr::mutate(
-      !!matname := case_when(
+      !!matname := dplyr::case_when(
         # All Consumption items belong in the final demand (Y) matrix.
         !!ledger_side == consumption_side ~ Y,
         # All positive values on the Supply side of the ledger belong in the make (V) matrix.
@@ -183,7 +175,7 @@ add_matnames_iea <- function(.DF,
       unique()
     # The next line subtracts (by group!) all industries with inputs from the industries_with_outputs data frame,
     # leaving only industries who have outputs but no inputs.
-    resource_rows <- anti_join(industries_with_outputs, industries_with_inputs, by = c(gvars, as.character(flow))) %>%
+    resource_rows <- dplyr::anti_join(industries_with_outputs, industries_with_inputs, by = c(gvars, as.character(flow))) %>%
       dplyr::mutate(
         # The rows in the resource_rows data frame belong in the resources matrix,
         # so we give them the R matrix name.

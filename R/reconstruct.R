@@ -64,7 +64,7 @@ new_Y <- function(.sutmats = NULL,
     V_prime_mat <- matsbyname::matrixproduct_byname(D_mat, matsbyname::hatize_byname(q_prime_vec))
     list(U_prime_mat, V_prime_mat) %>% magrittr::set_names(c(U_prime, V_prime))
   }
-  matsindf_apply(.sutmats, FUN = new_Y_func,
+  matsindf::matsindf_apply(.sutmats, FUN = new_Y_func,
                  Y_prime_mat = Y_prime, L_ixp_mat = L_ixp, L_pxp_mat = L_pxp,
                  Z_mat = Z, D_mat = D)
 }
@@ -174,8 +174,8 @@ new_k_ps <- function(.sutmats = NULL,
       stop(paste("k_prime_2 has", ncol(k_prime_2), "columns in delta_inputs_ps_func. Must have 1 column."))
     }
     # Ensure that the column sum of k_prime_2 is exactly 1.0.
-    if (colsums_byname(k_prime_2) != 1) {
-      stop(paste("k_prime_2 has column sum of", colsums_byname(y_prime_2), "but it must be exactly 1.0."))
+    if (matsbyname::colsums_byname(k_prime_2) != 1) {
+      stop(paste("k_prime_2 has column sum of", matsbyname::colsums_byname(y_prime_2), "but it must be exactly 1.0."))
     }
     # Grab the k_prime_1 (not k_prime_2) column out of the existing K matrix.
     # k_prime_1 is the column from the K matrix with the same name as k_prime_2.
@@ -194,7 +194,7 @@ new_k_ps <- function(.sutmats = NULL,
     g_prime_2 <- matsbyname::matrixproduct_byname(L_ixp_mat, y_prime_2)
 
     q_prime_1 <- matsbyname::matrixproduct_byname(L_pxp_mat, y_prime_1)
-    q_prime_2 <- matrixproduct_byname(L_pxp_mat, y_prime_2)
+    q_prime_2 <- matsbyname::matrixproduct_byname(L_pxp_mat, y_prime_2)
 
     # Calculate U_prime_1 and U_prime_2
     U_prime_1 <- matsbyname::sum_byname(matsbyname::matrixproduct_byname(Z_mat, matsbyname::hatize_byname(g_prime_1)), k_prime_1_f_hat)
@@ -210,7 +210,7 @@ new_k_ps <- function(.sutmats = NULL,
 
     list(U_prime_mat, V_prime_mat) %>% magrittr::set_names(c(U_prime, V_prime))
   }
-  matsindf_apply(.sutmats, FUN = new_k_ps_func,
+  matsindf::matsindf_apply(.sutmats, FUN = new_k_ps_func,
                  k_prime_2 = k_prime,
                  U_mat = U, V_mat = V, Y_mat = Y,
                  K_mat = K,
@@ -257,9 +257,6 @@ new_k_ps <- function(.sutmats = NULL,
 #' @return a list or data frame containing \code{U_prime}, \code{V_prime}, and \code{Y_prime} matrices
 #'
 #' @export
-#'
-#' @importFrom matsbyname abs_byname
-#' @importFrom matsbyname equal_byname
 #'
 #' @examples
 #' library(dplyr)
@@ -311,7 +308,7 @@ new_R_ps <- function(.sutmats = NULL,
     # Calculate some quantities that we'll use on each iteration.
 
     # q_hat_inv_times_U
-    q_hat_inv_times_U <- matrixproduct_byname(hatinv_byname(q_vec), U_mat)
+    q_hat_inv_times_U <- matsbyname::matrixproduct_byname(matsbyname::hatinv_byname(q_vec), U_mat)
 
     # Column sums of the R_prime matrix
     iR_prime <- matsbyname::colsums_byname(R_prime_mat)
@@ -391,7 +388,7 @@ new_R_ps <- function(.sutmats = NULL,
     list(U_prime_mat, V_prime_mat, Y_prime_mat) %>% magrittr::set_names(c(U_prime, V_prime, Y_prime))
   }
 
-  matsindf_apply(.sutmats, FUN = new_R_func, R_prime_mat = R_prime, U_mat = U, V_mat = V, Y_mat = Y, S_units_mat = S_units,
+  matsindf::matsindf_apply(.sutmats, FUN = new_R_func, R_prime_mat = R_prime, U_mat = U, V_mat = V, Y_mat = Y, S_units_mat = S_units,
                  q_vec = q, C_mat = C, eta_i_vec = eta_i)
 }
 
