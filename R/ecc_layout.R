@@ -79,23 +79,6 @@
 #'         The second column contains y coordinates for the nodes and is named \code{y_colname}.
 #'         Node names are the row names for the outgoing matrix.
 #'
-#' @importFrom rlang :=
-#' @importFrom rlang .data
-#' @importFrom magrittr %>%
-#' @importFrom magrittr set_rownames
-#' @importFrom dplyr arrange
-#' @importFrom dplyr count
-#' @importFrom dplyr filter
-#' @importFrom dplyr group_by
-#' @importFrom dplyr left_join
-#' @importFrom dplyr mutate
-#' @importFrom dplyr mutate_if
-#' @importFrom dplyr rename
-#' @importFrom dplyr row_number
-#' @importFrom dplyr select
-#' @importFrom tibble column_to_rownames
-#' @importFrom tibble rownames_to_column
-#'
 #' @export
 ecc_layout <- function(Industries,
                        Products,
@@ -111,29 +94,31 @@ ecc_layout <- function(Industries,
   # Set a name for the node name columsn that will be used throughout this function.
   node_name_colname <- ".Node_name"
   # First step is to eliminate factors in the incoming data frames
-  Industries <- Industries %>% mutate_if(is.factor, as.character)
-  Products <- Products %>% mutate_if(is.factor, as.character)
+  Industries <- Industries %>% dplyr::mutate_if(is.factor, as.character)
+  Products <- Products %>% dplyr::mutate_if(is.factor, as.character)
   # The group_colname is optional.
   # If the column is not present, add and fill with a single group (group_colname).
   if (!(group_colname %in% names(Industries))) {
-    Industries <- Industries %>% mutate(
-      !!as.name(group_colname) := group_colname
-    )
+    Industries <- Industries %>%
+      dplyr::mutate(
+        !!as.name(group_colname) := group_colname
+      )
   }
   if (!(group_colname %in% names(Products))) {
-    Products <- Products %>% mutate(
-      !!as.name(group_colname) := group_colname
-    )
+    Products <- Products %>%
+      dplyr::mutate(
+        !!as.name(group_colname) := group_colname
+      )
   }
   # Extract storage industries from the Industries data frame.
   Storage <- Industries %>%
-    filter((!!as.name(stage_colname)) == storage_stagename)
+    dplyr::filter((!!as.name(stage_colname)) == storage_stagename)
   Industries_less_Storage <- Industries %>%
-    filter((!!as.name(stage_colname)) != storage_stagename)
+    dplyr::filter((!!as.name(stage_colname)) != storage_stagename)
   # Ensure that the number of industry stages (less storage)
   # is one more than the number of product stages.
-  N_industry_stages <- Industries_less_Storage %>% select(!!as.name(stage_colname)) %>% unique() %>% nrow()
-  N_product_stages <- Products %>% select(!!as.name(stage_colname)) %>% unique() %>% nrow()
+  N_industry_stages <- Industries_less_Storage %>% dplyr::select(!!as.name(stage_colname)) %>% unique() %>% nrow()
+  N_product_stages <- Products %>% dplyr::select(!!as.name(stage_colname)) %>% unique() %>% nrow()
   if (N_industry_stages - N_product_stages != 1) {
     stop(paste0("N_industry_stages = ", N_industry_stages,
                 ". N_product_stages = ", N_product_stages, ". ",
@@ -142,26 +127,26 @@ ecc_layout <- function(Industries,
   }
   # Set groups for the Group variable based on order of appearance.
   # These groups will be used later for ordering the y coordinates of nodes.
-  grps <- rbind(Industries_less_Storage %>% select(!!as.name(group_colname)),
-                Products %>% select(!!as.name(group_colname))) %>%
-    filter(!is.na(!!as.name(group_colname))) %>% unique()
-  grps <- set_rownames(grps, 1:nrow(grps))
+  grps <- rbind(Industries_less_Storage %>% dplyr::select(!!as.name(group_colname)),
+                Products %>% dplyr::select(!!as.name(group_colname))) %>%
+    dplyr::filter(!is.na(!!as.name(group_colname))) %>% unique()
+  grps <- magrittr::set_rownames(grps, 1:nrow(grps))
   # Set levels for groups in order of their appearance.
   # These levels will be used later for calculating the y coordinates for the nodes.
   Industries <- Industries %>%
-    mutate(
+    dplyr::mutate(
       !!as.name(group_colname) := factor(!!as.name(group_colname), levels = grps[[group_colname]])
     )
   Industries_less_Storage <- Industries_less_Storage %>%
-    mutate(
+    dplyr::mutate(
       !!as.name(group_colname) := factor(!!as.name(group_colname), levels = grps[[group_colname]])
     )
   Products <- Products %>%
-    mutate(
+    dplyr::mutate(
       !!as.name(group_colname) := factor(!!as.name(group_colname), levels = grps[[group_colname]])
     )
   Storage <- Storage %>%
-    mutate(
+    dplyr::mutate(
       !!as.name(group_colname) := factor(!!as.name(group_colname), levels = grps[[group_colname]])
     )
   # Make data frames of stage numbers.
@@ -171,47 +156,47 @@ ecc_layout <- function(Industries,
   # but takes additional calculations for storage industries (later).
   i_stage_colname <- paste0("i_", stage_colname)
   Industry_stage_order <- data.frame(temp = Industries_less_Storage %>%
-                                       select(!!as.name(stage_colname)) %>%
+                                       dplyr::select(!!as.name(stage_colname)) %>%
                                        unique()) %>%
-    rownames_to_column(var = i_stage_colname) %>%
-    mutate(
+    tibble::rownames_to_column(var = i_stage_colname) %>%
+    dplyr::mutate(
       !!as.name(i_stage_colname) := as.numeric(!!as.name(i_stage_colname)),
       !!as.name(i_stage_colname) := 2 * (!!as.name(i_stage_colname)) - 1
     )
   Product_stage_order <- data.frame(temp = Products %>%
-                                      select(!!as.name(stage_colname)) %>%
+                                      dplyr::select(!!as.name(stage_colname)) %>%
                                       unique()) %>%
-    rownames_to_column(var = i_stage_colname) %>%
-    mutate(
+    tibble::rownames_to_column(var = i_stage_colname) %>%
+    dplyr::mutate(
       !!as.name(i_stage_colname) := as.numeric(!!as.name(i_stage_colname)),
       !!as.name(i_stage_colname) := 2 * (!!as.name(i_stage_colname))
     )
   # rbind these *_stage_order data frames
   Stage_coords <- rbind(Industry_stage_order %>%
-                          rename(!!as.name(x_colname) := !!as.name(i_stage_colname)),
+                          dplyr::rename(!!as.name(x_colname) := !!as.name(i_stage_colname)),
                         Product_stage_order %>%
-                          rename(!!as.name(x_colname) := !!as.name(i_stage_colname))) %>%
-    arrange(!!as.name(x_colname))
+                          dplyr::rename(!!as.name(x_colname) := !!as.name(i_stage_colname))) %>%
+    dplyr::arrange(!!as.name(x_colname))
 
   # Join Stage_coords to a list of industries and products to create the list of nodes.
   Node_coords <- rbind(
-    Industries_less_Storage %>% rename(!!as.name(node_name_colname) := !!as.name(industry_colname)),
-    Products %>% rename(!!as.name(node_name_colname) := !!as.name(product_colname))
+    Industries_less_Storage %>% dplyr::rename(!!as.name(node_name_colname) := !!as.name(industry_colname)),
+    Products %>% dplyr::rename(!!as.name(node_name_colname) := !!as.name(product_colname))
   ) %>%
-    left_join(Stage_coords, by = stage_colname) %>%
-    group_by(!!as.name(x_colname), !!as.name(group_colname)) %>%
+    dplyr::left_join(Stage_coords, by = stage_colname) %>%
+    dplyr::group_by(!!as.name(x_colname), !!as.name(group_colname)) %>%
     # Put nodes in correct order.
     # First group on stage (x coordinate) followed by
     # the Group within each stage.
-    arrange(!!as.name(x_colname), !!as.name(group_colname))
+    dplyr::arrange(!!as.name(x_colname), !!as.name(group_colname))
 
   # At this point, all x coordinates have been decided and are in the Node_coords data frame.
   # Furthermore, the Node_coords data frame is in the correct order for y coordinates.
   # So work on y coordinates.
   # Figure out the number of nodes in each stage.
   N_nodes <- Node_coords %>%
-    group_by(!!as.name(stage_colname)) %>%
-    count()
+    dplyr::group_by(!!as.name(stage_colname)) %>%
+    dplyr::count()
   # The count function automatically creates a column named "n".
   # We need this name later, so declare it here.
   n_colname <- "n"
@@ -226,14 +211,14 @@ ecc_layout <- function(Industries,
   Node_coords <- Node_coords %>%
     # Re-group according to x_colname only,
     # thereby ensuring that we apply y coords to each stage independently.
-    group_by(!!as.name(x_colname)) %>%
-    mutate(
+    dplyr::group_by(!!as.name(x_colname)) %>%
+    dplyr::mutate(
       # Add a column for the row number (i) within each group (_group).
-      !!as.name(i_group_colname) := row_number()
+      !!as.name(i_group_colname) := dplyr::row_number()
     ) %>%
     # Add a column (n) that gives the number of nodes in each stage
-    left_join(N_nodes, by = stage_colname) %>%
-    mutate(
+    dplyr::left_join(N_nodes, by = stage_colname) %>%
+    dplyr::mutate(
       # Calculate the column of y coordinates
       # using the index within each group (i_group) and
       # the total number of nodes in the group (n)
@@ -241,7 +226,7 @@ ecc_layout <- function(Industries,
                               (y_center + (!!as.name(i_group_colname)) - ((!!as.name(n_colname)) + 1)/2)
     ) %>%
     # select only relevant columns
-    select(!!as.name(node_name_colname), !!as.name(x_colname), !!as.name(y_colname))
+    dplyr::select(!!as.name(node_name_colname), !!as.name(x_colname), !!as.name(y_colname))
 
   # Figure out where to place Storage nodes in x dimension.
   # Align storage industries with other industries.
@@ -260,21 +245,21 @@ ecc_layout <- function(Industries,
     # We have some Storage nodes.
     # Calculate coordinates for storage nodes.
     Storage_coords <- data.frame(temp = Storage %>%
-                                   select(!!as.name(industry_colname)) %>%
+                                   dplyr::select(!!as.name(industry_colname)) %>%
                                    unique()) %>%
-      mutate(
+      dplyr::mutate(
         !!as.name(x_colname) := x_first_storage:(x_first_storage - 1 + N_storage)
       ) %>%
-      left_join(Storage, by = industry_colname) %>%
-      rename(
+      dplyr::left_join(Storage, by = industry_colname) %>%
+      dplyr::rename(
         !!as.name(node_name_colname) := !!as.name(industry_colname)
       ) %>%
-      mutate(
+      dplyr::mutate(
         # Add the y coordinate
         !!as.name(y_colname) := y_max + 1
       ) %>%
       # Select only columns that we want in output
-      select(!!as.name(node_name_colname), !!as.name(x_colname), !!as.name(y_colname))
+      dplyr::select(!!as.name(node_name_colname), !!as.name(x_colname), !!as.name(y_colname))
     # Finally, rbind Node_coords and Storage_coords and return
     out <- rbind(as.data.frame(Node_coords), Storage_coords)
   }
@@ -297,14 +282,14 @@ ecc_layout <- function(Industries,
     names(node_names_from_graph)[1] <- node_name_colname
     # By left_join-ing here, we keep the row order of node_names_from_graph
     # while we add the x and y coordinates for the nodes in this layout.
-    out <- left_join(node_names_from_graph, out, by = node_name_colname) %>%
+    out <- dplyr::left_join(node_names_from_graph, out, by = node_name_colname) %>%
       # Select only the columns that we want to return
-      select(!!as.name(x_colname), !!as.name(y_colname), !!as.name(node_name_colname))
+      dplyr::select(!!as.name(x_colname), !!as.name(y_colname), !!as.name(node_name_colname))
     # Ensure that we have x and y values for each row.
     # If any are missing, we didn't have a matching set of node names
     # among g, Industries, and Products.
     err <- out %>%
-      filter(
+      dplyr::filter(
         is.na((!!as.name(x_colname))) |
           is.na((!!as.name(y_colname)))
       )
@@ -318,7 +303,7 @@ ecc_layout <- function(Industries,
   # Return a matrix.
   out %>%
     # Move the node names to rownames ...
-    column_to_rownames(node_name_colname) %>%
+    tibble::column_to_rownames(node_name_colname) %>%
     # ... which allows the as.matrix function to create numeric columns for x and y.
     # This matrix can be used by qgraph for its layout argument.
     as.matrix()
@@ -360,9 +345,6 @@ ecc_layout <- function(Industries,
 #'         according to matches between \code{GeneralIndustries$general_industry_colname}
 #'         and \code{SpecificIndustries$specific_industry_colname}.
 #'
-#' @importFrom fuzzyjoin fuzzy_left_join
-#' @importFrom rlang set_names
-#'
 #' @export
 #'
 #' @examples
@@ -381,10 +363,10 @@ identify_industry_stages <- function(GeneralIndustries,
                                      stage_colname = "Stage",
                                      specific_industry_colname = "Industry"){
   SpecificIndustries %>%
-    select(!!as.name(specific_industry_colname)) %>%
-    fuzzy_left_join(GeneralIndustries %>%
-                      select(!!as.name(general_industry_colname), !!as.name(stage_colname)),
-                    by = c(general_industry_colname) %>% set_names(specific_industry_colname),
+    dplyr::select(!!as.name(specific_industry_colname)) %>%
+    fuzzyjoin::fuzzy_left_join(GeneralIndustries %>%
+                      dplyr::select(!!as.name(general_industry_colname), !!as.name(stage_colname)),
+                    by = c(general_industry_colname) %>% magrittr::set_names(specific_industry_colname),
                     match_fun = function(s.ind, g.ind){
                       startsWith(s.ind, g.ind)
                     }
@@ -395,5 +377,5 @@ identify_industry_stages <- function(GeneralIndustries,
     # fuzzy_left_join renames the columns with a ".x" and a ".y" suffix.
     # Because we can't know ahead of time how the columns will be named,
     # we select by position.
-    select(c(1,3))
+    dplyr::select(c(1,3))
 }

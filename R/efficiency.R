@@ -27,9 +27,6 @@
 #'
 #' @export
 #'
-#' @importFrom matsbyname complete_and_sort
-#' @importFrom tidyr spread
-#'
 #' @examples
 #' library(tidyr)
 #' UKEnergy2000mats %>%
@@ -46,11 +43,11 @@ calc_eta_i <- function(.sutmats,
     units_OK <- flows_unit_homogeneous(U = U_mat, V = V_mat, S_units = S_units_mat,
                                        flows_unit_homogeneous = result_var, keep_details = TRUE)[[result_var]]
 
-    f_vec <- colsums_byname(U_mat) %>% transpose_byname()
-    g_vec <- rowsums_byname(V_mat)
-    eta_vec <- quotient_byname(g_vec, f_vec)
+    f_vec <- matsbyname::colsums_byname(U_mat) %>% matsbyname::transpose_byname()
+    g_vec <- matsbyname::rowsums_byname(V_mat)
+    eta_vec <- matsbyname::quotient_byname(g_vec, f_vec)
     # Make sure that units_OK and eta have same rows by completing the rows (industries) relative to one another
-    completed <- complete_and_sort(units_OK, eta_vec, margin = 1)
+    completed <- matsbyname::complete_and_sort(units_OK, eta_vec, margin = 1)
     # The complete_and_sort function converts the TRUE/FALSE values in units_OK to 1/0.
     # Convert back to TRUE and FALSE.
     units_OK <- completed$a == 1
@@ -61,5 +58,5 @@ calc_eta_i <- function(.sutmats,
     list(eta_vec) %>% magrittr::set_names(eta_i)
   }
 
-  matsindf_apply(.sutmats, FUN = eta_func, U_mat = U, V_mat = V, S_units_mat = S_units)
+  matsindf::matsindf_apply(.sutmats, FUN = eta_func, U_mat = U, V_mat = V, S_units_mat = S_units)
 }

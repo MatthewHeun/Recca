@@ -1,3 +1,7 @@
+
+* Eliminated all `@importFrom` statements by fully-qualifying all function calls.
+
+
 # Recca 0.1.15 (2019-01-09)
 
 * First draft of `new-functions` vignette now complete, including demonstrations of 
