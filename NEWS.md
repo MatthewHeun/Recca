@@ -1,5 +1,5 @@
-
 * Eliminated all `@importFrom` statements by fully-qualifying all function calls.
+* Test coverage now up to 100%.
 
 
 # Recca 0.1.15 (2019-01-09)

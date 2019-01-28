@@ -48,5 +48,6 @@ Units (as supplied by the \code{S_units} matrix) are respected.
 \examples{
 library(tidyr)
 verify_SUT_energy_balance_with_units(UKEnergy2000mats \%>\%
-                                       spread(key = matrix.name, value = matrix))
+                                       spread(key = matrix.name, value = matrix),
+                                       tol = 1e-3)
 }

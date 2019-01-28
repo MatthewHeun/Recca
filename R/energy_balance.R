@@ -96,7 +96,8 @@ verify_SUT_energy_balance <- function(.sutmats = NULL,
 #' @examples
 #' library(tidyr)
 #' verify_SUT_energy_balance_with_units(UKEnergy2000mats %>%
-#'                                        spread(key = matrix.name, value = matrix))
+#'                                        spread(key = matrix.name, value = matrix),
+#'                                        tol = 1e-3)
 verify_SUT_energy_balance_with_units <- function(.sutmats = NULL,
                                                  # Input names
                                                  U = "U", V = "V", Y = "Y", S_units = "S_units",
