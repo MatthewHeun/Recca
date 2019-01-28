@@ -117,12 +117,14 @@ verify_SUT_energy_balance_with_units <- function(.sutmats = NULL,
     list(prodOK, indOK) %>% magrittr::set_names(c(SUT_prod_energy_balance, SUT_ind_energy_balance))
   }
   Out <- matsindf::matsindf_apply(.sutmats, FUN = verify_func, U = U, V = V, Y = Y, S_units = S_units)
-  if (!all(Out[[SUT_prod_energy_balance]] %>% as.logical())) {
-    warning(paste("Energy not conserved by product in verify_SUT_energy_balance_with_units. See column", SUT_prod_energy_balance))
-  }
-  if (!all(Out[[SUT_ind_energy_balance]] %>% as.logical())) {
-    warning(paste("Energy not conserved by industry in verify_SUT_energy_balance_with_units. See column", SUT_ind_energy_balance))
-  }
+  assertthat::assert_that(all(Out[[SUT_prod_energy_balance]] %>% as.logical()),
+                          msg = paste("Energy not conserved by product in verify_SUT_energy_balance_with_units.",
+                                      "See column",
+                                      SUT_prod_energy_balance))
+  assertthat::assert_that(all(Out[[SUT_ind_energy_balance]] %>% as.logical()),
+                          msg = paste("Energy not conserved by industry in verify_SUT_energy_balance_with_units",
+                                      "See column",
+                                      SUT_ind_energy_balance))
   return(Out)
 }
 
@@ -265,23 +267,15 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 
   # Option (a)
   EnergyCheck_err <- EnergyCheck %>% dplyr::filter(!is.na(!!as.name(err)))
-  if (!all(abs(EnergyCheck_err[[err]]) < tol)) {
-    # Emit a warning
-    warning(
-      paste("Energy not balanced in verify_IEATable_energy_balance.",
-            "Check return value for non-zero", err, "column.")
-    )
-  }
+  assertthat::assert_that(all(abs(EnergyCheck_err[[err]]) < tol),
+                          msg = paste("Energy not balanced in verify_IEATable_energy_balance.",
+                                      "Check return value for non-zero", err, "column."))
 
   # Option (b)
   EnergyCheck_supply <- EnergyCheck %>% dplyr::filter(is.na(!!as.name(err)))
-  if (!all(abs(EnergyCheck_supply[[esupply]]) < tol)) {
-    # Emit a warning
-    warning(
-      paste("Energy not balanced in verify_IEATable_energy_balance.",
-            "Check return value for non-zero", err, "column.")
-    )
-  }
+  assertthat::assert_that(all(abs(EnergyCheck_supply[[esupply]]) < tol),
+                          msg = paste("Energy not balanced in verify_IEATable_energy_balance.",
+                                      "Check return value for non-zero", err, "column."))
 
   return(EnergyCheck)
 }
