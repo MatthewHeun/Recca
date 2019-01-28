@@ -131,3 +131,17 @@ test_that("calculating IO matrices works as expected", {
 })
 
 
+test_that("NA in g works as expected", {
+  io_mats <- UKEnergy2000mats %>%
+    spread(key = matrix.name, value = matrix) %>%
+    calc_yqfgW()
+  io_mats <- io_mats[1, ]
+  new_g <- io_mats$g[[1]]
+  new_g[1, 1] <- NA_real_
+  io_mats$g[[1]] <- new_g
+  actual <- io_mats %>% calc_A()
+  expect_true(is.na(actual$Z[[1]]))
+  expect_true(is.na(actual$C[[1]]))
+  expect_true(all(is.na(actual$A[[1]])))
+})
+

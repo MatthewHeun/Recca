@@ -170,13 +170,14 @@ new_k_ps <- function(.sutmats = NULL,
     # Get the name of the industry whose inputs will be changed.
     industry_to_change <- colnames(k_prime_2)
     # Ensure that k_prime_2 is a single-column vector.
-    if (length(industry_to_change) != 1) {
-      stop(paste("k_prime_2 has", ncol(k_prime_2), "columns in delta_inputs_ps_func. Must have 1 column."))
-    }
+    assertthat::assert_that(length(industry_to_change) == 1,
+                            msg = paste("k_prime_2 has", ncol(k_prime_2),
+                                        "columns in delta_inputs_ps_func. Must have 1 column."))
     # Ensure that the column sum of k_prime_2 is exactly 1.0.
-    if (matsbyname::colsums_byname(k_prime_2) != 1) {
-      stop(paste("k_prime_2 has column sum of", matsbyname::colsums_byname(y_prime_2), "but it must be exactly 1.0."))
-    }
+    assertthat::assert_that(matsbyname::colsums_byname(k_prime_2) == 1,
+                            msg = paste("k_prime_2 has column sum of",
+                                        matsbyname::colsums_byname(y_prime_2),
+                                        "but it must be exactly 1.0."))
     # Grab the k_prime_1 (not k_prime_2) column out of the existing K matrix.
     # k_prime_1 is the column from the K matrix with the same name as k_prime_2.
     k_prime_1 <- K_mat[, industry_to_change, drop = FALSE]

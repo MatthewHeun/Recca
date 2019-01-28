@@ -244,13 +244,9 @@ calc_F_footprint_effects <- function(.Mmats = NULL,
     err_F_footprint_p <- matsbyname::difference_byname(colsums_F_footprint_p, 1)
     err_F_footprint_s <- matsbyname::difference_byname(colsums_F_footprint_s, 1)
     F_footprint_p_OK <- matsbyname::iszero_byname(err_F_footprint_p)
-    if (!F_footprint_p_OK) {
-      stop("F_footprint_p_OK is not true.")
-    }
     F_footprint_s_OK <- matsbyname::iszero_byname(err_F_footprint_s)
-    if (!F_footprint_s_OK) {
-      stop("F_footprint_s_OK is not true.")
-    }
+    assertthat::assert_that(F_footprint_p_OK, msg = "F_footprint_p_OK is not true.")
+    assertthat::assert_that(F_footprint_s_OK, msg = "F_footprint_s_OK is not true.")
     # Also check effects matrices
     rowsums_F_effects_p <- matsbyname::rowsums_byname(F_effects_p_mat)
     rowsums_F_effects_s <- matsbyname::rowsums_byname(F_effects_s_mat)
@@ -258,13 +254,8 @@ calc_F_footprint_effects <- function(.Mmats = NULL,
     err_F_effects_s <- matsbyname::difference_byname(rowsums_F_effects_s, 1)
     F_effects_p_OK <- matsbyname::iszero_byname(err_F_effects_p)
     F_effects_s_OK <- matsbyname::iszero_byname(err_F_effects_s)
-    if (!F_effects_p_OK) {
-      stop("F_effects_p_OK is not true.")
-    }
-    F_footprint_s_OK <- matsbyname::iszero_byname(err_F_footprint_s)
-    if (!F_effects_s_OK) {
-      stop("F_effects_s_OK is not true.")
-    }
+    assertthat::assert_that(F_effects_p_OK, msg = "F_effects_p_OK is not true.")
+    assertthat::assert_that(F_effects_s_OK, msg = "F_effects_s_OK is not true.")
 
     # Everything checked out, so make our outgoing list and return it.
     list(F_footprint_p_mat, F_effects_p_mat, F_footprint_s_mat, F_effects_s_mat) %>%

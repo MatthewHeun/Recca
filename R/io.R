@@ -179,8 +179,13 @@ calc_A <- function(.sutdata = NULL,
     # Test here if any entry in g is NA.
     # If so, the value for C will be assigned to NA.
     if (any(is.na(g_vec))) {
-      C_mat <- NA_real_
-      Z_mat <- NA_real_
+      C_mat <- NA_real_ %>%
+        # rowtype of C_mat is rowtype(transpose(V_mat)), which is same as coltype(V_mat))
+        matsbyname::setrowtype(matsbyname::coltype(V_mat)) %>%
+        matsbyname::setcoltype(matsbyname::coltype(matsbyname::hatinv_byname(g_vec)))
+      Z_mat <- NA_real_ %>%
+        matsbyname::setrowtype(matsbyname::rowtype(U_mat)) %>%
+        matsbyname::setcoltype(matsbyname::coltype(matsbyname::hatinv_byname(g_vec)))
     } else {
       C_mat <- matsbyname::matrixproduct_byname(matsbyname::transpose_byname(V_mat), matsbyname::hatinv_byname(g_vec))
       Z_mat <- matsbyname::matrixproduct_byname(U_mat, matsbyname::hatinv_byname(g_vec))
@@ -190,7 +195,9 @@ calc_A <- function(.sutdata = NULL,
     # Test here if any entry in f is NA.
     # If so, the value for K will be assigned NA.
     if (any(is.na(f_vec))) {
-      K_mat <- NA_real_
+      K_mat <- NA_real_ %>%
+        matsbyname::setrowtype(U_mat) %>%
+        matsbyname::setcoltype(matsbyname::coltype(matsbyname::hatinv_byname(f_vec)))
     } else {
       K_mat <- matsbyname::matrixproduct_byname(U_mat, matsbyname::hatinv_byname(f_vec))
     }

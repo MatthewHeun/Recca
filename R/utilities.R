@@ -173,15 +173,15 @@ separate_RV <- function(.sutmats = NULL,
     r_industry_names <- resource_industries(U = U_mat, V = R_plus_V_mat, r_industries = "r_inds") %>% unlist()
     if (length(r_industry_names) == 0) {
       warning("No R created in separate_RV")
-    } else {
-      new_R_mat <- R_plus_V_mat %>%
-        matsbyname::select_rows_byname(retain_pattern = matsbyname::make_pattern(r_industry_names,
-                                                                                 pattern_type = "exact"))
-      new_V_mat <- R_plus_V_mat %>%
-        matsbyname::select_rows_byname(remove_pattern = matsbyname::make_pattern(r_industry_names,
-                                                                                 pattern_type = "exact"))
     }
+    new_R_mat <- R_plus_V_mat %>%
+      matsbyname::select_rows_byname(retain_pattern = matsbyname::make_pattern(r_industry_names,
+                                                                               pattern_type = "exact"))
+    new_V_mat <- R_plus_V_mat %>%
+      matsbyname::select_rows_byname(remove_pattern = matsbyname::make_pattern(r_industry_names,
+                                                                               pattern_type = "exact"))
     list(new_R_mat, new_V_mat) %>% magrittr::set_names(c(R, V))
+
   }
   matsindf::matsindf_apply(.sutmats, FUN = separate_RV_func, U_mat = U, R_plus_V_mat = R_plus_V)
 }
