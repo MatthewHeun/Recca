@@ -66,7 +66,7 @@ test_that("starts_with_any_of works properly", {
 })
 
 test_that("resource_industries works correctly", {
-  mats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
+  mats <- UKEnergy2000mats %>% tidyr::spread(key = matrix.name, value = matrix)
   expected <- c("Resources - Crude", "Resources - NG")
   expect_equal(resource_industries(mats)[["r_industries"]],
                list(expected, expected, expected, expected))

@@ -20,7 +20,7 @@ combine_RV(.sutmats = NULL, R = "R", V = "V",
 a list or data frame containing \code{R_plus_V}
 }
 \description{
-\code{\link{combine_RV()}} is the inverse of \code{\link{separate_RV()}}.
+\code{\link{combine_RV}} is the inverse of \code{\link{separate_RV}}.
 }
 \examples{
 library(dplyr)
