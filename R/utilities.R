@@ -133,7 +133,7 @@ resource_industries <- function(.sutdata = NULL, U = "U", V = "V", r_industries 
 #' The elements of of \code{R} indicate extraction of resources from the biosphere.
 #' The industries of \code{R} are the reserves of the extracted products.
 #'
-#' This function uses the \code{\link{resource_industries}} function to
+#' This function uses the \code{\link{resource_industries()}} function to
 #' identify the resource industries in the \code{R_plus_V} matrix.
 #' Thereafter, the function extracts the resource industries from the \code{R_plus_V} matrix
 #' to form the \code{R} matrix.
@@ -143,6 +143,8 @@ resource_industries <- function(.sutdata = NULL, U = "U", V = "V", r_industries 
 #' a warning is emitted,
 #' no \code{R} matrix is created, and
 #' no changes are made to the \code{R_plus_V} matrix.
+#'
+#' \code{\link{separate_RV()}} is the inverse of \code{\link{combine_RV()}}.
 #'
 #' @param .sutmats a list or data frame containing use matrix(ces) and make matrix(ces)
 #' @param U a use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".
@@ -187,6 +189,8 @@ separate_RV <- function(.sutmats = NULL,
 }
 
 #' Combine resource (\code{R}) and make (\code{V}) matrices into a make plus resource (\code{R_plus_V}) matrix
+#'
+#' \code{\link{combine_RV()}} is the inverse of \code{\link{separate_RV()}}.
 #'
 #' @param .sutmats a list or data frame containing use matrix(ces) and make matrix(ces)
 #' @param R an \code{R} matrix or name of a column in \code{.sutmats} that contains same. Default is "\code{R}".
