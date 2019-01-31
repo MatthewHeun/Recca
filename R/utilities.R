@@ -111,11 +111,14 @@ resource_industries <- function(.sutdata = NULL, U = "U", V = "V", r_industries 
   r_industries_func <- function(U_mat, V_mat){
     completed_cols_U <- matsbyname::complete_rows_cols(a = U_mat, mat = matsbyname::transpose_byname(V_mat), margin = 2) %>%
       matsbyname::sort_rows_cols()
-    zero_cols_U_inds <- completed_cols_U %>%
-      matsbyname::colsums_byname() %>%
-      matsbyname::compare_byname("==", 0) %>%
-      which()
-    list(dimnames(completed_cols_U)[[2]][zero_cols_U_inds]) %>% magrittr::set_names(r_industries)
+    # Looking for columns of zeroes in the U matrix.
+    # Do so by eliminating all columns with zeroes and
+    # comparing against the original column names.
+    U_clean_names <- matsbyname::clean_byname(completed_cols_U, margin = 2) %>%
+      colnames()
+    r_names <- setdiff(colnames(completed_cols_U), U_clean_names) %>%
+      sort()
+    list(r_names) %>% magrittr::set_names(r_industries)
   }
   matsindf::matsindf_apply(.sutdata, FUN = r_industries_func, U_mat = U, V_mat = V)
 }
@@ -133,7 +136,7 @@ resource_industries <- function(.sutdata = NULL, U = "U", V = "V", r_industries 
 #' The elements of of \code{R} indicate extraction of resources from the biosphere.
 #' The industries of \code{R} are the reserves of the extracted products.
 #'
-#' This function uses the \code{\link{resource_industries()}} function to
+#' This function uses the \code{\link{resource_industries}} function to
 #' identify the resource industries in the \code{R_plus_V} matrix.
 #' Thereafter, the function extracts the resource industries from the \code{R_plus_V} matrix
 #' to form the \code{R} matrix.
@@ -144,7 +147,7 @@ resource_industries <- function(.sutdata = NULL, U = "U", V = "V", r_industries 
 #' no \code{R} matrix is created, and
 #' no changes are made to the \code{R_plus_V} matrix.
 #'
-#' \code{\link{separate_RV()}} is the inverse of \code{\link{combine_RV()}}.
+#' \code{\link{separate_RV}} is the inverse of \code{\link{combine_RV}}.
 #'
 #' @param .sutmats a list or data frame containing use matrix(ces) and make matrix(ces)
 #' @param U a use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".
@@ -190,7 +193,7 @@ separate_RV <- function(.sutmats = NULL,
 
 #' Combine resource (\code{R}) and make (\code{V}) matrices into a make plus resource (\code{R_plus_V}) matrix
 #'
-#' \code{\link{combine_RV()}} is the inverse of \code{\link{separate_RV()}}.
+#' \code{\link{combine_RV}} is the inverse of \code{\link{separate_RV}}.
 #'
 #' @param .sutmats a list or data frame containing use matrix(ces) and make matrix(ces)
 #' @param R an \code{R} matrix or name of a column in \code{.sutmats} that contains same. Default is "\code{R}".
