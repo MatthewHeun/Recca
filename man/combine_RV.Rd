@@ -20,7 +20,7 @@ combine_RV(.sutmats = NULL, R = "R", V = "V",
 a list or data frame containing \code{R_plus_V}
 }
 \description{
-Combine resource (\code{R}) and make (\code{V}) matrices into a make plus resource (\code{R_plus_V}) matrix
+\code{\link{combine_RV()}} is the inverse of \code{\link{separate_RV()}}.
 }
 \examples{
 library(dplyr)

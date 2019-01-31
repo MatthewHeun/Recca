@@ -33,7 +33,7 @@ A resource matrix (\code{R}) has industries in rows and products in columns.
 The elements of of \code{R} indicate extraction of resources from the biosphere.
 The industries of \code{R} are the reserves of the extracted products.
 
-This function uses the \code{\link{resource_industries}} function to
+This function uses the \code{\link{resource_industries()}} function to
 identify the resource industries in the \code{R_plus_V} matrix.
 Thereafter, the function extracts the resource industries from the \code{R_plus_V} matrix
 to form the \code{R} matrix.
@@ -43,6 +43,8 @@ If there are no resource industries in the \code{R_plus_V} matrix,
 a warning is emitted,
 no \code{R} matrix is created, and
 no changes are made to the \code{R_plus_V} matrix.
+
+\code{\link{separate_RV()}} is the inverse of \code{\link{combine_RV()}}.
 }
 \examples{
 library(dplyr)
