@@ -262,10 +262,10 @@ test_that("reverse works as expected", {
     separate_RV() %>%
     reverse()
   for (i in 1:4) {
-    R_rev_expected <- matsbyname::transpose_byname(result$R[[i]])
+    R_rev_expected <- matsbyname::transpose_byname(result$Y[[i]])
     V_rev_expected <- matsbyname::transpose_byname(result$U[[i]])
     U_rev_expected <- matsbyname::transpose_byname(result$V[[i]])
-    Y_rev_expected <- matsbyname::transpose_byname(result$Y[[i]])
+    Y_rev_expected <- matsbyname::transpose_byname(result$R[[i]])
     expect_equal(result$R_rev[[i]], R_rev_expected)
     expect_equal(result$V_rev[[i]], V_rev_expected)
     expect_equal(result$U_rev[[i]], U_rev_expected)
