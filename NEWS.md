@@ -1,6 +1,8 @@
+* Added new `reverse()` function to change flow direction of an ECC.
+  `reverse()` will be useful for downstream swim functions.
 * Simplified and improved `resource_industries()` function.
     - No longer summing columns of `U` matrix.
-    - Instead, cleaning 0 columns of `U` and comparing to the original `U`.
+    - Instead, cleaning 0 columns of `U` and comparing names of columns to the original `U`.
 * Eliminated all `@importFrom` statements by fully-qualifying all function calls.
 * Test coverage now up to 100%.
 
