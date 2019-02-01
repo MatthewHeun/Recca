@@ -253,10 +253,26 @@ test_that("inputs_outputs_unit_homogeneous works as expected", {
   expect_equal(result2$matvals, result2$expected)
 })
 
+test_that("reverse works as expected", {
+  result <- UKEnergy2000mats %>%
+    tidyr::spread(key = "matrix.name", value = "matrix") %>%
+    dplyr::rename(
+      R_plus_V = "V"
+    ) %>%
+    separate_RV() %>%
+    reverse()
+  for (i in 1:4) {
+    R_rev_expected <- matsbyname::transpose_byname(result$R[[i]])
+    V_rev_expected <- matsbyname::transpose_byname(result$U[[i]])
+    U_rev_expected <- matsbyname::transpose_byname(result$V[[i]])
+    Y_rev_expected <- matsbyname::transpose_byname(result$Y[[i]])
+    expect_equal(result$R_rev[[i]], R_rev_expected)
+    expect_equal(result$V_rev[[i]], V_rev_expected)
+    expect_equal(result$U_rev[[i]], U_rev_expected)
+    expect_equal(result$Y_rev[[i]], Y_rev_expected)
+  }
 
-
-
-
+})
 
 
 
