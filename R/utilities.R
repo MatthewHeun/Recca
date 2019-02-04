@@ -381,6 +381,7 @@ outputs_unit_homogeneous <- function(.sutmats = NULL,
 #' @param S_units an \code{S_units} matrix or name of a column in \code{.sutmats} that contains same. Default is "\code{S_units}".
 #' @param keep_details if \code{TRUE}, per-industry results are returned;
 #'        if \code{FALSE}, per-ECC results are returned.
+#'        Default is "\code{FALSE}".
 #' @param flows_unit_homogeneous the name of the output column
 #'        that tells whether each industry's outputs are unit-homogeneous.
 #'        Default is "\code{.flows_unit_homogeneous}".
