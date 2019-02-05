@@ -18,7 +18,8 @@ flows_unit_homogeneous(.sutmats = NULL, U = "U", V = "V",
 \item{S_units}{an \code{S_units} matrix or name of a column in \code{.sutmats} that contains same. Default is "\code{S_units}".}
 
 \item{keep_details}{if \code{TRUE}, per-industry results are returned;
-if \code{FALSE}, per-ECC results are returned.}
+if \code{FALSE}, per-ECC results are returned.
+Default is "\code{FALSE}".}
 
 \item{flows_unit_homogeneous}{the name of the output column
 that tells whether each industry's outputs are unit-homogeneous.
