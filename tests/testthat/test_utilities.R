@@ -66,7 +66,7 @@ test_that("starts_with_any_of works properly", {
 })
 
 test_that("resource_industries works correctly", {
-  mats <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
+  mats <- UKEnergy2000mats %>% tidyr::spread(key = matrix.name, value = matrix)
   expected <- c("Resources - Crude", "Resources - NG")
   expect_equal(resource_industries(mats)[["r_industries"]],
                list(expected, expected, expected, expected))
@@ -253,10 +253,26 @@ test_that("inputs_outputs_unit_homogeneous works as expected", {
   expect_equal(result2$matvals, result2$expected)
 })
 
+test_that("reverse works as expected", {
+  result <- UKEnergy2000mats %>%
+    tidyr::spread(key = "matrix.name", value = "matrix") %>%
+    dplyr::rename(
+      R_plus_V = "V"
+    ) %>%
+    separate_RV() %>%
+    reverse()
+  for (i in 1:4) {
+    R_rev_expected <- matsbyname::transpose_byname(result$Y[[i]])
+    V_rev_expected <- matsbyname::transpose_byname(result$U[[i]])
+    U_rev_expected <- matsbyname::transpose_byname(result$V[[i]])
+    Y_rev_expected <- matsbyname::transpose_byname(result$R[[i]])
+    expect_equal(result$R_rev[[i]], R_rev_expected)
+    expect_equal(result$V_rev[[i]], V_rev_expected)
+    expect_equal(result$U_rev[[i]], U_rev_expected)
+    expect_equal(result$Y_rev[[i]], Y_rev_expected)
+  }
 
-
-
-
+})
 
 
 

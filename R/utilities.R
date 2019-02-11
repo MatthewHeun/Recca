@@ -111,11 +111,14 @@ resource_industries <- function(.sutdata = NULL, U = "U", V = "V", r_industries 
   r_industries_func <- function(U_mat, V_mat){
     completed_cols_U <- matsbyname::complete_rows_cols(a = U_mat, mat = matsbyname::transpose_byname(V_mat), margin = 2) %>%
       matsbyname::sort_rows_cols()
-    zero_cols_U_inds <- completed_cols_U %>%
-      matsbyname::colsums_byname() %>%
-      matsbyname::compare_byname("==", 0) %>%
-      which()
-    list(dimnames(completed_cols_U)[[2]][zero_cols_U_inds]) %>% magrittr::set_names(r_industries)
+    # Looking for columns of zeroes in the U matrix.
+    # Do so by eliminating all columns with zeroes and
+    # comparing against the original column names.
+    U_clean_names <- matsbyname::clean_byname(completed_cols_U, margin = 2) %>%
+      colnames()
+    r_names <- setdiff(colnames(completed_cols_U), U_clean_names) %>%
+      sort()
+    list(r_names) %>% magrittr::set_names(r_industries)
   }
   matsindf::matsindf_apply(.sutdata, FUN = r_industries_func, U_mat = U, V_mat = V)
 }
@@ -143,6 +146,8 @@ resource_industries <- function(.sutdata = NULL, U = "U", V = "V", r_industries 
 #' a warning is emitted,
 #' no \code{R} matrix is created, and
 #' no changes are made to the \code{R_plus_V} matrix.
+#'
+#' \code{\link{separate_RV}} is the inverse of \code{\link{combine_RV}}.
 #'
 #' @param .sutmats a list or data frame containing use matrix(ces) and make matrix(ces)
 #' @param U a use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".
@@ -187,6 +192,8 @@ separate_RV <- function(.sutmats = NULL,
 }
 
 #' Combine resource (\code{R}) and make (\code{V}) matrices into a make plus resource (\code{R_plus_V}) matrix
+#'
+#' \code{\link{combine_RV}} is the inverse of \code{\link{separate_RV}}.
 #'
 #' @param .sutmats a list or data frame containing use matrix(ces) and make matrix(ces)
 #' @param R an \code{R} matrix or name of a column in \code{.sutmats} that contains same. Default is "\code{R}".
@@ -374,6 +381,7 @@ outputs_unit_homogeneous <- function(.sutmats = NULL,
 #' @param S_units an \code{S_units} matrix or name of a column in \code{.sutmats} that contains same. Default is "\code{S_units}".
 #' @param keep_details if \code{TRUE}, per-industry results are returned;
 #'        if \code{FALSE}, per-ECC results are returned.
+#'        Default is "\code{FALSE}".
 #' @param flows_unit_homogeneous the name of the output column
 #'        that tells whether each industry's outputs are unit-homogeneous.
 #'        Default is "\code{.flows_unit_homogeneous}".
@@ -412,4 +420,65 @@ flows_unit_homogeneous <- function(.sutmats = NULL,
   }
 
   matsindf::matsindf_apply(.sutmats, FUN = flows_unit_homogeneous_func, U_mat = U, V_mat = V, S_units_mat = S_units)
+}
+
+
+#' Reverse an energy conversion chain
+#'
+#' Leontief's original input-output analysis involved swimming
+#' "upstream" to estimate the economy that would be needed if different final demand were observed.
+#' But what if different resources were available?
+#' The analysis is the same if resources become final demand (and vice versa)
+#' and make becomes use (and vice versa).
+#' That is, the analysis is the same if you're dealing with a reversed energy conversion chain (ECC).
+#' This function performs that reversal.
+#'
+#' To reverse an ECC, the \code{R}, \code{V}, \code{U}, and \code{Y} matrices
+#' need to be transposed and swapped:
+#' \code{R} with \code{Y} and
+#' \code{V} with \code{U}.
+#' This function performs those operations.
+#'
+#' @param .sutmats the input ECC
+#' @param R the \code{R} matrix in the ECC to be reversed. (Default is "\code{R}".)
+#' @param V the \code{V} matrix in the ECC to be reversed. (Default is "\code{V}".)
+#' @param U the \code{U} matrix in the ECC to be reversed. (Default is "\code{U}".)
+#' @param Y the \code{Y} matrix in the ECC to be reversed. (Default is "\code{Y}".)
+#' @param suffix the suffix to be added to matrix names. (Default is "_rev".)
+#' @param R_rev the name of the \code{R} matrix in the reversed ECC. (Default is "\code{R_rev}".)
+#' @param V_rev the name of the \code{V} matrix in the reversed ECC. (Default is "\code{V_rev}".)
+#' @param U_rev the name of the \code{U} matrix in the reversed ECC. (Default is "\code{U_rev}".)
+#' @param Y_rev the name of the \code{Y} matrix in the reversed ECC. (Default is "\code{Y_rev}".)
+#'
+#' @return a reversed version of the ECC described by \code{R}, \code{V}, \code{U}, and \code{Y}.
+#'
+#' @export
+#'
+#' @examples
+#' library(dplyr)
+#' library(Recca)
+#' library(tidyr)
+#' mats <- UKEnergy2000mats %>%
+#'   spread(key = "matrix.name", value = "matrix") %>%
+#'   rename(
+#'     R_plus_V = "V"
+#'   ) %>%
+#'   separate_RV() %>%
+#'   reverse()
+reverse <- function(.sutmats = NULL,
+                    # Input names
+                    R = "R", V = "V", U = "U", Y = "Y",
+                    # Output names
+                    suffix = "_rev",
+                    R_rev = paste0(R, suffix), V_rev = paste0(V, suffix), U_rev = paste0(U, suffix), Y_rev = paste0(Y, suffix)){
+  reverse_func <- function(R_mat, V_mat, U_mat, Y_mat){
+    R_rev_mat <- matsbyname::transpose_byname(Y_mat)
+    V_rev_mat <- matsbyname::transpose_byname(U_mat)
+    U_rev_mat <- matsbyname::transpose_byname(V_mat)
+    Y_rev_mat <- matsbyname::transpose_byname(R_mat)
+    list(R_rev_mat, V_rev_mat, U_rev_mat, Y_rev_mat) %>%
+      magrittr::set_names(c(R_rev, V_rev, U_rev, Y_rev))
+  }
+
+  matsindf::matsindf_apply(.sutmats, FUN = reverse_func, R_mat = R, V_mat = V, U_mat = U, Y_mat = Y)
 }

@@ -119,12 +119,16 @@ ecc_layout <- function(Industries,
   # is one more than the number of product stages.
   N_industry_stages <- Industries_less_Storage %>% dplyr::select(!!as.name(stage_colname)) %>% unique() %>% nrow()
   N_product_stages <- Products %>% dplyr::select(!!as.name(stage_colname)) %>% unique() %>% nrow()
-  if (N_industry_stages - N_product_stages != 1) {
-    stop(paste0("N_industry_stages = ", N_industry_stages,
-                ". N_product_stages = ", N_product_stages, ". ",
-                "There should be one more industry stages than product stages. "),
-         call. = FALSE)
-  }
+  # if (N_industry_stages - N_product_stages != 1) {
+  #   stop(paste0("N_industry_stages = ", N_industry_stages,
+  #               ". N_product_stages = ", N_product_stages, ". ",
+  #               "There should be one more industry stages than product stages. "),
+  #        call. = FALSE)
+  # }
+  assertthat::assert_that(N_industry_stages - N_product_stages == 1,
+                          msg = paste0("N_industry_stages = ", N_industry_stages,
+                                       ". N_product_stages = ", N_product_stages, ". ",
+                                       "There should be one more industry stages than product stages. "))
   # Set groups for the Group variable based on order of appearance.
   # These groups will be used later for ordering the y coordinates of nodes.
   grps <- rbind(Industries_less_Storage %>% dplyr::select(!!as.name(group_colname)),
@@ -294,11 +298,10 @@ ecc_layout <- function(Industries,
           is.na((!!as.name(y_colname)))
       )
     # Check for errors.
-    if (nrow(err) > 0) {
-      # We have a problem. Print the data frame and stop.
-      print(err)
-      stop("Where NA appears, mismatched names among g, Industries, and Products in ecc_layout().")
-    }
+    assertthat::assert_that(nrow(err) == 0,
+                            msg = paste("Error in ecc_layout().",
+                                        "Check err data frame.",
+                                        "Where NA appears, mismatched names among g, Industries, and Products in ecc_layout()."))
   }
   # Return a matrix.
   out %>%

@@ -43,6 +43,8 @@ If there are no resource industries in the \code{R_plus_V} matrix,
 a warning is emitted,
 no \code{R} matrix is created, and
 no changes are made to the \code{R_plus_V} matrix.
+
+\code{\link{separate_RV}} is the inverse of \code{\link{combine_RV}}.
 }
 \examples{
 library(dplyr)
