@@ -100,6 +100,10 @@ test_that("separate_RV works correctly", {
     expect_true(equal_byname(mats$R[[i]], expected$R[[i]]))
     expect_true(equal_byname(mats$V[[i]], expected$V[[i]]))
   }
+
+  # If I try to separate R from V on the mats data frame, I should get nothing,
+  # because R has already been separated from V.
+  expect_warning(mats %>% separate_RV(R_plus_V = "V"), "No R created in separate_RV")
 })
 
 test_that("combine_RV works correctly", {

@@ -1,4 +1,4 @@
-
+* Now automatically building in Travis.
 * Eliminated all `@importFrom` statements by fully-qualifying all function calls.
 
 
