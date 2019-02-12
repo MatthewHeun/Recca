@@ -35,5 +35,6 @@ BugReports: https://github.com/MatthewHeun/Recca/issues
 Suggests: 
     knitr,
     rmarkdown,
-    testthat
+    testthat,
+    covr
 VignetteBuilder: knitr
