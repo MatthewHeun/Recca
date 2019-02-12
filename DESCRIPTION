@@ -6,7 +6,7 @@ Date: 2019-02-12
 Authors@R: c(person("Matthew", "Heun", role = c("aut", "cre"),
                      comment = c(ORCID = "0000-0002-7438-214X"),
                      email = "matthew.heun@me.com"))
-Maintainer: Matthew Kuperus Heun <matthew.heun@me.com>
+Maintainer: Matthew Heun <matthew.heun@me.com>
 Description: Provides functions to analyze energy conversion chains using a 
     physical supply use table (PSUT) approach.
 License: MIT + file LICENSE
