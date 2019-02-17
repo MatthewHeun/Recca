@@ -38,8 +38,8 @@ The functions in this package were used in the paper [Heun et al.
 
 ## More Information
 
-Find more information, including vignettes and function documentation at
-<https://MatthewHeun.github.io/Recca/>.
+Find more information, including vignettes and function documentation,
+at <https://MatthewHeun.github.io/Recca/>.
 
 ## References
 
