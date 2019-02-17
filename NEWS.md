@@ -21,7 +21,7 @@
 * New function `make_sankey()` does what it says: makes a Sankey diagram.
   `make_sankey()` is the first function that optionally uses the resource (`R`) matrix.
 * `edge_list()` also now accepts a resource (`R`) matrix on input.
-* The vigenette describing the `new*` functions now has a section on `new_R_ps()`.
+* The vignette describing the `new*` functions now has a section on `new_R_ps()`.
 
 
 # Recca 0.1.13 (2018-12-21)

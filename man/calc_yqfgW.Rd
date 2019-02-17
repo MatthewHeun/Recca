@@ -47,5 +47,5 @@ all products of a given industry are measured in the same units
 before we can calculate the \code{g} vector.
 If the unit homogeneity assumptions above are violated, we will return NA
 for violating industries in the \code{f} and \code{g} vectors.
-The checks for unit homogenity are performed only when an \code{S_units} matrix is present.
+The checks for unit homogeneity are performed only when an \code{S_units} matrix is present.
 }

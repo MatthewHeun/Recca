@@ -69,7 +69,7 @@ and terminology, although \code{.DF} does not necessarily need to contain IEA da
 In a reasonable workflow, this function would be followed by a call to
 \link{add_row_col_meta} and \link[matsindf]{collapse_to_matrices}.
 
-This function respects groups when identifying entires in the resource matrix (\code{R}).
+This function respects groups when identifying entries in the resource matrix (\code{R}).
 So be sure to group \code{.DF} before calling this function, if that is warranted.
 
 Internally, this function adds a temporary column to \code{.DF} called "\code{.R}".

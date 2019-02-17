@@ -10,6 +10,7 @@ Maintainer: Matthew Heun <matthew.heun@me.com>
 Description: Provides functions to analyze energy conversion chains using a 
     physical supply use table (PSUT) approach.
 License: MIT + file LICENSE
+Language: en-US
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1

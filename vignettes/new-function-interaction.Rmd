@@ -119,7 +119,7 @@ We can calculate the ECC that would be required to meet a new level of final dem
 with the `new_Y()` function. 
 The `new_k_ps()` and `new_Y()` functions interact in ways that might be surprising to the user, 
 depending on whether the input-output structure of the ECC is re-calculated 
-between sequantial function calls. 
+between sequential function calls. 
 
 
 ### Without recalculating the structure of the ECC
@@ -182,11 +182,11 @@ The "trick" is to recalculate the input-output structure of the ECC between the 
 # Conclusion
 
 The `new_*` function of the `Recca` package can be called sequentially.
-But the interactions among the `new_*` fuctions can be surprising
+But the interactions among the `new_*` functions can be surprising
 if their behavior is not fully understood. 
 This vignette provides a detailed example using the
 `new_k_ps()` and `new_Y()` functions.
-If they are called sequantially *without* first recalculating the input-output structure of the ECC,
+If they are called sequentially *without* first recalculating the input-output structure of the ECC,
 the call to `new_Y()` will be based on the original input-output structure of the ECC
 (from before `new_k_ps()` was called).
 If `calc_io_mats()` is called between the sequential calls to `new_k_ps()` and `new_Y()`

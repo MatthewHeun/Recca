@@ -205,7 +205,7 @@ calc_M <- function(.YqGHEdata = NULL,
 #'
 #' Calculates upstream footprint matrices (\code{F_footprint_p}, \code{F_footprint_s})
 #' and downstream effects matrices (\code{F_effects_p}, \code{F_effects_s})
-#' given an embodied matries \code{M_p} and \code{M_s}.
+#' given embodied matrices \code{M_p} and \code{M_s}.
 #' Column sums of \code{F_footprint} are 1.
 #' Row sums of \code{F_effects} are 1.
 #'
