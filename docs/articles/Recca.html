@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.15</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.16</span>
       </span>
     </div>
 
@@ -89,7 +89,7 @@
       <h1>Recca</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2019-01-09</h4>
+            <h4 class="date">2019-02-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/master/vignettes/Recca.Rmd"><code>vignettes/Recca.Rmd</code></a></small>
       <div class="hidden name"><code>Recca.Rmd</code></div>
@@ -167,10 +167,10 @@
 <a class="sourceLine" id="cb3-9" data-line-number="9"><span class="st">  </span><span class="co"># Do a little more cleanup</span></a>
 <a class="sourceLine" id="cb3-10" data-line-number="10"><span class="st">  </span><span class="kw">mutate</span>(</a>
 <a class="sourceLine" id="cb3-11" data-line-number="11">    <span class="co"># Create full U matrix</span></a>
-<a class="sourceLine" id="cb3-12" data-line-number="12">    <span class="dt">U =</span> <span class="kw">sum_byname</span>(U_excl_EIOU, U_EIOU),</a>
+<a class="sourceLine" id="cb3-12" data-line-number="12">    <span class="dt">U =</span> matsbyname<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/matsbyname/topics/sum_byname">sum_byname</a></span>(U_excl_EIOU, U_EIOU),</a>
 <a class="sourceLine" id="cb3-13" data-line-number="13">    <span class="co"># Create r_EIOU, a matrix that identifies the ratio of EIOU to other energy consumed.</span></a>
-<a class="sourceLine" id="cb3-14" data-line-number="14">    <span class="dt">r_EIOU =</span> <span class="kw">quotient_byname</span>(U_EIOU, U),</a>
-<a class="sourceLine" id="cb3-15" data-line-number="15">    <span class="dt">r_EIOU =</span> <span class="kw">replaceNaN_byname</span>(r_EIOU, <span class="dt">val =</span> <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb3-14" data-line-number="14">    <span class="dt">r_EIOU =</span> matsbyname<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/matsbyname/topics/quotient_byname">quotient_byname</a></span>(U_EIOU, U),</a>
+<a class="sourceLine" id="cb3-15" data-line-number="15">    <span class="dt">r_EIOU =</span> matsbyname<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/matsbyname/topics/replaceNaN_byname">replaceNaN_byname</a></span>(r_EIOU, <span class="dt">val =</span> <span class="dv">0</span>)</a>
 <a class="sourceLine" id="cb3-16" data-line-number="16">  ) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb3-17" data-line-number="17"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>U_EIOU, <span class="op">-</span>U_excl_EIOU) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb3-18" data-line-number="18"><span class="st">  </span><span class="co"># Add S_units matrices</span></a>

@@ -57,14 +57,14 @@ new_Y <- function(.sutmats = NULL,
                   U_prime = "U_prime", V_prime = "V_prime"){
 
   new_Y_func <- function(Y_prime_mat, L_ixp_mat, L_pxp_mat, Z_mat, D_mat){
-    y_prime_vec <- rowsums_byname(Y_prime_mat)
-    g_prime_vec <- matrixproduct_byname(L_ixp_mat, y_prime_vec)
-    q_prime_vec <- matrixproduct_byname(L_pxp_mat, y_prime_vec)
-    U_prime_mat <- matrixproduct_byname(Z_mat, hatize_byname(g_prime_vec))
-    V_prime_mat <- matrixproduct_byname(D_mat, hatize_byname(q_prime_vec))
+    y_prime_vec <- matsbyname::rowsums_byname(Y_prime_mat)
+    g_prime_vec <- matsbyname::matrixproduct_byname(L_ixp_mat, y_prime_vec)
+    q_prime_vec <- matsbyname::matrixproduct_byname(L_pxp_mat, y_prime_vec)
+    U_prime_mat <- matsbyname::matrixproduct_byname(Z_mat, matsbyname::hatize_byname(g_prime_vec))
+    V_prime_mat <- matsbyname::matrixproduct_byname(D_mat, matsbyname::hatize_byname(q_prime_vec))
     list(U_prime_mat, V_prime_mat) %>% magrittr::set_names(c(U_prime, V_prime))
   }
-  matsindf_apply(.sutmats, FUN = new_Y_func,
+  matsindf::matsindf_apply(.sutmats, FUN = new_Y_func,
                  Y_prime_mat = Y_prime, L_ixp_mat = L_ixp, L_pxp_mat = L_pxp,
                  Z_mat = Z, D_mat = D)
 }
@@ -170,47 +170,48 @@ new_k_ps <- function(.sutmats = NULL,
     # Get the name of the industry whose inputs will be changed.
     industry_to_change <- colnames(k_prime_2)
     # Ensure that k_prime_2 is a single-column vector.
-    if (length(industry_to_change) != 1) {
-      stop(paste("k_prime_2 has", ncol(k_prime_2), "columns in delta_inputs_ps_func. Must have 1 column."))
-    }
+    assertthat::assert_that(length(industry_to_change) == 1,
+                            msg = paste("k_prime_2 has", ncol(k_prime_2),
+                                        "columns in delta_inputs_ps_func. Must have 1 column."))
     # Ensure that the column sum of k_prime_2 is exactly 1.0.
-    if (colsums_byname(k_prime_2) != 1) {
-      stop(paste("k_prime_2 has column sum of", colsums_byname(y_prime_2), "but it must be exactly 1.0."))
-    }
+    assertthat::assert_that(matsbyname::colsums_byname(k_prime_2) == 1,
+                            msg = paste("k_prime_2 has column sum of",
+                                        matsbyname::colsums_byname(y_prime_2),
+                                        "but it must be exactly 1.0."))
     # Grab the k_prime_1 (not k_prime_2) column out of the existing K matrix.
     # k_prime_1 is the column from the K matrix with the same name as k_prime_2.
     k_prime_1 <- K_mat[, industry_to_change, drop = FALSE]
 
     # We need the matrix product of k_prime_1 and f_hat in several places.
     # Calculate it here now.
-    k_prime_1_f_hat <- matrixproduct_byname(k_prime_1, hatize_byname(f_vec))
-    k_prime_2_f_hat <- matrixproduct_byname(k_prime_2, hatize_byname(f_vec))
+    k_prime_1_f_hat <- matsbyname::matrixproduct_byname(k_prime_1, matsbyname::hatize_byname(f_vec))
+    k_prime_2_f_hat <- matsbyname::matrixproduct_byname(k_prime_2, matsbyname::hatize_byname(f_vec))
 
     # Get y_prime, g_prime, and q_prime vectors.
-    y_prime_1 <- rowsums_byname(k_prime_1_f_hat)
-    y_prime_2 <- rowsums_byname(k_prime_2_f_hat)
+    y_prime_1 <- matsbyname::rowsums_byname(k_prime_1_f_hat)
+    y_prime_2 <- matsbyname::rowsums_byname(k_prime_2_f_hat)
 
-    g_prime_1 <- matrixproduct_byname(L_ixp_mat, y_prime_1)
-    g_prime_2 <- matrixproduct_byname(L_ixp_mat, y_prime_2)
+    g_prime_1 <- matsbyname::matrixproduct_byname(L_ixp_mat, y_prime_1)
+    g_prime_2 <- matsbyname::matrixproduct_byname(L_ixp_mat, y_prime_2)
 
-    q_prime_1 <- matrixproduct_byname(L_pxp_mat, y_prime_1)
-    q_prime_2 <- matrixproduct_byname(L_pxp_mat, y_prime_2)
+    q_prime_1 <- matsbyname::matrixproduct_byname(L_pxp_mat, y_prime_1)
+    q_prime_2 <- matsbyname::matrixproduct_byname(L_pxp_mat, y_prime_2)
 
     # Calculate U_prime_1 and U_prime_2
-    U_prime_1 <- sum_byname(matrixproduct_byname(Z_mat, hatize_byname(g_prime_1)), k_prime_1_f_hat)
-    U_prime_2 <- sum_byname(matrixproduct_byname(Z_mat, hatize_byname(g_prime_2)), k_prime_2_f_hat)
+    U_prime_1 <- matsbyname::sum_byname(matsbyname::matrixproduct_byname(Z_mat, matsbyname::hatize_byname(g_prime_1)), k_prime_1_f_hat)
+    U_prime_2 <- matsbyname::sum_byname(matsbyname::matrixproduct_byname(Z_mat, matsbyname::hatize_byname(g_prime_2)), k_prime_2_f_hat)
 
     # Calculate V_prime_1 and V_prime_2
-    V_prime_1 <- matrixproduct_byname(D_mat, hatize_byname(q_prime_1))
-    V_prime_2 <- matrixproduct_byname(D_mat, hatize_byname(q_prime_2))
+    V_prime_1 <- matsbyname::matrixproduct_byname(D_mat, matsbyname::hatize_byname(q_prime_1))
+    V_prime_2 <- matsbyname::matrixproduct_byname(D_mat, matsbyname::hatize_byname(q_prime_2))
 
     # Now subtract the "1" versions and add the "2" versions.
-    U_prime_mat <- difference_byname(U_mat, U_prime_1) %>% sum_byname(U_prime_2)
-    V_prime_mat <- difference_byname(V_mat, V_prime_1) %>% sum_byname(V_prime_2)
+    U_prime_mat <- matsbyname::difference_byname(U_mat, U_prime_1) %>% matsbyname::sum_byname(U_prime_2)
+    V_prime_mat <- matsbyname::difference_byname(V_mat, V_prime_1) %>% matsbyname::sum_byname(V_prime_2)
 
     list(U_prime_mat, V_prime_mat) %>% magrittr::set_names(c(U_prime, V_prime))
   }
-  matsindf_apply(.sutmats, FUN = new_k_ps_func,
+  matsindf::matsindf_apply(.sutmats, FUN = new_k_ps_func,
                  k_prime_2 = k_prime,
                  U_mat = U, V_mat = V, Y_mat = Y,
                  K_mat = K,
@@ -257,9 +258,6 @@ new_k_ps <- function(.sutmats = NULL,
 #' @return a list or data frame containing \code{U_prime}, \code{V_prime}, and \code{Y_prime} matrices
 #'
 #' @export
-#'
-#' @importFrom matsbyname abs_byname
-#' @importFrom matsbyname equal_byname
 #'
 #' @examples
 #' library(dplyr)
@@ -311,24 +309,24 @@ new_R_ps <- function(.sutmats = NULL,
     # Calculate some quantities that we'll use on each iteration.
 
     # q_hat_inv_times_U
-    q_hat_inv_times_U <- matrixproduct_byname(hatinv_byname(q_vec), U_mat)
+    q_hat_inv_times_U <- matsbyname::matrixproduct_byname(matsbyname::hatinv_byname(q_vec), U_mat)
 
     # Column sums of the R_prime matrix
-    iR_prime <- colsums_byname(R_prime_mat)
+    iR_prime <- matsbyname::colsums_byname(R_prime_mat)
 
     # Set up an initial V_prime, which is a V matrix with all zeroes.
     # The easiest way to make that matrix is to multiply V by 0.
-    V_prime_mat <- hadamardproduct_byname(0, V_mat)
+    V_prime_mat <- matsbyname::hadamardproduct_byname(0, V_mat)
 
     # Values for y and Y_hat_inv * Y will be needed later.
-    y_vec <- rowsums_byname(Y_mat)
-    y_hat_inv_Y <- matrixproduct_byname(hatinv_byname(y_vec), Y_mat)
+    y_vec <- matsbyname::rowsums_byname(Y_mat)
+    y_hat_inv_Y <- matsbyname::matrixproduct_byname(matsbyname::hatinv_byname(y_vec), Y_mat)
     # Set up a value for Y_prime.
     # The easiest way to make Y_prime is to multiply Y by 0.
-    Y_prime_mat <- hadamardproduct_byname(0, Y_mat)
+    Y_prime_mat <- matsbyname::hadamardproduct_byname(0, Y_mat)
 
     # Set up "previous" matrices for convergence comparison
-    U_prime_mat_prev <- hadamardproduct_byname(0, U_mat)
+    U_prime_mat_prev <- matsbyname::hadamardproduct_byname(0, U_mat)
     V_prime_mat_prev <- V_prime_mat
     Y_prime_mat_prev <- Y_prime_mat
 
@@ -337,34 +335,34 @@ new_R_ps <- function(.sutmats = NULL,
     repeat {
       # Step 0: Calculate q_prime_hat
       # Note that we're making q_prime into a column vector. Purpose: compatibility with the calculation of y_prime later.
-      q_prime <- sum_byname(iR_prime, colsums_byname(V_prime_mat)) %>% transpose_byname()
-      q_hat_prime <- q_prime %>% hatize_byname()
+      q_prime <- matsbyname::sum_byname(iR_prime, matsbyname::colsums_byname(V_prime_mat)) %>% matsbyname::transpose_byname()
+      q_hat_prime <- q_prime %>% matsbyname::hatize_byname()
       # Index the iteration counter
       iter <- iter + 1
       # Step 1: Calculate U_prime
-      U_prime_mat <- matrixproduct_byname(q_hat_prime, q_hat_inv_times_U)
+      U_prime_mat <- matsbyname::matrixproduct_byname(q_hat_prime, q_hat_inv_times_U)
       # Step 2: Calculate U_bar_prime
-      U_bar_prime <- transpose_byname(S_units_mat) %>% matrixproduct_byname(U_prime_mat)
+      U_bar_prime <- matsbyname::transpose_byname(S_units_mat) %>% matsbyname::matrixproduct_byname(U_prime_mat)
       # Step 3: Calculate column sums of U_bar_prime
-      i_U_bar_prime <- colsums_byname(U_bar_prime)
+      i_U_bar_prime <- matsbyname::colsums_byname(U_bar_prime)
       # Step 4: Calculate i_U_bar_prime_hat
-      i_U_bar_hat_prime <- hatize_byname(i_U_bar_prime)
+      i_U_bar_hat_prime <- matsbyname::hatize_byname(i_U_bar_prime)
       # Step 5: Calculate g_prime
-      g_prime <- matrixproduct_byname(i_U_bar_hat_prime, eta_i_vec)
+      g_prime <- matsbyname::matrixproduct_byname(i_U_bar_hat_prime, eta_i_vec)
       # Step 6: Calculate g_prime_hat
-      g_hat_prime <- hatize_byname(g_prime)
+      g_hat_prime <- matsbyname::hatize_byname(g_prime)
       # Step 7: Calculate V_prime
-      V_prime_mat <- matrixproduct_byname(C_mat, g_hat_prime) %>% transpose_byname()
+      V_prime_mat <- matsbyname::matrixproduct_byname(C_mat, g_hat_prime) %>% matsbyname::transpose_byname()
       # Step 8: Calculate Y_prime
-      y_prime <- difference_byname(q_prime, rowsums_byname(U_prime_mat))
-      y_hat_prime <- hatize_byname(y_prime)
-      Y_prime_mat <- matrixproduct_byname(y_hat_prime, y_hat_inv_Y)
+      y_prime <- matsbyname::difference_byname(q_prime, matsbyname::rowsums_byname(U_prime_mat))
+      y_hat_prime <- matsbyname::hatize_byname(y_prime)
+      Y_prime_mat <- matsbyname::matrixproduct_byname(y_hat_prime, y_hat_inv_Y)
 
       # Check convergence condition
       # Calculate only as many differences as necessary.
-      if (difference_byname(Y_prime_mat, Y_prime_mat_prev) %>% iszero_byname(tol = tol)) {
-        if (difference_byname(V_prime_mat, V_prime_mat_prev) %>% iszero_byname(tol = tol)) {
-          if (difference_byname(U_prime_mat, U_prime_mat_prev) %>% iszero_byname(tol = tol)) {
+      if (matsbyname::difference_byname(Y_prime_mat, Y_prime_mat_prev) %>% matsbyname::iszero_byname(tol = tol)) {
+        if (matsbyname::difference_byname(V_prime_mat, V_prime_mat_prev) %>% matsbyname::iszero_byname(tol = tol)) {
+          if (matsbyname::difference_byname(U_prime_mat, U_prime_mat_prev) %>% matsbyname::iszero_byname(tol = tol)) {
             # If we get here, all of U_prime, V_prime, and Y_prime
             # are same as their respective *_prev values within tol.
             # This is the stopping condition, so break.
@@ -391,7 +389,7 @@ new_R_ps <- function(.sutmats = NULL,
     list(U_prime_mat, V_prime_mat, Y_prime_mat) %>% magrittr::set_names(c(U_prime, V_prime, Y_prime))
   }
 
-  matsindf_apply(.sutmats, FUN = new_R_func, R_prime_mat = R_prime, U_mat = U, V_mat = V, Y_mat = Y, S_units_mat = S_units,
+  matsindf::matsindf_apply(.sutmats, FUN = new_R_func, R_prime_mat = R_prime, U_mat = U, V_mat = V, Y_mat = Y, S_units_mat = S_units,
                  q_vec = q, C_mat = C, eta_i_vec = eta_i)
 }
 

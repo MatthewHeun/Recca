@@ -80,7 +80,7 @@ test_that("IEA energy balance works correctly", {
   # Change from 5e4 to 1e4
   Unbalanced$EX.ktoe[[1]] <- 1e4
   # Now try energy balance. It should fail.
-  expect_warning(Unbalanced %>%
+  expect_error(Unbalanced %>%
                  group_by(Country, Year, Energy.type, Last.stage) %>%
                  verify_IEATable_energy_balance(energy = "EX.ktoe"),
                  "Energy not balanced in verify_IEATable_energy_balance.")

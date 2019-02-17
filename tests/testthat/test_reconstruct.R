@@ -42,8 +42,8 @@ test_that("reconstructing U and V from a new Y matrix works as expected", {
       U_diff = difference_byname(U_prime, U),
       V_diff = difference_byname(V_prime, V),
       # The differences should be the 0 matrix, within tolerance
-      UOK = iszero_byname(U_diff, tol = 5e-5),
-      VOK = iszero_byname(V_diff, tol = 5e-5)
+      UOK = matsbyname::iszero_byname(U_diff, tol = 5e-5),
+      VOK = matsbyname::iszero_byname(V_diff, tol = 5e-5)
     )
   expect_true(all(as.logical(Reconstructed$UOK)))
   expect_true(all(as.logical(Reconstructed$VOK)))
@@ -194,7 +194,7 @@ context("New primary industries")
 ###########################################################
 
 test_that("new_R works as expected", {
-  newRsameasoldR <- UKEnergy2000mats %>%
+  setup <- UKEnergy2000mats %>%
     spread(key = "matrix.name", value = "matrix") %>%
     # When Last.stage is "services", we get units problems.
     # Avoid by using only ECCs with "final" and "useful" as the Last.stage.
@@ -214,12 +214,13 @@ test_that("new_R works as expected", {
     # For testing purposes!
     mutate(
       R_prime = R
-    ) %>%
+    )
     # Now call the new_R_ps function which will calculate
     # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
     # given R_prime.
     # Each of the *_prime matrices should be same as their originals,
     # because R_prime is equal to R.
+  newRsameasoldR <- setup %>%
     new_R_ps() %>%
     # Clean the rows of U_prime and Y_prime, because they contain Products that are not present in U.
     mutate(
@@ -240,6 +241,9 @@ test_that("new_R works as expected", {
     expect_true(equal_byname(newRsameasoldR$V_prime[[i]], newRsameasoldR$expected_V[[i]]))
     expect_true(equal_byname(newRsameasoldR$Y_prime[[i]], newRsameasoldR$expected_Y[[i]]))
   }
+
+  # Also try when the maxiter argument is set too small.
+  expect_warning(setup[1, ] %>% new_R_ps(maxiter = 1), "maxiter = 1 reached without convergence in new_R")
 
   doubleR <- UKEnergy2000mats %>%
     spread(key = "matrix.name", value = "matrix") %>%
@@ -318,4 +322,3 @@ test_that("new_R works as expected", {
     expect_true(is.na(WithDiffUnits$Y_prime[[i]]))
   }
 })
-

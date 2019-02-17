@@ -28,7 +28,7 @@ use_data(UKEnergy2000tidy, overwrite = TRUE)
 
 # Create S_units matrices from the UKEnergy2000tidy data frame
 S_units <- UKEnergy2000tidy %>%
-  group_by(Country, Year, Energy.type, Last.stage) %>%
+  dplyr::group_by(Country, Year, Energy.type, Last.stage) %>%
   S_units_from_tidy()
 
 UKEnergy2000mats <- UKEnergy2000tidy %>%
@@ -38,20 +38,20 @@ UKEnergy2000mats <- UKEnergy2000tidy %>%
   add_row_col_meta() %>%
   # Eliminate columns we no longer need
   select(-Ledger.side, -Flow.aggregation.point, -Flow, -Product) %>%
-  mutate(
+  dplyr::mutate(
     # Ensure that all energy values are positive, as required for analysis.
     EX.ktoe = abs(EX.ktoe)
   ) %>%
 
   # Collapse to matrices
-  group_by(Country, Year, Energy.type, Last.stage, matname) %>%
-  collapse_to_matrices(matnames = "matname", matvals = "EX.ktoe",
+  dplyr::group_by(Country, Year, Energy.type, Last.stage, matname) %>%
+  matsindf::collapse_to_matrices(matnames = "matname", matvals = "EX.ktoe",
                        rownames = "rowname", colnames = "colname",
                        rowtypes = "rowtype", coltypes = "coltype") %>%
-  rename(matrix.name = matname, matrix = EX.ktoe) %>%
-  spread(key = matrix.name, value = matrix) %>%
+  dplyr::rename(matrix.name = matname, matrix = EX.ktoe) %>%
+  tidyr::spread(key = matrix.name, value = matrix) %>%
 
-  mutate(
+  dplyr::mutate(
     # Create full U matrix
     U = sum_byname(U_excl_EIOU, U_EIOU),
     r_EIOU = quotient_byname(U_EIOU, U),
@@ -59,9 +59,9 @@ UKEnergy2000mats <- UKEnergy2000tidy %>%
   ) %>%
   select(-U_EIOU, -U_excl_EIOU) %>%
   # Add S_units matrices
-  left_join(S_units, by = c("Country", "Year", "Energy.type", "Last.stage")) %>%
+  dplyr::left_join(S_units, by = c("Country", "Year", "Energy.type", "Last.stage")) %>%
   # When convert to using R everywhere, be sure to add R to the list of gathered columns below.
   # gather(key = matrix.name, value = matrix, R, U, V, Y, r_EIOU, S_units)
-  gather(key = matrix.name, value = matrix, U, V, Y, r_EIOU, S_units)
+  dplyr::gather(key = matrix.name, value = matrix, U, V, Y, r_EIOU, S_units)
 
-use_data(UKEnergy2000mats, overwrite = TRUE)
+usethis::use_data(UKEnergy2000mats, overwrite = TRUE)

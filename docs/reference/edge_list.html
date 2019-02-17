@@ -66,7 +66,7 @@ Edge lists is a typical data format for visulaization software." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.15</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.16</span>
       </span>
     </div>
 
@@ -140,8 +140,8 @@ Edge lists is a typical data format for visulaization software.</p>
     <pre class="usage"><span class='fu'>edge_list</span>(<span class='kw'>.sutdata</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>R</span> <span class='kw'>=</span> <span class='st'>"R"</span>, <span class='kw'>U</span> <span class='kw'>=</span> <span class='st'>"U"</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>, <span class='kw'>Y</span> <span class='kw'>=</span> <span class='st'>"Y"</span>,
   <span class='kw'>edge_list</span> <span class='kw'>=</span> <span class='st'>"Edge list"</span>, <span class='kw'>from</span> <span class='kw'>=</span> <span class='st'>"From"</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"To"</span>,
   <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>"Value"</span>, <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>, <span class='kw'>waste</span> <span class='kw'>=</span> <span class='st'>"Waste"</span>,
-  <span class='kw'>node_id</span> <span class='kw'>=</span> <span class='st'>"node_id"</span>, <span class='kw'>first_node</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>edge_id</span> <span class='kw'>=</span> <span class='st'>"edge_id"</span>,
-  <span class='kw'>simplify_edges</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+  <span class='kw'>rowtypes</span> <span class='kw'>=</span> <span class='st'>"rowtype"</span>, <span class='kw'>coltypes</span> <span class='kw'>=</span> <span class='st'>"coltype"</span>, <span class='kw'>node_id</span> <span class='kw'>=</span> <span class='st'>"node_id"</span>,
+  <span class='kw'>first_node</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>edge_id</span> <span class='kw'>=</span> <span class='st'>"edge_id"</span>, <span class='kw'>simplify_edges</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -192,6 +192,14 @@ Or the name of the item in the return list if .sutdata is not specified.
       <th>waste</th>
       <td><p>the name of the waste product and the destination node for wastes.
 Set <code>NULL</code> to suppress addition of waste edges. (Default is "<code>Waste</code>".)</p></td>
+    </tr>
+    <tr>
+      <th>rowtypes</th>
+      <td><p>the name of the rowtypes. (Default is "<code>rowtype</code>".)</p></td>
+    </tr>
+    <tr>
+      <th>coltypes</th>
+      <td><p>the name of the rowtypes. (Default is "<code>coltype</code>".)</p></td>
     </tr>
     <tr>
       <th>node_id</th>

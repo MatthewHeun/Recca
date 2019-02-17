@@ -7,8 +7,8 @@
 edge_list(.sutdata = NULL, R = "R", U = "U", V = "V", Y = "Y",
   edge_list = "Edge list", from = "From", to = "To",
   value = "Value", product = "Product", waste = "Waste",
-  node_id = "node_id", first_node = 0, edge_id = "edge_id",
-  simplify_edges = TRUE)
+  rowtypes = "rowtype", coltypes = "coltype", node_id = "node_id",
+  first_node = 0, edge_id = "edge_id", simplify_edges = TRUE)
 }
 \arguments{
 \item{.sutdata}{Optionally, a data frame containing columns named with the values of the \code{U}, \code{V}, and \code{Y} arguments.}
@@ -35,6 +35,10 @@ Or the name of the item in the return list if .sutdata is not specified.
 
 \item{waste}{the name of the waste product and the destination node for wastes.
 Set \code{NULL} to suppress addition of waste edges. (Default is "\code{Waste}".)}
+
+\item{rowtypes}{the name of the rowtypes. (Default is "\code{rowtype}".)}
+
+\item{coltypes}{the name of the rowtypes. (Default is "\code{coltype}".)}
 
 \item{node_id}{the base name of node ID columns.
 Set \code{NULL} to suppress addition of node ID numbers.

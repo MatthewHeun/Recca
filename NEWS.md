@@ -1,3 +1,15 @@
+# Recca 0.1.16 (2019-02-16)
+
+* Now automatically building in Travis.
+* Added new `reverse()` function to change flow direction of an ECC.
+  `reverse()` will be useful for downstream swim functions.
+* Simplified and improved `resource_industries()` function.
+    - No longer summing columns of `U` matrix.
+    - Instead, cleaning 0 columns of `U` and comparing names of columns to the original `U`.
+* Eliminated all `@importFrom` statements by fully-qualifying all function calls.
+* Test coverage now up to 100%.
+
+
 # Recca 0.1.15 (2019-01-09)
 
 * First draft of `new-functions` vignette now complete, including demonstrations of 

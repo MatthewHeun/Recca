@@ -18,7 +18,7 @@
   \item{Unit}{unit in which quantity is expressed}
 }}
 \source{
-\url{http://www.see.leeds.ac.uk/fileadmin/Documents/research/sri/workingpapers/sri-wp111.pdf}
+\url{https://doi.org/10.1016/j.apenergy.2018.05.109}
 }
 \usage{
 UKEnergy2000tidy
@@ -28,13 +28,9 @@ A dataset containing approximations to
 some of the energy flows in the UK in the year 2000.
 These data first appeared as the example in
 Figures 3, 4, 6, 7, 10, 11, B.1, and B.2 of
-M.K. Heun, A. Owen, and P.E. Brockway.
+M.K. Heun, A. Owen, and P. E. Brockway.
 A physical supply-use table framework for energy analysis on the energy conversion chain.
-Sustainability Research Institute Paper 111,
-University of Leeds, School of Earth and Environment,
-Sustainability Research Institute,
-Leeds, England,
-13 November 2017.
+Applied Energy, 226:1134–1162, Sep 2018.
 }
 \details{
 \code{UKEnergy2000tidy} gives each non-zero entry in \code{UKEnergy2000mats}

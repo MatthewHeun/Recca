@@ -27,8 +27,6 @@
 #'
 #' @return a list or data frame saying whether \code{.sutmats} are in balance.
 #'
-#' @importFrom matsbyname complete_rows_cols
-#'
 #' @export
 #'
 #' @examples
@@ -46,17 +44,19 @@ verify_SUT_energy_balance <- function(.sutmats = NULL,
                                       # Output name
                                       SUT_energy_balance = ".SUT_energy_balance"){
   verify_func <- function(U_mat, V_mat, Y_mat){
-    U_sums <- rowsums_byname(U_mat)
-    V_sums <- transpose_byname(V_mat) %>% rowsums_byname()
-    Y_sums <- rowsums_byname(Y_mat)
-    err <- difference_byname(V_sums, U_sums) %>% difference_byname(Y_sums)
-    OK <- err %>% iszero_byname(tol) %>% as.logical()
+    U_sums <- matsbyname::rowsums_byname(U_mat)
+    V_sums <- matsbyname::transpose_byname(V_mat) %>% matsbyname::rowsums_byname()
+    Y_sums <- matsbyname::rowsums_byname(Y_mat)
+    err <- matsbyname::difference_byname(V_sums, U_sums) %>% matsbyname::difference_byname(Y_sums)
+    OK <- err %>%
+      matsbyname::iszero_byname(tol) %>%
+      as.logical()
     if (!OK) {
       return(list(FALSE) %>% magrittr::set_names(SUT_energy_balance))
     }
     list(TRUE) %>% magrittr::set_names(SUT_energy_balance)
   }
-  Out <- matsindf_apply(.sutmats, FUN = verify_func, U_mat = U, V_mat = V, Y_mat = Y)
+  Out <- matsindf::matsindf_apply(.sutmats, FUN = verify_func, U_mat = U, V_mat = V, Y_mat = Y)
   if (!all(Out[[SUT_energy_balance]] %>% as.logical())) {
     warning(paste("Energy not conserved in verify_SUT_energy_balance. See", SUT_energy_balance))
   }
@@ -96,7 +96,8 @@ verify_SUT_energy_balance <- function(.sutmats = NULL,
 #' @examples
 #' library(tidyr)
 #' verify_SUT_energy_balance_with_units(UKEnergy2000mats %>%
-#'                                        spread(key = matrix.name, value = matrix))
+#'                                        spread(key = matrix.name, value = matrix),
+#'                                        tol = 1e-3)
 verify_SUT_energy_balance_with_units <- function(.sutmats = NULL,
                                                  # Input names
                                                  U = "U", V = "V", Y = "Y", S_units = "S_units",
@@ -106,22 +107,25 @@ verify_SUT_energy_balance_with_units <- function(.sutmats = NULL,
                                                  SUT_prod_energy_balance = ".SUT_prod_energy_balance",
                                                  SUT_ind_energy_balance = ".SUT_ind_energy_balance"){
   verify_func <- function(U, V, Y, S_units){
-    y <- rowsums_byname(Y)
-    W <- difference_byname(transpose_byname(V), U)
-    U_bar <- matrixproduct_byname(transpose_byname(S_units), U)
-    V_bar <- matrixproduct_byname(V, S_units)
-    W_bar <- matrixproduct_byname(transpose_byname(S_units), W)
-    prodOK <- difference_byname(rowsums_byname(W), y) %>% iszero_byname(tol = tol)
-    indOK <- difference_byname(V_bar, transpose_byname(W_bar)) %>% difference_byname(transpose_byname(U_bar)) %>% iszero_byname(tol = tol)
-    list(prodOK, indOK) %>% set_names(c(SUT_prod_energy_balance, SUT_ind_energy_balance))
+    y <- matsbyname::rowsums_byname(Y)
+    W <- matsbyname::difference_byname(matsbyname::transpose_byname(V), U)
+    U_bar <- matsbyname::matrixproduct_byname(matsbyname::transpose_byname(S_units), U)
+    V_bar <- matsbyname::matrixproduct_byname(V, S_units)
+    W_bar <- matsbyname::matrixproduct_byname(matsbyname::transpose_byname(S_units), W)
+    prodOK <- matsbyname::difference_byname(matsbyname::rowsums_byname(W), y) %>% matsbyname::iszero_byname(tol = tol)
+    indOK <- matsbyname::difference_byname(V_bar, matsbyname::transpose_byname(W_bar)) %>%
+      matsbyname::difference_byname(matsbyname::transpose_byname(U_bar)) %>% matsbyname::iszero_byname(tol = tol)
+    list(prodOK, indOK) %>% magrittr::set_names(c(SUT_prod_energy_balance, SUT_ind_energy_balance))
   }
-  Out <- matsindf_apply(.sutmats, FUN = verify_func, U = U, V = V, Y = Y, S_units = S_units)
-  if (!all(Out[[SUT_prod_energy_balance]] %>% as.logical())) {
-    warning(paste("Energy not conserved by product in verify_SUT_energy_balance_with_units. See column", SUT_prod_energy_balance))
-  }
-  if (!all(Out[[SUT_ind_energy_balance]] %>% as.logical())) {
-    warning(paste("Energy not conserved by industry in verify_SUT_energy_balance_with_units. See column", SUT_ind_energy_balance))
-  }
+  Out <- matsindf::matsindf_apply(.sutmats, FUN = verify_func, U = U, V = V, Y = Y, S_units = S_units)
+  assertthat::assert_that(all(Out[[SUT_prod_energy_balance]] %>% as.logical()),
+                          msg = paste("Energy not conserved by product in verify_SUT_energy_balance_with_units.",
+                                      "See column",
+                                      SUT_prod_energy_balance))
+  assertthat::assert_that(all(Out[[SUT_ind_energy_balance]] %>% as.logical()),
+                          msg = paste("Energy not conserved by industry in verify_SUT_energy_balance_with_units",
+                                      "See column",
+                                      SUT_ind_energy_balance))
   return(Out)
 }
 
@@ -166,12 +170,13 @@ verify_SUT_industry_production <- function(.sutmats = NULL,
                                            industry_production_OK = ".industry_production_OK",
                                            problem_industries = ".problem_industries"){
   verify_func <- function(U_mat, V_mat){
-    check <- rowsums_byname(V_mat) %>% complete_rows_cols(mat = transpose_byname(U_mat), margin = 1)
+    check <- matsbyname::rowsums_byname(V_mat) %>%
+      matsbyname::complete_rows_cols(mat = matsbyname::transpose_byname(U_mat), margin = 1)
     OK <- !any(check == 0)
     problems <- rownames(check)[which(check == 0)]
-    list(OK, problems) %>% set_names(c(industry_production_OK, problem_industries))
+    list(OK, problems) %>% magrittr::set_names(c(industry_production_OK, problem_industries))
   }
-  Out <- matsindf_apply(.sutmats, FUN = verify_func, U_mat = U, V_mat = V)
+  Out <- matsindf::matsindf_apply(.sutmats, FUN = verify_func, U_mat = U, V_mat = V)
   if (!all(Out[[industry_production_OK]] %>% as.logical())) {
     warning(paste("There are some industries that consume but do not produce energy. See column", industry_production_OK))
   }
@@ -237,16 +242,16 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
   esupply <- as.name("ESupply")
   econsumption <- as.name("EConsumption")
 
-  EnergyCheck <- full_join(
+  EnergyCheck <- dplyr::full_join(
     .ieatidydata %>%
-      filter(!!ledger.side == "Supply") %>%
-      summarise(!!esupply := sum(!!energy)),
+      dplyr::filter(!!ledger.side == "Supply") %>%
+      dplyr::summarise(!!esupply := sum(!!energy)),
     .ieatidydata %>%
-      filter(!!ledger.side == "Consumption") %>%
-      summarise(!!econsumption := sum(!!energy)),
-    by = group_vars(.ieatidydata)
+      dplyr::filter(!!ledger.side == "Consumption") %>%
+      dplyr::summarise(!!econsumption := sum(!!energy)),
+    by = dplyr::group_vars(.ieatidydata)
   ) %>%
-    mutate(
+    dplyr::mutate(
       !!err := !!esupply - !!econsumption
     )
 
@@ -262,24 +267,16 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
   # Check that both of these are true.
 
   # Option (a)
-  EnergyCheck_err <- EnergyCheck %>% filter(!is.na(!!as.name(err)))
-  if (!all(abs(EnergyCheck_err[[err]]) < tol)) {
-    # Emit a warning
-    warning(
-      paste("Energy not balanced in verify_IEATable_energy_balance.",
-            "Check return value for non-zero", err, "column.")
-    )
-  }
+  EnergyCheck_err <- EnergyCheck %>% dplyr::filter(!is.na(!!as.name(err)))
+  assertthat::assert_that(all(abs(EnergyCheck_err[[err]]) < tol),
+                          msg = paste("Energy not balanced in verify_IEATable_energy_balance.",
+                                      "Check return value for non-zero", err, "column."))
 
   # Option (b)
-  EnergyCheck_supply <- EnergyCheck %>% filter(is.na(!!as.name(err)))
-  if (!all(abs(EnergyCheck_supply[[esupply]]) < tol)) {
-    # Emit a warning
-    warning(
-      paste("Energy not balanced in verify_IEATable_energy_balance.",
-            "Check return value for non-zero", err, "column.")
-    )
-  }
+  EnergyCheck_supply <- EnergyCheck %>% dplyr::filter(is.na(!!as.name(err)))
+  assertthat::assert_that(all(abs(EnergyCheck_supply[[esupply]]) < tol),
+                          msg = paste("Energy not balanced in verify_IEATable_energy_balance.",
+                                      "Check return value for non-zero", err, "column."))
 
   return(EnergyCheck)
 }

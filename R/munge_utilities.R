@@ -10,11 +10,6 @@
 #'
 #' @return a data frame containing grouping variables and a new \code{S_unit} column
 #'
-#' @importFrom dplyr groups
-#' @importFrom dplyr do
-#' @importFrom matsindf collapse_to_matrices
-#' @importFrom rlang .data
-#'
 #' @export
 #'
 #' @examples
@@ -32,20 +27,20 @@ S_units_from_tidy <- function(.tidydf, Product = "Product", Unit = "Unit", S_uni
   rowtype <- ".rowtype"
   coltype <- ".coltype"
 
-  verify_cols_missing(.tidydf, c(S_units, val, rowtype, coltype))
+  matsindf::verify_cols_missing(.tidydf, c(S_units, val, rowtype, coltype))
 
-  select(.tidydf, !!!groups(.tidydf), !!Product, !!Unit) %>%
-    do(unique(.data)) %>%
-    mutate(
+  dplyr::select(.tidydf, !!!dplyr::groups(.tidydf), !!Product, !!Unit) %>%
+    dplyr::do(unique(.data)) %>%
+    dplyr::mutate(
       !!as.name(val) := 1,
       !!as.name(S_units) := S_units,
       !!as.name(rowtype) := "Product",
       !!as.name(coltype) := "Unit"
     ) %>%
-    collapse_to_matrices(matnames = S_units, matvals = val,
-                         rownames = as.character(Product), colnames = as.character(Unit),
-                         rowtypes = rowtype, coltypes = coltype) %>%
-    rename(
+    matsindf::collapse_to_matrices(matnames = S_units, matvals = val,
+                                   rownames = as.character(Product), colnames = as.character(Unit),
+                                   rowtypes = rowtype, coltypes = coltype) %>%
+    dplyr::rename(
       !!as.name(S_units) := !!as.name(val)
     )
 }
@@ -98,10 +93,6 @@ S_units_from_tidy <- function(.tidydf, Product = "Product", Unit = "Unit", S_uni
 #'
 #' @export
 #'
-#' @importFrom dplyr anti_join
-#' @importFrom dplyr case_when
-#' @importFrom dplyr mutate
-#'
 #' @examples
 #' library(dplyr)
 #' UKEnergy2000tidy %>%
@@ -141,11 +132,11 @@ add_matnames_iea <- function(.DF,
   flow <- as.name(flow)
   flow_aggregation_point <- as.name(flow_aggregation_point)
 
-  verify_cols_missing(.DF, matname)
+  matsindf::verify_cols_missing(.DF, matname)
 
   out <- .DF %>%
-    mutate(
-      !!matname := case_when(
+    dplyr::mutate(
+      !!matname := dplyr::case_when(
         # All Consumption items belong in the final demand (Y) matrix.
         !!ledger_side == consumption_side ~ Y,
         # All positive values on the Supply side of the ledger belong in the make (V) matrix.
@@ -164,28 +155,28 @@ add_matnames_iea <- function(.DF,
       )
     )
   if (use_R) {
-    gvars <- group_vars(out)
+    gvars <- dplyr::group_vars(out)
     # Need to split R matrix entries from V matrix entries.
     matname <- as.name(matname)
     # Find all the rows that identify outputs of an ECC industry.
     output_rows <- out %>%
-      filter(!!matname == V)
+      dplyr::filter(!!matname == V)
     # Find all the rows that identify inputs to an ECC industry.
     input_rows <- out %>%
-      filter(!!matname == Y | !!energy < 0) %>%
-      mutate(
+      dplyr::filter(!!matname == Y | !!energy < 0) %>%
+      dplyr::mutate(
         !!energy := abs(!!energy)
       )
     # Resource industries are those industries (Flows) that have outputs but no inputs.
     industries_with_outputs <- output_rows %>%
-      select(!!!gvars, !!flow)
+      dplyr::select(!!!gvars, !!flow)
     industries_with_inputs <- input_rows %>%
-      select(!!!gvars, !!flow) %>%
+      dplyr::select(!!!gvars, !!flow) %>%
       unique()
     # The next line subtracts (by group!) all industries with inputs from the industries_with_outputs data frame,
     # leaving only industries who have outputs but no inputs.
-    resource_rows <- anti_join(industries_with_outputs, industries_with_inputs, by = c(gvars, as.character(flow))) %>%
-      mutate(
+    resource_rows <- dplyr::anti_join(industries_with_outputs, industries_with_inputs, by = c(gvars, as.character(flow))) %>%
+      dplyr::mutate(
         # The rows in the resource_rows data frame belong in the resources matrix,
         # so we give them the R matrix name.
         .R = TRUE
@@ -194,15 +185,15 @@ add_matnames_iea <- function(.DF,
     # The .R column will have TRUE where matname needs to be changed from its current value to R
     # The .R column will have NA where matname should not be changed.
     .R_col <- as.name(".R")
-    verify_cols_missing(out, .R_col)
-    out <- full_join(out, resource_rows, by = c(gvars, as.character(flow))) %>%
-      mutate(
-        !!matname := case_when(
+    matsindf::verify_cols_missing(out, .R_col)
+    out <- dplyr::full_join(out, resource_rows, by = c(gvars, as.character(flow))) %>%
+      dplyr::mutate(
+        !!matname := dplyr::case_when(
           !!.R_col ~ R,
           TRUE ~ matname
         )
       ) %>%
-      select(-!!.R_col)
+      dplyr::select(-!!.R_col)
   }
   return(out)
 }
@@ -270,32 +261,32 @@ add_row_col_meta <- function(.DF,
   rowtype <- as.name(rowtype)
   coltype <- as.name(coltype)
 
-  verify_cols_missing(.DF, c(rowname, colname, rowtype, coltype))
+  matsindf::verify_cols_missing(.DF, c(rowname, colname, rowtype, coltype))
 
   .DF %>%
-    mutate(
-      !!rowname := case_when(
+    dplyr::mutate(
+      !!rowname := dplyr::case_when(
         startsWith(!!matname, U) ~ !!product,
         !!matname == R ~ !!flow,
         !!matname == V ~ !!flow,
         !!matname == Y ~ !!product,
         TRUE ~ NA_character_
       ),
-      !!colname := case_when(
+      !!colname := dplyr::case_when(
         startsWith(!!matname, U) ~ !!flow,
         !!matname == V ~ !!product,
         !!matname == R ~ !!product,
         !!matname == Y ~ !!flow,
         TRUE ~ NA_character_
       ),
-      !!rowtype := case_when(
+      !!rowtype := dplyr::case_when(
         startsWith(!!matname, U) ~ product_type,
         !!matname == R ~ resource_type,
         !!matname == V ~ industry_type,
         !!matname == Y ~ product_type,
         TRUE ~ NA_character_
       ),
-      !!coltype := case_when(
+      !!coltype := dplyr::case_when(
         startsWith(!!matname, U) ~ industry_type,
         !!matname == R ~ product_type,
         !!matname == V ~ product_type,
