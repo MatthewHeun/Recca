@@ -7,8 +7,8 @@
 
 <!-- *********** -->
 
-<!-- [![CRAN status](https://www.r-pkg.org/badges/version/Recca)](https://cran.r-project.org/package=Recca) -->
-
+[![CRAN
+status](https://www.r-pkg.org/badges/version/Recca)](https://cran.r-project.org/package=Recca)
 [![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![Travis-CI Build
 Status](https://travis-ci.org/MatthewHeun/matsindf.svg?branch=master)](https://travis-ci.org/MatthewHeun/Recca)
