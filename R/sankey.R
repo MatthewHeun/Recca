@@ -42,17 +42,17 @@ make_sankey <- function(.sutmats = NULL, R = "R", U = "U", V = "V", Y = "Y", sim
     # Check for NA values. If any NA values are found, need to return NA.
     # But we can't check R_mat for NA if it is NULL.
     if (is.null(R_mat)) {
-      if (is.na(U_mat) || is.na(V_mat) || is.na(Y_mat)) {
+      if (all(is.na(U_mat)) || all(is.na(V_mat)) || all(is.na(Y_mat))) {
         return(NA)
       }
     } else {
-      if (is.na(R_mat) || is.na(U_mat) || is.na(V_mat) || is.na(Y_mat)) {
+      if (all(is.na(R_mat)) || all(is.na(U_mat)) || all(is.na(V_mat)) || all(is.na(Y_mat))) {
         return(NA)
       }
     }
     # When I convert everything to using R matrices, need to change this code.
     if (is.null(R_mat)) {
-      # If R is missing, need to extract it from V
+      # If R is missing, need to extract it from R_plus_V
       res <- separate_RV(U = U_mat, R_plus_V = V_mat)
       R_mat <- res$R
       V_mat <- res$V
