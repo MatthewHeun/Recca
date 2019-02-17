@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Tell whether ECC products are unit-homogenous — products_unit_homogeneous • Recca</title>
+<title>Reverse an energy conversion chain — reverse • Recca</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,11 +30,15 @@
 
 
 
-<meta property="og:title" content="Tell whether ECC products are unit-homogenous — products_unit_homogeneous" />
+<meta property="og:title" content="Reverse an energy conversion chain — reverse" />
 
-<meta property="og:description" content="Returns TRUE if products are unit-homogeneous
-according to the S_units matrix and
-FALSE otherwise." />
+<meta property="og:description" content="Leontief's original input-output analysis involved swimming
+&quot;upstream&quot; to estimate the economy that would be needed if different final demand were observed.
+But what if different resources were available?
+The analysis is the same if resources become final demand (and vice versa)
+and make becomes use (and vice versa).
+That is, the analysis is the same if you're dealing with a reversed energy conversion chain (ECC).
+This function performs that reversal." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -122,70 +126,96 @@ FALSE otherwise." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Tell whether ECC products are unit-homogenous</h1>
+    <h1>Reverse an energy conversion chain</h1>
     <small class="dont-index">Source: <a href='https://github.com/MatthewHeun/Recca/blob/master/R/utilities.R'><code>R/utilities.R</code></a></small>
-    <div class="hidden name"><code>products_unit_homogeneous.Rd</code></div>
+    <div class="hidden name"><code>reverse.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Returns <code>TRUE</code> if products are unit-homogeneous
-according to the <code>S_units</code> matrix and
-<code>FALSE</code> otherwise.</p>
+    <p>Leontief's original input-output analysis involved swimming
+"upstream" to estimate the economy that would be needed if different final demand were observed.
+But what if different resources were available?
+The analysis is the same if resources become final demand (and vice versa)
+and make becomes use (and vice versa).
+That is, the analysis is the same if you're dealing with a reversed energy conversion chain (ECC).
+This function performs that reversal.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>products_unit_homogeneous</span>(<span class='kw'>.sutmats</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>S_units</span> <span class='kw'>=</span> <span class='st'>"S_units"</span>,
-  <span class='kw'>keep_details</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>products_unit_homogeneous</span> <span class='kw'>=</span> <span class='st'>".products_unit_homogeneous"</span>)</pre>
+    <pre class="usage"><span class='fu'>reverse</span>(<span class='kw'>.sutmats</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>R</span> <span class='kw'>=</span> <span class='st'>"R"</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>, <span class='kw'>U</span> <span class='kw'>=</span> <span class='st'>"U"</span>, <span class='kw'>Y</span> <span class='kw'>=</span> <span class='st'>"Y"</span>,
+  <span class='kw'>suffix</span> <span class='kw'>=</span> <span class='st'>"_rev"</span>, <span class='kw'>R_rev</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste0</a></span>(<span class='no'>R</span>, <span class='no'>suffix</span>), <span class='kw'>V_rev</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste0</a></span>(<span class='no'>V</span>,
+  <span class='no'>suffix</span>), <span class='kw'>U_rev</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste0</a></span>(<span class='no'>U</span>, <span class='no'>suffix</span>), <span class='kw'>Y_rev</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste0</a></span>(<span class='no'>Y</span>, <span class='no'>suffix</span>))</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.sutmats</th>
-      <td><p>a data frame of supply-use table matrices with matrices arranged in columns.</p></td>
+      <td><p>the input ECC</p></td>
     </tr>
     <tr>
-      <th>S_units</th>
-      <td><p>an <code>S_units</code> matrix or name of a column in <code>.sutmats</code> that contains same. Default is "<code>S_units</code>".</p></td>
+      <th>R</th>
+      <td><p>the <code>R</code> matrix in the ECC to be reversed. (Default is "<code>R</code>".)</p></td>
     </tr>
     <tr>
-      <th>keep_details</th>
-      <td><p>if <code>TRUE</code>, per-product results are returned;
-if <code>FALSE</code>, per-ECC results are returned.</p></td>
+      <th>V</th>
+      <td><p>the <code>V</code> matrix in the ECC to be reversed. (Default is "<code>V</code>".)</p></td>
     </tr>
     <tr>
-      <th>products_unit_homogeneous</th>
-      <td><p>name for the boolean that tells whether products in <code>S_units</code> are unit-homogeneous on output.
-Default is "<code>.products_unit_homogeneous</code>".</p></td>
+      <th>U</th>
+      <td><p>the <code>U</code> matrix in the ECC to be reversed. (Default is "<code>U</code>".)</p></td>
+    </tr>
+    <tr>
+      <th>Y</th>
+      <td><p>the <code>Y</code> matrix in the ECC to be reversed. (Default is "<code>Y</code>".)</p></td>
+    </tr>
+    <tr>
+      <th>suffix</th>
+      <td><p>the suffix to be added to matrix names. (Default is "_rev".)</p></td>
+    </tr>
+    <tr>
+      <th>R_rev</th>
+      <td><p>the name of the <code>R</code> matrix in the reversed ECC. (Default is "<code>R_rev</code>".)</p></td>
+    </tr>
+    <tr>
+      <th>V_rev</th>
+      <td><p>the name of the <code>V</code> matrix in the reversed ECC. (Default is "<code>V_rev</code>".)</p></td>
+    </tr>
+    <tr>
+      <th>U_rev</th>
+      <td><p>the name of the <code>U</code> matrix in the reversed ECC. (Default is "<code>U_rev</code>".)</p></td>
+    </tr>
+    <tr>
+      <th>Y_rev</th>
+      <td><p>the name of the <code>Y</code> matrix in the reversed ECC. (Default is "<code>Y_rev</code>".)</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a list or data frame containing <code>TRUE</code> if products in <code>S_units</code> are unit-homogeneous, <code>FALSE</code> otherwise.</p>
-<p>importFrom magrittr extract2</p>
+    <p>a reversed version of the ECC described by <code>R</code>, <code>V</code>, <code>U</code>, and <code>Y</code>.</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>To reverse an ECC, the <code>R</code>, <code>V</code>, <code>U</code>, and <code>Y</code> matrices
+need to be transposed and swapped:
+<code>R</code> with <code>Y</code> and
+<code>V</code> with <code>U</code>.
+This function performs those operations.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>magrittr</span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>dplyr</span>)
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>Recca</span>)
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>tidyr</span>)
-<span class='no'>UKEnergy2000mats</span> <span class='kw'>%&gt;%</span>
+<span class='no'>mats</span> <span class='kw'>&lt;-</span> <span class='no'>UKEnergy2000mats</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='st'>"matrix.name"</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>"matrix"</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'>products_unit_homogeneous</span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://www.rdocumentation.org/packages/magrittr/topics/aliases'>extract2</a></span>(<span class='st'>".products_unit_homogeneous"</span>)</div><div class='output co'>#&gt; [[1]]
-#&gt; [1] TRUE
-#&gt; 
-#&gt; [[2]]
-#&gt; [1] TRUE
-#&gt; 
-#&gt; [[3]]
-#&gt; [1] TRUE
-#&gt; 
-#&gt; [[4]]
-#&gt; [1] TRUE
-#&gt; </div></pre>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>rename</a></span>(
+    <span class='kw'>R_plus_V</span> <span class='kw'>=</span> <span class='st'>"V"</span>
+  ) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='separate_RV.html'>separate_RV</a></span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'>reverse</span>()</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -193,6 +223,8 @@ Default is "<code>.products_unit_homogeneous</code>".</p></td>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

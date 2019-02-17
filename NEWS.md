@@ -1,3 +1,5 @@
+# Recca 0.1.16 (2019-02-16)
+
 * Now automatically building in Travis.
 * Added new `reverse()` function to change flow direction of an ECC.
   `reverse()` will be useful for downstream swim functions.
