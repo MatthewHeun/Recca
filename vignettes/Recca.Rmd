@@ -274,9 +274,24 @@ See the vignette for the [`new_*()` functions](new-functions.html) for more deta
 (Reference [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 3.1.)
 
 
+
+
 ## Efficiencies
 
 (Reference [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 3.2.)
+
+The efficiency of every industry in the ECC can be calculated quickly with the `calc_eta_i()` function,
+which creates a column named `eta_i` (by default) at the right of the data frame.
+If a particular ECC has industries whose inputs or outputs are not unit-homogeneous, 
+the `eta_i` vector will have `NA` values in the appropriate places.
+
+```{r}
+etas <- IO_df %>% 
+  calc_eta_i()
+names(etas)
+etas[["eta_i"]][[1]]
+etas[["eta_i"]][[3]] # NAs indicate inhomogeneous units on inputs or outputs.
+```
 
 
 ## Energy footprints
