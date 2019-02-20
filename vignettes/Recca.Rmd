@@ -45,23 +45,24 @@ energy and exergy analysis of energy conversion chains.
 `Recca` makes extensive use of a matrix-based PSUT analysis technique
 that first appeared in 
 [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
-This vignette walks through the calculations from [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109),
+This vignette walks through many of the calculations from [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109),
 using section headings from the paper and section numbers in parentheses.
 
 
 ## Design philosophy
 
-The functions in `Recca` are flexible and can be used with either
-(a) matrices as inputs 
-(with individual matrices as arguments to `Recca` functions)
-or 
-(b) a data frame as input
-(with names of data frame columns, as strings, as arguments to `Recca` functions).
+The functions in `Recca` are flexible and can be used with any of 
+
+1. matrices as inputs 
+(with individual matrices as arguments to `Recca` functions),
+2. a list as input (with names in the list indicating argument names), or 
+3. a data frame as input (with names of data frame columns, as strings, as arguments to `Recca` functions).
+
 Outputs are either 
-named matrices in a list
+named matrices in a list (for 1. and 2. above)
 or
-named columns appended to the input data frame, respectively.
-The functions in `Recca` have default names for arguments which follow a standard nomenclature.
+named columns appended to the input data frame (for 3. above).
+The functions in `Recca` have default names for matrix arguments which follow a standard nomenclature.
 It is recommended that the default matrix names be used whenever possible, 
 thereby allowing cleaner code.
 
@@ -76,7 +77,8 @@ another datum for a portion of the ECC for the UK in 2000.
 `UKEnergy2000tidy` is in a format similar to data from the IEA or other organizations.
 
 For data in the format of `UKEnergy2000tidy`, 
-we can create `S_units` matrices for each grouping.
+we can create `S_units` matrices for each grouping
+using the `S_units_from_tidy()` function.
 
 ```{r}
 library(tibble)
@@ -87,9 +89,9 @@ glimpse(S_units)
 ```
 
 And we can identify which entries belong in the
-resource ($\mat{R}$), use ($\mat{U}$), make ($\mat{V}$), and
+resource ($\mat{R}$), make ($\mat{V}$), use ($\mat{U}$), and
 final demand ($\mat{Y}$) matrices 
-with the `add_matnames_iea` and `add_row_col_meta` functions.
+with the `add_matnames_iea()` and `add_row_col_meta()` functions.
 
 ```{r}
 WithNames <- UKEnergy2000tidy %>%
@@ -107,7 +109,7 @@ head(WithNames)
 ```
 
 After identifying the matrices, rownames, colnames, rowtypes, and coltypes, 
-we can collapse all data to matrices and add `S_units`.
+we can collapse all data to matrices and add a unit summation matrix (`S_units`).
 
 ```{r}
 AsMats <- WithNames %>%
@@ -144,7 +146,7 @@ The remainder of this vignette uses the `UKEnergy2000mats` data frame.
 
 ### With individual matrices
 
-To determine the I-O structure of an ECC, use the `calc_io_mats` function.
+To determine the I-O structure of an ECC, use the `calc_io_mats()` function.
 
 ```{r}
 library(tidyr)
@@ -166,13 +168,34 @@ IO_list <- calc_io_mats(U = U, V = V, Y = Y, S_units = S_units)
 ```
 
 Most `Recca` functions return a list when called with individual matrices as arguments.
-The `calc_io_mats` function gives several I-O matrices in its returned list.
+The `calc_io_mats()` function gives several I-O matrices in its returned list.
 
 ```{r}
 class(IO_list)
 names(IO_list)
 IO_list[["y"]]
 ```
+
+The same calculations can be performed by supplying a named list to `Recca` functions.
+In this approach, all original data are returned in the list.
+So in this case, matrices $\mat{U}$, $\mat{V}$, $\mat{Y}$, and $\mat{S_{units}}$
+are also returned from the `calc_io_mats()` function.
+When a list is supplied to a `Recca` function in the `.sutmats` argument, 
+most other input arguments must be strings 
+that identify the names of appropriate entries in the `.sutmats` list containing 
+named vectors or matrices.
+Helpfully, the default values for other input arguments conform to a standard nomenclature.
+When using the standard nomenclature, 
+most `Recca` functions can use the default arguments
+for input and output items in the list.
+
+```{r}
+IO_from_list <- calc_io_mats(list(U = U, V = V, Y = Y, S_units = S_units))
+class(IO_from_list)
+names(IO_from_list)
+IO_from_list[["y"]]
+```
+
 
 ### From a `matsindf`-style data frame
 
@@ -192,7 +215,7 @@ This approach yields very clean piped code, as shown below.
 To illustrate the above features of `Recca` functions, 
 we'll apply the `calc_io_mats` function to the entire `UKEnergy2000mats` data frame, 
 calculating appropriate I-O matrices for each row.
-Used in this way, `Recca` functions act like specialized `dplyr::mutate` functions,
+Used in this way, `Recca` functions act like specialized `dplyr::mutate()` functions,
 with new columns added to the right side of the data frame supplied to the `.sutmats` argument.
 
 ```{r}
@@ -214,13 +237,37 @@ IO_df[["y"]][[4]]
 
 For the remainder of this vignette, 
 operations will be performed on the entire `UKEnergy2000mats` data frame.
-But readers should remember that functions can be called on 
+But readers should remember that functions can be called on named lists or
 individual matrices, as well.
 
 
 ## Changes in final demand
 
 (Reference [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 2.2.5.)
+
+One of the first applications of input-output analysis was estimating changes in industry outputs
+that would be required to meet new final demand. 
+`Recca` allows similar calculations on energy conversion chains
+with the function `new_Y()`.
+Arguments to `new_Y()` include matrices that describe the input-output structure of the ECC
+and `Y_prime`, the new final demand matrix.
+`new_Y()` calculates `U_prime` and `V_prime` matrices which represent the 
+ECC that would be required to meet the new final demand represented by `Y_prime`.
+
+```{r}
+Double_demand <- IO_df %>% 
+  mutate(
+    Y_prime = hadamardproduct_byname(2, Y)
+  ) %>% 
+  new_Y()
+names(Double_demand)
+IO_df[["Y"]][[1]][ , c(1,2)]
+Double_demand[["Y_prime"]][[1]]
+IO_df[["U"]][[1]][ , c("Crude dist.", "Diesel dist.")]
+Double_demand[["U_prime"]][[1]][ , c("Crude dist.", "Diesel dist.")]
+```
+
+See the vignette for the [`new_*()` functions](new-functions.html) for more details.
 
 
 ## Net energy analysis
