@@ -93,3 +93,22 @@ glimpse(IO_df)
 IO_df[["y"]][[1]]
 IO_df[["y"]][[4]]
 
+## ------------------------------------------------------------------------
+Double_demand <- IO_df %>% 
+  mutate(
+    Y_prime = hadamardproduct_byname(2, Y)
+  ) %>% 
+  new_Y()
+names(Double_demand)
+IO_df[["Y"]][[1]][ , c(1,2)]
+Double_demand[["Y_prime"]][[1]]
+IO_df[["U"]][[1]][ , c("Crude dist.", "Diesel dist.")]
+Double_demand[["U_prime"]][[1]][ , c("Crude dist.", "Diesel dist.")]
+
+## ------------------------------------------------------------------------
+etas <- IO_df %>% 
+  calc_eta_i()
+names(etas)
+etas[["eta_i"]][[1]]
+etas[["eta_i"]][[3]] # NAs indicate inhomogeneous units on inputs or outputs.
+

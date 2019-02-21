@@ -51,18 +51,19 @@ using section headings from the paper and section numbers in parentheses.
 
 ## Design philosophy
 
-The functions in `Recca` are flexible and can be used with any of 
+The functions in `Recca` are flexibly designed and useful in many situations.
+`Recca`'s flexibility stems from its extensive use of the `matsbyname` and `matsindf` packages under the hood. 
+Inputs to most `Recca` functions can be any one of:
 
-1. matrices as inputs 
-(with individual matrices as arguments to `Recca` functions),
-2. a list as input (with names in the list indicating argument names), or 
-3. a data frame as input (with names of data frame columns, as strings, as arguments to `Recca` functions).
+1. matrices (with individual matrices as arguments to `Recca` functions),
+2. a list as the first argument (with names in the list indicating argument names), or 
+3. a data frame (with names of data frame columns, as strings, as arguments to `Recca` functions).
 
 Outputs are either 
-named matrices in a list (for 1. and 2. above)
+named matrices in a list (for 1 and 2 above)
 or
-named columns appended to the input data frame (for 3. above).
-The functions in `Recca` have default names for matrix arguments which follow a standard nomenclature.
+named columns appended to the input data frame (for 3 above).
+Argument names for matrices follow a standard nomenclature.
 It is recommended that the default matrix names be used whenever possible, 
 thereby allowing cleaner code.
 
