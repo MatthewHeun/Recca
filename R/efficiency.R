@@ -46,6 +46,8 @@ calc_eta_i <- function(.sutmats,
     f_vec <- matsbyname::colsums_byname(U_mat) %>% matsbyname::transpose_byname()
     g_vec <- matsbyname::rowsums_byname(V_mat)
     eta_vec <- matsbyname::quotient_byname(g_vec, f_vec)
+    # Set the name of the column to the value of the eta_i variale.
+    dimnames(eta_vec) <- list(dimnames(eta_vec)[[1]], eta_i)
     # Make sure that units_OK and eta have same rows by completing the rows (industries) relative to one another
     completed <- matsbyname::complete_and_sort(units_OK, eta_vec, margin = 1)
     # The complete_and_sort function converts the TRUE/FALSE values in units_OK to 1/0.

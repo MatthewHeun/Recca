@@ -27,6 +27,7 @@ test_that("efficiencies are calculated correctly", {
         TRUE ~ eta_i
       )
     )
+  # Check that NAs appear in the right places.
   expect_equal(result$eta_i, result$expected)
 
   # Test some specific values
@@ -36,6 +37,19 @@ test_that("efficiencies are calculated correctly", {
   expect_equal(result %>% filter(Last.stage == "services", Energy.type == "X.ktoe", rownames == "Oil fields") %>% extract2("eta_i"), 0.94860812)
 
 })
+
+test_that("efficiency vectors are named correctly", {
+  result <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    calc_eta_i()
+
+  # Ensure that efficiency column is named correctly.
+  for (i in 1:nrow(result)) {
+    eta_i <- result$eta_i[[i]]
+    expect_equal(colnames(eta_i)[1], "eta_i")
+  }
+})
+
 
 
 
