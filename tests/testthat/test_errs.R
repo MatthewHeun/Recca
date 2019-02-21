@@ -15,6 +15,7 @@ test_that("errs are calculated correctly", {
   # Test some specific values
   expect_equal(result %>% filter(Last.stage == "final", matnames == "ger_gamma", rownames == "Crude dist.") %>% extract2("matvals"), 86.3636363636)
   expect_equal(result %>% filter(Last.stage == "final", matnames == "ger_gamma", rownames == "Diesel dist.") %>% extract2("matvals"), 44.2857142857)
+  expect_true(result %>% filter(Last.stage == "final", matnames == "ger_gamma", rownames == "Elect. grid") %>% extract2("matvals") %>% is.infinite())
   expect_equal(result %>% filter(Last.stage == "final", matnames == "ner_gamma", rownames == "NG dist.") %>% extract2("matvals"), 819)
   expect_equal(result %>% filter(Last.stage == "final", matnames == "ner_gamma", rownames == "Power plants") %>% extract2("matvals"), 63)
   expect_equal(result %>% filter(Last.stage == "final", matnames == "r_gamma", rownames == "Oil fields") %>% extract2("matvals"), 0.948500)

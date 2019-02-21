@@ -4,9 +4,9 @@
 \alias{calc_err_gamma}
 \title{Calculate energy return ratios for the gamma system boundary.}
 \usage{
-calc_err_gamma(.sutmats, U = "U", r_EIOU = "r_EIOU", g = "g",
-  ger_gamma = "ger_gamma", ner_gamma = "ner_gamma",
-  r_gamma = "r_gamma")
+calc_err_gamma(.sutmats, U = "U", r_EIOU = "r_EIOU", V = "V",
+  g = "g", S_units = "S_units", ger_gamma = "ger_gamma",
+  ner_gamma = "ner_gamma", r_gamma = "r_gamma")
 }
 \arguments{
 \item{.sutmats}{a data frame containing columns for \code{U} and \code{r_EIOU} matrices and a \code{g} vector.}
@@ -15,7 +15,11 @@ calc_err_gamma(.sutmats, U = "U", r_EIOU = "r_EIOU", g = "g",
 
 \item{r_EIOU}{a string for the name of a column of \code{r_EIOU} matrices in \code{.sutmats}. (Default is "\code{r_EIOU}".)}
 
+\item{V}{a string for the name of a column of \code{V} matrices in \code{.sutmats}. (Default is "\code{V}".)}
+
 \item{g}{a string for the name of a column of \code{g} vector in \code{.sutmats}. (Default is "\code{g}".)}
+
+\item{S_units}{a string for the name of a column of \code{S_units} matrices in \code{.sutmats}. (Default is "\code{S_units}".)}
 
 \item{ger_gamma}{the name of the gross energy ratio column in output. (Default is "\code{ger_gamma}",}
 

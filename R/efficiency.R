@@ -44,15 +44,17 @@ calc_eta_i <- function(.sutmats,
                        eta_i = "eta_i"){
   eta_func <- function(U_mat, V_mat, S_units_mat){
 
-    result_var <- "result"
-    units_OK <- flows_unit_homogeneous(U = U_mat, V = V_mat, S_units = S_units_mat,
-                                       flows_unit_homogeneous = result_var, keep_details = TRUE)[[result_var]]
 
     f_vec <- matsbyname::colsums_byname(U_mat) %>% matsbyname::transpose_byname()
     g_vec <- matsbyname::rowsums_byname(V_mat)
     eta_vec <- matsbyname::quotient_byname(g_vec, f_vec)
     # Set the name of the efficiency column to the value of the eta_i argument.
     dimnames(eta_vec) <- list(dimnames(eta_vec)[[1]], eta_i)
+
+    # Ensure that places where there are inhomogeneous units are replaced by NA.
+    result_var <- "result"
+    units_OK <- flows_unit_homogeneous(U = U_mat, V = V_mat, S_units = S_units_mat,
+                                       flows_unit_homogeneous = result_var, keep_details = TRUE)[[result_var]]
     # Make sure that units_OK and eta have same rows by completing the rows (industries) relative to one another
     completed <- matsbyname::complete_and_sort(units_OK, eta_vec, margin = 1)
     # The complete_and_sort function converts the TRUE/FALSE values in units_OK to 1/0.
