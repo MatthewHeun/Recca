@@ -34,7 +34,7 @@
 #'   spread(key = "matrix.name", value = "matrix") %>%
 #'   calc_io_mats() %>%
 #'   calc_err_gamma()
-calc_err_gamma <- function(.sutmats,
+calc_ERRs_gamma <- function(.sutmats,
                        # Input
                        U = "U", r_EIOU = "r_EIOU", V = "V", g = "g", S_units = "S_units",
                        # Outputs

@@ -6,7 +6,7 @@ test_that("errs are calculated correctly", {
   result <- UKEnergy2000mats %>%
     spread(key = "matrix.name", value = "matrix") %>%
     calc_io_mats() %>%
-    calc_err_gamma() %>%
+    calc_ERRs_gamma() %>%
     select(Country, Year, Energy.type, Last.stage, ger_gamma, ner_gamma, r_gamma) %>%
     gather(key = matnames, value = matvals, ger_gamma, ner_gamma, r_gamma) %>%
     expand_to_tidy()
@@ -29,7 +29,7 @@ test_that("column names are correct in calc_errs", {
   result <- UKEnergy2000mats %>%
     spread(key = "matrix.name", value = "matrix") %>%
     calc_io_mats() %>%
-    calc_err_gamma()
+    calc_ERRs_gamma()
 
   # Ensure that ger column is named correctly.
   for (i in 1:nrow(result)) {
