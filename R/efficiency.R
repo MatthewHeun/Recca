@@ -4,6 +4,11 @@
 #' Calculate industry efficiencies
 #'
 #' Calculates industry efficiencies for all energy conversion industries in the ECC.
+#' Calculations are performed as shown in Equation 11 in
+#' Heun, Owen, and Brockway. 2018.
+#' A physical supply-use table framework for energy analysis on the energy conversion chain.
+#' Applied Energy, vol 226, pp. 1134-1162.
+#'
 #' The efficiency for a given industry is calculated iff the units for inputs and outputs for that industry are unit-homogeneous.
 #' If units for inputs and outputs are heterogeneous for an industry, \code{NA} is the result.
 #'
@@ -46,7 +51,7 @@ calc_eta_i <- function(.sutmats,
     f_vec <- matsbyname::colsums_byname(U_mat) %>% matsbyname::transpose_byname()
     g_vec <- matsbyname::rowsums_byname(V_mat)
     eta_vec <- matsbyname::quotient_byname(g_vec, f_vec)
-    # Set the name of the column to the value of the eta_i variale.
+    # Set the name of the efficiency column to the value of the eta_i argument.
     dimnames(eta_vec) <- list(dimnames(eta_vec)[[1]], eta_i)
     # Make sure that units_OK and eta have same rows by completing the rows (industries) relative to one another
     completed <- matsbyname::complete_and_sort(units_OK, eta_vec, margin = 1)
