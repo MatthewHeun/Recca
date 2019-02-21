@@ -5,8 +5,8 @@
 \title{Calculate energy return ratios for the gamma system boundary.}
 \usage{
 calc_err_gamma(.sutmats, U = "U", r_EIOU = "r_EIOU", g = "g",
-  S_units = "S_units", ger_gamma = "ger_gamma",
-  ner_gamma = "ner_gamma", r_gamma = "r_gamma")
+  ger_gamma = "ger_gamma", ner_gamma = "ner_gamma",
+  r_gamma = "r_gamma")
 }
 \arguments{
 \item{.sutmats}{a data frame containing columns for \code{U} and \code{r_EIOU} matrices and a \code{g} vector.}
@@ -37,4 +37,12 @@ Applied Energy, vol 226, pp. 1134-1162.
 The energy return ratios for a given industry are calculated
 iff the units for inputs and outputs for that industry are unit-homogeneous.
 If units for inputs or outputs are heterogeneous for an industry, \code{NA} is the result.
+}
+\examples{
+library(tidyr)
+library(Recca)
+UKEnergy2000mats \%>\%
+  spread(key = "matrix.name", value = "matrix") \%>\%
+  calc_io_mats() \%>\%
+  calc_err_gamma()
 }

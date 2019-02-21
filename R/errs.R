@@ -26,9 +26,15 @@
 #' @export
 #'
 #' @examples
+#' library(tidyr)
+#' library(Recca)
+#' UKEnergy2000mats %>%
+#'   spread(key = "matrix.name", value = "matrix") %>%
+#'   calc_io_mats() %>%
+#'   calc_err_gamma()
 calc_err_gamma <- function(.sutmats,
                        # Input
-                       U = "U", r_EIOU = "r_EIOU", g = "g", S_units = "S_units",
+                       U = "U", r_EIOU = "r_EIOU", g = "g",
                        # Outputs
                        ger_gamma = "ger_gamma", ner_gamma = "ner_gamma", r_gamma= "r_gamma"){
 
@@ -38,13 +44,17 @@ calc_err_gamma <- function(.sutmats,
     # A physical supply-use table framework for energy analysis on the energy conversion chain.
     # Applied Energy, vol 226, pp. 1134-1162.
     # Equation 8 gives the gross energy ratio (ger) for each industry.
-    ger <- hadamardproduct_byname(U_mat, r_EIOU_mat) %>% colsums_byname() %>% hatinv_byname() %>% matrixproduct_byname(g_vec)
+    ger <- matsbyname::hadamardproduct_byname(U_mat, r_EIOU_mat) %>%
+      matsbyname::colsums_byname() %>%
+      matsbyname::hatinv_byname() %>%
+      matsbyname::matrixproduct_byname(g_vec)
     dimnames(ger) <- list(dimnames(ger)[[1]], ger_gamma)
     # Equation 9 gives the net energy ratio for each industry.
-    ner <- difference_byname(ger, 1)
+    ner <- matsbyname::difference_byname(ger, 1)
     dimnames(ner) <- list(dimnames(ner)[[1]], ner_gamma)
     # Equation 10 gives the ratio of ner/ger for each industry.
-    r <- quotient_byname(ner %>% setcolnames_byname(r_gamma), ger %>% setcolnames_byname(r_gamma))
+    r <- matsbyname::quotient_byname(ner %>% matsbyname::setcolnames_byname(r_gamma),
+                                     ger %>% matsbyname::setcolnames_byname(r_gamma))
     # Return the energy return ratios.
     list(ger, ner, r) %>% magrittr::set_names(c(ger_gamma, ner_gamma, r_gamma))
   }
