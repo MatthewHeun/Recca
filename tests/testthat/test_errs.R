@@ -30,7 +30,7 @@ test_that("ERRs are calculated correctly", {
     matnames = NULL,
     expected = case_when(
       Last.stage == "services" & rownames %in% c("Petrol dist.", "Crude dist.", "Diesel dist.", "NG dist.") ~ NA_real_,
-      rownames %in% inf_na_industries & matnames == "r_gamma" ~ 0/0,
+      rownames %in% inf_na_industries & colnames == "r_gamma" ~ 0/0,
       rownames %in% inf_na_industries ~ 1/0,
       TRUE ~ matvals
     )
