@@ -13,7 +13,6 @@ test_that("ERRs are calculated correctly", {
     gather(key = matnames, value = matvals, ger_gamma, ner_gamma, r_gamma) %>%
     expand_to_tidy()
 
-
   # Test some specific values
   expect_equal(result %>% filter(Last.stage == "final", matnames == "ger_gamma", rownames == "Crude dist.") %>% extract2("matvals"), 86.3636363636)
   expect_equal(result %>% filter(Last.stage == "final", matnames == "ger_gamma", rownames == "Diesel dist.") %>% extract2("matvals"), 44.2857142857)
@@ -24,7 +23,19 @@ test_that("ERRs are calculated correctly", {
   expect_equal(result %>% filter(Last.stage == "final", matnames == "r_gamma", rownames == "Oil refineries") %>% extract2("matvals"), 0.8920212766)
 
   # These industries have inhomogeneous units. Check for NAs where appropriate.
-
+  inf_na_industries <- c("Elect. grid", "Car engines", "Cars", "Furnaces", "Homes", "Light fixtures", "Rooms", "Truck engines", "Trucks")
+  detailed_result <- result %>% mutate(
+    rowtypes = NULL,
+    coltypes = NULL,
+    matnames = NULL,
+    expected = case_when(
+      Last.stage == "services" & rownames %in% c("Petrol dist.", "Crude dist.", "Diesel dist.", "NG dist.") ~ NA_real_,
+      rownames %in% inf_na_industries & matnames == "r_gamma" ~ 0/0,
+      rownames %in% inf_na_industries ~ 1/0,
+      TRUE ~ matvals
+    )
+  )
+  expect_equal(detailed_result$matvals, detailed_result$expected)
 })
 
 test_that("column names are correct in calc_ERRs_gamma", {

@@ -48,5 +48,5 @@ library(Recca)
 UKEnergy2000mats \%>\%
   spread(key = "matrix.name", value = "matrix") \%>\%
   calc_io_mats() \%>\%
-  calc_err_gamma()
+  calc_ERRs_gamma()
 }
