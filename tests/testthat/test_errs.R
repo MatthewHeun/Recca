@@ -2,9 +2,11 @@
 context("ERRs")
 ###########################################################
 
-test_that("errs are calculated correctly", {
+test_that("ERRs are calculated correctly", {
   result <- UKEnergy2000mats %>%
     spread(key = "matrix.name", value = "matrix") %>%
+    rename(R_plus_V = V) %>%
+    separate_RV() %>%
     calc_io_mats() %>%
     calc_ERRs_gamma() %>%
     select(Country, Year, Energy.type, Last.stage, ger_gamma, ner_gamma, r_gamma) %>%
@@ -25,7 +27,7 @@ test_that("errs are calculated correctly", {
 
 })
 
-test_that("column names are correct in calc_errs", {
+test_that("column names are correct in calc_ERRs_gamma", {
   result <- UKEnergy2000mats %>%
     spread(key = "matrix.name", value = "matrix") %>%
     calc_io_mats() %>%

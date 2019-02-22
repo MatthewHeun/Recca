@@ -305,9 +305,12 @@ inputs_unit_homogeneous <- function(.sutmats = NULL,
                                     # Output names
                                     ins_unit_homogeneous = ".inputs_unit_homogeneous"){
   inputs_unit_homogeneous_func <- function(U_mat, S_units_mat){
-    U_bar <- matsbyname::transpose_byname(S_units_mat) %>% matsbyname::matrixproduct_byname(U_mat)
-    num_non_zero <- matsbyname::count_vals_incols_byname(U_bar, "!=", 0)
+    U_bar <- matsbyname::transpose_byname(S_units_mat) %>%
+      matsbyname::matrixproduct_byname(U_mat) %>%
+      matsbyname::transpose_byname()
+    num_non_zero <- matsbyname::count_vals_inrows_byname(U_bar, "!=", 0)
     out <- num_non_zero == 1
+    out <- magrittr::set_colnames(out, ins_unit_homogeneous)
     if (!keep_details) {
       out <- all(out)
     }
@@ -357,6 +360,7 @@ outputs_unit_homogeneous <- function(.sutmats = NULL,
     V_bar <- matsbyname::matrixproduct_byname(V_mat, S_units_mat)
     num_non_zero <- matsbyname::count_vals_inrows_byname(V_bar, "!=", 0)
     out <- num_non_zero == 1
+    out <- magrittr::set_colnames(out, outs_unit_homogeneous)
     if (!keep_details) {
       out <- all(out)
     }
@@ -405,10 +409,10 @@ inputs_outputs_unit_homogeneous <- function(.sutmats = NULL,
                                            # Output names
                                            ins_outs_unit_homogeneous = ".inputs_outputs_unit_homogeneous"){
   inputs_outputs_unit_homogeneous_func <- function(U_mat, V_mat, S_units_mat){
-    ins_OK_name <- "ins_OK"
-    ins_homo <- inputs_unit_homogeneous(U = U_mat, S_units = S_units_mat, keep_details = keep_details, ins_unit_homogeneous = ins_OK_name)[[ins_OK_name]]
-    outs_OK_name <- "outs_OK"
-    outs_homo <- outputs_unit_homogeneous(V = V_mat, S_units = S_units_mat, keep_details = keep_details, outs_unit_homogeneous = outs_OK_name)[[outs_OK_name]]
+    ins_homo <- inputs_unit_homogeneous(U = U_mat, S_units = S_units_mat,
+                                        keep_details = keep_details, ins_unit_homogeneous = ins_outs_unit_homogeneous)[[ins_outs_unit_homogeneous]]
+    outs_homo <- outputs_unit_homogeneous(V = V_mat, S_units = S_units_mat,
+                                          keep_details = keep_details, outs_unit_homogeneous = ins_outs_unit_homogeneous)[[ins_outs_unit_homogeneous]]
     result <- matsbyname::and_byname(ins_homo, outs_homo)
     list(result) %>% magrittr::set_names(ins_outs_unit_homogeneous)
   }
@@ -464,6 +468,7 @@ flows_unit_homogeneous <- function(.sutmats = NULL,
     # If rows of sums_by_unit have more than 1 non-zero row, the inputs and outputs for the industry of that row are unit-inhomogeneous.
     num_non_zero <- matsbyname::count_vals_inrows_byname(sums_by_unit, "!=", 0)
     out <- num_non_zero == 1
+    out <- magrittr::set_colnames(out, flows_unit_homogeneous)
     if (!keep_details) {
       out <- all(out)
     }

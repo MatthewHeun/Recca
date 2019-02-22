@@ -50,17 +50,17 @@ calc_ERRs_gamma <- function(.sutmats,
       matsbyname::colsums_byname() %>%
       matsbyname::hatinv_byname() %>%
       matsbyname::matrixproduct_byname(g_vec)
-    dimnames(ger) <- list(dimnames(ger)[[1]], ger_gamma)
+    ger <- magrittr::set_colnames(ger, ger_gamma)
     # Equation 9 gives the net energy ratio for each industry.
     ner <- matsbyname::difference_byname(ger, 1)
-    dimnames(ner) <- list(dimnames(ner)[[1]], ner_gamma)
+    ner <- magrittr::set_colnames(ner, ner_gamma)
     # Equation 10 gives the ratio of ner/ger for each industry.
     r <- matsbyname::quotient_byname(ner %>% matsbyname::setcolnames_byname(r_gamma),
                                      ger %>% matsbyname::setcolnames_byname(r_gamma))
 
     # Put NA where the units don't work correctly.
     result_var <- "result"
-    units_OK <- inputs_outputs_unit_homogeneous(U = U_mat, V = V_mat, S_units = S_units_mat, ins_unit_homogeneous = result_var, keep_details = TRUE)[[result_var]]
+    units_OK <- inputs_outputs_unit_homogeneous(U = U_mat, V = V_mat, S_units = S_units_mat, ins_outs_unit_homogeneous = result_var, keep_details = TRUE)[[result_var]]
     # Make sure that units_OK and the output vectors have same rows by completing the rows (industries) relative to one another
     ger_completed <- matsbyname::complete_and_sort(units_OK, ger, margin = 1)
     ner_completed <- matsbyname::complete_and_sort(units_OK, ner, margin = 1)

@@ -184,8 +184,8 @@ test_that("inputs_unit_homogeneous works correctly", {
       expected = case_when(
         Last.stage == "final" ~ TRUE,
         Last.stage == "useful" ~ TRUE,
-        endsWith(colnames, "dist.") ~ FALSE,
-        !endsWith(colnames, "dist.") ~ TRUE,
+        endsWith(rownames, "dist.") ~ FALSE,
+        !endsWith(rownames, "dist.") ~ TRUE,
         TRUE ~ NA
       )
     )
