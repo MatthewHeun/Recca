@@ -402,6 +402,10 @@ outputs_unit_homogeneous <- function(.sutmats = NULL,
 #' @export
 #'
 #' @examples
+#' library(tidyr)
+#' result <- UKEnergy2000mats %>%
+#'   spread(key = "matrix.name", value = "matrix") %>%
+#'   inputs_outputs_unit_homogeneous()
 inputs_outputs_unit_homogeneous <- function(.sutmats = NULL,
                                            # Input names
                                            U = "U", V = "V", S_units = "S_units",

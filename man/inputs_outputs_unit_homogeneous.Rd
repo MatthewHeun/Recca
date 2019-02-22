@@ -43,6 +43,12 @@ requires that all flows are unit-homogeneous before returning \code{TRUE}.
 This function (\link{inputs_outputs_unit_homogeneous}) will return true when all
 inputs are unit-homogeneous with different units from outputs (which are also unit-homogeoenous).
 }
+\examples{
+library(tidyr)
+result <- UKEnergy2000mats \%>\%
+  spread(key = "matrix.name", value = "matrix") \%>\%
+  inputs_outputs_unit_homogeneous()
+}
 \seealso{
 \link{inputs_unit_homogeneous}, \link{outputs_unit_homogeneous}, \link{flows_unit_homogeneous}
 }

@@ -214,11 +214,11 @@ test_that("output_unit_homogeneous works correctly", {
   expect_equal(result2_details[[".outputs_unit_homogeneous"]][ ,1], c(i1 = FALSE, i2 = TRUE))
 })
 
-test_that("flows_unit_homogeneous works as expected", {
+test_that("inputs_outputs_unit_homogeneous works as expected", {
   result <- UKEnergy2000mats %>%
     spread(key = "matrix.name", value = "matrix") %>%
-    flows_unit_homogeneous() %>%
-    extract2(".flows_unit_homogeneous") %>%
+    inputs_outputs_unit_homogeneous() %>%
+    extract2(".inputs_outputs_unit_homogeneous") %>%
     unlist()
   # The 2nd and 4th rows of UKEnergy2000mats have services inputs to industries, with different units, of course.
   # Thus, we expect to have FALSE when services are the Last.stage.
@@ -253,11 +253,11 @@ test_that("flows_unit_homogeneous works as expected", {
   expect_equal(result2$matvals, result2$expected)
 })
 
-test_that("inputs_outputs_unit_homogeneous works as expected", {
+test_that("flows_unit_homogeneous works as expected", {
   result <- UKEnergy2000mats %>%
     spread(key = "matrix.name", value = "matrix") %>%
-    inputs_outputs_unit_homogeneous() %>%
-    extract2(".inputs_outputs_unit_homogeneous") %>%
+    flows_unit_homogeneous() %>%
+    extract2(".flows_unit_homogeneous") %>%
     unlist()
   # The 2nd and 4th rows of UKEnergy2000mats have services inputs to industries, with different units, of course.
   # Thus, we expect to have FALSE when services are the Last.stage.
