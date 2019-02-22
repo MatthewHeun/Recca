@@ -348,4 +348,5 @@ This vignette demonstrated the use of the `Recca` package.
 within the PSUT framework first described in 
 [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
 
+
 ## References
