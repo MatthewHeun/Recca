@@ -344,6 +344,8 @@ etas[["eta_i"]][[3]] # NAs indicate inhomogeneous units on inputs or outputs.
 ## Conclusion
 
 This vignette demonstrated the use of the `Recca` package. 
-
+`Recca` provides many useful functions for analyzing energy conversion chains
+within the PSUT framework first described in 
+[Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
 
 ## References
