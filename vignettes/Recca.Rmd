@@ -42,11 +42,21 @@ library(tibble)
 `Recca` (`R` Energy Conversion Chain Analysis)
 is an `R` package that enables
 energy and exergy analysis of energy conversion chains.
-`Recca` makes extensive use of a matrix-based PSUT analysis technique
+`Recca` makes extensive use of a matrix-based 
+Physical Supply Use Table (PSUT) analysis technique
 that first appeared in 
 [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
 This vignette walks through many of the calculations from [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109),
-using section headings from the paper and section numbers in parentheses.
+guided by section numbers from the paper.
+We begin by discussing the design philosophy of the `Recca` package, 
+followed by a discussion of the PSUT matrices that comprise an energy conversion chain (ECC).
+Thereafter, calculation of the input-output structure of an ECC is demonstrated.
+Finally, advanced calculations are shown, 
+including
+changes in final demand, 
+net energy analysis,
+industry efficiencies, and
+energy footprints.
 
 
 ## Design philosophy
@@ -63,6 +73,7 @@ Outputs are either
 named matrices in a list (for 1 and 2 above)
 or
 named columns appended to the input data frame (for 3 above).
+
 Argument names for matrices follow a standard nomenclature.
 It is recommended that the default matrix names be used whenever possible, 
 thereby allowing cleaner code.
@@ -294,9 +305,7 @@ The results below are identical to Fig. 6 in
 [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
 
 ```{r}
-ERRs <- UKEnergy2000mats %>%
-  spread(key = "matrix.name", value = "matrix") %>%
-  calc_io_mats() %>%
+ERRs <- IO_df %>% 
   calc_ERRs_gamma()
 ERRs$ger_gamma[[1]]
 ERRs$ner_gamma[[1]]
