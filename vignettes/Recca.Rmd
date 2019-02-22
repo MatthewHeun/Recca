@@ -272,9 +272,36 @@ See the vignette for the [`new_*()` functions](new-functions.html) for more deta
 
 
 ## Net energy analysis
+
 (Reference [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 3.1.)
 
+The energy production system itself consumes energy, and 
+important metrics for energy conversion chain industries are energy return ratios (ERRs).
+`Recca` provides a function to calculate three ERRs, 
+a gross energy ratio (GER),
+a net energy ratio (NER), and
+the ratio of NER to GER.
+GER is commonly called energy return on investment (EROI).
+(See [Brandt & Dale [-@Brandt:2011]](https://doi.org/10.3390/en4081211).)
+These ERRs can be calculated for a variety of system boundaries.
+ERRs for the $\gamma$ system boundary can be calculated readily 
+using the `calc_ERRs_gamma()` function.
+All three ERRs are calculated at the same time.
+The ERRs are `NA` for industries in which inputs or outputs are unit-inhomogeneous.
+The ERRs are `Inf` for industries that make an energy product without consuming 
+any energy from another processing chain (such as the Elect. grid).
+The results below are identical to Fig. 6 in 
+[Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
 
+```{r}
+ERRs <- UKEnergy2000mats %>%
+  spread(key = "matrix.name", value = "matrix") %>%
+  calc_io_mats() %>%
+  calc_ERRs_gamma()
+ERRs$ger_gamma[[1]]
+ERRs$ner_gamma[[1]]
+ERRs$r_gamma[[1]]
+```
 
 
 ## Efficiencies
@@ -285,6 +312,8 @@ The efficiency of every industry in the ECC can be calculated quickly with the `
 which creates a column named `eta_i` (by default) at the right of the data frame.
 If a particular ECC has industries whose inputs or outputs are unit inhomogeneous, 
 the `eta_i` vector will have `NA` values in the appropriate places.
+The results below are identical to Fig. 9 in 
+[Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
 
 ```{r}
 etas <- IO_df %>% 
