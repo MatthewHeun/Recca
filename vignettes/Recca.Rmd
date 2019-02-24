@@ -345,9 +345,9 @@ namely `calc_embodied_mats()` and `calc_embodied_etas()`.
 
 Outputs from `calc_embodied_mats()` include the following matrices:
 
-| Matrix | Description |
+| Matrix | Description (rows$\times$columns)|
 |------:|:-----|
-| $\mat{G}$ | something |
+| $\mat{G}$ | Industry output requirements for final demand (i$\times$p) |
 | $\mat{H}$ | something |
 | $\mat{E}$ | something |
 | $\mat{M}_p$ | something |
@@ -359,7 +359,7 @@ Outputs from `calc_embodied_mats()` include the following matrices:
 
 Outputs from `calc_embodied_etas()` include the following matrices:
 
-| Matrix | Description |
+| Matrix | Description (rows$\times$columns)|
 |------:|:-----|
 | $\mat{G}$ | something |
 
