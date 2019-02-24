@@ -1,8 +1,3 @@
-library(dplyr)
-library(Hmisc)
-library(magrittr)
-library(tidyr)
-
 ###########################################################
 context("Utilities")
 ###########################################################

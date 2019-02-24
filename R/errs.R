@@ -40,7 +40,7 @@ calc_ERRs_gamma <- function(.sutmats,
                        # Outputs
                        ger_gamma = "ger_gamma", ner_gamma = "ner_gamma", r_gamma= "r_gamma"){
 
-  err_func <- function(U_mat, r_EIOU_mat, V_mat, g_vec, S_units_mat){
+  ERR_func <- function(U_mat, r_EIOU_mat, V_mat, g_vec, S_units_mat){
     # All equation number references are from
     # Heun, Owen, Brockway. 2018.
     # A physical supply-use table framework for energy analysis on the energy conversion chain.
@@ -81,5 +81,5 @@ calc_ERRs_gamma <- function(.sutmats,
     # Return the energy return ratios.
     list(ger, ner, r) %>% magrittr::set_names(c(ger_gamma, ner_gamma, r_gamma))
   }
-  matsindf::matsindf_apply(.sutmats, FUN = err_func, U_mat = U, r_EIOU_mat = r_EIOU, V_mat = V, g_vec = g, S_units_mat = S_units)
+  matsindf::matsindf_apply(.sutmats, FUN = ERR_func, U_mat = U, r_EIOU_mat = r_EIOU, V_mat = V, g_vec = g, S_units_mat = S_units)
 }

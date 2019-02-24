@@ -1,11 +1,3 @@
-library(dplyr)
-library(magrittr)
-library(matsbyname)
-library(matsindf)
-library(testthat)
-library(tidyr)
-
-
 ###########################################################
 context("Efficiency")
 ###########################################################

@@ -337,6 +337,50 @@ etas[["eta_i"]][[3]] # NAs indicate inhomogeneous units on inputs or outputs.
 
 (Reference [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 3.3.)
 
+Final demand for energy contains embodied primary energy,
+the sum of all primary energy consumed and wasted 
+throughout the ECC in the process of satisfying that final demand.
+`Recca` provides two functions to calculate embodied primary energy and important ratios,
+namely `calc_embodied_mats()` and `calc_embodied_etas()`.
+
+```{r}
+primary_machine_names <- c("Resources - Crude", "Resources - NG")
+
+embodied_mats <- IO_df %>%
+  mutate(
+    U_EIOU = hadamardproduct_byname(r_EIOU, U)
+  ) %>%
+  calc_embodied_mats() %>%
+  calc_embodied_etas(primary_machine_names = primary_machine_names)
+names(embodied_mats)
+```
+
+Outputs of `calc_embodied_mats()` include the following matrices:
+
+| Matrix | Description |
+|------:|:-----|
+| $\mat{G}$ | something |
+
+
+<!-- #' @param G name of the \code{G} matrix on output. -->
+<!-- #'        \code{G} is calculated by \code{L_ixp * y_hat}. Default is "\code{G}". -->
+<!-- #' @param H name of the \code{H} matrix on output. -->
+<!-- #'        \code{H} is calculated by \code{L_ixp * Y}. Default is "\code{H}". -->
+<!-- #' @param E name of \code{E} matrix on output. -->
+<!-- #'        \code{E} is calculated by \code{W * g_hat_inv}. Default is "\code{E}". -->
+<!-- #' @param M_p name of the \code{M_p} matrix on output. -->
+<!-- #'        \code{M_p} is formed from column sums of positive entries in the various Qx matrices. -->
+<!-- #'        Default is "\code{M_p}". -->
+<!-- #' @param M_s name of the \code{M_s} matrix on output. -->
+<!-- #'        \code{M_s} is constructed by \code{M_p * q_hat_inv * Y}. Default is "\code{M_s}". -->
+<!-- #' @param F_footprint_p name of the \code{F_footprint_p} matrix on output. -->
+<!-- #'        \code{F_footprint_p} is calculated by \code{M_p * (M_p^T * i)_hat_inv}. Default is "\code{F_footprint_p}". -->
+<!-- #' @param F_effects_p name of the \code{F_effects_p} matrix on output. -->
+<!-- #'        \code{F_effects_p} is calculated by \code{(M_p * i)_hat_inv * M_p}. Default is "\code{F_effects_p}". -->
+<!-- #' @param F_footprint_s name of the \code{F_footprint_s} matrix on output. -->
+<!-- #'        \code{F_footprint_s} is calculated by \code{M_s * (M_s^T *i)_hat_inv}. Default is "\code{F_footprint_s}". -->
+<!-- #' @param F_effects_s name of the \code{F_effects_s} matrix on output. -->
+<!-- #'        \code{F_effects_s} is calculated by \code{(M_s * i)_hat_inv * M_s}. Default is "\code{F_effects_s}". -->
 
 
 

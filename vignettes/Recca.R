@@ -106,6 +106,13 @@ IO_df[["U"]][[1]][ , c("Crude dist.", "Diesel dist.")]
 Double_demand[["U_prime"]][[1]][ , c("Crude dist.", "Diesel dist.")]
 
 ## ------------------------------------------------------------------------
+ERRs <- IO_df %>% 
+  calc_ERRs_gamma()
+ERRs$ger_gamma[[1]]
+ERRs$ner_gamma[[1]]
+ERRs$r_gamma[[1]]
+
+## ------------------------------------------------------------------------
 etas <- IO_df %>% 
   calc_eta_i()
 names(etas)
