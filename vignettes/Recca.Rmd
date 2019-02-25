@@ -4,6 +4,8 @@ author: "Matthew Kuperus Heun"
 date: "`r Sys.Date()`"
 header-includes:
    - \usepackage{amsmath}
+   - \usepackage{upgreek}
+   - \usepackage{bm}
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{matsindf Vignette}
@@ -42,19 +44,6 @@ library(tibble)
 
 \newcommand{\Lpp}{\matwithdims{L}{p}{p}}
 \newcommand{\Lip}{\matwithdims{L}{i}{p}}
-
-
-| Equation | Description (rows$\times$columns)|
-|---:|:---------------------------------------------------|
-| $\mat{G} = \Lip \widehat{\colvec{y}}$ | Industry output requirements for final demand (i$\times$p) |
-| $\mat{H} = \Lip \mat{Y}$ | Industry output requirements for final demand sectors (i$\times$s) |
-| $\mat{E} = (\mat{W} + \mat{U}_{EIOU})\hatinv{\colvec{g}}$ | energy or services produced ($+$) or consumed ($-$) per unit output by industries (in columns) (p$\times$i)|
-| $\mat{M}_p$ | embodied products $\times$ embodying products |
-| $\mat{M}_s$ | embodied products $\times$ embodying final demand sectors |
-| $\mat{F}_{footprint,p}$ | something |
-| $\mat{F}_{effects,p}$ | something |
-| $\mat{F}_{footprint,s}$ | something |
-| $\mat{F}_{effects,s}$ | something |
 
 
 ## Introduction
@@ -365,15 +354,42 @@ namely `calc_embodied_mats()` and `calc_embodied_etas()`.
 
 Outputs from `calc_embodied_mats()` include the following matrices:
 
-**********************
-Table here 
-**********************
-
-Outputs from `calc_embodied_etas()` include the following matrices:
+The function `calc_embodied_mats()` calculates embodied energy in final demand products ($p$) and final demand sectors ($s$).
 
 | Matrix | Description (rows$\times$columns)|
-|----:|:--------------------|
-| $\mat{G}$ | something |
+|---:|:---------------------------------------------------|
+| $\mat{G} = \Lip \widehat{\colvec{y}}$ | Industry output requirements for final demand (i$\times$p) |
+| $\mat{H} = \Lip \mat{Y}$ | Industry output requirements for final demand sectors (i$\times$s) |
+| $\mat{E} = (\mat{W} + \mat{U}_{EIOU})\hatinv{\colvec{g}}$ | Energy or services produced ($+$) or consumed ($-$) per unit output by industries (in columns) (p$\times$i)|
+| $\mat{M}_p$ | embodied products $\times$ embodying products |
+| $\mat{M}_s$ | embodied products $\times$ consumed by final demand sectors |
+
+`calc_embodied_etas()` also calculates $\mat{F}_{footprint}$ and $\mat{F}_{effects}$ matrices,
+which answer the questions (respectively)
+``What is the fractional composition of embodied energy of each final demand energy type?''
+and
+``What is the fractional destination of a given upstream energy product?''
+The calculations can be performed for each final demand product or each final demand sector. 
+The following table describes these matrices.
+
+| Matrix | Description |
+|---:|:---------------------------------------------------|
+| $\mat{F}_{footprint,p}$ | Each final demand product (columns) contains embodied energy. On a fractional basis, where does that embodied energy come from (rows)? Columns sum to 1. |
+| $\mat{F}_{effects,p}$ | Each upstream energy product (rows) becomes embodied somewhere. On a fractional basis, where does that upstream energy become embodied columns)? Rows sums to 1. |
+| $\mat{F}_{footprint,s}$ | Each final demand sector (columns) consumes embodied energy. On a fractional basis, where does the consumed embodied energy come from (rows)? Columns sum to 1. |
+| $\mat{F}_{effects,s}$ | Each embodied upstream energy product (rows) is consumed by a final demand sector. On a fractional basis, where is that embodied upstream energy consumed (columns)? Rows sums to 1. |
+
+Finally, embodied energy efficiencies can be calculated as final demand energy divided by embodied energy. 
+Again, efficiencies can be calculated for each final demand product or each final demand sector.
+The `calc_embodied_etas()` function does this computation.
+
+| Matrix | Description |
+|---:|:---------------------------------------------------|
+| $\eta_p$ | Final demand product (rows) divided by embodied energy of that final demand product |
+| $\eta_s$ | Energy consumed by final demand sector (rows) dividied by embodied energy input to the final demand sector  |
+<!-- These don't work at this time. -->
+<!-- | $\colvec{\bm{\upeta}}_p$ | Final demand product (rows) divided by embodied energy of that final demand product | -->
+<!-- | $\colvec{\bm{\upeta}}_s$ | Energy consumed by final demand sector (rows) dividied by embodied energy input to the final demand sector  | -->
 
 ```{r}
 primary_machine_names <- c("Resources - Crude", "Resources - NG")
@@ -387,7 +403,15 @@ embodied_mats <- IO_df %>%
 names(embodied_mats)
 ```
 
+Figure 15 in [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109)
+shows primary-to-services energetic efficiencies for the ECC in the 3rd row of `IO_df`.
+The following code extracts those results. 
+Rows of the vector give final demand services and their units.
+The column gives efficiencies in units of service per ktoe of energy.
 
+```{r}
+embodied_mats$eta_p[[3]]
+```
 
 
 ## Conclusion

@@ -119,3 +119,17 @@ names(etas)
 etas[["eta_i"]][[1]]
 etas[["eta_i"]][[3]] # NAs indicate inhomogeneous units on inputs or outputs.
 
+## ------------------------------------------------------------------------
+primary_machine_names <- c("Resources - Crude", "Resources - NG")
+
+embodied_mats <- IO_df %>%
+  mutate(
+    U_EIOU = hadamardproduct_byname(r_EIOU, U)
+  ) %>%
+  calc_embodied_mats() %>%
+  calc_embodied_etas(primary_machine_names = primary_machine_names)
+names(embodied_mats)
+
+## ------------------------------------------------------------------------
+embodied_mats$eta_p[[3]]
+
