@@ -37,6 +37,26 @@ library(tibble)
 \newcommand{\transposeinverse}[1]{\inverse{\left( \transpose{\mat{#1}} \right)}}
 \newcommand{\hatinv}[1]{\inverse{\widehat{#1}}}
 
+\newcommand{\matwithdims}[3]{\underset{\mathrm{#2} \times \mathrm{#3}}{\mat{#1}}}
+\newcommand{\colvecwithdims}[2]{\underset{\mathrm{#2} \times 1}{\colvec{#1}}}
+
+\newcommand{\Lpp}{\matwithdims{L}{p}{p}}
+\newcommand{\Lip}{\matwithdims{L}{i}{p}}
+
+
+| Equation | Description (rows$\times$columns)|
+|---:|:---------------------------------------------------|
+| $\mat{G} = \Lip \widehat{\colvec{y}}$ | Industry output requirements for final demand (i$\times$p) |
+| $\mat{H} = \Lip \mat{Y}$ | Industry output requirements for final demand sectors (i$\times$s) |
+| $\mat{E} = (\mat{W} + \mat{U}_{EIOU})\hatinv{\colvec{g}}$ | energy or services produced ($+$) or consumed ($-$) per unit output by industries (in columns) (p$\times$i)|
+| $\mat{M}_p$ | embodied products $\times$ embodying products |
+| $\mat{M}_s$ | embodied products $\times$ embodying final demand sectors |
+| $\mat{F}_{footprint,p}$ | something |
+| $\mat{F}_{effects,p}$ | something |
+| $\mat{F}_{footprint,s}$ | something |
+| $\mat{F}_{effects,s}$ | something |
+
+
 ## Introduction
 
 `Recca` (`R` Energy Conversion Chain Analysis)
@@ -345,22 +365,14 @@ namely `calc_embodied_mats()` and `calc_embodied_etas()`.
 
 Outputs from `calc_embodied_mats()` include the following matrices:
 
-| Matrix | Description (rows$\times$columns)|
-|------:|:-----|
-| $\mat{G}$ | Industry output requirements for final demand (i$\times$p) |
-| $\mat{H}$ | something |
-| $\mat{E}$ | something |
-| $\mat{M}_p$ | something |
-| $\mat{M}_s$ | something |
-| $\mat{F}_{footprint,p}$ | something |
-| $\mat{F}_{effects,p}$ | something |
-| $\mat{F}_{footprint,s}$ | something |
-| $\mat{F}_{effects,s}$ | something |
+**********************
+Table here 
+**********************
 
 Outputs from `calc_embodied_etas()` include the following matrices:
 
 | Matrix | Description (rows$\times$columns)|
-|------:|:-----|
+|----:|:--------------------|
 | $\mat{G}$ | something |
 
 ```{r}
