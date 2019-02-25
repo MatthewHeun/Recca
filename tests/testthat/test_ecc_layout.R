@@ -1,19 +1,3 @@
-# Contains tests for the Recca package.
-
-# Need to put dplyr before testthat.
-# If not, the "matches" function in dplyr overrides the "matches" function in testthat,
-# and tests containing the string "(" don't work as expected.
-
-library(dplyr)
-library(tidyr)
-library(magrittr)
-library(tibble)
-library(lazyeval)
-library(testthat)
-library(qgraph)
-library(matsbyname)
-library(matsindf)
-
 ###########################################################
 context("Small example")
 ###########################################################

@@ -1,14 +1,9 @@
 library(dplyr)
-library(tidyr)
 library(magrittr)
-library(tibble)
-library(lazyeval)
 library(matsbyname)
 library(matsindf)
-library(parallel)
-library(purrr)
-library(testthat)
-library(rlang)
+library(qgraph)
+library(tidyr)
 
 ###########################################################
 context("Aggregates")

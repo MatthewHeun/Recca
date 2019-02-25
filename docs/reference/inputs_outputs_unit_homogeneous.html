@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Calculate <code>y</code>, <code>f</code>, <code>g</code>, and <code>q</code> vectors and the <code>W</code> matrix — calc_yqfgW • Recca</title>
+<title>Tell whether industry inputs are unit-homogeneous and industry outputs are unit-homogeneous — inputs_outputs_unit_homogeneous • Recca</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,17 +30,11 @@
 
 
 
-<meta property="og:title" content="Calculate <code>y</code>, <code>f</code>, <code>g</code>, and <code>q</code> vectors and the <code>W</code> matrix — calc_yqfgW" />
+<meta property="og:title" content="Tell whether industry inputs are unit-homogeneous and industry outputs are unit-homogeneous — inputs_outputs_unit_homogeneous" />
 
-<meta property="og:description" content="Note that a necessary condition for calculating the f and g vectors is that
-the U_bar and V_bar matrices should have only one entry per column and row, respectively,
-meaning that all products entering a given industry need to be unit homogeneous
-before we can calculate the f vector and
-all products of a given industry are measured in the same units
-before we can calculate the g vector.
-If the unit homogeneity assumptions above are violated, we will return NA
-for violating industries in the f and g vectors.
-The checks for unit homogeneity are performed only when an S_units matrix is present." />
+<meta property="og:description" content="Returns TRUE if each industry's inputs are unit-homogeneous and each industry's outputs are unit homogeneous.
+When inputs have different units from outputs, (but all inputs are unit-homogeneous and all outputs are unit-homogeneous),
+TRUE is returned." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -128,85 +122,81 @@ The checks for unit homogeneity are performed only when an S_units matrix is pre
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Calculate <code>y</code>, <code>f</code>, <code>g</code>, and <code>q</code> vectors and the <code>W</code> matrix</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MatthewHeun/Recca/blob/master/R/io.R'><code>R/io.R</code></a></small>
-    <div class="hidden name"><code>calc_yqfgW.Rd</code></div>
+    <h1>Tell whether industry inputs are unit-homogeneous and industry outputs are unit-homogeneous</h1>
+    <small class="dont-index">Source: <a href='https://github.com/MatthewHeun/Recca/blob/master/R/utilities.R'><code>R/utilities.R</code></a></small>
+    <div class="hidden name"><code>inputs_outputs_unit_homogeneous.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Note that a necessary condition for calculating the <code>f</code> and <code>g</code> vectors is that
-the U_bar and V_bar matrices should have only one entry per column and row, respectively,
-meaning that all products entering a given industry need to be unit homogeneous
-before we can calculate the <code>f</code> vector and
-all products of a given industry are measured in the same units
-before we can calculate the <code>g</code> vector.
-If the unit homogeneity assumptions above are violated, we will return NA
-for violating industries in the <code>f</code> and <code>g</code> vectors.
-The checks for unit homogeneity are performed only when an <code>S_units</code> matrix is present.</p>
+    <p>Returns <code>TRUE</code> if each industry's inputs are unit-homogeneous and each industry's outputs are unit homogeneous.
+When inputs have different units from outputs, (but all inputs are unit-homogeneous and all outputs are unit-homogeneous),
+<code>TRUE</code> is returned.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>calc_yqfgW</span>(<span class='kw'>.sutdata</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>U</span> <span class='kw'>=</span> <span class='st'>"U"</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>, <span class='kw'>Y</span> <span class='kw'>=</span> <span class='st'>"Y"</span>,
-  <span class='kw'>S_units</span> <span class='kw'>=</span> <span class='st'>"S_units"</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='st'>"y"</span>, <span class='kw'>q</span> <span class='kw'>=</span> <span class='st'>"q"</span>, <span class='kw'>f</span> <span class='kw'>=</span> <span class='st'>"f"</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='st'>"g"</span>,
-  <span class='kw'>W</span> <span class='kw'>=</span> <span class='st'>"W"</span>)</pre>
+    <pre class="usage"><span class='fu'>inputs_outputs_unit_homogeneous</span>(<span class='kw'>.sutmats</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>U</span> <span class='kw'>=</span> <span class='st'>"U"</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>,
+  <span class='kw'>S_units</span> <span class='kw'>=</span> <span class='st'>"S_units"</span>, <span class='kw'>keep_details</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>ins_outs_unit_homogeneous</span> <span class='kw'>=</span> <span class='st'>".inputs_outputs_unit_homogeneous"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>.sutdata</th>
+      <th>.sutmats</th>
       <td><p>a data frame of supply-use table matrices with matrices arranged in columns.</p></td>
     </tr>
     <tr>
       <th>U</th>
-      <td><p>use (<code>U</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "<code>U</code>".</p></td>
+      <td><p>a use (<code>U</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "<code>U</code>".</p></td>
     </tr>
     <tr>
       <th>V</th>
-      <td><p>make (<code>V</code>) matrix or name of the column in <code>.sutmats</code>that contains same. Default is "<code>V</code>".</p></td>
-    </tr>
-    <tr>
-      <th>Y</th>
-      <td><p>final demand (<code>Y</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "<code>Y</code>".</p></td>
+      <td><p>a make (<code>V</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "<code>V</code>".</p></td>
     </tr>
     <tr>
       <th>S_units</th>
-      <td><p><code>S_units</code> matrix or name of the column in <code>.sutmats</code> that contains same. Default is "<code>S_units</code>".</p></td>
+      <td><p>an <code>S_units</code> matrix or name of a column in <code>.sutmats</code> that contains same. Default is "<code>S_units</code>".</p></td>
     </tr>
     <tr>
-      <th>y</th>
-      <td><p>name for <code>y</code> vector on output. Default is "<code>y</code>".
-<code>y</code> is calculated by <code>rowsums(Y)</code>.</p></td>
+      <th>keep_details</th>
+      <td><p>if <code>TRUE</code>, per-industry results are returned;
+if <code>FALSE</code>, per-ECC results are returned.</p></td>
     </tr>
     <tr>
-      <th>q</th>
-      <td><p>name for <code>q</code> vector on output. Default is "<code>q</code>".
-<code>q</code> is calculated by <code>rowsums(U) + y</code>.</p></td>
-    </tr>
-    <tr>
-      <th>f</th>
-      <td><p>name for <code>f</code> vector on output. Default is "<code>f</code>".
-<code>f</code> is calculated by <code>colsums(U)</code>.</p></td>
-    </tr>
-    <tr>
-      <th>g</th>
-      <td><p>name for <code>g</code> vector on output. Default is "<code>g</code>".
-<code>g</code> is calculated by <code>rowsums(V)</code>.</p></td>
-    </tr>
-    <tr>
-      <th>W</th>
-      <td><p>name for <code>W</code> matrix on output. Default is "<code>W</code>".
-<code>W</code> is calculated by <code>transpose(V) - U</code>.</p></td>
+      <th>ins_outs_unit_homogeneous</th>
+      <td><p>the name of the output column
+that tells whether each industry's inputs and outputs are unit-homogeneous
+(though not necessarily in the same units).
+Default is "<code>.inputs_outputs_unit_homogeneous</code>".</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a list or data frame containing <code>y</code>, <code>q</code>,
-         <code>f</code>, <code>g</code>, and <code>W</code>.</p>
+    <p>a list or data frame containing
+        <code>TRUE</code> if inputs from each energy conversion industry are unit-homogeneous
+        and outputs from each energy conversion industry are unit-homogeneous,
+        <code>FALSE</code> otherwise.</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>This function uses both <a href='inputs_unit_homogeneous.html'>inputs_unit_homogeneous</a> and <a href='outputs_unit_homogeneous.html'>outputs_unit_homogeneous</a> internally.
+This function differs from <a href='flows_unit_homogeneous.html'>flows_unit_homogeneous</a>, because <a href='flows_unit_homogeneous.html'>flows_unit_homogeneous</a>
+requires that all flows are unit-homogeneous before returning <code>TRUE</code>.
+This function (inputs_outputs_unit_homogeneous) will return true when all
+inputs are unit-homogeneous with different units from outputs (which are also unit-homogeoenous).</p>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><a href='inputs_unit_homogeneous.html'>inputs_unit_homogeneous</a>, <a href='outputs_unit_homogeneous.html'>outputs_unit_homogeneous</a>, <a href='flows_unit_homogeneous.html'>flows_unit_homogeneous</a></p></div>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>tidyr</span>)
+<span class='no'>result</span> <span class='kw'>&lt;-</span> <span class='no'>UKEnergy2000mats</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='st'>"matrix.name"</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>"matrix"</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'>inputs_outputs_unit_homogeneous</span>()</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -214,7 +204,13 @@ The checks for unit homogeneity are performed only when an <code>S_units</code> 
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+
+      <li><a href="#details">Details</a></li>
+
+      <li><a href="#see-also">See also</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

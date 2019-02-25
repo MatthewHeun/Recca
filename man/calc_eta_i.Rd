@@ -23,10 +23,15 @@ calc_eta_i(.sutmats, U = "U", V = "V", S_units = "S_units",
 }
 \description{
 Calculates industry efficiencies for all energy conversion industries in the ECC.
-The efficiency for a given industry is calculated iff the units for inputs and outputs for that industry are unit-homogeneous.
-If units for inputs and outputs are heterogeneous for an industry, \code{NA} is the result.
+Calculations are performed as shown in Equation 11 in
+Heun, Owen, and Brockway. 2018.
+A physical supply-use table framework for energy analysis on the energy conversion chain.
+Applied Energy, vol 226, pp. 1134-1162.
 }
 \details{
+The efficiency for a given industry is calculated iff the units for inputs and outputs for that industry are unit-homogeneous.
+If units for inputs and outputs are heterogeneous for an industry, \code{NA} is the result.
+
 Note that these efficiencies (\code{eta}) are different from
 final demand sector and product efficiencies (\code{eta_s} and \code{eta_p}, respectively).
 Both final demand sector and product efficiencies
