@@ -1,4 +1,8 @@
+# Recca 0.1.17 (2019-02-25)
+
 * First draft of completed vignette.
+* Removed ecc_layout function. It was not being used, and there is a create_sankey function, anyway.
+
 
 # Recca 0.1.16 (2019-02-16)
 
