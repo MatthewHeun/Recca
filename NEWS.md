@@ -1,3 +1,5 @@
+* First draft of completed vignette.
+
 # Recca 0.1.16 (2019-02-16)
 
 * Now automatically building in Travis.
