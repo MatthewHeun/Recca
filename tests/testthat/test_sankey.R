@@ -1,9 +1,3 @@
-# Tests for make_sankey()
-
-library(Recca)
-library(testthat)
-library(tidyr)
-
 ###########################################################
 context("Sankey")
 ###########################################################

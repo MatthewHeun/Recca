@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Final demand aggregate energy — finaldemand_aggregates • Recca</title>
+<title>Tell whether industry inputs are unit-homogeneous and industry outputs are unit-homogeneous — inputs_outputs_unit_homogeneous • Recca</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,11 +30,11 @@
 
 
 
-<meta property="og:title" content="Final demand aggregate energy — finaldemand_aggregates" />
+<meta property="og:title" content="Tell whether industry inputs are unit-homogeneous and industry outputs are unit-homogeneous — inputs_outputs_unit_homogeneous" />
 
-<meta property="og:description" content="Calculates aggregate final demand energy from a data frame of Supply-Use matrices.
-The calculation includes non-energy uses if they are present in the final demand matrix.
-The calculation does not include balancing items (Losses and Statistical differences)." />
+<meta property="og:description" content="Returns TRUE if each industry's inputs are unit-homogeneous and each industry's outputs are unit homogeneous.
+When inputs have different units from outputs, (but all inputs are unit-homogeneous and all outputs are unit-homogeneous),
+TRUE is returned." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -122,71 +122,81 @@ The calculation does not include balancing items (Losses and Statistical differe
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Final demand aggregate energy</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MatthewHeun/Recca/blob/master/R/aggregates.R'><code>R/aggregates.R</code></a></small>
-    <div class="hidden name"><code>finaldemand_aggregates.Rd</code></div>
+    <h1>Tell whether industry inputs are unit-homogeneous and industry outputs are unit-homogeneous</h1>
+    <small class="dont-index">Source: <a href='https://github.com/MatthewHeun/Recca/blob/master/R/utilities.R'><code>R/utilities.R</code></a></small>
+    <div class="hidden name"><code>inputs_outputs_unit_homogeneous.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Calculates aggregate final demand energy from a data frame of Supply-Use matrices.
-The calculation includes non-energy uses if they are present in the final demand matrix.
-The calculation does not include balancing items (Losses and Statistical differences).</p>
+    <p>Returns <code>TRUE</code> if each industry's inputs are unit-homogeneous and each industry's outputs are unit homogeneous.
+When inputs have different units from outputs, (but all inputs are unit-homogeneous and all outputs are unit-homogeneous),
+<code>TRUE</code> is returned.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>finaldemand_aggregates</span>(<span class='no'>.sutdata</span>, <span class='no'>fd_sectors</span>, <span class='kw'>U</span> <span class='kw'>=</span> <span class='st'>"U"</span>, <span class='kw'>Y</span> <span class='kw'>=</span> <span class='st'>"Y"</span>,
-  <span class='kw'>r_EIOU</span> <span class='kw'>=</span> <span class='st'>"r_EIOU"</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Total"</span>, <span class='st'>"Product"</span>, <span class='st'>"Sector"</span>),
-  <span class='kw'>net_aggregate_demand</span> <span class='kw'>=</span> <span class='st'>"EX_fd_net.ktoe"</span>,
-  <span class='kw'>gross_aggregate_demand</span> <span class='kw'>=</span> <span class='st'>"EX_fd_gross.ktoe"</span>)</pre>
+    <pre class="usage"><span class='fu'>inputs_outputs_unit_homogeneous</span>(<span class='kw'>.sutmats</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>U</span> <span class='kw'>=</span> <span class='st'>"U"</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>,
+  <span class='kw'>S_units</span> <span class='kw'>=</span> <span class='st'>"S_units"</span>, <span class='kw'>keep_details</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>ins_outs_unit_homogeneous</span> <span class='kw'>=</span> <span class='st'>".inputs_outputs_unit_homogeneous"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>.sutdata</th>
-      <td><p>a data frame with columns of matrices from a supply-use analysis.</p></td>
-    </tr>
-    <tr>
-      <th>fd_sectors</th>
-      <td><p>a vector of names of sectors in final demand.</p></td>
+      <th>.sutmats</th>
+      <td><p>a data frame of supply-use table matrices with matrices arranged in columns.</p></td>
     </tr>
     <tr>
       <th>U</th>
-      <td><p>use (<code>U</code>) matrix or name of the column in <code>.sutdata</code> containing same</p></td>
+      <td><p>a use (<code>U</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "<code>U</code>".</p></td>
     </tr>
     <tr>
-      <th>Y</th>
-      <td><p>final demand (<code>Y</code>) matrix or name of the column in <code>.sutdata</code> containing same</p></td>
+      <th>V</th>
+      <td><p>a make (<code>V</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "<code>V</code>".</p></td>
     </tr>
     <tr>
-      <th>r_EIOU</th>
-      <td><p>matrix of ratios of EIOU for the make (<code>U</code>) matrix or name of the column in <code>.sutdata</code> containing same</p></td>
+      <th>S_units</th>
+      <td><p>an <code>S_units</code> matrix or name of a column in <code>.sutmats</code> that contains same. Default is "<code>S_units</code>".</p></td>
     </tr>
     <tr>
-      <th>by</th>
-      <td><p>one of "Product", "Sector", or "Total" to indicate the desired aggregation:
-"Product" for aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.),
-"Sector" for aggregation by final demand sector (Agriculture/forestry, Domestic navigation, etc.), or
-"Total" for aggregation over both Product and Sector (the default).</p></td>
+      <th>keep_details</th>
+      <td><p>if <code>TRUE</code>, per-industry results are returned;
+if <code>FALSE</code>, per-ECC results are returned.</p></td>
     </tr>
     <tr>
-      <th>net_aggregate_demand</th>
-      <td><p>the name of net energy demand on output.
-Each entry is <code>sumall(Y_fd)</code>.</p></td>
-    </tr>
-    <tr>
-      <th>gross_aggregate_demand</th>
-      <td><p>the name of gross energy demand on output.
-Each entry is calculated by <code>sumall(Y_fd)</code> + <code>sumall(U_EIOU)</code>.</p></td>
+      <th>ins_outs_unit_homogeneous</th>
+      <td><p>the name of the output column
+that tells whether each industry's inputs and outputs are unit-homogeneous
+(though not necessarily in the same units).
+Default is "<code>.inputs_outputs_unit_homogeneous</code>".</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a list or data frame containing <code>net_aggregate_demand</code> and <code>gross_aggregate_demand</code></p>
+    <p>a list or data frame containing
+        <code>TRUE</code> if inputs from each energy conversion industry are unit-homogeneous
+        and outputs from each energy conversion industry are unit-homogeneous,
+        <code>FALSE</code> otherwise.</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>This function uses both <a href='inputs_unit_homogeneous.html'>inputs_unit_homogeneous</a> and <a href='outputs_unit_homogeneous.html'>outputs_unit_homogeneous</a> internally.
+This function differs from <a href='flows_unit_homogeneous.html'>flows_unit_homogeneous</a>, because <a href='flows_unit_homogeneous.html'>flows_unit_homogeneous</a>
+requires that all flows are unit-homogeneous before returning <code>TRUE</code>.
+This function (inputs_outputs_unit_homogeneous) will return true when all
+inputs are unit-homogeneous with different units from outputs (which are also unit-homogeoenous).</p>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><a href='inputs_unit_homogeneous.html'>inputs_unit_homogeneous</a>, <a href='outputs_unit_homogeneous.html'>outputs_unit_homogeneous</a>, <a href='flows_unit_homogeneous.html'>flows_unit_homogeneous</a></p></div>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>tidyr</span>)
+<span class='no'>result</span> <span class='kw'>&lt;-</span> <span class='no'>UKEnergy2000mats</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='st'>"matrix.name"</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>"matrix"</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'>inputs_outputs_unit_homogeneous</span>()</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -194,7 +204,13 @@ Each entry is calculated by <code>sumall(Y_fd)</code> + <code>sumall(U_EIOU)</co
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+
+      <li><a href="#details">Details</a></li>
+
+      <li><a href="#see-also">See also</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

@@ -84,7 +84,7 @@ calc_io_mats <- function(.sutdata = NULL,
 #' before we can calculate the \code{g} vector.
 #' If the unit homogeneity assumptions above are violated, we will return NA
 #' for violating industries in the \code{f} and \code{g} vectors.
-#' The checks for unit homogenity are performed only when an \code{S_units} matrix is present.
+#' The checks for unit homogeneity are performed only when an \code{S_units} matrix is present.
 #'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
 #' @param U use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".
@@ -119,7 +119,7 @@ calc_yqfgW <- function(.sutdata = NULL,
     f_vec <- matsbyname::colsums_byname(U_mat) %>% matsbyname::transpose_byname() # vectors are always column vectors
     g_vec <- matsbyname::rowsums_byname(V_mat)
     W_mat <- matsbyname::difference_byname(matsbyname::transpose_byname(V_mat), U_mat)
-    # Deal with any unit homogenity issues for f and g.
+    # Deal with any unit homogeneity issues for f and g.
     if (!is.null(S_units_mat)) {
       U_bar <- matsbyname::matrixproduct_byname(matsbyname::transpose_byname(S_units_mat), U_mat)
       U_bar_units_OK <- matsbyname::count_vals_incols_byname(U_bar, "!=", 0) %>%

@@ -33,8 +33,10 @@
 <meta property="og:title" content="Calculate industry efficiencies — calc_eta_i" />
 
 <meta property="og:description" content="Calculates industry efficiencies for all energy conversion industries in the ECC.
-The efficiency for a given industry is calculated iff the units for inputs and outputs for that industry are unit-homogeneous.
-If units for inputs and outputs are heterogeneous for an industry, NA is the result." />
+Calculations are performed as shown in Equation 11 in
+Heun, Owen, and Brockway. 2018.
+A physical supply-use table framework for energy analysis on the energy conversion chain.
+Applied Energy, vol 226, pp. 1134-1162." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -65,7 +67,7 @@ If units for inputs and outputs are heterogeneous for an industry, NA is the res
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.17</span>
       </span>
     </div>
 
@@ -130,8 +132,10 @@ If units for inputs and outputs are heterogeneous for an industry, NA is the res
     <div class="ref-description">
     
     <p>Calculates industry efficiencies for all energy conversion industries in the ECC.
-The efficiency for a given industry is calculated iff the units for inputs and outputs for that industry are unit-homogeneous.
-If units for inputs and outputs are heterogeneous for an industry, <code>NA</code> is the result.</p>
+Calculations are performed as shown in Equation 11 in
+Heun, Owen, and Brockway. 2018.
+A physical supply-use table framework for energy analysis on the energy conversion chain.
+Applied Energy, vol 226, pp. 1134-1162.</p>
     
     </div>
 
@@ -169,7 +173,9 @@ If units for inputs and outputs are heterogeneous for an industry, <code>NA</cod
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Note that these efficiencies (<code>eta</code>) are different from
+    <p>The efficiency for a given industry is calculated iff the units for inputs and outputs for that industry are unit-homogeneous.
+If units for inputs and outputs are heterogeneous for an industry, <code>NA</code> is the result.</p>
+<p>Note that these efficiencies (<code>eta</code>) are different from
 final demand sector and product efficiencies (<code>eta_s</code> and <code>eta_p</code>, respectively).
 Both final demand sector and product efficiencies
 (<code>eta_s</code> and <code>eta_p</code>) are based on embodied energy, whereas

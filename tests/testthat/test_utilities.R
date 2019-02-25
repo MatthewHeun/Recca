@@ -1,8 +1,3 @@
-library(dplyr)
-library(Hmisc)
-library(magrittr)
-library(tidyr)
-
 ###########################################################
 context("Utilities")
 ###########################################################
@@ -184,8 +179,8 @@ test_that("inputs_unit_homogeneous works correctly", {
       expected = case_when(
         Last.stage == "final" ~ TRUE,
         Last.stage == "useful" ~ TRUE,
-        endsWith(colnames, "dist.") ~ FALSE,
-        !endsWith(colnames, "dist.") ~ TRUE,
+        endsWith(rownames, "dist.") ~ FALSE,
+        !endsWith(rownames, "dist.") ~ TRUE,
         TRUE ~ NA
       )
     )
@@ -215,6 +210,45 @@ test_that("output_unit_homogeneous works correctly", {
 })
 
 test_that("inputs_outputs_unit_homogeneous works as expected", {
+  result <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    inputs_outputs_unit_homogeneous() %>%
+    extract2(".inputs_outputs_unit_homogeneous") %>%
+    unlist()
+  # The 2nd and 4th rows of UKEnergy2000mats have services inputs to industries, with different units, of course.
+  # Thus, we expect to have FALSE when services are the Last.stage.
+  expected <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    mutate(
+      expected = case_when(
+        Last.stage == "services" ~ FALSE,
+        Last.stage != "services" ~ TRUE,
+        TRUE ~ NA
+      )
+    ) %>%
+    extract2("expected")
+  expect_equal(result, expected)
+
+  # Test when details are requested.
+  result2 <- UKEnergy2000mats %>%
+    spread(key = "matrix.name", value = "matrix") %>%
+    flows_unit_homogeneous(keep_details = TRUE) %>%
+    select(Country, Year, Energy.type, Last.stage, .flows_unit_homogeneous) %>%
+    gather(key = "matnames", value = "matvals", .flows_unit_homogeneous) %>%
+    expand_to_tidy() %>%
+    mutate(
+      expected = case_when(
+        Last.stage == "final" ~ TRUE,
+        Last.stage == "useful" ~ TRUE,
+        endsWith(rownames, "dist.") ~ FALSE,
+        rownames %in% c("Cars", "Homes", "Rooms", "Trucks") ~ FALSE,
+        TRUE ~ TRUE
+      )
+    )
+  expect_equal(result2$matvals, result2$expected)
+})
+
+test_that("flows_unit_homogeneous works as expected", {
   result <- UKEnergy2000mats %>%
     spread(key = "matrix.name", value = "matrix") %>%
     flows_unit_homogeneous() %>%
