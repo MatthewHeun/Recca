@@ -43,7 +43,7 @@ test_that("any_start_with works properly", {
   expect_equal(any_start_with(x = c("Production - Crude", "Production - NG", "Bogus"), target = c("Production", "Offshore")),
                c(TRUE, FALSE))
   # Does it also work with lists?
-  expect_equal(any_start_with(x = list("Production - Crude", "Production - NG", "Bogus"), target = c("Production", "Offshore")),
+  expect_equal(any_start_with(x = c("Production - Crude", "Production - NG", "Bogus"), target = list("Production", "Offshore")),
                c(TRUE, FALSE))
 })
 

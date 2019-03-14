@@ -33,12 +33,18 @@
 #' # TRUE FALSE, because the x strings start with "Production" but not "Offshore"
 #' any_start_with(x = c("Production - Crude", "Production - NG", "Bogus"),
 #'                target = c("Production", "Offshore"))
+# any_start_with <- function(x, target){
+#   sapply(target, FUN = function(t){
+#     grepl(paste0("^", Hmisc::escapeRegex(t)), x) %>%
+#       any()
+#     }) %>%
+#     as.logical()
+# }
 any_start_with <- function(x, target){
   sapply(target, FUN = function(t){
-    grepl(paste0("^", Hmisc::escapeRegex(t)), x) %>%
-      any()
-    }) %>%
-    as.logical()
+    any(startsWith(x, t))
+  }) %>%
+    magrittr::set_names(NULL)
 }
 
 
