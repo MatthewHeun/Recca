@@ -4,9 +4,13 @@
 \alias{verify_SUT_industry_production}
 \title{Confirm that all Industries in an SUT-style data frame produce energy.}
 \usage{
-verify_SUT_industry_production(.sutmats = NULL, U = "U", V = "V",
+verify_SUT_industry_production(
+  .sutmats = NULL,
+  U = "U",
+  V = "V",
   industry_production_OK = ".industry_production_OK",
-  problem_industries = ".problem_industries")
+  problem_industries = ".problem_industries"
+)
 }
 \arguments{
 \item{.sutmats}{an SUT-style data frame containing metadata columns

@@ -4,9 +4,17 @@
 \alias{calc_ERRs_gamma}
 \title{Calculate energy return ratios for the gamma system boundary.}
 \usage{
-calc_ERRs_gamma(.sutmats, U = "U", r_EIOU = "r_EIOU", V = "V",
-  g = "g", S_units = "S_units", ger_gamma = "ger_gamma",
-  ner_gamma = "ner_gamma", r_gamma = "r_gamma")
+calc_ERRs_gamma(
+  .sutmats,
+  U = "U",
+  r_EIOU = "r_EIOU",
+  V = "V",
+  g = "g",
+  S_units = "S_units",
+  ger_gamma = "ger_gamma",
+  ner_gamma = "ner_gamma",
+  r_gamma = "r_gamma"
+)
 }
 \arguments{
 \item{.sutmats}{a data frame containing columns for \code{U} and \code{r_EIOU} matrices and a \code{g} vector.}

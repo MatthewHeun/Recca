@@ -4,8 +4,13 @@
 \alias{simplify_edge_list}
 \title{Simplify an edge list}
 \usage{
-simplify_edge_list(edge_list, from = "From", to = "To",
-  value = "Value", product = "Product")
+simplify_edge_list(
+  edge_list,
+  from = "From",
+  to = "To",
+  value = "Value",
+  product = "Product"
+)
 }
 \arguments{
 \item{edge_list}{the edge list to be simplified}

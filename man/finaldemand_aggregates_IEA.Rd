@@ -4,12 +4,17 @@
 \alias{finaldemand_aggregates_IEA}
 \title{Final demand aggregate energy from IEA tables}
 \usage{
-finaldemand_aggregates_IEA(.ieadata, ledger_side = "Ledger.side",
-  flow_aggregation_point = "Flow.aggregation.point", flow = "Flow",
-  energy = "EX.ktoe", consumption = "Consumption",
+finaldemand_aggregates_IEA(
+  .ieadata,
+  ledger_side = "Ledger.side",
+  flow_aggregation_point = "Flow.aggregation.point",
+  flow = "Flow",
+  energy = "EX.ktoe",
+  consumption = "Consumption",
   eiou = "Energy industry own use",
   aggregate_net_finaldemand = "EX_fd_net_IEA.ktoe",
-  aggregate_gross_finaldemand = "EX_fd_gross_IEA.ktoe")
+  aggregate_gross_finaldemand = "EX_fd_gross_IEA.ktoe"
+)
 }
 \arguments{
 \item{.ieadata}{a data frame with columns of IEA data.}

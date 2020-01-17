@@ -4,8 +4,7 @@
 \alias{calc_L}
 \title{Calculates total requirements matrices (\code{L_pxp} and \code{L_ixp})}
 \usage{
-calc_L(.sutdata = NULL, D = "D", A = "A", L_pxp = "L_pxp",
-  L_ixp = "L_ixp")
+calc_L(.sutdata = NULL, D = "D", A = "A", L_pxp = "L_pxp", L_ixp = "L_ixp")
 }
 \arguments{
 \item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}

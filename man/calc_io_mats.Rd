@@ -4,10 +4,25 @@
 \alias{calc_io_mats}
 \title{Calculate several input-output matrices}
 \usage{
-calc_io_mats(.sutdata = NULL, U = "U", V = "V", Y = "Y",
-  S_units = "S_units", y = "y", q = "q", f = "f", g = "g",
-  W = "W", K = "K", Z = "Z", C = "C", D = "D", A = "A",
-  L_ixp = "L_ixp", L_pxp = "L_pxp")
+calc_io_mats(
+  .sutdata = NULL,
+  U = "U",
+  V = "V",
+  Y = "Y",
+  S_units = "S_units",
+  y = "y",
+  q = "q",
+  f = "f",
+  g = "g",
+  W = "W",
+  K = "K",
+  Z = "Z",
+  C = "C",
+  D = "D",
+  A = "A",
+  L_ixp = "L_ixp",
+  L_pxp = "L_pxp"
+)
 }
 \arguments{
 \item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}

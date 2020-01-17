@@ -4,8 +4,7 @@
 \alias{calc_eta_i}
 \title{Calculate industry efficiencies}
 \usage{
-calc_eta_i(.sutmats, U = "U", V = "V", S_units = "S_units",
-  eta_i = "eta_i")
+calc_eta_i(.sutmats, U = "U", V = "V", S_units = "S_units", eta_i = "eta_i")
 }
 \arguments{
 \item{.sutmats}{a data frame containing columns for \code{U}, \code{V}, and \code{S_units} matrices}

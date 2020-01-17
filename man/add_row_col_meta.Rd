@@ -4,12 +4,25 @@
 \alias{add_row_col_meta}
 \title{Add row, column, row type, and column type metadata}
 \usage{
-add_row_col_meta(.DF, matname = "matname", product = "Product",
-  flow = "Flow", U = "U", U_EIOU = "U_EIOU", R = "R", V = "V",
-  Y = "Y", industry_type = "Industry", product_type = "Product",
-  sector_type = "Industry", resource_type = "Industry",
-  rowname = "rowname", colname = "colname", rowtype = "rowtype",
-  coltype = "coltype")
+add_row_col_meta(
+  .DF,
+  matname = "matname",
+  product = "Product",
+  flow = "Flow",
+  U = "U",
+  U_EIOU = "U_EIOU",
+  R = "R",
+  V = "V",
+  Y = "Y",
+  industry_type = "Industry",
+  product_type = "Product",
+  sector_type = "Industry",
+  resource_type = "Industry",
+  rowname = "rowname",
+  colname = "colname",
+  rowtype = "rowtype",
+  coltype = "coltype"
+)
 }
 \arguments{
 \item{.DF}{a data frame containing \code{matname_colname}.}

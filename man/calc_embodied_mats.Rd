@@ -4,11 +4,24 @@
 \alias{calc_embodied_mats}
 \title{Calculate various embodied energy matrices}
 \usage{
-calc_embodied_mats(.iomats = NULL, Y = "Y", q = "q",
-  L_ixp = "L_ixp", g = "g", W = "W", U_EIOU = "U_EIOU", G = "G",
-  H = "H", E = "E", M_p = "M_p", M_s = "M_s",
-  F_footprint_p = "F_footprint_p", F_effects_p = "F_effects_p",
-  F_footprint_s = "F_footprint_s", F_effects_s = "F_effects_s")
+calc_embodied_mats(
+  .iomats = NULL,
+  Y = "Y",
+  q = "q",
+  L_ixp = "L_ixp",
+  g = "g",
+  W = "W",
+  U_EIOU = "U_EIOU",
+  G = "G",
+  H = "H",
+  E = "E",
+  M_p = "M_p",
+  M_s = "M_s",
+  F_footprint_p = "F_footprint_p",
+  F_effects_p = "F_effects_p",
+  F_footprint_s = "F_footprint_s",
+  F_effects_s = "F_effects_s"
+)
 }
 \arguments{
 \item{.iomats}{a data frame containing matrices that describe the Input-Output structure

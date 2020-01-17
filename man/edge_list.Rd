@@ -4,11 +4,25 @@
 \alias{edge_list}
 \title{Create an edge list}
 \usage{
-edge_list(.sutdata = NULL, R = "R", U = "U", V = "V", Y = "Y",
-  edge_list = "Edge list", from = "From", to = "To",
-  value = "Value", product = "Product", waste = "Waste",
-  rowtypes = "rowtype", coltypes = "coltype", node_id = "node_id",
-  first_node = 0, edge_id = "edge_id", simplify_edges = TRUE)
+edge_list(
+  .sutdata = NULL,
+  R = "R",
+  U = "U",
+  V = "V",
+  Y = "Y",
+  edge_list = "Edge list",
+  from = "From",
+  to = "To",
+  value = "Value",
+  product = "Product",
+  waste = "Waste",
+  rowtypes = "rowtype",
+  coltypes = "coltype",
+  node_id = "node_id",
+  first_node = 0,
+  edge_id = "edge_id",
+  simplify_edges = TRUE
+)
 }
 \arguments{
 \item{.sutdata}{Optionally, a data frame containing columns named with the values of the \code{U}, \code{V}, and \code{Y} arguments.}

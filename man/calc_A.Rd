@@ -4,8 +4,19 @@
 \alias{calc_A}
 \title{Calculate \code{Z}, \code{D}, \code{C}, and \code{A} matrices}
 \usage{
-calc_A(.sutdata = NULL, U = "U", V = "V", q = "q", f = "f",
-  g = "g", Z = "Z", K = "K", C = "C", D = "D", A = "A")
+calc_A(
+  .sutdata = NULL,
+  U = "U",
+  V = "V",
+  q = "q",
+  f = "f",
+  g = "g",
+  Z = "Z",
+  K = "K",
+  C = "C",
+  D = "D",
+  A = "A"
+)
 }
 \arguments{
 \item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}

@@ -4,10 +4,16 @@
 \alias{verify_SUT_energy_balance_with_units}
 \title{Confirm that an SUT-style data frame conserves energy.}
 \usage{
-verify_SUT_energy_balance_with_units(.sutmats = NULL, U = "U",
-  V = "V", Y = "Y", S_units = "S_units", tol = 1e-06,
+verify_SUT_energy_balance_with_units(
+  .sutmats = NULL,
+  U = "U",
+  V = "V",
+  Y = "Y",
+  S_units = "S_units",
+  tol = 1e-06,
   SUT_prod_energy_balance = ".SUT_prod_energy_balance",
-  SUT_ind_energy_balance = ".SUT_ind_energy_balance")
+  SUT_ind_energy_balance = ".SUT_ind_energy_balance"
+)
 }
 \arguments{
 \item{.sutmats}{an SUT-style data frame containing columns
