@@ -318,72 +318,75 @@ ecc_layout <- function(Industries,
 }
 
 
-#' Identify industry stages
+
 #'
-#' Names for industries in an ECC may be comprised of a general industry name
-#' and the name of specific product,
-#' such as "\code{Production - Hydro}".
-#' Stages of an ECC are most easily identified simply by the general industry name
-#' (e.g., all "\code{Production}" industries are \code{primary} industries),
-#' but simple matching of specific industry names with general industry names to identify
-#' industry stages will fail ("\code{Production - Hydro}" does not match "\code{Production}", e.g.).
-#' This function assigns ECC stages to specific industry names
-#' using a table of general industry names and associated ECC stages.
-#' A general industry name matches a specific industry name if the specific industry name
-#' starts with or is equal to the general industry name.
 #'
-#' @param GeneralIndustries a data frame containing at least two columns,
-#'        \code{general_industry_colname} and \code{stage_colname}.
-#' @param SpecificIndustries a data frame containing at least \code{specific_industry_colname}.
-#' @param general_industry_colname a string for the name of the column in \code{GeneralIndustries}
-#'        that contains the general names of industries (such as "\code{Production}").
-#'        Default is "\code{Industry}".
-#' @param stage_colname a string for the name of the column in \code{GeneralIndustries}
-#'        that contains the names of ECC stages (such as "\code{Primary industry}",
-#'        "\code{Primary-to-final industry}", or "\code{Final-to-useful industry}").
-#'        Default is "\code{Stage}".
-#' @param specific_industry_colname a string for the name
-#'        of the column in \code{SpecificIndustries} that contains the specific names of industries
-#'        (such as "\code{Production - Hydro}").
-#'        Default is "\code{Industry}".
-#'
-#' @return a data frame containing \code{specific_industry_colname} and \code{stage_colname},
-#'         wherein the stages associated with general industry names in \code{GeneralIndustries}
-#'         are assigned to the specific industries from \code{SpecificIndustries}
-#'         according to matches between \code{GeneralIndustries$general_industry_colname}
-#'         and \code{SpecificIndustries$specific_industry_colname}.
-#'
-#' @export
-#'
-#' @examples
-#' GeneralIndustries <- data.frame(Industry = c("Production", "Plants", "Cars"),
-#'                                 Stage = c("Primary industry", "p-->f industry",
-#'                                           "f-->u industry"), stringsAsFactors = FALSE)
-#' SpecificIndustries <- data.frame(Industry = c("Production - Coal", "Production - Hydro",
-#'                                               "Plants - Electric", "Plants - refinery",
-#'                                               "Cars - Electric", "Cars - Petrol"),
-#'                                               stringsAsFactors = FALSE)
-#' identify_industry_stages(GeneralIndustries = GeneralIndustries,
-#'                          SpecificIndustries = SpecificIndustries)
-identify_industry_stages <- function(GeneralIndustries,
-                                     SpecificIndustries,
-                                     general_industry_colname = "Industry",
-                                     stage_colname = "Stage",
-                                     specific_industry_colname = "Industry"){
-  SpecificIndustries %>%
-    dplyr::select(!!as.name(specific_industry_colname)) %>%
-    fuzzyjoin::fuzzy_left_join(GeneralIndustries %>%
-                      dplyr::select(!!as.name(general_industry_colname), !!as.name(stage_colname)),
-                    by = c(general_industry_colname) %>% magrittr::set_names(specific_industry_colname),
-                    match_fun = function(s.ind, g.ind){
-                      startsWith(s.ind, g.ind)
-                    }
-    ) %>%
-    # Return only the specific industries (column 1) and the stages (column 3).
-    # It would be nice to select these by name instead of position,
-    # but when specific_industry_colname and general_industry_colname are the same,
-    # fuzzy_left_join renames the columns with a ".x" and a ".y" suffix.
-    # Because we can't know ahead of time how the columns will be named,
-    # we select by position.
-    dplyr::select(c(1,3))
-}
+#' #' Identify industry stages
+#' #'
+#' #' Names for industries in an ECC may be comprised of a general industry name
+#' #' and the name of specific product,
+#' #' such as "\code{Production - Hydro}".
+#' #' Stages of an ECC are most easily identified simply by the general industry name
+#' #' (e.g., all "\code{Production}" industries are \code{primary} industries),
+#' #' but simple matching of specific industry names with general industry names to identify
+#' #' industry stages will fail ("\code{Production - Hydro}" does not match "\code{Production}", e.g.).
+#' #' This function assigns ECC stages to specific industry names
+#' #' using a table of general industry names and associated ECC stages.
+#' #' A general industry name matches a specific industry name if the specific industry name
+#' #' starts with or is equal to the general industry name.
+#' #'
+#' #' @param GeneralIndustries a data frame containing at least two columns,
+#' #'        \code{general_industry_colname} and \code{stage_colname}.
+#' #' @param SpecificIndustries a data frame containing at least \code{specific_industry_colname}.
+#' #' @param general_industry_colname a string for the name of the column in \code{GeneralIndustries}
+#' #'        that contains the general names of industries (such as "\code{Production}").
+#' #'        Default is "\code{Industry}".
+#' #' @param stage_colname a string for the name of the column in \code{GeneralIndustries}
+#' #'        that contains the names of ECC stages (such as "\code{Primary industry}",
+#' #'        "\code{Primary-to-final industry}", or "\code{Final-to-useful industry}").
+#' #'        Default is "\code{Stage}".
+#' #' @param specific_industry_colname a string for the name
+#' #'        of the column in \code{SpecificIndustries} that contains the specific names of industries
+#' #'        (such as "\code{Production - Hydro}").
+#' #'        Default is "\code{Industry}".
+#' #'
+#' #' @return a data frame containing \code{specific_industry_colname} and \code{stage_colname},
+#' #'         wherein the stages associated with general industry names in \code{GeneralIndustries}
+#' #'         are assigned to the specific industries from \code{SpecificIndustries}
+#' #'         according to matches between \code{GeneralIndustries$general_industry_colname}
+#' #'         and \code{SpecificIndustries$specific_industry_colname}.
+#' #'
+#' #' @export
+#' #'
+#' #' @examples
+#' #' GeneralIndustries <- data.frame(Industry = c("Production", "Plants", "Cars"),
+#' #'                                 Stage = c("Primary industry", "p-->f industry",
+#' #'                                           "f-->u industry"), stringsAsFactors = FALSE)
+#' #' SpecificIndustries <- data.frame(Industry = c("Production - Coal", "Production - Hydro",
+#' #'                                               "Plants - Electric", "Plants - refinery",
+#' #'                                               "Cars - Electric", "Cars - Petrol"),
+#' #'                                               stringsAsFactors = FALSE)
+#' #' identify_industry_stages(GeneralIndustries = GeneralIndustries,
+#' #'                          SpecificIndustries = SpecificIndustries)
+#' identify_industry_stages <- function(GeneralIndustries,
+#'                                      SpecificIndustries,
+#'                                      general_industry_colname = "Industry",
+#'                                      stage_colname = "Stage",
+#'                                      specific_industry_colname = "Industry"){
+#'   SpecificIndustries %>%
+#'     dplyr::select(!!as.name(specific_industry_colname)) %>%
+#'     fuzzyjoin::fuzzy_left_join(GeneralIndustries %>%
+#'                       dplyr::select(!!as.name(general_industry_colname), !!as.name(stage_colname)),
+#'                     by = c(general_industry_colname) %>% magrittr::set_names(specific_industry_colname),
+#'                     match_fun = function(s.ind, g.ind){
+#'                       startsWith(s.ind, g.ind)
+#'                     }
+#'     ) %>%
+#'     # Return only the specific industries (column 1) and the stages (column 3).
+#'     # It would be nice to select these by name instead of position,
+#'     # but when specific_industry_colname and general_industry_colname are the same,
+#'     # fuzzy_left_join renames the columns with a ".x" and a ".y" suffix.
+#'     # Because we can't know ahead of time how the columns will be named,
+#'     # we select by position.
+#'     dplyr::select(c(1,3))
+#' }
