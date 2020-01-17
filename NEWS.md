@@ -1,3 +1,13 @@
+# Recca 0.1.18 (2020-01-17)
+
+* Updates to synchronize with recent changes in other packages.
+  In particular, there was one place where `group`ing on a column
+  of a data frame with `NA` entries was causing a warning to be emitted.
+  Now, the `grouping` happens after splitting the data fram into 
+  rows wtih `NA` entries and those without. 
+  Grouping and sorting happens only for the rows without `NA` values.
+
+
 # Recca 0.1.17 (2019-02-25)
 
 * First draft of completed vignette.
