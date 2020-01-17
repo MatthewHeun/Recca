@@ -4,14 +4,25 @@
 \alias{add_matnames_iea}
 \title{Add a column of matrix names to tidy data frame}
 \usage{
-add_matnames_iea(.DF, ledger_side = "Ledger.side", energy = "EX.ktoe",
-  flow_aggregation_point = "Flow.aggregation.point", flow = "Flow",
-  supply_side = "Supply", consumption_side = "Consumption",
-  eiou = "Energy industry own use", neg_supply_in_fd = c("Exports",
-  "International aviation bunkers", "International marine bunkers",
-  "Losses", "Statistical differences", "Stock changes"), use_R = FALSE,
-  matname = "matname", U_excl_EIOU = "U_excl_EIOU",
-  U_EIOU = "U_EIOU", R = "R", V = "V", Y = "Y")
+add_matnames_iea(
+  .DF,
+  ledger_side = "Ledger.side",
+  energy = "EX.ktoe",
+  flow_aggregation_point = "Flow.aggregation.point",
+  flow = "Flow",
+  supply_side = "Supply",
+  consumption_side = "Consumption",
+  eiou = "Energy industry own use",
+  neg_supply_in_fd = c("Exports", "International aviation bunkers",
+    "International marine bunkers", "Losses", "Statistical differences", "Stock changes"),
+  use_R = FALSE,
+  matname = "matname",
+  U_excl_EIOU = "U_excl_EIOU",
+  U_EIOU = "U_EIOU",
+  R = "R",
+  V = "V",
+  Y = "Y"
+)
 }
 \arguments{
 \item{.DF}{a data frame with \code{ledger_side}, \code{energy}, \code{flow_aggregation_point},
@@ -69,7 +80,7 @@ and terminology, although \code{.DF} does not necessarily need to contain IEA da
 In a reasonable workflow, this function would be followed by a call to
 \link{add_row_col_meta} and \link[matsindf]{collapse_to_matrices}.
 
-This function respects groups when identifying entires in the resource matrix (\code{R}).
+This function respects groups when identifying entries in the resource matrix (\code{R}).
 So be sure to group \code{.DF} before calling this function, if that is warranted.
 
 Internally, this function adds a temporary column to \code{.DF} called "\code{.R}".

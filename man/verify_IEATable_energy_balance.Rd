@@ -4,9 +4,15 @@
 \alias{verify_IEATable_energy_balance}
 \title{Confirm that an IEA-style data frame conserves energy.}
 \usage{
-verify_IEATable_energy_balance(.ieatidydata, ledger.side = "Ledger.side",
-  energy = "E.ktoe", supply = "Supply", consumption = "Consumption",
-  err = ".err", tol = 1e-06)
+verify_IEATable_energy_balance(
+  .ieatidydata,
+  ledger.side = "Ledger.side",
+  energy = "E.ktoe",
+  supply = "Supply",
+  consumption = "Consumption",
+  err = ".err",
+  tol = 1e-06
+)
 }
 \arguments{
 \item{.ieatidydata}{an IEA-style data frame containing grouping columns

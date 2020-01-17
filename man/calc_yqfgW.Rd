@@ -4,9 +4,18 @@
 \alias{calc_yqfgW}
 \title{Calculate \code{y}, \code{f}, \code{g}, and \code{q} vectors and the \code{W} matrix}
 \usage{
-calc_yqfgW(.sutdata = NULL, U = "U", V = "V", Y = "Y",
-  S_units = "S_units", y = "y", q = "q", f = "f", g = "g",
-  W = "W")
+calc_yqfgW(
+  .sutdata = NULL,
+  U = "U",
+  V = "V",
+  Y = "Y",
+  S_units = "S_units",
+  y = "y",
+  q = "q",
+  f = "f",
+  g = "g",
+  W = "W"
+)
 }
 \arguments{
 \item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
@@ -47,5 +56,5 @@ all products of a given industry are measured in the same units
 before we can calculate the \code{g} vector.
 If the unit homogeneity assumptions above are violated, we will return NA
 for violating industries in the \code{f} and \code{g} vectors.
-The checks for unit homogenity are performed only when an \code{S_units} matrix is present.
+The checks for unit homogeneity are performed only when an \code{S_units} matrix is present.
 }

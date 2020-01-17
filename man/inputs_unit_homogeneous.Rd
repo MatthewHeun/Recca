@@ -4,9 +4,13 @@
 \alias{inputs_unit_homogeneous}
 \title{Tell whether each industry's inputs are unit-homogeneous}
 \usage{
-inputs_unit_homogeneous(.sutmats = NULL, U = "U",
-  S_units = "S_units", keep_details = FALSE,
-  ins_unit_homogeneous = ".inputs_unit_homogeneous")
+inputs_unit_homogeneous(
+  .sutmats = NULL,
+  U = "U",
+  S_units = "S_units",
+  keep_details = FALSE,
+  ins_unit_homogeneous = ".inputs_unit_homogeneous"
+)
 }
 \arguments{
 \item{.sutmats}{a data frame of supply-use table matrices with matrices arranged in columns.}

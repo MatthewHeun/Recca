@@ -4,11 +4,25 @@
 \alias{edge_list}
 \title{Create an edge list}
 \usage{
-edge_list(.sutdata = NULL, R = "R", U = "U", V = "V", Y = "Y",
-  edge_list = "Edge list", from = "From", to = "To",
-  value = "Value", product = "Product", waste = "Waste",
-  rowtypes = "rowtype", coltypes = "coltype", node_id = "node_id",
-  first_node = 0, edge_id = "edge_id", simplify_edges = TRUE)
+edge_list(
+  .sutdata = NULL,
+  R = "R",
+  U = "U",
+  V = "V",
+  Y = "Y",
+  edge_list = "Edge list",
+  from = "From",
+  to = "To",
+  value = "Value",
+  product = "Product",
+  waste = "Waste",
+  rowtypes = "rowtype",
+  coltypes = "coltype",
+  node_id = "node_id",
+  first_node = 0,
+  edge_id = "edge_id",
+  simplify_edges = TRUE
+)
 }
 \arguments{
 \item{.sutdata}{Optionally, a data frame containing columns named with the values of the \code{U}, \code{V}, and \code{Y} arguments.}
@@ -19,7 +33,7 @@ edge_list(.sutdata = NULL, R = "R", U = "U", V = "V", Y = "Y",
 
 \item{V}{a make matrix or the name of a column in \code{.sutdata} containing make matrices. (Default is "\code{V}".)}
 
-\item{Y}{a final demand matrix or the name of a column in \code{.sutdata} containing final demant matrices. (Default is "\code{Y}".)}
+\item{Y}{a final demand matrix or the name of a column in \code{.sutdata} containing final demand matrices. (Default is "\code{Y}".)}
 
 \item{edge_list}{the name of the column in the output data frame containing edge lists.
 Or the name of the item in the return list if .sutdata is not specified.
@@ -62,7 +76,7 @@ an edge list or a column of edge lists
 An edge list is a data frame in which each row describes a flow from one entity to another.
 Columns in the edge list data frame are \code{From}, \code{To}, \code{Value}, and \code{Product}.
 The edge list can be created from the \code{U}, \code{V}, and \code{Y} matrices of an energy conversion chain.
-Edge lists is a typical data format for visulaization software.
+Edge lists is a typical data format for visualization software.
 }
 \details{
 Optionally, waste streams can be calculated from the \code{U} and \code{V} matrices and

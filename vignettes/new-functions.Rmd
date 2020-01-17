@@ -147,7 +147,7 @@ we can use the `new_*` functions to ask "what if" questions.
 
 The classic I-O question is "what if final demand ($\mat{Y}$) changes?"
 `Recca` has a function for that, `new_Y()`.
-The `new_Y()` function looks upstream in the ECC to determine the effects of a change in fina demand.
+The `new_Y()` function looks upstream in the ECC to determine the effects of a change in final demand.
 To demonstrate, we'll double the `Residential` final demand 
 for electricity from the grid (`Elect - Grid`) in our ECC.
 
@@ -195,7 +195,7 @@ But what if we want to understand the downstream effects of a change in resource
 The function `new_R_ps()` supplies the answer. 
 `new_R_ps()` takes as input the input-output structure of an ECC 
 and the efficiency of every intermediate industry.
-After discussing the resource matrix and resoure vectors, 
+After discussing the resource matrix and resource vectors, 
 
 
 ### Resource matrices and vectors
@@ -226,7 +226,7 @@ rvecs$r[[1]]
 ```
 
 
-### Industry effiencies and a new resource matrix
+### Industry efficiencies and a new resource matrix
 
 The baseline $\mat{R}$ matrix is shown above.
 We can calculate the efficiency of every Industry in the ECC
@@ -313,7 +313,7 @@ the `new_k_ps()` function provides an answer.
 
 To demonstrate `new_k_ps()`, we'll create a very simple energy conversion chain.
 (The `UKEnergyMatsWithR` ECC doesn't have the characteristic that we need, 
-namely that an internediate industry has at least two reasonable-sized inputs.)
+namely that an intermediate industry has at least two reasonable-sized inputs.)
 This ECC has two resource industries (R1 and R2),
 one intermediate industry (I), and
 two final demand sectors (Y1 and Y2).

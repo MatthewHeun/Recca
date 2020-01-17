@@ -1,4 +1,4 @@
-## ----setup, include = FALSE----------------------------------------------
+## ----setup, include = FALSE---------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -10,14 +10,14 @@ library(Recca)
 library(tidyr)
 library(tibble)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 library(tibble)
 S_units <- UKEnergy2000tidy %>%
   group_by(Country, Year, Energy.type, Last.stage) %>%
   S_units_from_tidy()
 glimpse(S_units)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 WithNames <- UKEnergy2000tidy %>%
   # Add a column indicating the matrix in which this entry belongs (U, V, or Y).
   add_matnames_iea(use_R = TRUE) %>%
@@ -31,7 +31,7 @@ WithNames <- UKEnergy2000tidy %>%
   )
 head(WithNames)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 AsMats <- WithNames %>%
   # Collapse to matrices using functions in the matsindf package
   group_by(Country, Year, Energy.type, Last.stage, matname) %>%
@@ -54,7 +54,7 @@ AsMats <- WithNames %>%
   gather(key = matrix.name, value = matrix, R, U, V, Y, r_EIOU, S_units)
 glimpse(AsMats)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 library(tidyr)
 mats <- UKEnergy2000mats %>% 
   spread(key = matrix.name, value = matrix) %>% 
@@ -72,18 +72,64 @@ Y <- mats$Y[[1]]
 S_units <- mats$S_units[[1]]
 IO_list <- calc_io_mats(U = U, V = V, Y = Y, S_units = S_units)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 class(IO_list)
 names(IO_list)
 IO_list[["y"]]
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
+IO_from_list <- calc_io_mats(list(U = U, V = V, Y = Y, S_units = S_units))
+class(IO_from_list)
+names(IO_from_list)
+IO_from_list[["y"]]
+
+## -----------------------------------------------------------------------------
 IO_df <- mats %>% calc_io_mats()
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 class(IO_df)
 names(IO_df)
 glimpse(IO_df)
 IO_df[["y"]][[1]]
 IO_df[["y"]][[4]]
+
+## -----------------------------------------------------------------------------
+Double_demand <- IO_df %>% 
+  mutate(
+    Y_prime = hadamardproduct_byname(2, Y)
+  ) %>% 
+  new_Y()
+names(Double_demand)
+IO_df[["Y"]][[1]][ , c(1,2)]
+Double_demand[["Y_prime"]][[1]]
+IO_df[["U"]][[1]][ , c("Crude dist.", "Diesel dist.")]
+Double_demand[["U_prime"]][[1]][ , c("Crude dist.", "Diesel dist.")]
+
+## -----------------------------------------------------------------------------
+ERRs <- IO_df %>% 
+  calc_ERRs_gamma()
+ERRs$ger_gamma[[1]]
+ERRs$ner_gamma[[1]]
+ERRs$r_gamma[[1]]
+
+## -----------------------------------------------------------------------------
+etas <- IO_df %>% 
+  calc_eta_i()
+names(etas)
+etas[["eta_i"]][[1]]
+etas[["eta_i"]][[3]] # NAs indicate inhomogeneous units on inputs or outputs.
+
+## -----------------------------------------------------------------------------
+primary_machine_names <- c("Resources - Crude", "Resources - NG")
+
+embodied_mats <- IO_df %>%
+  mutate(
+    U_EIOU = hadamardproduct_byname(r_EIOU, U)
+  ) %>%
+  calc_embodied_mats() %>%
+  calc_embodied_etas(primary_machine_names = primary_machine_names)
+names(embodied_mats)
+
+## -----------------------------------------------------------------------------
+embodied_mats$eta_p[[3]]
 

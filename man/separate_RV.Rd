@@ -4,8 +4,7 @@
 \alias{separate_RV}
 \title{Separate resource (\code{R}) and make (\code{V}) matrices from make plus resource (\code{R_plus_V}) matrices}
 \usage{
-separate_RV(.sutmats = NULL, U = "U", R_plus_V = "R_plus_V",
-  R = "R", V = "V")
+separate_RV(.sutmats = NULL, U = "U", R_plus_V = "R_plus_V", R = "R", V = "V")
 }
 \arguments{
 \item{.sutmats}{a list or data frame containing use matrix(ces) and make matrix(ces)}

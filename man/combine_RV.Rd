@@ -4,8 +4,7 @@
 \alias{combine_RV}
 \title{Combine resource (\code{R}) and make (\code{V}) matrices into a make plus resource (\code{R_plus_V}) matrix}
 \usage{
-combine_RV(.sutmats = NULL, R = "R", V = "V",
-  R_plus_V = "R_plus_V")
+combine_RV(.sutmats = NULL, R = "R", V = "V", R_plus_V = "R_plus_V")
 }
 \arguments{
 \item{.sutmats}{a list or data frame containing use matrix(ces) and make matrix(ces)}

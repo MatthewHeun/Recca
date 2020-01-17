@@ -4,9 +4,15 @@
 \alias{calc_F_footprint_effects}
 \title{Upstream footprint and downstream effects matrices}
 \usage{
-calc_F_footprint_effects(.Mmats = NULL, M_p = "M_p", M_s = "M_s",
-  F_footprint_p = "F_footprint_p", F_effects_p = "F_effects_p",
-  F_footprint_s = "F_footprint_s", F_effects_s = "F_effects_s")
+calc_F_footprint_effects(
+  .Mmats = NULL,
+  M_p = "M_p",
+  M_s = "M_s",
+  F_footprint_p = "F_footprint_p",
+  F_effects_p = "F_effects_p",
+  F_footprint_s = "F_footprint_s",
+  F_effects_s = "F_effects_s"
+)
 }
 \arguments{
 \item{.Mmats}{a data frame containing a column of embodied matrices}
@@ -30,7 +36,7 @@ a list or data frame containing \code{F_footprint_p}, \code{F_effects_p},
 \description{
 Calculates upstream footprint matrices (\code{F_footprint_p}, \code{F_footprint_s})
 and downstream effects matrices (\code{F_effects_p}, \code{F_effects_s})
-given an embodied matries \code{M_p} and \code{M_s}.
+given embodied matrices \code{M_p} and \code{M_s}.
 Column sums of \code{F_footprint} are 1.
 Row sums of \code{F_effects} are 1.
 }

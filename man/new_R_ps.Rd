@@ -4,10 +4,22 @@
 \alias{new_R_ps}
 \title{Assess the effect of new levels of resources}
 \usage{
-new_R_ps(.sutmats = NULL, R_prime = "R_prime", U = "U", V = "V",
-  Y = "Y", S_units = "S_units", q = "q", C = "C",
-  eta_i = "eta_i", maxiter = 100, tol = 0, U_prime = "U_prime",
-  V_prime = "V_prime", Y_prime = "Y_prime")
+new_R_ps(
+  .sutmats = NULL,
+  R_prime = "R_prime",
+  U = "U",
+  V = "V",
+  Y = "Y",
+  S_units = "S_units",
+  q = "q",
+  C = "C",
+  eta_i = "eta_i",
+  maxiter = 100,
+  tol = 0,
+  U_prime = "U_prime",
+  V_prime = "V_prime",
+  Y_prime = "Y_prime"
+)
 }
 \arguments{
 \item{.sutmats}{a data frame of supply-use table matrices with matrices arranged in columns.}

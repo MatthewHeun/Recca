@@ -7,7 +7,7 @@
 #' An edge list is a data frame in which each row describes a flow from one entity to another.
 #' Columns in the edge list data frame are \code{From}, \code{To}, \code{Value}, and \code{Product}.
 #' The edge list can be created from the \code{U}, \code{V}, and \code{Y} matrices of an energy conversion chain.
-#' Edge lists is a typical data format for visulaization software.
+#' Edge lists is a typical data format for visualization software.
 #'
 #' Optionally, waste streams can be calculated from the \code{U} and \code{V} matrices and
 #' added to the edge list.
@@ -19,7 +19,7 @@
 #' @param R a resource matrix or the name of a column in \code{.sutdata} containing resource matrices. (Default is "\code{R}".)
 #' @param U a use matrix or the name of a column in \code{.sutdata} containing use matrices. (Default is "\code{U}".)
 #' @param V a make matrix or the name of a column in \code{.sutdata} containing make matrices. (Default is "\code{V}".)
-#' @param Y a final demand matrix or the name of a column in \code{.sutdata} containing final demant matrices. (Default is "\code{Y}".)
+#' @param Y a final demand matrix or the name of a column in \code{.sutdata} containing final demand matrices. (Default is "\code{Y}".)
 #' @param edge_list the name of the column in the output data frame containing edge lists.
 #'                  Or the name of the item in the return list if .sutdata is not specified.
 #'                  (Default is "\code{Edge list}".)

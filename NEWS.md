@@ -1,3 +1,19 @@
+# Recca 0.1.18 (2020-01-17)
+
+* Updates to synchronize with recent changes in other packages.
+  In particular, there was one place where `group`ing on a column
+  of a data frame with `NA` entries was causing a warning to be emitted.
+  Now, the `grouping` happens after splitting the data fram into 
+  rows wtih `NA` entries and those without. 
+  Grouping and sorting happens only for the rows without `NA` values.
+
+
+# Recca 0.1.17 (2019-02-25)
+
+* First draft of completed vignette.
+* Removed ecc_layout function. It was not being used, and there is a create_sankey function, anyway.
+
+
 # Recca 0.1.16 (2019-02-16)
 
 * Now automatically building in Travis.
@@ -21,7 +37,7 @@
 * New function `make_sankey()` does what it says: makes a Sankey diagram.
   `make_sankey()` is the first function that optionally uses the resource (`R`) matrix.
 * `edge_list()` also now accepts a resource (`R`) matrix on input.
-* The vigenette describing the `new*` functions now has a section on `new_R_ps()`.
+* The vignette describing the `new*` functions now has a section on `new_R_ps()`.
 
 
 # Recca 0.1.13 (2018-12-21)

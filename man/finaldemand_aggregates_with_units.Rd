@@ -4,9 +4,17 @@
 \alias{finaldemand_aggregates_with_units}
 \title{Final demand aggregate energy with units}
 \usage{
-finaldemand_aggregates_with_units(.sutdata, fd_sectors, U = "U",
-  Y = "Y", r_EIOU = "r_EIOU", S_units = "S_units", by = c("Total",
-  "Product", "Sector"), net_aggregate_demand, gross_aggregate_demand)
+finaldemand_aggregates_with_units(
+  .sutdata,
+  fd_sectors,
+  U = "U",
+  Y = "Y",
+  r_EIOU = "r_EIOU",
+  S_units = "S_units",
+  by = c("Total", "Product", "Sector"),
+  net_aggregate_demand,
+  gross_aggregate_demand
+)
 }
 \arguments{
 \item{.sutdata}{a data frame with columns of matrices from a supply-use analysis.}
