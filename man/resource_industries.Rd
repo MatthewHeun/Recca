@@ -4,8 +4,12 @@
 \alias{resource_industries}
 \title{Resource industries}
 \usage{
-resource_industries(.sutdata = NULL, U = "U", V = "V",
-  r_industries = "r_industries")
+resource_industries(
+  .sutdata = NULL,
+  U = "U",
+  V = "V",
+  r_industries = "r_industries"
+)
 }
 \arguments{
 \item{.sutdata}{a list or data frame containing use matrix(ces) and make matrix(ces)}

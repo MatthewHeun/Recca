@@ -4,9 +4,12 @@
 \alias{products_unit_homogeneous}
 \title{Tell whether ECC products are unit-homogenous}
 \usage{
-products_unit_homogeneous(.sutmats = NULL, S_units = "S_units",
+products_unit_homogeneous(
+  .sutmats = NULL,
+  S_units = "S_units",
   keep_details = FALSE,
-  products_unit_homogeneous = ".products_unit_homogeneous")
+  products_unit_homogeneous = ".products_unit_homogeneous"
+)
 }
 \arguments{
 \item{.sutmats}{a data frame of supply-use table matrices with matrices arranged in columns.}

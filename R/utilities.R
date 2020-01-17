@@ -33,12 +33,18 @@
 #' # TRUE FALSE, because the x strings start with "Production" but not "Offshore"
 #' any_start_with(x = c("Production - Crude", "Production - NG", "Bogus"),
 #'                target = c("Production", "Offshore"))
+# any_start_with <- function(x, target){
+#   sapply(target, FUN = function(t){
+#     grepl(paste0("^", Hmisc::escapeRegex(t)), x) %>%
+#       any()
+#     }) %>%
+#     as.logical()
+# }
 any_start_with <- function(x, target){
   sapply(target, FUN = function(t){
-    grepl(paste0("^", Hmisc::escapeRegex(t)), x) %>%
-      any()
-    }) %>%
-    as.logical()
+    any(startsWith(x, t))
+  }) %>%
+    magrittr::set_names(NULL)
 }
 
 
@@ -71,11 +77,10 @@ any_start_with <- function(x, target){
 #'                    target = c("Production", "Imports"))
 starts_with_any_of <- function(x, target){
   sapply(x, FUN = function(one_x){
-    grepl(paste(paste0("^", Hmisc::escapeRegex(target)), collapse = "|"), one_x)
+    any(startsWith(x = one_x, prefix = target))
   }) %>%
     magrittr::set_names(NULL)
 }
-
 
 #' Resource industries
 #'
@@ -305,9 +310,12 @@ inputs_unit_homogeneous <- function(.sutmats = NULL,
                                     # Output names
                                     ins_unit_homogeneous = ".inputs_unit_homogeneous"){
   inputs_unit_homogeneous_func <- function(U_mat, S_units_mat){
-    U_bar <- matsbyname::transpose_byname(S_units_mat) %>% matsbyname::matrixproduct_byname(U_mat)
-    num_non_zero <- matsbyname::count_vals_incols_byname(U_bar, "!=", 0)
+    U_bar <- matsbyname::transpose_byname(S_units_mat) %>%
+      matsbyname::matrixproduct_byname(U_mat) %>%
+      matsbyname::transpose_byname()
+    num_non_zero <- matsbyname::count_vals_inrows_byname(U_bar, "!=", 0)
     out <- num_non_zero == 1
+    out <- magrittr::set_colnames(out, ins_unit_homogeneous)
     if (!keep_details) {
       out <- all(out)
     }
@@ -357,12 +365,68 @@ outputs_unit_homogeneous <- function(.sutmats = NULL,
     V_bar <- matsbyname::matrixproduct_byname(V_mat, S_units_mat)
     num_non_zero <- matsbyname::count_vals_inrows_byname(V_bar, "!=", 0)
     out <- num_non_zero == 1
+    out <- magrittr::set_colnames(out, outs_unit_homogeneous)
     if (!keep_details) {
       out <- all(out)
     }
     list(out) %>% magrittr::set_names(outs_unit_homogeneous)
   }
   matsindf::matsindf_apply(.sutmats, FUN = outputs_unit_homogeneous_func, V_mat = V, S_units_mat = S_units)
+}
+
+#' Tell whether industry inputs are unit-homogeneous and industry outputs are unit-homogeneous
+#'
+#' Returns \code{TRUE} if each industry's inputs are unit-homogeneous and each industry's outputs are unit homogeneous.
+#' When inputs have different units from outputs, (but all inputs are unit-homogeneous and all outputs are unit-homogeneous),
+#' \code{TRUE} is returned.
+#'
+#' This function uses both \link{inputs_unit_homogeneous} and \link{outputs_unit_homogeneous} internally.
+#' This function differs from \link{flows_unit_homogeneous}, because \link{flows_unit_homogeneous}
+#' requires that all flows are unit-homogeneous before returning \code{TRUE}.
+#' This function (\link{inputs_outputs_unit_homogeneous}) will return true when all
+#' inputs are unit-homogeneous with different units from outputs (which are also unit-homogeoenous).
+#'
+#' @seealso \link{inputs_unit_homogeneous}, \link{outputs_unit_homogeneous}, \link{flows_unit_homogeneous}
+#'
+#' @param .sutmats a data frame of supply-use table matrices with matrices arranged in columns.
+#' @param U a use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".
+#' @param V a make (\code{V}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{V}".
+#' @param S_units an \code{S_units} matrix or name of a column in \code{.sutmats} that contains same. Default is "\code{S_units}".
+#' @param keep_details if \code{TRUE}, per-industry results are returned;
+#'        if \code{FALSE}, per-ECC results are returned.
+#' @param ins_outs_unit_homogeneous the name of the output column
+#'        that tells whether each industry's inputs and outputs are unit-homogeneous
+#'        (though not necessarily in the same units).
+#'        Default is "\code{.inputs_outputs_unit_homogeneous}".
+#'
+#' @return a list or data frame containing
+#'         \code{TRUE} if inputs from each energy conversion industry are unit-homogeneous
+#'         and outputs from each energy conversion industry are unit-homogeneous,
+#'         \code{FALSE} otherwise.
+#'
+#' @export
+#'
+#' @examples
+#' library(tidyr)
+#' result <- UKEnergy2000mats %>%
+#'   spread(key = "matrix.name", value = "matrix") %>%
+#'   inputs_outputs_unit_homogeneous()
+inputs_outputs_unit_homogeneous <- function(.sutmats = NULL,
+                                           # Input names
+                                           U = "U", V = "V", S_units = "S_units",
+                                           keep_details = FALSE,
+                                           # Output names
+                                           ins_outs_unit_homogeneous = ".inputs_outputs_unit_homogeneous"){
+  inputs_outputs_unit_homogeneous_func <- function(U_mat, V_mat, S_units_mat){
+    ins_homo <- inputs_unit_homogeneous(U = U_mat, S_units = S_units_mat,
+                                        keep_details = keep_details, ins_unit_homogeneous = ins_outs_unit_homogeneous)[[ins_outs_unit_homogeneous]]
+    outs_homo <- outputs_unit_homogeneous(V = V_mat, S_units = S_units_mat,
+                                          keep_details = keep_details, outs_unit_homogeneous = ins_outs_unit_homogeneous)[[ins_outs_unit_homogeneous]]
+    result <- matsbyname::and_byname(ins_homo, outs_homo)
+    list(result) %>% magrittr::set_names(ins_outs_unit_homogeneous)
+  }
+
+  matsindf::matsindf_apply(.sutmats, FUN = inputs_outputs_unit_homogeneous_func, U_mat = U, V_mat = V, S_units_mat = S_units)
 }
 
 
@@ -413,6 +477,7 @@ flows_unit_homogeneous <- function(.sutmats = NULL,
     # If rows of sums_by_unit have more than 1 non-zero row, the inputs and outputs for the industry of that row are unit-inhomogeneous.
     num_non_zero <- matsbyname::count_vals_inrows_byname(sums_by_unit, "!=", 0)
     out <- num_non_zero == 1
+    out <- magrittr::set_colnames(out, flows_unit_homogeneous)
     if (!keep_details) {
       out <- all(out)
     }

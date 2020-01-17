@@ -183,18 +183,23 @@ ecc_layout <- function(Industries,
     dplyr::arrange(!!as.name(x_colname))
 
   # Join Stage_coords to a list of industries and products to create the list of nodes.
-  Node_coords <- rbind(
+  Temp <- rbind(
     Industries_less_Storage %>% dplyr::rename(!!as.name(node_name_colname) := !!as.name(industry_colname)),
     Products %>% dplyr::rename(!!as.name(node_name_colname) := !!as.name(product_colname))
   ) %>%
-    dplyr::left_join(Stage_coords, by = stage_colname) %>%
-    dplyr::group_by(!!as.name(x_colname), !!as.name(group_colname)) %>%
-    # Put nodes in correct order.
-    # First group on stage (x coordinate) followed by
-    # the Group within each stage.
-    dplyr::arrange(!!as.name(x_colname), !!as.name(group_colname))
+    dplyr::left_join(Stage_coords, by = stage_colname)
+  # Split Temp in half by rows that have NA Group and those that don't.
+  # Sort the nodes where Groups are specified.
+  Node_coords <- dplyr::bind_rows(
+    Temp %>% dplyr::filter(is.na(!!as.name(group_colname))),
+    Temp %>% dplyr::filter(!is.na(!!as.name(group_colname))) %>%
+      dplyr::group_by(!!as.name(x_colname), !!as.name(group_colname)) %>%
+      # Put nodes in correct order.
+      # First group on stage (x coordinate) followed by
+      # the Group within each stage.
+      dplyr::arrange(!!as.name(x_colname), !!as.name(group_colname)))
 
-  # At this point, all x coordinates have been decided and are in the Node_coords data frame.
+# At this point, all x coordinates have been decided and are in the Node_coords data frame.
   # Furthermore, the Node_coords data frame is in the correct order for y coordinates.
   # So work on y coordinates.
   # Figure out the number of nodes in each stage.

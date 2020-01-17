@@ -4,9 +4,21 @@
 \alias{new_k_ps}
 \title{Assess the effect of changing perfectly substitutable intermediate inputs to an industry}
 \usage{
-new_k_ps(.sutmats = NULL, k_prime = "k_prime", U = "U", V = "V",
-  Y = "Y", K = "K", L_ixp = "L_ixp", L_pxp = "L_pxp", Z = "Z",
-  D = "D", f = "f", U_prime = "U_prime", V_prime = "V_prime")
+new_k_ps(
+  .sutmats = NULL,
+  k_prime = "k_prime",
+  U = "U",
+  V = "V",
+  Y = "Y",
+  K = "K",
+  L_ixp = "L_ixp",
+  L_pxp = "L_pxp",
+  Z = "Z",
+  D = "D",
+  f = "f",
+  U_prime = "U_prime",
+  V_prime = "V_prime"
+)
 }
 \arguments{
 \item{.sutmats}{a data frame of supply-use table matrices with matrices arranged in columns.}

@@ -4,10 +4,18 @@
 \alias{ecc_layout}
 \title{Layout for a \code{qgraph} network representation of an energy conversion chain}
 \usage{
-ecc_layout(Industries, Products, industry_colname = "Industry",
-  product_colname = "Product", stage_colname = "Stage",
-  group_colname = "Group", storage_stagename = "Storage", g,
-  x_colname = "x", y_colname = "y")
+ecc_layout(
+  Industries,
+  Products,
+  industry_colname = "Industry",
+  product_colname = "Product",
+  stage_colname = "Stage",
+  group_colname = "Group",
+  storage_stagename = "Storage",
+  g,
+  x_colname = "x",
+  y_colname = "y"
+)
 }
 \arguments{
 \item{Industries}{a data frame consisting of columns named

@@ -4,9 +4,16 @@
 \alias{new_Y}
 \title{Reconstruct an economy given a new final demand matrix}
 \usage{
-new_Y(.sutmats = NULL, Y_prime = "Y_prime", L_ixp = "L_ixp",
-  L_pxp = "L_pxp", Z = "Z", D = "D", U_prime = "U_prime",
-  V_prime = "V_prime")
+new_Y(
+  .sutmats = NULL,
+  Y_prime = "Y_prime",
+  L_ixp = "L_ixp",
+  L_pxp = "L_pxp",
+  Z = "Z",
+  D = "D",
+  U_prime = "U_prime",
+  V_prime = "V_prime"
+)
 }
 \arguments{
 \item{.sutmats}{a data frame of supply-use table matrices with matrices arranged in columns.}

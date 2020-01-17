@@ -4,8 +4,7 @@
 \alias{calc_E}
 \title{Calculate the \code{E} matrix for embodied energy calculations}
 \usage{
-calc_E(.iomats = NULL, g = "g", W = "W", U_EIOU = "U_EIOU",
-  E = "E")
+calc_E(.iomats = NULL, g = "g", W = "W", U_EIOU = "U_EIOU", E = "E")
 }
 \arguments{
 \item{.iomats}{a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.

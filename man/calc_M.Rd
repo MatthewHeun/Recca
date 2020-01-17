@@ -4,8 +4,16 @@
 \alias{calc_M}
 \title{Calculate embodied energy matrices}
 \usage{
-calc_M(.YqGHEdata = NULL, Y = "Y", q = "q", G = "G", E = "E",
-  tol = 1e-04, M_p = "M_p", M_s = "M_s")
+calc_M(
+  .YqGHEdata = NULL,
+  Y = "Y",
+  q = "q",
+  G = "G",
+  E = "E",
+  tol = 1e-04,
+  M_p = "M_p",
+  M_s = "M_s"
+)
 }
 \arguments{
 \item{.YqGHEdata}{a data frame containing columns with \code{q} vectors

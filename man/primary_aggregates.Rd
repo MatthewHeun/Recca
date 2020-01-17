@@ -4,8 +4,15 @@
 \alias{primary_aggregates}
 \title{Primary aggregate energy}
 \usage{
-primary_aggregates(.sutdata, p_industries, R = "R", V = "V", Y = "Y",
-  by = c("Total", "Product", "Flow"), aggregate_primary = "EX_p.ktoe")
+primary_aggregates(
+  .sutdata,
+  p_industries,
+  R = "R",
+  V = "V",
+  Y = "Y",
+  by = c("Total", "Product", "Flow"),
+  aggregate_primary = "EX_p.ktoe"
+)
 }
 \arguments{
 \item{.sutdata}{a data frame with columns of matrices from a supply-use analysis.}

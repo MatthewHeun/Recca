@@ -4,8 +4,15 @@
 \alias{waste_edges}
 \title{Create waste energy edges for an edge map}
 \usage{
-waste_edges(U_mat, V_mat, from = "From", to = "To", value = "Value",
-  product = "Product", waste = "Waste")
+waste_edges(
+  U_mat,
+  V_mat,
+  from = "From",
+  to = "To",
+  value = "Value",
+  product = "Product",
+  waste = "Waste"
+)
 }
 \arguments{
 \item{U_mat}{a use matrix.}

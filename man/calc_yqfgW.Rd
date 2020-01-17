@@ -4,9 +4,18 @@
 \alias{calc_yqfgW}
 \title{Calculate \code{y}, \code{f}, \code{g}, and \code{q} vectors and the \code{W} matrix}
 \usage{
-calc_yqfgW(.sutdata = NULL, U = "U", V = "V", Y = "Y",
-  S_units = "S_units", y = "y", q = "q", f = "f", g = "g",
-  W = "W")
+calc_yqfgW(
+  .sutdata = NULL,
+  U = "U",
+  V = "V",
+  Y = "Y",
+  S_units = "S_units",
+  y = "y",
+  q = "q",
+  f = "f",
+  g = "g",
+  W = "W"
+)
 }
 \arguments{
 \item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}

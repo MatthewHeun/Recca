@@ -4,8 +4,15 @@
 \alias{calc_embodied_etas}
 \title{Embodied energy efficiencies}
 \usage{
-calc_embodied_etas(.embodiedmats = NULL, primary_machine_names,
-  Y = "Y", G = "G", H = "H", eta_p = "eta_p", eta_s = "eta_s")
+calc_embodied_etas(
+  .embodiedmats = NULL,
+  primary_machine_names,
+  Y = "Y",
+  G = "G",
+  H = "H",
+  eta_p = "eta_p",
+  eta_s = "eta_s"
+)
 }
 \arguments{
 \item{.embodiedmats}{a data frame containing columns of \code{Y}, \code{G}, and \code{H} matrices}

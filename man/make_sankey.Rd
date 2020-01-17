@@ -4,8 +4,15 @@
 \alias{make_sankey}
 \title{Make a Sankey diagram}
 \usage{
-make_sankey(.sutmats = NULL, R = "R", U = "U", V = "V", Y = "Y",
-  simplify_edges = TRUE, sankey = "Sankey")
+make_sankey(
+  .sutmats = NULL,
+  R = "R",
+  U = "U",
+  V = "V",
+  Y = "Y",
+  simplify_edges = TRUE,
+  sankey = "Sankey"
+)
 }
 \arguments{
 \item{.sutmats}{an optional data frame}

@@ -4,8 +4,12 @@
 \alias{S_units_from_tidy}
 \title{Extract an \code{S_units} matrix from a tidy data frame}
 \usage{
-S_units_from_tidy(.tidydf, Product = "Product", Unit = "Unit",
-  S_units = "S_units")
+S_units_from_tidy(
+  .tidydf,
+  Product = "Product",
+  Unit = "Unit",
+  S_units = "S_units"
+)
 }
 \arguments{
 \item{.tidydf}{the data frame from which an \code{S_units} matrix is to be formed}

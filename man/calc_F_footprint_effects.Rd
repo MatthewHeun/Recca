@@ -4,9 +4,15 @@
 \alias{calc_F_footprint_effects}
 \title{Upstream footprint and downstream effects matrices}
 \usage{
-calc_F_footprint_effects(.Mmats = NULL, M_p = "M_p", M_s = "M_s",
-  F_footprint_p = "F_footprint_p", F_effects_p = "F_effects_p",
-  F_footprint_s = "F_footprint_s", F_effects_s = "F_effects_s")
+calc_F_footprint_effects(
+  .Mmats = NULL,
+  M_p = "M_p",
+  M_s = "M_s",
+  F_footprint_p = "F_footprint_p",
+  F_effects_p = "F_effects_p",
+  F_footprint_s = "F_footprint_s",
+  F_effects_s = "F_effects_s"
+)
 }
 \arguments{
 \item{.Mmats}{a data frame containing a column of embodied matrices}

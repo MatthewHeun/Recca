@@ -4,9 +4,13 @@
 \alias{identify_industry_stages}
 \title{Identify industry stages}
 \usage{
-identify_industry_stages(GeneralIndustries, SpecificIndustries,
-  general_industry_colname = "Industry", stage_colname = "Stage",
-  specific_industry_colname = "Industry")
+identify_industry_stages(
+  GeneralIndustries,
+  SpecificIndustries,
+  general_industry_colname = "Industry",
+  stage_colname = "Stage",
+  specific_industry_colname = "Industry"
+)
 }
 \arguments{
 \item{GeneralIndustries}{a data frame containing at least two columns,

@@ -4,8 +4,7 @@
 \alias{calc_GH}
 \title{Calculate the \code{G} and \code{H} matrices for embodied energy calculations}
 \usage{
-calc_GH(.iomats = NULL, Y = "Y", L_ixp = "L_ixp", G = "G",
-  H = "H")
+calc_GH(.iomats = NULL, Y = "Y", L_ixp = "L_ixp", G = "G", H = "H")
 }
 \arguments{
 \item{.iomats}{a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.

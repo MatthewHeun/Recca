@@ -4,8 +4,13 @@
 \alias{node_list}
 \title{Create a node list}
 \usage{
-node_list(edge_list, from = "From", to = "To", node = "Node",
-  node_id = "node_id")
+node_list(
+  edge_list,
+  from = "From",
+  to = "To",
+  node = "Node",
+  node_id = "node_id"
+)
 }
 \arguments{
 \item{edge_list}{the name of the column in \code{.sutmats} containing edge lists

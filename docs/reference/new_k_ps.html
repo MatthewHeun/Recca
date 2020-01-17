@@ -8,21 +8,25 @@
 
 <title>Assess the effect of changing perfectly substitutable intermediate inputs to an industry — new_k_ps • Recca</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -30,8 +34,8 @@
 
 
 
-<meta property="og:title" content="Assess the effect of changing perfectly substitutable intermediate inputs to an industry — new_k_ps" />
 
+<meta property="og:title" content="Assess the effect of changing perfectly substitutable intermediate inputs to an industry — new_k_ps" />
 <meta property="og:description" content="This function calculates the effect of changing perfectly-substitutable (ps) inputs
 to an intermediate industry.
 New versions of U and V matrices are returned
@@ -39,6 +43,7 @@ as U_prime and V_prime.
 Changes are made upstream of the changed industry inputs.
 The final demand matrix (Y) is unchanged." />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -50,6 +55,7 @@ The final demand matrix (Y) is unchanged." />
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
 
 
   </head>
@@ -76,7 +82,7 @@ The final demand matrix (Y) is unchanged." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -105,11 +111,10 @@ The final demand matrix (Y) is unchanged." />
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/MatthewHeun/Recca">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -120,6 +125,7 @@ The final demand matrix (Y) is unchanged." />
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -131,20 +137,30 @@ The final demand matrix (Y) is unchanged." />
     </div>
 
     <div class="ref-description">
-    
     <p>This function calculates the effect of changing perfectly-substitutable (ps) inputs
 to an intermediate industry.
 New versions of <code>U</code> and <code>V</code> matrices are returned
 as <code>U_prime</code> and <code>V_prime</code>.
 Changes are made upstream of the changed industry inputs.
 The final demand matrix (<code>Y</code>) is unchanged.</p>
-    
     </div>
 
-    <pre class="usage"><span class='fu'>new_k_ps</span>(<span class='kw'>.sutmats</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>k_prime</span> <span class='kw'>=</span> <span class='st'>"k_prime"</span>, <span class='kw'>U</span> <span class='kw'>=</span> <span class='st'>"U"</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>,
-  <span class='kw'>Y</span> <span class='kw'>=</span> <span class='st'>"Y"</span>, <span class='kw'>K</span> <span class='kw'>=</span> <span class='st'>"K"</span>, <span class='kw'>L_ixp</span> <span class='kw'>=</span> <span class='st'>"L_ixp"</span>, <span class='kw'>L_pxp</span> <span class='kw'>=</span> <span class='st'>"L_pxp"</span>, <span class='kw'>Z</span> <span class='kw'>=</span> <span class='st'>"Z"</span>,
-  <span class='kw'>D</span> <span class='kw'>=</span> <span class='st'>"D"</span>, <span class='kw'>f</span> <span class='kw'>=</span> <span class='st'>"f"</span>, <span class='kw'>U_prime</span> <span class='kw'>=</span> <span class='st'>"U_prime"</span>, <span class='kw'>V_prime</span> <span class='kw'>=</span> <span class='st'>"V_prime"</span>)</pre>
-    
+    <pre class="usage"><span class='fu'>new_k_ps</span>(
+  <span class='kw'>.sutmats</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>k_prime</span> <span class='kw'>=</span> <span class='st'>"k_prime"</span>,
+  <span class='kw'>U</span> <span class='kw'>=</span> <span class='st'>"U"</span>,
+  <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>,
+  <span class='kw'>Y</span> <span class='kw'>=</span> <span class='st'>"Y"</span>,
+  <span class='kw'>K</span> <span class='kw'>=</span> <span class='st'>"K"</span>,
+  <span class='kw'>L_ixp</span> <span class='kw'>=</span> <span class='st'>"L_ixp"</span>,
+  <span class='kw'>L_pxp</span> <span class='kw'>=</span> <span class='st'>"L_pxp"</span>,
+  <span class='kw'>Z</span> <span class='kw'>=</span> <span class='st'>"Z"</span>,
+  <span class='kw'>D</span> <span class='kw'>=</span> <span class='st'>"D"</span>,
+  <span class='kw'>f</span> <span class='kw'>=</span> <span class='st'>"f"</span>,
+  <span class='kw'>U_prime</span> <span class='kw'>=</span> <span class='st'>"U_prime"</span>,
+  <span class='kw'>V_prime</span> <span class='kw'>=</span> <span class='st'>"V_prime"</span>
+)</pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -208,29 +224,27 @@ provided by products (in rows).
       <td><p>name for the <code>V_prime</code> matrix on output. Default is "<code>V_prime</code>".</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>a list or data frame containing <code>U_prime</code> and <code>V_prime</code> matrices</p>
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Note that inputs <code>K</code>, <code>L_ixp</code>, <code>L_pxp</code>,
 <code>Z</code>, <code>D</code>, and <code>f</code> can be
 conveniently calculated by the function <code><a href='calc_io_mats.html'>calc_io_mats</a></code>.</p>
-<p>Internally, this function uses <code><a href='https://www.rdocumentation.org/packages/matsindf/topics/matsindf_apply'>matsindf_apply</a></code>,
+<p>Internally, this function uses <code><a href='https://rdrr.io/pkg/matsindf/man/matsindf_apply.html'>matsindf_apply</a></code>,
 and documentation assumes that
 <code>.sutmats</code> is not <code>NULL</code> and is a data frame.
 If <code>.sutmats</code> is present, output is a data frame with columns named by string values of output arguments, and
 input arguments should be character strings that name columns in <code>.sutmats</code>.
 If <code>.sutmats</code> is <code>NULL</code> (the default), output is a list with items named by output strings,
 and input arguments should be single matrices or vectors.</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>matsbyname</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>tidyr</span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>matsbyname</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>tidyr</span>)
 <span class='co'># To demonstrate calculating changes to an energy conversion chain due to changes</span>
 <span class='co'># in perfectly-substitutable inputs to an intermediate industry,</span>
 <span class='co'># we use the PerfectSubmats data frame.</span>
@@ -253,9 +267,9 @@ and input arguments should be single matrices or vectors.</p>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(
     <span class='co'># Set up a new k_prime vector for Electric transport.</span>
     <span class='co'># That vector will be used for the infininte substitution calculation.</span>
-    <span class='kw'>k_prime</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/matsbyname/topics/select_cols_byname'>select_cols_byname</a></span>(<span class='no'>K</span>, <span class='kw'>retain_pattern</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/matsbyname/topics/make_pattern'>make_pattern</a></span>(<span class='st'>"Electric transport"</span>,
+    <span class='kw'>k_prime</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/matsbyname/man/select_cols_byname.html'>select_cols_byname</a></span>(<span class='no'>K</span>, <span class='kw'>retain_pattern</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/matsbyname/man/make_pattern.html'>make_pattern</a></span>(<span class='st'>"Electric transport"</span>,
                                                                   <span class='kw'>pattern_type</span> <span class='kw'>=</span> <span class='st'>"exact"</span>)),
-    <span class='kw'>k_prime</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/matsbyname/topics/make_list'>make_list</a></span>(<span class='no'>k_prime_vec</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>1</span>)
+    <span class='kw'>k_prime</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/matsbyname/man/make_list.html'>make_list</a></span>(<span class='no'>k_prime_vec</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>1</span>)
   )
 <span class='co'># Now do the calculation of U_prime and V_prime matrices.</span>
 <span class='no'>new_UV</span> <span class='kw'>&lt;-</span> <span class='fu'>new_k_ps</span>(<span class='no'>io_mats</span>)
@@ -266,16 +280,14 @@ and input arguments should be single matrices or vectors.</p>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -283,13 +295,16 @@ and input arguments should be single matrices or vectors.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

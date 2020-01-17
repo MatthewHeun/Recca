@@ -1,9 +1,3 @@
-library(dplyr)
-library(lazyeval)
-library(matsbyname)
-library(testthat)
-library(parallel)
-
 ###########################################################
 context("SUT energy balance")
 ###########################################################

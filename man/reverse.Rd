@@ -4,9 +4,18 @@
 \alias{reverse}
 \title{Reverse an energy conversion chain}
 \usage{
-reverse(.sutmats = NULL, R = "R", V = "V", U = "U", Y = "Y",
-  suffix = "_rev", R_rev = paste0(R, suffix), V_rev = paste0(V,
-  suffix), U_rev = paste0(U, suffix), Y_rev = paste0(Y, suffix))
+reverse(
+  .sutmats = NULL,
+  R = "R",
+  V = "V",
+  U = "U",
+  Y = "Y",
+  suffix = "_rev",
+  R_rev = paste0(R, suffix),
+  V_rev = paste0(V, suffix),
+  U_rev = paste0(U, suffix),
+  Y_rev = paste0(Y, suffix)
+)
 }
 \arguments{
 \item{.sutmats}{the input ECC}
