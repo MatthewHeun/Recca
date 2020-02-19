@@ -27,7 +27,6 @@ Imports:
     networkD3,
     parallel,
     purrr,
-    qgraph, 
     rlang,
     tibble,
     tidyr
