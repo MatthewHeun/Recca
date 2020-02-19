@@ -15,7 +15,7 @@
 * Updates to synchronize with recent changes in other packages.
   In particular, there was one place where `group`ing on a column
   of a data frame with `NA` entries was causing a warning to be emitted.
-  Now, the `grouping` happens after splitting the data fram into 
+  Now, the `grouping` happens after splitting the data frame into 
   rows wtih `NA` entries and those without. 
   Grouping and sorting happens only for the rows without `NA` values.
 
