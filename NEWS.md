@@ -1,3 +1,15 @@
+# Recca 0.1.19 (2020-02-19)
+
+* Remove dependency on package `qgraph`.
+  `qgraph` dependedn upong `graph`, 
+  which is apparently no longer available on CRAN.
+  The dependency on `qgraph` was only for graphical representations of ECCs.
+  But, graphical representations of ECCs are not presently implemented in `Recca`.
+  Future versions of `Recca` may implement graphical representations. 
+  I can reassess the packages for graphing and Sankey diagrams 
+  at a later date.
+
+
 # Recca 0.1.18 (2020-01-17)
 
 * Updates to synchronize with recent changes in other packages.
