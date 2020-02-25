@@ -1,3 +1,6 @@
+* Fixed typos in `Recca.Rmd` vignette.
+
+
 # Recca 0.1.19 (2020-02-19)
 
 * Removed dependency on package `qgraph`.
@@ -16,7 +19,7 @@
   In particular, there was one place where `group`ing on a column
   of a data frame with `NA` entries was causing a warning to be emitted.
   Now, the `grouping` happens after splitting the data frame into 
-  rows wtih `NA` entries and those without. 
+  rows with `NA` entries and those without. 
   Grouping and sorting happens only for the rows without `NA` values.
 
 
