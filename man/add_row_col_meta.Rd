@@ -72,8 +72,8 @@ Default is "\code{Industry}".}
 }
 \value{
 \code{.DF} with additional columns named
-        \code{rowname}, \code{colname},
-        \code{rowtype}, and \code{coltype}.
+\code{rowname}, \code{colname},
+\code{rowtype}, and \code{coltype}.
 }
 \description{
 Add row, column, row type, and column type metadata

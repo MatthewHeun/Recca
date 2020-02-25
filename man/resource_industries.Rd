@@ -22,7 +22,7 @@ resource_industries(
 }
 \value{
 a list or data frame with \code{.sutdata} with an additional column (named with the value of the \code{p_industries} argument)
-        containing the resource industries for each row
+containing the resource industries for each row
 }
 \description{
 Identifies resource industries.

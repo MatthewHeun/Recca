@@ -39,8 +39,8 @@ Default is "\code{Consumption}".}
 }
 \value{
 a data frame containing with grouping variables and
-        an additional column whose name is the value of \code{err}.
-        The \code{err} column should be 0.
+an additional column whose name is the value of \code{err}.
+The \code{err} column should be 0.
 }
 \description{
 Energy balances are confirmed (within \code{tol}) for every combination of

@@ -6,12 +6,12 @@
 \title{Example energy conversion chain to demonstrate perfect substitution}
 \format{A data frame with 20 rows and 10 variables:
 \describe{
-  \item{Country}{country, (Example, only one country)}
-  \item{Year}{year, 2000 (only one year as an example)}
-  \item{Energy.type}{E.ktoe (for energy) or X.ktoe (for exergy)}
-  \item{Last.stage}{tells the final stage of the energy conversion chain: services is the only entry here}
-  \item{matrix.name}{gives the name of the matrix}
-  \item{matrix}{gives use (U), make (V), final demand (Y), r_EIOU, and S_units matrices}
+\item{Country}{country, (Example, only one country)}
+\item{Year}{year, 2000 (only one year as an example)}
+\item{Energy.type}{E.ktoe (for energy) or X.ktoe (for exergy)}
+\item{Last.stage}{tells the final stage of the energy conversion chain: services is the only entry here}
+\item{matrix.name}{gives the name of the matrix}
+\item{matrix}{gives use (U), make (V), final demand (Y), r_EIOU, and S_units matrices}
 }}
 \usage{
 PerfectSubmats

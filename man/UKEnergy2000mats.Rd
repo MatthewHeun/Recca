@@ -6,12 +6,12 @@
 \title{Energy consumption in the UK in 2000}
 \format{A data frame with 12 rows and 6 variables:
 \describe{
-  \item{Country}{country, GB (Great Britain, only one country)}
-  \item{Year}{year, 2000 (only one year)}
-  \item{Energy.type}{E.ktoe (for energy) or X.ktoe (for exergy)}
-  \item{Last.stage}{tells the final stage of the energy conversion chain: final, useful, or services}
-  \item{matrix.name}{gives the name of the matrix}
-  \item{matrix}{gives use (U), make (V), final demand (Y), r_EIOU, and S_units matrices}
+\item{Country}{country, GB (Great Britain, only one country)}
+\item{Year}{year, 2000 (only one year)}
+\item{Energy.type}{E.ktoe (for energy) or X.ktoe (for exergy)}
+\item{Last.stage}{tells the final stage of the energy conversion chain: final, useful, or services}
+\item{matrix.name}{gives the name of the matrix}
+\item{matrix}{gives use (U), make (V), final demand (Y), r_EIOU, and S_units matrices}
 }}
 \source{
 \url{https://doi.org/10.1016/j.apenergy.2018.05.109}

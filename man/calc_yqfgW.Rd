@@ -45,7 +45,7 @@ calc_yqfgW(
 }
 \value{
 a list or data frame containing \code{y}, \code{q},
-         \code{f}, \code{g}, and \code{W}.
+\code{f}, \code{g}, and \code{W}.
 }
 \description{
 Note that a necessary condition for calculating the \code{f} and \code{g} vectors is that

@@ -352,9 +352,9 @@ throughout the ECC in the process of satisfying that final demand.
 `Recca` provides two functions to calculate embodied primary energy and important ratios,
 namely `calc_embodied_mats()` and `calc_embodied_etas()`.
 
-Outputs from `calc_embodied_mats()` include the following matrices:
-
 The function `calc_embodied_mats()` calculates embodied energy in final demand products ($p$) and final demand sectors ($s$).
+
+Outputs from `calc_embodied_mats()` include the following matrices:
 
 | Matrix | Description (rows$\times$columns)|
 |---:|:---------------------------------------------------|

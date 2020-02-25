@@ -32,8 +32,8 @@ Default is "\code{.flows_unit_homogeneous}".}
 }
 \value{
 \code{.sutdata} with additional column "\code{flows_unit_homogeneous}" containing
-        \code{TRUE} if each industry's flows are unit-homogeneous,
-        \code{FALSE} if each industry's flows are unit-heterogeneous.
+\code{TRUE} if each industry's flows are unit-homogeneous,
+\code{FALSE} if each industry's flows are unit-heterogeneous.
 }
 \description{
 Returns \code{TRUE} if each industry's flows (all inputs and outputs) are unit-homogeneous.

@@ -45,7 +45,7 @@ Default is "\code{EX_fd_gross_IEA.ktoe}".}
 }
 \value{
 a data frame containing grouping columns of \code{.ieadata} and
-        two additional columns containing net and gross final demand.
+two additional columns containing net and gross final demand.
 }
 \description{
 Calculates total aggregate final demand energy from a data frame of IEA data
