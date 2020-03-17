@@ -135,12 +135,12 @@ we can collapse all data to matrices and add a unit summation matrix (`S_units`)
 ```{r}
 AsMats <- WithNames %>%
   # Collapse to matrices using functions in the matsindf package
-  group_by(Country, Year, Energy.type, Last.stage, matname) %>%
-  collapse_to_matrices(matnames = "matname", matvals = "EX.ktoe",
-                       rownames = "rowname", colnames = "colname",
-                       rowtypes = "rowtype", coltypes = "coltype") %>%
-  rename(matrix.name = matname, matrix = EX.ktoe) %>%
-  spread(key = matrix.name, value = matrix) %>%
+  group_by(Country, Year, Energy.type, Last.stage, matnames) %>%
+  collapse_to_matrices(matnames = "matnames", matvals = "E.dot",
+                       rownames = "rownames", colnames = "colnames",
+                       rowtypes = "rowtypes", coltypes = "coltypes") %>%
+  rename(matrix.name = matnames, matrix = E.dot) %>%
+  spread(key = matrix.name, value = matrix) %>% 
   # Do a little more cleanup
   mutate(
     # Create full U matrix
@@ -148,7 +148,7 @@ AsMats <- WithNames %>%
     # Create r_EIOU, a matrix that identifies the ratio of EIOU to other energy consumed.
     r_EIOU = matsbyname::quotient_byname(U_EIOU, U),
     r_EIOU = matsbyname::replaceNaN_byname(r_EIOU, val = 0)
-  ) %>%
+  ) %>% 
   select(-U_EIOU, -U_excl_EIOU) %>%
   # Add S_units matrices
   left_join(S_units, by = c("Country", "Year", "Energy.type", "Last.stage")) %>%
