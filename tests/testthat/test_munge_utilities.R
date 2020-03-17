@@ -20,13 +20,14 @@ test_that("add_matnames works correctly with a prefixed Flow", {
 test_that("add_matnames identifies resource industries correctly", {
   # Run the add_matnames_iea function with use_R = TRUE
   WithR <- UKEnergy2000tidy %>%
-    group_by(Country, Year, Energy.type, Last.stage) %>%
-    add_matnames_iea(use_R = TRUE) %>%
-    filter(matname == "R")
+    dplyr::group_by(Country, Year, Energy.type, Last.stage) %>%
+    IEATools::add_psut_matnames() %>%
+    # add_matnames_iea(use_R = TRUE) %>%
+    dplyr::filter(matnames == "R")
   # We expect that every flow from a "Resources - *" industry will end up in the R matrix.
   Expected <- UKEnergy2000tidy %>%
-    filter(startsWith_any_of(Flow, "Resources - ")) %>%
-    mutate(matname = "R")
+    dplyr::filter(startsWith_any_of(Flow, "Resources - ")) %>%
+    dplyr::mutate(matname = "R")
   expect_equal(WithR, Expected)
   # Check that rowname is correct for resource rows.
   WithRmeta <- WithR %>% IEATools::add_row_col_meta()

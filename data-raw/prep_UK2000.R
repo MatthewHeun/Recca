@@ -19,12 +19,14 @@ library(matsbyname)
 library(matsindf)
 library(devtools)
 
-# Load the raw data from the .csv file
-UKEnergy2000tidy <- read.csv(system.file("extdata", "UKEnergy2000raw", "UKEnergy2000raw.csv",
-                                         package = "Recca", mustWork = TRUE),
-                             stringsAsFactors = FALSE)
+# Load the raw data from the Excel file
+# UKEnergy2000tidy <- read.csv(system.file("extdata", "UKEnergy2000raw", "UKEnergy2000raw.csv",
+#                                          package = "Recca", mustWork = TRUE),
+#                              stringsAsFactors = FALSE)
 
-use_data(UKEnergy2000tidy, overwrite = TRUE)
+UKEnergy2000tidy <- openxlsx::read.xlsx(system.file("extdata", "UKEnergy2000raw", "SuperSimpleEconomy_2018-11-13.xlsx",
+                                                    package = "Recca", mustWork = TRUE), sheet = "UKEnergy2000raw")
+usethis::use_data(UKEnergy2000tidy, overwrite = TRUE)
 
 # Create S_units matrices from the UKEnergy2000tidy data frame
 S_units <- UKEnergy2000tidy %>%
@@ -33,22 +35,22 @@ S_units <- UKEnergy2000tidy %>%
 
 UKEnergy2000mats <- UKEnergy2000tidy %>%
   # Add a column indicating the matrix in which this entry belongs (U, V, or Y).
-  add_matnames_iea() %>%
+  IEATools::add_psut_matnames() %>%
   # Add metadata columns for row names, column names, row types, and column types.
-  add_row_col_meta() %>%
+  IEATools::add_row_col_meta() %>%
   # Eliminate columns we no longer need
-  select(-Ledger.side, -Flow.aggregation.point, -Flow, -Product) %>%
+  dplyr::select(-Ledger.side, -Flow.aggregation.point, -Flow, -Product) %>%
   dplyr::mutate(
     # Ensure that all energy values are positive, as required for analysis.
-    EX.ktoe = abs(EX.ktoe)
+    E.dot = abs(E.dot)
   ) %>%
 
   # Collapse to matrices
-  dplyr::group_by(Country, Year, Energy.type, Last.stage, matname) %>%
-  matsindf::collapse_to_matrices(matnames = "matname", matvals = "EX.ktoe",
-                       rownames = "rowname", colnames = "colname",
-                       rowtypes = "rowtype", coltypes = "coltype") %>%
-  dplyr::rename(matrix.name = matname, matrix = EX.ktoe) %>%
+  dplyr::group_by(Country, Year, Energy.type, Last.stage, matnames) %>%
+  matsindf::collapse_to_matrices(matnames = "matnames", matvals = "E.dot",
+                                 rownames = "rownames", colnames = "colnames",
+                                 rowtypes = "rowtypes", coltypes = "coltypes") %>%
+  dplyr::rename(matrix.name = matnames, matrix = E.dot) %>%
   tidyr::spread(key = matrix.name, value = matrix) %>%
 
   dplyr::mutate(
@@ -57,11 +59,11 @@ UKEnergy2000mats <- UKEnergy2000tidy %>%
     r_EIOU = quotient_byname(U_EIOU, U),
     r_EIOU = replaceNaN_byname(r_EIOU, val = 0)
   ) %>%
-  select(-U_EIOU, -U_excl_EIOU) %>%
+  dplyr::select(-U_EIOU, -U_excl_EIOU) %>%
   # Add S_units matrices
   dplyr::left_join(S_units, by = c("Country", "Year", "Energy.type", "Last.stage")) %>%
   # When convert to using R everywhere, be sure to add R to the list of gathered columns below.
   # gather(key = matrix.name, value = matrix, R, U, V, Y, r_EIOU, S_units)
-  dplyr::gather(key = matrix.name, value = matrix, U, V, Y, r_EIOU, S_units)
+  tidyr::gather(key = matrix.name, value = matrix, U, V, Y, r_EIOU, S_units)
 
 usethis::use_data(UKEnergy2000mats, overwrite = TRUE)
