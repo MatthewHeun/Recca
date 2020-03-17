@@ -112,19 +112,19 @@ glimpse(S_units)
 And we can identify which entries belong in the
 resource ($\mat{R}$), make ($\mat{V}$), use ($\mat{U}$), and
 final demand ($\mat{Y}$) matrices 
-with the `add_matnames_iea()` and `add_row_col_meta()` functions.
+with the `IEATools::add_psut_matnames()` and `IEATools::add_row_col_meta()` functions.
 
 ```{r}
 WithNames <- UKEnergy2000tidy %>%
   # Add a column indicating the matrix in which this entry belongs (U, V, or Y).
-  add_matnames_iea(use_R = TRUE) %>%
+  IEATools::add_psut_matnames() %>%
   # Add metadata columns for row names, column names, row types, and column types.
-  add_row_col_meta() %>% 
+  IEATools::add_row_col_meta() %>% 
   # Eliminate columns we no longer need
   select(-Ledger.side, -Flow.aggregation.point, -Flow, -Product) %>%
   mutate(
     # Ensure that all energy values are positive, as required for analysis.
-    EX.ktoe = abs(EX.ktoe)
+    E.dot = abs(E.dot)
   )
 head(WithNames)
 ```
