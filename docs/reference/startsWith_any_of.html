@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Energy consumption in the UK in 2000 — UKEnergy2000mats • Recca</title>
+<title>Tell if a string starts with any of a vector of strings — startsWith_any_of • Recca</title>
 
 
 <!-- jquery -->
@@ -35,14 +35,9 @@
 
 
 
-<meta property="og:title" content="Energy consumption in the UK in 2000 — UKEnergy2000mats" />
-<meta property="og:description" content="A dataset containing approximations to
-some of the energy flows in the UK in the year 2000.
-These data first appeared as the example in
-Figures 3, 4, 6, 7, 10, 11, B.1, and B.2 of
-M.K. Heun, A. Owen, and P. E. Brockway.
-A physical supply-use table framework for energy analysis on the energy conversion chain.
-Applied Energy, 226:1134–1162, Sep 2018." />
+<meta property="og:title" content="Tell if a string starts with any of a vector of strings — startsWith_any_of" />
+<meta property="og:description" content="This function returns TRUE if x
+starts with any of the strings in target and FALSE otherwise." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -132,52 +127,56 @@ Applied Energy, 226:1134–1162, Sep 2018." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Energy consumption in the UK in 2000</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MatthewHeun/Recca/blob/master/R/data.R'><code>R/data.R</code></a></small>
-    <div class="hidden name"><code>UKEnergy2000mats.Rd</code></div>
+    <h1>Tell if a string starts with any of a vector of strings</h1>
+    <small class="dont-index">Source: <a href='https://github.com/MatthewHeun/Recca/blob/master/R/utilities.R'><code>R/utilities.R</code></a></small>
+    <div class="hidden name"><code>startsWith_any_of.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A dataset containing approximations to
-some of the energy flows in the UK in the year 2000.
-These data first appeared as the example in
-Figures 3, 4, 6, 7, 10, 11, B.1, and B.2 of
-M.K. Heun, A. Owen, and P. E. Brockway.
-A physical supply-use table framework for energy analysis on the energy conversion chain.
-Applied Energy, 226:1134–1162, Sep 2018.</p>
+    <p>This function returns <code>TRUE</code> if <code>x</code>
+starts with any of the strings in <code>target</code> and <code>FALSE</code> otherwise.</p>
     </div>
 
-    <pre class="usage"><span class='no'>UKEnergy2000mats</span></pre>
+    <pre class="usage"><span class='fu'>startsWith_any_of</span>(<span class='no'>x</span>, <span class='no'>prefixes</span>)</pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>a string (or vector or list of strings)</p></td>
+    </tr>
+    <tr>
+      <th>prefixes</th>
+      <td><p>a vector or list of strings</p></td>
+    </tr>
+    </table>
 
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data frame with 12 rows and 6 variables:</p><dl class='dl-horizontal'>
-  <dt>Country</dt><dd><p>country, GB (Great Britain, only one country)</p></dd>
-  <dt>Year</dt><dd><p>year, 2000 (only one year)</p></dd>
-  <dt>Energy.type</dt><dd><p>E.ktoe (for energy) or X.ktoe (for exergy)</p></dd>
-  <dt>Last.stage</dt><dd><p>tells the final stage of the energy conversion chain: final, useful, or services</p></dd>
-  <dt>matrix.name</dt><dd><p>gives the name of the matrix</p></dd>
-  <dt>matrix</dt><dd><p>gives use (U), make (V), final demand (Y), r_EIOU, and S_units matrices</p></dd>
-
-</dl>
-
-    <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
-
-    <p><a href='https://doi.org/10.1016/j.apenergy.2018.05.109'>https://doi.org/10.1016/j.apenergy.2018.05.109</a></p>
+    <p><code>TRUE</code> if <code>x</code> starts with any of the strings in <code>target</code>,
+        <code>FALSE</code> otherwise.
+        If <code>x</code> is a vector or list of strings, the return value is the same length as <code>x</code>
+        and contains the result of applying the test to each item in <code>x</code>.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>UKEnergy2000mats</code> gives the use (<code>U</code>), make (<code>V</code>), and final demand (<code>Y</code>) matrices
-associated with <code>UKEnergy2000tidy</code>.
-These data are in <span class="pkg">matsindf</span> format.</p>
+    <p>This function is vectorized. If <code>x</code> is a vector or list of strings,
+the return value has the same length as <code>x</code> and contains the result
+of applying the test (does <code>x</code> start with any of <code>target</code>)
+for each item in <code>x</code>.</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>startsWith_any_of</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"prefix - suffix"</span>, <span class='kw'>prefixes</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"a"</span>, <span class='st'>"b"</span>, <span class='st'>"prefix"</span>))</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>startsWith_any_of</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"prefix - suffix"</span>, <span class='kw'>prefixes</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"a"</span>, <span class='st'>"b"</span>, <span class='st'>"c"</span>))</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'>startsWith_any_of</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"prefix - suffix"</span>, <span class='kw'>prefixes</span> <span class='kw'>=</span> <span class='st'>"suffix"</span>)</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'>startsWith_any_of</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Production - Crude"</span>, <span class='st'>"Production - NG"</span>,
+                         <span class='st'>"Exports - Oil"</span>, <span class='st'>"Exports - Crude"</span>),
+                   <span class='kw'>prefixes</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Production"</span>, <span class='st'>"Imports"</span>))</div><div class='output co'>#&gt; [1]  TRUE  TRUE FALSE FALSE</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#format">Format</a></li>
-      <li><a href="#source">Source</a></li>
+      <li><a href="#arguments">Arguments</a></li>
+      <li><a href="#value">Value</a></li>
       <li><a href="#details">Details</a></li>
+      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>

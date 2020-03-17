@@ -4,7 +4,8 @@
 \name{UKEnergy2000tidy}
 \alias{UKEnergy2000tidy}
 \title{Energy consumption in the UK in 2000}
-\format{A data frame with 186 rows and 9 variables:
+\format{
+A data frame with 186 rows and 9 variables:
 \describe{
   \item{Country}{country, GB (Great Britain, only one country)}
   \item{Year}{year, 2000 (only one year)}
@@ -16,7 +17,8 @@
   \item{Product}{the energy product involved in this flow}
   \item{EX.ktoe}{value of the energy, exergy, or service flow in ktoe}
   \item{Unit}{unit in which quantity is expressed}
-}}
+}
+}
 \source{
 \url{https://doi.org/10.1016/j.apenergy.2018.05.109}
 }

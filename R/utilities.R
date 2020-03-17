@@ -59,7 +59,7 @@ any_start_with <- function(x, target){
 #' for each item in \code{x}.
 #'
 #' @param x a string (or vector or list of strings)
-#' @param target a vector or list of strings
+#' @param prefixes a vector or list of strings
 #'
 #' @return \code{TRUE} if \code{x} starts with any of the strings in \code{target},
 #'         \code{FALSE} otherwise.
@@ -69,15 +69,15 @@ any_start_with <- function(x, target){
 #' @export
 #'
 #' @examples
-#' starts_with_any_of(x = "prefix - suffix", target = c("a", "b", "prefix"))
-#' starts_with_any_of(x = "prefix - suffix", target = c("a", "b", "c"))
-#' starts_with_any_of(x = "prefix - suffix", target = "suffix")
-#' starts_with_any_of(x = c("Production - Crude", "Production - NG",
+#' startsWith_any_of(x = "prefix - suffix", prefixes = c("a", "b", "prefix"))
+#' startsWith_any_of(x = "prefix - suffix", prefixes = c("a", "b", "c"))
+#' startsWith_any_of(x = "prefix - suffix", prefixes = "suffix")
+#' startsWith_any_of(x = c("Production - Crude", "Production - NG",
 #'                          "Exports - Oil", "Exports - Crude"),
-#'                    target = c("Production", "Imports"))
-starts_with_any_of <- function(x, target){
+#'                    prefixes = c("Production", "Imports"))
+startsWith_any_of <- function(x, prefixes){
   sapply(x, FUN = function(one_x){
-    any(startsWith(x = one_x, prefix = target))
+    any(startsWith(x = one_x, prefix = prefixes))
   }) %>%
     magrittr::set_names(NULL)
 }

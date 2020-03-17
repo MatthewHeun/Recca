@@ -239,7 +239,7 @@ primary_aggregates_IEA <- function(.ieadata,
   energy <- as.name(energy)
   aggregate_primary <- as.name(aggregate_primary)
   .ieadata %>%
-    dplyr::filter(starts_with_any_of(!!flow, p_industries), !startsWith(!!flow_aggregation_point, eiou)) %>%
+    dplyr::filter(startsWith_any_of(!!flow, p_industries), !startsWith(!!flow_aggregation_point, eiou)) %>%
     dplyr::summarise(!!aggregate_primary := sum(!!energy))
 }
 
@@ -316,13 +316,13 @@ finaldemand_aggregates_IEA <- function(.ieadata,
 
   # First calculate net energy
   net <- .ieadata %>%
-    dplyr::filter(starts_with_any_of(!!ledger_side, consumption)) %>%
+    dplyr::filter(startsWith_any_of(!!ledger_side, consumption)) %>%
     dplyr::summarise(
       !!aggregate_net_finaldemand := sum(!!energy)
     )
   # Now calculate additional energy, gross - net = eiou
   gross_less_net <- .ieadata %>%
-    dplyr::filter(starts_with_any_of(!!flow_aggregation_point, eiou)) %>%
+    dplyr::filter(startsWith_any_of(!!flow_aggregation_point, eiou)) %>%
     dplyr::mutate(
       !!energy := abs(!!energy)
     ) %>%

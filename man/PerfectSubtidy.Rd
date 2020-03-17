@@ -4,7 +4,8 @@
 \name{PerfectSubtidy}
 \alias{PerfectSubtidy}
 \title{Example energy conversion chain to demonstrate perfect substitution}
-\format{A data frame with 20 rows and 10 variables:
+\format{
+A data frame with 20 rows and 10 variables:
 \describe{
   \item{Country}{country, (Example, only one country)}
   \item{Year}{year, 2000 (only one year as an example)}
@@ -16,7 +17,8 @@
   \item{Product}{the energy product involved in this flow}
   \item{EX.ktoe}{value of the energy, exergy, or service flow in ktoe}
   \item{Unit}{unit in which quantity is expressed}
-}}
+}
+}
 \usage{
 PerfectSubtidy
 }

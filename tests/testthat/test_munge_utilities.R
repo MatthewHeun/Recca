@@ -7,22 +7,22 @@ test_that("add_matnames and add_row_col_meta works as expected", {
     add_matnames_iea() %>%
     add_row_col_meta()
   expect_equivalent(WithMatnames %>%
-                      filter(Ledger.side == "Supply", Energy.type == "E.ktoe", Last.stage == "final", Flow == "Resources - Crude", Product == "Crude") %>% select(matname, rowtype, coltype) %>% unlist(),
+                      dplyr::filter(Ledger.side == "Supply", Energy.type == "E.ktoe", Last.stage == "final", Flow == "Resources - Crude", Product == "Crude") %>% select(matname, rowtype, coltype) %>% unlist(),
                     c("V", "Industry", "Product"))
   expect_equivalent(WithMatnames %>%
-                      filter(Ledger.side == "Consumption", Energy.type == "E.ktoe", Last.stage == "final", Flow == "Transport", Product == "Diesel - Dist.") %>% select(matname, rowtype, coltype) %>% unlist(),
+                      dplyr::filter(Ledger.side == "Consumption", Energy.type == "E.ktoe", Last.stage == "final", Flow == "Transport", Product == "Diesel - Dist.") %>% select(matname, rowtype, coltype) %>% unlist(),
                     c("Y", "Product", "Industry"))
   expect_equivalent(WithMatnames %>%
-                      filter(Ledger.side == "Supply", Energy.type == "E.ktoe", Last.stage == "services", Flow == "Car engines", Product == "MD - Car engines") %>% select(matname, rowtype, coltype) %>% unlist(),
+                      dplyr::filter(Ledger.side == "Supply", Energy.type == "E.ktoe", Last.stage == "services", Flow == "Car engines", Product == "MD - Car engines") %>% select(matname, rowtype, coltype) %>% unlist(),
                     c("V", "Industry", "Product"))
   expect_equivalent(WithMatnames %>%
-                      filter(Ledger.side == "Supply", Energy.type == "E.ktoe", Last.stage == "useful", Flow == "Diesel dist.", Product == "Diesel") %>% select(matname, rowtype, coltype) %>% unlist(),
+                      dplyr::filter(Ledger.side == "Supply", Energy.type == "E.ktoe", Last.stage == "useful", Flow == "Diesel dist.", Product == "Diesel") %>% select(matname, rowtype, coltype) %>% unlist(),
                     c("U_excl_EIOU", "Product", "Industry"))
   expect_equivalent(WithMatnames %>%
-                      filter(Ledger.side == "Supply", Flow.aggregation.point == "Energy industry own use", Energy.type == "E.ktoe", Last.stage == "final", Flow == "Petrol dist.", Product == "Petrol - Dist.") %>% select(matname, rowtype, coltype) %>% unlist(),
+                      dplyr::filter(Ledger.side == "Supply", Flow.aggregation.point == "Energy industry own use", Energy.type == "E.ktoe", Last.stage == "final", Flow == "Petrol dist.", Product == "Petrol - Dist.") %>% select(matname, rowtype, coltype) %>% unlist(),
                     c("U_EIOU", "Product", "Industry"))
   expect_equivalent(WithMatnames %>%
-                      filter(Ledger.side == "Consumption", Energy.type == "X.ktoe", Last.stage == "services", Flow == "Residential", Product == "Space heating [m3-K]") %>% select(matname, rowtype, coltype) %>% unlist(),
+                      dplyr::filter(Ledger.side == "Consumption", Energy.type == "X.ktoe", Last.stage == "services", Flow == "Residential", Product == "Space heating [m3-K]") %>% select(matname, rowtype, coltype) %>% unlist(),
                     c("Y", "Product", "Industry"))
 })
 
@@ -48,7 +48,7 @@ test_that("add_matnames identifies resource industries correctly", {
     filter(matname == "R")
   # We expect that every flow from a "Resources - *" industry will end up in the R matrix.
   Expected <- UKEnergy2000tidy %>%
-    filter(starts_with_any_of(Flow, "Resources - ")) %>%
+    filter(startsWith_any_of(Flow, "Resources - ")) %>%
     mutate(matname = "R")
   expect_equal(WithR, Expected)
   # Check that rowname is correct for resource rows.
