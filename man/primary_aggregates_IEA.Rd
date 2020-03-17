@@ -28,9 +28,9 @@ Default is "\code{Flow.aggregation.point}".}
 
 \item{p_industries}{a vector of names of primary industries. Default is
 "\code{c("Coal mines", "Oil and gas extraction",
-"Production", "Imports", "Exports",
-"International aviation bunkers", "International marine bunkers",
-"Stock changes")}"}
+       "Production", "Imports", "Exports",
+       "International aviation bunkers", "International marine bunkers",
+       "Stock changes")}"}
 
 \item{eiou}{the string that identifies energy industry own use in the \code{Flow.aggregation.point} column.
 Default is "\code{Energy industry own use}".}
@@ -41,7 +41,7 @@ Default is "\code{EX_p_IEA.ktoe}".}
 }
 \value{
 a data frame containing the grouping columns of \code{.ieadata}
-        as well as a column named with the value of \code{aggregate_primary}.
+as well as a column named with the value of \code{aggregate_primary}.
 }
 \description{
 Calculates total aggregate primary energy from a data frame of IEA data.

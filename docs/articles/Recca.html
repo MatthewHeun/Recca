@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.18</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.19</span>
       </span>
     </div>
 
@@ -501,8 +501,8 @@
 <a href="#energy-footprints" class="anchor"></a>Energy footprints</h2>
 <p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 3.3.)</p>
 <p>Final demand for energy contains embodied primary energy, the sum of all primary energy consumed and wasted throughout the ECC in the process of satisfying that final demand. <code>Recca</code> provides two functions to calculate embodied primary energy and important ratios, namely <code><a href="../reference/calc_embodied_mats.html">calc_embodied_mats()</a></code> and <code><a href="../reference/calc_embodied_etas.html">calc_embodied_etas()</a></code>.</p>
-<p>Outputs from <code><a href="../reference/calc_embodied_mats.html">calc_embodied_mats()</a></code> include the following matrices:</p>
 <p>The function <code><a href="../reference/calc_embodied_mats.html">calc_embodied_mats()</a></code> calculates embodied energy in final demand products (<span class="math inline">\(p\)</span>) and final demand sectors (<span class="math inline">\(s\)</span>).</p>
+<p>Outputs from <code><a href="../reference/calc_embodied_mats.html">calc_embodied_mats()</a></code> include the following matrices:</p>
 <table class="table">
 <colgroup>
 <col width="7%">
@@ -535,7 +535,7 @@
 </tr>
 </tbody>
 </table>
-<p><code><a href="../reference/calc_embodied_etas.html">calc_embodied_etas()</a></code> also calculates <span class="math inline">\(\mathbf{F}_{footprint}\)</span> and <span class="math inline">\(\mathbf{F}_{effects}\)</span> matrices, which answer the questions (respectively) <code>What is the fractional composition of embodied energy of each final demand energy type?'' and</code>What is the fractional destination of a given upstream energy product?’’ The calculations can be performed for each final demand product or each final demand sector. The following table describes these matrices.</p>
+<p><code><a href="../reference/calc_embodied_mats.html">calc_embodied_mats()</a></code> also calculates <span class="math inline">\(\mathbf{F}_{footprint}\)</span> and <span class="math inline">\(\mathbf{F}_{effects}\)</span> matrices, which answer the questions (respectively) “What is the fractional composition of embodied energy of each final demand energy type?” and “What is the fractional destination of a given upstream energy product?” The calculations can be performed for each final demand product or each final demand sector. The following table describes these matrices.</p>
 <table class="table">
 <colgroup>
 <col width="7%">
@@ -552,7 +552,7 @@
 </tr>
 <tr class="even">
 <td align="right"><span class="math inline">\(\mathbf{F}_{effects,p}\)</span></td>
-<td align="left">Each upstream energy product (rows) becomes embodied somewhere. On a fractional basis, where does that upstream energy become embodied columns)? Rows sums to 1.</td>
+<td align="left">Each upstream energy product (rows) becomes embodied somewhere. On a fractional basis, where does that upstream energy become embodied (columns)? Rows sums to 1.</td>
 </tr>
 <tr class="odd">
 <td align="right"><span class="math inline">\(\mathbf{F}_{footprint,s}\)</span></td>

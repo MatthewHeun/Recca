@@ -1,10 +1,25 @@
+* Fixed typos in `Recca.Rmd` vignette.
+
+
+# Recca 0.1.19 (2020-02-19)
+
+* Removed dependency on package `qgraph`.
+  `qgraph` depended upon `graph`, 
+  which is apparently no longer available on CRAN.
+  The dependency on `qgraph` was only for graphical representations of ECCs.
+  But, graphical representations of ECCs are not presently implemented in `Recca`.
+  Future versions of `Recca` may implement graphical representations. 
+  I can reassess the packages for graphing and Sankey diagrams 
+  at a later date.
+
+
 # Recca 0.1.18 (2020-01-17)
 
 * Updates to synchronize with recent changes in other packages.
   In particular, there was one place where `group`ing on a column
   of a data frame with `NA` entries was causing a warning to be emitted.
-  Now, the `grouping` happens after splitting the data fram into 
-  rows wtih `NA` entries and those without. 
+  Now, the `grouping` happens after splitting the data frame into 
+  rows with `NA` entries and those without. 
   Grouping and sorting happens only for the rows without `NA` values.
 
 

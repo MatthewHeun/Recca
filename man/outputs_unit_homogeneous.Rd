@@ -28,8 +28,8 @@ Default is "\code{.outputs_unit_homogeneous}".}
 }
 \value{
 a list or data frame containing
-        \code{TRUE} if outputs from each energy conversion industry are unit-homogeneous,
-        \code{FALSE} otherwise.
+\code{TRUE} if outputs from each energy conversion industry are unit-homogeneous,
+\code{FALSE} otherwise.
 }
 \description{
 Returns \code{TRUE} if each industry's output are unit-homogeneous.

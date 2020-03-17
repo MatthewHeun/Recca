@@ -352,9 +352,9 @@ throughout the ECC in the process of satisfying that final demand.
 `Recca` provides two functions to calculate embodied primary energy and important ratios,
 namely `calc_embodied_mats()` and `calc_embodied_etas()`.
 
-Outputs from `calc_embodied_mats()` include the following matrices:
-
 The function `calc_embodied_mats()` calculates embodied energy in final demand products ($p$) and final demand sectors ($s$).
+
+Outputs from `calc_embodied_mats()` include the following matrices:
 
 | Matrix | Description (rows$\times$columns)|
 |---:|:---------------------------------------------------|
@@ -364,18 +364,18 @@ The function `calc_embodied_mats()` calculates embodied energy in final demand p
 | $\mat{M}_p$ | embodied products $\times$ embodying products |
 | $\mat{M}_s$ | embodied products $\times$ consumed by final demand sectors |
 
-`calc_embodied_etas()` also calculates $\mat{F}_{footprint}$ and $\mat{F}_{effects}$ matrices,
+`calc_embodied_mats()` also calculates $\mat{F}_{footprint}$ and $\mat{F}_{effects}$ matrices,
 which answer the questions (respectively)
-``What is the fractional composition of embodied energy of each final demand energy type?''
+"What is the fractional composition of embodied energy of each final demand energy type?"
 and
-``What is the fractional destination of a given upstream energy product?''
+"What is the fractional destination of a given upstream energy product?"
 The calculations can be performed for each final demand product or each final demand sector. 
 The following table describes these matrices.
 
 | Matrix | Description |
 |---:|:---------------------------------------------------|
 | $\mat{F}_{footprint,p}$ | Each final demand product (columns) contains embodied energy. On a fractional basis, where does that embodied energy come from (rows)? Columns sum to 1. |
-| $\mat{F}_{effects,p}$ | Each upstream energy product (rows) becomes embodied somewhere. On a fractional basis, where does that upstream energy become embodied columns)? Rows sums to 1. |
+| $\mat{F}_{effects,p}$ | Each upstream energy product (rows) becomes embodied somewhere. On a fractional basis, where does that upstream energy become embodied (columns)? Rows sums to 1. |
 | $\mat{F}_{footprint,s}$ | Each final demand sector (columns) consumes embodied energy. On a fractional basis, where does the consumed embodied energy come from (rows)? Columns sum to 1. |
 | $\mat{F}_{effects,s}$ | Each embodied upstream energy product (rows) is consumed by a final demand sector. On a fractional basis, where is that embodied upstream energy consumed (columns)? Rows sums to 1. |
 
