@@ -239,59 +239,59 @@ add_matnames_iea <- function(.DF,
 #' UKEnergy2000tidy %>%
 #'   add_matnames_iea() %>%
 #'   add_row_col_meta()
-add_row_col_meta <- function(.DF,
-                             # Name of the input column containing matrix names
-                             matname = "matname",
-                             # Column names for Product and Flow
-                             product = "Product", flow = "Flow",
-                             # Expected matrix names in the matname column
-                             U = "U", U_EIOU = "U_EIOU",
-                             R = "R", V = "V", Y = "Y",
-                             # Row and column Type identifiers
-                             industry_type = "Industry", product_type = "Product",
-                             sector_type = "Industry", resource_type = "Industry",
-                             # Output columns
-                             rowname = "rowname", colname = "colname",
-                             rowtype = "rowtype", coltype = "coltype"){
-  product <- as.name(product)
-  flow <- as.name(flow)
-  matname <- as.name(matname)
-  rowname <- as.name(rowname)
-  colname <- as.name(colname)
-  rowtype <- as.name(rowtype)
-  coltype <- as.name(coltype)
-
-  matsindf::verify_cols_missing(.DF, c(rowname, colname, rowtype, coltype))
-
-  .DF %>%
-    dplyr::mutate(
-      !!rowname := dplyr::case_when(
-        startsWith(!!matname, U) ~ !!product,
-        !!matname == R ~ !!flow,
-        !!matname == V ~ !!flow,
-        !!matname == Y ~ !!product,
-        TRUE ~ NA_character_
-      ),
-      !!colname := dplyr::case_when(
-        startsWith(!!matname, U) ~ !!flow,
-        !!matname == V ~ !!product,
-        !!matname == R ~ !!product,
-        !!matname == Y ~ !!flow,
-        TRUE ~ NA_character_
-      ),
-      !!rowtype := dplyr::case_when(
-        startsWith(!!matname, U) ~ product_type,
-        !!matname == R ~ resource_type,
-        !!matname == V ~ industry_type,
-        !!matname == Y ~ product_type,
-        TRUE ~ NA_character_
-      ),
-      !!coltype := dplyr::case_when(
-        startsWith(!!matname, U) ~ industry_type,
-        !!matname == R ~ product_type,
-        !!matname == V ~ product_type,
-        !!matname == Y ~ sector_type,
-        TRUE ~ NA_character_
-      )
-    )
-}
+# add_row_col_meta <- function(.DF,
+#                              # Name of the input column containing matrix names
+#                              matname = "matname",
+#                              # Column names for Product and Flow
+#                              product = "Product", flow = "Flow",
+#                              # Expected matrix names in the matname column
+#                              U = "U", U_EIOU = "U_EIOU",
+#                              R = "R", V = "V", Y = "Y",
+#                              # Row and column Type identifiers
+#                              industry_type = "Industry", product_type = "Product",
+#                              sector_type = "Industry", resource_type = "Industry",
+#                              # Output columns
+#                              rowname = "rowname", colname = "colname",
+#                              rowtype = "rowtype", coltype = "coltype"){
+#   product <- as.name(product)
+#   flow <- as.name(flow)
+#   matname <- as.name(matname)
+#   rowname <- as.name(rowname)
+#   colname <- as.name(colname)
+#   rowtype <- as.name(rowtype)
+#   coltype <- as.name(coltype)
+#
+#   matsindf::verify_cols_missing(.DF, c(rowname, colname, rowtype, coltype))
+#
+#   .DF %>%
+#     dplyr::mutate(
+#       !!rowname := dplyr::case_when(
+#         startsWith(!!matname, U) ~ !!product,
+#         !!matname == R ~ !!flow,
+#         !!matname == V ~ !!flow,
+#         !!matname == Y ~ !!product,
+#         TRUE ~ NA_character_
+#       ),
+#       !!colname := dplyr::case_when(
+#         startsWith(!!matname, U) ~ !!flow,
+#         !!matname == V ~ !!product,
+#         !!matname == R ~ !!product,
+#         !!matname == Y ~ !!flow,
+#         TRUE ~ NA_character_
+#       ),
+#       !!rowtype := dplyr::case_when(
+#         startsWith(!!matname, U) ~ product_type,
+#         !!matname == R ~ resource_type,
+#         !!matname == V ~ industry_type,
+#         !!matname == Y ~ product_type,
+#         TRUE ~ NA_character_
+#       ),
+#       !!coltype := dplyr::case_when(
+#         startsWith(!!matname, U) ~ industry_type,
+#         !!matname == R ~ product_type,
+#         !!matname == V ~ product_type,
+#         !!matname == Y ~ sector_type,
+#         TRUE ~ NA_character_
+#       )
+#     )
+# }

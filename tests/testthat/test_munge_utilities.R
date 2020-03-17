@@ -2,30 +2,6 @@
 context("Data prep utilities")
 ###########################################################
 
-test_that("add_matnames and add_row_col_meta works as expected", {
-  WithMatnames <- UKEnergy2000tidy %>%
-    add_matnames_iea() %>%
-    add_row_col_meta()
-  expect_equivalent(WithMatnames %>%
-                      dplyr::filter(Ledger.side == "Supply", Energy.type == "E.ktoe", Last.stage == "final", Flow == "Resources - Crude", Product == "Crude") %>% select(matname, rowtype, coltype) %>% unlist(),
-                    c("V", "Industry", "Product"))
-  expect_equivalent(WithMatnames %>%
-                      dplyr::filter(Ledger.side == "Consumption", Energy.type == "E.ktoe", Last.stage == "final", Flow == "Transport", Product == "Diesel - Dist.") %>% select(matname, rowtype, coltype) %>% unlist(),
-                    c("Y", "Product", "Industry"))
-  expect_equivalent(WithMatnames %>%
-                      dplyr::filter(Ledger.side == "Supply", Energy.type == "E.ktoe", Last.stage == "services", Flow == "Car engines", Product == "MD - Car engines") %>% select(matname, rowtype, coltype) %>% unlist(),
-                    c("V", "Industry", "Product"))
-  expect_equivalent(WithMatnames %>%
-                      dplyr::filter(Ledger.side == "Supply", Energy.type == "E.ktoe", Last.stage == "useful", Flow == "Diesel dist.", Product == "Diesel") %>% select(matname, rowtype, coltype) %>% unlist(),
-                    c("U_excl_EIOU", "Product", "Industry"))
-  expect_equivalent(WithMatnames %>%
-                      dplyr::filter(Ledger.side == "Supply", Flow.aggregation.point == "Energy industry own use", Energy.type == "E.ktoe", Last.stage == "final", Flow == "Petrol dist.", Product == "Petrol - Dist.") %>% select(matname, rowtype, coltype) %>% unlist(),
-                    c("U_EIOU", "Product", "Industry"))
-  expect_equivalent(WithMatnames %>%
-                      dplyr::filter(Ledger.side == "Consumption", Energy.type == "X.ktoe", Last.stage == "services", Flow == "Residential", Product == "Space heating [m3-K]") %>% select(matname, rowtype, coltype) %>% unlist(),
-                    c("Y", "Product", "Industry"))
-})
-
 test_that("add_matnames works correctly with a prefixed Flow", {
   # Add an exports row to UKEnergy2000tidy
   new_row <- list(Country = "ZA", Year = 2018, Ledger.side = "Supply",
@@ -40,6 +16,7 @@ test_that("add_matnames works correctly with a prefixed Flow", {
   expect_equal(UVY[["UVY"]][[n_rows]], "Y")
 })
 
+
 test_that("add_matnames identifies resource industries correctly", {
   # Run the add_matnames_iea function with use_R = TRUE
   WithR <- UKEnergy2000tidy %>%
@@ -52,16 +29,17 @@ test_that("add_matnames identifies resource industries correctly", {
     mutate(matname = "R")
   expect_equal(WithR, Expected)
   # Check that rowname is correct for resource rows.
-  WithRmeta <- WithR %>% add_row_col_meta()
+  WithRmeta <- WithR %>% IEATools::add_row_col_meta()
   # Ensure that the rowname is correct
-  expect_equal(WithRmeta$rowname, WithRmeta$Flow)
+  expect_equal(WithRmeta$rownames, WithRmeta$Flow)
   # Ensure that the colname is correct
-  expect_equal(WithRmeta$colname, WithRmeta$Product)
+  expect_equal(WithRmeta$colnames, WithRmeta$Product)
   # Ensure that the rowtype is correct
-  expect_equal(WithRmeta$rowtype, rep("Industry", 8))
+  expect_equal(WithRmeta$rowtypes, rep("Industry", 8))
   # Ensure that the coltype is correct
-  expect_equal(WithRmeta$coltype, rep("Product", 8))
+  expect_equal(WithRmeta$coltypes, rep("Product", 8))
 })
+
 
 test_that("verify_cols_missing works when either strings or names are provided", {
   df <- data.frame(a = c(1,2), b = c(3,4))
@@ -75,12 +53,14 @@ test_that("verify_cols_missing works when either strings or names are provided",
                Hmisc::escapeRegex("column(s) 'a', 'b' is (are) already column names in data frame 'df'"))
 })
 
+
 test_that("verify_cols_missing works with a single value", {
   df <- data.frame(a = c(1,2), b = c(3,4))
   expect_silent(verify_cols_missing(df, as.name("c")))
   expect_error(verify_cols_missing(df, as.name("a")),
                Hmisc::escapeRegex("column(s) 'a' is (are) already column names in data frame 'df'"))
 })
+
 
 test_that("S_units_from_tidy works as expected", {
 
