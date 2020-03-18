@@ -25,8 +25,8 @@ library(dplyr)
 library(matsbyname)
 library(matsindf)
 library(Recca)
-library(tidyr)
 library(tibble)
+library(tidyr)
 ```
 
 <!-- Establish some helpful LaTeX shortcuts for equations -->
@@ -104,9 +104,9 @@ using the `S_units_from_tidy()` function.
 ```{r}
 library(tibble)
 S_units <- UKEnergy2000tidy %>%
-  group_by(Country, Year, Energy.type, Last.stage) %>%
+  dplyr::group_by(Country, Year, Energy.type, Last.stage) %>%
   S_units_from_tidy()
-glimpse(S_units)
+tibble::glimpse(S_units)
 ```
 
 And we can identify which entries belong in the
@@ -121,8 +121,8 @@ WithNames <- UKEnergy2000tidy %>%
   # Add metadata columns for row names, column names, row types, and column types.
   IEATools::add_row_col_meta() %>% 
   # Eliminate columns we no longer need
-  select(-Ledger.side, -Flow.aggregation.point, -Flow, -Product) %>%
-  mutate(
+  dplyr::select(-Ledger.side, -Flow.aggregation.point, -Flow, -Product) %>%
+  dplyr::mutate(
     # Ensure that all energy values are positive, as required for analysis.
     E.dot = abs(E.dot)
   )
@@ -135,25 +135,25 @@ we can collapse all data to matrices and add a unit summation matrix (`S_units`)
 ```{r}
 AsMats <- WithNames %>%
   # Collapse to matrices using functions in the matsindf package
-  group_by(Country, Year, Energy.type, Last.stage, matnames) %>%
-  collapse_to_matrices(matnames = "matnames", matvals = "E.dot",
+  dplyr::group_by(Country, Year, Energy.type, Last.stage, matnames) %>%
+  matsindf::collapse_to_matrices(matnames = "matnames", matvals = "E.dot",
                        rownames = "rownames", colnames = "colnames",
                        rowtypes = "rowtypes", coltypes = "coltypes") %>%
-  rename(matrix.name = matnames, matrix = E.dot) %>%
-  spread(key = matrix.name, value = matrix) %>% 
+  dplyr::rename(matrix.name = matnames, matrix = E.dot) %>%
+  tidyr::spread(key = matrix.name, value = matrix) %>% 
   # Do a little more cleanup
-  mutate(
+  dplyr::mutate(
     # Create full U matrix
     U = matsbyname::sum_byname(U_excl_EIOU, U_EIOU),
     # Create r_EIOU, a matrix that identifies the ratio of EIOU to other energy consumed.
     r_EIOU = matsbyname::quotient_byname(U_EIOU, U),
     r_EIOU = matsbyname::replaceNaN_byname(r_EIOU, val = 0)
   ) %>% 
-  select(-U_EIOU, -U_excl_EIOU) %>%
+  dplyr::select(-U_EIOU, -U_excl_EIOU) %>%
   # Add S_units matrices
-  left_join(S_units, by = c("Country", "Year", "Energy.type", "Last.stage")) %>%
-  gather(key = matrix.name, value = matrix, R, U, V, Y, r_EIOU, S_units)
-glimpse(AsMats)
+  dplyr::left_join(S_units, by = c("Country", "Year", "Energy.type", "Last.stage")) %>%
+  tidyr::gather(key = matrix.name, value = matrix, R, U, V, Y, r_EIOU, S_units)
+tibble::glimpse(AsMats)
 ```
 
 The `AsMats` data frame is essentially the same as the `Recca::UKEnergy2000mats` data frame.
@@ -172,13 +172,13 @@ To determine the I-O structure of an ECC, use the `calc_io_mats()` function.
 ```{r}
 library(tidyr)
 mats <- UKEnergy2000mats %>% 
-  spread(key = matrix.name, value = matrix) %>% 
+  tidyr::spread(key = matrix.name, value = matrix) %>% 
   # Put rows in a natural order
-  mutate(
+  dplyr::mutate(
     Last.stage = factor(Last.stage, levels = c("final", "useful", "services")),
-    Energy.type = factor(Energy.type, levels = c("E.ktoe", "X.ktoe"))
+    Energy.type = factor(Energy.type, levels = c("E", "X"))
   ) %>% 
-  arrange(Last.stage, Energy.type) 
+  dplyr::arrange(Last.stage, Energy.type)
 # Use the calc_io_mats function with individual matrices, 
 # each taken from the first row of the UKEnergy2000mats data frame.
 U <- mats$U[[1]]
@@ -277,8 +277,8 @@ ECC that would be required to meet the new final demand represented by `Y_prime`
 
 ```{r}
 Double_demand <- IO_df %>% 
-  mutate(
-    Y_prime = hadamardproduct_byname(2, Y)
+  dplyr::mutate(
+    Y_prime = matsbyname::hadamardproduct_byname(2, Y)
   ) %>% 
   new_Y()
 names(Double_demand)
@@ -394,9 +394,9 @@ The `calc_embodied_etas()` function does this computation.
 ```{r}
 primary_machine_names <- c("Resources - Crude", "Resources - NG")
 
-embodied_mats <- IO_df %>%
-  mutate(
-    U_EIOU = hadamardproduct_byname(r_EIOU, U)
+embodied_mats <- IO_df %>% 
+  dplyr::mutate(
+    U_EIOU = matsbyname::hadamardproduct_byname(r_EIOU, U)
   ) %>%
   calc_embodied_mats() %>%
   calc_embodied_etas(primary_machine_names = primary_machine_names)
