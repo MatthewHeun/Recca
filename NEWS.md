@@ -1,3 +1,4 @@
+* `primary_aggregates()` now properly handles PSUT matrices formulated with `R` matrices.
 * Fixed typos in `Recca.Rmd` vignette.
 
 
