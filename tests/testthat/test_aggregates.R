@@ -15,7 +15,7 @@ test_that("primary aggregates of SUT data work as expected", {
 
   # Primary TOTAL aggregates
   primary_total_aggregates_sut <- UKEnergy2000mats %>%
-    spread(key = matrix.name, value = matrix) %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
     primary_aggregates(p_industries = p_industries, by = "Total",
                        aggregate_primary = "EX_total_agg.ktoe")
   expect_equivalent(primary_total_aggregates_sut %>% filter(Last.stage == "final") %>%
