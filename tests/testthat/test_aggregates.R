@@ -2,7 +2,6 @@ library(dplyr)
 library(magrittr)
 library(matsbyname)
 library(matsindf)
-# library(qgraph)
 library(tidyr)
 
 ###########################################################
@@ -18,14 +17,14 @@ test_that("primary aggregates of SUT data work as expected", {
     tidyr::spread(key = matrix.name, value = matrix) %>%
     primary_aggregates(p_industries = p_industries, by = "Total",
                        aggregate_primary = "EX_total_agg.ktoe")
-  expect_equivalent(primary_total_aggregates_sut %>% filter(Last.stage == "final") %>%
-                      select("EX_total_agg.ktoe"), 93000)
-  expect_equivalent(primary_total_aggregates_sut %>% filter(Last.stage == "useful") %>%
-                      select("EX_total_agg.ktoe"), 93000)
-  expect_equivalent(primary_total_aggregates_sut %>% filter(Energy.type == "E.ktoe", Last.stage == "services") %>%
-                      select("EX_total_agg.ktoe"), 93000)
-  expect_equivalent(primary_total_aggregates_sut %>% filter(Energy.type == "X.ktoe", Last.stage == "services") %>%
-                      select("EX_total_agg.ktoe"), 98220)
+  testthat::expect_equivalent(primary_total_aggregates_sut %>% filter(Last.stage == "Final") %>%
+                                select("EX_total_agg.ktoe"), 93000)
+  testthat::expect_equivalent(primary_total_aggregates_sut %>% filter(Last.stage == "Useful") %>%
+                                select("EX_total_agg.ktoe"), 93000)
+  testthat::expect_equivalent(primary_total_aggregates_sut %>% filter(Energy.type == "E", Last.stage == "Services") %>%
+                                select("EX_total_agg.ktoe"), 93000)
+  testthat::expect_equivalent(primary_total_aggregates_sut %>% filter(Energy.type == "X", Last.stage == "Services") %>%
+                                select("EX_total_agg.ktoe"), 98220)
 
   # Primary PRODUCT aggregates
   primary_product_aggregates_sut <- UKEnergy2000mats %>%
