@@ -3,9 +3,9 @@
 #
 # Workflow:
 #
-# (1) If any changes are made in UKEnergy2000raw.csv,
+# (1) If any changes are made in SuperSimpleEconomy_2018-11-13.xlsx,
 # be sure to build the package before running this script.
-# Building the package will put the UKEnergy2000raw.csv file in the correct location
+# Building the package will put the SuperSimpleEconomy_2018-11-13.xlsx file in the correct location
 # to be picked up by the System.file function.
 #
 # (2) Run this script so that use_data puts the *.rda files in the correct location.

@@ -3,9 +3,9 @@
 #
 # Workflow:
 #
-# (1) If any changes are made in PerfectSubstitutionraw.csv,
+# (1) If any changes are made in UTEI_Sankey_Simple_ECC_Perfect_Sub.xlsx,
 # be sure to build the package before running this script.
-# Building the package will put the PerfectSubstitutionraw.csv file in the correct location
+# Building the package will put the UTEI_Sankey_Simple_ECC_Perfect_Sub.xlsx file in the correct location
 # to be picked up by the System.file function.
 #
 # (2) Run this script so that use_data puts the *.rda files in the correct location.
