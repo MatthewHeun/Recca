@@ -22,7 +22,6 @@ library(devtools)
 # Load the raw data from the .Excel file
 PerfectSubtidy <- openxlsx::read.xlsx(system.file("extdata", "PerfectSubstitutionraw", "UTEI_Sankey_Simple_ECC_Perfect_Sub.xlsx",
                                                     package = "Recca", mustWork = TRUE), sheet = "PerfectSubstitutionRaw")
-
 usethis::use_data(PerfectSubtidy, overwrite = TRUE)
 
 # Create S_units matrices from the PerfectSubtidy data frame
@@ -32,22 +31,22 @@ S_units <- PerfectSubtidy %>%
 
 PerfectSubmats <- PerfectSubtidy %>%
   # Add a column indicating the matrix in which this entry belongs (U, V, or Y).
-  add_matnames_iea() %>%
+  IEATools::add_psut_matnames() %>%
   # Add metadata columns for row names, column names, row types, and column types.
   IEATools::add_row_col_meta() %>%
   # Eliminate columns we no longer need
   dplyr::select(-Ledger.side, -Flow.aggregation.point, -Flow, -Product) %>%
   dplyr::mutate(
     # Ensure that all energy values are positive, as required for analysis.
-    EX.ktoe = abs(EX.ktoe)
+    E.dot = abs(E.dot)
   ) %>%
 
   # Collapse to matrices
-  dplyr::group_by(Country, Year, Energy.type, Last.stage, matname) %>% View
+  dplyr::group_by(Country, Year, Energy.type, Last.stage, matnames) %>%
   matsindf::collapse_to_matrices(matnames = "matnames", matvals = "E.dot",
                                  rownames = "rownames", colnames = "colnames",
                                  rowtypes = "rowtypes", coltypes = "coltypes") %>%
-  dplyr::rename(matrix.name = matname, matrix = EX.ktoe) %>%
+  dplyr::rename(matrix.name = matnames, matrix = E.dot) %>%
   tidyr::spread(key = matrix.name, value = matrix) %>%
 
   dplyr::mutate(
@@ -60,6 +59,5 @@ PerfectSubmats <- PerfectSubtidy %>%
   # Add S_units matrices
   dplyr::left_join(S_units, by = c("Country", "Year", "Energy.type", "Last.stage")) %>%
   tidyr::gather(key = matrix.name, value = matrix, U, V, Y, r_EIOU, S_units)
-
 
 usethis::use_data(PerfectSubmats, overwrite = TRUE)

@@ -39,7 +39,10 @@ UKEnergy2000mats <- UKEnergy2000tidy %>%
   # Add metadata columns for row names, column names, row types, and column types.
   IEATools::add_row_col_meta() %>%
   # Eliminate columns we no longer need
-  dplyr::select(-Ledger.side, -Flow.aggregation.point, -Flow, -Product) %>%
+  dplyr::select(-Ledger.side,
+                -Flow.aggregation.point,
+                -Flow,
+                -Product) %>%
   dplyr::mutate(
     # Ensure that all energy values are positive, as required for analysis.
     E.dot = abs(E.dot)
@@ -55,9 +58,9 @@ UKEnergy2000mats <- UKEnergy2000tidy %>%
 
   dplyr::mutate(
     # Create full U matrix
-    U = sum_byname(U_excl_EIOU, U_EIOU),
-    r_EIOU = quotient_byname(U_EIOU, U),
-    r_EIOU = replaceNaN_byname(r_EIOU, val = 0)
+    U = matsbyname::sum_byname(U_excl_EIOU, U_EIOU),
+    r_EIOU = matsbyname::quotient_byname(U_EIOU, U),
+    r_EIOU = matsbyname::replaceNaN_byname(r_EIOU, val = 0)
   ) %>%
   dplyr::select(-U_EIOU, -U_excl_EIOU) %>%
   # Add S_units matrices
