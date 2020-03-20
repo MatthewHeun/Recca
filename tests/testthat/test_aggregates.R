@@ -32,7 +32,7 @@ test_that("primary aggregates of SUT data work as expected", {
     tidyr::spread(key = matrix.name, value = matrix) %>%
     primary_aggregates(p_industries = p_industries, by = "Product",
                        aggregate_primary = "EX_product_agg.ktoe") %>%
-    dplyr::select(Country, Year, Last.stage, Energy.type, EX_product_agg.ktoe) %>% View
+    dplyr::select(Country, Year, Last.stage, Energy.type, EX_product_agg.ktoe) %>%
     tidyr::gather(key = "matnames", value = "matvals", EX_product_agg.ktoe) %>%
     matsindf::expand_to_tidy(drop = 0)
   expect_equivalent(primary_product_aggregates_sut %>% filter(Energy.type == "E.ktoe" & rownames == "Crude") %>% select(matvals) %>% unlist(), rep(50000, 3))
