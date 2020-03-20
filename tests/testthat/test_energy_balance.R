@@ -5,8 +5,8 @@ context("SUT energy balance")
 test_that("SUT matrix energy balance works with energy only", {
   expect_silent(
     UKEnergy2000mats %>%
-      spread(key = matrix.name, value = matrix) %>%
-      filter(Last.stage %in% c("final", "useful")) %>%
+      tidyr::spread(key = matrix.name, value = matrix) %>%
+      dplyr::filter(Last.stage %in% c("Final", "Useful")) %>%
       verify_SUT_energy_balance()
   )
 })
@@ -14,20 +14,22 @@ test_that("SUT matrix energy balance works with energy only", {
 test_that("SUT matrix energy balance fails when a number has changed", {
   mats <- UKEnergy2000mats %>%
     spread(key = matrix.name, value = matrix) %>%
-    filter(Last.stage == "final")
+    filter(Last.stage == IEATools::last_stages$final)
+  R <- mats$R[[1]]
   U <- mats$U[[1]]
   V <- mats$V[[1]]
   Y <- mats$Y[[1]]
-  expect_equal(verify_SUT_energy_balance(U = U, V = V, Y = Y),
+  expect_equal(verify_SUT_energy_balance(R = R, U = U, V = V, Y = Y),
                list(.SUT_energy_balance = TRUE))
   Y[2, 2] <- 42 # Replace a 0 with a value
-  expect_warning(verify_SUT_energy_balance(U = U, V = V, Y = Y),
+  expect_warning(verify_SUT_energy_balance(R = R, U = U, V = V, Y = Y),
                  "Energy not conserved")
 })
 
 test_that("SUT matrix energy balance works as expected", {
   result <- verify_SUT_energy_balance_with_units(
-    UKEnergy2000mats %>% spread(key = matrix.name, value = matrix),
+    UKEnergy2000mats %>%
+      tidyr::spread(key = matrix.name, value = matrix),
     tol = 1e-3)
   expect_true(all(result$.SUT_prod_energy_balance %>% as.logical()))
   expect_true(all(result$.SUT_ind_energy_balance %>% as.logical()))

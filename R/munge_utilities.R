@@ -99,104 +99,104 @@ S_units_from_tidy <- function(.tidydf, Product = "Product", Unit = "Unit", S_uni
 #'   group_by(Country, Year, Energy.type, Last.stage) %>%
 #'   add_matnames_iea() %>%
 #'   glimpse()
-add_matnames_iea <- function(.DF,
-                             # Input columns
-                             ledger_side = "Ledger.side",
-                             energy = "E.dot",
-                             flow_aggregation_point = "Flow.aggregation.point",
-                             flow = "Flow",
-                             # Input identifiers for supply, consumption, and EIOU
-                             supply_side = "Supply",
-                             consumption_side = "Consumption",
-                             eiou = "Energy industry own use",
-                             neg_supply_in_fd = c("Exports",
-                                                  "International aviation bunkers",
-                                                  "International marine bunkers",
-                                                  "Losses",
-                                                  "Statistical differences",
-                                                  "Stock changes"),
-                             # Mode switch
-                             use_R = FALSE,
-                             # Output column
-                             matname = "matname",
-                             # Ouput identifiers for
-                             # use matrix excluding EIOU (U_excl_EIOU),
-                             # use matrix energy industry own use items (U_EIOU),
-                             # make (V), and
-                             # final demand (Y)
-                             # matrices.
-                             U_excl_EIOU = "U_excl_EIOU", U_EIOU = "U_EIOU",
-                             R = "R", V = "V", Y = "Y"){
-  ledger_side <- as.name(ledger_side)
-  energy <- as.name(energy)
-  flow <- as.name(flow)
-  flow_aggregation_point <- as.name(flow_aggregation_point)
-
-  matsindf::verify_cols_missing(.DF, matname)
-
-  out <- .DF %>%
-    dplyr::mutate(
-      !!matname := dplyr::case_when(
-        # All Consumption items belong in the final demand (Y) matrix.
-        !!ledger_side == consumption_side ~ Y,
-        # All positive values on the Supply side of the ledger belong in the make (V) matrix.
-        !!ledger_side == supply_side & !!energy > 0 ~ V,
-        # Negative values on the supply side of the ledger with Flow == "Energy industry own use"
-        # are put into the U_EIOU matrix
-        !!ledger_side == supply_side & !!energy <= 0 & !!flow_aggregation_point == eiou ~ U_EIOU,
-        # Negative values on the supply side that have Flow %in% supply_in_fd go in the final demand matrix
-        # !!ledger_side == supply_side & !!energy <= 0 & !!flow %in% neg_supply_in_fd ~ Y,
-        !!ledger_side == supply_side & !!energy <= 0 & startsWith_any_of(!!flow, neg_supply_in_fd) ~ Y,
-        # All other negative values on the Supply side of the ledger belong in the use matrix
-        # that excludes EIOU (U_excl_EIOU).
-        !!ledger_side == supply_side & !!energy <= 0 ~ U_excl_EIOU,
-        # Identify any places where our logic is faulty.
-        TRUE ~ NA_character_
-      )
-    )
-  if (use_R) {
-    gvars <- dplyr::group_vars(out)
-    # Need to split R matrix entries from V matrix entries.
-    matname <- as.name(matname)
-    # Find all the rows that identify outputs of an ECC industry.
-    output_rows <- out %>%
-      dplyr::filter(!!matname == V)
-    # Find all the rows that identify inputs to an ECC industry.
-    input_rows <- out %>%
-      dplyr::filter(!!matname == Y | !!energy < 0) %>%
-      dplyr::mutate(
-        !!energy := abs(!!energy)
-      )
-    # Resource industries are those industries (Flows) that have outputs but no inputs.
-    industries_with_outputs <- output_rows %>%
-      dplyr::select(!!!gvars, !!flow)
-    industries_with_inputs <- input_rows %>%
-      dplyr::select(!!!gvars, !!flow) %>%
-      unique()
-    # The next line subtracts (by group!) all industries with inputs from the industries_with_outputs data frame,
-    # leaving only industries who have outputs but no inputs.
-    resource_rows <- dplyr::anti_join(industries_with_outputs, industries_with_inputs, by = c(gvars, as.character(flow))) %>%
-      dplyr::mutate(
-        # The rows in the resource_rows data frame belong in the resources matrix,
-        # so we give them the R matrix name.
-        .R = TRUE
-      )
-    # The following full_join puts a .R column in the out data frame.
-    # The .R column will have TRUE where matname needs to be changed from its current value to R
-    # The .R column will have NA where matname should not be changed.
-    .R_col <- as.name(".R")
-    matsindf::verify_cols_missing(out, .R_col)
-    out <- dplyr::full_join(out, resource_rows, by = c(gvars, as.character(flow))) %>%
-      dplyr::mutate(
-        !!matname := dplyr::case_when(
-          !!.R_col ~ R,
-          TRUE ~ matname
-        )
-      ) %>%
-      dplyr::select(-!!.R_col)
-  }
-  return(out)
-}
+# add_matnames_iea <- function(.DF,
+#                              # Input columns
+#                              ledger_side = "Ledger.side",
+#                              energy = "E.dot",
+#                              flow_aggregation_point = "Flow.aggregation.point",
+#                              flow = "Flow",
+#                              # Input identifiers for supply, consumption, and EIOU
+#                              supply_side = "Supply",
+#                              consumption_side = "Consumption",
+#                              eiou = "Energy industry own use",
+#                              neg_supply_in_fd = c("Exports",
+#                                                   "International aviation bunkers",
+#                                                   "International marine bunkers",
+#                                                   "Losses",
+#                                                   "Statistical differences",
+#                                                   "Stock changes"),
+#                              # Mode switch
+#                              use_R = FALSE,
+#                              # Output column
+#                              matname = "matname",
+#                              # Ouput identifiers for
+#                              # use matrix excluding EIOU (U_excl_EIOU),
+#                              # use matrix energy industry own use items (U_EIOU),
+#                              # make (V), and
+#                              # final demand (Y)
+#                              # matrices.
+#                              U_excl_EIOU = "U_excl_EIOU", U_EIOU = "U_EIOU",
+#                              R = "R", V = "V", Y = "Y"){
+#   ledger_side <- as.name(ledger_side)
+#   energy <- as.name(energy)
+#   flow <- as.name(flow)
+#   flow_aggregation_point <- as.name(flow_aggregation_point)
+#
+#   matsindf::verify_cols_missing(.DF, matname)
+#
+#   out <- .DF %>%
+#     dplyr::mutate(
+#       !!matname := dplyr::case_when(
+#         # All Consumption items belong in the final demand (Y) matrix.
+#         !!ledger_side == consumption_side ~ Y,
+#         # All positive values on the Supply side of the ledger belong in the make (V) matrix.
+#         !!ledger_side == supply_side & !!energy > 0 ~ V,
+#         # Negative values on the supply side of the ledger with Flow == "Energy industry own use"
+#         # are put into the U_EIOU matrix
+#         !!ledger_side == supply_side & !!energy <= 0 & !!flow_aggregation_point == eiou ~ U_EIOU,
+#         # Negative values on the supply side that have Flow %in% supply_in_fd go in the final demand matrix
+#         # !!ledger_side == supply_side & !!energy <= 0 & !!flow %in% neg_supply_in_fd ~ Y,
+#         !!ledger_side == supply_side & !!energy <= 0 & startsWith_any_of(!!flow, neg_supply_in_fd) ~ Y,
+#         # All other negative values on the Supply side of the ledger belong in the use matrix
+#         # that excludes EIOU (U_excl_EIOU).
+#         !!ledger_side == supply_side & !!energy <= 0 ~ U_excl_EIOU,
+#         # Identify any places where our logic is faulty.
+#         TRUE ~ NA_character_
+#       )
+#     )
+#   if (use_R) {
+#     gvars <- dplyr::group_vars(out)
+#     # Need to split R matrix entries from V matrix entries.
+#     matname <- as.name(matname)
+#     # Find all the rows that identify outputs of an ECC industry.
+#     output_rows <- out %>%
+#       dplyr::filter(!!matname == V)
+#     # Find all the rows that identify inputs to an ECC industry.
+#     input_rows <- out %>%
+#       dplyr::filter(!!matname == Y | !!energy < 0) %>%
+#       dplyr::mutate(
+#         !!energy := abs(!!energy)
+#       )
+#     # Resource industries are those industries (Flows) that have outputs but no inputs.
+#     industries_with_outputs <- output_rows %>%
+#       dplyr::select(!!!gvars, !!flow)
+#     industries_with_inputs <- input_rows %>%
+#       dplyr::select(!!!gvars, !!flow) %>%
+#       unique()
+#     # The next line subtracts (by group!) all industries with inputs from the industries_with_outputs data frame,
+#     # leaving only industries who have outputs but no inputs.
+#     resource_rows <- dplyr::anti_join(industries_with_outputs, industries_with_inputs, by = c(gvars, as.character(flow))) %>%
+#       dplyr::mutate(
+#         # The rows in the resource_rows data frame belong in the resources matrix,
+#         # so we give them the R matrix name.
+#         .R = TRUE
+#       )
+#     # The following full_join puts a .R column in the out data frame.
+#     # The .R column will have TRUE where matname needs to be changed from its current value to R
+#     # The .R column will have NA where matname should not be changed.
+#     .R_col <- as.name(".R")
+#     matsindf::verify_cols_missing(out, .R_col)
+#     out <- dplyr::full_join(out, resource_rows, by = c(gvars, as.character(flow))) %>%
+#       dplyr::mutate(
+#         !!matname := dplyr::case_when(
+#           !!.R_col ~ R,
+#           TRUE ~ matname
+#         )
+#       ) %>%
+#       dplyr::select(-!!.R_col)
+#   }
+#   return(out)
+# }
 
 #' Add row, column, row type, and column type metadata
 #'

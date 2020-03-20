@@ -17,15 +17,16 @@
 #' showing where energy is not in balance.
 #'
 #' @param .sutmats an SUT-style data frame with columns of matrices,
-#'        including \code{U}, \code{V}, and \code{Y} columns.
-#' @param U use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".
-#' @param V make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "\code{V}".
-#' @param Y final demand (\code{Y}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Y}".
-#' @param SUT_energy_balance the name for booleans telling if energy is in balance. Default is "\code{.SUT_energy_balance}".
+#'        including `U`, `V`, and `Y` columns.
+#' @param R resources (`R`) matrix or name of the column in `.sutmats` that contains same. Default is "R".
+#' @param U use (`U`) matrix or name of the column in `.sutmats` that contains same. Default is "U".
+#' @param V make (`V`) matrix or name of the column in `.sutmats`that contains same. Default is "V".
+#' @param Y final demand (`Y`) matrix or name of the column in `.sutmats` that contains same. Default is "Y".
+#' @param SUT_energy_balance the name for booleans telling if energy is in balance. Default is ".SUT_energy_balance".
 #' @param tol the maximum amount by which Supply and Consumption can be out of balance.
-#'        Default is \code{1e-6}.
+#'        Default is `1e-6`.
 #'
-#' @return a list or data frame saying whether \code{.sutmats} are in balance.
+#' @return a list or data frame saying whether `.sutmats` are in balance.
 #'
 #' @export
 #'
@@ -33,21 +34,29 @@
 #' library(dplyr)
 #' library(tidyr)
 #' verify_SUT_energy_balance(UKEnergy2000mats %>%
-#'                             filter(Last.stage %in% c("final", "useful")) %>%
-#'                             spread(key = matrix.name, value = matrix),
+#'                             dplyr::filter(Last.stage %in% c("final", "useful")) %>%
+#'                             tidyr::spread(key = matrix.name, value = matrix),
 #'                           tol = 1e-4)
 verify_SUT_energy_balance <- function(.sutmats = NULL,
                                       # Input names
-                                      U = "U", V = "V", Y = "Y",
+                                      R = "R", U = "U", V = "V", Y = "Y",
                                       # Tolerance
                                       tol = 1e-6,
                                       # Output name
                                       SUT_energy_balance = ".SUT_energy_balance"){
-  verify_func <- function(U_mat, V_mat, Y_mat){
+  verify_func <- function(R_mat, U_mat, V_mat, Y_mat){
+    if (is.null(R_mat)) {
+      # No R matrix, just use the V matrix, assuming that resouces are included there.
+      RV_mat <- V_mat
+    } else {
+      # An R matrix is present. Sum R and V before proceeding.
+      RV_mat <- matsbyname::sum_byname(R_mat, V_mat)
+    }
+    RV_sums <- matsbyname::transpose_byname(RV_mat) %>% matsbyname::rowsums_byname()
     U_sums <- matsbyname::rowsums_byname(U_mat)
-    V_sums <- matsbyname::transpose_byname(V_mat) %>% matsbyname::rowsums_byname()
     Y_sums <- matsbyname::rowsums_byname(Y_mat)
-    err <- matsbyname::difference_byname(V_sums, U_sums) %>% matsbyname::difference_byname(Y_sums)
+    # (R + V) - U - Y
+    err <- matsbyname::difference_byname(RV_sums, U_sums) %>% matsbyname::difference_byname(Y_sums)
     OK <- err %>%
       matsbyname::iszero_byname(tol) %>%
       as.logical()
@@ -56,7 +65,7 @@ verify_SUT_energy_balance <- function(.sutmats = NULL,
     }
     list(TRUE) %>% magrittr::set_names(SUT_energy_balance)
   }
-  Out <- matsindf::matsindf_apply(.sutmats, FUN = verify_func, U_mat = U, V_mat = V, Y_mat = Y)
+  Out <- matsindf::matsindf_apply(.sutmats, FUN = verify_func, R_mat = R, U_mat = U, V_mat = V, Y_mat = Y)
   if (!all(Out[[SUT_energy_balance]] %>% as.logical())) {
     warning(paste("Energy not conserved in verify_SUT_energy_balance. See", SUT_energy_balance))
   }

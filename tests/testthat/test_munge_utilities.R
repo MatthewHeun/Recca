@@ -9,8 +9,8 @@ test_that("add_matnames works correctly with a prefixed Flow", {
                   Last.stage = "Final", Flow = "Exports", Product = "Crude", E.dot = -42,
                   Unit = "ktoe")
   with_export <- UKEnergy2000tidy %>%
-    bind_rows(new_row)
-  UVY <- with_export %>% add_matnames_iea(matname = "UVY")
+    dplyr::bind_rows(new_row)
+  UVY <- with_export %>% IEATools::add_psut_matnames(matnames = "UVY")
   n_rows <- nrow(UVY)
   # This piece of exports data should be put in the Y matrix, not in the U matrix.
   expect_equal(UVY[["UVY"]][[n_rows]], "Y")
@@ -18,11 +18,9 @@ test_that("add_matnames works correctly with a prefixed Flow", {
 
 
 test_that("add_matnames identifies resource industries correctly", {
-  # Run the add_matnames_iea function with use_R = TRUE
   WithR <- UKEnergy2000tidy %>%
     dplyr::group_by(Country, Year, Energy.type, Last.stage) %>%
     IEATools::add_psut_matnames() %>%
-    # add_matnames_iea(use_R = TRUE) %>%
     dplyr::filter(matnames == "R")
   # We expect that every flow from a "Resources - *" industry will end up in the R matrix.
   Expected <- UKEnergy2000tidy %>%
