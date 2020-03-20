@@ -20,10 +20,6 @@ library(matsindf)
 library(devtools)
 
 # Load the raw data from the Excel file
-# UKEnergy2000tidy <- read.csv(system.file("extdata", "UKEnergy2000raw", "UKEnergy2000raw.csv",
-#                                          package = "Recca", mustWork = TRUE),
-#                              stringsAsFactors = FALSE)
-
 UKEnergy2000tidy <- openxlsx::read.xlsx(system.file("extdata", "UKEnergy2000raw", "SuperSimpleEconomy_2018-11-13.xlsx",
                                                     package = "Recca", mustWork = TRUE), sheet = "UKEnergy2000raw")
 usethis::use_data(UKEnergy2000tidy, overwrite = TRUE)
