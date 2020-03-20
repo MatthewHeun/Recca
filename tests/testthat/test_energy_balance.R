@@ -6,7 +6,7 @@ test_that("SUT matrix energy balance works with energy only", {
   expect_silent(
     UKEnergy2000mats %>%
       tidyr::spread(key = matrix.name, value = matrix) %>%
-      dplyr::filter(Last.stage %in% c("Final", "Useful")) %>%
+      dplyr::filter(Last.stage %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
       verify_SUT_energy_balance()
   )
 })
@@ -26,7 +26,7 @@ test_that("SUT matrix energy balance fails when a number has changed", {
                  "Energy not conserved")
 })
 
-test_that("SUT matrix energy balance works as expected", {
+test_that("SUT matrix energy balance with units works as expected", {
   result <- verify_SUT_energy_balance_with_units(
     UKEnergy2000mats %>%
       tidyr::spread(key = matrix.name, value = matrix),
