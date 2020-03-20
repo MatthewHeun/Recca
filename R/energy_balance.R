@@ -224,11 +224,11 @@ verify_SUT_industry_production <- function(.sutmats = NULL,
 #' UKEnergy2000tidy %>%
 #'   filter(Last.stage %in% c("final", "useful")) %>%
 #'   group_by(Country, Year, Energy.type, Last.stage) %>%
-#'   verify_IEATable_energy_balance(energy = "EX.ktoe")
+#'   verify_IEATable_energy_balance(energy = "E.dot")
 verify_IEATable_energy_balance <- function(.ieatidydata,
                                            # Input column names
                                            ledger.side = "Ledger.side",
-                                           energy = "E.ktoe",
+                                           energy = "E.dot",
                                            # ledger.side identifiers
                                            supply = "Supply",
                                            consumption = "Consumption",

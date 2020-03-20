@@ -142,7 +142,7 @@ on both net and gross bases.</p>
   <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='st'>"Ledger.side"</span>,
   <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='st'>"Flow.aggregation.point"</span>,
   <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
-  <span class='kw'>energy</span> <span class='kw'>=</span> <span class='st'>"EX.ktoe"</span>,
+  <span class='kw'>energy</span> <span class='kw'>=</span> <span class='st'>"E.dot"</span>,
   <span class='kw'>consumption</span> <span class='kw'>=</span> <span class='st'>"Consumption"</span>,
   <span class='kw'>eiou</span> <span class='kw'>=</span> <span class='st'>"Energy industry own use"</span>,
   <span class='kw'>aggregate_net_finaldemand</span> <span class='kw'>=</span> <span class='st'>"EX_fd_net_IEA.ktoe"</span>,
@@ -174,7 +174,7 @@ Default is "<code>Flow</code>".</p></td>
     <tr>
       <th>energy</th>
       <td><p>the name of the column that contains energy information.
-Default is "<code>EX.ktoe</code>".</p></td>
+Default is "<code>E.dot</code>".</p></td>
     </tr>
     <tr>
       <th>consumption</th>
@@ -222,16 +222,14 @@ Grouping columns are preserved on output.</p>
 <span class='co'># Thus, filter to rows in UKEnergy2000tidy where Last.stage is final or useful.</span>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>UKEnergy2000tidy</span>))</div><div class='output co'>#&gt;  [1] "Country"                "Year"                   "Ledger.side"           
 #&gt;  [4] "Flow.aggregation.point" "Energy.type"            "Last.stage"            
-#&gt;  [7] "Flow"                   "Product"                "EX.ktoe"               
+#&gt;  [7] "Flow"                   "Product"                "E.dot"                 
 #&gt; [10] "Unit"                  </div><div class='input'><span class='no'>UKEnergy2000tidy</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>Country</span>, <span class='no'>Year</span>, <span class='no'>Energy.type</span>, <span class='no'>Last.stage</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>Last.stage</span> <span class='kw'>%in%</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"final"</span>, <span class='st'>"useful"</span>)) <span class='kw'>%&gt;%</span>
-  <span class='fu'>finaldemand_aggregates_IEA</span>()</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 2 x 6</span><span>
-#&gt; </span><span style='color: #555555;'># Groups:   Country, Year, Energy.type [1]</span><span>
-#&gt;   Country  Year Energy.type Last.stage EX_fd_net_IEA.ktoe EX_fd_gross_IEA.ktoe
-#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>                   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>                </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #555555;'>1</span><span> GB       </span><span style='text-decoration: underline;'>2</span><span>000 E.ktoe      final                  </span><span style='text-decoration: underline;'>71</span><span>750                </span><span style='text-decoration: underline;'>83</span><span>275 
-#&gt; </span><span style='color: #555555;'>2</span><span> GB       </span><span style='text-decoration: underline;'>2</span><span>000 E.ktoe      useful                 </span><span style='text-decoration: underline;'>25</span><span>915.               </span><span style='text-decoration: underline;'>26</span><span>375.</div></span></pre>
+  <span class='fu'>finaldemand_aggregates_IEA</span>()</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 0 x 6</span><span>
+#&gt; </span><span style='color: #555555;'># Groups:   Country, Year, Energy.type [0]</span><span>
+#&gt; </span><span style='color: #555555;'># … with 6 variables: Country </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Year </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, Energy.type </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,
+#&gt; #   Last.stage </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, EX_fd_net_IEA.ktoe </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, EX_fd_gross_IEA.ktoe </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

@@ -5,8 +5,8 @@ context("Data prep utilities")
 test_that("add_matnames works correctly with a prefixed Flow", {
   # Add an exports row to UKEnergy2000tidy
   new_row <- list(Country = "ZA", Year = 2018, Ledger.side = "Supply",
-                  Flow.aggregation.point = "Total primary energy supply", Energy.type = "E.ktoe",
-                  Last.stage = "final", Flow = "Exports", Product = "Crude", EX.ktoe = -42,
+                  Flow.aggregation.point = "Total primary energy supply", Energy.type = "E.dot",
+                  Last.stage = "Final", Flow = "Exports", Product = "Crude", E.dot = -42,
                   Unit = "ktoe")
   with_export <- UKEnergy2000tidy %>%
     bind_rows(new_row)

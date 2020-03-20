@@ -66,17 +66,17 @@ test_that("IEA energy balance works correctly", {
   expect_silent(
     UKEnergy2000tidy %>%
       group_by(Country, Year, Energy.type, Last.stage) %>%
-      verify_IEATable_energy_balance(energy = "EX.ktoe")
+      verify_IEATable_energy_balance(energy = "E.dot")
   )
 
   # Introduce something to make the energy balance fail.
   Unbalanced <- UKEnergy2000tidy
   # Change from 5e4 to 1e4
-  Unbalanced$EX.ktoe[[1]] <- 1e4
+  Unbalanced$E.dot[[1]] <- 1e4
   # Now try energy balance. It should fail.
   expect_error(Unbalanced %>%
                  group_by(Country, Year, Energy.type, Last.stage) %>%
-                 verify_IEATable_energy_balance(energy = "EX.ktoe"),
+                 verify_IEATable_energy_balance(energy = "E.dot"),
                  "Energy not balanced in verify_IEATable_energy_balance.")
 
 })

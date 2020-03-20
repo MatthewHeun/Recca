@@ -214,7 +214,7 @@ finaldemand_aggregates_with_units <- function(.sutdata,
 #' @param flow the name of the column that contains flow information. Default is "\code{Flow}".
 #' @param flow_aggregation_point the name of the column that identifies flow aggregation points.
 #'        Default is "\code{Flow.aggregation.point}".
-#' @param energy the name of the column that contains energy information. Default is "\code{EX.ktoe}".
+#' @param energy the name of the column that contains energy information. Default is "\code{E.dot}".
 #' @param p_industries a vector of names of primary industries. Default is
 #'        "\code{c("Coal mines", "Oil and gas extraction",
 #'        "Production", "Imports", "Exports",
@@ -243,7 +243,7 @@ primary_aggregates_IEA <- function(.ieadata,
                                    # Input names
                                    flow = "Flow",
                                    flow_aggregation_point = "Flow.aggregation.point",
-                                   energy = "EX.ktoe",
+                                   energy = "E.dot",
                                    p_industries = c("Production", "Coal mines", "Oil and gas extraction",
                                                     "Imports", "Exports", "International aviation bunkers",
                                                     "International marine bunkers", "Stock changes"),
@@ -286,7 +286,7 @@ primary_aggregates_IEA <- function(.ieadata,
 #' @param flow the name of the column that contains flow information.
 #'        Default is "\code{Flow}".
 #' @param energy the name of the column that contains energy information.
-#'        Default is "\code{EX.ktoe}".
+#'        Default is "\code{E.dot}".
 #' @param consumption the identifier for consumption in the \code{flow_aggregation_point} column.
 #'        Default is "\code{Consumption}".
 #' @param eiou the identifier for energy industry own use in the \code{flow_aggregation_point} column.
@@ -316,7 +316,7 @@ finaldemand_aggregates_IEA <- function(.ieadata,
                                        ledger_side = "Ledger.side",
                                        flow_aggregation_point = "Flow.aggregation.point",
                                        flow = "Flow",
-                                       energy = "EX.ktoe",
+                                       energy = "E.dot",
                                        consumption = "Consumption",
                                        eiou = "Energy industry own use",
                                        # Output names

@@ -67,7 +67,7 @@ S_units_from_tidy <- function(.tidydf, Product = "Product", Unit = "Unit", S_uni
 #' @param ledger_side the name of the column in \code{.DF} that contains ledger side
 #'        (a string). Default is "\code{Ledger.side}".
 #' @param energy the name of the column in \code{.DF} that contains energy and exergy values
-#'        (a string). Default is "\code{EX.ktoe}".
+#'        (a string). Default is "\code{E.dot}".
 #' @param flow_aggregation_point the name of the column in \code{.DF} that contains flow aggregation point information.
 #'        Default is "\code{Flow.aggregation.point}".
 #' @param flow the name of the column in \code{.DF} that contains flow information.
@@ -102,7 +102,7 @@ S_units_from_tidy <- function(.tidydf, Product = "Product", Unit = "Unit", S_uni
 add_matnames_iea <- function(.DF,
                              # Input columns
                              ledger_side = "Ledger.side",
-                             energy = "EX.ktoe",
+                             energy = "E.dot",
                              flow_aggregation_point = "Flow.aggregation.point",
                              flow = "Flow",
                              # Input identifiers for supply, consumption, and EIOU

@@ -191,16 +191,16 @@ and the name of the destination of the waste flows.</p>
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>matsbyname</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>tidyr</span>)
 <span class='no'>sutmats</span> <span class='kw'>&lt;-</span> <span class='no'>UKEnergy2000mats</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='no'>matrix.name</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='no'>matrix</span>)
-<span class='fu'><a href='edge_list.html'>edge_list</a></span>(<span class='no'>sutmats</span>)$<span class='no'>`Edge list`</span><span class='kw'>[[</span><span class='fl'>1</span>]] <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>Product</span> <span class='kw'>==</span> <span class='st'>"Waste"</span>)</div><div class='output co'>#&gt;                From    To Value Product edge_id From_node_id To_node_id
-#&gt; 1       Crude dist. Waste   550   Waste      31            1         13
-#&gt; 2      Diesel dist. Waste   350   Waste      32            4         13
-#&gt; 3       Elect. grid Waste   125   Waste      33            6         13
-#&gt; 4 Gas wells &amp; proc. Waste  2075   Waste      34            9         13
-#&gt; 5          NG dist. Waste    50   Waste      35            8         13
-#&gt; 6        Oil fields Waste  2575   Waste      36            2         13
-#&gt; 7    Oil refineries Waste  5075   Waste      37            3         13
-#&gt; 8      Petrol dist. Waste   750   Waste      38           10         13
-#&gt; 9      Power plants Waste  9700   Waste      39            5         13</div></pre>
+<span class='fu'><a href='edge_list.html'>edge_list</a></span>(<span class='no'>sutmats</span>)$<span class='no'>`Edge list`</span><span class='kw'>[[</span><span class='fl'>1</span>]] <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>Product</span> <span class='kw'>==</span> <span class='st'>"Waste"</span>)</div><div class='output co'>#&gt;                    From    To Value Product edge_id From_node_id To_node_id
+#&gt; 1           Crude dist. Waste   550   Waste      31            1         13
+#&gt; 2          Diesel dist. Waste   350   Waste      32            4         13
+#&gt; 3           Elect. grid Waste   125   Waste      33            6         13
+#&gt; 4 Gas wells &amp;amp; proc. Waste  2075   Waste      34            9         13
+#&gt; 5              NG dist. Waste    50   Waste      35            8         13
+#&gt; 6            Oil fields Waste  2575   Waste      36            2         13
+#&gt; 7        Oil refineries Waste  5075   Waste      37            3         13
+#&gt; 8          Petrol dist. Waste   750   Waste      38           10         13
+#&gt; 9          Power plants Waste  9700   Waste      39            5         13</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

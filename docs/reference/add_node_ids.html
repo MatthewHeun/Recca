@@ -188,46 +188,46 @@ the value of the <code>from</code> and <code>to</code> arguments with the value 
 <span class='no'>sutmats</span> <span class='kw'>&lt;-</span> <span class='no'>UKEnergy2000mats</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='no'>matrix.name</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='no'>matrix</span>)
 <span class='co'># Suppress adding node IDs</span>
 <span class='no'>elDF</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='edge_list.html'>edge_list</a></span>(<span class='no'>sutmats</span>, <span class='kw'>node_id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)$<span class='no'>`Edge list`</span><span class='kw'>[[</span><span class='fl'>1</span>]]
-<span class='fu'>add_node_ids</span>(<span class='no'>elDF</span>)</div><div class='output co'>#&gt;                 From                To Value        Product edge_id
-#&gt; 1  Resources - Crude        Oil fields 50000          Crude       1
-#&gt; 2        Crude dist.       Crude dist.   500  Crude - Dist.       2
-#&gt; 3        Crude dist.    Oil refineries 47000  Crude - Dist.       3
-#&gt; 4         Oil fields       Crude dist. 47500 Crude - Fields       4
-#&gt; 5         Oil fields        Oil fields  2500 Crude - Fields       5
-#&gt; 6     Oil refineries      Diesel dist. 15500         Diesel       6
-#&gt; 7     Oil refineries    Oil refineries  5000         Diesel       7
-#&gt; 8       Diesel dist.       Crude dist.    25 Diesel - Dist.       8
-#&gt; 9       Diesel dist.      Diesel dist.   350 Diesel - Dist.       9
-#&gt; 10      Diesel dist. Gas wells &amp; proc.    50 Diesel - Dist.      10
-#&gt; 11      Diesel dist.          NG dist.    25 Diesel - Dist.      11
-#&gt; 12      Diesel dist.        Oil fields    50 Diesel - Dist.      12
-#&gt; 13      Diesel dist.      Petrol dist.   250 Diesel - Dist.      13
-#&gt; 14      Diesel dist.         Transport 14750 Diesel - Dist.      14
-#&gt; 15      Power plants       Elect. grid  6400          Elect      15
-#&gt; 16       Elect. grid       Crude dist.    25   Elect - Grid      16
-#&gt; 17       Elect. grid Gas wells &amp; proc.    25   Elect - Grid      17
-#&gt; 18       Elect. grid          NG dist.    25   Elect - Grid      18
-#&gt; 19       Elect. grid        Oil fields    25   Elect - Grid      19
-#&gt; 20       Elect. grid    Oil refineries    75   Elect - Grid      20
-#&gt; 21       Elect. grid      Power plants   100   Elect - Grid      21
-#&gt; 22       Elect. grid       Residential  6000   Elect - Grid      22
-#&gt; 23    Resources - NG Gas wells &amp; proc. 43000             NG      23
-#&gt; 24          NG dist.      Power plants 16000     NG - Dist.      24
-#&gt; 25          NG dist.       Residential 25000     NG - Dist.      25
-#&gt; 26 Gas wells &amp; proc. Gas wells &amp; proc.  2000     NG - Wells      26
-#&gt; 27 Gas wells &amp; proc.          NG dist. 41000     NG - Wells      27
-#&gt; 28    Oil refineries      Petrol dist. 26500         Petrol      28
-#&gt; 29      Petrol dist.      Petrol dist.   500 Petrol - Dist.      29
-#&gt; 30      Petrol dist.         Transport 26000 Petrol - Dist.      30
-#&gt; 31       Crude dist.             Waste   550          Waste      31
-#&gt; 32      Diesel dist.             Waste   350          Waste      32
-#&gt; 33       Elect. grid             Waste   125          Waste      33
-#&gt; 34 Gas wells &amp; proc.             Waste  2075          Waste      34
-#&gt; 35          NG dist.             Waste    50          Waste      35
-#&gt; 36        Oil fields             Waste  2575          Waste      36
-#&gt; 37    Oil refineries             Waste  5075          Waste      37
-#&gt; 38      Petrol dist.             Waste   750          Waste      38
-#&gt; 39      Power plants             Waste  9700          Waste      39
+<span class='fu'>add_node_ids</span>(<span class='no'>elDF</span>)</div><div class='output co'>#&gt;                     From                    To Value        Product edge_id
+#&gt; 1      Resources - Crude            Oil fields 50000          Crude       1
+#&gt; 2            Crude dist.           Crude dist.   500  Crude - Dist.       2
+#&gt; 3            Crude dist.        Oil refineries 47000  Crude - Dist.       3
+#&gt; 4             Oil fields           Crude dist. 47500 Crude - Fields       4
+#&gt; 5             Oil fields            Oil fields  2500 Crude - Fields       5
+#&gt; 6         Oil refineries          Diesel dist. 15500         Diesel       6
+#&gt; 7         Oil refineries        Oil refineries  5000         Diesel       7
+#&gt; 8           Diesel dist.           Crude dist.    25 Diesel - Dist.       8
+#&gt; 9           Diesel dist.          Diesel dist.   350 Diesel - Dist.       9
+#&gt; 10          Diesel dist. Gas wells &amp;amp; proc.    50 Diesel - Dist.      10
+#&gt; 11          Diesel dist.              NG dist.    25 Diesel - Dist.      11
+#&gt; 12          Diesel dist.            Oil fields    50 Diesel - Dist.      12
+#&gt; 13          Diesel dist.          Petrol dist.   250 Diesel - Dist.      13
+#&gt; 14          Diesel dist.             Transport 14750 Diesel - Dist.      14
+#&gt; 15          Power plants           Elect. grid  6400          Elect      15
+#&gt; 16           Elect. grid           Crude dist.    25   Elect - Grid      16
+#&gt; 17           Elect. grid Gas wells &amp;amp; proc.    25   Elect - Grid      17
+#&gt; 18           Elect. grid              NG dist.    25   Elect - Grid      18
+#&gt; 19           Elect. grid            Oil fields    25   Elect - Grid      19
+#&gt; 20           Elect. grid        Oil refineries    75   Elect - Grid      20
+#&gt; 21           Elect. grid          Power plants   100   Elect - Grid      21
+#&gt; 22           Elect. grid           Residential  6000   Elect - Grid      22
+#&gt; 23        Resources - NG Gas wells &amp;amp; proc. 43000             NG      23
+#&gt; 24              NG dist.          Power plants 16000     NG - Dist.      24
+#&gt; 25              NG dist.           Residential 25000     NG - Dist.      25
+#&gt; 26 Gas wells &amp;amp; proc. Gas wells &amp;amp; proc.  2000     NG - Wells      26
+#&gt; 27 Gas wells &amp;amp; proc.              NG dist. 41000     NG - Wells      27
+#&gt; 28        Oil refineries          Petrol dist. 26500         Petrol      28
+#&gt; 29          Petrol dist.          Petrol dist.   500 Petrol - Dist.      29
+#&gt; 30          Petrol dist.             Transport 26000 Petrol - Dist.      30
+#&gt; 31           Crude dist.                 Waste   550          Waste      31
+#&gt; 32          Diesel dist.                 Waste   350          Waste      32
+#&gt; 33           Elect. grid                 Waste   125          Waste      33
+#&gt; 34 Gas wells &amp;amp; proc.                 Waste  2075          Waste      34
+#&gt; 35              NG dist.                 Waste    50          Waste      35
+#&gt; 36            Oil fields                 Waste  2575          Waste      36
+#&gt; 37        Oil refineries                 Waste  5075          Waste      37
+#&gt; 38          Petrol dist.                 Waste   750          Waste      38
+#&gt; 39          Power plants                 Waste  9700          Waste      39
 #&gt;    From_node_id To_node_id
 #&gt; 1             0          2
 #&gt; 2             1          1

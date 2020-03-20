@@ -184,21 +184,21 @@ or a single edge list data frame.
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>tidyr</span>)
 <span class='no'>sutmats</span> <span class='kw'>&lt;-</span> <span class='no'>UKEnergy2000mats</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='no'>matrix.name</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='no'>matrix</span>)
 <span class='no'>el</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='edge_list.html'>edge_list</a></span>(<span class='no'>sutmats</span>)$<span class='no'>`Edge list`</span><span class='kw'>[[</span><span class='fl'>1</span>]]
-<span class='fu'>node_list</span>(<span class='no'>el</span>)</div><div class='output co'>#&gt;                 Node node_id
-#&gt; 1  Resources - Crude       0
-#&gt; 2        Crude dist.       1
-#&gt; 4         Oil fields       2
-#&gt; 6     Oil refineries       3
-#&gt; 8       Diesel dist.       4
-#&gt; 15      Power plants       5
-#&gt; 16       Elect. grid       6
-#&gt; 23    Resources - NG       7
-#&gt; 24          NG dist.       8
-#&gt; 26 Gas wells &amp; proc.       9
-#&gt; 29      Petrol dist.      10
-#&gt; 53         Transport      11
-#&gt; 61       Residential      12
-#&gt; 70             Waste      13</div></pre>
+<span class='fu'>node_list</span>(<span class='no'>el</span>)</div><div class='output co'>#&gt;                     Node node_id
+#&gt; 1      Resources - Crude       0
+#&gt; 2            Crude dist.       1
+#&gt; 4             Oil fields       2
+#&gt; 6         Oil refineries       3
+#&gt; 8           Diesel dist.       4
+#&gt; 15          Power plants       5
+#&gt; 16           Elect. grid       6
+#&gt; 23        Resources - NG       7
+#&gt; 24              NG dist.       8
+#&gt; 26 Gas wells &amp;amp; proc.       9
+#&gt; 29          Petrol dist.      10
+#&gt; 53             Transport      11
+#&gt; 61           Residential      12
+#&gt; 70                 Waste      13</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

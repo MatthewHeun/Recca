@@ -147,7 +147,7 @@ but it is meant to operate on tidy SUT-style data frames.</p>
   <span class='no'>.ieadata</span>,
   <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
   <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='st'>"Flow.aggregation.point"</span>,
-  <span class='kw'>energy</span> <span class='kw'>=</span> <span class='st'>"EX.ktoe"</span>,
+  <span class='kw'>energy</span> <span class='kw'>=</span> <span class='st'>"E.dot"</span>,
   <span class='kw'>p_industries</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Production"</span>, <span class='st'>"Coal mines"</span>, <span class='st'>"Oil and gas extraction"</span>, <span class='st'>"Imports"</span>,
     <span class='st'>"Exports"</span>, <span class='st'>"International aviation bunkers"</span>, <span class='st'>"International marine bunkers"</span>,
     <span class='st'>"Stock changes"</span>),
@@ -173,7 +173,7 @@ Default is "<code>Flow.aggregation.point</code>".</p></td>
     </tr>
     <tr>
       <th>energy</th>
-      <td><p>the name of the column that contains energy information. Default is "<code>EX.ktoe</code>".</p></td>
+      <td><p>the name of the column that contains energy information. Default is "<code>E.dot</code>".</p></td>
     </tr>
     <tr>
       <th>p_industries</th>
@@ -215,14 +215,10 @@ Grouping columns are preserved on output.</p>
   <span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='no'>matrix.name</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='no'>matrix</span>))<span class='kw'>[[</span><span class='st'>"r_industries"</span>]]<span class='kw'>[[</span><span class='fl'>1</span>]]
 <span class='no'>UKEnergy2000tidy</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>Country</span>, <span class='no'>Year</span>, <span class='no'>Energy.type</span>, <span class='no'>Last.stage</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'>primary_aggregates_IEA</span>(<span class='kw'>p_industries</span> <span class='kw'>=</span> <span class='no'>r_ind</span>)</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 4 x 5</span><span>
-#&gt; </span><span style='color: #555555;'># Groups:   Country, Year, Energy.type [2]</span><span>
-#&gt;   Country  Year Energy.type Last.stage EX_p_IEA.ktoe
-#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>              </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #555555;'>1</span><span> GB       </span><span style='text-decoration: underline;'>2</span><span>000 E.ktoe      final              </span><span style='text-decoration: underline;'>93</span><span>000
-#&gt; </span><span style='color: #555555;'>2</span><span> GB       </span><span style='text-decoration: underline;'>2</span><span>000 E.ktoe      services           </span><span style='text-decoration: underline;'>93</span><span>000
-#&gt; </span><span style='color: #555555;'>3</span><span> GB       </span><span style='text-decoration: underline;'>2</span><span>000 E.ktoe      useful             </span><span style='text-decoration: underline;'>93</span><span>000
-#&gt; </span><span style='color: #555555;'>4</span><span> GB       </span><span style='text-decoration: underline;'>2</span><span>000 X.ktoe      services           </span><span style='text-decoration: underline;'>98</span><span>220</div></span></pre>
+  <span class='fu'>primary_aggregates_IEA</span>(<span class='kw'>p_industries</span> <span class='kw'>=</span> <span class='no'>r_ind</span>)</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 0 x 5</span><span>
+#&gt; </span><span style='color: #555555;'># Groups:   Country, Year, Energy.type [0]</span><span>
+#&gt; </span><span style='color: #555555;'># … with 5 variables: Country </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Year </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, Energy.type </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,
+#&gt; #   Last.stage </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, EX_p_IEA.ktoe </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

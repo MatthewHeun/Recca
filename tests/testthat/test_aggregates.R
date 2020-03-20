@@ -18,13 +18,13 @@ test_that("primary aggregates of SUT data work as expected", {
     tidyr::spread(key = matrix.name, value = matrix) %>%
     primary_aggregates(p_industries = p_industries, by = "Total",
                        aggregate_primary = "EX_total_agg.ktoe")
-  testthat::expect_equivalent(primary_total_aggregates_sut %>% filter(Last.stage == IEATools::last_stages$final) %>%
+  expect_equivalent(primary_total_aggregates_sut %>% filter(Last.stage == IEATools::last_stages$final) %>%
                                 select("EX_total_agg.ktoe"), 93000)
-  testthat::expect_equivalent(primary_total_aggregates_sut %>% filter(Last.stage == IEATools::last_stages$useful) %>%
+  expect_equivalent(primary_total_aggregates_sut %>% filter(Last.stage == IEATools::last_stages$useful) %>%
                                 select("EX_total_agg.ktoe"), 93000)
-  testthat::expect_equivalent(primary_total_aggregates_sut %>% filter(Energy.type == "E", Last.stage == IEATools::last_stages$services) %>%
+  expect_equivalent(primary_total_aggregates_sut %>% filter(Energy.type == "E", Last.stage == IEATools::last_stages$services) %>%
                                 select("EX_total_agg.ktoe"), 93000)
-  testthat::expect_equivalent(primary_total_aggregates_sut %>% filter(Energy.type == "X", Last.stage == IEATools::last_stages$services) %>%
+  expect_equivalent(primary_total_aggregates_sut %>% filter(Energy.type == "X", Last.stage == IEATools::last_stages$services) %>%
                                 select("EX_total_agg.ktoe"), 98220)
 
   # Primary PRODUCT aggregates
@@ -35,19 +35,19 @@ test_that("primary aggregates of SUT data work as expected", {
     dplyr::select(Country, Year, Last.stage, Energy.type, EX_product_agg.ktoe) %>% View
     tidyr::gather(key = "matnames", value = "matvals", EX_product_agg.ktoe) %>%
     matsindf::expand_to_tidy(drop = 0)
-  testthat::expect_equivalent(primary_product_aggregates_sut %>% filter(Energy.type == "E.ktoe" & rownames == "Crude") %>% select(matvals) %>% unlist(), rep(50000, 3))
-  testthat::expect_equivalent(primary_product_aggregates_sut %>% filter(Energy.type == "E.ktoe" & rownames == "NG") %>% select(matvals) %>% unlist(), rep(43000, 3))
-  testthat::expect_equivalent(primary_product_aggregates_sut %>% filter(Energy.type == "X.ktoe" & rownames == "Crude") %>% select(matvals) %>% unlist(), 53500)
-  testthat::expect_equivalent(primary_product_aggregates_sut %>% filter(Energy.type == "X.ktoe" & rownames == "NG") %>% select(matvals) %>% unlist(), 44720)
+  expect_equivalent(primary_product_aggregates_sut %>% filter(Energy.type == "E.ktoe" & rownames == "Crude") %>% select(matvals) %>% unlist(), rep(50000, 3))
+  expect_equivalent(primary_product_aggregates_sut %>% filter(Energy.type == "E.ktoe" & rownames == "NG") %>% select(matvals) %>% unlist(), rep(43000, 3))
+  expect_equivalent(primary_product_aggregates_sut %>% filter(Energy.type == "X.ktoe" & rownames == "Crude") %>% select(matvals) %>% unlist(), 53500)
+  expect_equivalent(primary_product_aggregates_sut %>% filter(Energy.type == "X.ktoe" & rownames == "NG") %>% select(matvals) %>% unlist(), 44720)
 
   # Primary FLOW aggregates
   primary_flow_aggregates_sut <- UKEnergy2000mats %>%
-    spread(key = matrix.name, value = matrix) %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
     primary_aggregates(p_industries = p_industries, by = "Flow",
                        aggregate_primary = "EX_flow_agg.ktoe") %>%
-    select(Country, Year, Last.stage, Energy.type, EX_flow_agg.ktoe) %>%
-    gather(key = "matnames", value = "matvals", EX_flow_agg.ktoe) %>%
-    expand_to_tidy(drop = 0)
+    dplyr::select(Country, Year, Last.stage, Energy.type, EX_flow_agg.ktoe) %>%
+    tidyr::gather(key = "matnames", value = "matvals", EX_flow_agg.ktoe) %>%
+    matsindf::expand_to_tidy(drop = 0)
   expect_equivalent(primary_flow_aggregates_sut %>% filter(Energy.type == "E.ktoe" & colnames == "Resources - Crude") %>% select(matvals) %>% unlist(), rep(50000, 3))
   expect_equivalent(primary_flow_aggregates_sut %>% filter(Energy.type == "E.ktoe" & colnames == "Resources - NG") %>% select(matvals) %>% unlist(), rep(43000, 3))
   expect_equivalent(primary_flow_aggregates_sut %>% filter(Energy.type == "X.ktoe" & colnames == "Resources - Crude") %>% select(matvals) %>% unlist(), 53500)
@@ -60,13 +60,13 @@ test_that("final demand aggregates of SUT data work as expected", {
 
   # Final demand TOTAL aggregates
   final_demand_total_aggregates_sut <- UKEnergy2000mats %>%
-    spread(key = matrix.name, value = matrix) %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
     finaldemand_aggregates_with_units(fd_sectors = fd_sectors, by = "Total",
                        net_aggregate_demand = "EX_total_net_agg.ktoe",
                        gross_aggregate_demand = "EX_total_gross_agg.ktoe") %>%
-    select(Country, Year, Last.stage, Energy.type, EX_total_net_agg.ktoe, EX_total_gross_agg.ktoe) %>%
-    gather(key = "matnames", value = "matvals", EX_total_net_agg.ktoe, EX_total_gross_agg.ktoe) %>%
-    expand_to_tidy(drop = 0)
+    dplyr::select(Country, Year, Last.stage, Energy.type, EX_total_net_agg.ktoe, EX_total_gross_agg.ktoe) %>%
+    tidyr::gather(key = "matnames", value = "matvals", EX_total_net_agg.ktoe, EX_total_gross_agg.ktoe) %>%
+    matsindf::expand_to_tidy(drop = 0)
   expect_equivalent(final_demand_total_aggregates_sut %>%
                       filter(Last.stage == "final", Energy.type == "E.ktoe", matnames == "EX_total_gross_agg.ktoe", colnames == "ktoe") %>% select(matvals) %>% unlist(),
                     83275)
@@ -82,13 +82,13 @@ test_that("final demand aggregates of SUT data work as expected", {
 
   # Final demand PRODUCT aggregates
   final_demand_product_aggregates_sut <- UKEnergy2000mats %>%
-    spread(key = matrix.name, value = matrix) %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
     finaldemand_aggregates_with_units(fd_sectors = fd_sectors, by = "Product",
                                       net_aggregate_demand = "EX_product_net_agg.ktoe",
                                       gross_aggregate_demand = "EX_product_gross_agg.ktoe") %>%
-    select(Country, Year, Last.stage, Energy.type, EX_product_net_agg.ktoe, EX_product_gross_agg.ktoe) %>%
-    gather(key = "matnames", value = "matvals", EX_product_net_agg.ktoe, EX_product_gross_agg.ktoe) %>%
-    expand_to_tidy(drop = 0)
+    dplyr::select(Country, Year, Last.stage, Energy.type, EX_product_net_agg.ktoe, EX_product_gross_agg.ktoe) %>%
+    tidyr::gather(key = "matnames", value = "matvals", EX_product_net_agg.ktoe, EX_product_gross_agg.ktoe) %>%
+    matsindf::expand_to_tidy(drop = 0)
   expect_equivalent(final_demand_product_aggregates_sut %>%
                       filter(Last.stage == "final", Energy.type == "E.ktoe", matnames == "EX_product_gross_agg.ktoe", rownames == "Crude - Dist.") %>% select(matvals) %>% unlist(),
                     500)
@@ -110,13 +110,13 @@ test_that("final demand aggregates of SUT data work as expected", {
 
   # Final demand SECTOR aggregates
   final_demand_sector_aggregates_sut <- UKEnergy2000mats %>%
-    spread(key = matrix.name, value = matrix) %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
     finaldemand_aggregates_with_units(fd_sectors = fd_sectors, by = "Sector",
                                       net_aggregate_demand = "EX_sector_net_agg.ktoe",
                                       gross_aggregate_demand = "EX_sector_gross_agg.ktoe") %>%
-    select(Country, Year, Last.stage, Energy.type, EX_sector_net_agg.ktoe, EX_sector_gross_agg.ktoe) %>%
-    gather(key = "matnames", value = "matvals", EX_sector_net_agg.ktoe, EX_sector_gross_agg.ktoe) %>%
-    expand_to_tidy(drop = 0)
+    dplyr::select(Country, Year, Last.stage, Energy.type, EX_sector_net_agg.ktoe, EX_sector_gross_agg.ktoe) %>%
+    tidyr::gather(key = "matnames", value = "matvals", EX_sector_net_agg.ktoe, EX_sector_gross_agg.ktoe) %>%
+    matsindf::expand_to_tidy(drop = 0)
   expect_equivalent(final_demand_sector_aggregates_sut %>%
                       filter(Last.stage == "final", Energy.type == "E.ktoe", matnames == "EX_sector_gross_agg.ktoe", rownames == "Crude dist.") %>% select(matvals) %>% unlist(),
                     550)
@@ -140,10 +140,10 @@ test_that("final demand aggregates of SUT data work as expected", {
 test_that("primary_aggregates_IEA works as expected", {
   # Get the vector of primary industries for the example data set.
   r_ind <- resource_industries(UKEnergy2000mats %>%
-                                spread(key = matrix.name, value = matrix))[["r_industries"]][[1]]
+                                tidyr::spread(key = matrix.name, value = matrix))[["r_industries"]][[1]]
 
   result <- UKEnergy2000tidy %>%
-    group_by(Country, Year, Energy.type, Last.stage) %>%
+    dplyr::group_by(Country, Year, Energy.type, Last.stage) %>%
     primary_aggregates_IEA(p_industries = r_ind)
   expect_equal(result[["EX_p_IEA.ktoe"]], c(93000, 93000, 93000, 98220))
 })
@@ -151,12 +151,12 @@ test_that("primary_aggregates_IEA works as expected", {
 test_that("finaldemand_aggregates_IEA works as expected", {
   iea_result <- UKEnergy2000tidy %>%
     # Can calculate only when all entries are in same units, i.e., only when last stage is final or useful energy.
-    filter(Last.stage %in% c("final", "useful")) %>%
-    group_by(Country, Year, Energy.type, Last.stage) %>%
+    dplyr::filter(Last.stage %in% c("final", "useful")) %>%
+    dplyr::group_by(Country, Year, Energy.type, Last.stage) %>%
     finaldemand_aggregates_IEA()
   sut_result <- UKEnergy2000mats %>%
-    spread(key = matrix.name, value = matrix) %>%
-    filter(Last.stage %in% c("final", "useful")) %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    dplyr::filter(Last.stage %in% c("final", "useful")) %>%
     finaldemand_aggregates(fd_sectors = c("Residential", "Transport"))
   expect_equal(iea_result[["EX_fd_net_IEA.ktoe"]], sut_result[["EX_fd_net.ktoe"]] %>% unlist())
   expect_equal(iea_result[["EX_fd_gross_IEA.ktoe"]], sut_result[["EX_fd_gross.ktoe"]] %>% unlist())
