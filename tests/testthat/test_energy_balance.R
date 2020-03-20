@@ -52,10 +52,11 @@ test_that("all SUT industries are producing energy", {
 
 test_that("SUT energy balance works with single matrices", {
   UKspread <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
+  R <- UKspread$R[[1]]
   U <- UKspread$U[[1]]
   V <- UKspread$V[[1]]
   Y <- UKspread$Y[[1]]
-  expect_silent(verify_SUT_energy_balance(U = U, V = V, Y = Y))
+  expect_silent(verify_SUT_energy_balance(R = R, U = U, V = V, Y = Y))
 })
 
 
