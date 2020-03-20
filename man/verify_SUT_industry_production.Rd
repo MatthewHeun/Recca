@@ -6,6 +6,7 @@
 \usage{
 verify_SUT_industry_production(
   .sutmats = NULL,
+  R = "R",
   U = "U",
   V = "V",
   industry_production_OK = ".industry_production_OK",
@@ -17,12 +18,14 @@ verify_SUT_industry_production(
 (typically \code{Country}, \code{Year}, \code{Ledger.side}, \code{Product}, etc.)
 and columns of SUT matrices, including \code{U} and \code{V}.}
 
-\item{U}{use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".}
+\item{R}{resources (\code{R}) matrix or name of the column in \code{.sutmats} that contains same. Default is "R".}
 
-\item{V}{make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "\code{V}".}
+\item{U}{use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "U".}
+
+\item{V}{make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "V".}
 
 \item{industry_production_OK}{the name of the column in the output that
-tells whether all industries produce something. Default is "\code{.industry_production_OK}".}
+tells whether all industries produce something. Default is ".industry_production_OK".}
 
 \item{problem_industries}{the name of the column in the output that
 tells which transformation processes consume energy but do not produce anything.}

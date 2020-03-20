@@ -41,10 +41,12 @@ test_that("all SUT industries are producing energy", {
   result <- verify_SUT_industry_production(UKspread)
   expect_true(all(result[[".industry_production_OK"]] %>% as.logical()))
   # Try it when something doesn't produce energy
+  R <- UKspread$R[[1]]
   U <- UKspread$U[[1]]
   V <- UKspread$V[[1]]
-  V[1, 2] <- 0 # Zero out production of Crude - Dist. from Crude dist.
-  expect_warning(result <- verify_SUT_industry_production(U = U, V = V),
+  expect_equal(V["Crude dist.", "Crude - Dist."], 47500)
+  V["Crude dist.", "Crude - Dist."] <- 0 # Zero out production of Crude - Dist. from Crude dist.
+  expect_warning(result <- verify_SUT_industry_production(R = R, U = U, V = V),
                  "There are some industries that consume but do not produce energy.")
   expect_false(result$.industry_production_OK)
   expect_equal(expected = "Crude dist.", result$.problem_industries)
