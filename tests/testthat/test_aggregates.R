@@ -35,10 +35,10 @@ test_that("primary aggregates of SUT data work as expected", {
     dplyr::select(Country, Year, Last.stage, Energy.type, EX_product_agg.ktoe) %>%
     tidyr::gather(key = "matnames", value = "matvals", EX_product_agg.ktoe) %>%
     matsindf::expand_to_tidy(drop = 0)
-  expect_equivalent(primary_product_aggregates_sut %>% filter(Energy.type == "E.ktoe" & rownames == "Crude") %>% select(matvals) %>% unlist(), rep(50000, 3))
-  expect_equivalent(primary_product_aggregates_sut %>% filter(Energy.type == "E.ktoe" & rownames == "NG") %>% select(matvals) %>% unlist(), rep(43000, 3))
-  expect_equivalent(primary_product_aggregates_sut %>% filter(Energy.type == "X.ktoe" & rownames == "Crude") %>% select(matvals) %>% unlist(), 53500)
-  expect_equivalent(primary_product_aggregates_sut %>% filter(Energy.type == "X.ktoe" & rownames == "NG") %>% select(matvals) %>% unlist(), 44720)
+  expect_equivalent(primary_product_aggregates_sut %>% filter(Energy.type == "E" & rownames == "Crude") %>% select(matvals) %>% unlist(), rep(50000, 3))
+  expect_equivalent(primary_product_aggregates_sut %>% filter(Energy.type == "E" & rownames == "NG") %>% select(matvals) %>% unlist(), rep(43000, 3))
+  expect_equivalent(primary_product_aggregates_sut %>% filter(Energy.type == "X" & rownames == "Crude") %>% select(matvals) %>% unlist(), 53500)
+  expect_equivalent(primary_product_aggregates_sut %>% filter(Energy.type == "X" & rownames == "NG") %>% select(matvals) %>% unlist(), 44720)
 
   # Primary FLOW aggregates
   primary_flow_aggregates_sut <- UKEnergy2000mats %>%
@@ -48,10 +48,10 @@ test_that("primary aggregates of SUT data work as expected", {
     dplyr::select(Country, Year, Last.stage, Energy.type, EX_flow_agg.ktoe) %>%
     tidyr::gather(key = "matnames", value = "matvals", EX_flow_agg.ktoe) %>%
     matsindf::expand_to_tidy(drop = 0)
-  expect_equivalent(primary_flow_aggregates_sut %>% filter(Energy.type == "E.ktoe" & colnames == "Resources - Crude") %>% select(matvals) %>% unlist(), rep(50000, 3))
-  expect_equivalent(primary_flow_aggregates_sut %>% filter(Energy.type == "E.ktoe" & colnames == "Resources - NG") %>% select(matvals) %>% unlist(), rep(43000, 3))
-  expect_equivalent(primary_flow_aggregates_sut %>% filter(Energy.type == "X.ktoe" & colnames == "Resources - Crude") %>% select(matvals) %>% unlist(), 53500)
-  expect_equivalent(primary_flow_aggregates_sut %>% filter(Energy.type == "X.ktoe" & colnames == "Resources - NG") %>% select(matvals) %>% unlist(), 44720)
+  expect_equivalent(primary_flow_aggregates_sut %>% filter(Energy.type == "E" & colnames == "Resources - Crude") %>% select(matvals) %>% unlist(), rep(50000, 3))
+  expect_equivalent(primary_flow_aggregates_sut %>% filter(Energy.type == "E" & colnames == "Resources - NG") %>% select(matvals) %>% unlist(), rep(43000, 3))
+  expect_equivalent(primary_flow_aggregates_sut %>% filter(Energy.type == "X" & colnames == "Resources - Crude") %>% select(matvals) %>% unlist(), 53500)
+  expect_equivalent(primary_flow_aggregates_sut %>% filter(Energy.type == "X" & colnames == "Resources - NG") %>% select(matvals) %>% unlist(), 44720)
 })
 
 test_that("final demand aggregates of SUT data work as expected", {
@@ -68,16 +68,16 @@ test_that("final demand aggregates of SUT data work as expected", {
     tidyr::gather(key = "matnames", value = "matvals", EX_total_net_agg.ktoe, EX_total_gross_agg.ktoe) %>%
     matsindf::expand_to_tidy(drop = 0)
   expect_equivalent(final_demand_total_aggregates_sut %>%
-                      filter(Last.stage == "final", Energy.type == "E.ktoe", matnames == "EX_total_gross_agg.ktoe", colnames == "ktoe") %>% select(matvals) %>% unlist(),
+                      filter(Last.stage == "Final", Energy.type == "E", matnames == "EX_total_gross_agg.ktoe", colnames == "ktoe") %>% select(matvals) %>% unlist(),
                     83275)
   expect_equivalent(final_demand_total_aggregates_sut %>%
-                      filter(Last.stage == "useful", Energy.type == "E.ktoe", matnames == "EX_total_net_agg.ktoe", colnames == "ktoe") %>% select(matvals) %>% unlist(),
+                      filter(Last.stage == "Useful", Energy.type == "E", matnames == "EX_total_net_agg.ktoe", colnames == "ktoe") %>% select(matvals) %>% unlist(),
                     25915.380499999999)
   expect_equivalent(final_demand_total_aggregates_sut %>%
-                      filter(Last.stage == "services", Energy.type == "E.ktoe", matnames == "EX_total_net_agg.ktoe", colnames == "lumen-hrs/yr") %>% select(matvals) %>% unlist(),
+                      filter(Last.stage == "Services", Energy.type == "E", matnames == "EX_total_net_agg.ktoe", colnames == "lumen-hrs/yr") %>% select(matvals) %>% unlist(),
                     5e14)
   expect_equivalent(final_demand_total_aggregates_sut %>%
-                      filter(Last.stage == "services", Energy.type == "X.ktoe", matnames == "EX_total_net_agg.ktoe", colnames == "tonne-km/yr") %>% select(matvals) %>% unlist(),
+                      filter(Last.stage == "Services", Energy.type == "X", matnames == "EX_total_net_agg.ktoe", colnames == "tonne-km/yr") %>% select(matvals) %>% unlist(),
                     142916629629)
 
   # Final demand PRODUCT aggregates
@@ -90,22 +90,22 @@ test_that("final demand aggregates of SUT data work as expected", {
     tidyr::gather(key = "matnames", value = "matvals", EX_product_net_agg.ktoe, EX_product_gross_agg.ktoe) %>%
     matsindf::expand_to_tidy(drop = 0)
   expect_equivalent(final_demand_product_aggregates_sut %>%
-                      filter(Last.stage == "final", Energy.type == "E.ktoe", matnames == "EX_product_gross_agg.ktoe", rownames == "Crude - Dist.") %>% select(matvals) %>% unlist(),
+                      filter(Last.stage == "Final", Energy.type == "E", matnames == "EX_product_gross_agg.ktoe", rownames == "Crude - Dist.") %>% select(matvals) %>% unlist(),
                     500)
   expect_equivalent(final_demand_product_aggregates_sut %>%
-                      filter(Last.stage == "final", Energy.type == "E.ktoe", matnames == "EX_product_net_agg.ktoe", rownames == "Elect - Grid") %>% select(matvals) %>% unlist(),
+                      filter(Last.stage == "Final", Energy.type == "E", matnames == "EX_product_net_agg.ktoe", rownames == "Elect - Grid") %>% select(matvals) %>% unlist(),
                     6000)
   expect_equivalent(final_demand_product_aggregates_sut %>%
-                      filter(Last.stage == "useful", Energy.type == "E.ktoe", matnames == "EX_product_gross_agg.ktoe", rownames == "LTH") %>% select(matvals) %>% unlist(),
+                      filter(Last.stage == "Useful", Energy.type == "E", matnames == "EX_product_gross_agg.ktoe", rownames == "LTH") %>% select(matvals) %>% unlist(),
                     20000)
   expect_equivalent(final_demand_product_aggregates_sut %>%
-                      filter(Last.stage == "useful", Energy.type == "E.ktoe", matnames == "EX_product_net_agg.ktoe", rownames == "MD - Car engines") %>% select(matvals) %>% unlist(),
+                      filter(Last.stage == "Useful", Energy.type == "E", matnames == "EX_product_net_agg.ktoe", rownames == "MD - Car engines") %>% select(matvals) %>% unlist(),
                     3000.4)
   expect_equivalent(final_demand_product_aggregates_sut %>%
-                      filter(Last.stage == "services", Energy.type == "E.ktoe", matnames == "EX_product_net_agg.ktoe", rownames == "Freight [tonne-km/year]") %>% select(matvals) %>% unlist(),
+                      filter(Last.stage == "Services", Energy.type == "E", matnames == "EX_product_net_agg.ktoe", rownames == "Freight [tonne-km/year]") %>% select(matvals) %>% unlist(),
                     142916629629)
   expect_equivalent(final_demand_product_aggregates_sut %>%
-                      filter(Last.stage == "services", Energy.type == "X.ktoe", matnames == "EX_product_gross_agg.ktoe", rownames == "Space heating [m3-K]") %>% select(matvals) %>% unlist(),
+                      filter(Last.stage == "Services", Energy.type == "X", matnames == "EX_product_gross_agg.ktoe", rownames == "Space heating [m3-K]") %>% select(matvals) %>% unlist(),
                     7.500000e+10)
 
   # Final demand SECTOR aggregates
@@ -118,22 +118,22 @@ test_that("final demand aggregates of SUT data work as expected", {
     tidyr::gather(key = "matnames", value = "matvals", EX_sector_net_agg.ktoe, EX_sector_gross_agg.ktoe) %>%
     matsindf::expand_to_tidy(drop = 0)
   expect_equivalent(final_demand_sector_aggregates_sut %>%
-                      filter(Last.stage == "final", Energy.type == "E.ktoe", matnames == "EX_sector_gross_agg.ktoe", rownames == "Crude dist.") %>% select(matvals) %>% unlist(),
+                      filter(Last.stage == "Final", Energy.type == "E", matnames == "EX_sector_gross_agg.ktoe", rownames == "Crude dist.") %>% select(matvals) %>% unlist(),
                     550)
   expect_equivalent(final_demand_sector_aggregates_sut %>%
-                      filter(Last.stage == "final", Energy.type == "E.ktoe", matnames == "EX_sector_net_agg.ktoe", rownames == "Residential") %>% select(matvals) %>% unlist(),
+                      filter(Last.stage == "Final", Energy.type == "E", matnames == "EX_sector_net_agg.ktoe", rownames == "Residential") %>% select(matvals) %>% unlist(),
                     31000)
   expect_equivalent(final_demand_sector_aggregates_sut %>%
-                      filter(Last.stage == "useful", Energy.type == "E.ktoe", matnames == "EX_sector_gross_agg.ktoe", rownames == "Transport") %>% select(matvals) %>% unlist(),
+                      filter(Last.stage == "Useful", Energy.type == "EE", matnames == "EX_sector_gross_agg.ktoe", rownames == "Transport") %>% select(matvals) %>% unlist(),
                     21714.9805)
   expect_equivalent(final_demand_sector_aggregates_sut %>%
-                      filter(Last.stage == "useful", Energy.type == "E.ktoe", matnames == "EX_sector_net_agg.ktoe", rownames == "Residential") %>% select(matvals) %>% unlist(),
+                      filter(Last.stage == "Useful", Energy.type == "E", matnames == "EX_sector_net_agg.ktoe", rownames == "Residential") %>% select(matvals) %>% unlist(),
                     4200.4)
   expect_equivalent(final_demand_sector_aggregates_sut %>%
-                      filter(Last.stage == "services", Energy.type == "E.ktoe", matnames == "EX_sector_gross_agg.ktoe", rownames == "Gas wells & proc.") %>% select(matvals) %>% unlist(),
+                      filter(Last.stage == "Services", Energy.type == "E", matnames == "EX_sector_gross_agg.ktoe", rownames == "Gas wells & proc.") %>% select(matvals) %>% unlist(),
                     75)
   expect_equivalent(final_demand_sector_aggregates_sut %>%
-                      filter(Last.stage == "services", Energy.type == "X.ktoe", matnames == "EX_sector_net_agg.ktoe", rownames == "Transport", colnames == "tonne-km/yr") %>% select(matvals) %>% unlist(),
+                      filter(Last.stage == "Services", Energy.type == "X", matnames == "EX_sector_net_agg.ktoe", rownames == "Transport", colnames == "tonne-km/yr") %>% select(matvals) %>% unlist(),
                     142916629629)
 })
 
