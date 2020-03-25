@@ -21,7 +21,10 @@ library(devtools)
 
 # Load the raw data from the Excel file
 UKEnergy2000tidy <- openxlsx::read.xlsx(system.file("extdata", "UKEnergy2000raw", "SuperSimpleEconomy_2018-11-13.xlsx",
-                                                    package = "Recca", mustWork = TRUE), sheet = "UKEnergy2000raw")
+                                                    package = "Recca", mustWork = TRUE), sheet = "UKEnergy2000raw") %>%
+  dplyr::mutate(
+    Flow = replace_html_codes(Flow)
+  )
 usethis::use_data(UKEnergy2000tidy, overwrite = TRUE)
 
 # Create S_units matrices from the UKEnergy2000tidy data frame

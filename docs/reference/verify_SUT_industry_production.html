@@ -159,6 +159,7 @@ exhibit this problem.</p>
 
     <pre class="usage"><span class='fu'>verify_SUT_industry_production</span>(
   <span class='kw'>.sutmats</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>R</span> <span class='kw'>=</span> <span class='st'>"R"</span>,
   <span class='kw'>U</span> <span class='kw'>=</span> <span class='st'>"U"</span>,
   <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>,
   <span class='kw'>industry_production_OK</span> <span class='kw'>=</span> <span class='st'>".industry_production_OK"</span>,
@@ -175,17 +176,21 @@ exhibit this problem.</p>
 and columns of SUT matrices, including <code>U</code> and <code>V</code>.</p></td>
     </tr>
     <tr>
+      <th>R</th>
+      <td><p>resources (<code>R</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "R".</p></td>
+    </tr>
+    <tr>
       <th>U</th>
-      <td><p>use (<code>U</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "<code>U</code>".</p></td>
+      <td><p>use (<code>U</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "U".</p></td>
     </tr>
     <tr>
       <th>V</th>
-      <td><p>make (<code>V</code>) matrix or name of the column in <code>.sutmats</code>that contains same. Default is "<code>V</code>".</p></td>
+      <td><p>make (<code>V</code>) matrix or name of the column in <code>.sutmats</code>that contains same. Default is "V".</p></td>
     </tr>
     <tr>
       <th>industry_production_OK</th>
       <td><p>the name of the column in the output that
-tells whether all industries produce something. Default is "<code>.industry_production_OK</code>".</p></td>
+tells whether all industries produce something. Default is ".industry_production_OK".</p></td>
     </tr>
     <tr>
       <th>problem_industries</th>

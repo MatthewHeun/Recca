@@ -549,7 +549,7 @@ reverse <- function(.sutmats = NULL,
 }
 
 
-#' Unescape HTML codes in text
+#' Un-escape HTML codes in text
 #'
 #' Occasionally,
 #' we need to un-escape HTML codes in text.

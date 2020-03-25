@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Confirm that an SUT-style data frame conserves energy. — verify_SUT_energy_balance • Recca</title>
+<title>Un-escape HTML codes in text — replace_html_codes • Recca</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,12 @@
 
 
 
-<meta property="og:title" content="Confirm that an SUT-style data frame conserves energy. — verify_SUT_energy_balance" />
-<meta property="og:description" content="Energy balances are confirmed by Product (within tol) for every row in .sutmats." />
+<meta property="og:title" content="Un-escape HTML codes in text — replace_html_codes" />
+<meta property="og:description" content="Occasionally,
+we need to un-escape HTML codes in text.
+If text contains HTML codes, they are replaced with replacements, which,
+by default, describe replacements for &quot;&amp;amp;amp;&quot;, &quot;&amp;amp;lt;&quot;, and &quot;&amp;amp;gt;&quot;
+(&quot;&amp;amp;&quot;, &quot;&amp;lt;&quot;, and &quot;&amp;gt;&quot;, respectively)." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -126,80 +130,60 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Confirm that an SUT-style data frame conserves energy.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MatthewHeun/Recca/blob/master/R/energy_balance.R'><code>R/energy_balance.R</code></a></small>
-    <div class="hidden name"><code>verify_SUT_energy_balance.Rd</code></div>
+    <h1>Un-escape HTML codes in text</h1>
+    <small class="dont-index">Source: <a href='https://github.com/MatthewHeun/Recca/blob/master/R/utilities.R'><code>R/utilities.R</code></a></small>
+    <div class="hidden name"><code>replace_html_codes.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Energy balances are confirmed by Product (within <code>tol</code>) for every row in <code>.sutmats</code>.</p>
+    <p>Occasionally,
+we need to un-escape HTML codes in text.
+If <code>text</code> contains HTML codes, they are replaced with <code>replacements</code>, which,
+by default, describe replacements for "<code>&amp;amp;</code>", "<code>&amp;lt;</code>", and "<code>&amp;gt;</code>"
+("<code>&amp;</code>", "<code>&lt;</code>", and "<code>&gt;</code>", respectively).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>verify_SUT_energy_balance</span>(
-  <span class='kw'>.sutmats</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>R</span> <span class='kw'>=</span> <span class='st'>"R"</span>,
-  <span class='kw'>U</span> <span class='kw'>=</span> <span class='st'>"U"</span>,
-  <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>,
-  <span class='kw'>Y</span> <span class='kw'>=</span> <span class='st'>"Y"</span>,
-  <span class='kw'>tol</span> <span class='kw'>=</span> <span class='fl'>1e-06</span>,
-  <span class='kw'>SUT_energy_balance</span> <span class='kw'>=</span> <span class='st'>".SUT_energy_balance"</span>
+    <pre class="usage"><span class='fu'>replace_html_codes</span>(
+  <span class='no'>text</span>,
+  <span class='kw'>replacements</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"&amp;amp;"</span>, <span class='st'>"&amp;"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"&amp;lt;"</span>, <span class='st'>"&lt;"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"&amp;gt;"</span>, <span class='st'>"&gt;"</span>))
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>.sutmats</th>
-      <td><p>an SUT-style data frame with columns of matrices,
-including <code>U</code>, <code>V</code>, and <code>Y</code> columns.</p></td>
+      <th>text</th>
+      <td><p>a vector (or one-dimensional list) of character strings</p></td>
     </tr>
     <tr>
-      <th>R</th>
-      <td><p>resources (<code>R</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "R".</p></td>
-    </tr>
-    <tr>
-      <th>U</th>
-      <td><p>use (<code>U</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "U".</p></td>
-    </tr>
-    <tr>
-      <th>V</th>
-      <td><p>make (<code>V</code>) matrix or name of the column in <code>.sutmats</code>that contains same. Default is "V".</p></td>
-    </tr>
-    <tr>
-      <th>Y</th>
-      <td><p>final demand (<code>Y</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "Y".</p></td>
-    </tr>
-    <tr>
-      <th>tol</th>
-      <td><p>the maximum amount by which Supply and Consumption can be out of balance.
-Default is <code>1e-6</code>.</p></td>
-    </tr>
-    <tr>
-      <th>SUT_energy_balance</th>
-      <td><p>the name for booleans telling if energy is in balance. Default is ".SUT_energy_balance".</p></td>
+      <th>replacements</th>
+      <td><p>a list of string pairs. Each pair consists of encoded string and unencoded string,
+in that order. Default is
+<code><a href='https://rdrr.io/r/base/list.html'>list(c("&amp;amp;", "&amp;"), c("&amp;lt;", "&lt;"), c("&amp;gt;", "&gt;"))</a></code></p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a list or data frame saying whether <code>.sutmats</code> are in balance.</p>
+    <p>If <code>text</code> is a vector, a vector of un-encoded strings.
+If <code>text</code> is a list of strings, a list of un-encoded strings of same structure.
+If possible, an outgoing list has simplified structure, even to the point of
+conversion to vector.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>If energy is in balance for every row, <code>.sutmats</code> is returned with an additional column, and
-execution returns to the caller.
-If energy balance is not observed for one or more of the rows,
-a warning is emitted, and
-the additional column (<code>SUT_energy_blance</code>)
-indicates where the problem occurred, with <code>FALSE</code>
-showing where energy is not in balance.</p>
+    <p>HTML codes can arrive in text read from an Excel file by the <code>openxlsx</code> package
+due to a bug documented <a href='https://github.com/awalker89/openxlsx/issues/393'>here</a>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>tidyr</span>)
-<span class='fu'>verify_SUT_energy_balance</span>(<span class='no'>UKEnergy2000mats</span> <span class='kw'>%&gt;%</span>
-                            <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>Last.stage</span> <span class='kw'>%in%</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"final"</span>, <span class='st'>"useful"</span>)) <span class='kw'>%&gt;%</span>
-                            <span class='kw pkg'>tidyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='no'>matrix.name</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='no'>matrix</span>),
-                          <span class='kw'>tol</span> <span class='kw'>=</span> <span class='fl'>1e-4</span>)</div><div class='output co'>#&gt; <span class='error'>Error in out_list[[1]]: subscript out of bounds</span></div></pre>
+    <pre class="examples"><div class='input'><span class='fu'>replace_html_codes</span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='st'>"a"</span>, <span class='st'>"&amp;amp;"</span>, <span class='st'>"&amp;lt;"</span>, <span class='st'>"&amp;gt;"</span>, <span class='st'>"bcd"</span>))</div><div class='output co'>#&gt; [1] "a"   "&amp;"   "&lt;"   "&gt;"   "bcd"</div><div class='input'><span class='fu'>replace_html_codes</span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"&amp;amp;"</span>, <span class='st'>"&amp;amp;"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"&amp;lt;"</span>, <span class='st'>"&amp;lt;"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"&amp;gt;"</span>, <span class='st'>"&amp;gt;"</span>)))</div><div class='output co'>#&gt; [[1]]
+#&gt; [1] "&amp;" "&amp;"
+#&gt; 
+#&gt; [[2]]
+#&gt; [1] "&lt;" "&lt;"
+#&gt; 
+#&gt; [[3]]
+#&gt; [1] "&gt;" "&gt;"
+#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

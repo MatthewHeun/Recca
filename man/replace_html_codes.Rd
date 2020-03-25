@@ -2,7 +2,7 @@
 % Please edit documentation in R/utilities.R
 \name{replace_html_codes}
 \alias{replace_html_codes}
-\title{Unescape HTML codes in text}
+\title{Un-escape HTML codes in text}
 \usage{
 replace_html_codes(
   text,
