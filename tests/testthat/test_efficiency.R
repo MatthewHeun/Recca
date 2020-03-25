@@ -23,11 +23,10 @@ test_that("efficiencies are calculated correctly", {
   expect_equal(result$eta_i, result$expected)
 
   # Test some specific values
-  expect_equal(result %>% filter(Last.stage == "final", rownames == "Crude dist.") %>% extract2("eta_i"), 0.98855359)
-  expect_equal(result %>% filter(Last.stage == "useful", rownames == "Power plants") %>% extract2("eta_i"), 0.39751553)
-  expect_equal(result %>% filter(Last.stage == "services", Energy.type == "E.ktoe", rownames == "Oil fields") %>% extract2("eta_i"), 0.94857713)
-  expect_equal(result %>% filter(Last.stage == "services", Energy.type == "X.ktoe", rownames == "Oil fields") %>% extract2("eta_i"), 0.94860812)
-
+  expect_equal(result %>% filter(Last.stage == IEATools::last_stages$final, rownames == "Crude dist.") %>% extract2("eta_i"), 0.98855359)
+  expect_equal(result %>% filter(Last.stage == IEATools::last_stages$useful, rownames == "Power plants") %>% extract2("eta_i"), 0.39751553)
+  expect_equal(result %>% filter(Last.stage == IEATools::last_stages$services, Energy.type == IEATools::energy_types$e, rownames == "Oil fields") %>% extract2("eta_i"), 0.94857713)
+  expect_equal(result %>% filter(Last.stage == IEATools::last_stages$services, Energy.type == IEATools::energy_types$x, rownames == "Oil fields") %>% extract2("eta_i"), 0.94860812)
 })
 
 test_that("efficiency vectors are named correctly", {

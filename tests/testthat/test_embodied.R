@@ -3,7 +3,13 @@ context("Embodied energy calculations")
 ###########################################################
 
 test_that("embodied energy calculations works as expected", {
-  primary_machine_names <- c("Resources - Crude", "Resources - NG")
+  # Get a vector of primary industries for the example data set.
+  # The vector of primary industries comes from the resource matrix (R).
+  primary_machine_names <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    extract2("R") %>%
+    extract2(1) %>%
+    rownames()
 
   # Calculate all embodied matrices
   emb_mats <- UKEnergy2000mats %>%
