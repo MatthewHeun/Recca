@@ -16,6 +16,7 @@ test_that("error messages about column names works as expected", {
                Hmisc::escapeRegex("column(s) 'a' is (are) already column names in data frame 'df'"))
 })
 
+
 test_that("verify_cols_missing works when either strings or names are provided", {
   df <- data.frame(a = c(1,2), b = c(3,4))
   # Try with strings
@@ -28,12 +29,14 @@ test_that("verify_cols_missing works when either strings or names are provided",
                Hmisc::escapeRegex("column(s) 'a', 'b' is (are) already column names in data frame 'df'"))
 })
 
+
 test_that("verify_cols_missing works with a single value", {
   df <- data.frame(a = c(1,2), b = c(3,4))
   expect_silent(verify_cols_missing(df, as.name("c")))
   expect_error(verify_cols_missing(df, as.name("a")),
                Hmisc::escapeRegex("column(s) 'a' is (are) already column names in data frame 'df'"))
 })
+
 
 test_that("any_start_with works properly", {
   expect_true(any_start_with(x = c("a", "b", "c"), target = "b"))
@@ -46,6 +49,7 @@ test_that("any_start_with works properly", {
   expect_equal(any_start_with(x = c("Production - Crude", "Production - NG", "Bogus"), target = list("Production", "Offshore")),
                c(TRUE, FALSE))
 })
+
 
 test_that("startsWith_any_of works properly", {
   expect_true(startsWith_any_of(x = "prefix - suffix", prefixes = c("a", "b", "prefix")))
@@ -60,6 +64,7 @@ test_that("startsWith_any_of works properly", {
                c(TRUE, TRUE, FALSE, FALSE))
 })
 
+
 test_that("resource_industries works correctly", {
   mats <- UKEnergy2000mats %>% tidyr::spread(key = matrix.name, value = matrix)
   expected <- c("Resources - Crude", "Resources - NG")
@@ -70,6 +75,7 @@ test_that("resource_industries works correctly", {
     expect_equal(resource_industries(U = mats$U[[i]], V = mats$V[[i]]) %>% set_names(NULL) %>% unlist(), expected)
   }
 })
+
 
 test_that("separate_RV works correctly", {
   # These tests will need to be re-evaluated after I implement R matrices in the
@@ -101,6 +107,7 @@ test_that("separate_RV works correctly", {
   expect_warning(mats %>% separate_RV(R_plus_V = "V"), "No R created in separate_RV")
 })
 
+
 test_that("combine_RV works correctly", {
   mats <- UKEnergy2000mats %>%
     spread(key = "matrix.name", value = "matrix") %>%
@@ -118,6 +125,7 @@ test_that("combine_RV works correctly", {
     expect_true(equal_byname(mats$R_plus_V[[i]], mats$R_plus_V_expected[[i]]))
   }
 })
+
 
 test_that("products_unit_homogeneous works correctly", {
   result <- UKEnergy2000mats %>%
@@ -144,6 +152,7 @@ test_that("products_unit_homogeneous works correctly", {
   # The first row has two units, the second row has one unit.
   expect_equal(su_detailed[[".products_unit_homogeneous"]][ , 1], c(p1 = FALSE, p2 = TRUE))
 })
+
 
 test_that("inputs_unit_homogeneous works correctly", {
   result <- UKEnergy2000mats %>%
@@ -209,6 +218,7 @@ test_that("output_unit_homogeneous works correctly", {
   expect_equal(result2_details[[".outputs_unit_homogeneous"]][ ,1], c(i1 = FALSE, i2 = TRUE))
 })
 
+
 test_that("inputs_outputs_unit_homogeneous works as expected", {
   result <- UKEnergy2000mats %>%
     spread(key = "matrix.name", value = "matrix") %>%
@@ -248,6 +258,7 @@ test_that("inputs_outputs_unit_homogeneous works as expected", {
   expect_equal(result2$matvals, result2$expected)
 })
 
+
 test_that("flows_unit_homogeneous works as expected", {
   result <- UKEnergy2000mats %>%
     spread(key = "matrix.name", value = "matrix") %>%
@@ -286,6 +297,7 @@ test_that("flows_unit_homogeneous works as expected", {
     )
   expect_equal(result2$matvals, result2$expected)
 })
+
 
 test_that("reverse works as expected", {
   result <- UKEnergy2000mats %>%
