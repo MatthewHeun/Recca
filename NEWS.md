@@ -1,3 +1,8 @@
+* Worked around a bug in `openxlsx::read.xlsx()` that HTML-escapes referenced cells
+  that contain "&", "<", or ">".  
+  See https://github.com/awalker89/openxlsx/issues/393 for details.
+* Switched to using the `openxlsx` package for reading data directly out of Excel files,
+  eliminating the need to export .csv files for the UKEnergy2000tidy data frame.
 * `primary_aggregates()` now properly handles PSUT matrices formulated with `R` matrices.
 * Fixed typos in `Recca.Rmd` vignette.
 
