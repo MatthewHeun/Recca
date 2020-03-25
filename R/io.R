@@ -115,7 +115,7 @@ calc_yqfgW <- function(.sutdata = NULL,
                        y = "y", q = "q",
                        f = "f", g = "g",
                        W = "W"){
-  yqfgw_func <- function(R_mat, U_mat, V_mat, Y_mat, S_units_mat = NULL){
+  yqfgw_func <- function(R_mat = NULL, U_mat, V_mat, Y_mat, S_units_mat = NULL){
     y_vec <- matsbyname::rowsums_byname(Y_mat)
     q_vec <- matsbyname::sum_byname(matsbyname::rowsums_byname(U_mat), y_vec)
     f_vec <- matsbyname::colsums_byname(U_mat) %>% matsbyname::transpose_byname() # vectors are always column vectors
@@ -158,6 +158,8 @@ calc_yqfgW <- function(.sutdata = NULL,
 #'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
 #' @param R resources (`R`) matrix or name of the column in `.sutmats` that contains same. Default is "`R`".
+#'          `R` is an optional argument.
+#'          If all of `R` is added to `V`, this argument can be left unspecified.
 #' @param U use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".
 #' @param V make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "\code{V}".
 #' @param q \code{q} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{q}".

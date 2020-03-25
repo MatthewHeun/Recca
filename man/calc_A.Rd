@@ -22,7 +22,9 @@ calc_A(
 \arguments{
 \item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
 
-\item{R}{resources (\code{R}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{R}".}
+\item{R}{resources (\code{R}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{R}".
+\code{R} is an optional argument.
+If all of \code{R} is added to \code{V}, this argument can be left unspecified.}
 
 \item{U}{use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".}
 
