@@ -547,3 +547,56 @@ reverse <- function(.sutmats = NULL,
 
   matsindf::matsindf_apply(.sutmats, FUN = reverse_func, R_mat = R, V_mat = V, U_mat = U, Y_mat = Y)
 }
+
+
+#' Unescape HTML codes in text
+#'
+#' Occasionally,
+#' we need to un-escape HTML codes in text.
+#' If `text` contains HTML codes, they are replaced with `replacements`, which,
+#' by default, describe replacements for "`&amp;`", "`&lt;`", and "`&gt;`"
+#' ("`&`", "`<`", and "`>`", respectively).
+#'
+#' HTML codes can arrive in text read from an Excel file by the `openxlsx` package
+#' due to a bug documented [here](https://github.com/awalker89/openxlsx/issues/393).
+#'
+#' @param text a vector (or one-dimensional list) of character strings
+#' @param replacements a list of string pairs. Each pair consists of encoded string and unencoded string,
+#'                     in that order. Default is
+#'                     `list(c("&amp;", "&"), c("&lt;", "<"), c("&gt;", ">"))`
+#'
+#' @return If `text` is a vector, a vector of un-encoded strings.
+#'         If `text` is a list of strings, a list of un-encoded strings of same structure.
+#'         If possible, an outgoing list has simplified structure, even to the point of
+#'         conversion to vector.
+#'
+#' @export
+#'
+#' @examples
+#' replace_html_codes(list("a", "&amp;", "&lt;", "&gt;", "bcd"))
+#' replace_html_codes(list(c("&amp;", "&amp;"), c("&lt;", "&lt;"), c("&gt;", "&gt;")))
+replace_html_codes <- function(text,
+                               replacements = list(c("&amp;", "&"),
+                                                   c("&lt;", "<"),
+                                                   c("&gt;", ">"))) {
+  out <- list()
+  for (i in 1:length(text)) {
+    text_i <- text[[i]]
+    if (length(text_i) > 1) {
+      # Be recursive here.
+      replace_html_codes(text_i, replacements)
+    }
+    for (r in replacements) {
+      text_i <- gsub(pattern = r[[1]], replacement = r[[2]], x = text_i)
+    }
+    out[[i]] <- text_i
+  }
+  # Flatten things, if possible
+  if (lapply(out, function(strng) {length(strng) == 1}) %>% as.logical() %>% all()) {
+    return(unlist(out))
+  }
+  return(out)
+}
+
+
+

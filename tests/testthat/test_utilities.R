@@ -321,7 +321,31 @@ test_that("reverse works as expected", {
 })
 
 
+test_that("unescape_html_codes works as expected", {
+  expect_equal(replace_html_codes("&amp;"), "&")
+  expect_equal(replace_html_codes("&lt;"), "<")
+  expect_equal(replace_html_codes("&gt;"), ">")
 
+  expect_equal(replace_html_codes("&amp"), "&amp")
+  expect_equal(replace_html_codes("&lt"), "&lt")
+  expect_equal(replace_html_codes("&gt"), "&gt")
+
+  expect_equal(replace_html_codes(c("a", "&amp;")), c("a", "&"))
+  expect_equal(replace_html_codes(list("a", "&amp;", "&lt;", "&gt;", "bcd")),
+               c("a", "&", "<", ">", "bcd"))
+  # Make sure it works in the context of a data frame
+  df <- data.frame(text = c("a", "&amp;", "&lt;", "&gt;", "bcd"))
+  escaped <- df %>% dplyr::mutate(
+    fixed = replace_html_codes(text)
+  )
+  expect_equal(escaped$fixed, c("a", "&", "<", ">", "bcd"))
+
+  # Try to generate some errors
+  expect_equal(replace_html_codes(42), "42") # this works, surprisingly
+  expect_error(replace_html_codes(fortytwo), "object 'fortytwo' not found")
+  expect_equal(replace_html_codes(list(c("&amp;", "&amp;"), c("&lt;", "&lt;"), c("&gt;", "&gt;"))),
+               list(c("&", "&"), c("<", "<"), c(">", ">")))
+})
 
 
 
