@@ -184,7 +184,7 @@ test_that("finaldemand_aggregates_IEA works as expected", {
     finaldemand_aggregates_IEA()
   sut_result <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
-    dplyr::filter(Last.stage %in% c("final", "useful")) %>%
+    dplyr::filter(Last.stage %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
     finaldemand_aggregates(fd_sectors = c("Residential", "Transport"))
   expect_equal(iea_result[["EX_fd_net_IEA.ktoe"]], sut_result[["EX_fd_net.ktoe"]] %>% unlist())
   expect_equal(iea_result[["EX_fd_gross_IEA.ktoe"]], sut_result[["EX_fd_gross.ktoe"]] %>% unlist())
