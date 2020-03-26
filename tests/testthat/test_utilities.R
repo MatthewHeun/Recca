@@ -113,12 +113,12 @@ test_that("separate_RV works correctly", {
 
 test_that("combine_RV works correctly", {
   mats <- UKEnergy2000mats %>%
-    spread(key = "matrix.name", value = "matrix") %>%
-    rename(
+    tidyr::spread(key = "matrix.name", value = "matrix") %>%
+    dplyr::rename(
       R_plus_V = V
     ) %>%
     separate_RV() %>%
-    rename(
+    dplyr::rename(
       R_plus_V_expected = R_plus_V
     ) %>%
     combine_RV()
@@ -159,22 +159,22 @@ test_that("products_unit_homogeneous works correctly", {
 
 test_that("inputs_unit_homogeneous works correctly", {
   result <- UKEnergy2000mats %>%
-    spread(key = "matrix.name", value = "matrix") %>%
+    tidyr::spread(key = "matrix.name", value = "matrix") %>%
     inputs_unit_homogeneous() %>%
-    extract2(".inputs_unit_homogeneous") %>%
+    magrittr::extract2(".inputs_unit_homogeneous") %>%
     unlist()
   # The 2nd and 4th rows of UKEnergy2000mats have services inputs to industries, with different units, of course.
   # Thus, we expect to have FALSE when services are the Last.stage.
   expected <- UKEnergy2000mats %>%
-    spread(key = "matrix.name", value = "matrix") %>%
-    mutate(
+    tidyr::spread(key = "matrix.name", value = "matrix") %>%
+    dplyr::mutate(
       expected = case_when(
-        Last.stage == "services" ~ FALSE,
-        Last.stage != "services" ~ TRUE,
+        Last.stage == IEATools::last_stages$services ~ FALSE,
+        Last.stage != IEATools::last_stages$services ~ TRUE,
         TRUE ~ NA
         )
     ) %>%
-    extract2("expected")
+    magrittr::extract2("expected")
   # Perform the test.
   expect_equal(result, expected)
 
@@ -182,15 +182,15 @@ test_that("inputs_unit_homogeneous works correctly", {
   # When Last.stage is "services", we have mixed units on the inputs for *dist. industries,
   # because services (with funny units) are inputs to the industries.
   result_details <- UKEnergy2000mats %>%
-    spread(key = "matrix.name", value = "matrix") %>%
+    tidyr::spread(key = "matrix.name", value = "matrix") %>%
     inputs_unit_homogeneous(keep_details = TRUE) %>%
-    select(Country, Year, Energy.type, Last.stage, .inputs_unit_homogeneous) %>%
-    gather(key = "matnames", value = "matvals", .inputs_unit_homogeneous) %>%
+    dplyr::select(Country, Year, Energy.type, Last.stage, .inputs_unit_homogeneous) %>%
+    tidyr::gather(key = "matnames", value = "matvals", .inputs_unit_homogeneous) %>%
     expand_to_tidy() %>%
-    mutate(
+    dplyr::mutate(
       expected = case_when(
-        Last.stage == "final" ~ TRUE,
-        Last.stage == "useful" ~ TRUE,
+        Last.stage == IEATools::last_stages$final ~ TRUE,
+        Last.stage == IEATools::last_stages$useful ~ TRUE,
         endsWith(rownames, "dist.") ~ FALSE,
         !endsWith(rownames, "dist.") ~ TRUE,
         TRUE ~ NA
