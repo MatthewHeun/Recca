@@ -7,6 +7,7 @@
 new_k_ps(
   .sutmats = NULL,
   k_prime = "k_prime",
+  R = "R",
   U = "U",
   V = "V",
   Y = "Y",
@@ -16,6 +17,7 @@ new_k_ps(
   Z = "Z",
   D = "D",
   f = "f",
+  R_prime = "R_prime",
   U_prime = "U_prime",
   V_prime = "V_prime"
 )
@@ -25,34 +27,36 @@ new_k_ps(
 
 \item{k_prime}{a new column vector for the \code{K} matrix representing new
 inputs to an industry or name of a column in \code{.sutmats} containing same.
-Default is "\code{k_prime}".
+Default is "k_prime".
 The name of the single \code{k_prime} column must match the name of one of the columns of matrix \code{K}.}
 
-\item{U}{use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".}
+\item{U}{use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "U".}
 
-\item{V}{make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "\code{V}".}
+\item{V}{make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "V".}
 
-\item{Y}{final demand (\code{Y}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Y}".}
+\item{Y}{final demand (\code{Y}) matrix or name of the column in \code{.sutmats} that contains same. Default is "Y".}
 
-\item{K}{a \code{K} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{K}".
+\item{K}{a \code{K} matrix or name of the column in \code{.sutmats} that contains same. Default is "K".
 \code{K} consists of columns that sum to 1.
 Elements of \code{K} indicate the fraction of total input to industries (in columns)
 provided by products (in rows).
-\code{K} can be calculated by \code{\link{calc_io_mats}}.}
+\code{K} can be calculated by \code{calc_io_mats()}.}
 
-\item{L_ixp}{an (\code{L_ixp}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{L_ixp}".}
+\item{L_ixp}{an (\code{L_ixp}) matrix or name of the column in \code{.sutmats} that contains same. Default is "L_ixp".}
 
-\item{L_pxp}{an (\code{L_pxp}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{L_pxp}".}
+\item{L_pxp}{an (\code{L_pxp}) matrix or name of the column in \code{.sutmats} that contains same. Default is "L_pxp".}
 
-\item{Z}{a \code{Z} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Z}".}
+\item{Z}{a \code{Z} matrix or name of the column in \code{.sutmats} that contains same. Default is "Z".}
 
-\item{D}{a \code{D} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{D}".}
+\item{D}{a \code{D} matrix or name of the column in \code{.sutmats} that contains same. Default is "D".}
 
-\item{f}{an \code{f} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{f}".}
+\item{f}{an \code{f} vector or name of the column in \code{sutmats} that contains same. Default is "f".}
 
-\item{U_prime}{name for the \code{U_prime} matrix on output. Default is "\code{U_prime}".}
+\item{R_prime}{name for the \code{R_prime} matrix on output. Default is "R_prime".}
 
-\item{V_prime}{name for the \code{V_prime} matrix on output. Default is "\code{V_prime}".}
+\item{U_prime}{name for the \code{U_prime} matrix on output. Default is "U_prime".}
+
+\item{V_prime}{name for the \code{V_prime} matrix on output. Default is "V_prime".}
 }
 \value{
 a list or data frame containing \code{U_prime} and \code{V_prime} matrices
@@ -68,9 +72,9 @@ The final demand matrix (\code{Y}) is unchanged.
 \details{
 Note that inputs \code{K}, \code{L_ixp}, \code{L_pxp},
 \code{Z}, \code{D}, and \code{f} can be
-conveniently calculated by the function \code{\link{calc_io_mats}}.
+conveniently calculated by the function \code{calc_io_mats()}.
 
-Internally, this function uses \code{\link[matsindf]{matsindf_apply}},
+Internally, this function uses \code{matsindf::matsindf_apply()},
 and documentation assumes that
 \code{.sutmats} is not \code{NULL} and is a data frame.
 If \code{.sutmats} is present, output is a data frame with columns named by string values of output arguments, and
@@ -87,7 +91,7 @@ library(tidyr)
 # we use the PerfectSubmats data frame.
 # But we need to calculate several important input-output matrices first.
 io_mats <- PerfectSubmats \%>\%
-  spread(key = "matrix.name", value = "matrix") \%>\%
+  tidyr::spread(key = "matrix.name", value = "matrix") \%>\%
   calc_io_mats()
 # Next, find the K matrix that contains the fraction of each type of energy
 # that enters each industry
@@ -101,12 +105,12 @@ k_prime_vec["FF elec", "Electric transport"] <- 0.5
 k_prime_vec["Ren elec", "Electric transport"] <- 0.5
 # Add k_prime_vec to the io_mats data frame.
 io_mats <- io_mats \%>\%
-  mutate(
+  dplyr::mutate(
     # Set up a new k_prime vector for Electric transport.
     # That vector will be used for the infininte substitution calculation.
-    k_prime = select_cols_byname(K, retain_pattern = make_pattern("Electric transport",
+    k_prime = matsbyname::select_cols_byname(K, retain_pattern = make_pattern("Electric transport",
                                                                   pattern_type = "exact")),
-    k_prime = make_list(k_prime_vec, n = 1)
+    k_prime = matsbyname::make_list(k_prime_vec, n = 1)
   )
 # Now do the calculation of U_prime and V_prime matrices.
 new_UV <- new_k_ps(io_mats)

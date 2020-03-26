@@ -112,6 +112,36 @@ test_that("new_k_ps works as expected", {
       k_prime = matsbyname::make_list(k_prime_vec, n = 1)
     )
   # Now do the calculation of U_prime and V_prime matrices.
+  # First test when we don't have an R matrix.
+  new_UV <- io_mats %>%
+    dplyr::mutate(
+      R_plus_V = sum_byname(R, V),
+      R = NULL
+    ) %>%
+    new_k_ps(V = "R_plus_V") %>%
+    dplyr::select(Country, Year, Energy.type, Last.stage, U_prime, V_prime) %>%
+    tidyr::gather(key = "matnames", value = "matvals", U_prime, V_prime) %>%
+    matsindf::expand_to_tidy(drop = 0)
+  expect_equivalent(new_UV %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "U_prime", rownames == "FF elec", colnames == "Buildings") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
+                    12.1)
+  expect_equivalent(new_UV %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "V_prime", rownames == "Buildings", colnames == "Bldg services") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
+                    25.2)
+  expect_equivalent(new_UV %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "V_prime", rownames == "Resources - Rens", colnames == "Rens") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
+                    49.75)
+
+
+
+
+  # Now test when we do have an R matrix.
   new_UV <- io_mats %>%
     new_k_ps() %>%
     dplyr::select(Country, Year, Energy.type, Last.stage, U_prime, V_prime) %>%
@@ -132,6 +162,7 @@ test_that("new_k_ps works as expected", {
                       dplyr::select(matvals) %>%
                       unlist(),
                     49.75)
+
 })
 
 test_that("1-industry ECC works with new_k_ps", {

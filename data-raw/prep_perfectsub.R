@@ -58,6 +58,6 @@ PerfectSubmats <- PerfectSubtidy %>%
   dplyr::select(-U_EIOU, -U_excl_EIOU) %>%
   # Add S_units matrices
   dplyr::left_join(S_units, by = c("Country", "Year", "Energy.type", "Last.stage")) %>%
-  tidyr::gather(key = matrix.name, value = matrix, U, V, Y, r_EIOU, S_units)
+  tidyr::gather(key = matrix.name, value = matrix, R, U, V, Y, r_EIOU, S_units)
 
 usethis::use_data(PerfectSubmats, overwrite = TRUE)
