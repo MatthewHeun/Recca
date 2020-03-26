@@ -8,23 +8,30 @@ context("ERRs")
 
 test_that("ERRs are calculated correctly", {
   result <- UKEnergy2000mats %>%
-    spread(key = "matrix.name", value = "matrix") %>%
-    rename(R_plus_V = V) %>%
+    tidyr::spread(key = "matrix.name", value = "matrix") %>%
+    dplyr::rename(R_plus_V = V) %>%
     separate_RV() %>%
     calc_io_mats() %>%
     calc_ERRs_gamma() %>%
-    select(Country, Year, Energy.type, Last.stage, ger_gamma, ner_gamma, r_gamma) %>%
-    gather(key = matnames, value = matvals, ger_gamma, ner_gamma, r_gamma) %>%
-    expand_to_tidy()
+    dplyr::select(Country, Year, Energy.type, Last.stage, ger_gamma, ner_gamma, r_gamma) %>%
+    tidyr::gather(key = matnames, value = matvals, ger_gamma, ner_gamma, r_gamma) %>%
+    matsindf::expand_to_tidy()
 
   # Test some specific values
-  expect_equal(result %>% filter(Last.stage == "final", matnames == "ger_gamma", rownames == "Crude dist.") %>% extract2("matvals"), 86.3636363636)
-  expect_equal(result %>% filter(Last.stage == "final", matnames == "ger_gamma", rownames == "Diesel dist.") %>% extract2("matvals"), 44.2857142857)
-  expect_true(result %>% filter(Last.stage == "final", matnames == "ger_gamma", rownames == "Elect. grid") %>% extract2("matvals") %>% is.infinite())
-  expect_equal(result %>% filter(Last.stage == "final", matnames == "ner_gamma", rownames == "NG dist.") %>% extract2("matvals"), 819)
-  expect_equal(result %>% filter(Last.stage == "final", matnames == "ner_gamma", rownames == "Power plants") %>% extract2("matvals"), 63)
-  expect_equal(result %>% filter(Last.stage == "final", matnames == "r_gamma", rownames == "Oil fields") %>% extract2("matvals"), 0.948500)
-  expect_equal(result %>% filter(Last.stage == "final", matnames == "r_gamma", rownames == "Oil refineries") %>% extract2("matvals"), 0.8920212766)
+  expect_equal(result %>% dplyr::filter(Last.stage == "final", matnames == "ger_gamma", rownames == "Crude dist.") %>%
+                 magrittr::extract2("matvals"), 86.3636363636)
+  expect_equal(result %>% dplyr::filter(Last.stage == "final", matnames == "ger_gamma", rownames == "Diesel dist.") %>%
+                 magrittr::extract2("matvals"), 44.2857142857)
+  expect_true(result %>% dplyr::filter(Last.stage == "final", matnames == "ger_gamma", rownames == "Elect. grid") %>%
+                magrittr::extract2("matvals") %>% is.infinite())
+  expect_equal(result %>% dplyr::filter(Last.stage == "final", matnames == "ner_gamma", rownames == "NG dist.") %>%
+                 magrittr::extract2("matvals"), 819)
+  expect_equal(result %>% dplyr::filter(Last.stage == "final", matnames == "ner_gamma", rownames == "Power plants") %>%
+                 magrittr::extract2("matvals"), 63)
+  expect_equal(result %>% dplyr::filter(Last.stage == "final", matnames == "r_gamma", rownames == "Oil fields") %>%
+                 magrittr::extract2("matvals"), 0.948500)
+  expect_equal(result %>% dplyr::filter(Last.stage == "final", matnames == "r_gamma", rownames == "Oil refineries") %>%
+                 magrittr::extract2("matvals"), 0.8920212766)
 
   # These industries have inhomogeneous units. Check for NAs where appropriate.
   inf_na_industries <- c("Elect. grid", "Car engines", "Cars", "Furnaces", "Homes", "Light fixtures", "Rooms", "Truck engines", "Trucks")

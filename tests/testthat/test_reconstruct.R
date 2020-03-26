@@ -80,7 +80,7 @@ context("New perfectly substitutable inputs in k")
 
 test_that("new_k_ps works as expected", {
   perfectsub_mats <- PerfectSubmats %>%
-    spread(key = "matrix.name", value = "matrix")
+    tidyr::spread(key = "matrix.name", value = "matrix")
 
   io_mats <- perfectsub_mats %>% calc_io_mats()
   K <- io_mats$K[[1]]
@@ -97,26 +97,32 @@ test_that("new_k_ps works as expected", {
   k_prime_vec["Ren elec", "Electric transport"] <- 0.5
   # Add this vector to the io_mats data frame.
   io_mats <- io_mats %>%
-    mutate(
+    dplyr::mutate(
       # Set up a new k_prime vector for Electric transport.
       # That vector will be used for the infininte substitution calculation.
       # k_prime = select_cols_byname(K, retain_pattern = make_pattern("Electric transport", pattern_type = "exact")),
-      k_prime = make_list(k_prime_vec, n = 1)
+      k_prime = matsbyname::make_list(k_prime_vec, n = 1)
     )
   # Now do the calculation of U_prime and V_prime matrices.
   new_UV <- io_mats %>%
     new_k_ps() %>%
-    select(Country, Year, Energy.type, Last.stage, U_prime, V_prime) %>%
-    gather(key = "matnames", value = "matvals", U_prime, V_prime) %>%
-    expand_to_tidy(drop = 0)
+    dplyr::select(Country, Year, Energy.type, Last.stage, U_prime, V_prime) %>%
+    tidyr::gather(key = "matnames", value = "matvals", U_prime, V_prime) %>%
+    matsindf::expand_to_tidy(drop = 0)
   expect_equivalent(new_UV %>%
-                      filter(Energy.type == "E.ktoe", Last.stage == "services", matnames == "U_prime", rownames == "FF elec", colnames == "Buildings") %>% select(matvals) %>% unlist(),
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "U_prime", rownames == "FF elec", colnames == "Buildings") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
                     12.1)
   expect_equivalent(new_UV %>%
-                      filter(Energy.type == "E.ktoe", Last.stage == "services", matnames == "V_prime", rownames == "Buildings", colnames == "Bldg services") %>% select(matvals) %>% unlist(),
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "V_prime", rownames == "Buildings", colnames == "Bldg services") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
                     25.2)
   expect_equivalent(new_UV %>%
-                      filter(Energy.type == "E.ktoe", Last.stage == "services", matnames == "V_prime", rownames == "Resources - Rens", colnames == "Rens") %>% select(matvals) %>% unlist(),
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "V_prime", rownames == "Resources - Rens", colnames == "Rens") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
                     49.75)
 })
 
@@ -137,28 +143,28 @@ test_that("1-industry ECC works with new_k_ps", {
                 0, 0,  0),
               byrow = TRUE, nrow = 3, ncol = 3,
               dimnames = list(c("R1p", "R2p", "Ip"), c("R1", "R2", "I"))) %>%
-    setrowtype("Products") %>% setcoltype("Industries")
+    matsbyname::setrowtype("Products") %>% matsbyname::setcoltype("Industries")
 
   V <- matrix(c(10,  0, 0,
                 0, 10, 0,
                 0,  0, 4),
               byrow = TRUE, nrow = 3, ncol = 3,
               dimnames = list(c("R1", "R2", "I"), c("R1p", "R2p", "Ip"))) %>%
-    setrowtype("Industries") %>% setcoltype("Products")
+    matsbyname::setrowtype("Industries") %>% matsbyname::setcoltype("Products")
 
   Y <- matrix(c(0, 0,
                 0, 0,
                 2, 2),
               byrow = TRUE, nrow = 3, ncol = 2,
               dimnames = list(c("R1p", "R2p", "Ip"), c("Y1", "Y2"))) %>%
-    setrowtype("Products") %>% setcoltype("Industries")
+    matsbyname::setrowtype("Products") %>% matsbyname::setcoltype("Industries")
 
   S_units <- matrix(c(1,
                       1,
                       1),
                     byrow = TRUE, nrow = 3, ncol = 1,
                     dimnames = list(c("R1p", "R2p", "Ip"), c("quad"))) %>%
-    setrowtype("Products") %>% setcoltype("Units")
+    matsbyname::setrowtype("Products") %>% matsbyname::setcoltype("Units")
 
   # Now calculate the IO matrices
   iomats <- calc_io_mats(U = U, V = V, Y = Y, S_units = S_units)
@@ -168,15 +174,12 @@ test_that("1-industry ECC works with new_k_ps", {
                     0),
                   byrow = TRUE, nrow = 2, ncol = 1,
                   dimnames = list(c("R1p", "R2p"), c("I"))) %>%
-    setrowtype("Products") %>% setcoltype("Industries")
+    matsbyname::setrowtype("Products") %>% matsbyname::setcoltype("Industries")
   prime1 <- new_k_ps(c(iomats, list(U = U, V = V, Y = Y, S_units = S_units, k_prime = new_k)))
   expect_equal(prime1$U_prime["R1p", "I"], 20)
   expect_equal(prime1$U_prime["R2p", "I"], 0)
   expect_equal(prime1$V_prime["R1", "R1p"], 20)
   expect_equal(prime1$V_prime["R2", "R2p"], 0)
-
-
-
 })
 
 

@@ -54,7 +54,7 @@ calc_io_mats <- function(.sutdata = NULL,
                          # Output names
                          y = "y", q = "q", f = "f", g = "g", W = "W", K = "K",
                          Z = "Z", C = "C", D = "D", A = "A", L_ixp = "L_ixp", L_pxp = "L_pxp"){
-  io_func <- function(R_mat, U_mat, V_mat, Y_mat, S_units_mat = NULL){
+  io_func <- function(R_mat = NULL, U_mat, V_mat, Y_mat, S_units_mat = NULL){
     yqfgW <- calc_yqfgW(R = R_mat, U = U_mat, V = V_mat, Y = Y_mat, S_units = S_units_mat,
                         y = y, q = q,
                         f = f, g = g,

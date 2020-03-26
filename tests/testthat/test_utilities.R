@@ -81,17 +81,19 @@ test_that("separate_RV works correctly", {
   # These tests will need to be re-evaluated after I implement R matrices in the
   # UKEnergy2000Mats data frame.
   expected <- UKEnergy2000mats %>%
-    spread(key = "matrix.name", value = "matrix") %>%
-    mutate(
-      R = V %>% select_rows_byname(retain_pattern = make_pattern("Resources - ", pattern_type = "leading")),
-      V = V %>% select_rows_byname(remove_pattern = make_pattern("Resources - ", pattern_type = "leading"))
+    tidyr::spread(key = "matrix.name", value = "matrix") %>%
+    dplyr::mutate(
+      R = V %>%
+        matsbyname::select_rows_byname(retain_pattern = matsbyname::make_pattern("Resources - ", pattern_type = "leading")),
+      V = V %>%
+        matsbyname::select_rows_byname(remove_pattern = matsbyname::make_pattern("Resources - ", pattern_type = "leading"))
     )
 
   mats <- UKEnergy2000mats %>%
-    spread(key = "matrix.name", value = "matrix") %>%
+    tidyr::spread(key = "matrix.name", value = "matrix") %>%
     # Rename the V matrix, because it includes the R matrix.
     # At some point, this rename step will be unnecessary because UKEnergy2000mats will be created with R separate from V
-    rename(
+    dplyr::rename(
       R_plus_V = V
     ) %>%
     separate_RV()
