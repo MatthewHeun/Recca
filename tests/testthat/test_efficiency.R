@@ -4,13 +4,13 @@ context("Efficiency")
 
 test_that("efficiencies are calculated correctly", {
   result <- UKEnergy2000mats %>%
-    spread(key = "matrix.name", value = "matrix") %>%
+    tidyr::spread(key = "matrix.name", value = "matrix") %>%
     calc_eta_i() %>%
-    select(Country, Year, Energy.type, Last.stage, eta_i) %>%
-    gather(key = matnames, value = matvals, eta_i) %>%
+    dplyr::select(Country, Year, Energy.type, Last.stage, eta_i) %>%
+    tidyr::gather(key = matnames, value = matvals, eta_i) %>%
     expand_to_tidy() %>%
-    rename(eta_i = matvals) %>%
-    mutate(
+    dplyr::rename(eta_i = matvals) %>%
+    dplyr::mutate(
       # Make expected values
       expected = case_when(
         startsWith(rownames, "Resources - ") ~ Inf,
@@ -31,7 +31,7 @@ test_that("efficiencies are calculated correctly", {
 
 test_that("efficiency vectors are named correctly", {
   result <- UKEnergy2000mats %>%
-    spread(key = "matrix.name", value = "matrix") %>%
+    tidyr::spread(key = "matrix.name", value = "matrix") %>%
     calc_eta_i()
 
   # Ensure that efficiency column is named correctly.

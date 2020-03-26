@@ -21,14 +21,14 @@ test_that("reconstructing U and V from single matrices works as expected", {
 test_that("reconstructing U and V from a new Y matrix works as expected", {
   # Try with Y_prime <- Y, thereby simply trying to duplicate the original U and V matrices
   Reconstructed <- UKEnergy2000mats %>%
-    spread(key = matrix.name, value = matrix) %>%
-    select(Country, Year, Energy.type, Last.stage, U, V, Y, r_EIOU, S_units) %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    dplyr::select(Country, Year, Energy.type, Last.stage, U, V, Y, r_EIOU, S_units) %>%
     calc_io_mats() %>%
-    mutate(
+    dplyr::mutate(
       Y_prime = Y
     ) %>%
     new_Y() %>%
-    mutate(
+    dplyr::mutate(
       # Take the difference between U_prime and U and V_prime and V
       U_diff = difference_byname(U_prime, U),
       V_diff = difference_byname(V_prime, V),
@@ -51,25 +51,33 @@ test_that("reconstructing U and V from a new Y matrix works as expected", {
     setrowtype("Product") %>% setcoltype("Industry")
 
   Reconstructed_Residential <- Reconstructed %>%
-    select(-Y_prime, -U_prime, -V_prime, -U_diff, -V_diff, -UOK, -VOK) %>%
-    mutate(
+    dplyr::select(-Y_prime, -U_prime, -V_prime, -U_diff, -V_diff, -UOK, -VOK) %>%
+    dplyr::mutate(
       Y_prime = list(Y_prime_finalE, Y_prime_servicesE, Y_prime_usefulE, Y_prime_servicesX)
     ) %>%
     new_Y() %>%
-    select(Country, Year, Energy.type, Last.stage, U_prime, V_prime) %>%
-    gather(key = "matnames", value = "matvals", U_prime, V_prime) %>%
-    expand_to_tidy(drop = 0)
+    dplyr::select(Country, Year, Energy.type, Last.stage, U_prime, V_prime) %>%
+    tidyr::gather(key = "matnames", value = "matvals", U_prime, V_prime) %>%
+    matsindf::expand_to_tidy(drop = 0)
   expect_equivalent(Reconstructed_Residential %>%
-                      filter(Energy.type == "E.ktoe", Last.stage == "final", matnames == "U_prime", rownames == "Crude - Dist.", colnames == "Crude dist.") %>% select(matvals) %>% unlist(),
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "U_prime", rownames == "Crude - Dist.", colnames == "Crude dist.") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
                     0.3481179450)
   expect_equivalent(Reconstructed_Residential %>%
-                      filter(Energy.type == "E.ktoe", Last.stage == "useful", matnames == "V_prime", rownames == "Truck engines", colnames == "MD - Truck engines") %>% select(matvals) %>% unlist(),
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$useful, matnames == "V_prime", rownames == "Truck engines", colnames == "MD - Truck engines") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
                     7.748625)
   expect_equivalent(Reconstructed_Residential %>%
-                      filter(Energy.type == "X.ktoe", Last.stage == "services", matnames == "V_prime", rownames == "Gas wells & proc.", colnames == "NG - Wells") %>% select(matvals) %>% unlist(),
+                      dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, matnames == "V_prime", rownames == "Gas wells & proc.", colnames == "NG - Wells") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
                     16220.3637987185)
   expect_equivalent(Reconstructed_Residential %>%
-                      filter(Energy.type == "X.ktoe", Last.stage == "services", matnames == "U_prime", rownames == "Elect", colnames == "Elect. grid") %>% select(matvals) %>% unlist(),
+                      dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, matnames == "U_prime", rownames == "Elect", colnames == "Elect. grid") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
                     6238.6014610456)
 })
 

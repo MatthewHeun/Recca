@@ -87,22 +87,25 @@ startsWith_any_of <- function(x, prefixes){
 #' Identifies resource industries.
 #'
 #' Resource industries are industries that make a product without using any products.
-#' Resource industries are identified by interrogating
-#' the use (\code{U}) and make (\code{V}) matrices.
-#' Resource industries have all zeroes in their column of the use matrix (\code{U})
-#' and at least one non-zero value in their row of the make (\code{V}) matrix.
+#' If `R` is given, its industries are automatically included in the output.
+#' Additional resource industries are identified by interrogating
+#' the resources (`R`), use (`U`) and make (`V`) matrices.
+#' Resource industries are, by definition, present in the `R` matrix,
+#' or they have all zeroes in their column of the use matrix (`U`)
+#' and at least one non-zero value in their row of the make (`V`) matrix.
 #'
-#' Argument and value descriptions are written assuming that \code{.sutdata} is a data frame.
-#' Alternatively, \code{.sutdata} can be unspecified, and \code{U} and \code{V} can be matrices.
-#' In that case, the return value is a list with a single item: \code{r_industries}
-#' which contains a vector of names of resource industries for the \code{U} and \code{V} matrices.
+#' Argument and value descriptions are written assuming that `.sutdata` is a data frame.
+#' Alternatively, `.sutdata` can be unspecified, and `U` and `V` can be matrices.
+#' In that case, the return value is a list with a single item (`r_industries`)
+#' which contains a vector of names of resource industries for the `U` and `V` matrices.
 #'
 #' @param .sutdata a list or data frame containing use matrix(ces) and make matrix(ces)
-#' @param U use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".
-#' @param V make (\code{V}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{V}".
-#' @param r_industries name for the \code{r_industries} vector on output. Default is "\code{r_industries}".
+#' @param R resource (`R`) matrix or name of the column in `.sutmats` that contains same. Default is "R".
+#' @param U use (`U`) matrix or name of the column in `.sutmats` that contains same. Default is "U".
+#' @param V make (`V`) matrix or name of the column in `.sutmats` that contains same. Default is "V".
+#' @param r_industries name for the resource industry vector on output. Default is "r_industries".
 #'
-#' @return a list or data frame with \code{.sutdata} with an additional column (named with the value of the \code{p_industries} argument)
+#' @return a list or data frame with `.sutdata` with an additional column (named with the value of the `p_industries` argument)
 #'         containing the resource industries for each row
 #'
 #' @export
@@ -112,8 +115,13 @@ startsWith_any_of <- function(x, prefixes){
 #' UKEnergy2000mats %>%
 #'   spread(key = matrix.name, value = matrix) %>%
 #'   resource_industries()
-resource_industries <- function(.sutdata = NULL, U = "U", V = "V", r_industries = "r_industries"){
-  r_industries_func <- function(U_mat, V_mat){
+resource_industries <- function(.sutdata = NULL, R = "R", U = "U", V = "V", r_industries = "r_industries"){
+  r_industries_func <- function(R_mat = NULL, U_mat, V_mat){
+    r_names_R <- NULL
+    if (!is.null(R_mat)) {
+      # Any industries in the R matrix are, by definition, resource industries.
+      r_names_R <- rownames(R_mat) %>% sort()
+    }
     completed_cols_U <- matsbyname::complete_rows_cols(a = U_mat, mat = matsbyname::transpose_byname(V_mat), margin = 2) %>%
       matsbyname::sort_rows_cols()
     # Looking for columns of zeroes in the U matrix.
@@ -121,11 +129,12 @@ resource_industries <- function(.sutdata = NULL, U = "U", V = "V", r_industries 
     # comparing against the original column names.
     U_clean_names <- matsbyname::clean_byname(completed_cols_U, margin = 2) %>%
       colnames()
-    r_names <- setdiff(colnames(completed_cols_U), U_clean_names) %>%
+    r_names_V <- setdiff(colnames(completed_cols_U), U_clean_names) %>%
       sort()
+    r_names <- c(r_names_R, r_names_V)
     list(r_names) %>% magrittr::set_names(r_industries)
   }
-  matsindf::matsindf_apply(.sutdata, FUN = r_industries_func, U_mat = U, V_mat = V)
+  matsindf::matsindf_apply(.sutdata, FUN = r_industries_func, R_mat = R, U_mat = U, V_mat = V)
 }
 
 

@@ -66,13 +66,14 @@ test_that("startsWith_any_of works properly", {
 
 
 test_that("resource_industries works correctly", {
-  mats <- UKEnergy2000mats %>% tidyr::spread(key = matrix.name, value = matrix)
+  mats <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix)
   expected <- c("Resources - Crude", "Resources - NG")
   expect_equal(resource_industries(mats)[["r_industries"]],
                list(expected, expected, expected, expected))
   # Try with individual matrices
   for (i in 1:nrow(mats)) {
-    expect_equal(resource_industries(U = mats$U[[i]], V = mats$V[[i]]) %>% set_names(NULL) %>% unlist(), expected)
+    expect_equal(resource_industries(R = mats$R[[i]], U = mats$U[[i]], V = mats$V[[i]]) %>% set_names(NULL) %>% unlist(), expected)
   }
 })
 
