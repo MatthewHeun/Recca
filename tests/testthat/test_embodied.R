@@ -28,16 +28,24 @@ test_that("embodied energy calculations works as expected", {
     gather(key = "matnames", value = "matvals", G, H) %>%
     expand_to_tidy(drop = 0)
   expect_equivalent(GH %>%
-                      filter(Last.stage == "final", Energy.type == "E.ktoe", matnames == "G", rownames == "Crude dist.", colnames == "Diesel - Dist.") %>% select(matvals) %>% unlist(),
+                      dplyr::filter(Last.stage == IEATools::last_stages$final, Energy.type == IEATools::energy_types$e, matnames == "G", rownames == "Crude dist.", colnames == "Diesel - Dist.") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
                     17098.4157270469)
   expect_equivalent(GH %>%
-                      filter(Last.stage == "useful", Energy.type == "E.ktoe", matnames == "H", rownames == "Diesel dist.", colnames == "Residential") %>% select(matvals) %>% unlist(),
+                      dplyr::filter(Last.stage == IEATools::last_stages$useful, Energy.type == IEATools::energy_types$e, matnames == "H", rownames == "Diesel dist.", colnames == "Residential") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
                     453.4462184729)
   expect_equivalent(GH %>%
-                      filter(Last.stage == "services", Energy.type == "X.ktoe", matnames == "G", rownames == "Gas wells & proc.", colnames == "Space heating [m3-K]") %>% select(matvals) %>% unlist(),
+                      dplyr::filter(Last.stage == IEATools::last_stages$services, Energy.type == IEATools::energy_types$x, matnames == "G", rownames == "Gas wells & proc.", colnames == "Space heating [m3-K]") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
                     26083.5277231996)
   expect_equivalent(GH %>%
-                      filter(Last.stage == "services", Energy.type == "X.ktoe", matnames == "H", rownames == "NG dist.", colnames == "Residential") %>% select(matvals) %>% unlist(),
+                      dplyr::filter(Last.stage == IEATools::last_stages$services, Energy.type == IEATools::energy_types$x, matnames == "H", rownames == "NG dist.", colnames == "Residential") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
                     42303.8915219182)
 
   # Focus on E matrices
@@ -46,13 +54,19 @@ test_that("embodied energy calculations works as expected", {
     gather(key = "matnames", value = "matvals", E) %>%
     expand_to_tidy(drop = 0)
   expect_equivalent(E %>%
-                      filter(Last.stage == "final", Energy.type == "E.ktoe", rownames == "Crude - Dist.", colnames == "Crude dist.") %>% select(matvals) %>% unlist(),
+                      dplyr::filter(Last.stage == IEATools::last_stages$final, Energy.type == IEATools::energy_types$e, rownames == "Crude - Dist.", colnames == "Crude dist.") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
                     1)
   expect_equivalent(E %>%
-                      filter(Last.stage == "services", Energy.type == "X.ktoe", rownames == "NG", colnames == "Gas wells & proc.") %>% select(matvals) %>% unlist(),
+                      dplyr::filter(Last.stage == IEATools::last_stages$services, Energy.type == IEATools::energy_types$x, rownames == "NG", colnames == "Gas wells & proc.") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
                     -1.0487804878)
   expect_equivalent(E %>%
-                      filter(Last.stage == "services", Energy.type == "E.ktoe", rownames == "NG - Dist.", colnames == "Power plants") %>% select(matvals) %>% unlist(),
+                      dplyr::filter(Last.stage == IEATools::last_stages$services, Energy.type == IEATools::energy_types$e, rownames == "NG - Dist.", colnames == "Power plants") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
                     -2.5)
 
   # Focus on M matrices
@@ -61,13 +75,13 @@ test_that("embodied energy calculations works as expected", {
     gather(key = "matnames", value = "matvals", M_p, M_s) %>%
     expand_to_tidy(drop = 0)
   expect_equivalent(M %>%
-                      filter(Last.stage == "services", matnames == "M_s", Energy.type == "E.ktoe", rownames == "Diesel - Dist.", colnames == "Residential") %>% select(matvals) %>% unlist(),
+                      dplyr::filter(Last.stage == IEATools::last_stages$services, matnames == "M_s", Energy.type == IEATools::energy_types$e, rownames == "Diesel - Dist.", colnames == "Residential") %>% select(matvals) %>% unlist(),
                     218.8438205116)
   expect_equivalent(M %>%
-                      filter(Last.stage == "useful", matnames == "M_p", Energy.type == "E.ktoe", rownames == "NG - Wells", colnames == "MD - Car engines") %>% select(matvals) %>% unlist(),
+                      dplyr::filter(Last.stage == IEATools::last_stages$useful, matnames == "M_p", Energy.type == IEATools::energy_types$e, rownames == "NG - Wells", colnames == "MD - Car engines") %>% select(matvals) %>% unlist(),
                     207.9296211559)
   expect_equivalent(M %>%
-                      filter(Last.stage == "services", matnames == "M_p", Energy.type == "X.ktoe", rownames == "Petrol", colnames == "Space heating [m3-K]") %>% select(matvals) %>% unlist(),
+                      dplyr::filter(Last.stage == IEATools::last_stages$services, matnames == "M_p", Energy.type == IEATools::energy_types$x, rownames == "Petrol", colnames == "Space heating [m3-K]") %>% select(matvals) %>% unlist(),
                     93.2008177323)
 
   # Focus on footprint matrices
@@ -76,28 +90,42 @@ test_that("embodied energy calculations works as expected", {
     gather(key = "matnames", value = "matvals", F_footprint_p, F_effects_p, F_footprint_s, F_effects_s) %>%
     expand_to_tidy(drop = 0)
   expect_equivalent(F_fe %>%
-                      filter(Last.stage == "final", Energy.type == "E.ktoe", matnames == "F_effects_p", rownames == "Crude", colnames == "Diesel - Dist.") %>% select(matvals) %>% unlist(),
+                      dplyr::filter(Last.stage == IEATools::last_stages$final, Energy.type == IEATools::energy_types$e, matnames == "F_effects_p", rownames == "Crude", colnames == "Diesel - Dist.") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
                     0.3599666468)
   expect_equivalent(F_fe %>%
-                      filter(Last.stage == "final", Energy.type == "E.ktoe", matnames == "F_footprint_p", rownames == "NG - Wells", colnames == "NG - Dist.") %>% select(matvals) %>% unlist(),
+                      dplyr::filter(Last.stage == IEATools::last_stages$final, Energy.type == IEATools::energy_types$e, matnames == "F_footprint_p", rownames == "NG - Wells", colnames == "NG - Dist.") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
                     0.3371597830)
   expect_equivalent(F_fe %>%
-                      filter(Last.stage == "services", Energy.type == "E.ktoe", matnames == "F_effects_s", rownames == "Diesel", colnames == "Residential") %>% select(matvals) %>% unlist(),
+                      dplyr::filter(Last.stage == IEATools::last_stages$services, Energy.type == IEATools::energy_types$e, matnames == "F_effects_s", rownames == "Diesel", colnames == "Residential") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
                     0.0054217606)
   # Because this number is so small, divide by the expected value to generate a 1.
   expect_equivalent(F_fe %>%
-                      filter(Last.stage == "services", Energy.type == "E.ktoe", matnames == "F_footprint_s", rownames == "LTH", colnames == "Residential") %>% select(matvals) %>% unlist() / 3.9993866199998427767e-11,
+                      dplyr::filter(Last.stage == IEATools::last_stages$services, Energy.type == IEATools::energy_types$e, matnames == "F_footprint_s", rownames == "LTH", colnames == "Residential") %>%
+                      dplyr::select(matvals) %>%
+                      unlist() / 3.9993866199998427767e-11,
                     1)
   expect_equivalent(F_fe %>%
-                      filter(Last.stage == "services", Energy.type == "X.ktoe", matnames == "F_effects_p", rownames == "Crude - Fields", colnames == "Illumination [lumen-hrs/yr]") %>% select(matvals) %>% unlist(),
+                      dplyr::filter(Last.stage == IEATools::last_stages$services, Energy.type == IEATools::energy_types$x, matnames == "F_effects_p", rownames == "Crude - Fields", colnames == "Illumination [lumen-hrs/yr]") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
                     0.002044016)
   # Because this number is so small, divide by the expected value to generate a 1.
   expect_equivalent(F_fe %>%
-                      filter(Last.stage == "services", Energy.type == "X.ktoe", matnames == "F_footprint_p", rownames == "MD - Truck engines", colnames == "Illumination [lumen-hrs/yr]") %>% select(matvals) %>% unlist() / 1.549723e-14,
+                      dplyr::filter(Last.stage == IEATools::last_stages$services, Energy.type == IEATools::energy_types$x, matnames == "F_footprint_p", rownames == "MD - Truck engines", colnames == "Illumination [lumen-hrs/yr]") %>%
+                      dplyr::select(matvals) %>%
+                      unlist() / 1.549723e-14,
                     1)
   # Because this number is so small, divide by the expected value to generate a 1.
   expect_equivalent(F_fe %>%
-                      filter(Last.stage == "services", Energy.type == "X.ktoe", matnames == "F_footprint_s", rownames == "Petrol - Dist.", colnames == "Transport") %>% select(matvals) %>% unlist() / 4.3369065801119745e-08,
+                      dplyr::filter(Last.stage == IEATools::last_stages$services, Energy.type == IEATools::energy_types$x, matnames == "F_footprint_s", rownames == "Petrol - Dist.", colnames == "Transport") %>%
+                      dplyr::select(matvals) %>%
+                      unlist() / 4.3369065801119745e-08,
                     1)
 
   # Focus on efficiencies
@@ -106,16 +134,16 @@ test_that("embodied energy calculations works as expected", {
     gather(key = "matnames", value = "matvals", eta_p, eta_s) %>%
     expand_to_tidy(drop = 0)
   expect_equivalent(embodied_etas %>%
-                      filter(Energy.type == "E.ktoe", Last.stage == "final", matnames == "eta_p", rownames == "Diesel - Dist.") %>% select(matvals) %>% unlist(),
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "eta_p", rownames == "Diesel - Dist.") %>% select(matvals) %>% unlist(),
                     0.81397293779504)
   expect_equivalent(embodied_etas %>%
-                      filter(Energy.type == "E.ktoe", Last.stage == "services", matnames == "eta_p", rownames == "Space heating [m3-K]") %>% select(matvals) %>% unlist(),
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "eta_p", rownames == "Space heating [m3-K]") %>% select(matvals) %>% unlist(),
                     2833600.6039485)
   expect_equivalent(embodied_etas %>%
-                      filter(Energy.type == "E.ktoe", Last.stage == "useful", matnames == "eta_s", rownames == "Transport") %>% select(matvals) %>% unlist(),
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$useful, matnames == "eta_s", rownames == "Transport") %>% select(matvals) %>% unlist(),
                     0.48990686308539)
   expect_equivalent(embodied_etas %>%
-                      filter(Energy.type == "X.ktoe", Last.stage == "services", matnames == "eta_p", rownames == "Illumination [lumen-hrs/yr]") %>% select(matvals) %>% unlist(),
+                      dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, matnames == "eta_p", rownames == "Illumination [lumen-hrs/yr]") %>% select(matvals) %>% unlist(),
                     29203976824)
 })
 
