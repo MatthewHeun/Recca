@@ -200,14 +200,7 @@ test_that("new_R works as expected", {
     spread(key = "matrix.name", value = "matrix") %>%
     # When Last.stage is "services", we get units problems.
     # Avoid by using only ECCs with "final" and "useful" as the Last.stage.
-    filter(Last.stage != "services") %>%
-    # At present, UKEnergy2000mats has V matrices that are the sum of both V and R.
-    # Change to use the R matrix.
-    rename(
-      R_plus_V = V
-    ) %>%
-    separate_RV() %>%
-    # At this point, the matrices are they way we want them.
+    filter(Last.stage != IEATools::last_stages$services) %>%
     # Calculate the input-output matrices which are inputs to the new_R function.
     calc_io_mats() %>%
     # Calculate the efficiency of every industry in the ECC.
@@ -239,9 +232,9 @@ test_that("new_R works as expected", {
 
   # Test that everything worked as expected
   for (i in 1:2) {
-    expect_true(equal_byname(newRsameasoldR$U_prime[[i]], newRsameasoldR$expected_U[[i]]))
-    expect_true(equal_byname(newRsameasoldR$V_prime[[i]], newRsameasoldR$expected_V[[i]]))
-    expect_true(equal_byname(newRsameasoldR$Y_prime[[i]], newRsameasoldR$expected_Y[[i]]))
+    expect_true(matsbyname::equal_byname(newRsameasoldR$U_prime[[i]], newRsameasoldR$expected_U[[i]]))
+    expect_true(matsbyname::equal_byname(newRsameasoldR$V_prime[[i]], newRsameasoldR$expected_V[[i]]))
+    expect_true(matsbyname::equal_byname(newRsameasoldR$Y_prime[[i]], newRsameasoldR$expected_Y[[i]]))
   }
 
   # Also try when the maxiter argument is set too small.
@@ -251,21 +244,14 @@ test_that("new_R works as expected", {
     spread(key = "matrix.name", value = "matrix") %>%
     # When Last.stage is "services", we get units problems.
     # Avoid by using only ECCs with "final" and "useful" as the Last.stage.
-    filter(Last.stage != "services") %>%
-    # At present, UKEnergy2000mats has V matrices that are the sum of both V and R.
-    # Change to use the R matrix.
-    rename(
-      R_plus_V = V
-    ) %>%
-    separate_RV() %>%
-    # At this point, the matrices are they way we want them.
+    filter(Last.stage != IEATools::last_stages$services) %>%
     # Calculate the input-output matrices which are inputs to the new_R function.
     calc_io_mats() %>%
     # Calculate the efficiency of every industry in the ECC.
     calc_eta_i() %>%
     # Make an R_prime matrix that gives twice the resource inputs to the economy.
     mutate(
-      R_prime = hadamardproduct_byname(2, R)
+      R_prime = matsbyname::hadamardproduct_byname(2, R)
     ) %>%
     # Now call the new_R function which will calculate
     # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
@@ -275,13 +261,15 @@ test_that("new_R works as expected", {
     new_R_ps() %>%
     # Clean the rows of U_prime, because they contain Products that are not present in U.
     mutate(
-      U_prime = clean_byname(U_prime, margin = 1),
-      Y_prime = clean_byname(Y_prime, margin = 1)
+      # Eliminate zero rows or cols that appear after the new_R_ps() call.
+      U_prime = matsbyname::clean_byname(U_prime, margin = 1),
+      V_prime = matsbyname::clean_byname(V_prime, margin = 2),
+      Y_prime = matsbyname::clean_byname(Y_prime, margin = 1)
     ) %>%
     mutate(
-      expected_U = hadamardproduct_byname(2, U),
-      expected_V = hadamardproduct_byname(2, V),
-      expected_Y = hadamardproduct_byname(2, Y)
+      expected_U = matsbyname::hadamardproduct_byname(2, U),
+      expected_V = matsbyname::hadamardproduct_byname(2, V),
+      expected_Y = matsbyname::hadamardproduct_byname(2, Y)
     )
 
   # Test that everything worked as expected
@@ -297,13 +285,6 @@ test_that("new_R works as expected", {
   # So don't filter out the "services" rows.
   WithDiffUnits <- UKEnergy2000mats %>%
     spread(key = "matrix.name", value = "matrix") %>%
-    # At present, UKEnergy2000mats has V matrices that are the sum of both V and R.
-    # Change to use the R matrix.
-    rename(
-      R_plus_V = V
-    ) %>%
-    separate_RV() %>%
-    # At this point, the matrices are they way we want them.
     # Calculate the input-output matrices which are inputs to the new_R function.
     calc_io_mats() %>%
     # Calculate the efficiency of every industry in the ECC.

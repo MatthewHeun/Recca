@@ -79,24 +79,19 @@ test_that("resource_industries works correctly", {
 
 
 test_that("separate_RV works correctly", {
-  # These tests will need to be re-evaluated after I implement R matrices in the
-  # UKEnergy2000Mats data frame.
   expected <- UKEnergy2000mats %>%
-    tidyr::spread(key = "matrix.name", value = "matrix") %>%
-    dplyr::mutate(
-      R = V %>%
-        matsbyname::select_rows_byname(retain_pattern = matsbyname::make_pattern("Resources - ", pattern_type = "leading")),
-      V = V %>%
-        matsbyname::select_rows_byname(remove_pattern = matsbyname::make_pattern("Resources - ", pattern_type = "leading"))
-    )
+    tidyr::spread(key = "matrix.name", value = "matrix")
 
   mats <- UKEnergy2000mats %>%
     tidyr::spread(key = "matrix.name", value = "matrix") %>%
-    # Rename the V matrix, because it includes the R matrix.
-    # At some point, this rename step will be unnecessary because UKEnergy2000mats will be created with R separate from V
-    dplyr::rename(
-      R_plus_V = V
+    dplyr::mutate(
+      # Make an R+V matrix
+      R_plus_V = matsbyname::sum_byname(R, V),
+      # Delete the R and V matrices
+      R = NULL,
+      V = NULL
     ) %>%
+    # Now separate R and V
     separate_RV()
 
   # Make sure that we get the expected values for R and V matrices
@@ -114,8 +109,10 @@ test_that("separate_RV works correctly", {
 test_that("combine_RV works correctly", {
   mats <- UKEnergy2000mats %>%
     tidyr::spread(key = "matrix.name", value = "matrix") %>%
-    dplyr::rename(
-      R_plus_V = V
+    dplyr::mutate(
+      R_plus_V = matsbyname::sum_byname(R, V),
+      R = NULL,
+      V = NULL
     ) %>%
     separate_RV() %>%
     dplyr::rename(
@@ -234,8 +231,8 @@ test_that("inputs_outputs_unit_homogeneous works as expected", {
     spread(key = "matrix.name", value = "matrix") %>%
     mutate(
       expected = case_when(
-        Last.stage == "services" ~ FALSE,
-        Last.stage != "services" ~ TRUE,
+        Last.stage == IEATools::last_stages$services ~ FALSE,
+        Last.stage != IEATools::last_stages$services ~ TRUE,
         TRUE ~ NA
       )
     ) %>%
@@ -251,8 +248,8 @@ test_that("inputs_outputs_unit_homogeneous works as expected", {
     expand_to_tidy() %>%
     mutate(
       expected = case_when(
-        Last.stage == "final" ~ TRUE,
-        Last.stage == "useful" ~ TRUE,
+        Last.stage == IEATools::last_stages$final ~ TRUE,
+        Last.stage == IEATools::last_stages$useful ~ TRUE,
         endsWith(rownames, "dist.") ~ FALSE,
         rownames %in% c("Cars", "Homes", "Rooms", "Trucks") ~ FALSE,
         TRUE ~ TRUE
@@ -274,8 +271,8 @@ test_that("flows_unit_homogeneous works as expected", {
     spread(key = "matrix.name", value = "matrix") %>%
     mutate(
       expected = case_when(
-        Last.stage == "services" ~ FALSE,
-        Last.stage != "services" ~ TRUE,
+        Last.stage == IEATools::last_stages$services ~ FALSE,
+        Last.stage != IEATools::last_stages$services ~ TRUE,
         TRUE ~ NA
       )
     ) %>%
@@ -291,8 +288,8 @@ test_that("flows_unit_homogeneous works as expected", {
     expand_to_tidy() %>%
     mutate(
       expected = case_when(
-        Last.stage == "final" ~ TRUE,
-        Last.stage == "useful" ~ TRUE,
+        Last.stage == IEATools::last_stages$final ~ TRUE,
+        Last.stage == IEATools::last_stages$useful ~ TRUE,
         endsWith(rownames, "dist.") ~ FALSE,
         rownames %in% c("Cars", "Homes", "Rooms", "Trucks") ~ FALSE,
         TRUE ~ TRUE
@@ -305,10 +302,6 @@ test_that("flows_unit_homogeneous works as expected", {
 test_that("reverse works as expected", {
   result <- UKEnergy2000mats %>%
     tidyr::spread(key = "matrix.name", value = "matrix") %>%
-    dplyr::rename(
-      R_plus_V = "V"
-    ) %>%
-    separate_RV() %>%
     reverse()
   for (i in 1:4) {
     R_rev_expected <- matsbyname::transpose_byname(result$Y[[i]])

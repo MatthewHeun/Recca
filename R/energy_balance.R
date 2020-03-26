@@ -47,12 +47,12 @@ verify_SUT_energy_balance <- function(.sutmats = NULL,
   verify_func <- function(R_mat, U_mat, V_mat, Y_mat){
     if (is.null(R_mat)) {
       # No R matrix, just use the V matrix, assuming that resouces are included there.
-      RV_mat <- V_mat
+      R_plus_V_mat <- V_mat
     } else {
       # An R matrix is present. Sum R and V before proceeding.
-      RV_mat <- matsbyname::sum_byname(R_mat, V_mat)
+      R_plus_V_mat <- matsbyname::sum_byname(R_mat, V_mat)
     }
-    RV_sums <- matsbyname::transpose_byname(RV_mat) %>% matsbyname::rowsums_byname()
+    RV_sums <- matsbyname::transpose_byname(R_plus_V_mat) %>% matsbyname::rowsums_byname()
     U_sums <- matsbyname::rowsums_byname(U_mat)
     Y_sums <- matsbyname::rowsums_byname(Y_mat)
     # (R + V) - U - Y
@@ -187,11 +187,11 @@ verify_SUT_industry_production <- function(.sutmats = NULL,
                                            problem_industries = ".problem_industries"){
   verify_func <- function(R_mat, U_mat, V_mat){
     if (is.null(R_mat)) {
-      RV_mat <- V_mat
+      R_plus_V_mat <- V_mat
     } else {
-      RV_mat <- matsbyname::sum_byname(R_mat, V_mat)
+      R_plus_V_mat <- matsbyname::sum_byname(R_mat, V_mat)
     }
-    check <- matsbyname::rowsums_byname(RV_mat) %>%
+    check <- matsbyname::rowsums_byname(R_plus_V_mat) %>%
       matsbyname::complete_rows_cols(mat = matsbyname::transpose_byname(U_mat), margin = 1)
     OK <- !any(check == 0)
     problems <- rownames(check)[which(check == 0)]
