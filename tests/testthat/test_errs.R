@@ -52,7 +52,7 @@ test_that("ERRs are calculated correctly", {
 
 test_that("column names are correct in calc_ERRs_gamma", {
   result <- UKEnergy2000mats %>%
-    spread(key = "matrix.name", value = "matrix") %>%
+    tidyr::spread(key = "matrix.name", value = "matrix") %>%
     calc_io_mats() %>%
     calc_ERRs_gamma()
 
