@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.19</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.20</span>
       </span>
     </div>
 
@@ -132,6 +132,19 @@
       <small>Source: <a href='https://github.com/MatthewHeun/Recca/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="recca-0120-2020-03-27" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.20">
+<a href="#recca-0120-2020-03-27" class="anchor"></a>Recca 0.1.20 (2020-03-27)</h1>
+<ul>
+<li>Completed the conversion of the entire package to enable use of <code>R</code> matrices in the PSUT framework. This effort involved converting several functions to accept <em>either</em> 1) both <code>R</code> and <code>V</code> matrices in the <code>R</code> and <code>V</code> arguments or 2) nothing supplied to the <code>R</code> argument and <code>R + V</code> supplied to the <code>V</code> argument.</li>
+<li>Worked around a bug in <code><a href="https://rdrr.io/pkg/openxlsx/man/read.xlsx.html">openxlsx::read.xlsx()</a></code> that HTML-escapes referenced cells that contain “&amp;”, “&lt;”, or “&gt;”.<br>
+See <a href="https://github.com/awalker89/openxlsx/issues/393" class="uri">https://github.com/awalker89/openxlsx/issues/393</a> for details.</li>
+<li>Switched to using the <code>openxlsx</code> package for reading data directly out of Excel files, eliminating the need to export .csv files for the UKEnergy2000tidy data frame.</li>
+<li>
+<code><a href="../reference/primary_aggregates.html">primary_aggregates()</a></code> now properly handles PSUT matrices formulated with <code>R</code> matrices.</li>
+<li>Fixed typos in <code>Recca.Rmd</code> vignette.</li>
+</ul>
+</div>
     <div id="recca-0119-2020-02-19" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.19">
 <a href="#recca-0119-2020-02-19" class="anchor"></a>Recca 0.1.19 (2020-02-19)</h1>
