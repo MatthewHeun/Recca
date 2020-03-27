@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Calculate the <code>E</code> matrix for embodied energy calculations — calc_E • Recca</title>
+<title>Un-escape HTML codes in text — replace_html_codes • Recca</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,12 @@
 
 
 
-<meta property="og:title" content="Calculate the <code>E</code> matrix for embodied energy calculations — calc_E" />
-<meta property="og:description" content="Calculate the E matrix for embodied energy calculations" />
+<meta property="og:title" content="Un-escape HTML codes in text — replace_html_codes" />
+<meta property="og:description" content="Occasionally,
+we need to un-escape HTML codes in text.
+If text contains HTML codes, they are replaced with replacements, which,
+by default, describe replacements for &quot;&amp;amp;amp;&quot;, &quot;&amp;amp;lt;&quot;, and &quot;&amp;amp;gt;&quot;
+(&quot;&amp;amp;&quot;, &quot;&amp;lt;&quot;, and &quot;&amp;gt;&quot;, respectively)." />
 
 
 
@@ -129,48 +133,60 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Calculate the <code>E</code> matrix for embodied energy calculations</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MatthewHeun/Recca/blob/master/R/embodied.R'><code>R/embodied.R</code></a></small>
-    <div class="hidden name"><code>calc_E.Rd</code></div>
+    <h1>Un-escape HTML codes in text</h1>
+    <small class="dont-index">Source: <a href='https://github.com/MatthewHeun/Recca/blob/master/R/utilities.R'><code>R/utilities.R</code></a></small>
+    <div class="hidden name"><code>replace_html_codes.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Calculate the <code>E</code> matrix for embodied energy calculations</p>
+    <p>Occasionally,
+we need to un-escape HTML codes in text.
+If <code>text</code> contains HTML codes, they are replaced with <code>replacements</code>, which,
+by default, describe replacements for "<code>&amp;amp;</code>", "<code>&amp;lt;</code>", and "<code>&amp;gt;</code>"
+("<code>&amp;</code>", "<code>&lt;</code>", and "<code>&gt;</code>", respectively).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>calc_E</span>(<span class='kw'>.iomats</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='st'>"g"</span>, <span class='kw'>W</span> <span class='kw'>=</span> <span class='st'>"W"</span>, <span class='kw'>U_EIOU</span> <span class='kw'>=</span> <span class='st'>"U_EIOU"</span>, <span class='kw'>E</span> <span class='kw'>=</span> <span class='st'>"E"</span>)</pre>
+    <pre class="usage"><span class='fu'>replace_html_codes</span>(
+  <span class='no'>text</span>,
+  <span class='kw'>replacements</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"&amp;amp;"</span>, <span class='st'>"&amp;"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"&amp;lt;"</span>, <span class='st'>"&lt;"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"&amp;gt;"</span>, <span class='st'>"&gt;"</span>))
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>.iomats</th>
-      <td><p>a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.
-<code>.iomats</code> will likely have been obtained from the <code><a href='calc_io_mats.html'>calc_io_mats</a></code> function.</p></td>
+      <th>text</th>
+      <td><p>a vector (or one-dimensional list) of character strings</p></td>
     </tr>
     <tr>
-      <th>g</th>
-      <td><p>final demand (<code>g</code>) vector or name of the column in <code>.iomats</code> containing same. Default is "<code>g</code>".</p></td>
-    </tr>
-    <tr>
-      <th>W</th>
-      <td><p>product-by-industry value added (<code>W</code>) matrix or name of the column in <code>.iomats</code> containing same. Default is "<code>W</code>".</p></td>
-    </tr>
-    <tr>
-      <th>U_EIOU</th>
-      <td><p>energy industry own use matrix or name of the column in <code>.iomats</code> containing same. Default is "<code>U_EIOU</code>".</p></td>
-    </tr>
-    <tr>
-      <th>E</th>
-      <td><p>the name for the <code>E</code> matrix on output. Default is "<code>E</code>".
-<code>E</code> is calculated by <code>W * g_hat_inv</code>.</p></td>
+      <th>replacements</th>
+      <td><p>a list of string pairs. Each pair consists of encoded string and unencoded string,
+in that order. Default is
+<code><a href='https://rdrr.io/r/base/list.html'>list(c("&amp;amp;", "&amp;"), c("&amp;lt;", "&lt;"), c("&amp;gt;", "&gt;"))</a></code></p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>list or data frame containing <code>E</code> matrices</p>
+    <p>If <code>text</code> is a vector, a vector of un-encoded strings.
+If <code>text</code> is a list of strings, a list of un-encoded strings of same structure.
+If possible, an outgoing list has simplified structure, even to the point of
+conversion to vector.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
+    <p>HTML codes can arrive in text read from an Excel file by the <code>openxlsx</code> package
+due to a bug documented <a href='https://github.com/awalker89/openxlsx/issues/393'>here</a>.</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>replace_html_codes</span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='st'>"a"</span>, <span class='st'>"&amp;amp;"</span>, <span class='st'>"&amp;lt;"</span>, <span class='st'>"&amp;gt;"</span>, <span class='st'>"bcd"</span>))</div><div class='output co'>#&gt; [1] "a"   "&amp;"   "&lt;"   "&gt;"   "bcd"</div><div class='input'><span class='fu'>replace_html_codes</span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"&amp;amp;"</span>, <span class='st'>"&amp;amp;"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"&amp;lt;"</span>, <span class='st'>"&amp;lt;"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"&amp;gt;"</span>, <span class='st'>"&amp;gt;"</span>)))</div><div class='output co'>#&gt; [[1]]
+#&gt; [1] "&amp;" "&amp;"
+#&gt; 
+#&gt; [[2]]
+#&gt; [1] "&lt;" "&lt;"
+#&gt; 
+#&gt; [[3]]
+#&gt; [1] "&gt;" "&gt;"
+#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

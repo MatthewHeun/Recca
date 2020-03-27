@@ -6,6 +6,7 @@
 \usage{
 verify_SUT_energy_balance_with_units(
   .sutmats = NULL,
+  R = "R",
   U = "U",
   V = "V",
   Y = "Y",
@@ -17,21 +18,23 @@ verify_SUT_energy_balance_with_units(
 }
 \arguments{
 \item{.sutmats}{an SUT-style data frame containing columns
-\code{U}, \code{V}, \code{Y}, and \code{S_units}.}
+\code{R} (optionally), \code{U}, \code{V}, \code{Y}, and \code{S_units}.}
 
-\item{U}{use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".}
+\item{R}{resource (\code{R}) matrix or name of the column in \code{.sutmats} that contains same. Default is "R".}
 
-\item{V}{make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "\code{V}".}
+\item{U}{use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "U".}
 
-\item{Y}{final demand (\code{Y}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Y}".}
+\item{V}{make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "V".}
 
-\item{S_units}{\code{S_units} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{S_units}".}
+\item{Y}{final demand (\code{Y}) matrix or name of the column in \code{.sutmats} that contains same. Default is "Y".}
+
+\item{S_units}{\code{S_units} matrix or name of the column in \code{.sutmats} that contains same. Default is "S_units".}
 
 \item{tol}{the maximum amount by which energy can be out of balance. Default is \code{1e-6}.}
 
-\item{SUT_prod_energy_balance}{the name for booleans telling if product energy is in balance. Default is "\code{.SUT_prod_energy_balance}".}
+\item{SUT_prod_energy_balance}{the name for booleans telling if product energy is in balance. Default is ".SUT_prod_energy_balance".}
 
-\item{SUT_ind_energy_balance}{the name for booleans telling if product energy is in balance. Default is "\code{.SUT_inds_energy_balance}".}
+\item{SUT_ind_energy_balance}{the name for booleans telling if product energy is in balance. Default is ".SUT_inds_energy_balance".}
 }
 \value{
 \code{.sutmats} with additional columns.
@@ -54,6 +57,6 @@ Units (as supplied by the \code{S_units} matrix) are respected.
 \examples{
 library(tidyr)
 verify_SUT_energy_balance_with_units(UKEnergy2000mats \%>\%
-                                       spread(key = matrix.name, value = matrix),
+                                       tidyr::spread(key = matrix.name, value = matrix),
                                        tol = 1e-3)
 }

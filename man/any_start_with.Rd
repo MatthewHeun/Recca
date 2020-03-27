@@ -13,8 +13,8 @@ any_start_with(x, target)
 }
 \value{
 \code{TRUE} if any of \code{x} starts with \code{target}, \code{FALSE} otherwise.
-        If \code{target} is a vector or list, the return value is the same length as \code{target}
-        and contains the result of applying the test to each item in \code{target}.
+If \code{target} is a vector or list, the return value is the same length as \code{target}
+and contains the result of applying the test to each item in \code{target}.
 }
 \description{
 This function returns \code{TRUE} if any of the strings in \code{x}

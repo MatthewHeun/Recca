@@ -4,19 +4,21 @@
 \name{UKEnergy2000tidy}
 \alias{UKEnergy2000tidy}
 \title{Energy consumption in the UK in 2000}
-\format{A data frame with 186 rows and 9 variables:
+\format{
+A data frame with 186 rows and 9 variables:
 \describe{
-  \item{Country}{country, GB (Great Britain, only one country)}
-  \item{Year}{year, 2000 (only one year)}
-  \item{Ledger.side}{Supply or Consumption}
-  \item{Flow.aggregation.point}{tells where each row should be aggregated}
-  \item{Energy.type}{E.ktoe (for energy) or X.ktoe (for exergy)}
-  \item{Last.stage}{tells the final stage of the energy conversion chain: final, useful, or services}
-  \item{Flow}{the Industry or Sector involved in this flow}
-  \item{Product}{the energy product involved in this flow}
-  \item{EX.ktoe}{value of the energy, exergy, or service flow in ktoe}
-  \item{Unit}{unit in which quantity is expressed}
-}}
+\item{Country}{country, GB (Great Britain, only one country)}
+\item{Year}{year, 2000 (only one year)}
+\item{Ledger.side}{Supply or Consumption}
+\item{Flow.aggregation.point}{tells where each row should be aggregated}
+\item{Energy.type}{E.ktoe (for energy) or X.ktoe (for exergy)}
+\item{Last.stage}{tells the final stage of the energy conversion chain: final, useful, or services}
+\item{Flow}{the Industry or Sector involved in this flow}
+\item{Product}{the energy product involved in this flow}
+\item{E.dot}{value of the energy, exergy, or service flow in ktoe}
+\item{Unit}{unit in which quantity is expressed}
+}
+}
 \source{
 \url{https://doi.org/10.1016/j.apenergy.2018.05.109}
 }

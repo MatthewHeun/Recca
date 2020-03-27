@@ -79,13 +79,6 @@ library(matsbyname)
 library(tidyr)
 doubleR <- UKEnergy2000mats \%>\%
   spread(key = "matrix.name", value = "matrix") \%>\%
-  # At present, UKEnergy2000mats has V matrices that are the sum of both V and R.
-  # Change to use the R matrix.
-  rename(
-    R_plus_V = V
-  ) \%>\%
-  separate_RV() \%>\%
-  # At this point, the matrices are they way we want them.
   # Calculate the input-output matrices which are inputs to the new_R function.
   calc_io_mats() \%>\%
   # Calculate the efficiency of every industry in the ECC.
@@ -101,4 +94,7 @@ doubleR <- UKEnergy2000mats \%>\%
   # because R_prime is 2x relative to R.
   # Rows with Last.stage == "services" are NA.
   new_R_ps()
+doubleR$U_prime[[1]]
+doubleR$V_prime[[1]]
+doubleR$Y_prime[[1]]
 }

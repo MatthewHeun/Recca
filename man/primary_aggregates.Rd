@@ -31,9 +31,9 @@ the total primary energy aggregate.}
 
 \item{by}{one of \code{Total}, \code{Product}, or \code{Flow} to indicate the desired aggregation:
 \itemize{
-  \item{\code{Total}: aggregation over both Product and Flow (the default)}
-  \item{\code{Product}: aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.)}
-  \item{\code{Flow}: aggregation by type of flow (Production, Imports, Exports, etc.)}
+\item \code{Total}: aggregation over both Product and Flow (the default)
+\item \code{Product}: aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.)
+\item \code{Flow}: aggregation by type of flow (Production, Imports, Exports, etc.)
 }}
 
 \item{aggregate_primary}{the name for aggregates of primary energy on output}

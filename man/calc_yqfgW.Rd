@@ -6,6 +6,7 @@
 \usage{
 calc_yqfgW(
   .sutdata = NULL,
+  R = "R",
   U = "U",
   V = "V",
   Y = "Y",
@@ -19,6 +20,8 @@ calc_yqfgW(
 }
 \arguments{
 \item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
+
+\item{R}{resources (\code{R}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{R}".}
 
 \item{U}{use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".}
 
@@ -45,7 +48,7 @@ calc_yqfgW(
 }
 \value{
 a list or data frame containing \code{y}, \code{q},
-         \code{f}, \code{g}, and \code{W}.
+\code{f}, \code{g}, and \code{W}.
 }
 \description{
 Note that a necessary condition for calculating the \code{f} and \code{g} vectors is that

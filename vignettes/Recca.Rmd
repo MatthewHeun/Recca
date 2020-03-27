@@ -25,8 +25,8 @@ library(dplyr)
 library(matsbyname)
 library(matsindf)
 library(Recca)
-library(tidyr)
 library(tibble)
+library(tidyr)
 ```
 
 <!-- Establish some helpful LaTeX shortcuts for equations -->
@@ -104,27 +104,27 @@ using the `S_units_from_tidy()` function.
 ```{r}
 library(tibble)
 S_units <- UKEnergy2000tidy %>%
-  group_by(Country, Year, Energy.type, Last.stage) %>%
+  dplyr::group_by(Country, Year, Energy.type, Last.stage) %>%
   S_units_from_tidy()
-glimpse(S_units)
+tibble::glimpse(S_units)
 ```
 
 And we can identify which entries belong in the
 resource ($\mat{R}$), make ($\mat{V}$), use ($\mat{U}$), and
 final demand ($\mat{Y}$) matrices 
-with the `add_matnames_iea()` and `add_row_col_meta()` functions.
+with the `IEATools::add_psut_matnames()` and `IEATools::add_row_col_meta()` functions.
 
 ```{r}
 WithNames <- UKEnergy2000tidy %>%
   # Add a column indicating the matrix in which this entry belongs (U, V, or Y).
-  add_matnames_iea(use_R = TRUE) %>%
+  IEATools::add_psut_matnames() %>%
   # Add metadata columns for row names, column names, row types, and column types.
-  add_row_col_meta() %>% 
+  IEATools::add_row_col_meta() %>% 
   # Eliminate columns we no longer need
-  select(-Ledger.side, -Flow.aggregation.point, -Flow, -Product) %>%
-  mutate(
+  dplyr::select(-Ledger.side, -Flow.aggregation.point, -Flow, -Product) %>%
+  dplyr::mutate(
     # Ensure that all energy values are positive, as required for analysis.
-    EX.ktoe = abs(EX.ktoe)
+    E.dot = abs(E.dot)
   )
 head(WithNames)
 ```
@@ -135,25 +135,25 @@ we can collapse all data to matrices and add a unit summation matrix (`S_units`)
 ```{r}
 AsMats <- WithNames %>%
   # Collapse to matrices using functions in the matsindf package
-  group_by(Country, Year, Energy.type, Last.stage, matname) %>%
-  collapse_to_matrices(matnames = "matname", matvals = "EX.ktoe",
-                       rownames = "rowname", colnames = "colname",
-                       rowtypes = "rowtype", coltypes = "coltype") %>%
-  rename(matrix.name = matname, matrix = EX.ktoe) %>%
-  spread(key = matrix.name, value = matrix) %>%
+  dplyr::group_by(Country, Year, Energy.type, Last.stage, matnames) %>%
+  matsindf::collapse_to_matrices(matnames = "matnames", matvals = "E.dot",
+                       rownames = "rownames", colnames = "colnames",
+                       rowtypes = "rowtypes", coltypes = "coltypes") %>%
+  dplyr::rename(matrix.name = matnames, matrix = E.dot) %>%
+  tidyr::spread(key = matrix.name, value = matrix) %>% 
   # Do a little more cleanup
-  mutate(
+  dplyr::mutate(
     # Create full U matrix
     U = matsbyname::sum_byname(U_excl_EIOU, U_EIOU),
     # Create r_EIOU, a matrix that identifies the ratio of EIOU to other energy consumed.
     r_EIOU = matsbyname::quotient_byname(U_EIOU, U),
     r_EIOU = matsbyname::replaceNaN_byname(r_EIOU, val = 0)
-  ) %>%
-  select(-U_EIOU, -U_excl_EIOU) %>%
+  ) %>% 
+  dplyr::select(-U_EIOU, -U_excl_EIOU) %>%
   # Add S_units matrices
-  left_join(S_units, by = c("Country", "Year", "Energy.type", "Last.stage")) %>%
-  gather(key = matrix.name, value = matrix, R, U, V, Y, r_EIOU, S_units)
-glimpse(AsMats)
+  dplyr::left_join(S_units, by = c("Country", "Year", "Energy.type", "Last.stage")) %>%
+  tidyr::gather(key = matrix.name, value = matrix, R, U, V, Y, r_EIOU, S_units)
+tibble::glimpse(AsMats)
 ```
 
 The `AsMats` data frame is essentially the same as the `Recca::UKEnergy2000mats` data frame.
@@ -172,20 +172,21 @@ To determine the I-O structure of an ECC, use the `calc_io_mats()` function.
 ```{r}
 library(tidyr)
 mats <- UKEnergy2000mats %>% 
-  spread(key = matrix.name, value = matrix) %>% 
+  tidyr::spread(key = matrix.name, value = matrix) %>% 
   # Put rows in a natural order
-  mutate(
-    Last.stage = factor(Last.stage, levels = c("final", "useful", "services")),
-    Energy.type = factor(Energy.type, levels = c("E.ktoe", "X.ktoe"))
+  dplyr::mutate(
+    Last.stage = factor(Last.stage, levels = c("Final", "Useful", "Services")),
+    Energy.type = factor(Energy.type, levels = c("E", "X"))
   ) %>% 
-  arrange(Last.stage, Energy.type) 
+  dplyr::arrange(Last.stage, Energy.type)
 # Use the calc_io_mats function with individual matrices, 
 # each taken from the first row of the UKEnergy2000mats data frame.
+R <- mats$R[[1]]
 U <- mats$U[[1]]
 V <- mats$V[[1]]
 Y <- mats$Y[[1]]
 S_units <- mats$S_units[[1]]
-IO_list <- calc_io_mats(U = U, V = V, Y = Y, S_units = S_units)
+IO_list <- calc_io_mats(R = R, U = U, V = V, Y = Y, S_units = S_units)
 ```
 
 Most `Recca` functions return a list when called with individual matrices as arguments.
@@ -211,7 +212,7 @@ most `Recca` functions can use the default arguments
 for input and output items in the list.
 
 ```{r}
-IO_from_list <- calc_io_mats(list(U = U, V = V, Y = Y, S_units = S_units))
+IO_from_list <- calc_io_mats(list(R = R, U = U, V = V, Y = Y, S_units = S_units))
 class(IO_from_list)
 names(IO_from_list)
 IO_from_list[["y"]]
@@ -277,8 +278,8 @@ ECC that would be required to meet the new final demand represented by `Y_prime`
 
 ```{r}
 Double_demand <- IO_df %>% 
-  mutate(
-    Y_prime = hadamardproduct_byname(2, Y)
+  dplyr::mutate(
+    Y_prime = matsbyname::hadamardproduct_byname(2, Y)
   ) %>% 
   new_Y()
 names(Double_demand)
@@ -352,9 +353,9 @@ throughout the ECC in the process of satisfying that final demand.
 `Recca` provides two functions to calculate embodied primary energy and important ratios,
 namely `calc_embodied_mats()` and `calc_embodied_etas()`.
 
-Outputs from `calc_embodied_mats()` include the following matrices:
-
 The function `calc_embodied_mats()` calculates embodied energy in final demand products ($p$) and final demand sectors ($s$).
+
+Outputs from `calc_embodied_mats()` include the following matrices:
 
 | Matrix | Description (rows$\times$columns)|
 |---:|:---------------------------------------------------|
@@ -364,18 +365,18 @@ The function `calc_embodied_mats()` calculates embodied energy in final demand p
 | $\mat{M}_p$ | embodied products $\times$ embodying products |
 | $\mat{M}_s$ | embodied products $\times$ consumed by final demand sectors |
 
-`calc_embodied_etas()` also calculates $\mat{F}_{footprint}$ and $\mat{F}_{effects}$ matrices,
+`calc_embodied_mats()` also calculates $\mat{F}_{footprint}$ and $\mat{F}_{effects}$ matrices,
 which answer the questions (respectively)
-``What is the fractional composition of embodied energy of each final demand energy type?''
+"What is the fractional composition of embodied energy of each final demand energy type?"
 and
-``What is the fractional destination of a given upstream energy product?''
+"What is the fractional destination of a given upstream energy product?"
 The calculations can be performed for each final demand product or each final demand sector. 
 The following table describes these matrices.
 
 | Matrix | Description |
 |---:|:---------------------------------------------------|
 | $\mat{F}_{footprint,p}$ | Each final demand product (columns) contains embodied energy. On a fractional basis, where does that embodied energy come from (rows)? Columns sum to 1. |
-| $\mat{F}_{effects,p}$ | Each upstream energy product (rows) becomes embodied somewhere. On a fractional basis, where does that upstream energy become embodied columns)? Rows sums to 1. |
+| $\mat{F}_{effects,p}$ | Each upstream energy product (rows) becomes embodied somewhere. On a fractional basis, where does that upstream energy become embodied (columns)? Rows sums to 1. |
 | $\mat{F}_{footprint,s}$ | Each final demand sector (columns) consumes embodied energy. On a fractional basis, where does the consumed embodied energy come from (rows)? Columns sum to 1. |
 | $\mat{F}_{effects,s}$ | Each embodied upstream energy product (rows) is consumed by a final demand sector. On a fractional basis, where is that embodied upstream energy consumed (columns)? Rows sums to 1. |
 
@@ -394,9 +395,9 @@ The `calc_embodied_etas()` function does this computation.
 ```{r}
 primary_machine_names <- c("Resources - Crude", "Resources - NG")
 
-embodied_mats <- IO_df %>%
-  mutate(
-    U_EIOU = hadamardproduct_byname(r_EIOU, U)
+embodied_mats <- IO_df %>% 
+  dplyr::mutate(
+    U_EIOU = matsbyname::hadamardproduct_byname(r_EIOU, U)
   ) %>%
   calc_embodied_mats() %>%
   calc_embodied_etas(primary_machine_names = primary_machine_names)

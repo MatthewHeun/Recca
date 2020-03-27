@@ -8,7 +8,7 @@ primary_aggregates_IEA(
   .ieadata,
   flow = "Flow",
   flow_aggregation_point = "Flow.aggregation.point",
-  energy = "EX.ktoe",
+  energy = "E.dot",
   p_industries = c("Production", "Coal mines", "Oil and gas extraction", "Imports",
     "Exports", "International aviation bunkers", "International marine bunkers",
     "Stock changes"),
@@ -24,13 +24,13 @@ primary_aggregates_IEA(
 \item{flow_aggregation_point}{the name of the column that identifies flow aggregation points.
 Default is "\code{Flow.aggregation.point}".}
 
-\item{energy}{the name of the column that contains energy information. Default is "\code{EX.ktoe}".}
+\item{energy}{the name of the column that contains energy information. Default is "\code{E.dot}".}
 
 \item{p_industries}{a vector of names of primary industries. Default is
 "\code{c("Coal mines", "Oil and gas extraction",
-"Production", "Imports", "Exports",
-"International aviation bunkers", "International marine bunkers",
-"Stock changes")}"}
+       "Production", "Imports", "Exports",
+       "International aviation bunkers", "International marine bunkers",
+       "Stock changes")}"}
 
 \item{eiou}{the string that identifies energy industry own use in the \code{Flow.aggregation.point} column.
 Default is "\code{Energy industry own use}".}
@@ -41,7 +41,7 @@ Default is "\code{EX_p_IEA.ktoe}".}
 }
 \value{
 a data frame containing the grouping columns of \code{.ieadata}
-        as well as a column named with the value of \code{aggregate_primary}.
+as well as a column named with the value of \code{aggregate_primary}.
 }
 \description{
 Calculates total aggregate primary energy from a data frame of IEA data.

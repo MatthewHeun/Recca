@@ -40,7 +40,7 @@ Sankey diagrams are a helpful way to visualize energy flows in an energy convers
 This function takes a matrix description of an ECC and produces a Sankey diagram.
 }
 \details{
-At present, this function uses the `networkD3` package to draw the Sankey diagram.
+At present, this function uses the \code{networkD3} package to draw the Sankey diagram.
 
 If any of \code{R}, \code{U}, \code{V}, or \code{Y} is \code{NA}, \code{NA} is returned.
 }
@@ -51,10 +51,6 @@ library(networkD3)
 library(tidyr)
 UKEnergy2000mats \%>\%
   spread(key = "matrix.name", value = "matrix") \%>\%
-  rename(
-    R_plus_V = V
-  ) \%>\%
-  separate_RV() \%>\%
   make_sankey() \%>\%
   extract2("Sankey") \%>\%
   extract2(1)

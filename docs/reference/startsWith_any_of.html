@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Calculate the <code>E</code> matrix for embodied energy calculations — calc_E • Recca</title>
+<title>Tell if a string starts with any of a vector of strings — startsWith_any_of • Recca</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="Calculate the <code>E</code> matrix for embodied energy calculations — calc_E" />
-<meta property="og:description" content="Calculate the E matrix for embodied energy calculations" />
+<meta property="og:title" content="Tell if a string starts with any of a vector of strings — startsWith_any_of" />
+<meta property="og:description" content="This function returns TRUE if x
+starts with any of the strings in target and FALSE otherwise." />
 
 
 
@@ -129,48 +130,48 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Calculate the <code>E</code> matrix for embodied energy calculations</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MatthewHeun/Recca/blob/master/R/embodied.R'><code>R/embodied.R</code></a></small>
-    <div class="hidden name"><code>calc_E.Rd</code></div>
+    <h1>Tell if a string starts with any of a vector of strings</h1>
+    <small class="dont-index">Source: <a href='https://github.com/MatthewHeun/Recca/blob/master/R/utilities.R'><code>R/utilities.R</code></a></small>
+    <div class="hidden name"><code>startsWith_any_of.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Calculate the <code>E</code> matrix for embodied energy calculations</p>
+    <p>This function returns <code>TRUE</code> if <code>x</code>
+starts with any of the strings in <code>target</code> and <code>FALSE</code> otherwise.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>calc_E</span>(<span class='kw'>.iomats</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>g</span> <span class='kw'>=</span> <span class='st'>"g"</span>, <span class='kw'>W</span> <span class='kw'>=</span> <span class='st'>"W"</span>, <span class='kw'>U_EIOU</span> <span class='kw'>=</span> <span class='st'>"U_EIOU"</span>, <span class='kw'>E</span> <span class='kw'>=</span> <span class='st'>"E"</span>)</pre>
+    <pre class="usage"><span class='fu'>startsWith_any_of</span>(<span class='no'>x</span>, <span class='no'>prefixes</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>.iomats</th>
-      <td><p>a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.
-<code>.iomats</code> will likely have been obtained from the <code><a href='calc_io_mats.html'>calc_io_mats</a></code> function.</p></td>
+      <th>x</th>
+      <td><p>a string (or vector or list of strings)</p></td>
     </tr>
     <tr>
-      <th>g</th>
-      <td><p>final demand (<code>g</code>) vector or name of the column in <code>.iomats</code> containing same. Default is "<code>g</code>".</p></td>
-    </tr>
-    <tr>
-      <th>W</th>
-      <td><p>product-by-industry value added (<code>W</code>) matrix or name of the column in <code>.iomats</code> containing same. Default is "<code>W</code>".</p></td>
-    </tr>
-    <tr>
-      <th>U_EIOU</th>
-      <td><p>energy industry own use matrix or name of the column in <code>.iomats</code> containing same. Default is "<code>U_EIOU</code>".</p></td>
-    </tr>
-    <tr>
-      <th>E</th>
-      <td><p>the name for the <code>E</code> matrix on output. Default is "<code>E</code>".
-<code>E</code> is calculated by <code>W * g_hat_inv</code>.</p></td>
+      <th>prefixes</th>
+      <td><p>a vector or list of strings</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>list or data frame containing <code>E</code> matrices</p>
+    <p><code>TRUE</code> if <code>x</code> starts with any of the strings in <code>target</code>,
+<code>FALSE</code> otherwise.
+If <code>x</code> is a vector or list of strings, the return value is the same length as <code>x</code>
+and contains the result of applying the test to each item in <code>x</code>.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
+    <p>This function is vectorized. If <code>x</code> is a vector or list of strings,
+the return value has the same length as <code>x</code> and contains the result
+of applying the test (does <code>x</code> start with any of <code>target</code>)
+for each item in <code>x</code>.</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>startsWith_any_of</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"prefix - suffix"</span>, <span class='kw'>prefixes</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"a"</span>, <span class='st'>"b"</span>, <span class='st'>"prefix"</span>))</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>startsWith_any_of</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"prefix - suffix"</span>, <span class='kw'>prefixes</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"a"</span>, <span class='st'>"b"</span>, <span class='st'>"c"</span>))</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'>startsWith_any_of</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"prefix - suffix"</span>, <span class='kw'>prefixes</span> <span class='kw'>=</span> <span class='st'>"suffix"</span>)</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'>startsWith_any_of</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Production - Crude"</span>, <span class='st'>"Production - NG"</span>,
+                         <span class='st'>"Exports - Oil"</span>, <span class='st'>"Exports - Crude"</span>),
+                   <span class='kw'>prefixes</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Production"</span>, <span class='st'>"Imports"</span>))</div><div class='output co'>#&gt; [1]  TRUE  TRUE FALSE FALSE</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

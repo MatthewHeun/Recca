@@ -35,10 +35,12 @@ library(tidyr)
 
 ## Introduction
 
-`Recca` is an `R` package that builds upon input-output (I-O) analysis to analyze energy conversion chains (ECCs).
+`Recca` is an `R` package that builds upon input-output (I-O) analysis, 
+developed originally to analyze money flow through economies,
+to analyze energy conversion chains (ECCs).
 Historically, input-output (I-O) analysis has been used to analyze "what-if" scenarios involving
 changes to the production structure of an economy. 
-A common scenario asks "how will will the structure of intermediate industries
+A common scenario asks "how will the structure of intermediate industries
 (represented by $\mat{U}$ and $\mat{V}$ matrices) change when final demand (represented by the $\mat{Y}$ matrix) changes?"
 In the economic arena, Leontief's early work answered this question 
 via a matrix inversion that now bears his name,
@@ -51,11 +53,11 @@ Some functions have the suffix `_ps` to indicate the functions assume perfect su
 of industry inputs throughout the ECC.
 The `new_*` functions return the resource ($\mat{R}$), use ($\mat{U}$), make ($\mat{V}$), and final demand ($\mat{Y}$) matrices
 that would be present under the conditions given by arguments to the `new_*` functions.
-Arguments for "new" versions of vectors or matrices are given the suffix `_prime` in the `new_*` functions.
-For example, the updated version of the use ($\mat{U}$) matrix is called `U_prime`.
+Arguments for new or changed versions of vectors or matrices are given the suffix `_prime` in the `new_*` functions.
+For example, the changed version of the use matrix ($\mat{U}$) is called `U_prime`.
 
 For the examples that follow, we'll use one ECC from the `UKEnergy2000mats` data frame
-which represents primary and final energy flows through a portion of the UK in the year 2000.
+which represents a portion of the primary and final energy flows through the UK in the year 2000.
 
 ```{r}
 library(dplyr)
@@ -65,7 +67,7 @@ library(matsindf)
 library(Recca)
 library(tidyr)
 OurECC <- UKEnergy2000mats %>% 
-  filter(Last.stage == "final") %>% 
+  filter(Last.stage == "Final") %>% 
   spread(key = "matrix.name", value = "matrix")
 glimpse(OurECC)
 ```
@@ -89,27 +91,12 @@ use ($\mat{U}$),
 make ($\mat{V}$), and 
 final demand ($\mat{Y}$) matrices
 that describe the ECC.
-Earlier versions of `Recca` included the resource matrix ($\mat{R}$) 
-with the make ($\mat{V}$) matrix.
-To separate the resource matrix $\mat{R}$ from the make matrix ($\mat{V}$),
-use the `separate_RV()` function.
-
-```{r}
-UKEnergyMatsWithR <- OurECC %>% 
-  # The following code is necessary until R matrices are included
-  # in the UKEnergy2000mats data frame.
-  rename(
-    R_plus_V = V
-  ) %>%
-  separate_RV()
-glimpse(UKEnergyMatsWithR)
-```
 
 To look at the ECC, we can draw a Sankey diagram. 
 A Sankey diagram for the first row of the `UKEnergyMatsWithR` data frame is given below.
 
 ```{r, fig.width = 7, fig.height = 4}
-make_sankey(UKEnergyMatsWithR) %>% 
+make_sankey(OurECC) %>% 
   extract2("Sankey") %>% # Extracts the "Sankey" column
   extract2(1) # Extracts the first row of the "Sankey" column
 ```
@@ -119,17 +106,16 @@ make_sankey(UKEnergyMatsWithR) %>%
 
 Each `new_*` function requires basic knowledge about the I-O structure of the ECCs
 in the form of named vectors and matrices.
-The `calc_io_mats` function is the simplest way to obtain the I-O structure
-which appears as additional columns appended at the right of the data frame.
+Thus, the first step in any "what-if" analysis is to calculate the input-output 
+structure of the energy conversion chain.
+The `calc_io_mats()` function is the simplest way to obtain the necessary I-O structure,
+which appears as additional columns appended at the right of the `OurECC` data frame
+in our example.
 (The names of the additional columns are given by 
 arguments to the `calc_io_mats()` function.)
 
-The first step in any "what-if" analysis is to calculate the input-output 
-structure of the energy conversion chain.
-The `calc_io_mats()` function adds several columns to the `UKEnergyMatsWithR` data frame.
-
 ```{r}
-IO_mats <- UKEnergyMatsWithR %>% 
+IO_mats <- OurECC %>% 
   # Obtain the I-O structure of the ECCs
   calc_io_mats()
 # Note additional columns appended to the data frame.
@@ -146,7 +132,7 @@ we can use the `new_*` functions to ask "what if" questions.
 ## What if final demand changes? Function new_Y()
 
 The classic I-O question is "what if final demand ($\mat{Y}$) changes?"
-`Recca` has a function for that, `new_Y()`.
+`Recca` has a function for that: `new_Y()`.
 The `new_Y()` function looks upstream in the ECC to determine the effects of a change in final demand.
 To demonstrate, we'll double the `Residential` final demand 
 for electricity from the grid (`Elect - Grid`) in our ECC.
@@ -168,9 +154,9 @@ Now we can use the `new_Y()` function to estimate the ECC with the larger final 
 The original Sankey diagram is:
 
 ```{r, fig.width = 7, fig.height = 4}
-make_sankey(UKEnergyMatsWithR) %>% 
+make_sankey(OurECC) %>% 
   extract2("Sankey") %>% # Extracts the "Sankey" column
-  extract2(1) # Extracts the first row of the "Sankey" column
+  extract2(1)            # Extracts the first row of the "Sankey" column
 ```
 
 The new Sankey diagram is:
@@ -178,12 +164,12 @@ The new Sankey diagram is:
 ```{r, fig.width = 7, fig.height = 4}
 DoubleRes <- DoubleRes %>% 
   new_Y()
-make_sankey(DoubleRes, U = "U_prime", V = "V_prime", Y = "Y_prime") %>% 
+make_sankey(DoubleRes, R = "R_prime", U = "U_prime", V = "V_prime", Y = "Y_prime") %>% 
   extract2("Sankey") %>% 
   extract2(1)
 ```
 
-Output from the electric grid is clearly larger now than before.
+Output from the electricity grid is clearly larger now than before.
 Also, upstream demand for natural gas is now larger than the upstream demand for crude,
 whereas in the original Sankey diagram, demand for crude was larger than the demand for natural gas.
 
@@ -196,6 +182,7 @@ The function `new_R_ps()` supplies the answer.
 `new_R_ps()` takes as input the input-output structure of an ECC 
 and the efficiency of every intermediate industry.
 After discussing the resource matrix and resource vectors, 
+the `new_R_ps()` function is demonstrated.
 
 
 ### Resource matrices and vectors
@@ -208,7 +195,7 @@ where `<Product>` is the name of the Product produced by that industry.
 (`clean_byname()` removes `0` rows and columns for clarity.)
 
 ```{r}
-UKEnergyMatsWithR$R[[1]] %>% 
+OurECC$R[[1]] %>% 
   clean_byname()
 ```
 
@@ -216,7 +203,7 @@ The resource vector ($\colvec{r}$) is a Product column vector
 containing Products that are resources.
 
 ```{r}
-rvecs <- UKEnergyMatsWithR %>% 
+rvecs <- OurECC %>% 
   transmute(
     r = clean_byname(R) %>% 
       colsums_byname() %>% 
@@ -229,8 +216,6 @@ rvecs$r[[1]]
 ### Industry efficiencies and a new resource matrix
 
 The baseline $\mat{R}$ matrix is shown above.
-We can calculate the efficiency of every Industry in the ECC
-using the `calc_eta_i()` function.
 Let's say we want to estimate the effect of 
 a 50 % reduction in the production rate of crude oil. 
 So, we cut `Resources - Crude` in half.
@@ -241,7 +226,6 @@ half <- function(x){
   x/2
 }
 HalfCrude <- IO_mats %>% 
-  calc_eta_i() %>% 
   mutate(
     R_prime = elementapply_byname(half, a = R, row = "Resources - Crude", col = "Crude")
   )
@@ -249,11 +233,12 @@ HalfCrude$R_prime[[1]] %>% clean_byname()
 ```
 
 Now we use the `new_R()` function to estimate changes in the ECC.
-But we need to calculate the efficiency of all sectors in the ECC first
+But first, we need to calculate the efficiency of all sectors in the ECC
 using the `calc_eta_i()` function.
 
 ```{r}
 HalfCrude <- HalfCrude %>% 
+  calc_eta_i() %>% 
   new_R_ps()
 glimpse(HalfCrude)
 ```
@@ -266,7 +251,7 @@ with a modified Sankey diagram.
 First, we have the original Sankey diagram.
 
 ```{r, fig.width = 7, fig.height = 4}
-make_sankey(UKEnergyMatsWithR) %>% 
+make_sankey(OurECC) %>% 
   extract2("Sankey") %>% # Extracts the "Sankey" column
   extract2(1) # Extracts the first row of the "Sankey" column
 ```
@@ -279,12 +264,18 @@ make_sankey(HalfCrude, R = "R_prime", U = "U_prime", V = "V_prime", Y = "Y_prime
   extract2(1) # Extracts the first row of the "Sankey" column
 ```
 
+The Sankey diagrams clearly show that 
+reducing the availability of crude oil (`Resources - crude`)
+means that less `Transport` final demand can be satisfied.
+
 Note that both ECCs are in complete energy balance.
 
 ```{r}
-UKEnergyMatsWithR %>% 
-  verify_SUT_energy_balance_with_units(S_units = "S_units", U = "U", V = "R_plus_V", Y = "Y") %>% 
-  select(Country, Year, Energy.type, Last.stage, .SUT_prod_energy_balance, .SUT_ind_energy_balance)
+OurECC %>% 
+  verify_SUT_energy_balance_with_units() %>% 
+  select(Country, Year, Energy.type, Last.stage, 
+         .SUT_prod_energy_balance, .SUT_ind_energy_balance) %>% 
+  glimpse()
 ```
 
 
@@ -294,13 +285,12 @@ HalfCrude %>%
   mutate(
     R_plus_V_prime = sum_byname(R_prime, V_prime)
   ) %>% 
-  verify_SUT_energy_balance(U = "U_prime", V = "R_plus_V_prime", Y = "Y_prime") %>% 
-  select(Country, Year, Energy.type, Last.stage, .SUT_energy_balance)
+  verify_SUT_energy_balance(R = "R_prime", U = "U_prime", V = "V_prime", 
+                            Y = "Y_prime") %>% 
+  select(Country, Year, Energy.type, Last.stage,
+         .SUT_energy_balance) %>% 
+  glimpse()
 ```
-
-The Sankey diagram clearly shows that 
-reducing the availability of crude oil (`Resources - crude`)
-means that less `Transport` final demand can be satisfied.
 
 
 ## What if perfectly-substitutable inputs to an intermediate industry change? Function new_k_ps()
@@ -311,10 +301,11 @@ But what if we want to estimate the effects of a change to the inputs of an inte
 If those inputs are perfectly substitutable, 
 the `new_k_ps()` function provides an answer. 
 
-To demonstrate `new_k_ps()`, we'll create a very simple energy conversion chain.
-(The `UKEnergyMatsWithR` ECC doesn't have the characteristic that we need, 
-namely that an intermediate industry has at least two reasonable-sized inputs.)
-This ECC has two resource industries (R1 and R2),
+To demonstrate `new_k_ps()`, we need an ECC that has at least two reasonably-sized inputs.
+Unfortunately, `OurECC` doesn't have the necessary characteristics,
+so we create a new ECC here.
+
+ECC below has two resource industries (R1 and R2),
 one intermediate industry (I), and
 two final demand sectors (Y1 and Y2).
 The R1 industry makes product R1p.  
@@ -322,7 +313,7 @@ The R2 industry makes product R2p.
 Industry I makes product Ip.
 Product Ip is consumed by final demand sectors Y1 and Y2.
 
-The use (U), make (V), final demand (Y), and unit summation (S_units) matrices are given below.
+The use ($\mat{U}$), make ($\mat{V}$), final demand ($\mat{Y}$), and unit summation ($\mat{S}_{units}$) matrices are given below.
 
 ```{r}
 U <- matrix(c(0, 0, 10,
@@ -332,7 +323,7 @@ U <- matrix(c(0, 0, 10,
             dimnames = list(c("R1p", "R2p", "Ip"), c("R1", "R2", "I"))) %>% 
   setrowtype("Products") %>% setcoltype("Industries")
 
-V <- matrix(c(10,  0, 0,
+R_plus_V <- matrix(c(10,  0, 0,
                0, 10, 0, 
                0,  0, 4), 
             byrow = TRUE, nrow = 3, ncol = 3, 
@@ -346,6 +337,10 @@ Y <- matrix(c(0, 0,
             dimnames = list(c("R1p", "R2p", "Ip"), c("Y1", "Y2"))) %>% 
   setrowtype("Products") %>% setcoltype("Industries")
 
+RV <- separate_RV(U = U, R_plus_V = R_plus_V)
+R <- RV$R
+V <- RV$V
+
 S_units <- matrix(c(1, 
                     1, 
                     1), 
@@ -357,7 +352,7 @@ S_units <- matrix(c(1,
 The Sankey diagram for this simple ECC is given below.
 
 ```{r, fig.width = 7, fig.height = 4}
-make_sankey(U = U, V = V, Y = Y) %>% 
+make_sankey(R = R, U = U, V = V, Y = Y) %>% 
   extract2("Sankey")
 ```
 
@@ -368,22 +363,28 @@ Then, we call the `new_k_ps()` function with a new k vector
 that indicates industry I now uses 75/25 mixture of `R1` and `R2` instead of a 50/50 split between `R1` and `R2`.
 
 ```{r, fig.width = 7, fig.height = 4}
-simple_iomats <- calc_io_mats(U = U, V = V, Y = Y, S_units = S_units)
+simple_iomats <- calc_io_mats(R = R, U = U, V = V, Y = Y, S_units = S_units)
 k_prime <- matrix(c(0.75,
                     0.25), 
                   byrow = TRUE, nrow = 2, ncol = 1,
                   dimnames = list(c("R1p", "R2p"), c("I"))) %>% 
   setrowtype("Products") %>% setcoltype("Industries")
-change_input_proportions <- new_k_ps(c(simple_iomats, list(U = U, V = V, Y = Y, S_units = S_units, 
-                                                    k_prime = k_prime)))
-make_sankey(U = change_input_proportions$U_prime, V = change_input_proportions$V_prime, Y = Y) %>% 
+change_input_proportions <- new_k_ps(c(simple_iomats, 
+                                       list(R = R, U = U, V = V, Y = Y, 
+                                            S_units = S_units, 
+                                            k_prime = k_prime)))
+make_sankey(R = change_input_proportions$R_prime, 
+            U = change_input_proportions$U_prime, 
+            V = change_input_proportions$V_prime, 
+            Y = Y) %>% 
   extract2("Sankey")
 ```
 
+In response to the different demands from industry `I`,
+the rate of resource extraction from `R1` would need to grow, and
+the rate of resource extraction from supply `R2` would need to shrink.
 If there were additional upstream industries, 
 they would also change in response to the new ratio of inputs to industry `I`. 
-The rate of resource extraction needed to supply `R1` would grow.
-The rate of resource extraction needed to supply `R2` would shrink.
 
 
 ## Conclusion

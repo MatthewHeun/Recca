@@ -1,7 +1,23 @@
+# Recca 0.1.20 (2020-03-27)
+
+* Completed the conversion of the entire package
+  to enable use of `R` matrices in the PSUT framework.
+  This effort involved converting several functions to accept *either* 
+    1) both `R` and `V` matrices in the `R` and `V` arguments or
+    2) nothing supplied to the `R` argument and `R + V` supplied to the `V` argument.
+* Worked around a bug in `openxlsx::read.xlsx()` that HTML-escapes referenced cells
+  that contain "&", "<", or ">".  
+  See https://github.com/awalker89/openxlsx/issues/393 for details.
+* Switched to using the `openxlsx` package for reading data directly out of Excel files,
+  eliminating the need to export .csv files for the UKEnergy2000tidy data frame.
+* `primary_aggregates()` now properly handles PSUT matrices formulated with `R` matrices.
+* Fixed typos in `Recca.Rmd` vignette.
+
+
 # Recca 0.1.19 (2020-02-19)
 
-* Remove dependency on package `qgraph`.
-  `qgraph` dependedn upong `graph`, 
+* Removed dependency on package `qgraph`.
+  `qgraph` depended upon `graph`, 
   which is apparently no longer available on CRAN.
   The dependency on `qgraph` was only for graphical representations of ECCs.
   But, graphical representations of ECCs are not presently implemented in `Recca`.
@@ -15,8 +31,8 @@
 * Updates to synchronize with recent changes in other packages.
   In particular, there was one place where `group`ing on a column
   of a data frame with `NA` entries was causing a warning to be emitted.
-  Now, the `grouping` happens after splitting the data fram into 
-  rows wtih `NA` entries and those without. 
+  Now, the `grouping` happens after splitting the data frame into 
+  rows with `NA` entries and those without. 
   Grouping and sorting happens only for the rows without `NA` values.
 
 

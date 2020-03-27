@@ -26,7 +26,5 @@ library(dplyr)
 library(tidyr)
 UKEnergy2000mats \%>\%
   spread(key = "matrix.name", value = "matrix") \%>\%
-  # Delete next line when switch to using R everywhere
-  rename(R_plus_V = V) \%>\% separate_RV() \%>\% select(-R_plus_V) \%>\%
   combine_RV()
 }

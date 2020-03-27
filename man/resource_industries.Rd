@@ -6,6 +6,7 @@
 \usage{
 resource_industries(
   .sutdata = NULL,
+  R = "R",
   U = "U",
   V = "V",
   r_industries = "r_industries"
@@ -14,29 +15,33 @@ resource_industries(
 \arguments{
 \item{.sutdata}{a list or data frame containing use matrix(ces) and make matrix(ces)}
 
-\item{U}{use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".}
+\item{R}{resource (\code{R}) matrix or name of the column in \code{.sutmats} that contains same. Default is "R".}
 
-\item{V}{make (\code{V}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{V}".}
+\item{U}{use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "U".}
 
-\item{r_industries}{name for the \code{r_industries} vector on output. Default is "\code{r_industries}".}
+\item{V}{make (\code{V}) matrix or name of the column in \code{.sutmats} that contains same. Default is "V".}
+
+\item{r_industries}{name for the resource industry vector on output. Default is "r_industries".}
 }
 \value{
 a list or data frame with \code{.sutdata} with an additional column (named with the value of the \code{p_industries} argument)
-        containing the resource industries for each row
+containing the resource industries for each row
 }
 \description{
 Identifies resource industries.
 }
 \details{
 Resource industries are industries that make a product without using any products.
-Resource industries are identified by interrogating
-the use (\code{U}) and make (\code{V}) matrices.
-Resource industries have all zeroes in their column of the use matrix (\code{U})
+If \code{R} is given, its industries are automatically included in the output.
+Additional resource industries are identified by interrogating
+the resources (\code{R}), use (\code{U}) and make (\code{V}) matrices.
+Resource industries are, by definition, present in the \code{R} matrix,
+or they have all zeroes in their column of the use matrix (\code{U})
 and at least one non-zero value in their row of the make (\code{V}) matrix.
 
 Argument and value descriptions are written assuming that \code{.sutdata} is a data frame.
 Alternatively, \code{.sutdata} can be unspecified, and \code{U} and \code{V} can be matrices.
-In that case, the return value is a list with a single item: \code{r_industries}
+In that case, the return value is a list with a single item (\code{r_industries})
 which contains a vector of names of resource industries for the \code{U} and \code{V} matrices.
 }
 \examples{

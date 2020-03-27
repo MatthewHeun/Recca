@@ -7,6 +7,7 @@
 #' Calculate several input-output matrices
 #'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
+#' @param R resources (`R`) matrix or name of the column in `.sutmats` that contains same. Default is "`R`".
 #' @param U use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".
 #' @param V make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "\code{V}".
 #' @param Y final demand (\code{Y}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Y}".
@@ -49,19 +50,19 @@
 #'   calc_io_mats()
 calc_io_mats <- function(.sutdata = NULL,
                          # Input names
-                         U = "U", V = "V", Y = "Y", S_units = "S_units",
+                         R = "R", U = "U", V = "V", Y = "Y", S_units = "S_units",
                          # Output names
                          y = "y", q = "q", f = "f", g = "g", W = "W", K = "K",
                          Z = "Z", C = "C", D = "D", A = "A", L_ixp = "L_ixp", L_pxp = "L_pxp"){
-  io_func <- function(U_mat, V_mat, Y_mat, S_units_mat = NULL){
-    yqfgW <- calc_yqfgW(U = U_mat, V = V_mat, Y = Y_mat, S_units = S_units_mat,
+  io_func <- function(R_mat = NULL, U_mat, V_mat, Y_mat, S_units_mat = NULL){
+    yqfgW <- calc_yqfgW(R = R_mat, U = U_mat, V = V_mat, Y = Y_mat, S_units = S_units_mat,
                         y = y, q = q,
                         f = f, g = g,
                         W = W)
     q_vec <- yqfgW[[q]]
     f_vec <- yqfgW[[f]]
     g_vec <- yqfgW[[g]]
-    ZKCDA <- calc_A(U = U_mat, V = V_mat, q = q_vec, f = f_vec, g = g_vec,
+    ZKCDA <- calc_A(R = R_mat, U = U_mat, V = V_mat, q = q_vec, f = f_vec, g = g_vec,
                     Z = Z, C = C, D = D, A = A)
     D_mat <- ZKCDA[[D]]
     A_mat <- ZKCDA[[A]]
@@ -70,13 +71,13 @@ calc_io_mats <- function(.sutdata = NULL,
     # Set names and return
     c(yqfgW, ZKCDA, L_mats) %>% magrittr::set_names(c(names(yqfgW), names(ZKCDA), names(L_mats)))
   }
-  matsindf::matsindf_apply(.sutdata, FUN = io_func, U_mat = U, V_mat = V, Y_mat = Y, S_units_mat = S_units)
+  matsindf::matsindf_apply(.sutdata, FUN = io_func, R_mat = R, U_mat = U, V_mat = V, Y_mat = Y, S_units_mat = S_units)
 }
 
 
-#' Calculate \code{y}, \code{f}, \code{g}, and \code{q} vectors and the \code{W} matrix
+#' Calculate `y`, `f`, `g`, and `q` vectors and the `W` matrix
 #'
-#' Note that a necessary condition for calculating the \code{f} and \code{g} vectors is that
+#' Note that a necessary condition for calculating the `f` and `g` vectors is that
 #' the U_bar and V_bar matrices should have only one entry per column and row, respectively,
 #' meaning that all products entering a given industry need to be unit homogeneous
 #' before we can calculate the \code{f} vector and
@@ -87,6 +88,7 @@ calc_io_mats <- function(.sutdata = NULL,
 #' The checks for unit homogeneity are performed only when an \code{S_units} matrix is present.
 #'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
+#' @param R resources (`R`) matrix or name of the column in `.sutmats` that contains same. Default is "`R`".
 #' @param U use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".
 #' @param V make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "\code{V}".
 #' @param Y final demand (\code{Y}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Y}".
@@ -108,17 +110,24 @@ calc_io_mats <- function(.sutdata = NULL,
 #'          \code{f}, \code{g}, and \code{W}.
 calc_yqfgW <- function(.sutdata = NULL,
                        # Input names
-                       U = "U", V = "V", Y = "Y", S_units = "S_units",
+                       R = "R", U = "U", V = "V", Y = "Y", S_units = "S_units",
                        # Output columns
                        y = "y", q = "q",
                        f = "f", g = "g",
                        W = "W"){
-  yqfgw_func <- function(U_mat, V_mat, Y_mat, S_units_mat = NULL){
+  yqfgw_func <- function(R_mat = NULL, U_mat, V_mat, Y_mat, S_units_mat = NULL){
     y_vec <- matsbyname::rowsums_byname(Y_mat)
     q_vec <- matsbyname::sum_byname(matsbyname::rowsums_byname(U_mat), y_vec)
     f_vec <- matsbyname::colsums_byname(U_mat) %>% matsbyname::transpose_byname() # vectors are always column vectors
-    g_vec <- matsbyname::rowsums_byname(V_mat)
-    W_mat <- matsbyname::difference_byname(matsbyname::transpose_byname(V_mat), U_mat)
+    if (is.null(R_mat)) {
+      # No R matrix, just use the V matrix, assuming that resouces are included there.
+      R_plus_V_mat <- V_mat
+    } else {
+      # An R matrix is present. Sum R and V before proceeding.
+      R_plus_V_mat <- matsbyname::sum_byname(R_mat, V_mat)
+    }
+    g_vec <- matsbyname::rowsums_byname(R_plus_V_mat)
+    W_mat <- matsbyname::difference_byname(matsbyname::transpose_byname(R_plus_V_mat), U_mat)
     # Deal with any unit homogeneity issues for f and g.
     if (!is.null(S_units_mat)) {
       U_bar <- matsbyname::matrixproduct_byname(matsbyname::transpose_byname(S_units_mat), U_mat)
@@ -130,24 +139,27 @@ calc_yqfgW <- function(.sutdata = NULL,
       # Replace with NA.
       f_vec[which(!U_bar_units_OK)] <- NA_real_
 
-      V_bar <- matsbyname::matrixproduct_byname(V_mat, S_units_mat)
-      V_bar_units_OK <- matsbyname::count_vals_inrows_byname(V_bar, "!=", 0) %>%
+      RV_bar <- matsbyname::matrixproduct_byname(R_plus_V_mat, S_units_mat)
+      RV_bar_units_OK <- matsbyname::count_vals_inrows_byname(RV_bar, "!=", 0) %>%
         matsbyname::compare_byname("<=", 1)
       # When we have an Industry whose outputs are not unit-homogeneous,
       # the value for that Industry in the g vector is nonsensical.
       # Replace with NA.
-      g_vec[which(!V_bar_units_OK)] <- NA_real_
+      g_vec[which(!RV_bar_units_OK)] <- NA_real_
     }
     # Put the values in a list and return the list
     list(y_vec, q_vec, f_vec, g_vec, W_mat) %>%
       magrittr::set_names(c(y, q, f, g, W))
   }
-  matsindf::matsindf_apply(.sutdata, FUN = yqfgw_func, U_mat = U, V_mat = V, Y_mat = Y, S_units_mat = S_units)
+  matsindf::matsindf_apply(.sutdata, FUN = yqfgw_func, R_mat = R, U_mat = U, V_mat = V, Y_mat = Y, S_units_mat = S_units)
 }
 
 #' Calculate \code{Z}, \code{D}, \code{C}, and \code{A} matrices
 #'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
+#' @param R resources (`R`) matrix or name of the column in `.sutmats` that contains same. Default is "`R`".
+#'          `R` is an optional argument.
+#'          If all of `R` is added to `V`, this argument can be left unspecified.
 #' @param U use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".
 #' @param V make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "\code{V}".
 #' @param q \code{q} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{q}".
@@ -170,24 +182,31 @@ calc_yqfgW <- function(.sutdata = NULL,
 #' @export
 calc_A <- function(.sutdata = NULL,
                    # Input names
-                   U = "U", V = "V", q = "q", f = "f", g = "g",
+                   R = "R", U = "U", V = "V", q = "q", f = "f", g = "g",
                    # Output names
                    Z = "Z", K = "K", C = "C", D = "D", A = "A"){
-  A_func <- function(U_mat, V_mat, q_vec, f_vec, g_vec){
+  A_func <- function(R_mat, U_mat, V_mat, q_vec, f_vec, g_vec){
+    if (is.null(R_mat)) {
+      # No R matrix, just use the V matrix, assuming that resouces are included there.
+      R_plus_V_mat <- V_mat
+    } else {
+      # An R matrix is present. Sum R and V before proceeding.
+      R_plus_V_mat <- matsbyname::sum_byname(R_mat, V_mat)
+    }
     # The calculation of C and Z will fail when g contains NA values.
     # NA values can be created when V has any industry whose outputs are unit inhomogeneous.
     # Test here if any entry in g is NA.
     # If so, the value for C will be assigned to NA.
     if (any(is.na(g_vec))) {
       C_mat <- NA_real_ %>%
-        # rowtype of C_mat is rowtype(transpose(V_mat)), which is same as coltype(V_mat))
-        matsbyname::setrowtype(matsbyname::coltype(V_mat)) %>%
+        # rowtype of C_mat is rowtype(transpose(R_plus_V_mat)), which is same as coltype(R_plus_V_mat))
+        matsbyname::setrowtype(matsbyname::coltype(R_plus_V_mat)) %>%
         matsbyname::setcoltype(matsbyname::coltype(matsbyname::hatinv_byname(g_vec)))
       Z_mat <- NA_real_ %>%
         matsbyname::setrowtype(matsbyname::rowtype(U_mat)) %>%
         matsbyname::setcoltype(matsbyname::coltype(matsbyname::hatinv_byname(g_vec)))
     } else {
-      C_mat <- matsbyname::matrixproduct_byname(matsbyname::transpose_byname(V_mat), matsbyname::hatinv_byname(g_vec))
+      C_mat <- matsbyname::matrixproduct_byname(matsbyname::transpose_byname(R_plus_V_mat), matsbyname::hatinv_byname(g_vec))
       Z_mat <- matsbyname::matrixproduct_byname(U_mat, matsbyname::hatinv_byname(g_vec))
     }
     # The calculation of K will fail when f contains NA values.
@@ -201,13 +220,13 @@ calc_A <- function(.sutdata = NULL,
     } else {
       K_mat <- matsbyname::matrixproduct_byname(U_mat, matsbyname::hatinv_byname(f_vec))
     }
-    D_mat <- matsbyname::matrixproduct_byname(V_mat, matsbyname::hatinv_byname(q_vec))
+    D_mat <- matsbyname::matrixproduct_byname(R_plus_V_mat, matsbyname::hatinv_byname(q_vec))
     A_mat <- matsbyname::matrixproduct_byname(Z_mat, D_mat)
     # Put all output matrices in a list and return it.
     list(Z_mat, K_mat, C_mat, D_mat, A_mat) %>%
       magrittr::set_names(c(Z, K, C, D, A))
   }
-  matsindf::matsindf_apply(.sutdata, FUN = A_func, U_mat = U, V_mat = V, q_vec = q, f_vec = f, g_vec = g)
+  matsindf::matsindf_apply(.sutdata, FUN = A_func, R_mat = R, U_mat = U, V_mat = V, q_vec = q, f_vec = f, g_vec = g)
 }
 
 

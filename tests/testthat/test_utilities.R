@@ -16,6 +16,7 @@ test_that("error messages about column names works as expected", {
                Hmisc::escapeRegex("column(s) 'a' is (are) already column names in data frame 'df'"))
 })
 
+
 test_that("verify_cols_missing works when either strings or names are provided", {
   df <- data.frame(a = c(1,2), b = c(3,4))
   # Try with strings
@@ -28,12 +29,14 @@ test_that("verify_cols_missing works when either strings or names are provided",
                Hmisc::escapeRegex("column(s) 'a', 'b' is (are) already column names in data frame 'df'"))
 })
 
+
 test_that("verify_cols_missing works with a single value", {
   df <- data.frame(a = c(1,2), b = c(3,4))
   expect_silent(verify_cols_missing(df, as.name("c")))
   expect_error(verify_cols_missing(df, as.name("a")),
                Hmisc::escapeRegex("column(s) 'a' is (are) already column names in data frame 'df'"))
 })
+
 
 test_that("any_start_with works properly", {
   expect_true(any_start_with(x = c("a", "b", "c"), target = "b"))
@@ -47,47 +50,48 @@ test_that("any_start_with works properly", {
                c(TRUE, FALSE))
 })
 
-test_that("starts_with_any_of works properly", {
-  expect_true(starts_with_any_of(x = "prefix - suffix", target = c("a", "b", "prefix")))
-  expect_false(starts_with_any_of(x = "prefix - suffix", target = c("a", "b", "c")))
-  expect_false(starts_with_any_of(x = "prefix - suffix", target = "suffix"))
-  expect_equal(starts_with_any_of(x = c("Production - Crude", "Production - NG", "Exports - Oil", "Exports - Crude"),
-                                  target = c("Production", "Imports")),
+
+test_that("startsWith_any_of works properly", {
+  expect_true(startsWith_any_of(x = "prefix - suffix", prefixes = c("a", "b", "prefix")))
+  expect_false(startsWith_any_of(x = "prefix - suffix", prefixes = c("a", "b", "c")))
+  expect_false(startsWith_any_of(x = "prefix - suffix", prefixes = "suffix"))
+  expect_equal(startsWith_any_of(x = c("Production - Crude", "Production - NG", "Exports - Oil", "Exports - Crude"),
+                                 prefixes = c("Production", "Imports")),
                c(TRUE, TRUE, FALSE, FALSE))
   # Does it also work with lists?
-  expect_equal(starts_with_any_of(x = list("Production - Crude", "Production - NG", "Exports - Oil", "Exports - Crude"),
-                                  target = c("Production", "Imports")),
+  expect_equal(startsWith_any_of(x = list("Production - Crude", "Production - NG", "Exports - Oil", "Exports - Crude"),
+                                  prefixes = c("Production", "Imports")),
                c(TRUE, TRUE, FALSE, FALSE))
 })
 
+
 test_that("resource_industries works correctly", {
-  mats <- UKEnergy2000mats %>% tidyr::spread(key = matrix.name, value = matrix)
+  mats <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix)
   expected <- c("Resources - Crude", "Resources - NG")
   expect_equal(resource_industries(mats)[["r_industries"]],
                list(expected, expected, expected, expected))
   # Try with individual matrices
   for (i in 1:nrow(mats)) {
-    expect_equal(resource_industries(U = mats$U[[i]], V = mats$V[[i]]) %>% set_names(NULL) %>% unlist(), expected)
+    expect_equal(resource_industries(R = mats$R[[i]], U = mats$U[[i]], V = mats$V[[i]]) %>% set_names(NULL) %>% unlist(), expected)
   }
 })
 
+
 test_that("separate_RV works correctly", {
-  # These tests will need to be re-evaluated after I implement R matrices in the
-  # UKEnergy2000Mats data frame.
   expected <- UKEnergy2000mats %>%
-    spread(key = "matrix.name", value = "matrix") %>%
-    mutate(
-      R = V %>% select_rows_byname(retain_pattern = make_pattern("Resources - ", pattern_type = "leading")),
-      V = V %>% select_rows_byname(remove_pattern = make_pattern("Resources - ", pattern_type = "leading"))
-    )
+    tidyr::spread(key = "matrix.name", value = "matrix")
 
   mats <- UKEnergy2000mats %>%
-    spread(key = "matrix.name", value = "matrix") %>%
-    # Rename the V matrix, because it includes the R matrix.
-    # At some point, this rename step will be unnecessary because UKEnergy2000mats will be created with R separate from V
-    rename(
-      R_plus_V = V
+    tidyr::spread(key = "matrix.name", value = "matrix") %>%
+    dplyr::mutate(
+      # Make an R+V matrix
+      R_plus_V = matsbyname::sum_byname(R, V),
+      # Delete the R and V matrices
+      R = NULL,
+      V = NULL
     ) %>%
+    # Now separate R and V
     separate_RV()
 
   # Make sure that we get the expected values for R and V matrices
@@ -101,14 +105,17 @@ test_that("separate_RV works correctly", {
   expect_warning(mats %>% separate_RV(R_plus_V = "V"), "No R created in separate_RV")
 })
 
+
 test_that("combine_RV works correctly", {
   mats <- UKEnergy2000mats %>%
-    spread(key = "matrix.name", value = "matrix") %>%
-    rename(
-      R_plus_V = V
+    tidyr::spread(key = "matrix.name", value = "matrix") %>%
+    dplyr::mutate(
+      R_plus_V = matsbyname::sum_byname(R, V),
+      R = NULL,
+      V = NULL
     ) %>%
     separate_RV() %>%
-    rename(
+    dplyr::rename(
       R_plus_V_expected = R_plus_V
     ) %>%
     combine_RV()
@@ -118,6 +125,7 @@ test_that("combine_RV works correctly", {
     expect_true(equal_byname(mats$R_plus_V[[i]], mats$R_plus_V_expected[[i]]))
   }
 })
+
 
 test_that("products_unit_homogeneous works correctly", {
   result <- UKEnergy2000mats %>%
@@ -145,24 +153,25 @@ test_that("products_unit_homogeneous works correctly", {
   expect_equal(su_detailed[[".products_unit_homogeneous"]][ , 1], c(p1 = FALSE, p2 = TRUE))
 })
 
+
 test_that("inputs_unit_homogeneous works correctly", {
   result <- UKEnergy2000mats %>%
-    spread(key = "matrix.name", value = "matrix") %>%
+    tidyr::spread(key = "matrix.name", value = "matrix") %>%
     inputs_unit_homogeneous() %>%
-    extract2(".inputs_unit_homogeneous") %>%
+    magrittr::extract2(".inputs_unit_homogeneous") %>%
     unlist()
   # The 2nd and 4th rows of UKEnergy2000mats have services inputs to industries, with different units, of course.
   # Thus, we expect to have FALSE when services are the Last.stage.
   expected <- UKEnergy2000mats %>%
-    spread(key = "matrix.name", value = "matrix") %>%
-    mutate(
+    tidyr::spread(key = "matrix.name", value = "matrix") %>%
+    dplyr::mutate(
       expected = case_when(
-        Last.stage == "services" ~ FALSE,
-        Last.stage != "services" ~ TRUE,
+        Last.stage == IEATools::last_stages$services ~ FALSE,
+        Last.stage != IEATools::last_stages$services ~ TRUE,
         TRUE ~ NA
         )
     ) %>%
-    extract2("expected")
+    magrittr::extract2("expected")
   # Perform the test.
   expect_equal(result, expected)
 
@@ -170,15 +179,15 @@ test_that("inputs_unit_homogeneous works correctly", {
   # When Last.stage is "services", we have mixed units on the inputs for *dist. industries,
   # because services (with funny units) are inputs to the industries.
   result_details <- UKEnergy2000mats %>%
-    spread(key = "matrix.name", value = "matrix") %>%
+    tidyr::spread(key = "matrix.name", value = "matrix") %>%
     inputs_unit_homogeneous(keep_details = TRUE) %>%
-    select(Country, Year, Energy.type, Last.stage, .inputs_unit_homogeneous) %>%
-    gather(key = "matnames", value = "matvals", .inputs_unit_homogeneous) %>%
+    dplyr::select(Country, Year, Energy.type, Last.stage, .inputs_unit_homogeneous) %>%
+    tidyr::gather(key = "matnames", value = "matvals", .inputs_unit_homogeneous) %>%
     expand_to_tidy() %>%
-    mutate(
+    dplyr::mutate(
       expected = case_when(
-        Last.stage == "final" ~ TRUE,
-        Last.stage == "useful" ~ TRUE,
+        Last.stage == IEATools::last_stages$final ~ TRUE,
+        Last.stage == IEATools::last_stages$useful ~ TRUE,
         endsWith(rownames, "dist.") ~ FALSE,
         !endsWith(rownames, "dist.") ~ TRUE,
         TRUE ~ NA
@@ -209,6 +218,7 @@ test_that("output_unit_homogeneous works correctly", {
   expect_equal(result2_details[[".outputs_unit_homogeneous"]][ ,1], c(i1 = FALSE, i2 = TRUE))
 })
 
+
 test_that("inputs_outputs_unit_homogeneous works as expected", {
   result <- UKEnergy2000mats %>%
     spread(key = "matrix.name", value = "matrix") %>%
@@ -221,8 +231,8 @@ test_that("inputs_outputs_unit_homogeneous works as expected", {
     spread(key = "matrix.name", value = "matrix") %>%
     mutate(
       expected = case_when(
-        Last.stage == "services" ~ FALSE,
-        Last.stage != "services" ~ TRUE,
+        Last.stage == IEATools::last_stages$services ~ FALSE,
+        Last.stage != IEATools::last_stages$services ~ TRUE,
         TRUE ~ NA
       )
     ) %>%
@@ -238,8 +248,8 @@ test_that("inputs_outputs_unit_homogeneous works as expected", {
     expand_to_tidy() %>%
     mutate(
       expected = case_when(
-        Last.stage == "final" ~ TRUE,
-        Last.stage == "useful" ~ TRUE,
+        Last.stage == IEATools::last_stages$final ~ TRUE,
+        Last.stage == IEATools::last_stages$useful ~ TRUE,
         endsWith(rownames, "dist.") ~ FALSE,
         rownames %in% c("Cars", "Homes", "Rooms", "Trucks") ~ FALSE,
         TRUE ~ TRUE
@@ -247,6 +257,7 @@ test_that("inputs_outputs_unit_homogeneous works as expected", {
     )
   expect_equal(result2$matvals, result2$expected)
 })
+
 
 test_that("flows_unit_homogeneous works as expected", {
   result <- UKEnergy2000mats %>%
@@ -260,8 +271,8 @@ test_that("flows_unit_homogeneous works as expected", {
     spread(key = "matrix.name", value = "matrix") %>%
     mutate(
       expected = case_when(
-        Last.stage == "services" ~ FALSE,
-        Last.stage != "services" ~ TRUE,
+        Last.stage == IEATools::last_stages$services ~ FALSE,
+        Last.stage != IEATools::last_stages$services ~ TRUE,
         TRUE ~ NA
       )
     ) %>%
@@ -277,8 +288,8 @@ test_that("flows_unit_homogeneous works as expected", {
     expand_to_tidy() %>%
     mutate(
       expected = case_when(
-        Last.stage == "final" ~ TRUE,
-        Last.stage == "useful" ~ TRUE,
+        Last.stage == IEATools::last_stages$final ~ TRUE,
+        Last.stage == IEATools::last_stages$useful ~ TRUE,
         endsWith(rownames, "dist.") ~ FALSE,
         rownames %in% c("Cars", "Homes", "Rooms", "Trucks") ~ FALSE,
         TRUE ~ TRUE
@@ -287,13 +298,10 @@ test_that("flows_unit_homogeneous works as expected", {
   expect_equal(result2$matvals, result2$expected)
 })
 
+
 test_that("reverse works as expected", {
   result <- UKEnergy2000mats %>%
     tidyr::spread(key = "matrix.name", value = "matrix") %>%
-    dplyr::rename(
-      R_plus_V = "V"
-    ) %>%
-    separate_RV() %>%
     reverse()
   for (i in 1:4) {
     R_rev_expected <- matsbyname::transpose_byname(result$Y[[i]])
@@ -309,7 +317,31 @@ test_that("reverse works as expected", {
 })
 
 
+test_that("unescape_html_codes works as expected", {
+  expect_equal(replace_html_codes("&amp;"), "&")
+  expect_equal(replace_html_codes("&lt;"), "<")
+  expect_equal(replace_html_codes("&gt;"), ">")
 
+  expect_equal(replace_html_codes("&amp"), "&amp")
+  expect_equal(replace_html_codes("&lt"), "&lt")
+  expect_equal(replace_html_codes("&gt"), "&gt")
+
+  expect_equal(replace_html_codes(c("a", "&amp;")), c("a", "&"))
+  expect_equal(replace_html_codes(list("a", "&amp;", "&lt;", "&gt;", "bcd")),
+               c("a", "&", "<", ">", "bcd"))
+  # Make sure it works in the context of a data frame
+  df <- data.frame(text = c("a", "&amp;", "&lt;", "&gt;", "bcd"))
+  escaped <- df %>% dplyr::mutate(
+    fixed = replace_html_codes(text)
+  )
+  expect_equal(escaped$fixed, c("a", "&", "<", ">", "bcd"))
+
+  # Try to generate some errors
+  expect_equal(replace_html_codes(42), "42") # this works, surprisingly
+  expect_error(replace_html_codes(fortytwo), "object 'fortytwo' not found")
+  expect_equal(replace_html_codes(list(c("&amp;", "&amp;"), c("&lt;", "&lt;"), c("&gt;", "&gt;"))),
+               list(c("&", "&"), c("<", "<"), c(">", ">")))
+})
 
 
 
