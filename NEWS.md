@@ -1,3 +1,11 @@
+# Recca 0.1.21 (2020-03-27)
+
+* Now up to 332 tests, all of which pass.
+* Test coverage now up to 100%.
+* Implemented energy balance checking for `new_R_ps()`
+  with its own tolerance, by default `1e-6`.
+
+
 # Recca 0.1.20 (2020-03-27)
 
 * Completed the conversion of the entire package

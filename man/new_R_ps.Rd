@@ -15,7 +15,8 @@ new_R_ps(
   C = "C",
   eta_i = "eta_i",
   maxiter = 100,
-  tol = 0,
+  convergence_tol = 0,
+  e_bal_tol = 1e-06,
   U_prime = "U_prime",
   V_prime = "V_prime",
   Y_prime = "Y_prime"
@@ -43,10 +44,12 @@ new_R_ps(
 \item{maxiter}{the maximum allowable number of iterations when calculating the effects of a new \code{R} matrix.
 Default is \code{100}.}
 
-\item{tol}{the maximum allowable change in any one entry of the \code{U}, \code{V}, and \code{Y} matrices
+\item{convergence_tol}{the maximum allowable change in any one entry of the \code{U}, \code{V}, and \code{Y} matrices
 from one iteration to the next. Default is 0,
 i.e., when two subsequent iterations produce the same values,
 the algorithm has converged.}
+
+\item{e_bal_tol}{the maximum allowable difference in energy ECC energy balance. Default is \code{1e-6}.}
 
 \item{U_prime}{name for the \code{U_prime} matrix on output. Default is "\code{U_prime}".}
 

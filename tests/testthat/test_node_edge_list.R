@@ -146,3 +146,15 @@ test_that("node_list works as expected", {
   expect_equal(filter(nl, Node == "Waste")$node_id, 13)
 })
 
+
+test_that("edge_list works when R is missing", {
+  sutmats <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    dplyr::mutate(
+      V = matsbyname::sum_byname(R, V),
+      R = NULL
+    )
+  elDF <- edge_list(sutmats)
+  expect_equal(elDF$`Edge list`[[1]][["edge_id"]], seq(1, 39))
+})
+

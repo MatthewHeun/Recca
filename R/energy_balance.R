@@ -44,7 +44,7 @@ verify_SUT_energy_balance <- function(.sutmats = NULL,
                                       tol = 1e-6,
                                       # Output name
                                       SUT_energy_balance = ".SUT_energy_balance"){
-  verify_func <- function(R_mat, U_mat, V_mat, Y_mat){
+  verify_func <- function(R_mat = NULL, U_mat, V_mat, Y_mat){
     if (is.null(R_mat)) {
       # No R matrix, just use the V matrix, assuming that resouces are included there.
       R_plus_V_mat <- V_mat
@@ -116,16 +116,16 @@ verify_SUT_energy_balance_with_units <- function(.sutmats = NULL,
                                                  # Output names
                                                  SUT_prod_energy_balance = ".SUT_prod_energy_balance",
                                                  SUT_ind_energy_balance = ".SUT_ind_energy_balance"){
-  verify_func <- function(R, U, V, Y, S_units){
+  verify_func <- function(R = NULL, U, V, Y, S_units){
     y <- matsbyname::rowsums_byname(Y)
     if (is.null(R)) {
-      RV <- V
+      R_plus_V <- V
     } else {
-      RV <- matsbyname::sum_byname(R, V)
+      R_plus_V <- matsbyname::sum_byname(R, V)
     }
-    W <- matsbyname::difference_byname(matsbyname::transpose_byname(RV), U)
+    W <- matsbyname::difference_byname(matsbyname::transpose_byname(R_plus_V), U)
     U_bar <- matsbyname::matrixproduct_byname(matsbyname::transpose_byname(S_units), U)
-    RV_bar <- matsbyname::matrixproduct_byname(RV, S_units)
+    RV_bar <- matsbyname::matrixproduct_byname(R_plus_V, S_units)
     W_bar <- matsbyname::matrixproduct_byname(matsbyname::transpose_byname(S_units), W)
     prodOK <- matsbyname::difference_byname(matsbyname::rowsums_byname(W), y) %>% matsbyname::iszero_byname(tol = tol)
     indOK <- matsbyname::difference_byname(RV_bar, matsbyname::transpose_byname(W_bar)) %>%
@@ -185,7 +185,7 @@ verify_SUT_industry_production <- function(.sutmats = NULL,
                                            # Output column names
                                            industry_production_OK = ".industry_production_OK",
                                            problem_industries = ".problem_industries"){
-  verify_func <- function(R_mat, U_mat, V_mat){
+  verify_func <- function(R_mat = NULL, U_mat, V_mat){
     if (is.null(R_mat)) {
       R_plus_V_mat <- V_mat
     } else {

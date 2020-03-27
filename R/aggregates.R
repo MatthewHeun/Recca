@@ -43,7 +43,7 @@ primary_aggregates <- function(.sutdata,
   aggfuncs <- list(total = "sumall_byname", product = "rowsums_byname", flow = "colsums_byname")
   agg_func <- match.fun(aggfuncs[[tolower(by)]])
 
-  prim_func <- function(R_mat, V_mat, Y_mat){
+  prim_func <- function(R_mat = NULL, V_mat, Y_mat){
     # Look for primary industries in each of R, V, and Y matrices
     RT_p <- matsbyname::transpose_byname(R_mat) %>%
       matsbyname::select_cols_byname(retain_pattern =

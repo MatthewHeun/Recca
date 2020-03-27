@@ -253,11 +253,11 @@ test_that("new_R works as expected", {
     mutate(
       R_prime = R
     )
-    # Now call the new_R_ps function which will calculate
-    # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
-    # given R_prime.
-    # Each of the *_prime matrices should be same as their originals,
-    # because R_prime is equal to R.
+  # Now call the new_R_ps function which will calculate
+  # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
+  # given R_prime.
+  # Each of the *_prime matrices should be same as their originals,
+  # because R_prime is equal to R.
   newRsameasoldR <- setup %>%
     new_R_ps() %>%
     # Clean the rows of U_prime and Y_prime, because they contain Products that are not present in U.
@@ -281,7 +281,7 @@ test_that("new_R works as expected", {
   }
 
   # Also try when the maxiter argument is set too small.
-  expect_warning(setup[1, ] %>% new_R_ps(maxiter = 1), "maxiter = 1 reached without convergence in new_R")
+  expect_error(setup[1, ] %>% new_R_ps(maxiter = 1), "maxiter = 1 reached without convergence in new_R")
 
   doubleR <- UKEnergy2000mats %>%
     spread(key = "matrix.name", value = "matrix") %>%
