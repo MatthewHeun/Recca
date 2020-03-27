@@ -309,7 +309,7 @@ primary_aggregates_IEA <- function(.ieadata,
 #' print(names(UKEnergy2000tidy))
 #' UKEnergy2000tidy %>%
 #'   group_by(Country, Year, Energy.type, Last.stage) %>%
-#'   filter(Last.stage %in% c("final", "useful")) %>%
+#'   filter(Last.stage %in% c("Final", "Useful")) %>%
 #'   finaldemand_aggregates_IEA()
 finaldemand_aggregates_IEA <- function(.ieadata,
                                        # Input names

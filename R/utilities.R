@@ -223,8 +223,6 @@ separate_RV <- function(.sutmats = NULL,
 #' library(tidyr)
 #' UKEnergy2000mats %>%
 #'   spread(key = "matrix.name", value = "matrix") %>%
-#'   # Delete next line when switch to using R everywhere
-#'   rename(R_plus_V = V) %>% separate_RV() %>% select(-R_plus_V) %>%
 #'   combine_RV()
 combine_RV <- function(.sutmats = NULL,
                        # Input names
@@ -534,11 +532,11 @@ flows_unit_homogeneous <- function(.sutmats = NULL,
 #' library(tidyr)
 #' mats <- UKEnergy2000mats %>%
 #'   spread(key = "matrix.name", value = "matrix") %>%
-#'   rename(
-#'     R_plus_V = "V"
-#'   ) %>%
-#'   separate_RV() %>%
 #'   reverse()
+#' mats$R_rev[[1]]
+#' mats$U_rev[[1]]
+#' mats$V_rev[[1]]
+#' mats$Y_rev[[1]]
 reverse <- function(.sutmats = NULL,
                     # Input names
                     R = "R", V = "V", U = "U", Y = "Y",

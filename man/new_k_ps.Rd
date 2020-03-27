@@ -30,6 +30,8 @@ inputs to an industry or name of a column in \code{.sutmats} containing same.
 Default is "k_prime".
 The name of the single \code{k_prime} column must match the name of one of the columns of matrix \code{K}.}
 
+\item{R}{resource (\code{R}) matrix or name of the column in \code{.sutmats} that contains same. Default is "R".}
+
 \item{U}{use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "U".}
 
 \item{V}{make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "V".}

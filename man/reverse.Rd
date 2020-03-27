@@ -63,9 +63,9 @@ library(Recca)
 library(tidyr)
 mats <- UKEnergy2000mats \%>\%
   spread(key = "matrix.name", value = "matrix") \%>\%
-  rename(
-    R_plus_V = "V"
-  ) \%>\%
-  separate_RV() \%>\%
   reverse()
+mats$R_rev[[1]]
+mats$U_rev[[1]]
+mats$V_rev[[1]]
+mats$Y_rev[[1]]
 }

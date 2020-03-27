@@ -242,7 +242,7 @@ test_that("new_R works as expected", {
   setup <- UKEnergy2000mats %>%
     spread(key = "matrix.name", value = "matrix") %>%
     # When Last.stage is "services", we get units problems.
-    # Avoid by using only ECCs with "final" and "useful" as the Last.stage.
+    # Avoid by using only ECCs with "Final" and "Useful" as the Last.stage.
     filter(Last.stage != IEATools::last_stages$services) %>%
     # Calculate the input-output matrices which are inputs to the new_R function.
     calc_io_mats() %>%
@@ -286,7 +286,7 @@ test_that("new_R works as expected", {
   doubleR <- UKEnergy2000mats %>%
     spread(key = "matrix.name", value = "matrix") %>%
     # When Last.stage is "services", we get units problems.
-    # Avoid by using only ECCs with "final" and "useful" as the Last.stage.
+    # Avoid by using only ECCs with "Final" and "Useful" as the Last.stage.
     filter(Last.stage != IEATools::last_stages$services) %>%
     # Calculate the input-output matrices which are inputs to the new_R function.
     calc_io_mats() %>%

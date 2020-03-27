@@ -175,7 +175,7 @@ mats <- UKEnergy2000mats %>%
   tidyr::spread(key = matrix.name, value = matrix) %>% 
   # Put rows in a natural order
   dplyr::mutate(
-    Last.stage = factor(Last.stage, levels = c("final", "useful", "services")),
+    Last.stage = factor(Last.stage, levels = c("Final", "Useful", "Services")),
     Energy.type = factor(Energy.type, levels = c("E", "X"))
   ) %>% 
   dplyr::arrange(Last.stage, Energy.type)

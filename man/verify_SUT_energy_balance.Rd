@@ -50,7 +50,7 @@ showing where energy is not in balance.
 library(dplyr)
 library(tidyr)
 verify_SUT_energy_balance(UKEnergy2000mats \%>\%
-                            dplyr::filter(Last.stage \%in\% c("final", "useful")) \%>\%
+                            dplyr::filter(Last.stage \%in\% c("Final", "Useful")) \%>\%
                             tidyr::spread(key = matrix.name, value = matrix),
                           tol = 1e-4)
 }

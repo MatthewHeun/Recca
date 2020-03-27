@@ -73,6 +73,6 @@ library(dplyr)
 print(names(UKEnergy2000tidy))
 UKEnergy2000tidy \%>\%
   group_by(Country, Year, Energy.type, Last.stage) \%>\%
-  filter(Last.stage \%in\% c("final", "useful")) \%>\%
+  filter(Last.stage \%in\% c("Final", "Useful")) \%>\%
   finaldemand_aggregates_IEA()
 }

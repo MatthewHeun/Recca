@@ -51,10 +51,6 @@ library(networkD3)
 library(tidyr)
 UKEnergy2000mats \%>\%
   spread(key = "matrix.name", value = "matrix") \%>\%
-  rename(
-    R_plus_V = V
-  ) \%>\%
-  separate_RV() \%>\%
   make_sankey() \%>\%
   extract2("Sankey") \%>\%
   extract2(1)

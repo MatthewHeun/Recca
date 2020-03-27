@@ -96,6 +96,7 @@ new_Y <- function(.sutmats = NULL,
 #'        inputs to an industry or name of a column in `.sutmats` containing same.
 #'        Default is "k_prime".
 #'        The name of the single `k_prime` column must match the name of one of the columns of matrix `K`.
+#' @param R resource (`R`) matrix or name of the column in `.sutmats` that contains same. Default is "R".
 #' @param U use (`U`) matrix or name of the column in `.sutmats` that contains same. Default is "U".
 #' @param V make (`V`) matrix or name of the column in `.sutmats`that contains same. Default is "V".
 #' @param Y final demand (`Y`) matrix or name of the column in `.sutmats` that contains same. Default is "Y".
@@ -288,13 +289,6 @@ new_k_ps <- function(.sutmats = NULL,
 #' library(tidyr)
 #' doubleR <- UKEnergy2000mats %>%
 #'   spread(key = "matrix.name", value = "matrix") %>%
-#'   # At present, UKEnergy2000mats has V matrices that are the sum of both V and R.
-#'   # Change to use the R matrix.
-#'   rename(
-#'     R_plus_V = V
-#'   ) %>%
-#'   separate_RV() %>%
-#'   # At this point, the matrices are they way we want them.
 #'   # Calculate the input-output matrices which are inputs to the new_R function.
 #'   calc_io_mats() %>%
 #'   # Calculate the efficiency of every industry in the ECC.
@@ -310,6 +304,9 @@ new_k_ps <- function(.sutmats = NULL,
 #'   # because R_prime is 2x relative to R.
 #'   # Rows with Last.stage == "services" are NA.
 #'   new_R_ps()
+#' doubleR$U_prime[[1]]
+#' doubleR$V_prime[[1]]
+#' doubleR$Y_prime[[1]]
 new_R_ps <- function(.sutmats = NULL,
                   # Input names
                   R_prime = "R_prime",

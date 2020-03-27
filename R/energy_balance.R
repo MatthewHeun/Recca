@@ -34,7 +34,7 @@
 #' library(dplyr)
 #' library(tidyr)
 #' verify_SUT_energy_balance(UKEnergy2000mats %>%
-#'                             dplyr::filter(Last.stage %in% c("final", "useful")) %>%
+#'                             dplyr::filter(Last.stage %in% c("Final", "Useful")) %>%
 #'                             tidyr::spread(key = matrix.name, value = matrix),
 #'                           tol = 1e-4)
 verify_SUT_energy_balance <- function(.sutmats = NULL,
@@ -90,10 +90,10 @@ verify_SUT_energy_balance <- function(.sutmats = NULL,
 #'
 #' @param .sutmats an SUT-style data frame containing columns
 #' `R` (optionally), `U`, `V`, `Y`, and `S_units`.
-#' @param R resource (`R`) matrix or name of the column in `.sutmats` that contains same. Default is "U".
+#' @param R resource (`R`) matrix or name of the column in `.sutmats` that contains same. Default is "R".
 #' @param U use (`U`) matrix or name of the column in `.sutmats` that contains same. Default is "U".
 #' @param V make (`V`) matrix or name of the column in `.sutmats`that contains same. Default is "V".
-#' @param Y final demand (`Y`) matrix or name of the column in `.sutmats` that contains same. Default is "`Y`".
+#' @param Y final demand (`Y`) matrix or name of the column in `.sutmats` that contains same. Default is "Y".
 #' @param S_units `S_units` matrix or name of the column in `.sutmats` that contains same. Default is "S_units".
 #' @param tol the maximum amount by which energy can be out of balance. Default is `1e-6`.
 #' @param SUT_prod_energy_balance the name for booleans telling if product energy is in balance. Default is ".SUT_prod_energy_balance".
@@ -243,7 +243,7 @@ verify_SUT_industry_production <- function(.sutmats = NULL,
 #' @examples
 #' library(dplyr)
 #' UKEnergy2000tidy %>%
-#'   filter(Last.stage %in% c("final", "useful")) %>%
+#'   filter(Last.stage %in% c("Final", "Useful")) %>%
 #'   group_by(Country, Year, Energy.type, Last.stage) %>%
 #'   verify_IEATable_energy_balance(energy = "E.dot")
 verify_IEATable_energy_balance <- function(.ieatidydata,

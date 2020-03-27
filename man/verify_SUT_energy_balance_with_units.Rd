@@ -20,13 +20,13 @@ verify_SUT_energy_balance_with_units(
 \item{.sutmats}{an SUT-style data frame containing columns
 \code{R} (optionally), \code{U}, \code{V}, \code{Y}, and \code{S_units}.}
 
-\item{R}{resource (\code{R}) matrix or name of the column in \code{.sutmats} that contains same. Default is "U".}
+\item{R}{resource (\code{R}) matrix or name of the column in \code{.sutmats} that contains same. Default is "R".}
 
 \item{U}{use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "U".}
 
 \item{V}{make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "V".}
 
-\item{Y}{final demand (\code{Y}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Y}".}
+\item{Y}{final demand (\code{Y}) matrix or name of the column in \code{.sutmats} that contains same. Default is "Y".}
 
 \item{S_units}{\code{S_units} matrix or name of the column in \code{.sutmats} that contains same. Default is "S_units".}
 

@@ -58,7 +58,7 @@ a warning is emitted.
 \examples{
 library(dplyr)
 UKEnergy2000tidy \%>\%
-  filter(Last.stage \%in\% c("final", "useful")) \%>\%
+  filter(Last.stage \%in\% c("Final", "Useful")) \%>\%
   group_by(Country, Year, Energy.type, Last.stage) \%>\%
   verify_IEATable_energy_balance(energy = "E.dot")
 }
