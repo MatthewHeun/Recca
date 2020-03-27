@@ -44,7 +44,7 @@ verify_SUT_energy_balance <- function(.sutmats = NULL,
                                       tol = 1e-6,
                                       # Output name
                                       SUT_energy_balance = ".SUT_energy_balance"){
-  verify_func <- function(R_mat, U_mat, V_mat, Y_mat){
+  verify_func <- function(R_mat = NULL, U_mat, V_mat, Y_mat){
     if (is.null(R_mat)) {
       # No R matrix, just use the V matrix, assuming that resouces are included there.
       R_plus_V_mat <- V_mat
@@ -185,7 +185,7 @@ verify_SUT_industry_production <- function(.sutmats = NULL,
                                            # Output column names
                                            industry_production_OK = ".industry_production_OK",
                                            problem_industries = ".problem_industries"){
-  verify_func <- function(R_mat, U_mat, V_mat){
+  verify_func <- function(R_mat = NULL, U_mat, V_mat){
     if (is.null(R_mat)) {
       R_plus_V_mat <- V_mat
     } else {

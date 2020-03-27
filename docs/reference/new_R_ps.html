@@ -155,7 +155,8 @@ This function assumes that each industry's inputs are perfectly substitutable (p
   <span class='kw'>C</span> <span class='kw'>=</span> <span class='st'>"C"</span>,
   <span class='kw'>eta_i</span> <span class='kw'>=</span> <span class='st'>"eta_i"</span>,
   <span class='kw'>maxiter</span> <span class='kw'>=</span> <span class='fl'>100</span>,
-  <span class='kw'>tol</span> <span class='kw'>=</span> <span class='fl'>0</span>,
+  <span class='kw'>convergence_tol</span> <span class='kw'>=</span> <span class='fl'>0</span>,
+  <span class='kw'>e_bal_tol</span> <span class='kw'>=</span> <span class='fl'>1e-06</span>,
   <span class='kw'>U_prime</span> <span class='kw'>=</span> <span class='st'>"U_prime"</span>,
   <span class='kw'>V_prime</span> <span class='kw'>=</span> <span class='st'>"V_prime"</span>,
   <span class='kw'>Y_prime</span> <span class='kw'>=</span> <span class='st'>"Y_prime"</span>
@@ -206,11 +207,15 @@ This function assumes that each industry's inputs are perfectly substitutable (p
 Default is <code>100</code>.</p></td>
     </tr>
     <tr>
-      <th>tol</th>
+      <th>convergence_tol</th>
       <td><p>the maximum allowable change in any one entry of the <code>U</code>, <code>V</code>, and <code>Y</code> matrices
 from one iteration to the next. Default is 0,
 i.e., when two subsequent iterations produce the same values,
 the algorithm has converged.</p></td>
+    </tr>
+    <tr>
+      <th>e_bal_tol</th>
+      <td><p>the maximum allowable difference in energy ECC energy balance. Default is <code>1e-6</code>.</p></td>
     </tr>
     <tr>
       <th>U_prime</th>

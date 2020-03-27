@@ -62,6 +62,25 @@ test_that("primary aggregates of SUT data work as expected", {
                       dplyr::select(matvals) %>% unlist(), 44720)
 })
 
+
+test_that("primary aggregates work when R is folded into V", {
+  p_industries <- c("Resources - Crude", "Resources - NG")
+
+  # Primary TOTAL aggregates
+  primary_total_aggregates_sut <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    dplyr::mutate(
+      V = matsbyname::sum_byname(R, V),
+      R = NULL
+    ) %>%
+    primary_aggregates(p_industries = p_industries, by = "Total",
+                       aggregate_primary = "EX_total_agg.ktoe")
+  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
+                      dplyr::select("EX_total_agg.ktoe"), 93000)
+
+})
+
+
 test_that("final demand aggregates of SUT data work as expected", {
   # Define final demand sectors
   fd_sectors <- c("Residential", "Transport")
