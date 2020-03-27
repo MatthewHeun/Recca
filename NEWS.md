@@ -1,3 +1,8 @@
+* Completed the conversion of the entire package
+  to enable use of `R` matrices in the PSUT framework.
+  This effort involved converting several functions to accept *either* 
+    1) both `R` and `V` matrices in the `R` and `V` arguments or
+    2) nothing supplied to the `R` argument and `R + V` supplied to the `V` argument.
 * Worked around a bug in `openxlsx::read.xlsx()` that HTML-escapes referenced cells
   that contain "&", "<", or ">".  
   See https://github.com/awalker89/openxlsx/issues/393 for details.
