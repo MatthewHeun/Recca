@@ -9,6 +9,17 @@ test_that("SUT matrix energy balance works with energy only", {
       dplyr::filter(Last.stage %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
       verify_SUT_energy_balance()
   )
+  # Try with missing R matrix
+  expect_silent(
+    UKEnergy2000mats %>%
+      tidyr::spread(key = matrix.name, value = matrix) %>%
+      dplyr::mutate(
+        V = matsbyname::sum_byname(R, V),
+        R = NULL
+      ) %>%
+      dplyr::filter(Last.stage %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
+      verify_SUT_energy_balance()
+  )
 })
 
 test_that("SUT matrix energy balance fails when a number has changed", {
@@ -33,6 +44,18 @@ test_that("SUT matrix energy balance with units works as expected", {
     tol = 1e-3)
   expect_true(all(result$.SUT_prod_energy_balance %>% as.logical()))
   expect_true(all(result$.SUT_ind_energy_balance %>% as.logical()))
+
+  # Now try when R is gone.
+  result_noR <- verify_SUT_energy_balance_with_units(
+    UKEnergy2000mats %>%
+      tidyr::spread(key = matrix.name, value = matrix) %>%
+      dplyr::mutate(
+        V = matsbyname::sum_byname(R, V),
+        R = NULL
+      ),
+    tol = 1e-3)
+  expect_true(all(result_noR$.SUT_prod_energy_balance %>% as.logical()))
+  expect_true(all(result_noR$.SUT_ind_energy_balance %>% as.logical()))
 })
 
 test_that("all SUT industries are producing energy", {
@@ -40,6 +63,7 @@ test_that("all SUT industries are producing energy", {
   expect_silent(verify_SUT_industry_production(UKspread))
   result <- verify_SUT_industry_production(UKspread)
   expect_true(all(result[[".industry_production_OK"]] %>% as.logical()))
+
   # Try it when something doesn't produce energy
   R <- UKspread$R[[1]]
   U <- UKspread$U[[1]]
@@ -50,6 +74,17 @@ test_that("all SUT industries are producing energy", {
                  "There are some industries that consume but do not produce energy.")
   expect_false(result$.industry_production_OK)
   expect_equal(expected = "Crude dist.", result$.problem_industries)
+
+  # Try when there is no R matrix
+  UKspread_noR <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    dplyr::mutate(
+      V = matsbyname::sum_byname(R, V),
+      R = NULL
+    )
+  expect_silent(verify_SUT_industry_production(UKspread_noR))
+  result_noR <- verify_SUT_industry_production(UKspread_noR)
+  expect_true(all(result_noR[[".industry_production_OK"]] %>% as.logical()))
 })
 
 test_that("SUT energy balance works with single matrices", {

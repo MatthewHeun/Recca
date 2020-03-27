@@ -1,3 +1,7 @@
+* Implemented energy balance checking for `new_R_ps()`
+  with its own tolerance, by default `1e-6`.
+
+
 # Recca 0.1.20 (2020-03-27)
 
 * Completed the conversion of the entire package
