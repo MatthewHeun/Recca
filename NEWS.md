@@ -1,3 +1,5 @@
+# Recca 0.1.20 (2020-03-27)
+
 * Completed the conversion of the entire package
   to enable use of `R` matrices in the PSUT framework.
   This effort involved converting several functions to accept *either* 
