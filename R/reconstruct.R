@@ -403,14 +403,14 @@ new_R_ps <- function(.sutmats = NULL,
     }
 
     # Verify that the ECC is in energy balance.
-    # verify_SUT_energy_balance_with_units(U = U, V = V, Y = Y, S_units = S_units)
+    verify_SUT_energy_balance_with_units(R = R_prime_mat, U = U_prime_mat, V = V_prime_mat, Y = Y_prime_mat, S_units = S_units_mat)
 
     # Return the new U, V, and Y matrices.
     list(U_prime_mat, V_prime_mat, Y_prime_mat) %>% magrittr::set_names(c(U_prime, V_prime, Y_prime))
   }
 
   matsindf::matsindf_apply(.sutmats, FUN = new_R_func, R_prime_mat = R_prime, U_mat = U, V_mat = V, Y_mat = Y, S_units_mat = S_units,
-                 q_vec = q, C_mat = C, eta_i_vec = eta_i)
+                           q_vec = q, C_mat = C, eta_i_vec = eta_i)
 }
 
 
