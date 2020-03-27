@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -53,7 +57,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-news">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -106,7 +110,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/MatthewHeun/Recca">
+  <a href="https://github.com/MatthewHeun/Recca/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -124,26 +128,26 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Changelog <small></small></h1>
+      <h1 data-toc-skip>Changelog <small></small></h1>
       <small>Source: <a href='https://github.com/MatthewHeun/Recca/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
     <div id="recca-0119-2020-02-19" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.1.19">
 <a href="#recca-0119-2020-02-19" class="anchor"></a>Recca 0.1.19 (2020-02-19)</h1>
 <ul>
 <li>Removed dependency on package <code>qgraph</code>. <code>qgraph</code> depended upon <code>graph</code>, which is apparently no longer available on CRAN. The dependency on <code>qgraph</code> was only for graphical representations of ECCs. But, graphical representations of ECCs are not presently implemented in <code>Recca</code>. Future versions of <code>Recca</code> may implement graphical representations. I can reassess the packages for graphing and Sankey diagrams at a later date.</li>
 </ul>
 </div>
     <div id="recca-0118-2020-01-17" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.1.18">
 <a href="#recca-0118-2020-01-17" class="anchor"></a>Recca 0.1.18 (2020-01-17)</h1>
 <ul>
 <li>Updates to synchronize with recent changes in other packages. In particular, there was one place where <code>group</code>ing on a column of a data frame with <code>NA</code> entries was causing a warning to be emitted. Now, the <code>grouping</code> happens after splitting the data frame into rows with <code>NA</code> entries and those without. Grouping and sorting happens only for the rows without <code>NA</code> values.</li>
 </ul>
 </div>
     <div id="recca-0117-2019-02-25" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.1.17">
 <a href="#recca-0117-2019-02-25" class="anchor"></a>Recca 0.1.17 (2019-02-25)</h1>
 <ul>
 <li>First draft of completed vignette.</li>
@@ -151,7 +155,7 @@
 </ul>
 </div>
     <div id="recca-0116-2019-02-16" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.1.16">
 <a href="#recca-0116-2019-02-16" class="anchor"></a>Recca 0.1.16 (2019-02-16)</h1>
 <ul>
 <li>Now automatically building in Travis.</li>
@@ -167,14 +171,14 @@
 </ul>
 </div>
     <div id="recca-0115-2019-01-09" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.1.15">
 <a href="#recca-0115-2019-01-09" class="anchor"></a>Recca 0.1.15 (2019-01-09)</h1>
 <ul>
 <li>First draft of <code>new-functions</code> vignette now complete, including demonstrations of <code><a href="../reference/new_R_ps.html">new_R_ps()</a></code> and <code><a href="../reference/new_k_ps.html">new_k_ps()</a></code> functions.</li>
 </ul>
 </div>
     <div id="recca-0114-2019-01-07" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.1.14">
 <a href="#recca-0114-2019-01-07" class="anchor"></a>Recca 0.1.14 (2019-01-07)</h1>
 <ul>
 <li>New function <code><a href="../reference/make_sankey.html">make_sankey()</a></code> does what it says: makes a Sankey diagram. <code><a href="../reference/make_sankey.html">make_sankey()</a></code> is the first function that optionally uses the resource (<code>R</code>) matrix.</li>
@@ -184,7 +188,7 @@
 </ul>
 </div>
     <div id="recca-0113-2018-12-21" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.1.13">
 <a href="#recca-0113-2018-12-21" class="anchor"></a>Recca 0.1.13 (2018-12-21)</h1>
 <ul>
 <li>
@@ -194,21 +198,21 @@
 </ul>
 </div>
     <div id="recca-0112-2018-12-02" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.1.12">
 <a href="#recca-0112-2018-12-02" class="anchor"></a>Recca 0.1.12 (2018-12-02)</h1>
 <ul>
 <li>Added a vignette discussing interactions among <code>new_*</code> functions.</li>
 </ul>
 </div>
     <div id="recca-0111-2018-12-02" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.1.11">
 <a href="#recca-0111-2018-12-02" class="anchor"></a>Recca 0.1.11 (2018-12-02)</h1>
 <ul>
 <li>Updates to embodied energy calculations to conform to updated <code><a href="https://rdrr.io/pkg/matsbyname/man/hatinv_byname.html">matsbyname::hatinv_byname()</a></code> which handles <code>0</code> values better.</li>
 </ul>
 </div>
     <div id="recca-0110-2018-11-29" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.1.10">
 <a href="#recca-0110-2018-11-29" class="anchor"></a>Recca 0.1.10 (2018-11-29)</h1>
 <ul>
 <li>Now importing <code>magrittr</code> pipe at high level.</li>
@@ -220,7 +224,7 @@
 </ul>
 </div>
     <div id="recca-019-2018-11-08" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.1.9">
 <a href="#recca-019-2018-11-08" class="anchor"></a>Recca 0.1.9 (2018-11-08)</h1>
 <ul>
 <li>Breaking change: <code>reconstruct_UV</code> –&gt; <code>new_Y</code>. This change allows for several <code>new_*</code> functions that assess changes to the ECC when some part of the ECC changes.</li>
@@ -229,21 +233,21 @@
 </ul>
 </div>
     <div id="recca-018-2018-07-27" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.1.8">
 <a href="#recca-018-2018-07-27" class="anchor"></a>Recca 0.1.8 (2018-07-27)</h1>
 <ul>
 <li>Added new function <code>node_list</code> which creates a node list from an edge list.</li>
 </ul>
 </div>
     <div id="recca-017-2018-07-26" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.1.7">
 <a href="#recca-017-2018-07-26" class="anchor"></a>Recca 0.1.7 (2018-07-26)</h1>
 <ul>
 <li>Added new function <code>edge_list</code> which creates an edge list from U, V, and Y matrices.</li>
 </ul>
 </div>
     <div id="recca-016-2018-07-09" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.1.6">
 <a href="#recca-016-2018-07-09" class="anchor"></a>Recca 0.1.6 (2018-07-09)</h1>
 <ul>
 <li>Fixed a bug in <code>verify_IEATable_energy_balance</code>. <code>err</code> –&gt; <code><a href="https://rdrr.io/r/base/name.html">as.name(err)</a></code>.</li>
@@ -251,28 +255,28 @@
 </ul>
 </div>
     <div id="recca-015-2018-07-02" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.1.5">
 <a href="#recca-015-2018-07-02" class="anchor"></a>Recca 0.1.5 (2018-07-02)</h1>
 <ul>
 <li>Added a column in the output of <code>verify_SUT_industry_production</code> that indicates which industries are problematic.</li>
 </ul>
 </div>
     <div id="recca-014-2018-06-28" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.1.4">
 <a href="#recca-014-2018-06-28" class="anchor"></a>Recca 0.1.4 (2018-06-28)</h1>
 <ul>
 <li>Fixed a bug in the <code>verify_IEATable_energy_balance</code> function: !!err –&gt; !!as.name(err)</li>
 </ul>
 </div>
     <div id="recca-013-2018-06-27" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.1.3">
 <a href="#recca-013-2018-06-27" class="anchor"></a>Recca 0.1.3 (2018-06-27)</h1>
 <ul>
 <li>Added <code>verify_IEATable_energy_balance</code> function</li>
 </ul>
 </div>
     <div id="recca-012-2018-05-20" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.1.2">
 <a href="#recca-012-2018-05-20" class="anchor"></a>Recca 0.1.2 (2018-05-20)</h1>
 <ul>
 <li>All functions now use the <code><a href="https://rdrr.io/pkg/matsindf/man/matsindf_apply.html">matsindf::matsindf_apply</a></code> function</li>
@@ -283,7 +287,7 @@
 </ul>
 </div>
     <div id="recca-011-2018-04-16" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.1.1">
 <a href="#recca-011-2018-04-16" class="anchor"></a>Recca 0.1.1 (2018-04-16)</h1>
 <ul>
 <li>New function <code>calc_io_mats</code>: calculate input-output (PSUT version) matrices, including <code>y</code>, <code>q</code>, <code>g</code>, <code>W</code>, <code>Z</code>, <code>D</code>, <code>C</code>, <code>A</code>, <code>L_ixp</code>, and <code>L_pxp</code>.</li>
@@ -291,7 +295,7 @@
 </ul>
 </div>
     <div id="recca-010-2018-04-12" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.1.0">
 <a href="#recca-010-2018-04-12" class="anchor"></a>Recca 0.1.0 (2018-04-12)</h1>
 <ul>
 <li>Initial version</li>
@@ -309,32 +313,10 @@
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <div id="tocnav">
-      <h2>Contents</h2>
-      <ul class="nav nav-pills nav-stacked">
-        <li><a href="#recca-0119-2020-02-19">0.1.19</a></li>
-        <li><a href="#recca-0118-2020-01-17">0.1.18</a></li>
-        <li><a href="#recca-0117-2019-02-25">0.1.17</a></li>
-        <li><a href="#recca-0116-2019-02-16">0.1.16</a></li>
-        <li><a href="#recca-0115-2019-01-09">0.1.15</a></li>
-        <li><a href="#recca-0114-2019-01-07">0.1.14</a></li>
-        <li><a href="#recca-0113-2018-12-21">0.1.13</a></li>
-        <li><a href="#recca-0112-2018-12-02">0.1.12</a></li>
-        <li><a href="#recca-0111-2018-12-02">0.1.11</a></li>
-        <li><a href="#recca-0110-2018-11-29">0.1.10</a></li>
-        <li><a href="#recca-019-2018-11-08">0.1.9</a></li>
-        <li><a href="#recca-018-2018-07-27">0.1.8</a></li>
-        <li><a href="#recca-017-2018-07-26">0.1.7</a></li>
-        <li><a href="#recca-016-2018-07-09">0.1.6</a></li>
-        <li><a href="#recca-015-2018-07-02">0.1.5</a></li>
-        <li><a href="#recca-014-2018-06-28">0.1.4</a></li>
-        <li><a href="#recca-013-2018-06-27">0.1.3</a></li>
-        <li><a href="#recca-012-2018-05-20">0.1.2</a></li>
-        <li><a href="#recca-011-2018-04-16">0.1.1</a></li>
-        <li><a href="#recca-010-2018-04-12">0.1.0</a></li>
-      </ul>
-    </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 
 </div>
@@ -346,7 +328,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
 </div>
 
       </footer>

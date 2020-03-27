@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -38,7 +42,6 @@
 <meta property="og:title" content="Add edge ID numbers to an edge list — add_edge_ids" />
 <meta property="og:description" content="The edges in an edge list can have ID numbers.
 This functions adds a column of edge ID numbers." />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -56,7 +59,7 @@ This functions adds a column of edge ID numbers." />
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -109,7 +112,7 @@ This functions adds a column of edge ID numbers." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/MatthewHeun/Recca">
+  <a href="https://github.com/MatthewHeun/Recca/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -164,95 +167,91 @@ This functions adds a column of edge ID numbers.</p>
 <span class='no'>sutmats</span> <span class='kw'>&lt;-</span> <span class='no'>UKEnergy2000mats</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='no'>matrix.name</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='no'>matrix</span>)
 <span class='co'># Suppress adding edge IDs</span>
 <span class='no'>elDF</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='edge_list.html'>edge_list</a></span>(<span class='no'>sutmats</span>, <span class='kw'>edge_id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)$<span class='no'>`Edge list`</span><span class='kw'>[[</span><span class='fl'>1</span>]]
-<span class='fu'><a href='add_node_ids.html'>add_node_ids</a></span>(<span class='no'>elDF</span>)</div><div class='output co'>#&gt;                     From                    To Value        Product
-#&gt; 1      Resources - Crude            Oil fields 50000          Crude
-#&gt; 2            Crude dist.           Crude dist.   500  Crude - Dist.
-#&gt; 3            Crude dist.        Oil refineries 47000  Crude - Dist.
-#&gt; 4             Oil fields           Crude dist. 47500 Crude - Fields
-#&gt; 5             Oil fields            Oil fields  2500 Crude - Fields
-#&gt; 6         Oil refineries          Diesel dist. 15500         Diesel
-#&gt; 7         Oil refineries        Oil refineries  5000         Diesel
-#&gt; 8           Diesel dist.           Crude dist.    25 Diesel - Dist.
-#&gt; 9           Diesel dist.          Diesel dist.   350 Diesel - Dist.
-#&gt; 10          Diesel dist. Gas wells &amp;amp; proc.    50 Diesel - Dist.
-#&gt; 11          Diesel dist.              NG dist.    25 Diesel - Dist.
-#&gt; 12          Diesel dist.            Oil fields    50 Diesel - Dist.
-#&gt; 13          Diesel dist.          Petrol dist.   250 Diesel - Dist.
-#&gt; 14          Diesel dist.             Transport 14750 Diesel - Dist.
-#&gt; 15          Power plants           Elect. grid  6400          Elect
-#&gt; 16           Elect. grid           Crude dist.    25   Elect - Grid
-#&gt; 17           Elect. grid Gas wells &amp;amp; proc.    25   Elect - Grid
-#&gt; 18           Elect. grid              NG dist.    25   Elect - Grid
-#&gt; 19           Elect. grid            Oil fields    25   Elect - Grid
-#&gt; 20           Elect. grid        Oil refineries    75   Elect - Grid
-#&gt; 21           Elect. grid          Power plants   100   Elect - Grid
-#&gt; 22           Elect. grid           Residential  6000   Elect - Grid
-#&gt; 23        Resources - NG Gas wells &amp;amp; proc. 43000             NG
-#&gt; 24              NG dist.          Power plants 16000     NG - Dist.
-#&gt; 25              NG dist.           Residential 25000     NG - Dist.
-#&gt; 26 Gas wells &amp;amp; proc. Gas wells &amp;amp; proc.  2000     NG - Wells
-#&gt; 27 Gas wells &amp;amp; proc.              NG dist. 41000     NG - Wells
-#&gt; 28        Oil refineries          Petrol dist. 26500         Petrol
-#&gt; 29          Petrol dist.          Petrol dist.   500 Petrol - Dist.
-#&gt; 30          Petrol dist.             Transport 26000 Petrol - Dist.
-#&gt; 31           Crude dist.                 Waste   550          Waste
-#&gt; 32          Diesel dist.                 Waste   350          Waste
-#&gt; 33           Elect. grid                 Waste   125          Waste
-#&gt; 34 Gas wells &amp;amp; proc.                 Waste  2075          Waste
-#&gt; 35              NG dist.                 Waste    50          Waste
-#&gt; 36            Oil fields                 Waste  2575          Waste
-#&gt; 37        Oil refineries                 Waste  5075          Waste
-#&gt; 38          Petrol dist.                 Waste   750          Waste
-#&gt; 39          Power plants                 Waste  9700          Waste
-#&gt;    From_node_id.x To_node_id.x From_node_id.y To_node_id.y
-#&gt; 1               0            2              0            2
-#&gt; 2               1            1              1            1
-#&gt; 3               1            3              1            3
-#&gt; 4               2            1              2            1
-#&gt; 5               2            2              2            2
-#&gt; 6               3            4              3            4
-#&gt; 7               3            3              3            3
-#&gt; 8               4            1              4            1
-#&gt; 9               4            4              4            4
-#&gt; 10              4            9              4            9
-#&gt; 11              4            8              4            8
-#&gt; 12              4            2              4            2
-#&gt; 13              4           10              4           10
-#&gt; 14              4           11              4           11
-#&gt; 15              5            6              5            6
-#&gt; 16              6            1              6            1
-#&gt; 17              6            9              6            9
-#&gt; 18              6            8              6            8
-#&gt; 19              6            2              6            2
-#&gt; 20              6            3              6            3
-#&gt; 21              6            5              6            5
-#&gt; 22              6           12              6           12
-#&gt; 23              7            9              7            9
-#&gt; 24              8            5              8            5
-#&gt; 25              8           12              8           12
-#&gt; 26              9            9              9            9
-#&gt; 27              9            8              9            8
-#&gt; 28              3           10              3           10
-#&gt; 29             10           10             10           10
-#&gt; 30             10           11             10           11
-#&gt; 31              1           13              1           13
-#&gt; 32              4           13              4           13
-#&gt; 33              6           13              6           13
-#&gt; 34              9           13              9           13
-#&gt; 35              8           13              8           13
-#&gt; 36              2           13              2           13
-#&gt; 37              3           13              3           13
-#&gt; 38             10           13             10           13
-#&gt; 39              5           13              5           13</div></pre>
+<span class='fu'><a href='add_node_ids.html'>add_node_ids</a></span>(<span class='no'>elDF</span>)</div><div class='output co'>#&gt;                 From                To Value        Product From_node_id.x
+#&gt; 1  Resources - Crude        Oil fields 50000          Crude              0
+#&gt; 2        Crude dist.       Crude dist.   500  Crude - Dist.              1
+#&gt; 3        Crude dist.    Oil refineries 47000  Crude - Dist.              1
+#&gt; 4         Oil fields       Crude dist. 47500 Crude - Fields              2
+#&gt; 5         Oil fields        Oil fields  2500 Crude - Fields              2
+#&gt; 6     Oil refineries      Diesel dist. 15500         Diesel              3
+#&gt; 7     Oil refineries    Oil refineries  5000         Diesel              3
+#&gt; 8       Diesel dist.       Crude dist.    25 Diesel - Dist.              4
+#&gt; 9       Diesel dist.      Diesel dist.   350 Diesel - Dist.              4
+#&gt; 10      Diesel dist. Gas wells &amp; proc.    50 Diesel - Dist.              4
+#&gt; 11      Diesel dist.          NG dist.    25 Diesel - Dist.              4
+#&gt; 12      Diesel dist.        Oil fields    50 Diesel - Dist.              4
+#&gt; 13      Diesel dist.      Petrol dist.   250 Diesel - Dist.              4
+#&gt; 14      Diesel dist.         Transport 14750 Diesel - Dist.              4
+#&gt; 15      Power plants       Elect. grid  6400          Elect              5
+#&gt; 16       Elect. grid       Crude dist.    25   Elect - Grid              6
+#&gt; 17       Elect. grid Gas wells &amp; proc.    25   Elect - Grid              6
+#&gt; 18       Elect. grid          NG dist.    25   Elect - Grid              6
+#&gt; 19       Elect. grid        Oil fields    25   Elect - Grid              6
+#&gt; 20       Elect. grid    Oil refineries    75   Elect - Grid              6
+#&gt; 21       Elect. grid      Power plants   100   Elect - Grid              6
+#&gt; 22       Elect. grid       Residential  6000   Elect - Grid              6
+#&gt; 23    Resources - NG Gas wells &amp; proc. 43000             NG              7
+#&gt; 24          NG dist.      Power plants 16000     NG - Dist.              8
+#&gt; 25          NG dist.       Residential 25000     NG - Dist.              8
+#&gt; 26 Gas wells &amp; proc. Gas wells &amp; proc.  2000     NG - Wells              9
+#&gt; 27 Gas wells &amp; proc.          NG dist. 41000     NG - Wells              9
+#&gt; 28    Oil refineries      Petrol dist. 26500         Petrol              3
+#&gt; 29      Petrol dist.      Petrol dist.   500 Petrol - Dist.             10
+#&gt; 30      Petrol dist.         Transport 26000 Petrol - Dist.             10
+#&gt; 31       Crude dist.             Waste   550          Waste              1
+#&gt; 32      Diesel dist.             Waste   350          Waste              4
+#&gt; 33       Elect. grid             Waste   125          Waste              6
+#&gt; 34 Gas wells &amp; proc.             Waste  2075          Waste              9
+#&gt; 35          NG dist.             Waste    50          Waste              8
+#&gt; 36        Oil fields             Waste  2575          Waste              2
+#&gt; 37    Oil refineries             Waste  5075          Waste              3
+#&gt; 38      Petrol dist.             Waste   750          Waste             10
+#&gt; 39      Power plants             Waste  9700          Waste              5
+#&gt;    To_node_id.x From_node_id.y To_node_id.y
+#&gt; 1             2              0            2
+#&gt; 2             1              1            1
+#&gt; 3             3              1            3
+#&gt; 4             1              2            1
+#&gt; 5             2              2            2
+#&gt; 6             4              3            4
+#&gt; 7             3              3            3
+#&gt; 8             1              4            1
+#&gt; 9             4              4            4
+#&gt; 10            9              4            9
+#&gt; 11            8              4            8
+#&gt; 12            2              4            2
+#&gt; 13           10              4           10
+#&gt; 14           11              4           11
+#&gt; 15            6              5            6
+#&gt; 16            1              6            1
+#&gt; 17            9              6            9
+#&gt; 18            8              6            8
+#&gt; 19            2              6            2
+#&gt; 20            3              6            3
+#&gt; 21            5              6            5
+#&gt; 22           12              6           12
+#&gt; 23            9              7            9
+#&gt; 24            5              8            5
+#&gt; 25           12              8           12
+#&gt; 26            9              9            9
+#&gt; 27            8              9            8
+#&gt; 28           10              3           10
+#&gt; 29           10             10           10
+#&gt; 30           11             10           11
+#&gt; 31           13              1           13
+#&gt; 32           13              4           13
+#&gt; 33           13              6           13
+#&gt; 34           13              9           13
+#&gt; 35           13              8           13
+#&gt; 36           13              2           13
+#&gt; 37           13              3           13
+#&gt; 38           13             10           13
+#&gt; 39           13              5           13</div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -263,7 +262,7 @@ This functions adds a column of edge ID numbers.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
 </div>
 
       </footer>

@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -40,7 +44,6 @@
 Because each row in the edge list data frame contains a &quot;From&quot; node
 and a &quot;To&quot; node, two columns of node IDs are added, one for &quot;From&quot;
 and one for &quot;To&quot;." />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -58,7 +61,7 @@ and one for &quot;To&quot;." />
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -111,7 +114,7 @@ and one for &quot;To&quot;." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/MatthewHeun/Recca">
+  <a href="https://github.com/MatthewHeun/Recca/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -188,46 +191,46 @@ the value of the <code>from</code> and <code>to</code> arguments with the value 
 <span class='no'>sutmats</span> <span class='kw'>&lt;-</span> <span class='no'>UKEnergy2000mats</span> <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='no'>matrix.name</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='no'>matrix</span>)
 <span class='co'># Suppress adding node IDs</span>
 <span class='no'>elDF</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='edge_list.html'>edge_list</a></span>(<span class='no'>sutmats</span>, <span class='kw'>node_id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)$<span class='no'>`Edge list`</span><span class='kw'>[[</span><span class='fl'>1</span>]]
-<span class='fu'>add_node_ids</span>(<span class='no'>elDF</span>)</div><div class='output co'>#&gt;                     From                    To Value        Product edge_id
-#&gt; 1      Resources - Crude            Oil fields 50000          Crude       1
-#&gt; 2            Crude dist.           Crude dist.   500  Crude - Dist.       2
-#&gt; 3            Crude dist.        Oil refineries 47000  Crude - Dist.       3
-#&gt; 4             Oil fields           Crude dist. 47500 Crude - Fields       4
-#&gt; 5             Oil fields            Oil fields  2500 Crude - Fields       5
-#&gt; 6         Oil refineries          Diesel dist. 15500         Diesel       6
-#&gt; 7         Oil refineries        Oil refineries  5000         Diesel       7
-#&gt; 8           Diesel dist.           Crude dist.    25 Diesel - Dist.       8
-#&gt; 9           Diesel dist.          Diesel dist.   350 Diesel - Dist.       9
-#&gt; 10          Diesel dist. Gas wells &amp;amp; proc.    50 Diesel - Dist.      10
-#&gt; 11          Diesel dist.              NG dist.    25 Diesel - Dist.      11
-#&gt; 12          Diesel dist.            Oil fields    50 Diesel - Dist.      12
-#&gt; 13          Diesel dist.          Petrol dist.   250 Diesel - Dist.      13
-#&gt; 14          Diesel dist.             Transport 14750 Diesel - Dist.      14
-#&gt; 15          Power plants           Elect. grid  6400          Elect      15
-#&gt; 16           Elect. grid           Crude dist.    25   Elect - Grid      16
-#&gt; 17           Elect. grid Gas wells &amp;amp; proc.    25   Elect - Grid      17
-#&gt; 18           Elect. grid              NG dist.    25   Elect - Grid      18
-#&gt; 19           Elect. grid            Oil fields    25   Elect - Grid      19
-#&gt; 20           Elect. grid        Oil refineries    75   Elect - Grid      20
-#&gt; 21           Elect. grid          Power plants   100   Elect - Grid      21
-#&gt; 22           Elect. grid           Residential  6000   Elect - Grid      22
-#&gt; 23        Resources - NG Gas wells &amp;amp; proc. 43000             NG      23
-#&gt; 24              NG dist.          Power plants 16000     NG - Dist.      24
-#&gt; 25              NG dist.           Residential 25000     NG - Dist.      25
-#&gt; 26 Gas wells &amp;amp; proc. Gas wells &amp;amp; proc.  2000     NG - Wells      26
-#&gt; 27 Gas wells &amp;amp; proc.              NG dist. 41000     NG - Wells      27
-#&gt; 28        Oil refineries          Petrol dist. 26500         Petrol      28
-#&gt; 29          Petrol dist.          Petrol dist.   500 Petrol - Dist.      29
-#&gt; 30          Petrol dist.             Transport 26000 Petrol - Dist.      30
-#&gt; 31           Crude dist.                 Waste   550          Waste      31
-#&gt; 32          Diesel dist.                 Waste   350          Waste      32
-#&gt; 33           Elect. grid                 Waste   125          Waste      33
-#&gt; 34 Gas wells &amp;amp; proc.                 Waste  2075          Waste      34
-#&gt; 35              NG dist.                 Waste    50          Waste      35
-#&gt; 36            Oil fields                 Waste  2575          Waste      36
-#&gt; 37        Oil refineries                 Waste  5075          Waste      37
-#&gt; 38          Petrol dist.                 Waste   750          Waste      38
-#&gt; 39          Power plants                 Waste  9700          Waste      39
+<span class='fu'>add_node_ids</span>(<span class='no'>elDF</span>)</div><div class='output co'>#&gt;                 From                To Value        Product edge_id
+#&gt; 1  Resources - Crude        Oil fields 50000          Crude       1
+#&gt; 2        Crude dist.       Crude dist.   500  Crude - Dist.       2
+#&gt; 3        Crude dist.    Oil refineries 47000  Crude - Dist.       3
+#&gt; 4         Oil fields       Crude dist. 47500 Crude - Fields       4
+#&gt; 5         Oil fields        Oil fields  2500 Crude - Fields       5
+#&gt; 6     Oil refineries      Diesel dist. 15500         Diesel       6
+#&gt; 7     Oil refineries    Oil refineries  5000         Diesel       7
+#&gt; 8       Diesel dist.       Crude dist.    25 Diesel - Dist.       8
+#&gt; 9       Diesel dist.      Diesel dist.   350 Diesel - Dist.       9
+#&gt; 10      Diesel dist. Gas wells &amp; proc.    50 Diesel - Dist.      10
+#&gt; 11      Diesel dist.          NG dist.    25 Diesel - Dist.      11
+#&gt; 12      Diesel dist.        Oil fields    50 Diesel - Dist.      12
+#&gt; 13      Diesel dist.      Petrol dist.   250 Diesel - Dist.      13
+#&gt; 14      Diesel dist.         Transport 14750 Diesel - Dist.      14
+#&gt; 15      Power plants       Elect. grid  6400          Elect      15
+#&gt; 16       Elect. grid       Crude dist.    25   Elect - Grid      16
+#&gt; 17       Elect. grid Gas wells &amp; proc.    25   Elect - Grid      17
+#&gt; 18       Elect. grid          NG dist.    25   Elect - Grid      18
+#&gt; 19       Elect. grid        Oil fields    25   Elect - Grid      19
+#&gt; 20       Elect. grid    Oil refineries    75   Elect - Grid      20
+#&gt; 21       Elect. grid      Power plants   100   Elect - Grid      21
+#&gt; 22       Elect. grid       Residential  6000   Elect - Grid      22
+#&gt; 23    Resources - NG Gas wells &amp; proc. 43000             NG      23
+#&gt; 24          NG dist.      Power plants 16000     NG - Dist.      24
+#&gt; 25          NG dist.       Residential 25000     NG - Dist.      25
+#&gt; 26 Gas wells &amp; proc. Gas wells &amp; proc.  2000     NG - Wells      26
+#&gt; 27 Gas wells &amp; proc.          NG dist. 41000     NG - Wells      27
+#&gt; 28    Oil refineries      Petrol dist. 26500         Petrol      28
+#&gt; 29      Petrol dist.      Petrol dist.   500 Petrol - Dist.      29
+#&gt; 30      Petrol dist.         Transport 26000 Petrol - Dist.      30
+#&gt; 31       Crude dist.             Waste   550          Waste      31
+#&gt; 32      Diesel dist.             Waste   350          Waste      32
+#&gt; 33       Elect. grid             Waste   125          Waste      33
+#&gt; 34 Gas wells &amp; proc.             Waste  2075          Waste      34
+#&gt; 35          NG dist.             Waste    50          Waste      35
+#&gt; 36        Oil fields             Waste  2575          Waste      36
+#&gt; 37    Oil refineries             Waste  5075          Waste      37
+#&gt; 38      Petrol dist.             Waste   750          Waste      38
+#&gt; 39      Power plants             Waste  9700          Waste      39
 #&gt;    From_node_id To_node_id
 #&gt; 1             0          2
 #&gt; 2             1          1
@@ -269,15 +272,10 @@ the value of the <code>from</code> and <code>to</code> arguments with the value 
 #&gt; 38           10         13
 #&gt; 39            5         13</div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -288,7 +286,7 @@ the value of the <code>from</code> and <code>to</code> arguments with the value 
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
 </div>
 
       </footer>
