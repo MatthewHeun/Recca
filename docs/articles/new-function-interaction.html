@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.20</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.21</span>
       </span>
     </div>
 
@@ -153,8 +153,8 @@ The R2 industry makes product R2p. Industry I makes product Ip. Product Ip is co
 <p>We’ll use Sankey diagrams to visualize several ECCs. The <code><a href="../reference/make_sankey.html">make_sankey()</a></code> function creates the diagrams. A Sankey diagram that shows the base energy conversion chain is shown below. <code><a href="../reference/make_sankey.html">make_sankey()</a></code> returns a list with a named item “Sankey” that we must extract to insert the diagram into this vignette.</p>
 <div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span>(<span class="kw">R</span> <span class="kw">=</span> <span class="no">R</span>, <span class="kw">U</span> <span class="kw">=</span> <span class="no">U</span>, <span class="kw">V</span> <span class="kw">=</span> <span class="no">V</span>, <span class="kw">Y</span> <span class="kw">=</span> <span class="no">Y</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/magrittr/man/aliases.html">extract2</a></span>(<span class="st">"Sankey"</span>)</pre></body></html></div>
-<div id="htmlwidget-58bd8482745887dcf04d" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-58bd8482745887dcf04d">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[2,2,10,10]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":20,"fontFamily":null,"nodeWidth":15,"nodePadding":14,"units":"Quads","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":500,"sinksRight":true}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-8fd3da42eaec90b503cb" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-8fd3da42eaec90b503cb">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[2,2,10,10]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":20,"fontFamily":null,"nodeWidth":15,"nodePadding":14,"units":"Quads","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":500,"sinksRight":true}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="adjust-inputs-to-industry-i" class="section level2">
 <h2 class="hasAnchor">
@@ -176,8 +176,8 @@ The R2 industry makes product R2p. Industry I makes product Ip. Product Ip is co
             <span class="kw">V</span> <span class="kw">=</span> <span class="no">change_input_proportions</span>$<span class="no">V_prime</span>,
             <span class="kw">Y</span> <span class="kw">=</span> <span class="no">Y</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/magrittr/man/aliases.html">extract2</a></span>(<span class="st">"Sankey"</span>)</pre></body></html></div>
-<div id="htmlwidget-b0865b53c57771f3ae71" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-b0865b53c57771f3ae71">{"x":{"links":{"source":[0,0,1],"target":[2,3,0],"value":[2,2,20]},"nodes":{"name":["I","R1","Y1","Y2"],"group":["I","R1","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":20,"fontFamily":null,"nodeWidth":15,"nodePadding":14,"units":"Quads","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":500,"sinksRight":true}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-c061a85f080973048d41" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c061a85f080973048d41">{"x":{"links":{"source":[0,0,1],"target":[2,3,0],"value":[2,2,20]},"nodes":{"name":["I","R1","Y1","Y2"],"group":["I","R1","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":20,"fontFamily":null,"nodeWidth":15,"nodePadding":14,"units":"Quads","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":500,"sinksRight":true}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="change-final-demand" class="section level2">
 <h2 class="hasAnchor">
@@ -199,8 +199,8 @@ The R2 industry makes product R2p. Industry I makes product Ip. Product Ip is co
             <span class="kw">V</span> <span class="kw">=</span> <span class="no">change_final_demand</span>$<span class="no">V_prime</span>,
             <span class="kw">Y</span> <span class="kw">=</span> <span class="no">change_final_demand</span>$<span class="no">Y_prime</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/magrittr/man/aliases.html">extract2</a></span>(<span class="st">"Sankey"</span>)</pre></body></html></div>
-<div id="htmlwidget-9563876931aabb3a322b" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-9563876931aabb3a322b">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[4,2,15,15]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":20,"fontFamily":null,"nodeWidth":15,"nodePadding":14,"units":"Quads","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":500,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>Industry I is back to using both R1p and R2p in a 50/50 split to make its output. Both R1p and R2p now supply 15 quads to I to account for increased final demand.</p>
+<div id="htmlwidget-fbd3d8efdc3d8b168db9" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-fbd3d8efdc3d8b168db9">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[4,2,15,15]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":20,"fontFamily":null,"nodeWidth":15,"nodePadding":14,"units":"Quads","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":500,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>Industry I is back to using both R1p and R2p in a 50/50 split to make its output. Both R1p and R2p now supply 15 quads to I to account for increased final demand.</p>
 <p>The <code><a href="../reference/new_Y.html">new_Y()</a></code> function is performing exactly as expected, given that <code>iomats</code> was supplied to <code><a href="../reference/new_Y.html">new_Y()</a></code>. <code>iomats</code> contains information about an ECC in which industry I’s inputs are split 50/50 between R1p and R2p. So when <code><a href="../reference/new_Y.html">new_Y()</a></code> calculates a new ECC, it assumes that industry I’s needs are a 50/50 split between R1p and R2p.</p>
 <p>In fact, it would be a mistake to think that <code><a href="../reference/new_Y.html">new_Y()</a></code> would give anything but a 50/50 split between R1p and R2p when using the <code>iomats</code> description of the ECC.</p>
 </div>
@@ -218,8 +218,8 @@ The R2 industry makes product R2p. Industry I makes product Ip. Product Ip is co
             <span class="kw">V</span> <span class="kw">=</span> <span class="no">change_final_demand2</span>$<span class="no">V_prime</span>,
             <span class="kw">Y</span> <span class="kw">=</span> <span class="no">change_final_demand2</span>$<span class="no">Y_prime</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/magrittr/man/aliases.html">extract2</a></span>(<span class="st">"Sankey"</span>)</pre></body></html></div>
-<div id="htmlwidget-eeff5a97c1eb508625a8" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-eeff5a97c1eb508625a8">{"x":{"links":{"source":[0,0,1],"target":[2,3,0],"value":[4,2,30]},"nodes":{"name":["I","R1","Y1","Y2"],"group":["I","R1","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":20,"fontFamily":null,"nodeWidth":15,"nodePadding":14,"units":"Quads","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":500,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>The Sankey diagram above shows that we have successfully increased the demand from <code>Y1</code> while ensuring that all inputs to industry I come from R1p. The “trick” is to recalculate the input-output structure of the ECC between the two steps.</p>
+<div id="htmlwidget-f0a9d6ab76cd284a747e" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-f0a9d6ab76cd284a747e">{"x":{"links":{"source":[0,0,1],"target":[2,3,0],"value":[4,2,30]},"nodes":{"name":["I","R1","Y1","Y2"],"group":["I","R1","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":20,"fontFamily":null,"nodeWidth":15,"nodePadding":14,"units":"Quads","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":500,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>The Sankey diagram above shows that we have successfully increased the demand from <code>Y1</code> while ensuring that all inputs to industry I come from R1p. The “trick” is to recalculate the input-output structure of the ECC between the two steps.</p>
 </div>
 </div>
 <div id="conclusion" class="section level1">
