@@ -7,7 +7,7 @@
 verify_IEATable_energy_balance(
   .ieatidydata,
   ledger.side = "Ledger.side",
-  energy = "E.ktoe",
+  energy = "E.dot",
   supply = "Supply",
   consumption = "Consumption",
   err = ".err",
@@ -58,7 +58,7 @@ a warning is emitted.
 \examples{
 library(dplyr)
 UKEnergy2000tidy \%>\%
-  filter(Last.stage \%in\% c("final", "useful")) \%>\%
+  filter(Last.stage \%in\% c("Final", "Useful")) \%>\%
   group_by(Country, Year, Energy.type, Last.stage) \%>\%
-  verify_IEATable_energy_balance(energy = "EX.ktoe")
+  verify_IEATable_energy_balance(energy = "E.dot")
 }

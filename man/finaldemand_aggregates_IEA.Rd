@@ -9,7 +9,7 @@ finaldemand_aggregates_IEA(
   ledger_side = "Ledger.side",
   flow_aggregation_point = "Flow.aggregation.point",
   flow = "Flow",
-  energy = "EX.ktoe",
+  energy = "E.dot",
   consumption = "Consumption",
   eiou = "Energy industry own use",
   aggregate_net_finaldemand = "EX_fd_net_IEA.ktoe",
@@ -29,7 +29,7 @@ Default is "\code{Flow.aggregation.point}".}
 Default is "\code{Flow}".}
 
 \item{energy}{the name of the column that contains energy information.
-Default is "\code{EX.ktoe}".}
+Default is "\code{E.dot}".}
 
 \item{consumption}{the identifier for consumption in the \code{flow_aggregation_point} column.
 Default is "\code{Consumption}".}
@@ -73,6 +73,6 @@ library(dplyr)
 print(names(UKEnergy2000tidy))
 UKEnergy2000tidy \%>\%
   group_by(Country, Year, Energy.type, Last.stage) \%>\%
-  filter(Last.stage \%in\% c("final", "useful")) \%>\%
+  filter(Last.stage \%in\% c("Final", "Useful")) \%>\%
   finaldemand_aggregates_IEA()
 }

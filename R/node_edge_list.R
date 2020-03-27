@@ -62,7 +62,7 @@
 #' # Now includes waste edges
 #' tail(el$`Edge list`[[1]])
 #' # Works with single matrices, too.
-#' elmats <- edge_list(U = sutmats$U[[1]], V = sutmats$V[[1]], Y = sutmats$Y[[1]])
+#' elmats <- edge_list(R = sutmats$R[[1]], U = sutmats$U[[1]], V = sutmats$V[[1]], Y = sutmats$Y[[1]])
 #' head(elmats[["Edge list"]])
 #' tail(elmats[["Edge list"]])
 edge_list <- function(.sutdata = NULL, R = "R", U = "U", V = "V", Y = "Y",
@@ -71,10 +71,10 @@ edge_list <- function(.sutdata = NULL, R = "R", U = "U", V = "V", Y = "Y",
                       rowtypes = "rowtype", coltypes = "coltype",
                       node_id = "node_id", first_node = 0,
                       edge_id = "edge_id", simplify_edges = TRUE){
-  el_func <- function(R_mat, U_mat, V_mat, Y_mat){
+  el_func <- function(R_mat = NULL, U_mat, V_mat, Y_mat){
     # At this point, R_mat, U_mat, V_mat, and Y_mat should be single matrices.
     # But R_mat may be missing, in which case V_mat is actually R_mat + V_mat, and they need to be separated.
-    if (missing(R_mat)) {
+    if (is.null(R_mat)) {
       res <- separate_RV(U = U_mat, R_plus_V = V_mat)
       R_mat <- res[["R"]]
       V_mat <- res[["V"]]

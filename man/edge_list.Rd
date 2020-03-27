@@ -100,7 +100,7 @@ head(el$`Edge list`[[1]])
 # Now includes waste edges
 tail(el$`Edge list`[[1]])
 # Works with single matrices, too.
-elmats <- edge_list(U = sutmats$U[[1]], V = sutmats$V[[1]], Y = sutmats$Y[[1]])
+elmats <- edge_list(R = sutmats$R[[1]], U = sutmats$U[[1]], V = sutmats$V[[1]], Y = sutmats$Y[[1]])
 head(elmats[["Edge list"]])
 tail(elmats[["Edge list"]])
 }

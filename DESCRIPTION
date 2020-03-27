@@ -34,8 +34,9 @@ Imports:
 URL: https://github.com/MatthewHeun/Recca
 BugReports: https://github.com/MatthewHeun/Recca/issues
 Suggests: 
+    covr,
+    IEATools,
     knitr,
     rmarkdown,
-    testthat,
-    covr
+    testthat
 VignetteBuilder: knitr

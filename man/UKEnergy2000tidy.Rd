@@ -15,7 +15,7 @@ A data frame with 186 rows and 9 variables:
 \item{Last.stage}{tells the final stage of the energy conversion chain: final, useful, or services}
 \item{Flow}{the Industry or Sector involved in this flow}
 \item{Product}{the energy product involved in this flow}
-\item{EX.ktoe}{value of the energy, exergy, or service flow in ktoe}
+\item{E.dot}{value of the energy, exergy, or service flow in ktoe}
 \item{Unit}{unit in which quantity is expressed}
 }
 }

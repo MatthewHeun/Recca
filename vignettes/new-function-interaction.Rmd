@@ -19,6 +19,23 @@ library(matsbyname)
 library(Recca)
 ```
 
+<!-- Establish some helpful LaTeX shortcuts for equations -->
+\newcommand{\transpose}[1]{#1^\mathrm{T}}
+\newcommand{\inverse}[1]{#1^{\mathrm{-}1}}
+\newcommand{\mat}[1]{\mathbf{#1}}
+\newcommand{\colvec}[1]{\mathbf{#1}}
+\newcommand{\rowvec}[1]{\transpose{\colvec{#1}}}
+\newcommand{\inversetranspose}[1]{\transpose{\left( \inverse{\mat{#1}} \right)}}
+\newcommand{\transposeinverse}[1]{\inverse{\left( \transpose{\mat{#1}} \right)}}
+\newcommand{\hatinv}[1]{\inverse{\widehat{#1}}}
+
+\newcommand{\matwithdims}[3]{\underset{\mathrm{#2} \times \mathrm{#3}}{\mat{#1}}}
+\newcommand{\colvecwithdims}[2]{\underset{\mathrm{#2} \times 1}{\colvec{#1}}}
+
+\newcommand{\Lpp}{\matwithdims{L}{p}{p}}
+\newcommand{\Lip}{\matwithdims{L}{i}{p}}
+
+
 ## Introduction
 
 The `Recca` package provides several `new_*` functions that allow the user to estimate a new version
@@ -43,7 +60,11 @@ The R2 industry makes product R2p.
 Industry I makes product Ip.
 Product Ip is consumed by final demand sectors Y1 and Y2.
 
-The use (U), make (V), final demand (Y), and unit summation (S_units) matrices are given below.
+The resources ($\mat{R}$), 
+use ($\mat{U}$), 
+make ($\mat{V}$), 
+final demand ($\mat{Y}$), and 
+unit summation ($\mat{S}_{units}$) matrices are given below.
 
 ```{r}
 library(magrittr)
@@ -56,12 +77,17 @@ U <- matrix(c(0, 0, 10,
             dimnames = list(c("R1p", "R2p", "Ip"), c("R1", "R2", "I"))) %>% 
   setrowtype("Products") %>% setcoltype("Industries")
 
-V <- matrix(c(10,  0, 0,
-               0, 10, 0, 
-               0,  0, 4), 
-            byrow = TRUE, nrow = 3, ncol = 3, 
-            dimnames = list(c("R1", "R2", "I"), c("R1p", "R2p", "Ip"))) %>% 
+R_plus_V <- matrix(c(10,  0, 0,
+                     0, 10, 0, 
+                     0,  0, 4), 
+                   byrow = TRUE, nrow = 3, ncol = 3, 
+                   dimnames = list(c("R1", "R2", "I"), 
+                                   c("R1p", "R2p", "Ip"))) %>% 
   setrowtype("Industries") %>% setcoltype("Products")
+
+RV_mats <- separate_RV(U = U, R_plus_V = R_plus_V)
+R <- RV_mats$R
+V <- RV_mats$V
 
 Y <- matrix(c(0, 0,
               0, 0, 
@@ -85,7 +111,7 @@ A Sankey diagram that shows the base energy conversion chain is shown below.
 to insert the diagram into this vignette.
 
 ```{r}
-make_sankey(U = U, V = V, Y = Y) %>% 
+make_sankey(R = R, U = U, V = V, Y = Y) %>% 
   extract2("Sankey")
 ```
 
@@ -100,15 +126,20 @@ that indicates industry I now uses 20 quads of `R1` instead of a 50/50 split bet
 
 ```{r}
 library(Recca)
-iomats <- calc_io_mats(U = U, V = V, Y = Y, S_units = S_units)
+iomats <- calc_io_mats(R = R, U = U, V = V, Y = Y, S_units = S_units)
 k_prime <- matrix(c(1,
                     0), 
                   byrow = TRUE, nrow = 2, ncol = 1,
                   dimnames = list(c("R1p", "R2p"), c("I"))) %>% 
   setrowtype("Products") %>% setcoltype("Industries")
-change_input_proportions <- new_k_ps(c(iomats, list(U = U, V = V, Y = Y, S_units = S_units, 
-                                                    k_prime = k_prime)))
-make_sankey(U = change_input_proportions$U_prime, V = change_input_proportions$V_prime, Y = Y) %>% 
+change_input_proportions <- new_k_ps(c(iomats, 
+                                       list(R = R, U = U, V = V, Y = Y,
+                                            S_units = S_units, 
+                                            k_prime = k_prime)))
+make_sankey(R = change_input_proportions$R_prime, 
+            U = change_input_proportions$U_prime, 
+            V = change_input_proportions$V_prime, 
+            Y = Y) %>% 
   extract2("Sankey")
 ```
 
@@ -135,7 +166,9 @@ Y_prime <- matrix(c(0, 0,
                   dimnames = list(c("R1p", "R2p", "Ip"), c("Y1", "Y2"))) %>% 
   setrowtype("Products") %>% setcoltype("Industries")
 change_final_demand <- new_Y(c(iomats, list(Y_prime = Y_prime)))
-make_sankey(U = change_final_demand$U_prime, V = change_final_demand$V_prime, 
+make_sankey(R = change_final_demand$R_prime, 
+            U = change_final_demand$U_prime, 
+            V = change_final_demand$V_prime, 
             Y = change_final_demand$Y_prime) %>% 
   extract2("Sankey")
 ```
@@ -164,11 +197,13 @@ Then, you must submit that updated description of the input-output structure of 
 The following code demonstrates the approach.
 
 ```{r}
-iomats2 <- calc_io_mats(U = change_input_proportions$U_prime, 
+iomats2 <- calc_io_mats(R = change_input_proportions$R_prime, 
+                        U = change_input_proportions$U_prime, 
                         V = change_input_proportions$V_prime, 
                         Y = Y, S_units = S_units)
 change_final_demand2 <- new_Y(c(iomats2, list(Y_prime = Y_prime)))
-make_sankey(U = change_final_demand2$U_prime, 
+make_sankey(R = change_final_demand2$R_prime, 
+            U = change_final_demand2$U_prime, 
             V = change_final_demand2$V_prime, 
             Y = change_final_demand2$Y_prime) %>% 
   extract2("Sankey")

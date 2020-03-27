@@ -9,18 +9,18 @@
 #'
 #' @param .sutdata a data frame with columns of matrices from a supply-use analysis.
 #' @param p_industries a vector of names of industries to be aggregated as "primary".
-#'        These industries will appear in rows of the make matrix (\code{V}) and
-#'        columns of the final demand matrix (\code{Y}).
-#'        Entries in \code{Y_p} will be subtracted from entries in \code{V_p} to obtain
+#'        These industries will appear in rows of the make matrix (`V`) and
+#'        columns of the final demand matrix (`Y`).
+#'        Entries in `Y_p` will be subtracted from entries in `V_p` to obtain
 #'        the total primary energy aggregate.
-#' @param R resources (\code{R}) matrix or the name of the column in \code{.sutdata} containing same
-#' @param V make (\code{V}) matrix or the name of the column in \code{.sutdata} containing same
-#' @param Y final demand (\code{Y}) matrix or the name of the column in \code{.sutdata} containing same
-#' @param by one of \code{Total}, \code{Product}, or \code{Flow} to indicate the desired aggregation:
+#' @param R resources (`R`) matrix or the name of the column in `.sutdata` containing same
+#' @param V make (`V`) matrix or the name of the column in `.sutdata` containing same
+#' @param Y final demand (`Y`) matrix or the name of the column in `.sutdata` containing same
+#' @param by one of `Total`, `Product`, or `Flow` to indicate the desired aggregation:
 #' \itemize{
-#'   \item{\code{Total}: aggregation over both Product and Flow (the default)}
-#'   \item{\code{Product}: aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.)}
-#'   \item{\code{Flow}: aggregation by type of flow (Production, Imports, Exports, etc.)}
+#'   \item `Total`: aggregation over both Product and Flow (the default)
+#'   \item `Product`: aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.)
+#'   \item `Flow`: aggregation by type of flow (Production, Imports, Exports, etc.)
 #' }
 #' @param aggregate_primary the name for aggregates of primary energy on output
 #'
@@ -39,21 +39,37 @@ primary_aggregates <- function(.sutdata,
                                aggregate_primary = "EX_p.ktoe"){
 
   by <- match.arg(by)
+  # Figure out which function we need to use.
   aggfuncs <- list(total = "sumall_byname", product = "rowsums_byname", flow = "colsums_byname")
   agg_func <- match.fun(aggfuncs[[tolower(by)]])
 
-  prim_func <- function(V_mat, Y_mat){
+  prim_func <- function(R_mat, V_mat, Y_mat){
+    # Look for primary industries in each of R, V, and Y matrices
+    RT_p <- matsbyname::transpose_byname(R_mat) %>%
+      matsbyname::select_cols_byname(retain_pattern =
+                                       matsbyname::make_pattern(row_col_names = p_industries, pattern_type = "leading"))
     VT_p <- matsbyname::transpose_byname(V_mat) %>%
       matsbyname::select_cols_byname(retain_pattern =
                                        matsbyname::make_pattern(row_col_names = p_industries, pattern_type = "leading"))
+    # We expect only one of R or V contains primary industries.
+    # If both or neither contain primary industries, there is a problem.
+    # Perfect opportunity to use the xor operator!
+    # When one of R or V does not contain primary industries, the corresponding value of RT_p or VT_p is NULL.
+    # Check for that condition.
+    assertthat::assert_that(xor(is.null(RT_p), is.null(VT_p)), msg = "Only one of R or V may contain primary industries in primary_aggregates")
+    # Get the primary industries from the Y matrix.
     Y_p <- Y_mat %>% matsbyname::select_cols_byname(retain_pattern =
                                                       matsbyname::make_pattern(row_col_names = p_industries, pattern_type = "leading"))
-    # VT_p - Y_p. This is TPES in product x industry matrix format
-    VT_p_minus_Y_p <- matsbyname::difference_byname(VT_p, Y_p)
-    agg_primary <- agg_func(VT_p_minus_Y_p)
+    # VT_p - Y_p or RT_p - Y_p.  This is TPES in product x industry matrix format
+    if (is.null(VT_p)) {
+      RVT_p_minus_Y_p <- matsbyname::difference_byname(RT_p, Y_p)
+    } else {
+      RVT_p_minus_Y_p <- matsbyname::difference_byname(VT_p, Y_p)
+    }
+    agg_primary <- agg_func(RVT_p_minus_Y_p)
     list(agg_primary) %>% magrittr::set_names(aggregate_primary)
   }
-  matsindf::matsindf_apply(.sutdata, FUN = prim_func, V_mat = V, Y_mat = Y)
+  matsindf::matsindf_apply(.sutdata, FUN = prim_func, R_mat = R, V_mat = V, Y_mat = Y)
 }
 
 
@@ -198,7 +214,7 @@ finaldemand_aggregates_with_units <- function(.sutdata,
 #' @param flow the name of the column that contains flow information. Default is "\code{Flow}".
 #' @param flow_aggregation_point the name of the column that identifies flow aggregation points.
 #'        Default is "\code{Flow.aggregation.point}".
-#' @param energy the name of the column that contains energy information. Default is "\code{EX.ktoe}".
+#' @param energy the name of the column that contains energy information. Default is "\code{E.dot}".
 #' @param p_industries a vector of names of primary industries. Default is
 #'        "\code{c("Coal mines", "Oil and gas extraction",
 #'        "Production", "Imports", "Exports",
@@ -227,7 +243,7 @@ primary_aggregates_IEA <- function(.ieadata,
                                    # Input names
                                    flow = "Flow",
                                    flow_aggregation_point = "Flow.aggregation.point",
-                                   energy = "EX.ktoe",
+                                   energy = "E.dot",
                                    p_industries = c("Production", "Coal mines", "Oil and gas extraction",
                                                     "Imports", "Exports", "International aviation bunkers",
                                                     "International marine bunkers", "Stock changes"),
@@ -270,7 +286,7 @@ primary_aggregates_IEA <- function(.ieadata,
 #' @param flow the name of the column that contains flow information.
 #'        Default is "\code{Flow}".
 #' @param energy the name of the column that contains energy information.
-#'        Default is "\code{EX.ktoe}".
+#'        Default is "\code{E.dot}".
 #' @param consumption the identifier for consumption in the \code{flow_aggregation_point} column.
 #'        Default is "\code{Consumption}".
 #' @param eiou the identifier for energy industry own use in the \code{flow_aggregation_point} column.
@@ -293,14 +309,14 @@ primary_aggregates_IEA <- function(.ieadata,
 #' print(names(UKEnergy2000tidy))
 #' UKEnergy2000tidy %>%
 #'   group_by(Country, Year, Energy.type, Last.stage) %>%
-#'   filter(Last.stage %in% c("final", "useful")) %>%
+#'   filter(Last.stage %in% c("Final", "Useful")) %>%
 #'   finaldemand_aggregates_IEA()
 finaldemand_aggregates_IEA <- function(.ieadata,
                                        # Input names
                                        ledger_side = "Ledger.side",
                                        flow_aggregation_point = "Flow.aggregation.point",
                                        flow = "Flow",
-                                       energy = "EX.ktoe",
+                                       energy = "E.dot",
                                        consumption = "Consumption",
                                        eiou = "Energy industry own use",
                                        # Output names

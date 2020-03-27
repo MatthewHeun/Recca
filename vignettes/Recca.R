@@ -20,26 +20,26 @@ glimpse(S_units)
 ## -----------------------------------------------------------------------------
 WithNames <- UKEnergy2000tidy %>%
   # Add a column indicating the matrix in which this entry belongs (U, V, or Y).
-  add_matnames_iea(use_R = TRUE) %>%
+  IEATools::add_psut_matnames() %>%
   # Add metadata columns for row names, column names, row types, and column types.
-  add_row_col_meta() %>% 
+  IEATools::add_row_col_meta() %>% 
   # Eliminate columns we no longer need
   select(-Ledger.side, -Flow.aggregation.point, -Flow, -Product) %>%
   mutate(
     # Ensure that all energy values are positive, as required for analysis.
-    EX.ktoe = abs(EX.ktoe)
+    E.dot = abs(E.dot)
   )
 head(WithNames)
 
 ## -----------------------------------------------------------------------------
 AsMats <- WithNames %>%
   # Collapse to matrices using functions in the matsindf package
-  group_by(Country, Year, Energy.type, Last.stage, matname) %>%
-  collapse_to_matrices(matnames = "matname", matvals = "EX.ktoe",
-                       rownames = "rowname", colnames = "colname",
-                       rowtypes = "rowtype", coltypes = "coltype") %>%
-  rename(matrix.name = matname, matrix = EX.ktoe) %>%
-  spread(key = matrix.name, value = matrix) %>%
+  group_by(Country, Year, Energy.type, Last.stage, matnames) %>%
+  collapse_to_matrices(matnames = "matnames", matvals = "E.dot",
+                       rownames = "rownames", colnames = "colnames",
+                       rowtypes = "rowtypes", coltypes = "coltypes") %>%
+  rename(matrix.name = matnames, matrix = E.dot) %>%
+  spread(key = matrix.name, value = matrix) %>% 
   # Do a little more cleanup
   mutate(
     # Create full U matrix
@@ -47,7 +47,7 @@ AsMats <- WithNames %>%
     # Create r_EIOU, a matrix that identifies the ratio of EIOU to other energy consumed.
     r_EIOU = matsbyname::quotient_byname(U_EIOU, U),
     r_EIOU = matsbyname::replaceNaN_byname(r_EIOU, val = 0)
-  ) %>%
+  ) %>% 
   select(-U_EIOU, -U_excl_EIOU) %>%
   # Add S_units matrices
   left_join(S_units, by = c("Country", "Year", "Energy.type", "Last.stage")) %>%
@@ -118,18 +118,4 @@ etas <- IO_df %>%
 names(etas)
 etas[["eta_i"]][[1]]
 etas[["eta_i"]][[3]] # NAs indicate inhomogeneous units on inputs or outputs.
-
-## -----------------------------------------------------------------------------
-primary_machine_names <- c("Resources - Crude", "Resources - NG")
-
-embodied_mats <- IO_df %>%
-  mutate(
-    U_EIOU = hadamardproduct_byname(r_EIOU, U)
-  ) %>%
-  calc_embodied_mats() %>%
-  calc_embodied_etas(primary_machine_names = primary_machine_names)
-names(embodied_mats)
-
-## -----------------------------------------------------------------------------
-embodied_mats$eta_p[[3]]
 

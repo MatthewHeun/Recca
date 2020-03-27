@@ -21,14 +21,14 @@ test_that("reconstructing U and V from single matrices works as expected", {
 test_that("reconstructing U and V from a new Y matrix works as expected", {
   # Try with Y_prime <- Y, thereby simply trying to duplicate the original U and V matrices
   Reconstructed <- UKEnergy2000mats %>%
-    spread(key = matrix.name, value = matrix) %>%
-    select(Country, Year, Energy.type, Last.stage, U, V, Y, r_EIOU, S_units) %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    dplyr::select(Country, Year, Energy.type, Last.stage, U, V, Y, r_EIOU, S_units) %>%
     calc_io_mats() %>%
-    mutate(
+    dplyr::mutate(
       Y_prime = Y
     ) %>%
     new_Y() %>%
-    mutate(
+    dplyr::mutate(
       # Take the difference between U_prime and U and V_prime and V
       U_diff = difference_byname(U_prime, U),
       V_diff = difference_byname(V_prime, V),
@@ -51,25 +51,33 @@ test_that("reconstructing U and V from a new Y matrix works as expected", {
     setrowtype("Product") %>% setcoltype("Industry")
 
   Reconstructed_Residential <- Reconstructed %>%
-    select(-Y_prime, -U_prime, -V_prime, -U_diff, -V_diff, -UOK, -VOK) %>%
-    mutate(
+    dplyr::select(-Y_prime, -U_prime, -V_prime, -U_diff, -V_diff, -UOK, -VOK) %>%
+    dplyr::mutate(
       Y_prime = list(Y_prime_finalE, Y_prime_servicesE, Y_prime_usefulE, Y_prime_servicesX)
     ) %>%
     new_Y() %>%
-    select(Country, Year, Energy.type, Last.stage, U_prime, V_prime) %>%
-    gather(key = "matnames", value = "matvals", U_prime, V_prime) %>%
-    expand_to_tidy(drop = 0)
+    dplyr::select(Country, Year, Energy.type, Last.stage, U_prime, V_prime) %>%
+    tidyr::gather(key = "matnames", value = "matvals", U_prime, V_prime) %>%
+    matsindf::expand_to_tidy(drop = 0)
   expect_equivalent(Reconstructed_Residential %>%
-                      filter(Energy.type == "E.ktoe", Last.stage == "final", matnames == "U_prime", rownames == "Crude - Dist.", colnames == "Crude dist.") %>% select(matvals) %>% unlist(),
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "U_prime", rownames == "Crude - Dist.", colnames == "Crude dist.") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
                     0.3481179450)
   expect_equivalent(Reconstructed_Residential %>%
-                      filter(Energy.type == "E.ktoe", Last.stage == "useful", matnames == "V_prime", rownames == "Truck engines", colnames == "MD - Truck engines") %>% select(matvals) %>% unlist(),
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$useful, matnames == "V_prime", rownames == "Truck engines", colnames == "MD - Truck engines") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
                     7.748625)
   expect_equivalent(Reconstructed_Residential %>%
-                      filter(Energy.type == "X.ktoe", Last.stage == "services", matnames == "V_prime", rownames == "Gas wells & proc.", colnames == "NG - Wells") %>% select(matvals) %>% unlist(),
+                      dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, matnames == "V_prime", rownames == "Gas wells & proc.", colnames == "NG - Wells") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
                     16220.3637987185)
   expect_equivalent(Reconstructed_Residential %>%
-                      filter(Energy.type == "X.ktoe", Last.stage == "services", matnames == "U_prime", rownames == "Elect", colnames == "Elect. grid") %>% select(matvals) %>% unlist(),
+                      dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, matnames == "U_prime", rownames == "Elect", colnames == "Elect. grid") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
                     6238.6014610456)
 })
 
@@ -80,7 +88,7 @@ context("New perfectly substitutable inputs in k")
 
 test_that("new_k_ps works as expected", {
   perfectsub_mats <- PerfectSubmats %>%
-    spread(key = "matrix.name", value = "matrix")
+    tidyr::spread(key = "matrix.name", value = "matrix")
 
   io_mats <- perfectsub_mats %>% calc_io_mats()
   K <- io_mats$K[[1]]
@@ -97,28 +105,77 @@ test_that("new_k_ps works as expected", {
   k_prime_vec["Ren elec", "Electric transport"] <- 0.5
   # Add this vector to the io_mats data frame.
   io_mats <- io_mats %>%
-    mutate(
+    dplyr::mutate(
       # Set up a new k_prime vector for Electric transport.
       # That vector will be used for the infininte substitution calculation.
       # k_prime = select_cols_byname(K, retain_pattern = make_pattern("Electric transport", pattern_type = "exact")),
-      k_prime = make_list(k_prime_vec, n = 1)
+      k_prime = matsbyname::make_list(k_prime_vec, n = 1)
     )
   # Now do the calculation of U_prime and V_prime matrices.
-  new_UV <- io_mats %>%
-    new_k_ps() %>%
-    select(Country, Year, Energy.type, Last.stage, U_prime, V_prime) %>%
-    gather(key = "matnames", value = "matvals", U_prime, V_prime) %>%
-    expand_to_tidy(drop = 0)
-  expect_equivalent(new_UV %>%
-                      filter(Energy.type == "E.ktoe", Last.stage == "services", matnames == "U_prime", rownames == "FF elec", colnames == "Buildings") %>% select(matvals) %>% unlist(),
+  # First test when we don't have an R matrix.
+  new_UV_noR <- io_mats %>%
+    dplyr::mutate(
+      R_plus_V = matsbyname::sum_byname(R, V),
+      R = NULL
+    ) %>%
+    # Use the R_plus_V matrix in place of V
+    new_k_ps(V = "R_plus_V")
+  # Verify that we didn't make an R_prime column
+  expect_null(new_UV_noR[["R_prime"]])
+
+
+  new_UV_noR %<>%
+    dplyr::select(Country, Year, Energy.type, Last.stage, U_prime, V_prime) %>%
+    tidyr::gather(key = "matnames", value = "matvals", U_prime, V_prime) %>%
+    matsindf::expand_to_tidy(drop = 0)
+  expect_equivalent(new_UV_noR %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "U_prime", rownames == "FF elec", colnames == "Buildings") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
                     12.1)
-  expect_equivalent(new_UV %>%
-                      filter(Energy.type == "E.ktoe", Last.stage == "services", matnames == "V_prime", rownames == "Buildings", colnames == "Bldg services") %>% select(matvals) %>% unlist(),
+  expect_equivalent(new_UV_noR %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "V_prime", rownames == "Buildings", colnames == "Bldg services") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
                     25.2)
-  expect_equivalent(new_UV %>%
-                      filter(Energy.type == "E.ktoe", Last.stage == "services", matnames == "V_prime", rownames == "Resources - Rens", colnames == "Rens") %>% select(matvals) %>% unlist(),
+  expect_equivalent(new_UV_noR %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "V_prime", rownames == "Resources - Rens", colnames == "Rens") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
+                    49.75)
+
+  # Now test when an R matrix is present.
+  new_UV_withR <- io_mats %>%
+    new_k_ps() %>%
+    dplyr::select(Country, Year, Energy.type, Last.stage, R_prime, U_prime, V_prime) %>%
+    tidyr::gather(key = "matnames", value = "matvals", R_prime, U_prime, V_prime) %>%
+    matsindf::expand_to_tidy(drop = 0)
+  expect_equivalent(new_UV_withR %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "U_prime", rownames == "FF elec", colnames == "Buildings") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
+                    12.1)
+  expect_equivalent(new_UV_withR %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "V_prime", rownames == "Buildings", colnames == "Bldg services") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
+                    25.2)
+  # This number is no longer found in the V_prime matrix.
+  # It is found in the R_prime matrix.
+  # So we should get an error with this one.
+  expect_equal(new_UV_withR %>%
+                 dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "V_prime", rownames == "Resources - Rens", colnames == "Rens") %>%
+                 dplyr::select(matvals) %>%
+                 unlist() %>%
+                 length(),
+               0)
+  expect_equivalent(new_UV_withR %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "R_prime", rownames == "Resources - Rens", colnames == "Rens") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
                     49.75)
 })
+
 
 test_that("1-industry ECC works with new_k_ps", {
   # This test arises from interactions with Jianwei Du at University of Texas at Austin.
@@ -137,28 +194,28 @@ test_that("1-industry ECC works with new_k_ps", {
                 0, 0,  0),
               byrow = TRUE, nrow = 3, ncol = 3,
               dimnames = list(c("R1p", "R2p", "Ip"), c("R1", "R2", "I"))) %>%
-    setrowtype("Products") %>% setcoltype("Industries")
+    matsbyname::setrowtype("Products") %>% matsbyname::setcoltype("Industries")
 
   V <- matrix(c(10,  0, 0,
                 0, 10, 0,
                 0,  0, 4),
               byrow = TRUE, nrow = 3, ncol = 3,
               dimnames = list(c("R1", "R2", "I"), c("R1p", "R2p", "Ip"))) %>%
-    setrowtype("Industries") %>% setcoltype("Products")
+    matsbyname::setrowtype("Industries") %>% matsbyname::setcoltype("Products")
 
   Y <- matrix(c(0, 0,
                 0, 0,
                 2, 2),
               byrow = TRUE, nrow = 3, ncol = 2,
               dimnames = list(c("R1p", "R2p", "Ip"), c("Y1", "Y2"))) %>%
-    setrowtype("Products") %>% setcoltype("Industries")
+    matsbyname::setrowtype("Products") %>% matsbyname::setcoltype("Industries")
 
   S_units <- matrix(c(1,
                       1,
                       1),
                     byrow = TRUE, nrow = 3, ncol = 1,
                     dimnames = list(c("R1p", "R2p", "Ip"), c("quad"))) %>%
-    setrowtype("Products") %>% setcoltype("Units")
+    matsbyname::setrowtype("Products") %>% matsbyname::setcoltype("Units")
 
   # Now calculate the IO matrices
   iomats <- calc_io_mats(U = U, V = V, Y = Y, S_units = S_units)
@@ -168,15 +225,12 @@ test_that("1-industry ECC works with new_k_ps", {
                     0),
                   byrow = TRUE, nrow = 2, ncol = 1,
                   dimnames = list(c("R1p", "R2p"), c("I"))) %>%
-    setrowtype("Products") %>% setcoltype("Industries")
+    matsbyname::setrowtype("Products") %>% matsbyname::setcoltype("Industries")
   prime1 <- new_k_ps(c(iomats, list(U = U, V = V, Y = Y, S_units = S_units, k_prime = new_k)))
   expect_equal(prime1$U_prime["R1p", "I"], 20)
   expect_equal(prime1$U_prime["R2p", "I"], 0)
   expect_equal(prime1$V_prime["R1", "R1p"], 20)
   expect_equal(prime1$V_prime["R2", "R2p"], 0)
-
-
-
 })
 
 
@@ -188,15 +242,8 @@ test_that("new_R works as expected", {
   setup <- UKEnergy2000mats %>%
     spread(key = "matrix.name", value = "matrix") %>%
     # When Last.stage is "services", we get units problems.
-    # Avoid by using only ECCs with "final" and "useful" as the Last.stage.
-    filter(Last.stage != "services") %>%
-    # At present, UKEnergy2000mats has V matrices that are the sum of both V and R.
-    # Change to use the R matrix.
-    rename(
-      R_plus_V = V
-    ) %>%
-    separate_RV() %>%
-    # At this point, the matrices are they way we want them.
+    # Avoid by using only ECCs with "Final" and "Useful" as the Last.stage.
+    filter(Last.stage != IEATools::last_stages$services) %>%
     # Calculate the input-output matrices which are inputs to the new_R function.
     calc_io_mats() %>%
     # Calculate the efficiency of every industry in the ECC.
@@ -228,9 +275,9 @@ test_that("new_R works as expected", {
 
   # Test that everything worked as expected
   for (i in 1:2) {
-    expect_true(equal_byname(newRsameasoldR$U_prime[[i]], newRsameasoldR$expected_U[[i]]))
-    expect_true(equal_byname(newRsameasoldR$V_prime[[i]], newRsameasoldR$expected_V[[i]]))
-    expect_true(equal_byname(newRsameasoldR$Y_prime[[i]], newRsameasoldR$expected_Y[[i]]))
+    expect_true(matsbyname::equal_byname(newRsameasoldR$U_prime[[i]], newRsameasoldR$expected_U[[i]]))
+    expect_true(matsbyname::equal_byname(newRsameasoldR$V_prime[[i]], newRsameasoldR$expected_V[[i]]))
+    expect_true(matsbyname::equal_byname(newRsameasoldR$Y_prime[[i]], newRsameasoldR$expected_Y[[i]]))
   }
 
   # Also try when the maxiter argument is set too small.
@@ -239,22 +286,15 @@ test_that("new_R works as expected", {
   doubleR <- UKEnergy2000mats %>%
     spread(key = "matrix.name", value = "matrix") %>%
     # When Last.stage is "services", we get units problems.
-    # Avoid by using only ECCs with "final" and "useful" as the Last.stage.
-    filter(Last.stage != "services") %>%
-    # At present, UKEnergy2000mats has V matrices that are the sum of both V and R.
-    # Change to use the R matrix.
-    rename(
-      R_plus_V = V
-    ) %>%
-    separate_RV() %>%
-    # At this point, the matrices are they way we want them.
+    # Avoid by using only ECCs with "Final" and "Useful" as the Last.stage.
+    filter(Last.stage != IEATools::last_stages$services) %>%
     # Calculate the input-output matrices which are inputs to the new_R function.
     calc_io_mats() %>%
     # Calculate the efficiency of every industry in the ECC.
     calc_eta_i() %>%
     # Make an R_prime matrix that gives twice the resource inputs to the economy.
     mutate(
-      R_prime = hadamardproduct_byname(2, R)
+      R_prime = matsbyname::hadamardproduct_byname(2, R)
     ) %>%
     # Now call the new_R function which will calculate
     # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
@@ -264,13 +304,15 @@ test_that("new_R works as expected", {
     new_R_ps() %>%
     # Clean the rows of U_prime, because they contain Products that are not present in U.
     mutate(
-      U_prime = clean_byname(U_prime, margin = 1),
-      Y_prime = clean_byname(Y_prime, margin = 1)
+      # Eliminate zero rows or cols that appear after the new_R_ps() call.
+      U_prime = matsbyname::clean_byname(U_prime, margin = 1),
+      V_prime = matsbyname::clean_byname(V_prime, margin = 2),
+      Y_prime = matsbyname::clean_byname(Y_prime, margin = 1)
     ) %>%
     mutate(
-      expected_U = hadamardproduct_byname(2, U),
-      expected_V = hadamardproduct_byname(2, V),
-      expected_Y = hadamardproduct_byname(2, Y)
+      expected_U = matsbyname::hadamardproduct_byname(2, U),
+      expected_V = matsbyname::hadamardproduct_byname(2, V),
+      expected_Y = matsbyname::hadamardproduct_byname(2, Y)
     )
 
   # Test that everything worked as expected
@@ -286,13 +328,6 @@ test_that("new_R works as expected", {
   # So don't filter out the "services" rows.
   WithDiffUnits <- UKEnergy2000mats %>%
     spread(key = "matrix.name", value = "matrix") %>%
-    # At present, UKEnergy2000mats has V matrices that are the sum of both V and R.
-    # Change to use the R matrix.
-    rename(
-      R_plus_V = V
-    ) %>%
-    separate_RV() %>%
-    # At this point, the matrices are they way we want them.
     # Calculate the input-output matrices which are inputs to the new_R function.
     calc_io_mats() %>%
     # Calculate the efficiency of every industry in the ECC.

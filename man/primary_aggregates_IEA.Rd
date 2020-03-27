@@ -8,7 +8,7 @@ primary_aggregates_IEA(
   .ieadata,
   flow = "Flow",
   flow_aggregation_point = "Flow.aggregation.point",
-  energy = "EX.ktoe",
+  energy = "E.dot",
   p_industries = c("Production", "Coal mines", "Oil and gas extraction", "Imports",
     "Exports", "International aviation bunkers", "International marine bunkers",
     "Stock changes"),
@@ -24,7 +24,7 @@ primary_aggregates_IEA(
 \item{flow_aggregation_point}{the name of the column that identifies flow aggregation points.
 Default is "\code{Flow.aggregation.point}".}
 
-\item{energy}{the name of the column that contains energy information. Default is "\code{EX.ktoe}".}
+\item{energy}{the name of the column that contains energy information. Default is "\code{E.dot}".}
 
 \item{p_industries}{a vector of names of primary industries. Default is
 "\code{c("Coal mines", "Oil and gas extraction",

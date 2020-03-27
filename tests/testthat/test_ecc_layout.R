@@ -107,7 +107,7 @@
 #   bigmat <- UKEnergy2000mats %>%
 #     spread(key = matrix.name, value = matrix) %>%
 #     select(Country, Year, Energy.type, Last.stage, U, V, Y, r_EIOU, S_units) %>%
-#     filter(Country == "GB", Year == 2000, Energy.type == "E.ktoe", Last.stage == "final") %>%
+#     filter(Country == "GBR", Year == 2000, Energy.type == "E", Last.stage == "Final") %>%
 #     mutate(
 #       # Delete unneeded columns.
 #       Energy.type = NULL,
