@@ -225,13 +225,14 @@ new_k_ps <- function(.sutmats = NULL,
       separated <- separate_RV(U = U_prime_mat, R_plus_V = V_prime_mat)
       R_prime_mat <- separated[["R"]]
       V_prime_mat <- separated[["V"]]
+      return(list(R_prime_mat, U_prime_mat, V_prime_mat) %>% magrittr::set_names(c(R_prime, U_prime, V_prime)))
     } else {
       # We didn't have an R matrix on input, so don't provide one on output.
       # Furthermore, the V_prime matrix is still fine, so leave it alone.
-      R_prime_mat <- NULL
+      # No need to separate R_prime from V_prime.
+      return(list(U_prime_mat, V_prime_mat) %>% magrittr::set_names(c(U_prime, V_prime)))
     }
 
-    list(R_prime_mat, U_prime_mat, V_prime_mat) %>% magrittr::set_names(c(R_prime, U_prime, V_prime))
   }
   matsindf::matsindf_apply(.sutmats, FUN = new_k_ps_func,
                  k_prime_2 = k_prime,
