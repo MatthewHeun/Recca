@@ -271,10 +271,11 @@ new_k_ps <- function(.sutmats = NULL,
 #' @param eta_i an \code{eta_i} vector or name of a column in \code{.sutmats} containing same. Default is "\code{eta_i}".
 #' @param maxiter the maximum allowable number of iterations when calculating the effects of a new \code{R} matrix.
 #'        Default is \code{100}.
-#' @param tol the maximum allowable change in any one entry of the \code{U}, \code{V}, and \code{Y} matrices
+#' @param convergence_tol the maximum allowable change in any one entry of the \code{U}, \code{V}, and \code{Y} matrices
 #'        from one iteration to the next. Default is 0,
 #'        i.e., when two subsequent iterations produce the same values,
 #'        the algorithm has converged.
+#' @param e_bal_tol the maximum allowable difference in energy ECC energy balance. Default is `1e-6`.
 #' @param U_prime name for the \code{U_prime} matrix on output. Default is "\code{U_prime}".
 #' @param V_prime name for the \code{V_prime} matrix on output. Default is "\code{V_prime}".
 #' @param Y_prime name for the \code{Y_prime} matrix on output. Default is "\code{Y_prime}".
@@ -312,7 +313,9 @@ new_R_ps <- function(.sutmats = NULL,
                   R_prime = "R_prime",
                   U = "U", V = "V", Y = "Y", S_units = "S_units",
                   q = "q", C = "C", eta_i = "eta_i",
-                  maxiter = 100, tol = 0,
+                  maxiter = 100,
+                  convergence_tol = 0,
+                  e_bal_tol = 1e-6,
                   # Output names
                   U_prime = "U_prime", V_prime = "V_prime", Y_prime = "Y_prime"){
   new_R_func <- function(R_prime_mat, U_mat, V_mat, Y_mat, S_units_mat, q_vec, C_mat, eta_i_vec){
@@ -380,9 +383,9 @@ new_R_ps <- function(.sutmats = NULL,
 
       # Check convergence condition
       # Calculate only as many differences as necessary.
-      if (matsbyname::difference_byname(Y_prime_mat, Y_prime_mat_prev) %>% matsbyname::iszero_byname(tol = tol)) {
-        if (matsbyname::difference_byname(V_prime_mat, V_prime_mat_prev) %>% matsbyname::iszero_byname(tol = tol)) {
-          if (matsbyname::difference_byname(U_prime_mat, U_prime_mat_prev) %>% matsbyname::iszero_byname(tol = tol)) {
+      if (matsbyname::difference_byname(Y_prime_mat, Y_prime_mat_prev) %>% matsbyname::iszero_byname(tol = convergence_tol)) {
+        if (matsbyname::difference_byname(V_prime_mat, V_prime_mat_prev) %>% matsbyname::iszero_byname(tol = convergence_tol)) {
+          if (matsbyname::difference_byname(U_prime_mat, U_prime_mat_prev) %>% matsbyname::iszero_byname(tol = convergence_tol)) {
             # If we get here, all of U_prime, V_prime, and Y_prime
             # are same as their respective *_prev values within tol.
             # This is the stopping condition, so break.
@@ -393,8 +396,7 @@ new_R_ps <- function(.sutmats = NULL,
 
       # Check to see if we have exceeded the maximum number of iterations
       if (iter >= maxiter) {
-        warning(paste("maxiter =", maxiter, "reached without convergence in new_R"))
-        break
+        stop(paste("maxiter =", maxiter, "reached without convergence in new_R"))
       }
       # Prepare for next iteration
       U_prime_mat_prev <- U_prime_mat
@@ -402,8 +404,8 @@ new_R_ps <- function(.sutmats = NULL,
       Y_prime_mat_prev <- Y_prime_mat
     }
 
-    # Verify that the ECC is in energy balance.
-    verify_SUT_energy_balance_with_units(R = R_prime_mat, U = U_prime_mat, V = V_prime_mat, Y = Y_prime_mat, S_units = S_units_mat)
+    # We think we converged. Let's see if we have energy balance.
+    verify_SUT_energy_balance_with_units(R = R_prime_mat, U = U_prime_mat, V = V_prime_mat, Y = Y_prime_mat, S_units = S_units_mat, tol = e_bal_tol)
 
     # Return the new U, V, and Y matrices.
     list(U_prime_mat, V_prime_mat, Y_prime_mat) %>% magrittr::set_names(c(U_prime, V_prime, Y_prime))
