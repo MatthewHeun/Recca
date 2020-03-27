@@ -181,11 +181,12 @@ mats <- UKEnergy2000mats %>%
   dplyr::arrange(Last.stage, Energy.type)
 # Use the calc_io_mats function with individual matrices, 
 # each taken from the first row of the UKEnergy2000mats data frame.
+R <- mats$R[[1]]
 U <- mats$U[[1]]
 V <- mats$V[[1]]
 Y <- mats$Y[[1]]
 S_units <- mats$S_units[[1]]
-IO_list <- calc_io_mats(U = U, V = V, Y = Y, S_units = S_units)
+IO_list <- calc_io_mats(R = R, U = U, V = V, Y = Y, S_units = S_units)
 ```
 
 Most `Recca` functions return a list when called with individual matrices as arguments.
@@ -211,7 +212,7 @@ most `Recca` functions can use the default arguments
 for input and output items in the list.
 
 ```{r}
-IO_from_list <- calc_io_mats(list(U = U, V = V, Y = Y, S_units = S_units))
+IO_from_list <- calc_io_mats(list(R = R, U = U, V = V, Y = Y, S_units = S_units))
 class(IO_from_list)
 names(IO_from_list)
 IO_from_list[["y"]]
