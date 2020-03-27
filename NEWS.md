@@ -1,3 +1,4 @@
+* Test coverage now up to 100%.
 * Implemented energy balance checking for `new_R_ps()`
   with its own tolerance, by default `1e-6`.
 
