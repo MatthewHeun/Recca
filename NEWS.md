@@ -1,3 +1,17 @@
+* Fixed a bug in `primary_aggregates()`.
+  `primary_aggregates()` had been assuming that either the `R` or the `V` matrix (but not both) 
+  could contain industries counted in total primary energy supply (production, imports, exports, etc.).
+  However, that is not true. 
+  `R` is for resource industries, so 
+  imports, exports, marine and aviation bunkers, and stock changes
+  are excluded from `R`.
+  However, 
+  imports, exports, marine and aviation bunkers, and stock changes
+  _are_ included in total primary energy supply. 
+  I removed the conditional `xor` check for appearance of TPES industries in `R` and `V`.
+  Everything seems to be working now.
+
+
 # Recca 0.1.21 (2020-03-27)
 
 * Now up to 332 tests, all of which pass.

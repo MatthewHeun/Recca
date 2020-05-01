@@ -18,9 +18,9 @@ primary_aggregates(
 \item{.sutdata}{a data frame with columns of matrices from a supply-use analysis.}
 
 \item{p_industries}{a vector of names of industries to be aggregated as "primary".
-These industries will appear in rows of the make matrix (\code{V}) and
+These industries will appear in rows of the resource (\code{R}) and make (\code{V}) matrices and
 columns of the final demand matrix (\code{Y}).
-Entries in \code{Y_p} will be subtracted from entries in \code{V_p} to obtain
+Entries in \code{Y_p} will be subtracted from entries in \code{R_p + V_p} to obtain
 the total primary energy aggregate.}
 
 \item{R}{resources (\code{R}) matrix or the name of the column in \code{.sutdata} containing same}
