@@ -1,3 +1,5 @@
+# Recca 0.1.22 (2020-05-02)
+
 * Fixed a bug in `primary_aggregates()`.
   `primary_aggregates()` had been assuming that either the `R` or the `V` matrix (but not both) 
   could contain industries counted in total primary energy supply (production, imports, exports, etc.).
