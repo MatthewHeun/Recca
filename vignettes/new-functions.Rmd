@@ -2,7 +2,9 @@
 title: "new_* functions"
 author: "Matthew Kuperus Heun"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette:
+    smart: false
 bibliography: recca.bib
 vignette: >
   %\VignetteIndexEntry{new_* functions}

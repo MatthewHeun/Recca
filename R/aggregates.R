@@ -9,9 +9,9 @@
 #'
 #' @param .sutdata a data frame with columns of matrices from a supply-use analysis.
 #' @param p_industries a vector of names of industries to be aggregated as "primary".
-#'        These industries will appear in rows of the make matrix (`V`) and
+#'        These industries will appear in rows of the resource (`R`) and make (`V`) matrices and
 #'        columns of the final demand matrix (`Y`).
-#'        Entries in `Y_p` will be subtracted from entries in `V_p` to obtain
+#'        Entries in `Y_p` will be subtracted from entries in `R_p + V_p` to obtain
 #'        the total primary energy aggregate.
 #' @param R resources (`R`) matrix or the name of the column in `.sutdata` containing same
 #' @param V make (`V`) matrix or the name of the column in `.sutdata` containing same
@@ -51,21 +51,11 @@ primary_aggregates <- function(.sutdata,
     VT_p <- matsbyname::transpose_byname(V_mat) %>%
       matsbyname::select_cols_byname(retain_pattern =
                                        matsbyname::make_pattern(row_col_names = p_industries, pattern_type = "leading"))
-    # We expect only one of R or V contains primary industries.
-    # If both or neither contain primary industries, there is a problem.
-    # Perfect opportunity to use the xor operator!
-    # When one of R or V does not contain primary industries, the corresponding value of RT_p or VT_p is NULL.
-    # Check for that condition.
-    assertthat::assert_that(xor(is.null(RT_p), is.null(VT_p)), msg = "Only one of R or V may contain primary industries in primary_aggregates")
     # Get the primary industries from the Y matrix.
     Y_p <- Y_mat %>% matsbyname::select_cols_byname(retain_pattern =
                                                       matsbyname::make_pattern(row_col_names = p_industries, pattern_type = "leading"))
-    # VT_p - Y_p or RT_p - Y_p.  This is TPES in product x industry matrix format
-    if (is.null(VT_p)) {
-      RVT_p_minus_Y_p <- matsbyname::difference_byname(RT_p, Y_p)
-    } else {
-      RVT_p_minus_Y_p <- matsbyname::difference_byname(VT_p, Y_p)
-    }
+    # TPES in product x industry matrix format is RT_p + VT_p - Y_p.
+    RVT_p_minus_Y_p <- matsbyname::sum_byname(RT_p, VT_p) %>% matsbyname::difference_byname(Y_p)
     agg_primary <- agg_func(RVT_p_minus_Y_p)
     list(agg_primary) %>% magrittr::set_names(aggregate_primary)
   }
