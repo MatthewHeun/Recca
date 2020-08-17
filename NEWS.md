@@ -1,3 +1,7 @@
+* Now using `U_feed` everywhere.
+* Calculate `Z_feed` and `A_feed` in `calc_io_mats()`.
+
+
 # Recca 0.1.23 (2020-03-17)
 
 * Added a `...` argument to `make_sankey()`, which passes arguments to `networkD3::sankeyNetwork()`.
