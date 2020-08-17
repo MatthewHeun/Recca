@@ -17,6 +17,7 @@
 #' @param simplify_edges a boolean which tells whether edges should be simplified.
 #'        Applies to every row of \code{.sutmats} if \code{.sutmats} is specified.
 #' @param sankey the name of the output Sankey diagram or the name of the column in \code{.sutmats} containing Sankey diagrams
+#' @param ... Arguments passed to `networkD3::sankenNetwork()`.
 #'
 #' @return a Sankey diagram
 #'
@@ -33,7 +34,7 @@
 #'   extract2("Sankey") %>%
 #'   extract2(1)
 make_sankey <- function(.sutmats = NULL, R = "R", U = "U", V = "V", Y = "Y", simplify_edges = TRUE,
-                        sankey = "Sankey"){
+                        sankey = "Sankey", ...){
   sankey_func <- function(R_mat = NULL, U_mat, V_mat, Y_mat){
     # Check for NA values. If any NA values are found, need to return NA.
     # But we can't check R_mat for NA if it is NULL.
@@ -57,10 +58,13 @@ make_sankey <- function(.sutmats = NULL, R = "R", U = "U", V = "V", Y = "Y", sim
     nl <- node_list(el)
     s <- networkD3::sankeyNetwork(Links = el, Nodes = nl,
                        Source = "From_node_id", Target = "To_node_id", Value = "Value",
-                       NodeID = "Node", units = "Quads",
+                       NodeID = "Node",
+                       ...
+                       # units = "Quads",
                        # LinkGroup = "type",
                        # colourScale = mycolor, fontSize = 20, nodeWidth = 30,
-                       iterations = 500, nodePadding = 14, fontSize = 20)
+                       # iterations = 500, nodePadding = 14, fontSize = 20
+                       )
     list(s) %>% magrittr::set_names(sankey)
   }
   matsindf::matsindf_apply(.sutmats, FUN = sankey_func, R_mat = R, U_mat = U, V_mat = V, Y_mat = Y)
