@@ -127,6 +127,39 @@ test_that("calculating Z_feed works as expected", {
 })
 
 
+test_that("calc_io_mats give correct _feed matrices", {
+  feed_mats <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    dplyr::mutate(
+      U_EIOU = matsbyname::hadamardproduct_byname(r_EIOU, U),
+      U_feed = matsbyname::difference_byname(U, U_EIOU)
+    ) %>%
+    calc_io_mats()
+
+  # Check Z_feed
+  Z_feed_final <- feed_mats$Z_feed[[1]]
+  expect_equal(Z_feed_final["Elect", "Elect. grid"], 1.019920319)
+
+  ###############
+  # Emmanuel:
+  # I got things to a stable state.
+  # All tests are working again.
+  #
+  # Add additional tests here.
+  # Be sure to check all "_feed" matrices.
+  # You might also check that the C_feed and D_feed matrices are same as the C and D matrices,
+  # as you expect they will be.
+  #
+  # Here is the workflow:
+  # * Build the package Build|Install and Restart
+  # * Test the package Build|Test Package
+  # * Check the package Build|Check Package
+  #
+  # As of this moment (17 Aug 2020), all three are working perfectly.
+  ###############
+})
+
+
 test_that("calculating IO matrices works as expected", {
   # Calculate all IO matrices
   L_mats <- UKEnergy2000mats %>%

@@ -61,9 +61,12 @@ UKEnergy2000mats <- UKEnergy2000tidy %>%
     r_EIOU = matsbyname::quotient_byname(U_EIOU, U),
     r_EIOU = matsbyname::replaceNaN_byname(r_EIOU, val = 0)
   ) %>%
-  dplyr::select(-U_EIOU, -U_excl_EIOU) %>%
+  dplyr::rename(
+    U_feed = U_excl_EIOU
+  ) %>%
+  # dplyr::select(-U_EIOU, -U_excl_EIOU) %>%
   # Add S_units matrices
   dplyr::left_join(S_units, by = c("Country", "Year", "Energy.type", "Last.stage")) %>%
-  tidyr::gather(key = matrix.name, value = matrix, R, U, V, Y, r_EIOU, S_units)
+  tidyr::gather(key = matrix.name, value = matrix, R, U, U_EIOU, U_feed, V, Y, r_EIOU, S_units)
 
 usethis::use_data(UKEnergy2000mats, overwrite = TRUE)

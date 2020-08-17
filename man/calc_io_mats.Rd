@@ -8,6 +8,7 @@ calc_io_mats(
   .sutdata = NULL,
   R = "R",
   U = "U",
+  U_feed = "U_feed",
   V = "V",
   Y = "Y",
   S_units = "S_units",
@@ -22,7 +23,14 @@ calc_io_mats(
   D = "D",
   A = "A",
   L_ixp = "L_ixp",
-  L_pxp = "L_pxp"
+  L_pxp = "L_pxp",
+  Z_feed = "Z_feed",
+  K_feed = "K_feed",
+  C_feed = "C_feed",
+  D_feed = "D_feed",
+  A_feed = "A_feed",
+  L_ixp_feed = "L_ixp_feed",
+  L_pxp_feed = "L_pxp_feed"
 )
 }
 \arguments{
@@ -30,49 +38,72 @@ calc_io_mats(
 
 \item{R}{resources (\code{R}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{R}".}
 
-\item{U}{use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".}
+\item{U}{use (\code{U}) matrix or name of the column in `.sutmats`` that contains same. Default is "U".}
 
-\item{V}{make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "\code{V}".}
+\item{U_feed}{use matrix or name of the column in \code{.sutmats} that contains same. Default is "U_feed".}
 
-\item{Y}{final demand (\code{Y}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Y}".}
+\item{V}{make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "V".}
 
-\item{S_units}{\code{S_units} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{S_units}".}
+\item{Y}{final demand (\code{Y}) matrix or name of the column in \code{.sutmats} that contains same. Default is "Y".}
 
-\item{y}{name for \code{y} vector on output. Default is "\code{y}".
+\item{S_units}{(\code{S_units}) matrix or name of the column in \code{.sutmats} that contains same. Default is "S_units".}
+
+\item{y}{name for \code{y} vector on output. Default is "y".
 \code{y} is calculated by \code{rowsums(Y)}.}
 
-\item{q}{name for \code{q} vector on output. Default is "\code{q}".
+\item{q}{name for \code{q} vector on output. Default is "q".
 \code{q} is calculated by \code{rowsums(U) + y}.}
 
-\item{f}{name for \code{f} vector on output. Default is "\code{f}".
+\item{f}{name for \code{f} vector on output. Default is "f".
 \code{f} is calculated by \code{colsums(U)}.}
 
-\item{g}{name for \code{g} vector on output. Default is "\code{g}".
+\item{g}{name for \code{g} vector on output. Default is "g".
 \code{g} is calculated by \code{rowsums(V)}.}
 
-\item{W}{name for \code{W} matrix on output. Default is "\code{W}".
+\item{W}{name for \code{W} matrix on output. Default is "W".
 \code{W} is calculated by \code{transpose(V) - U}.}
 
-\item{K}{name for \code{K} matrix on output. Default is "\code{K}".
+\item{K}{name for \code{K} matrix on output. Default is "K".
 \code{K} is calculated by \code{U * f_hat_inv}.}
 
-\item{Z}{name for \code{Z} matrix on output. Default is "\code{Z}".
+\item{Z}{name for \code{Z} matrix on output. Default is "Z".
 \code{Z} is calculated by \code{U * g_hat_inv}.}
 
-\item{C}{name for \code{C} matrix on output. Default is "\code{C}".
+\item{C}{name for \code{C} matrix on output. Default is "C".
 \code{C} is calculated by \code{transpose(V) * g_hat_inv}.}
 
-\item{D}{name for \code{D} matrix on output. Default is "\code{D}".
+\item{D}{name for \code{D} matrix on output. Default is "D".
 \code{D} is calculated by \code{V * q_hat_inv}.}
 
-\item{A}{name for \code{A} matrix on output. Default is "\code{A}".
+\item{A}{name for \code{A} matrix on output. Default is "A".
 \code{A} is calculated by \code{Z * D}.}
 
-\item{L_ixp}{name for \code{L_ixp} matrix on output. Default is "\code{L_ixp}".
+\item{L_ixp}{name for \code{L_ixp} matrix on output. Default is "L_ixp".
 \code{L_ixp} is calculated by \code{D * L_pxp}.}
 
-\item{L_pxp}{name for \code{L_pxp} matrix on output. Default is "\code{L_pxp}".
+\item{L_pxp}{name for \code{L_pxp_feed} matrix on output. Default is "L_pxp_feed".
 \code{L_pxp} is calculated by \code{(I - Z*D)^-1}.}
+
+\item{Z_feed}{name for \code{Z_feed} matrix on output. Default is "Z_feed".
+\code{Z_feed} is calculated by \code{U_feed * g_hat_inv}.}
+
+\item{K_feed}{name for \code{K_feed} matrix on output. Default is "K_feed".
+\code{K_feed} is calculated by \code{U_feed * f_hat_inv}.}
+
+\item{C_feed}{name for \code{C_feed} matrix on output. Default is "C_feed".
+\code{C_feed} is calculated by \code{transpose(V) * g_hat_inv}.}
+
+\item{D_feed}{name for \code{D_feed} matrix on output. Default is "D_feed".
+\code{D_feed} is calculated by \code{V * q_hat_inv}.}
+
+\item{A_feed}{name for \code{A_feed} matrix on output. Default is "A_feed".
+\code{A_feed} is calculated by \code{Z_feed * D_feed}.}
+
+\item{L_ixp_feed}{name for \code{L_ixp_feed} matrix on output. Default is "L_ixp_feed".
+\code{L_ixp_feed} is calculated by \code{D_feed * L_pxp_feed}.}
+
+\item{L_pxp_feed}{name for \code{L_pxp_feed} matrix on output. Default is "L_pxp_feed".
+\code{L_pxp_feed} is calculated by \code{(I - Z_feed*D)^-1}.}
 }
 \value{
 a list or data frame containing input-output matrices
@@ -85,6 +116,6 @@ library(dplyr)
 library(tidyr)
 UKEnergy2000mats \%>\%
   spread(key = matrix.name, value = matrix) \%>\%
-  select(Country, Year, Energy.type, Last.stage, U, V, Y, r_EIOU, S_units) \%>\%
+  select(Country, Year, Energy.type, Last.stage, U, U_feed, V, Y, r_EIOU, S_units) \%>\%
   calc_io_mats()
 }

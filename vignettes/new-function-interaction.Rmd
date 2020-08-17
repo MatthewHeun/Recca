@@ -77,6 +77,9 @@ U <- matrix(c(0, 0, 10,
             dimnames = list(c("R1p", "R2p", "Ip"), c("R1", "R2", "I"))) %>% 
   setrowtype("Products") %>% setcoltype("Industries")
 
+# There is no EIOU, so U_feed and U are the same.
+U_feed <- U
+
 R_plus_V <- matrix(c(10,  0, 0,
                      0, 10, 0, 
                      0,  0, 4), 
@@ -126,7 +129,7 @@ that indicates industry I now uses 20 quads of `R1` instead of a 50/50 split bet
 
 ```{r}
 library(Recca)
-iomats <- calc_io_mats(R = R, U = U, V = V, Y = Y, S_units = S_units)
+iomats <- calc_io_mats(R = R, U = U, U_feed = U_feed, V = V, Y = Y, S_units = S_units)
 k_prime <- matrix(c(1,
                     0), 
                   byrow = TRUE, nrow = 2, ncol = 1,
@@ -136,6 +139,8 @@ change_input_proportions <- new_k_ps(c(iomats,
                                        list(R = R, U = U, V = V, Y = Y,
                                             S_units = S_units, 
                                             k_prime = k_prime)))
+# There is no EIOU, so U and U_feed are same.
+change_input_proportions[["U_feed_prime"]] <- change_input_proportions[["U_prime"]]
 make_sankey(R = change_input_proportions$R_prime, 
             U = change_input_proportions$U_prime, 
             V = change_input_proportions$V_prime, 
@@ -199,6 +204,7 @@ The following code demonstrates the approach.
 ```{r}
 iomats2 <- calc_io_mats(R = change_input_proportions$R_prime, 
                         U = change_input_proportions$U_prime, 
+                        U_feed = change_input_proportions$U_feed_prime,
                         V = change_input_proportions$V_prime, 
                         Y = Y, S_units = S_units)
 change_final_demand2 <- new_Y(c(iomats2, list(Y_prime = Y_prime)))
