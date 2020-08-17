@@ -65,6 +65,7 @@ verify_SUT_energy_balance <- function(.sutmats = NULL,
     }
     list(TRUE) %>% magrittr::set_names(SUT_energy_balance)
   }
+
   Out <- matsindf::matsindf_apply(.sutmats, FUN = verify_func, R_mat = R, U_mat = U, V_mat = V, Y_mat = Y)
   if (!all(Out[[SUT_energy_balance]] %>% as.logical())) {
     warning(paste("Energy not conserved in verify_SUT_energy_balance. See", SUT_energy_balance))

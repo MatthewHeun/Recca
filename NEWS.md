@@ -1,3 +1,8 @@
+# Recca 0.1.23 (2020-03-17)
+
+* Added a `...` argument to `make_sankey()`, which passes arguments to `networkD3::sankeyNetwork()`.
+
+
 # Recca 0.1.22 (2020-05-02)
 
 * Fixed a bug in `primary_aggregates()`.

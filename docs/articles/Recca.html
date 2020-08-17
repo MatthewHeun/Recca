@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.22</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.23</span>
       </span>
     </div>
 
@@ -85,13 +85,13 @@
 
       
 
-      </header><div class="row">
+      </header><script src="Recca_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Recca</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2020-05-02</h4>
+            <h4 class="date">2020-08-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/master/vignettes/Recca.Rmd"><code>vignettes/Recca.Rmd</code></a></small>
       <div class="hidden name"><code>Recca.Rmd</code></div>
@@ -173,7 +173,7 @@
   <span class="kw pkg">matsindf</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/matsindf/man/collapse_to_matrices.html">collapse_to_matrices</a></span>(<span class="kw">matnames</span> <span class="kw">=</span> <span class="st">"matnames"</span>, <span class="kw">matvals</span> <span class="kw">=</span> <span class="st">"E.dot"</span>,
                        <span class="kw">rownames</span> <span class="kw">=</span> <span class="st">"rownames"</span>, <span class="kw">colnames</span> <span class="kw">=</span> <span class="st">"colnames"</span>,
                        <span class="kw">rowtypes</span> <span class="kw">=</span> <span class="st">"rowtypes"</span>, <span class="kw">coltypes</span> <span class="kw">=</span> <span class="st">"coltypes"</span>) <span class="kw">%&gt;%</span>
-  <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">rename</a></span>(<span class="kw">matrix.name</span> <span class="kw">=</span> <span class="no">matnames</span>, <span class="kw">matrix</span> <span class="kw">=</span> <span class="no">E.dot</span>) <span class="kw">%&gt;%</span>
+  <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(<span class="kw">matrix.name</span> <span class="kw">=</span> <span class="no">matnames</span>, <span class="kw">matrix</span> <span class="kw">=</span> <span class="no">E.dot</span>) <span class="kw">%&gt;%</span>
   <span class="kw pkg">tidyr</span><span class="kw ns">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/spread.html">spread</a></span>(<span class="kw">key</span> <span class="kw">=</span> <span class="no">matrix.name</span>, <span class="kw">value</span> <span class="kw">=</span> <span class="no">matrix</span>) <span class="kw">%&gt;%</span>
   <span class="co"># Do a little more cleanup</span>
   <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(
@@ -185,7 +185,7 @@
   ) <span class="kw">%&gt;%</span>
   <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(-<span class="no">U_EIOU</span>, -<span class="no">U_excl_EIOU</span>) <span class="kw">%&gt;%</span>
   <span class="co"># Add S_units matrices</span>
-  <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(<span class="no">S_units</span>, <span class="kw">by</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Country"</span>, <span class="st">"Year"</span>, <span class="st">"Energy.type"</span>, <span class="st">"Last.stage"</span>)) <span class="kw">%&gt;%</span>
+  <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span>(<span class="no">S_units</span>, <span class="kw">by</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Country"</span>, <span class="st">"Year"</span>, <span class="st">"Energy.type"</span>, <span class="st">"Last.stage"</span>)) <span class="kw">%&gt;%</span>
   <span class="kw pkg">tidyr</span><span class="kw ns">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/gather.html">gather</a></span>(<span class="kw">key</span> <span class="kw">=</span> <span class="no">matrix.name</span>, <span class="kw">value</span> <span class="kw">=</span> <span class="no">matrix</span>, <span class="no">R</span>, <span class="no">U</span>, <span class="no">V</span>, <span class="no">Y</span>, <span class="no">r_EIOU</span>, <span class="no">S_units</span>)
 <span class="kw pkg">tibble</span><span class="kw ns">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span>(<span class="no">AsMats</span>)
 <span class="co">#&gt; Rows: 24</span>
