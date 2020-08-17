@@ -104,6 +104,29 @@ test_that("calculating y, q, f, g, W, A, and L works as expected", {
 })
 
 
+test_that("calculating Z_feed works as expected", {
+  # Calculate all IO matrices
+  Z_feed_mats <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    dplyr::mutate(
+      U_EIOU = matsbyname::hadamardproduct_byname(r_EIOU, U),
+      U_excl_EIOU = matsbyname::difference_byname(U, U_EIOU)
+    ) %>%
+    calc_yqfgW() %>%
+    calc_A(U = "U_excl_EIOU") %>%
+    dplyr::rename(
+      Z_feed = Z
+    )
+
+  # Now test Z_feed for correctness.
+  Z_feed_final <- Z_feed_mats$Z_feed[[1]]
+  expect_equal(Z_feed_final["Elect", "Elect. grid"], 1.019920319)
+  expect_equal(Z_feed_final["NG - Dist.", "Power plants"], 2.5)
+  expect_equal(Z_feed_final["Crude - Fields", "Crude dist."], 1)
+  expect_equal(Z_feed_final["Petrol", "Gas wells & proc."], 0)
+})
+
+
 test_that("calculating IO matrices works as expected", {
   # Calculate all IO matrices
   L_mats <- UKEnergy2000mats %>%
