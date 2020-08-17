@@ -1,3 +1,8 @@
+# Recca 0.1.24 (2020-03-17)
+
+* New tests for new features and old bugs.
+    * Now up to 337 tests, all passing.
+    * Test coverage remains at 100 %.
 * Now using `U_feed` everywhere.
 * Calculate `Z_feed` and `A_feed` in `calc_io_mats()`.
 
