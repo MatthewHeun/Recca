@@ -75,7 +75,7 @@ This function takes a matrix description of an ECC and produces a Sankey diagram
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.22</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.23</span>
       </span>
     </div>
 
@@ -151,7 +151,8 @@ This function takes a matrix description of an ECC and produces a Sankey diagram
   <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>,
   <span class='kw'>Y</span> <span class='kw'>=</span> <span class='st'>"Y"</span>,
   <span class='kw'>simplify_edges</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>sankey</span> <span class='kw'>=</span> <span class='st'>"Sankey"</span>
+  <span class='kw'>sankey</span> <span class='kw'>=</span> <span class='st'>"Sankey"</span>,
+  <span class='no'>...</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -185,6 +186,10 @@ Applies to every row of <code>.sutmats</code> if <code>.sutmats</code> is specif
     <tr>
       <th>sankey</th>
       <td><p>the name of the output Sankey diagram or the name of the column in <code>.sutmats</code> containing Sankey diagrams</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Arguments passed to <code><a href='https://rdrr.io/pkg/networkD3/man/sankeyNetwork.html'>networkD3::sankeyNetwork()</a></code>.</p></td>
     </tr>
     </table>
 

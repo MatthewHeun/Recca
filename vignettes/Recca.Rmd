@@ -8,7 +8,7 @@ header-includes:
    - \usepackage{bm}
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{matsindf Vignette}
+  %\VignetteIndexEntry{Recca}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
