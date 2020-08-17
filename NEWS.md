@@ -1,3 +1,5 @@
+# Recca 0.1.24 (2020-03-17)
+
 * Now using `U_feed` everywhere.
 * Calculate `Z_feed` and `A_feed` in `calc_io_mats()`.
 
