@@ -14,7 +14,7 @@ test_that("embodied energy calculations works as expected", {
   # Calculate all embodied matrices
   emb_mats <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, R, U, V, Y, r_EIOU, S_units) %>%
+    dplyr::select(Country, Year, Energy.type, Last.stage, R, U, U_feed, V, Y, r_EIOU, S_units) %>%
     calc_io_mats() %>%
     dplyr::mutate(
       U_EIOU = hadamardproduct_byname(r_EIOU, U)

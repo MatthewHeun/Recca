@@ -22,7 +22,7 @@ test_that("reconstructing U and V from a new Y matrix works as expected", {
   # Try with Y_prime <- Y, thereby simply trying to duplicate the original U and V matrices
   Reconstructed <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, U, V, Y, r_EIOU, S_units) %>%
+    dplyr::select(Country, Year, Energy.type, Last.stage, U, U_feed, V, Y, r_EIOU, S_units) %>%
     calc_io_mats() %>%
     dplyr::mutate(
       Y_prime = Y
@@ -218,7 +218,7 @@ test_that("1-industry ECC works with new_k_ps", {
     matsbyname::setrowtype("Products") %>% matsbyname::setcoltype("Units")
 
   # Now calculate the IO matrices
-  iomats <- calc_io_mats(U = U, V = V, Y = Y, S_units = S_units)
+  iomats <- calc_io_mats(U = U, U_feed = U, V = V, Y = Y, S_units = S_units)
 
   # Recalculate the matrices with updated k column
   new_k <- matrix(c(1,

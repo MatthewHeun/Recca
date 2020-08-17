@@ -8,34 +8,49 @@
 #'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
 #' @param R resources (`R`) matrix or name of the column in `.sutmats` that contains same. Default is "`R`".
-#' @param U use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".
-#' @param V make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "\code{V}".
-#' @param Y final demand (\code{Y}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Y}".
-#' @param S_units \code{S_units} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{S_units}".
-#' @param y name for \code{y} vector on output. Default is "\code{y}".
-#'        \code{y} is calculated by \code{rowsums(Y)}.
-#' @param q name for \code{q} vector on output. Default is "\code{q}".
-#'        \code{q} is calculated by \code{rowsums(U) + y}.
-#' @param f name for \code{f} vector on output. Default is "\code{f}".
-#'        \code{f} is calculated by \code{colsums(U)}.
-#' @param g name for \code{g} vector on output. Default is "\code{g}".
-#'        \code{g} is calculated by \code{rowsums(V)}.
-#' @param W name for \code{W} matrix on output. Default is "\code{W}".
-#'        \code{W} is calculated by \code{transpose(V) - U}.
-#' @param K name for \code{K} matrix on output. Default is "\code{K}".
-#'        \code{K} is calculated by \code{U * f_hat_inv}.
-#' @param Z name for \code{Z} matrix on output. Default is "\code{Z}".
-#'        \code{Z} is calculated by \code{U * g_hat_inv}.
-#' @param C name for \code{C} matrix on output. Default is "\code{C}".
-#'        \code{C} is calculated by \code{transpose(V) * g_hat_inv}.
-#' @param D name for \code{D} matrix on output. Default is "\code{D}".
-#'        \code{D} is calculated by \code{V * q_hat_inv}.
-#' @param A name for \code{A} matrix on output. Default is "\code{A}".
-#'        \code{A} is calculated by \code{Z * D}.
-#' @param L_ixp name for \code{L_ixp} matrix on output. Default is "\code{L_ixp}".
-#'        \code{L_ixp} is calculated by \code{D * L_pxp}.
-#' @param L_pxp name for \code{L_pxp} matrix on output. Default is "\code{L_pxp}".
-#'        \code{L_pxp} is calculated by \code{(I - Z*D)^-1}.
+#' @param U use (`U`) matrix or name of the column in `.sutmats`` that contains same. Default is "U".
+#' @param U_feed use matrix or name of the column in `.sutmats` that contains same. Default is "U_feed".
+#' @param V make (`V`) matrix or name of the column in `.sutmats`that contains same. Default is "V".
+#' @param Y final demand (`Y`) matrix or name of the column in `.sutmats` that contains same. Default is "Y".
+#' @param S_units (`S_units`) matrix or name of the column in `.sutmats` that contains same. Default is "S_units".
+#' @param y name for `y` vector on output. Default is "y".
+#'        `y` is calculated by `rowsums(Y)`.
+#' @param q name for `q` vector on output. Default is "q".
+#'        `q` is calculated by `rowsums(U) + y`.
+#' @param f name for `f` vector on output. Default is "f".
+#'        `f` is calculated by `colsums(U)`.
+#' @param g name for `g` vector on output. Default is "g".
+#'        `g` is calculated by `rowsums(V)`.
+#' @param W name for `W` matrix on output. Default is "W".
+#'        `W` is calculated by `transpose(V) - U`.
+#' @param K name for `K` matrix on output. Default is "K".
+#'        `K` is calculated by `U * f_hat_inv`.
+#' @param Z name for `Z` matrix on output. Default is "Z".
+#'        `Z` is calculated by `U * g_hat_inv`.
+#' @param C name for `C` matrix on output. Default is "C".
+#'        `C` is calculated by `transpose(V) * g_hat_inv`.
+#' @param D name for `D` matrix on output. Default is "D".
+#'        `D` is calculated by `V * q_hat_inv`.
+#' @param A name for `A` matrix on output. Default is "A".
+#'        `A` is calculated by `Z * D`.
+#' @param L_ixp name for `L_ixp` matrix on output. Default is "L_ixp".
+#'        `L_ixp` is calculated by `D * L_pxp`.
+#' @param L_pxp name for `L_pxp_feed` matrix on output. Default is "L_pxp_feed".
+#'        `L_pxp` is calculated by `(I - Z*D)^-1`.
+#' @param K_feed name for `K_feed` matrix on output. Default is "K_feed".
+#'        `K_feed` is calculated by `U_feed * f_hat_inv`.
+#' @param Z_feed name for `Z_feed` matrix on output. Default is "Z_feed".
+#'        `Z_feed` is calculated by `U_feed * g_hat_inv`.
+#' @param C_feed name for `C_feed` matrix on output. Default is "C_feed".
+#'        `C_feed` is calculated by `transpose(V) * g_hat_inv`.
+#' @param D_feed name for `D_feed` matrix on output. Default is "D_feed".
+#'        `D_feed` is calculated by `V * q_hat_inv`.
+#' @param A_feed name for `A_feed` matrix on output. Default is "A_feed".
+#'        `A_feed` is calculated by `Z_feed * D_feed`.
+#' @param L_ixp_feed name for `L_ixp_feed` matrix on output. Default is "L_ixp_feed".
+#'        `L_ixp_feed` is calculated by `D_feed * L_pxp_feed`.
+#' @param L_pxp_feed name for `L_pxp_feed` matrix on output. Default is "L_pxp_feed".
+#'        `L_pxp_feed` is calculated by `(I - Z_feed*D)^-1`.
 #'
 #' @return a list or data frame containing input-output matrices
 #'
@@ -46,15 +61,16 @@
 #' library(tidyr)
 #' UKEnergy2000mats %>%
 #'   spread(key = matrix.name, value = matrix) %>%
-#'   select(Country, Year, Energy.type, Last.stage, U, V, Y, r_EIOU, S_units) %>%
+#'   select(Country, Year, Energy.type, Last.stage, U, U_feed, V, Y, r_EIOU, S_units) %>%
 #'   calc_io_mats()
 calc_io_mats <- function(.sutdata = NULL,
                          # Input names
-                         R = "R", U = "U", V = "V", Y = "Y", S_units = "S_units",
+                         R = "R", U = "U", U_feed = "U_feed", V = "V", Y = "Y", S_units = "S_units",
                          # Output names
                          y = "y", q = "q", f = "f", g = "g", W = "W", K = "K",
-                         Z = "Z", C = "C", D = "D", A = "A", L_ixp = "L_ixp", L_pxp = "L_pxp"){
-  io_func <- function(R_mat = NULL, U_mat, V_mat, Y_mat, S_units_mat = NULL){
+                         Z = "Z", C = "C", D = "D", A = "A", L_ixp = "L_ixp", L_pxp = "L_pxp",
+                         Z_feed = "Z_feed", K_feed = "K_feed", C_feed = "C_feed", D_feed = "D_feed", A_feed = "A_feed", L_ixp_feed = "L_ixp_feed", L_pxp_feed = "L_pxp_feed"){
+  io_func <- function(R_mat = NULL, U_mat, U_feed_mat, V_mat, Y_mat, S_units_mat = NULL){
     yqfgW <- calc_yqfgW(R = R_mat, U = U_mat, V = V_mat, Y = Y_mat, S_units = S_units_mat,
                         y = y, q = q,
                         f = f, g = g,
@@ -63,15 +79,30 @@ calc_io_mats <- function(.sutdata = NULL,
     f_vec <- yqfgW[[f]]
     g_vec <- yqfgW[[g]]
     ZKCDA <- calc_A(R = R_mat, U = U_mat, V = V_mat, q = q_vec, f = f_vec, g = g_vec,
-                    Z = Z, C = C, D = D, A = A)
+                    Z = Z, K = K, C = C, D = D, A = A)
     D_mat <- ZKCDA[[D]]
     A_mat <- ZKCDA[[A]]
     L_mats <- calc_L(D = D_mat, A = A_mat,
                      L_ixp = L_ixp, L_pxp = L_pxp)
-    # Set names and return
-    c(yqfgW, ZKCDA, L_mats) %>% magrittr::set_names(c(names(yqfgW), names(ZKCDA), names(L_mats)))
+    # Set names
+    # c(yqfgW, ZKCDA, L_mats) %>% magrittr::set_names(c(names(yqfgW), names(ZKCDA), names(L_mats)))
+
+    # Work on the "_feed" matrices.
+
+    ZKCDA_feed <- calc_A(R = R_mat, U = U_feed_mat, V = V_mat, q = q_vec, f = f_vec, g = g_vec,
+                    Z = Z_feed, K = K_feed, C = C_feed, D = D_feed, A = A_feed)
+    A_feed_mat <- ZKCDA_feed[[A_feed]]
+    L_feed_mats <- calc_L(D = D_mat, A = A_feed_mat,
+                     L_ixp = L_ixp_feed, L_pxp = L_pxp_feed)
+
+    # Set names
+    # c(yqfgW, ZKCDA, ZKCDA_feed, L_mats, L_feed_mats) %>%
+    #   magrittr::set_names(c(names(yqfgW), names(ZKCDA), names(ZKCDA_feed), names(L_mats), names(L_feed_mats)))
+
+    # Return a list
+    c(yqfgW, ZKCDA, L_mats, ZKCDA_feed, L_feed_mats)
   }
-  matsindf::matsindf_apply(.sutdata, FUN = io_func, R_mat = R, U_mat = U, V_mat = V, Y_mat = Y, S_units_mat = S_units)
+  matsindf::matsindf_apply(.sutdata, FUN = io_func, R_mat = R, U_mat = U, U_feed_mat = U_feed, V_mat = V, Y_mat = Y, S_units_mat = S_units)
 }
 
 
