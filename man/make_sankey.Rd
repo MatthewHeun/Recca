@@ -31,7 +31,7 @@ Applies to every row of \code{.sutmats} if \code{.sutmats} is specified.}
 
 \item{sankey}{the name of the output Sankey diagram or the name of the column in \code{.sutmats} containing Sankey diagrams}
 
-\item{...}{Arguments passed to \code{networkD3::sankenNetwork()}.}
+\item{...}{Arguments passed to \code{networkD3::sankeyNetwork()}.}
 }
 \value{
 a Sankey diagram
