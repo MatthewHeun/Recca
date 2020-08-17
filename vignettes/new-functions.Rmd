@@ -325,6 +325,9 @@ U <- matrix(c(0, 0, 10,
             dimnames = list(c("R1p", "R2p", "Ip"), c("R1", "R2", "I"))) %>% 
   setrowtype("Products") %>% setcoltype("Industries")
 
+# There is no EIOU, so U_feed is the same as U
+U_feed <- U
+
 R_plus_V <- matrix(c(10,  0, 0,
                0, 10, 0, 
                0,  0, 4), 
@@ -365,7 +368,7 @@ Then, we call the `new_k_ps()` function with a new k vector
 that indicates industry I now uses 75/25 mixture of `R1` and `R2` instead of a 50/50 split between `R1` and `R2`.
 
 ```{r, fig.width = 7, fig.height = 4}
-simple_iomats <- calc_io_mats(R = R, U = U, V = V, Y = Y, S_units = S_units)
+simple_iomats <- calc_io_mats(R = R, U = U, U_feed = U_feed, V = V, Y = Y, S_units = S_units)
 k_prime <- matrix(c(0.75,
                     0.25), 
                   byrow = TRUE, nrow = 2, ncol = 1,
