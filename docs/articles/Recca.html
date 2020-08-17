@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.23</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.24</span>
       </span>
     </div>
 
@@ -219,16 +219,19 @@
 <span class="co"># each taken from the first row of the UKEnergy2000mats data frame.</span>
 <span class="no">R</span> <span class="kw">&lt;-</span> <span class="no">mats</span>$<span class="no">R</span><span class="kw">[[</span><span class="fl">1</span>]]
 <span class="no">U</span> <span class="kw">&lt;-</span> <span class="no">mats</span>$<span class="no">U</span><span class="kw">[[</span><span class="fl">1</span>]]
+<span class="no">U_feed</span> <span class="kw">=</span> <span class="no">mats</span>$<span class="no">U_feed</span><span class="kw">[[</span><span class="fl">1</span>]]
 <span class="no">V</span> <span class="kw">&lt;-</span> <span class="no">mats</span>$<span class="no">V</span><span class="kw">[[</span><span class="fl">1</span>]]
 <span class="no">Y</span> <span class="kw">&lt;-</span> <span class="no">mats</span>$<span class="no">Y</span><span class="kw">[[</span><span class="fl">1</span>]]
 <span class="no">S_units</span> <span class="kw">&lt;-</span> <span class="no">mats</span>$<span class="no">S_units</span><span class="kw">[[</span><span class="fl">1</span>]]
-<span class="no">IO_list</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/calc_io_mats.html">calc_io_mats</a></span>(<span class="kw">R</span> <span class="kw">=</span> <span class="no">R</span>, <span class="kw">U</span> <span class="kw">=</span> <span class="no">U</span>, <span class="kw">V</span> <span class="kw">=</span> <span class="no">V</span>, <span class="kw">Y</span> <span class="kw">=</span> <span class="no">Y</span>, <span class="kw">S_units</span> <span class="kw">=</span> <span class="no">S_units</span>)</pre></body></html></div>
+<span class="no">IO_list</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/calc_io_mats.html">calc_io_mats</a></span>(<span class="kw">R</span> <span class="kw">=</span> <span class="no">R</span>, <span class="kw">U</span> <span class="kw">=</span> <span class="no">U</span>, <span class="kw">U_feed</span> <span class="kw">=</span> <span class="no">U_feed</span>, <span class="kw">V</span> <span class="kw">=</span> <span class="no">V</span>, <span class="kw">Y</span> <span class="kw">=</span> <span class="no">Y</span>, <span class="kw">S_units</span> <span class="kw">=</span> <span class="no">S_units</span>)</pre></body></html></div>
 <p>Most <code>Recca</code> functions return a list when called with individual matrices as arguments. The <code><a href="../reference/calc_io_mats.html">calc_io_mats()</a></code> function gives several I-O matrices in its returned list.</p>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span>(<span class="no">IO_list</span>)
 <span class="co">#&gt; [1] "list"</span>
 <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">IO_list</span>)
-<span class="co">#&gt;  [1] "y"     "q"     "f"     "g"     "W"     "Z"     "K"     "C"     "D"    </span>
-<span class="co">#&gt; [10] "A"     "L_pxp" "L_ixp"</span>
+<span class="co">#&gt;  [1] "y"          "q"          "f"          "g"          "W"         </span>
+<span class="co">#&gt;  [6] "Z"          "K"          "C"          "D"          "A"         </span>
+<span class="co">#&gt; [11] "L_pxp"      "L_ixp"      "Z_feed"     "K_feed"     "C_feed"    </span>
+<span class="co">#&gt; [16] "D_feed"     "A_feed"     "L_pxp_feed" "L_ixp_feed"</span>
 <span class="no">IO_list</span><span class="kw">[[</span><span class="st">"y"</span>]]
 <span class="co">#&gt;                Industry</span>
 <span class="co">#&gt; Diesel - Dist.    14750</span>
@@ -240,13 +243,15 @@
 <span class="co">#&gt; attr(,"coltype")</span>
 <span class="co">#&gt; [1] "Industry"</span></pre></body></html></div>
 <p>The same calculations can be performed by supplying a named list to <code>Recca</code> functions. In this approach, all original data are returned in the list. So in this case, matrices <span class="math inline">\(\mathbf{U}\)</span>, <span class="math inline">\(\mathbf{V}\)</span>, <span class="math inline">\(\mathbf{Y}\)</span>, and <span class="math inline">\(\mathbf{S_{units}}\)</span> are also returned from the <code><a href="../reference/calc_io_mats.html">calc_io_mats()</a></code> function. When a list is supplied to a <code>Recca</code> function in the <code>.sutmats</code> argument, most other input arguments must be strings that identify the names of appropriate entries in the <code>.sutmats</code> list containing named vectors or matrices. Helpfully, the default values for other input arguments conform to a standard nomenclature. When using the standard nomenclature, most <code>Recca</code> functions can use the default arguments for input and output items in the list.</p>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">IO_from_list</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/calc_io_mats.html">calc_io_mats</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">R</span> <span class="kw">=</span> <span class="no">R</span>, <span class="kw">U</span> <span class="kw">=</span> <span class="no">U</span>, <span class="kw">V</span> <span class="kw">=</span> <span class="no">V</span>, <span class="kw">Y</span> <span class="kw">=</span> <span class="no">Y</span>, <span class="kw">S_units</span> <span class="kw">=</span> <span class="no">S_units</span>))
+<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">IO_from_list</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/calc_io_mats.html">calc_io_mats</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">R</span> <span class="kw">=</span> <span class="no">R</span>, <span class="kw">U</span> <span class="kw">=</span> <span class="no">U</span>, <span class="kw">U_feed</span> <span class="kw">=</span> <span class="no">U_feed</span>, <span class="kw">V</span> <span class="kw">=</span> <span class="no">V</span>, <span class="kw">Y</span> <span class="kw">=</span> <span class="no">Y</span>, <span class="kw">S_units</span> <span class="kw">=</span> <span class="no">S_units</span>))
 <span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span>(<span class="no">IO_from_list</span>)
 <span class="co">#&gt; [1] "list"</span>
 <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">IO_from_list</span>)
-<span class="co">#&gt;  [1] "R"       "U"       "V"       "Y"       "S_units" "y"       "q"      </span>
-<span class="co">#&gt;  [8] "f"       "g"       "W"       "Z"       "K"       "C"       "D"      </span>
-<span class="co">#&gt; [15] "A"       "L_pxp"   "L_ixp"</span>
+<span class="co">#&gt;  [1] "R"          "U"          "U_feed"     "V"          "Y"         </span>
+<span class="co">#&gt;  [6] "S_units"    "y"          "q"          "f"          "g"         </span>
+<span class="co">#&gt; [11] "W"          "Z"          "K"          "C"          "D"         </span>
+<span class="co">#&gt; [16] "A"          "L_pxp"      "L_ixp"      "Z_feed"     "K_feed"    </span>
+<span class="co">#&gt; [21] "C_feed"     "D_feed"     "A_feed"     "L_pxp_feed" "L_ixp_feed"</span>
 <span class="no">IO_from_list</span><span class="kw">[[</span><span class="st">"y"</span>]]
 <span class="co">#&gt;                Industry</span>
 <span class="co">#&gt; Diesel - Dist.    14750</span>
@@ -269,13 +274,15 @@
 <span class="co">#&gt; [1] "data.frame"</span>
 <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">IO_df</span>)
 <span class="co">#&gt;  [1] "Country"     "Year"        "Energy.type" "Last.stage"  "R"          </span>
-<span class="co">#&gt;  [6] "r_EIOU"      "S_units"     "U"           "V"           "Y"          </span>
-<span class="co">#&gt; [11] "y"           "q"           "f"           "g"           "W"          </span>
-<span class="co">#&gt; [16] "Z"           "K"           "C"           "D"           "A"          </span>
-<span class="co">#&gt; [21] "L_pxp"       "L_ixp"</span>
+<span class="co">#&gt;  [6] "r_EIOU"      "S_units"     "U"           "U_EIOU"      "U_feed"     </span>
+<span class="co">#&gt; [11] "V"           "Y"           "y"           "q"           "f"          </span>
+<span class="co">#&gt; [16] "g"           "W"           "Z"           "K"           "C"          </span>
+<span class="co">#&gt; [21] "D"           "A"           "L_pxp"       "L_ixp"       "Z_feed"     </span>
+<span class="co">#&gt; [26] "K_feed"      "C_feed"      "D_feed"      "A_feed"      "L_pxp_feed" </span>
+<span class="co">#&gt; [31] "L_ixp_feed"</span>
 <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span>(<span class="no">IO_df</span>)
 <span class="co">#&gt; Rows: 4</span>
-<span class="co">#&gt; Columns: 22</span>
+<span class="co">#&gt; Columns: 31</span>
 <span class="co">#&gt; $ Country     &lt;chr&gt; "GBR", "GBR", "GBR", "GBR"</span>
 <span class="co">#&gt; $ Year        &lt;dbl&gt; 2000, 2000, 2000, 2000</span>
 <span class="co">#&gt; $ Energy.type &lt;fct&gt; E, E, E, X</span>
@@ -284,6 +291,8 @@
 <span class="co">#&gt; $ r_EIOU      &lt;list&gt; [&lt;matrix[12 x 9]&gt;, &lt;matrix[13 x 13]&gt;, &lt;matrix[17 x 17]&gt;,…</span>
 <span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;matrix[12 x 1]&gt;, &lt;matrix[16 x 1]&gt;, &lt;matrix[20 x 5]&gt;, &lt;…</span>
 <span class="co">#&gt; $ U           &lt;list&gt; [&lt;matrix[12 x 9]&gt;, &lt;matrix[13 x 13]&gt;, &lt;matrix[17 x 17]&gt;,…</span>
+<span class="co">#&gt; $ U_EIOU      &lt;list&gt; [&lt;matrix[7 x 8]&gt;, &lt;matrix[3 x 8]&gt;, &lt;matrix[3 x 8]&gt;, &lt;mat…</span>
+<span class="co">#&gt; $ U_feed      &lt;list&gt; [&lt;matrix[9 x 9]&gt;, &lt;matrix[12 x 13]&gt;, &lt;matrix[16 x 17]&gt;, …</span>
 <span class="co">#&gt; $ V           &lt;list&gt; [&lt;matrix[9 x 10]&gt;, &lt;matrix[13 x 14]&gt;, &lt;matrix[17 x 18]&gt;,…</span>
 <span class="co">#&gt; $ Y           &lt;list&gt; [&lt;matrix[4 x 2]&gt;, &lt;matrix[4 x 2]&gt;, &lt;matrix[4 x 2]&gt;, &lt;mat…</span>
 <span class="co">#&gt; $ y           &lt;list&gt; [&lt;matrix[4 x 1]&gt;, &lt;matrix[4 x 1]&gt;, &lt;matrix[4 x 1]&gt;, &lt;mat…</span>
@@ -298,6 +307,13 @@
 <span class="co">#&gt; $ A           &lt;list&gt; [&lt;matrix[12 x 12]&gt;, &lt;matrix[13 x 16]&gt;, &lt;matrix[17 x 20]&gt;…</span>
 <span class="co">#&gt; $ L_pxp       &lt;list&gt; [&lt;matrix[12 x 12]&gt;, &lt;matrix[16 x 16]&gt;, &lt;matrix[20 x 20]&gt;…</span>
 <span class="co">#&gt; $ L_ixp       &lt;list&gt; [&lt;matrix[11 x 12]&gt;, &lt;matrix[15 x 16]&gt;, &lt;matrix[19 x 20]&gt;…</span>
+<span class="co">#&gt; $ Z_feed      &lt;list&gt; [&lt;matrix[9 x 11]&gt;, &lt;matrix[12 x 15]&gt;, &lt;matrix[16 x 19]&gt;,…</span>
+<span class="co">#&gt; $ K_feed      &lt;list&gt; [&lt;matrix[9 x 9]&gt;, &lt;matrix[12 x 13]&gt;, NA, NA]</span>
+<span class="co">#&gt; $ C_feed      &lt;list&gt; [&lt;matrix[12 x 11]&gt;, &lt;matrix[16 x 15]&gt;, &lt;matrix[20 x 19]&gt;…</span>
+<span class="co">#&gt; $ D_feed      &lt;list&gt; [&lt;matrix[11 x 12]&gt;, &lt;matrix[15 x 16]&gt;, &lt;matrix[19 x 20]&gt;…</span>
+<span class="co">#&gt; $ A_feed      &lt;list&gt; [&lt;matrix[9 x 12]&gt;, &lt;matrix[12 x 16]&gt;, &lt;matrix[16 x 20]&gt;,…</span>
+<span class="co">#&gt; $ L_pxp_feed  &lt;list&gt; [&lt;matrix[12 x 12]&gt;, &lt;matrix[16 x 16]&gt;, &lt;matrix[20 x 20]&gt;…</span>
+<span class="co">#&gt; $ L_ixp_feed  &lt;list&gt; [&lt;matrix[11 x 12]&gt;, &lt;matrix[15 x 16]&gt;, &lt;matrix[19 x 20]&gt;…</span>
 <span class="no">IO_df</span><span class="kw">[[</span><span class="st">"y"</span>]]<span class="kw">[[</span><span class="fl">1</span>]]
 <span class="co">#&gt;                Industry</span>
 <span class="co">#&gt; Diesel - Dist.    14750</span>
@@ -333,10 +349,12 @@
   <span class="fu"><a href="../reference/new_Y.html">new_Y</a></span>()
 <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">Double_demand</span>)
 <span class="co">#&gt;  [1] "Country"     "Year"        "Energy.type" "Last.stage"  "R"          </span>
-<span class="co">#&gt;  [6] "r_EIOU"      "S_units"     "U"           "V"           "Y"          </span>
-<span class="co">#&gt; [11] "y"           "q"           "f"           "g"           "W"          </span>
-<span class="co">#&gt; [16] "Z"           "K"           "C"           "D"           "A"          </span>
-<span class="co">#&gt; [21] "L_pxp"       "L_ixp"       "Y_prime"     "U_prime"     "V_prime"</span>
+<span class="co">#&gt;  [6] "r_EIOU"      "S_units"     "U"           "U_EIOU"      "U_feed"     </span>
+<span class="co">#&gt; [11] "V"           "Y"           "y"           "q"           "f"          </span>
+<span class="co">#&gt; [16] "g"           "W"           "Z"           "K"           "C"          </span>
+<span class="co">#&gt; [21] "D"           "A"           "L_pxp"       "L_ixp"       "Z_feed"     </span>
+<span class="co">#&gt; [26] "K_feed"      "C_feed"      "D_feed"      "A_feed"      "L_pxp_feed" </span>
+<span class="co">#&gt; [31] "L_ixp_feed"  "Y_prime"     "U_prime"     "V_prime"</span>
 <span class="no">IO_df</span><span class="kw">[[</span><span class="st">"Y"</span>]]<span class="kw">[[</span><span class="fl">1</span>]][ , <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>,<span class="fl">2</span>)]
 <span class="co">#&gt;                Residential Transport</span>
 <span class="co">#&gt; Diesel - Dist.           0     14750</span>
@@ -445,10 +463,12 @@
   <span class="fu"><a href="../reference/calc_eta_i.html">calc_eta_i</a></span>()
 <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">etas</span>)
 <span class="co">#&gt;  [1] "Country"     "Year"        "Energy.type" "Last.stage"  "R"          </span>
-<span class="co">#&gt;  [6] "r_EIOU"      "S_units"     "U"           "V"           "Y"          </span>
-<span class="co">#&gt; [11] "y"           "q"           "f"           "g"           "W"          </span>
-<span class="co">#&gt; [16] "Z"           "K"           "C"           "D"           "A"          </span>
-<span class="co">#&gt; [21] "L_pxp"       "L_ixp"       "eta_i"</span>
+<span class="co">#&gt;  [6] "r_EIOU"      "S_units"     "U"           "U_EIOU"      "U_feed"     </span>
+<span class="co">#&gt; [11] "V"           "Y"           "y"           "q"           "f"          </span>
+<span class="co">#&gt; [16] "g"           "W"           "Z"           "K"           "C"          </span>
+<span class="co">#&gt; [21] "D"           "A"           "L_pxp"       "L_ixp"       "Z_feed"     </span>
+<span class="co">#&gt; [26] "K_feed"      "C_feed"      "D_feed"      "A_feed"      "L_pxp_feed" </span>
+<span class="co">#&gt; [31] "L_ixp_feed"  "eta_i"</span>
 <span class="no">etas</span><span class="kw">[[</span><span class="st">"eta_i"</span>]]<span class="kw">[[</span><span class="fl">1</span>]]
 <span class="co">#&gt;                       eta_i</span>
 <span class="co">#&gt; Crude dist.       0.9885536</span>
@@ -588,13 +608,15 @@
 <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">embodied_mats</span>)
 <span class="co">#&gt;  [1] "Country"       "Year"          "Energy.type"   "Last.stage"   </span>
 <span class="co">#&gt;  [5] "R"             "r_EIOU"        "S_units"       "U"            </span>
-<span class="co">#&gt;  [9] "V"             "Y"             "y"             "q"            </span>
-<span class="co">#&gt; [13] "f"             "g"             "W"             "Z"            </span>
-<span class="co">#&gt; [17] "K"             "C"             "D"             "A"            </span>
-<span class="co">#&gt; [21] "L_pxp"         "L_ixp"         "U_EIOU"        "G"            </span>
-<span class="co">#&gt; [25] "H"             "E"             "M_p"           "M_s"          </span>
-<span class="co">#&gt; [29] "F_footprint_p" "F_effects_p"   "F_footprint_s" "F_effects_s"  </span>
-<span class="co">#&gt; [33] "eta_p"         "eta_s"</span></pre></body></html></div>
+<span class="co">#&gt;  [9] "U_EIOU"        "U_feed"        "V"             "Y"            </span>
+<span class="co">#&gt; [13] "y"             "q"             "f"             "g"            </span>
+<span class="co">#&gt; [17] "W"             "Z"             "K"             "C"            </span>
+<span class="co">#&gt; [21] "D"             "A"             "L_pxp"         "L_ixp"        </span>
+<span class="co">#&gt; [25] "Z_feed"        "K_feed"        "C_feed"        "D_feed"       </span>
+<span class="co">#&gt; [29] "A_feed"        "L_pxp_feed"    "L_ixp_feed"    "G"            </span>
+<span class="co">#&gt; [33] "H"             "E"             "M_p"           "M_s"          </span>
+<span class="co">#&gt; [37] "F_footprint_p" "F_effects_p"   "F_footprint_s" "F_effects_s"  </span>
+<span class="co">#&gt; [41] "eta_p"         "eta_s"</span></pre></body></html></div>
 <p>Figure 15 in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a> shows primary-to-services energetic efficiencies for the ECC in the 3rd row of <code>IO_df</code>. The following code extracts those results. Rows of the vector give final demand services and their units. The column gives efficiencies in units of service per ktoe of energy.</p>
 <div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="no">embodied_mats</span>$<span class="no">eta_p</span><span class="kw">[[</span><span class="fl">3</span>]]
 <span class="co">#&gt;                                Industry</span>
