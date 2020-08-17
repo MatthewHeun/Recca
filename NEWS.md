@@ -1,3 +1,8 @@
+* `prep_UK2000.R` and `prep_perfectsub.R` scripts
+  fixed to work with `IEATools`, which now uses
+  `U_feed` instead of `U_excl_EIOU`.
+
+
 # Recca 0.1.24 (2020-03-17)
 
 * New tests for new features and old bugs.
