@@ -1,3 +1,4 @@
+* Fixed a bug in one of the vignettes related to the move from `U_excl_EIOU` to `U_feed`.
 * `prep_UK2000.R` and `prep_perfectsub.R` scripts
   fixed to work with `IEATools`, which now uses
   `U_feed` instead of `U_excl_EIOU`.

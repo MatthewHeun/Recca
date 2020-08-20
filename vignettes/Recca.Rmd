@@ -144,12 +144,12 @@ AsMats <- WithNames %>%
   # Do a little more cleanup
   dplyr::mutate(
     # Create full U matrix
-    U = matsbyname::sum_byname(U_excl_EIOU, U_EIOU),
+    U = matsbyname::sum_byname(U_feed, U_EIOU),
     # Create r_EIOU, a matrix that identifies the ratio of EIOU to other energy consumed.
     r_EIOU = matsbyname::quotient_byname(U_EIOU, U),
     r_EIOU = matsbyname::replaceNaN_byname(r_EIOU, val = 0)
   ) %>% 
-  dplyr::select(-U_EIOU, -U_excl_EIOU) %>%
+  dplyr::select(-U_EIOU, -U_feed) %>%
   # Add S_units matrices
   dplyr::left_join(S_units, by = c("Country", "Year", "Energy.type", "Last.stage")) %>%
   tidyr::gather(key = matrix.name, value = matrix, R, U, V, Y, r_EIOU, S_units)
