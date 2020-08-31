@@ -38,5 +38,6 @@ Suggests:
     IEATools,
     knitr,
     rmarkdown,
-    testthat
+    testthat,
+    spelling
 VignetteBuilder: knitr

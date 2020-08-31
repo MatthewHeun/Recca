@@ -97,6 +97,6 @@ These EROIs include both energy used in feedstocks and EIOU production.
 The inverse of \code{g_eroi_p} is calculated by \code{transpose(i) \%*\% e_EIOU_hat \%*\% L_ixp}.
 }
 
-Note: All matrix multiplication (\code{\%*\%}) is perfomed "by name" using
+Note: All matrix multiplication (\code{\%*\%}) is performed "by name" using
 \code{matsbyname::matrixproduct_byname()}.
 }

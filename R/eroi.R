@@ -61,7 +61,7 @@ calc_E_EIOU <- function(.iomats = NULL,
 #'
 #'
 #'
-#' Note: All matrix multiplication (`%*%`) is perfomed "by name" using
+#' Note: All matrix multiplication (`%*%`) is performed "by name" using
 #' `matsbyname::matrixproduct_byname()`.
 #'
 #' @param .iomats a data frame containing matrices that describe the Input-Output structure
