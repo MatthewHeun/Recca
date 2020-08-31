@@ -2,7 +2,7 @@
 context("EROI calculations")
 ###########################################################
 
-test_that("calc_E_EIOU returns correct E_EIOU matrix and e_EIOU vector",{
+test_that("calc_E_EIOU() returns correct E_EIOU matrix and e_EIOU vector",{
   EIOU_mats <- UKEnergy2000mats %>%
     dplyr::filter(Last.stage == "Final", Energy.type == "E") %>%
     tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") %>%
@@ -11,6 +11,10 @@ test_that("calc_E_EIOU returns correct E_EIOU matrix and e_EIOU vector",{
 
   E_EIOU <- EIOU_mats[["E_EIOU"]][[1]]
   e_EIOU <- EIOU_mats[["e_EIOU"]][[1]]
+
+  # The expected values for these results were calculated in Excel.
+  # See file "". ********************************
+  # --- EAR, 31 Aug 2020
 
   # Checking E_EIOU
   expect_equal(E_EIOU["Crude - Dist.", "Crude dist."], 0.0105263157894737)
@@ -41,7 +45,7 @@ test_that("calc_eroi returns appropriate EROIs",{
   EROI_mats <- EIOU_mats %>% calc_erois()
 
   # Non-feed EROIs
-  g_eroi_p <- EROI_mats$g_eroi_p[[1]]
+  eroi_g_p <- EROI_mats$eroi_g_p[[1]]
   n_eroi_p <- EROI_mats$n_eroi_p[[1]]
   g_eroi_i <- EROI_mats$g_eroi_i[[1]]
   n_eroi_i <- EROI_mats$n_eroi_i[[1]]
@@ -54,10 +58,14 @@ test_that("calc_eroi returns appropriate EROIs",{
 
   # Checking non-feed EROIs
 
-  # g_eroi_p
-  expect_equal(g_eroi_p["Diesel", "Industry"], 5.09969733020006)
-  expect_equal(g_eroi_p["NG - Wells", "Industry"], 19.6173481664719)
-  expect_equal(g_eroi_p["Petrol - Dist.", "Industry"], 4.33166026595272)
+  # The expected values for these results were calculated in Excel.
+  # See file "". ********************************
+  # --- EAR, 31 Aug 2020
+
+  # eroi_g_p
+  expect_equal(eroi_g_p["Diesel", "Industry"], 5.09969733020006)
+  expect_equal(eroi_g_p["NG - Wells", "Industry"], 19.6173481664719)
+  expect_equal(eroi_g_p["Petrol - Dist.", "Industry"], 4.33166026595272)
 
   # n_eroi_p
   expect_equal(n_eroi_p["Diesel", "Industry"], 4.09969733020006)
@@ -90,7 +98,6 @@ test_that("calc_eroi returns appropriate EROIs",{
   expect_equal(g_eroi_i_feed["Diesel dist.", "Industry"], 5.16426718119679)
   expect_equal(g_eroi_i_feed["NG dist.", "Industry"], 20.2120951562052)
   expect_equal(g_eroi_i_feed["Power plants", "Industry"], 7.17806476238947)
-
 
   # n_eroi_i_feed
   expect_equal(n_eroi_i_feed["Diesel dist.", "Industry"], 4.16426718119679)

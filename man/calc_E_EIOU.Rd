@@ -15,7 +15,7 @@ calc_E_EIOU(
 \arguments{
 \item{.iomats}{a data frame containing matrices that describe the Input-Output structure
 (using the supply-use table format) of an Energy Conversion Chain.
-\code{.iomats} will likely have been obtained from the \code{\link{calc_io_mats}} function.}
+\code{.iomats} will likely have been obtained from the \code{calc_io_mats()} function.}
 
 \item{g}{name of the \code{g} vector on output. Default is "\code{g}".}
 
@@ -25,11 +25,12 @@ calc_E_EIOU(
 \code{E} is calculated by \code{U_EIOU * g_hat_inv}.}
 
 \item{e_EIOU}{name for the \code{e_EIOU} vector on output. Default is "\code{e_EIOU}".
-\code{e_EIOU} is calculated by \code{i * e_EIOU}.}
+\code{e_EIOU} is calculated by \code{transpose(i) * e_EIOU}.}
 }
 \value{
 list or data frame containing the \code{E_EIOU} matrix and \code{e_EIOU} vector.
 }
 \description{
-Calculate various embodied energy matrices
+\subsection{Change title and add description.}{
+}
 }

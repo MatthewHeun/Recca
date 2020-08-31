@@ -4,9 +4,11 @@
 
 #' Calculate various embodied energy matrices
 #'
+#' #### Change title and add description.
+#'
 #' @param .iomats a data frame containing matrices that describe the Input-Output structure
 #' (using the supply-use table format) of an Energy Conversion Chain.
-#' \code{.iomats} will likely have been obtained from the \code{\link{calc_io_mats}} function.
+#' \code{.iomats} will likely have been obtained from the `calc_io_mats()` function.
 #' @param g name of the \code{g} vector on output. Default is "\code{g}".
 #' @param U_EIOU name of the \code{U_EIOU} matrices on output. Default is "\code{U_EIOU}".
 #' @param E_EIOU name for the \code{E_EIOU} matrix on output. Default is "\code{E_EIOU}".
@@ -14,7 +16,7 @@
 #' @param e_EIOU name for the \code{e_EIOU} vector on output. Default is "\code{e_EIOU}".
 #'        \code{e_EIOU} is calculated by \code{transpose(i) * e_EIOU}.
 #'
-#' @return list or data frame containing the \code{E_EIOU} matrix and \code{e_EIOU} vector.
+#' @return list or data frame containing the `E_EIOU` matrix and \code{e_EIOU} vector.
 #'
 #' @export
 calc_E_EIOU <- function(.iomats = NULL,
@@ -35,8 +37,32 @@ calc_E_EIOU <- function(.iomats = NULL,
 }
 
 
-#' Calculate gross and net EROIs, both at the product and industry level, and both when including only feedstock's supply chains
-#' and when including both feedstocks and EIOU supply chains.
+#' Calculate EROIs
+#'
+#' This function calculates energy return on investment (EROI)
+#' given an data frame input-output matrices for an energy conversion chain.
+#' The argument `.iomats` should be wide-by-matrices.
+#' See details for types of EROIs that are returned.
+#'
+#' This function adds many additional columns to `.sutmats`.
+#' The default column names use the following naming convention:
+#' * names of EROIs calculated for products include the string "_p" and
+#' * names of EROIs calculated for industries include the string "_i".
+#'
+#' Calculations are made also based on inclusion of either
+#' * only feedstock inputs ("_feed") or
+#' * both feedstocks and EIOU inputs (no additional string in the name).
+#'
+#' Output columns include:
+#' * `g_eroi_p` gives the name for the column in the output data frame
+#'   for the vector of product-level gross EROIs.
+#'   These EROIs include both energy used in feedstocks and EIOU production.
+#'   The inverse of `g_eroi_p` is calculated by `transpose(i) %*% e_EIOU_hat %*% L_ixp`.
+#'
+#'
+#'
+#' Note: All matrix multiplication (`%*%`) is perfomed "by name" using
+#' `matsbyname::matrixproduct_byname()`.
 #'
 #' @param .iomats a data frame containing matrices that describe the Input-Output structure
 #' (using the supply-use table format) of an Energy Conversion Chain.
@@ -51,8 +77,8 @@ calc_E_EIOU <- function(.iomats = NULL,
 #'        `D` is calculated by `V * q_hat_inv`.
 #' @param C name for `C` matrix on output. Default is "C".
 #'        `C` is calculated by `transpose(V) * g_hat_inv`.
-#' @param g_eroi_p is the vector of product-level gross EROIs, including both energy use for feedstock and EIOU production.
-#'        `g_eroi_p_inv` is calculated by `transpose(i) * e_EIOU_hat * L_ixp`.
+#' @param g_eroi_p The name for the column of gross, product-based EROIs.
+#'                 Default is "g_eroi_p".
 #' @param n_eroi_p is the vector of product-level net EROIs, including both energy use for feedstock and EIOU production.
 #'        `n_eroi_p` is calculated by `g_eroi_p - 1`.
 #' @param g_eroi_i is the vector of industry-level gross EROIs, including both energy use for feedstock and EIOU production.
@@ -68,8 +94,8 @@ calc_E_EIOU <- function(.iomats = NULL,
 #' @param n_eroi_i_feed is the vector of industry-level net EROIs, including only energy use for feedstock production.
 #'        `n_eroi_i_feed` is calculated by `g_eroi_i_feed - 1`.
 #'
-#'
-#' @return
+#' @return A data frame that includes several additional EROIs.
+#'         See description for details.
 #'
 #' @export
 calc_erois <- function(.iomats = NULL,
@@ -80,7 +106,8 @@ calc_erois <- function(.iomats = NULL,
                        D = "D",
                        C = "C",
                        # Output names
-                       g_eroi_p = "g_eroi_p",
+                       eroi_g_p = "eroi_g_p",
+                       ##### Emmanuel: rename all of these variables to our new convention. ****
                        n_eroi_p = "n_eroi_p",
                        g_eroi_i = "g_eroi_i",
                        n_eroi_i = "n_eroi_i",
@@ -120,7 +147,7 @@ calc_erois <- function(.iomats = NULL,
 
     list(g_eroi_p_vec, n_eroi_p_vec, g_eroi_i_vec, n_eroi_i_vec,
          g_eroi_p_feed_vec, n_eroi_p_feed_vec, g_eroi_i_feed_vec, n_eroi_i_feed_vec) %>%
-      magrittr::set_names(c(g_eroi_p, n_eroi_p, g_eroi_i, n_eroi_i,
+      magrittr::set_names(c(eroi_g_p, n_eroi_p, g_eroi_i, n_eroi_i,
                             g_eroi_p_feed, n_eroi_p_feed, g_eroi_i_feed, n_eroi_i_feed))
 
   }
