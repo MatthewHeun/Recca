@@ -2,7 +2,7 @@
 % Please edit documentation in R/eroi.R
 \name{calc_E_EIOU}
 \alias{calc_E_EIOU}
-\title{Calculate various embodied energy matrices}
+\title{Calculate embodied EIOU per industry output}
 \usage{
 calc_E_EIOU(
   .iomats = NULL,
@@ -13,24 +13,35 @@ calc_E_EIOU(
 )
 }
 \arguments{
-\item{.iomats}{a data frame containing matrices that describe the Input-Output structure
-(using the supply-use table format) of an Energy Conversion Chain.
+\item{.iomats}{a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.
 \code{.iomats} will likely have been obtained from the \code{calc_io_mats()} function.}
 
 \item{g}{name of the \code{g} vector on output. Default is "\code{g}".}
 
 \item{U_EIOU}{name of the \code{U_EIOU} matrices on output. Default is "\code{U_EIOU}".}
 
-\item{E_EIOU}{name for the \code{E_EIOU} matrix on output. Default is "\code{E_EIOU}".
-\code{E} is calculated by \code{U_EIOU * g_hat_inv}.}
+\item{E_EIOU}{name for the \code{E_EIOU} matrix on output. Default is "\code{E_EIOU}".}
 
-\item{e_EIOU}{name for the \code{e_EIOU} vector on output. Default is "\code{e_EIOU}".
-\code{e_EIOU} is calculated by \code{transpose(i) * e_EIOU}.}
+\item{e_EIOU}{name for the \code{e_EIOU} vector on output. Default is "\code{e_EIOU}".}
 }
 \value{
-list or data frame containing the \code{E_EIOU} matrix and \code{e_EIOU} vector.
+List or data frame containing the \code{E_EIOU} matrix and \code{e_EIOU} vector.
 }
 \description{
-\subsection{Change title and add description.}{
+This function calculates the EIOU per industry output given a \code{.iomats} data frame input-output matrices for an
+energy conversion chain. The returned \code{E_EIOU} matrix contains the by-product EIOU used by unit of each industry output,
+while the \code{e_EIOU} vector contains the total EIOU by unit of industry output.
 }
+\details{
+The output \code{E_EIOU} matrix is calculated as \code{U_EIOU \%*\% g_hat_inv}.
+
+The output \code{e_EIOU} vector is sum of \code{E_EIOU} columns: \code{transpose(i) \%*\% E_EIOU}.
+}
+\examples{
+library(IEATools)
+UKEnergy2000mats \%>\%
+   dplyr::filter(Last.stage == "Final", Energy.type == "E") \%>\%
+   tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") \%>\%
+   calc_io_mats() \%>\%
+   calc_E_EIOU()
 }

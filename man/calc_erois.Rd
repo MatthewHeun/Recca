@@ -12,91 +12,109 @@ calc_erois(
   D = "D",
   C = "C",
   eroi_g_p = "eroi_g_p",
-  n_eroi_p = "n_eroi_p",
-  g_eroi_i = "g_eroi_i",
-  n_eroi_i = "n_eroi_i",
-  g_eroi_p_feed = "g_eroi_p_feed",
-  n_eroi_p_feed = "n_eroi_p_feed",
-  g_eroi_i_feed = "g_eroi_i_feed",
-  n_eroi_i_feed = "n_eroi_i_feed"
+  eroi_n_p = "eroi_n_p",
+  eroi_g_i = "eroi_g_i",
+  eroi_n_i = "eroi_n_i",
+  eroi_g_p_feed = "eroi_g_p_feed",
+  eroi_n_p_feed = "eroi_n_p_feed",
+  eroi_g_i_feed = "eroi_g_i_feed",
+  eroi_n_i_feed = "eroi_n_i_feed"
 )
 }
 \arguments{
 \item{.iomats}{a data frame containing matrices that describe the Input-Output structure
 (using the supply-use table format) of an Energy Conversion Chain.
-\code{.iomats} will likely have been obtained from the \code{\link{calc_io_mats}} function.}
+\code{.iomats} will likely have been obtained combining the \code{calc_io_mats()} and \code{calc_E_EIOU()} functions.}
 
-\item{e_EIOU}{name for the \code{e_EIOU} vector on output. Default is "\code{e_EIOU}".
-\code{e_EIOU} is calculated by \code{i * e_EIOU}.}
+\item{e_EIOU}{name for the \code{e_EIOU} vector on output. Default is "\code{e_EIOU}".}
 
-\item{L_ixp}{name for \code{L_ixp} matrix on output. Default is "L_ixp".
-\code{L_ixp} is calculated by \code{D * L_pxp}.}
+\item{L_ixp}{name for \code{L_ixp} matrix on output. Default is "L_ixp".}
 
-\item{L_ixp_feed}{name for \code{L_ixp_feed} matrix on output. Default is "L_ixp_feed".
-\code{L_ixp_feed} is calculated by \code{D_feed * L_pxp_feed}.}
+\item{L_ixp_feed}{name for \code{L_ixp_feed} matrix on output. Default is "L_ixp_feed".}
 
-\item{D}{name for \code{D} matrix on output. Default is "D".
-\code{D} is calculated by \code{V * q_hat_inv}.}
+\item{D}{name for \code{D} matrix on output. Default is "D".}
 
-\item{C}{name for \code{C} matrix on output. Default is "C".
-\code{C} is calculated by \code{transpose(V) * g_hat_inv}.}
+\item{C}{name for \code{C} matrix on output. Default is "C".}
 
-\item{n_eroi_p}{is the vector of product-level net EROIs, including both energy use for feedstock and EIOU production.
-\code{n_eroi_p} is calculated by \code{g_eroi_p - 1}.}
+\item{eroi_g_p}{is the vector of product-level gross EROIs, including both energy use for feedstock and EIOU production.
+Default is "eroi_g_p".}
 
-\item{g_eroi_i}{is the vector of industry-level gross EROIs, including both energy use for feedstock and EIOU production.
-\code{g_eroi_i_inv} is calculated by \code{transpose(C) * g_eroi_p_inv}.}
+\item{eroi_n_p}{is the vector of product-level net EROIs, including both energy use for feedstock and EIOU production.
+Default is "eroi_n_p".}
 
-\item{n_eroi_i}{is the vector of industry-level net EROIs, including both energy use for feedstock and EIOU production.
-\code{n_eroi_i} is calculated by \code{g_eroi_i - 1}.}
+\item{eroi_g_i}{is the vector of industry-level gross EROIs, including both energy use for feedstock and EIOU production.
+Default is "eroi_g_i".}
 
-\item{g_eroi_p_feed}{is the vector of product-level gross EROIs, including only energy use for feedstock production.
-\code{g_eroi_p_feed_inv} is calculated by \code{transpose(i) * e_EIOU_hat * L_ixp_feed}.}
+\item{eroi_n_i}{is the vector of industry-level net EROIs, including both energy use for feedstock and EIOU production.
+Default is "eroi_n_i".}
 
-\item{n_eroi_p_feed}{is the vector of product-level net EROIs, including only energy use for feedstock production.
-\code{n_eroi_p_feed} is calculated by \code{g_eroi_p_feed - 1}.}
+\item{eroi_g_p_feed}{is the vector of product-level gross EROIs, including only energy use for feedstock production.
+Default is "eroi_g_p_feed".}
 
-\item{g_eroi_i_feed}{is the vector of industry-level gross EROIs, including only energy use for feedstock production.
-\code{g_eroi_i_feed_inv} is calculated by \code{transpose(C) * g_eroi_p_feed_inv}.}
+\item{eroi_n_p_feed}{is the vector of product-level net EROIs, including only energy use for feedstock production.
+Default is "eroi_n_p_feed".}
 
-\item{n_eroi_i_feed}{is the vector of industry-level net EROIs, including only energy use for feedstock production.
-\code{n_eroi_i_feed} is calculated by \code{g_eroi_i_feed - 1}.}
+\item{eroi_g_i_feed}{is the vector of industry-level gross EROIs, including only energy use for feedstock production.
+Default is "eroi_g_i_feed".}
 
-\item{g_eroi_p}{The name for the column of gross, product-based EROIs.
-Default is "g_eroi_p".}
+\item{eroi_n_i_feed}{is the vector of industry-level net EROIs, including only energy use for feedstock production.
+Default is "eroi_n_i_feed".}
 }
 \value{
 A data frame that includes several additional EROIs.
 See description for details.
 }
 \description{
-This function calculates energy return on investment (EROI)
-given an data frame input-output matrices for an energy conversion chain.
+This function calculates energy return on investment (EROI) values
+given an data frame of input-output matrices for an energy conversion chain.
 The argument \code{.iomats} should be wide-by-matrices.
 See details for types of EROIs that are returned.
 }
 \details{
-This function adds many additional columns to \code{.sutmats}.
+This function adds many additional columns to \code{.iomats}, each one containing a particular EROI value.
 The default column names use the following naming convention:
 \itemize{
-\item names of EROIs calculated for products include the string "_p" and
-\item names of EROIs calculated for industries include the string "_i".
+\item names of EROIs calculated for products include the string "_p";
+\item names of EROIs calculated for industries include the string "_i";
+\item names of gross EROIs include the string "_g";
+\item names of net EROIs include the string "_n".
 }
 
-Calculations are made also based on inclusion of either
+In addition, calculations are made based on inclusion of either
 \itemize{
-\item only feedstock inputs ("_feed") or
-\item both feedstocks and EIOU inputs (no additional string in the name).
+\item only EIOU required for feedstock inputs production (string "_feed" in the name);
+\item both EIOU required for feedstock and EIOU inputs production (no additional string in the name).
 }
 
 Output columns include:
 \itemize{
-\item \code{g_eroi_p} gives the name for the column in the output data frame
-for the vector of product-level gross EROIs.
-These EROIs include both energy used in feedstocks and EIOU production.
-The inverse of \code{g_eroi_p} is calculated by \code{transpose(i) \%*\% e_EIOU_hat \%*\% L_ixp}.
+\item \code{eroi_g_p}: vector of product-level gross EROIs, including both EIOU required for feedstock and EIOU inputs production.
+The inverse of \code{eroi_g_p} is calculated by \code{transpose(i) \%*\% e_EIOU_hat \%*\% L_ixp}.
+\item \code{eroi_n_p}: vector of product-level net EROIs, including both EIOU required for feedstock and EIOU inputs production.
+\code{eroi_n_p} is calculated by \code{eroi_g_p - 1}.
+\item \code{eroi_g_i}: vector of industry-level gross EROIs, including both EIOU required for feedstock and EIOU inputs production.
+The inverse of \code{eroi_i_p} is calculated by \code{transpose(C) * eroi_g_p_inv}.
+\item \code{eroi_n_i}: vector of industry-level net EROIs, including both EIOU required for feedstock and EIOU inputs production.
+\code{eroi_n_i} is calculated by \code{eroi_g_i - 1}.
+\item \code{eroi_g_p_feed}: vector of product-level gross EROIs, including only EIOU required for feedstock inputs production.
+The inverse of \code{eroi_g_p_feed} is calculated by \code{transpose(i) \%*\% e_EIOU_hat \%*\% L_ixp_feed}.
+\item \code{eroi_n_p_feed}: vector of product-level net EROIs, including only EIOU required for feedstock inputs production.
+\code{eroi_n_p_feed} is calculated by \code{eroi_g_p_feed - 1}.
+\item \code{eroi_g_i_feed}: vector of industry-level gross EROIs, including only EIOU required for feedstock inputs production.
+The inverse of \code{eroi_i_p} is calculated by \code{transpose(C) * eroi_g_p_feed_inv}.
+\item \code{eroi_n_i_feed}: vector of industry-level net EROIs, including only EIOU required for feedstock inputs production.
+\code{eroi_n_i_feed} is calculated by \code{eroi_g_i_feed - 1}.
 }
 
 Note: All matrix multiplication (\code{\%*\%}) is performed "by name" using
 \code{matsbyname::matrixproduct_byname()}.
+}
+\examples{
+library(IEATools)
+UKEnergy2000mats \%>\%
+ dplyr::filter(Last.stage == "Final", Energy.type == "E") \%>\%
+ tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") \%>\%
+ calc_io_mats() \%>\%
+ calc_E_EIOU() \%>\%
+ calc_erois()
 }

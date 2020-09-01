@@ -118,6 +118,10 @@ test_that("calculating Z_feed works as expected", {
       Z_feed = Z
     )
 
+  # The expected values for the E_EIOU matrix and e_EIOU vector were calculated in LibreOffice.
+  # See file "UK_2000_EROI_example.ods"
+  # --- EAR, September 1st 2020
+
   # Now test Z_feed for correctness.
   Z_feed_final <- Z_feed_mats$Z_feed[[1]]
   expect_equal(Z_feed_final["Elect", "Elect. grid"], 1.019920319)
@@ -135,6 +139,10 @@ test_that("calc_io_mats give correct _feed matrices", {
       U_feed = matsbyname::difference_byname(U, U_EIOU)
     ) %>%
     calc_io_mats()
+
+  # The expected values for the E_EIOU matrix and e_EIOU vector were calculated in LibreOffice.
+  # See file "UK_2000_EROI_example.ods"
+  # --- EAR, September 1st 2020
 
   # Check Z_feed
   Z_feed_final <- feed_mats$Z_feed[[1]]
