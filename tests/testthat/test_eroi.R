@@ -36,7 +36,7 @@ test_that("calc_E_EIOU returns correct E_EIOU matrix and e_EIOU vector",{
 })
 
 
-test_that("calc_eroi returns appropriate EROIs",{
+test_that("calc_erois() returns appropriate EROIs",{
   EIOU_mats <- UKEnergy2000mats %>%
     dplyr::filter(Last.stage == "Final", Energy.type == "E") %>%
     tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") %>%
