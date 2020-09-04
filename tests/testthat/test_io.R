@@ -118,6 +118,10 @@ test_that("calculating Z_feed works as expected", {
       Z_feed = Z
     )
 
+  # The expected values for the E_EIOU matrix and e_EIOU vector were calculated in LibreOffice.
+  # See file "UK_2000_EROI_example.ods"
+  # --- EAR, September 1st 2020
+
   # Now test Z_feed for correctness.
   Z_feed_final <- Z_feed_mats$Z_feed[[1]]
   expect_equal(Z_feed_final["Elect", "Elect. grid"], 1.019920319)
@@ -136,9 +140,55 @@ test_that("calc_io_mats give correct _feed matrices", {
     ) %>%
     calc_io_mats()
 
+  # The expected values for the E_EIOU matrix and e_EIOU vector were calculated in LibreOffice.
+  # See file "UK_2000_EROI_example.ods"
+  # --- EAR, September 1st 2020
+
   # Check Z_feed
   Z_feed_final <- feed_mats$Z_feed[[1]]
   expect_equal(Z_feed_final["Elect", "Elect. grid"], 1.019920319)
+  expect_equal(Z_feed_final["NG - Dist.", "Power plants"], 2.5)
+  expect_equal(Z_feed_final["Crude - Fields", "Crude dist."], 1)
+  expect_equal(Z_feed_final["Petrol", "Gas wells & proc."], 0)
+
+  # Check A_feed
+  A_feed_final <- feed_mats$A_feed[[1]]
+  expect_equal(A_feed_final["NG - Dist.", "Elect"], 2.5)
+  expect_equal(A_feed_final["Elect", "Elect - Grid"], 1.019920319)
+  expect_equal(A_feed_final["Petrol", "Petrol - Dist."], 1)
+  expect_equal(A_feed_final["Crude", "Diesel"], 0)
+
+
+
+  # Check L_pxp_feed
+  L_pxp_feed_final <- feed_mats$L_pxp_feed[[1]]
+  expect_equal(L_pxp_feed_final["NG", "Elect"], 2.5)
+  expect_equal(L_pxp_feed_final["NG - Dist.", "Elect - Grid"], 2.549800797)
+  expect_equal(L_pxp_feed_final["NG - Wells", "Elect - Grid"], 2.549800797)
+  expect_equal(L_pxp_feed_final["Crude - Dist.", "Petrol"], 1)
+  expect_equal(L_pxp_feed_final["Diesel", "Elect"], 0)
+  expect_equal(L_pxp_feed_final["Diesel", "Diesel - Dist."], 1)
+
+
+  # Check L_ixp_feed
+  L_ixp_feed_final <- feed_mats$L_ixp_feed[[1]]
+  expect_equal(L_ixp_feed_final["NG dist.", "Elect"], 2.5)
+  expect_equal(L_ixp_feed_final["Elect. grid", "NG"], 0)
+  expect_equal(L_ixp_feed_final["Gas wells & proc.", "Elect - Grid"], 2.549800797)
+  expect_equal(L_ixp_feed_final["Power plants", "Elect - Grid"], 1.019920319)
+  expect_equal(L_ixp_feed_final["Petrol dist.", "Petrol - Dist."], 1)
+
+
+  # Check D_feed
+  D_feed_final <- feed_mats$D_feed[[1]]
+  D_final <- feed_mats$D[[1]]
+  expect_identical(D_final, D_feed_final)
+
+  # Check C_feed
+  C_feed_final <- feed_mats$C_feed[[1]]
+  C_final <- feed_mats$C[[1]]
+  expect_identical(C_final, C_feed_final)
+
 
   ###############
   # Emmanuel:
