@@ -316,3 +316,79 @@ calc_embodied_etas <- function(.embodiedmats = NULL,
   }
   matsindf::matsindf_apply(.embodiedmats, FUN = eta_func, Y_mat = Y, G_mat = G, H_mat = H)
 }
+
+
+
+#' Calculate various embodied EIOU matrices
+#'
+#' @param .iomats a data frame containing matrices that describe the Input-Output structure
+#' (using the supply-use table format) of an Energy Conversion Chain.
+#' \code{.iomats} will likely have been obtained from the \code{\link{calc_io_mats}} function.
+#' @param Y final demand (\code{Y}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{Y}".
+#' @param q final demand (\code{q}) vector or name of the column in \code{.iodata} containing same. Default is "\code{q}".
+#' @param L_ixp industry-by-product Leontief (\code{L_ixp}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{L_ixp}"
+#' @param g name of the \code{g} vector on output. Default is "\code{g}".
+#' @param W name of the \code{W} matrix on output. Default is "\code{W}".
+#' @param U_EIOU name of the \code{U_EIOU} matrices on output. Default is "\code{U_EIOU}".
+#' @param G name of the \code{G} matrix on output.
+#'        \code{G} is calculated by \code{L_ixp * y_hat}. Default is "\code{G}".
+#' @param H name of the \code{H} matrix on output.
+#'        \code{H} is calculated by \code{L_ixp * Y}. Default is "\code{H}".
+#' @param E name of \code{E} matrix on output.
+#'        \code{E} is calculated by \code{W * g_hat_inv}. Default is "\code{E}".
+#'
+#' @return a list or data frame containing EIOU embodied matrices
+#'
+#' @export
+calc_embodied_EIOU <- function(.iomats = NULL,
+                               # Input names
+                               e_EIOU = "e_EIOU",
+                               Y = "Y", y = "y",
+                               L_ixp = "L_ixp", L_ixp_feed = "L_ixp_feed",
+                               # Output names
+                               #G = "G", H = "H", G_feed = "G_feed", H_feed = "H_feed",
+                               Q_EIOU_s = "Q_EIOU_s", Q_EIOU_p = "Q_EIOU_p",
+                               Q_EIOU_feed_s = "Q_EIOU_feed_s", Q_EIOU_feed_p = "Q_EIOU_feed_p"
+                               ){
+
+  embodied_EIOU_func <- function(e_EIOU_vec, y_mat, Y_mat, L_ixp_mat, L_ixp_feed_mat){
+
+    e_EIOU_hat_vec <- matsbyname::hatize_byname(e_EIOU_vec)
+    y_hat_vec <- matsbyname::hatize_byname(y_mat)
+
+    #GH_list <- calc_GH(Y = Y_mat, L_ixp = L_ixp_mat)
+    # G_mat <- GH_list[[G]]
+    # H_mat <- GH_list[[H]]
+
+    Q_EIOU_p_mat <- matsbyname::matrixproduct_byname(e_EIOU_hat_vec,
+                                                     matsbyname::matrixproduct_byname(L_ixp_mat, y_hat_vec))
+
+    Q_EIOU_s_mat <- matsbyname::matrixproduct_byname(e_EIOU_hat_vec,
+                                                     matsbyname::matrixproduct_byname(L_ixp_mat, Y_mat))
+
+    #GH_feed_list <- calc_GH(Y = Y_mat, L_ixp = L_ixp_feed_mat)
+    # G_feed_mat <- GH_feed_list[[G]]
+    # H_feed_mat <- GH_feed_list[[H]]
+
+    Q_EIOU_feed_p_mat <- matsbyname::matrixproduct_byname(e_EIOU_hat_vec,
+                                                          matsbyname::matrixproduct_byname(L_ixp_feed_mat, y_hat_vec))
+    Q_EIOU_feed_s_mat <-matsbyname::matrixproduct_byname(e_EIOU_hat_vec,
+                                                          matsbyname::matrixproduct_byname(L_ixp_feed_mat, Y_mat))
+
+    c(Q_EIOU_p_mat, Q_EIOU_s_mat, Q_EIOU_feed_p_mat, Q_EIOU_feed_s_mat) %>% magrittr::set_names(c(Q_EIOU_p_mat, Q_EIOU_s_mat,
+                                                                                                     Q_EIOU_feed_p_mat, Q_EIOU_feed_s_mat))
+
+  }
+  matsindf::matsindf_apply(.iomats, FUN = embodied_EIOU_func, e_EIOU_vec = e_EIOU, Y_mat = Y, y_mat = y,
+                           L_ixp_mat = L_ixp, L_ixp_feed_mat = L_ixp_feed)
+}
+
+
+
+EIOU_mats <- UKEnergy2000mats %>%
+  dplyr::filter(Last.stage == "Final", Energy.type == "E") %>%
+  tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") %>%
+  calc_io_mats() %>%
+  calc_E_EIOU()
+
+
