@@ -351,10 +351,10 @@ calc_embodied_EIOU <- function(.iomats = NULL,
                                Q_EIOU_feed_s = "Q_EIOU_feed_s", Q_EIOU_feed_p = "Q_EIOU_feed_p"
                                ){
 
-  embodied_EIOU_func <- function(e_EIOU_vec, y_mat, Y_mat, L_ixp_mat, L_ixp_feed_mat){
+  embodied_EIOU_func <- function(e_EIOU_vec, y_vec, Y_mat, L_ixp_mat, L_ixp_feed_mat){
 
     e_EIOU_hat_vec <- matsbyname::hatize_byname(e_EIOU_vec)
-    y_hat_vec <- matsbyname::hatize_byname(y_mat)
+    y_hat_vec <- matsbyname::hatize_byname(y_vec)
 
     #GH_list <- calc_GH(Y = Y_mat, L_ixp = L_ixp_mat)
     # G_mat <- GH_list[[G]]
@@ -379,16 +379,22 @@ calc_embodied_EIOU <- function(.iomats = NULL,
                                                                                                      Q_EIOU_feed_p_mat, Q_EIOU_feed_s_mat))
 
   }
-  matsindf::matsindf_apply(.iomats, FUN = embodied_EIOU_func, e_EIOU_vec = e_EIOU, Y_mat = Y, y_mat = y,
+  matsindf::matsindf_apply(.iomats, FUN = embodied_EIOU_func, e_EIOU_vec = e_EIOU, Y_mat = Y, y_vec = y,
                            L_ixp_mat = L_ixp, L_ixp_feed_mat = L_ixp_feed)
 }
 
 
-
-EIOU_mats <- UKEnergy2000mats %>%
+IO_mats <- UKEnergy2000mats %>%
   dplyr::filter(Last.stage == "Final", Energy.type == "E") %>%
   tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") %>%
-  calc_io_mats() %>%
+  calc_io_mats()
+
+
+EIOU_mats <- IO_mats %>%
   calc_E_EIOU()
 
+EROIs <- EIOU_mats %>%
+  calc_erois()
 
+embodied_eiou <- EIOU_mats %>%
+  calc_embodied_EIOU()
