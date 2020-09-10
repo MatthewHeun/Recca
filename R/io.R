@@ -282,7 +282,8 @@ calc_L <- function(.sutdata = NULL,
   L_func <- function(D_mat, A_mat){
     L_pxp_mat <- matsbyname::Iminus_byname(A_mat) %>% matsbyname::invert_byname()
     L_ixp_mat <- matsbyname::matrixproduct_byname(D_mat, L_pxp_mat)
-    list(L_pxp_mat, L_ixp_mat) %>% magrittr::set_names(c(L_pxp, L_ixp))
+    list(L_pxp_mat, L_ixp_mat) %>%
+      magrittr::set_names(c(L_pxp, L_ixp))
   }
   matsindf::matsindf_apply(.sutdata, FUN = L_func, D_mat = D, A_mat = A)
 }

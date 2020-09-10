@@ -106,3 +106,22 @@ test_that("calc_erois() returns appropriate EROIs",{
   expect_equal(eroi_n_i_feed["NG dist.", "Industry"], 19.2120951562052)
   expect_equal(eroi_n_i_feed["Power plants", "Industry"], 6.17806476238947)
 })
+
+
+test_that("calc_embodied_EIOU() works correctly", {
+  IO_mats <- UKEnergy2000mats %>%
+    dplyr::filter(Last.stage == "Final", Energy.type == "E") %>%
+    tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") %>%
+    calc_io_mats()
+
+
+  EIOU_mats <- IO_mats %>%
+    calc_E_EIOU()
+
+  EROIs <- EIOU_mats %>%
+    calc_erois()
+
+  embodied_eiou <- EIOU_mats %>%
+    calc_embodied_EIOU()
+
+})

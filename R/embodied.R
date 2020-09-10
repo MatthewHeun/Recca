@@ -347,9 +347,8 @@ calc_embodied_EIOU <- function(.iomats = NULL,
                                L_ixp = "L_ixp", L_ixp_feed = "L_ixp_feed",
                                # Output names
                                #G = "G", H = "H", G_feed = "G_feed", H_feed = "H_feed",
-                               Q_EIOU_s = "Q_EIOU_s", Q_EIOU_p = "Q_EIOU_p",
-                               Q_EIOU_feed_s = "Q_EIOU_feed_s", Q_EIOU_feed_p = "Q_EIOU_feed_p"
-                               ){
+                               Q_EIOU_p = "Q_EIOU_p", Q_EIOU_s = "Q_EIOU_s",
+                               Q_EIOU_feed_p = "Q_EIOU_feed_p", Q_EIOU_feed_s = "Q_EIOU_feed_s"){
 
   embodied_EIOU_func <- function(e_EIOU_vec, y_vec, Y_mat, L_ixp_mat, L_ixp_feed_mat){
 
@@ -375,26 +374,10 @@ calc_embodied_EIOU <- function(.iomats = NULL,
     Q_EIOU_feed_s_mat <-matsbyname::matrixproduct_byname(e_EIOU_hat_vec,
                                                           matsbyname::matrixproduct_byname(L_ixp_feed_mat, Y_mat))
 
-    c(Q_EIOU_p_mat, Q_EIOU_s_mat, Q_EIOU_feed_p_mat, Q_EIOU_feed_s_mat) %>%
+    list(Q_EIOU_p_mat, Q_EIOU_s_mat, Q_EIOU_feed_p_mat, Q_EIOU_feed_s_mat) %>%
       magrittr::set_names(c(Q_EIOU_p, Q_EIOU_s, Q_EIOU_feed_p, Q_EIOU_feed_s))
 
   }
   matsindf::matsindf_apply(.iomats, FUN = embodied_EIOU_func, e_EIOU_vec = e_EIOU, Y_mat = Y, y_vec = y,
                            L_ixp_mat = L_ixp, L_ixp_feed_mat = L_ixp_feed)
 }
-
-
-IO_mats <- UKEnergy2000mats %>%
-  dplyr::filter(Last.stage == "Final", Energy.type == "E") %>%
-  tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") %>%
-  calc_io_mats()
-
-
-EIOU_mats <- IO_mats %>%
-  calc_E_EIOU()
-
-EROIs <- EIOU_mats %>%
-  calc_erois()
-
-embodied_eiou <- EIOU_mats %>%
-  calc_embodied_EIOU()
