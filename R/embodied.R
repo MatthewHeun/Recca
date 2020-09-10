@@ -375,8 +375,8 @@ calc_embodied_EIOU <- function(.iomats = NULL,
     Q_EIOU_feed_s_mat <-matsbyname::matrixproduct_byname(e_EIOU_hat_vec,
                                                           matsbyname::matrixproduct_byname(L_ixp_feed_mat, Y_mat))
 
-    c(Q_EIOU_p_mat, Q_EIOU_s_mat, Q_EIOU_feed_p_mat, Q_EIOU_feed_s_mat) %>% magrittr::set_names(c(Q_EIOU_p_mat, Q_EIOU_s_mat,
-                                                                                                     Q_EIOU_feed_p_mat, Q_EIOU_feed_s_mat))
+    c(Q_EIOU_p_mat, Q_EIOU_s_mat, Q_EIOU_feed_p_mat, Q_EIOU_feed_s_mat) %>%
+      magrittr::set_names(c(Q_EIOU_p, Q_EIOU_s, Q_EIOU_feed_p, Q_EIOU_feed_s))
 
   }
   matsindf::matsindf_apply(.iomats, FUN = embodied_EIOU_func, e_EIOU_vec = e_EIOU, Y_mat = Y, y_vec = y,
