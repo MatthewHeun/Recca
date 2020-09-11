@@ -69,7 +69,7 @@ including only energy use for feedstock production.
 Default is "eroi_n_i_feed".}
 }
 \value{
-A data frame that includes several additional EROIs in added columns.
+A data frame that includes several additional EROIs vectors in added columns.
 See description for details.
 }
 \description{

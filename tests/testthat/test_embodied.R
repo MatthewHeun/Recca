@@ -148,5 +148,43 @@ test_that("embodied energy calculations works as expected", {
 })
 
 
+test_that("calc_embodied_EIOU() works correctly",{
+  embodied_EIOU_mats <- UKEnergy2000mats %>%
+    dplyr::filter(Last.stage == "Final", Energy.type == "E") %>%
+    tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") %>%
+    calc_io_mats() %>%
+    calc_E_EIOU() %>%
+    calc_embodied_EIOU()
+
+  # Testing first Q_eiou_p
+  Q_eiou_p_mat <- embodied_EIOU_mats$Q_EIOU_p[[1]]
+
+  expect_equal(Q_eiou_p_mat["Crude dist.", "Diesel - Dist."], 197.98165578686)
+  expect_equal(Q_eiou_p_mat["Oil fields", "NG - Dist."], 2.88296505131538)
+  expect_equal(Q_eiou_p_mat["Oil refineries", "Petrol - Dist."], 3238.95390966953)
+  expect_equal(Q_eiou_p_mat["Elect. grid", "Elect - Grid"], 0)
+
+  # Testing second Q_eiou_s
+  Q_eiou_s_mat <- embodied_EIOU_mats$Q_EIOU_s[[1]]
+
+  expect_equal(Q_eiou_s_mat["Diesel dist.", "Transport"], 348.277886494775)
+  expect_equal(Q_eiou_s_mat["NG dist.", "Residential"], 49.6044837380755)
+  expect_equal(Q_eiou_s_mat["Petrol dist.", "Residential"], 0)
+
+  # Testing third Q_eiou_feed_p
+  Q_eiou_feed_p_mat <- embodied_EIOU_mats$Q_EIOU_feed_p[[1]]
+
+  expect_equal(Q_eiou_feed_p_mat["Crude dist.", "Diesel - Dist."], 170.789473684211)
+  expect_equal(Q_eiou_feed_p_mat["Gas wells & proc.", "Elect - Grid"], 738.256277216714)
+  expect_equal(Q_eiou_feed_p_mat["Oil fields", "NG - Dist."], 0)
+
+
+  # Testing fourth Q_eiou_feed_s
+  Q_eiou_feed_s_mat <- embodied_EIOU_mats$Q_EIOU_feed_s[[1]]
+
+  expect_equal(Q_eiou_feed_s_mat["Power plants", "Residential"], 95.6175298804781)
+  expect_equal(Q_eiou_feed_s_mat["NG dist.", "Residential"], 49.1448838791177)
+  expect_equal(Q_eiou_feed_s_mat["Elect. grid", "Transport"], 0)
+})
 
 

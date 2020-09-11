@@ -11,41 +11,88 @@ calc_embodied_EIOU(
   y = "y",
   L_ixp = "L_ixp",
   L_ixp_feed = "L_ixp_feed",
-  Q_EIOU_p = "Q_EIOU_p",
   Q_EIOU_s = "Q_EIOU_s",
-  Q_EIOU_feed_p = "Q_EIOU_feed_p",
-  Q_EIOU_feed_s = "Q_EIOU_feed_s"
+  Q_EIOU_p = "Q_EIOU_p",
+  Q_EIOU_feed_s = "Q_EIOU_feed_s",
+  Q_EIOU_feed_p = "Q_EIOU_feed_p"
 )
 }
 \arguments{
-\item{.iomats}{a data frame containing matrices that describe the Input-Output structure
+\item{.iomats}{A wide-by-matrices data frame containing matrices that describe the Input-Output structure
 (using the supply-use table format) of an Energy Conversion Chain.
-\code{.iomats} will likely have been obtained from the \code{\link{calc_io_mats}} function.}
+\code{.iomats} will likely have been obtained combining the \code{calc_io_mats()} and \code{calc_E_EIOU()} functions.
+See the example.?c}
 
-\item{Y}{final demand (\code{Y}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{Y}".}
+\item{e_EIOU}{The name of the column containing the direct energy use extension vector.
+Default is "e_EIOU".}
 
-\item{L_ixp}{industry-by-product Leontief (\code{L_ixp}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{L_ixp}"}
+\item{Y}{The name of the column containing final demand \code{Y} matrices in \code{.iomats}.
+Default is "Y".}
 
-\item{q}{final demand (\code{q}) vector or name of the column in \code{.iodata} containing same. Default is "\code{q}".}
+\item{y}{The name of the column containing total final demand by product \code{y} vectors in \code{iomats}.
+Default is "y".}
 
-\item{g}{name of the \code{g} vector on output. Default is "\code{g}".}
+\item{L_ixp}{The name of the column containing \code{L_ixp} matrices in \code{.iomats}.
+Default is "L_ixp".}
 
-\item{W}{name of the \code{W} matrix on output. Default is "\code{W}".}
+\item{L_ixp_feed}{The name of the column containing \code{L_ixp_feed} matrix in \code{.iomats}.
+Default is "L_ixp_feed".}
 
-\item{U_EIOU}{name of the \code{U_EIOU} matrices on output. Default is "\code{U_EIOU}".}
+\item{Q_EIOU_s}{The name of the output column containing the EIOU embodied by final demand sectors, including both energy use for feedstock and EIOU production.
+Default is "Q_EIOU_s".}
 
-\item{G}{name of the \code{G} matrix on output.
-\code{G} is calculated by \code{L_ixp * y_hat}. Default is "\code{G}".}
+\item{Q_EIOU_p}{The name of the output column containing the EIOU embodied by final demand products, including both energy use for feedstock and EIOU production.
+Default is "Q_EIOU_p".}
 
-\item{H}{name of the \code{H} matrix on output.
-\code{H} is calculated by \code{L_ixp * Y}. Default is "\code{H}".}
+\item{Q_EIOU_feed_s}{The name of the output column containing the EIOU embodied by final demand sectors, including only energy use for feedstock production.
+Default is "Q_EIOU_feed_s".}
 
-\item{E}{name of \code{E} matrix on output.
-\code{E} is calculated by \code{W * g_hat_inv}. Default is "\code{E}".}
+\item{Q_EIOU_feed_p}{The name of the output column containing the EIOU embodied by final demand products, including only energy use for feedstock production.
+Default is "Q_EIOU_feed_p".}
 }
 \value{
-a list or data frame containing EIOU embodied matrices
+A data frame that contains several embodied EIOU matrices in added columns.
+See description for details.
 }
 \description{
-Calculate various embodied EIOU matrices
+This function calculates different embodied Energy Industry Own Use (EIOU) matrices (see details) for a given energy conversion chain
+and final demand, using a data frame of input-output matrices in the physical supply-use table (PSUT) format.
+}
+\details{
+The argument \code{.iomats} should be a wide-by-matrices data frame, obtained combining the \code{calc_iomats()} and \code{calc_E_EIOU()}
+functions as described in the example.
+
+This function adds many additional columns to \code{.iomats}, each one containing particular embodied EIOU matrices.
+
+The embodied EIOU matrices are calculated either:
+\itemize{
+\item by final demand sector (subscript "_s" appears in the name);
+\item by final demand products (subscrip "_p" appears in the name);
+\item including only EIOU required for feedstock inputs production (subscript "_feed" appears in the name);
+\item including both EIOU required for feedstock and EIOU inputs production (no additional subscript).
+}
+
+Note: All matrix multiplication (\code{\%*\%}) is performed "by name" using
+\code{matsbyname::matrixproduct_byname()}.
+
+Output columns include:
+\itemize{
+\item \code{Q_EIOU_s}: matrix of embodied EIOU by final demand sectors, including both energy use for feedstock and EIOU production.
+\code{Q_EIOU_s} is calculated by \code{e_EIOU_hat \%*\% L_ixp \%*\% Y}.
+\item \code{Q_EIOU_p}: matrix of embodied EIOU by final demand products, including both energy use for feedstock and EIOU production.
+\code{Q_EIOU_p} is calculated by \code{e_EIOU_hat \%*\% L_ixp \%*\% y_hat}.
+\item \code{Q_EIOU_feed_s}: matrix of embodied EIOU by final demand sectors, including only energy use for feedstock production.
+\code{Q_EIOU_feed_s} is calculated by \code{e_EIOU_hat \%*\% L_ixp_feed \%*\% Y}.
+\item \code{Q_EIOU_feed_p}: matrix of embodied EIOU by final demand products, including only energy use for feedstock production.
+\code{Q_EIOU_feed_p} is calculated by \code{e_EIOU_hat \%*\% L_ixp_feed \%*\% y_hat}.
+}
+}
+\examples{
+library(IEATools)
+UKEnergy2000mats \%>\%
+  dplyr::filter(Last.stage == "Final", Energy.type == "E") \%>\%
+  tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") \%>\%
+  calc_io_mats() \%>\%
+  calc_E_EIOU() \%>\%
+  calc_embodied_EIOU()
 }
