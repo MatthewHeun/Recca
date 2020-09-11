@@ -186,5 +186,5 @@ test_that("calc_embodied_EIOU() works correctly",{
   expect_equal(Q_eiou_feed_s_mat["NG dist.", "Residential"], 49.1448838791177)
   expect_equal(Q_eiou_feed_s_mat["Elect. grid", "Transport"], 0)
 })
-
+# EAR, 11/09/2020
 

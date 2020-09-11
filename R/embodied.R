@@ -420,4 +420,4 @@ calc_embodied_EIOU <- function(.iomats = NULL,
   matsindf::matsindf_apply(.iomats, FUN = embodied_EIOU_func, e_EIOU_vec = e_EIOU, Y_mat = Y, y_vec = y,
                            L_ixp_mat = L_ixp, L_ixp_feed_mat = L_ixp_feed)
 }
-
+# EAR, 11/09/2020
