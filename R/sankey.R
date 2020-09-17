@@ -17,7 +17,7 @@
 #' @param simplify_edges a boolean which tells whether edges should be simplified.
 #'        Applies to every row of \code{.sutmats} if \code{.sutmats} is specified.
 #' @param sankey the name of the output Sankey diagram or the name of the column in \code{.sutmats} containing Sankey diagrams
-#' @param ... Arguments passed to `networkD3::sankeyNetwork()`.
+#' @param ... Arguments passed to `networkD3::sankeyNetwork()`, mostly for formatting purposes.
 #'
 #' @return a Sankey diagram
 #'

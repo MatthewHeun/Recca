@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.24</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.25</span>
       </span>
     </div>
 
@@ -85,13 +85,13 @@
 
       
 
-      </header><script src="new-function-interaction_files/accessible-code-block-0.0.1/empty-anchor.js"></script><script src="new-function-interaction_files/htmlwidgets-1.5.1/htmlwidgets.js"></script><script src="new-function-interaction_files/d3-4.5.0/d3.min.js"></script><script src="new-function-interaction_files/sankey-1/sankey.js"></script><script src="new-function-interaction_files/sankeyNetwork-binding-0.4/sankeyNetwork.js"></script><div class="row">
+      </header><script src="new-function-interaction_files/htmlwidgets-1.5.1/htmlwidgets.js"></script><script src="new-function-interaction_files/d3-4.5.0/d3.min.js"></script><script src="new-function-interaction_files/sankey-1/sankey.js"></script><script src="new-function-interaction_files/sankeyNetwork-binding-0.4/sankeyNetwork.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>new_* function interactions</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2020-08-17</h4>
+            <h4 class="date">2020-09-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/master/vignettes/new-function-interaction.Rmd"><code>vignettes/new-function-interaction.Rmd</code></a></small>
       <div class="hidden name"><code>new-function-interaction.Rmd</code></div>
@@ -115,74 +115,80 @@
 <p>To investigate the interactions, we first make the simplest possible ECC that retains the features to be tested, a minimum working example (MWE). This example has two resource industries (R1 and R2), one intermediate industry (I), and two final demand sectors (Y1 and Y2). The R1 industry makes product R1p.<br>
 The R2 industry makes product R2p. Industry I makes product Ip. Product Ip is consumed by final demand sectors Y1 and Y2.</p>
 <p>The resources (<span class="math inline">\(\mathbf{R}\)</span>), use (<span class="math inline">\(\mathbf{U}\)</span>), make (<span class="math inline">\(\mathbf{V}\)</span>), final demand (<span class="math inline">\(\mathbf{Y}\)</span>), and unit summation (<span class="math inline">\(\mathbf{S}_{units}\)</span>) matrices are given below.</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">magrittr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">matsbyname</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">Recca</span>)
-<span class="no">U</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">10</span>,
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">magrittr</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/MatthewHeun/matsbyname">matsbyname</a></span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/MatthewHeun/Recca">Recca</a></span>)
+<span class="kw">U</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">10</span>,
               <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">10</span>,
               <span class="fl">0</span>, <span class="fl">0</span>,  <span class="fl">0</span>),
-            <span class="kw">byrow</span> <span class="kw">=</span> <span class="fl">TRUE</span>, <span class="kw">nrow</span> <span class="kw">=</span> <span class="fl">3</span>, <span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">3</span>,
-            <span class="kw">dimnames</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"R1p"</span>, <span class="st">"R2p"</span>, <span class="st">"Ip"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"R1"</span>, <span class="st">"R2"</span>, <span class="st">"I"</span>))) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setrowtype.html">setrowtype</a></span>(<span class="st">"Products"</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setcoltype.html">setcoltype</a></span>(<span class="st">"Industries"</span>)
+            byrow = <span class="fl">TRUE</span>, nrow = <span class="fl">3</span>, ncol = <span class="fl">3</span>,
+            dimnames = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"R1p"</span>, <span class="st">"R2p"</span>, <span class="st">"Ip"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"R1"</span>, <span class="st">"R2"</span>, <span class="st">"I"</span>))) <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setrowtype.html">setrowtype</a></span>(<span class="st">"Products"</span>) <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setcoltype.html">setcoltype</a></span>(<span class="st">"Industries"</span>)
 
 <span class="co"># There is no EIOU, so U_feed and U are the same.</span>
-<span class="no">U_feed</span> <span class="kw">&lt;-</span> <span class="no">U</span>
+<span class="kw">U_feed</span> <span class="op">&lt;-</span> <span class="kw">U</span>
 
-<span class="no">R_plus_V</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">10</span>,  <span class="fl">0</span>, <span class="fl">0</span>,
-                     <span class="fl">0</span>, <span class="fl">10</span>, <span class="fl">0</span>,
-                     <span class="fl">0</span>,  <span class="fl">0</span>, <span class="fl">4</span>),
-                   <span class="kw">byrow</span> <span class="kw">=</span> <span class="fl">TRUE</span>, <span class="kw">nrow</span> <span class="kw">=</span> <span class="fl">3</span>, <span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">3</span>,
-                   <span class="kw">dimnames</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"R1"</span>, <span class="st">"R2"</span>, <span class="st">"I"</span>),
-                                   <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"R1p"</span>, <span class="st">"R2p"</span>, <span class="st">"Ip"</span>))) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setrowtype.html">setrowtype</a></span>(<span class="st">"Industries"</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setcoltype.html">setcoltype</a></span>(<span class="st">"Products"</span>)
+<span class="kw">R_plus_V</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">10</span>,  <span class="fl">0</span>, <span class="fl">0</span>,
+                     <span class="fl">0</span>, <span class="fl">10</span>, <span class="fl">0</span>, 
+                     <span class="fl">0</span>,  <span class="fl">0</span>, <span class="fl">4</span>), 
+                   byrow = <span class="fl">TRUE</span>, nrow = <span class="fl">3</span>, ncol = <span class="fl">3</span>, 
+                   dimnames = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"R1"</span>, <span class="st">"R2"</span>, <span class="st">"I"</span>), 
+                                   <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"R1p"</span>, <span class="st">"R2p"</span>, <span class="st">"Ip"</span>))) <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setrowtype.html">setrowtype</a></span>(<span class="st">"Industries"</span>) <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setcoltype.html">setcoltype</a></span>(<span class="st">"Products"</span>)
 
-<span class="no">RV_mats</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/separate_RV.html">separate_RV</a></span>(<span class="kw">U</span> <span class="kw">=</span> <span class="no">U</span>, <span class="kw">R_plus_V</span> <span class="kw">=</span> <span class="no">R_plus_V</span>)
-<span class="no">R</span> <span class="kw">&lt;-</span> <span class="no">RV_mats</span>$<span class="no">R</span>
-<span class="no">V</span> <span class="kw">&lt;-</span> <span class="no">RV_mats</span>$<span class="no">V</span>
+<span class="kw">RV_mats</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/separate_RV.html">separate_RV</a></span>(U = <span class="kw">U</span>, R_plus_V = <span class="kw">R_plus_V</span>)
+<span class="kw">R</span> <span class="op">&lt;-</span> <span class="kw">RV_mats</span><span class="op">$</span><span class="kw">R</span>
+<span class="kw">V</span> <span class="op">&lt;-</span> <span class="kw">RV_mats</span><span class="op">$</span><span class="kw">V</span>
 
-<span class="no">Y</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>, <span class="fl">0</span>,
-              <span class="fl">0</span>, <span class="fl">0</span>,
+<span class="kw">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>, <span class="fl">0</span>,
+              <span class="fl">0</span>, <span class="fl">0</span>, 
               <span class="fl">2</span>, <span class="fl">2</span>),
-            <span class="kw">byrow</span> <span class="kw">=</span> <span class="fl">TRUE</span>, <span class="kw">nrow</span> <span class="kw">=</span> <span class="fl">3</span>, <span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">2</span>,
-            <span class="kw">dimnames</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"R1p"</span>, <span class="st">"R2p"</span>, <span class="st">"Ip"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Y1"</span>, <span class="st">"Y2"</span>))) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setrowtype.html">setrowtype</a></span>(<span class="st">"Products"</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setcoltype.html">setcoltype</a></span>(<span class="st">"Industries"</span>)
+            byrow = <span class="fl">TRUE</span>, nrow = <span class="fl">3</span>, ncol = <span class="fl">2</span>,
+            dimnames = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"R1p"</span>, <span class="st">"R2p"</span>, <span class="st">"Ip"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Y1"</span>, <span class="st">"Y2"</span>))) <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setrowtype.html">setrowtype</a></span>(<span class="st">"Products"</span>) <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setcoltype.html">setcoltype</a></span>(<span class="st">"Industries"</span>)
 
-<span class="no">S_units</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>,
-                    <span class="fl">1</span>,
-                    <span class="fl">1</span>),
-                  <span class="kw">byrow</span> <span class="kw">=</span> <span class="fl">TRUE</span>, <span class="kw">nrow</span> <span class="kw">=</span> <span class="fl">3</span>, <span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">1</span>,
-                  <span class="kw">dimnames</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"R1p"</span>, <span class="st">"R2p"</span>, <span class="st">"Ip"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"quad"</span>))) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setrowtype.html">setrowtype</a></span>(<span class="st">"Products"</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setcoltype.html">setcoltype</a></span>(<span class="st">"Units"</span>)</pre></body></html></div>
+<span class="kw">S_units</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>, 
+                    <span class="fl">1</span>, 
+                    <span class="fl">1</span>), 
+                  byrow = <span class="fl">TRUE</span>, nrow = <span class="fl">3</span>, ncol = <span class="fl">1</span>,
+                  dimnames = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"R1p"</span>, <span class="st">"R2p"</span>, <span class="st">"Ip"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"quad"</span>))) <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setrowtype.html">setrowtype</a></span>(<span class="st">"Products"</span>) <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setcoltype.html">setcoltype</a></span>(<span class="st">"Units"</span>)
+</pre></div>
 <p>We’ll use Sankey diagrams to visualize several ECCs. The <code><a href="../reference/make_sankey.html">make_sankey()</a></code> function creates the diagrams. A Sankey diagram that shows the base energy conversion chain is shown below. <code><a href="../reference/make_sankey.html">make_sankey()</a></code> returns a list with a named item “Sankey” that we must extract to insert the diagram into this vignette.</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span>(<span class="kw">R</span> <span class="kw">=</span> <span class="no">R</span>, <span class="kw">U</span> <span class="kw">=</span> <span class="no">U</span>, <span class="kw">V</span> <span class="kw">=</span> <span class="no">V</span>, <span class="kw">Y</span> <span class="kw">=</span> <span class="no">Y</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/magrittr/man/aliases.html">extract2</a></span>(<span class="st">"Sankey"</span>)</pre></body></html></div>
-<div id="htmlwidget-6fdac8eda4939285d2f3" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-6fdac8eda4939285d2f3">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[2,2,10,10]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script>
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span>(R = <span class="kw">R</span>, U = <span class="kw">U</span>, V = <span class="kw">V</span>, Y = <span class="kw">Y</span>) <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/magrittr/man/aliases.html">extract2</a></span>(<span class="st">"Sankey"</span>)
+</pre></div>
+<div id="htmlwidget-941921761550dd92403f" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-941921761550dd92403f">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[2,2,10,10]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="adjust-inputs-to-industry-i" class="section level2">
 <h2 class="hasAnchor">
 <a href="#adjust-inputs-to-industry-i" class="anchor"></a>Adjust inputs to industry I</h2>
 <p>We can change the proportion of inputs to industry I using <code><a href="../reference/new_k_ps.html">new_k_ps()</a></code>. To do so, we must first calculate the input-output structure of the ECC using the <code><a href="../reference/calc_io_mats.html">calc_io_mats()</a></code> function. Then, we call the <code><a href="../reference/new_k_ps.html">new_k_ps()</a></code> function with a new k vector that indicates industry I now uses 20 quads of <code>R1</code> instead of a 50/50 split between <code>R1</code> and <code>R2</code>.</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">Recca</span>)
-<span class="no">iomats</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/calc_io_mats.html">calc_io_mats</a></span>(<span class="kw">R</span> <span class="kw">=</span> <span class="no">R</span>, <span class="kw">U</span> <span class="kw">=</span> <span class="no">U</span>, <span class="kw">U_feed</span> <span class="kw">=</span> <span class="no">U_feed</span>, <span class="kw">V</span> <span class="kw">=</span> <span class="no">V</span>, <span class="kw">Y</span> <span class="kw">=</span> <span class="no">Y</span>, <span class="kw">S_units</span> <span class="kw">=</span> <span class="no">S_units</span>)
-<span class="no">k_prime</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>,
-                    <span class="fl">0</span>),
-                  <span class="kw">byrow</span> <span class="kw">=</span> <span class="fl">TRUE</span>, <span class="kw">nrow</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">1</span>,
-                  <span class="kw">dimnames</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"R1p"</span>, <span class="st">"R2p"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"I"</span>))) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setrowtype.html">setrowtype</a></span>(<span class="st">"Products"</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setcoltype.html">setcoltype</a></span>(<span class="st">"Industries"</span>)
-<span class="no">change_input_proportions</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/new_k_ps.html">new_k_ps</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">iomats</span>,
-                                       <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">R</span> <span class="kw">=</span> <span class="no">R</span>, <span class="kw">U</span> <span class="kw">=</span> <span class="no">U</span>, <span class="kw">V</span> <span class="kw">=</span> <span class="no">V</span>, <span class="kw">Y</span> <span class="kw">=</span> <span class="no">Y</span>,
-                                            <span class="kw">S_units</span> <span class="kw">=</span> <span class="no">S_units</span>,
-                                            <span class="kw">k_prime</span> <span class="kw">=</span> <span class="no">k_prime</span>)))
+<div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/MatthewHeun/Recca">Recca</a></span>)
+<span class="kw">iomats</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_io_mats.html">calc_io_mats</a></span>(R = <span class="kw">R</span>, U = <span class="kw">U</span>, U_feed = <span class="kw">U_feed</span>, V = <span class="kw">V</span>, Y = <span class="kw">Y</span>, S_units = <span class="kw">S_units</span>)
+<span class="kw">k_prime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>,
+                    <span class="fl">0</span>), 
+                  byrow = <span class="fl">TRUE</span>, nrow = <span class="fl">2</span>, ncol = <span class="fl">1</span>,
+                  dimnames = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"R1p"</span>, <span class="st">"R2p"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"I"</span>))) <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setrowtype.html">setrowtype</a></span>(<span class="st">"Products"</span>) <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setcoltype.html">setcoltype</a></span>(<span class="st">"Industries"</span>)
+<span class="kw">change_input_proportions</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_k_ps.html">new_k_ps</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw">iomats</span>, 
+                                       <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(R = <span class="kw">R</span>, U = <span class="kw">U</span>, V = <span class="kw">V</span>, Y = <span class="kw">Y</span>,
+                                            S_units = <span class="kw">S_units</span>, 
+                                            k_prime = <span class="kw">k_prime</span>)))
 <span class="co"># There is no EIOU, so U and U_feed are same.</span>
-<span class="no">change_input_proportions</span><span class="kw">[[</span><span class="st">"U_feed_prime"</span>]] <span class="kw">&lt;-</span> <span class="no">change_input_proportions</span><span class="kw">[[</span><span class="st">"U_prime"</span>]]
-<span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span>(<span class="kw">R</span> <span class="kw">=</span> <span class="no">change_input_proportions</span>$<span class="no">R_prime</span>,
-            <span class="kw">U</span> <span class="kw">=</span> <span class="no">change_input_proportions</span>$<span class="no">U_prime</span>,
-            <span class="kw">V</span> <span class="kw">=</span> <span class="no">change_input_proportions</span>$<span class="no">V_prime</span>,
-            <span class="kw">Y</span> <span class="kw">=</span> <span class="no">Y</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/magrittr/man/aliases.html">extract2</a></span>(<span class="st">"Sankey"</span>)</pre></body></html></div>
-<div id="htmlwidget-be6a5e5914073ba24259" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-be6a5e5914073ba24259">{"x":{"links":{"source":[0,0,1],"target":[2,3,0],"value":[2,2,20]},"nodes":{"name":["I","R1","Y1","Y2"],"group":["I","R1","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script>
+<span class="kw">change_input_proportions</span>[[<span class="st">"U_feed_prime"</span>]] <span class="op">&lt;-</span> <span class="kw">change_input_proportions</span>[[<span class="st">"U_prime"</span>]]
+<span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span>(R = <span class="kw">change_input_proportions</span><span class="op">$</span><span class="kw">R_prime</span>, 
+            U = <span class="kw">change_input_proportions</span><span class="op">$</span><span class="kw">U_prime</span>, 
+            V = <span class="kw">change_input_proportions</span><span class="op">$</span><span class="kw">V_prime</span>, 
+            Y = <span class="kw">Y</span>) <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/magrittr/man/aliases.html">extract2</a></span>(<span class="st">"Sankey"</span>)
+</pre></div>
+<div id="htmlwidget-48d112c05d92dca9f0ef" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-48d112c05d92dca9f0ef">{"x":{"links":{"source":[0,0,1],"target":[2,3,0],"value":[2,2,20]},"nodes":{"name":["I","R1","Y1","Y2"],"group":["I","R1","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="change-final-demand" class="section level2">
 <h2 class="hasAnchor">
@@ -192,20 +198,22 @@ The R2 industry makes product R2p. Industry I makes product Ip. Product Ip is co
 <h3 class="hasAnchor">
 <a href="#without-recalculating-the-structure-of-the-ecc" class="anchor"></a>Without recalculating the structure of the ECC</h3>
 <p>Now let’s change final demand, saying that consumption by Y1 doubles. But we’ll call <code><a href="../reference/new_Y.html">new_Y()</a></code> <em>without</em> recalculating the structure of the ECC with the <code><a href="../reference/calc_io_mats.html">calc_io_mats()</a></code> function.</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">Y_prime</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>, <span class="fl">0</span>,
-                    <span class="fl">0</span>, <span class="fl">0</span>,
+<div class="sourceCode" id="cb4"><pre class="downlit">
+<span class="kw">Y_prime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>, <span class="fl">0</span>,
+                    <span class="fl">0</span>, <span class="fl">0</span>, 
                     <span class="fl">4</span>, <span class="fl">2</span>),
-                  <span class="kw">byrow</span> <span class="kw">=</span> <span class="fl">TRUE</span>, <span class="kw">nrow</span> <span class="kw">=</span> <span class="fl">3</span>, <span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">2</span>,
-                  <span class="kw">dimnames</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"R1p"</span>, <span class="st">"R2p"</span>, <span class="st">"Ip"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Y1"</span>, <span class="st">"Y2"</span>))) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setrowtype.html">setrowtype</a></span>(<span class="st">"Products"</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setcoltype.html">setcoltype</a></span>(<span class="st">"Industries"</span>)
-<span class="no">change_final_demand</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/new_Y.html">new_Y</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">iomats</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">Y_prime</span> <span class="kw">=</span> <span class="no">Y_prime</span>)))
-<span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span>(<span class="kw">R</span> <span class="kw">=</span> <span class="no">change_final_demand</span>$<span class="no">R_prime</span>,
-            <span class="kw">U</span> <span class="kw">=</span> <span class="no">change_final_demand</span>$<span class="no">U_prime</span>,
-            <span class="kw">V</span> <span class="kw">=</span> <span class="no">change_final_demand</span>$<span class="no">V_prime</span>,
-            <span class="kw">Y</span> <span class="kw">=</span> <span class="no">change_final_demand</span>$<span class="no">Y_prime</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/magrittr/man/aliases.html">extract2</a></span>(<span class="st">"Sankey"</span>)</pre></body></html></div>
-<div id="htmlwidget-f472bfab81830bf1c464" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-f472bfab81830bf1c464">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[4,2,15,15]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>Industry I is back to using both R1p and R2p in a 50/50 split to make its output. Both R1p and R2p now supply 15 quads to I to account for increased final demand.</p>
+                  byrow = <span class="fl">TRUE</span>, nrow = <span class="fl">3</span>, ncol = <span class="fl">2</span>,
+                  dimnames = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"R1p"</span>, <span class="st">"R2p"</span>, <span class="st">"Ip"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Y1"</span>, <span class="st">"Y2"</span>))) <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setrowtype.html">setrowtype</a></span>(<span class="st">"Products"</span>) <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setcoltype.html">setcoltype</a></span>(<span class="st">"Industries"</span>)
+<span class="kw">change_final_demand</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_Y.html">new_Y</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw">iomats</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(Y_prime = <span class="kw">Y_prime</span>)))
+<span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span>(R = <span class="kw">change_final_demand</span><span class="op">$</span><span class="kw">R_prime</span>, 
+            U = <span class="kw">change_final_demand</span><span class="op">$</span><span class="kw">U_prime</span>, 
+            V = <span class="kw">change_final_demand</span><span class="op">$</span><span class="kw">V_prime</span>, 
+            Y = <span class="kw">change_final_demand</span><span class="op">$</span><span class="kw">Y_prime</span>) <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/magrittr/man/aliases.html">extract2</a></span>(<span class="st">"Sankey"</span>)
+</pre></div>
+<div id="htmlwidget-808268f1ac469a9138f8" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-808268f1ac469a9138f8">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[4,2,15,15]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>Industry I is back to using both R1p and R2p in a 50/50 split to make its output. Both R1p and R2p now supply 15 quads to I to account for increased final demand.</p>
 <p>The <code><a href="../reference/new_Y.html">new_Y()</a></code> function is performing exactly as expected, given that <code>iomats</code> was supplied to <code><a href="../reference/new_Y.html">new_Y()</a></code>. <code>iomats</code> contains information about an ECC in which industry I’s inputs are split 50/50 between R1p and R2p. So when <code><a href="../reference/new_Y.html">new_Y()</a></code> calculates a new ECC, it assumes that industry I’s needs are a 50/50 split between R1p and R2p.</p>
 <p>In fact, it would be a mistake to think that <code><a href="../reference/new_Y.html">new_Y()</a></code> would give anything but a 50/50 split between R1p and R2p when using the <code>iomats</code> description of the ECC.</p>
 </div>
@@ -213,19 +221,21 @@ The R2 industry makes product R2p. Industry I makes product Ip. Product Ip is co
 <h3 class="hasAnchor">
 <a href="#after-recalculating-the-structure-of-the-ecc" class="anchor"></a>After recalculating the structure of the ECC</h3>
 <p>If you want <code><a href="../reference/new_Y.html">new_Y()</a></code> to start from the Sankey in which all energy supplied to industry I comes from R1p, you need to first recalculate the input-output structure of the ECC based on the ECC in which industry I uses only R1p. I.e., you need to re-calculate an <code>iomats</code> object after calling <code><a href="../reference/new_k_ps.html">new_k_ps()</a></code> and before calling <code><a href="../reference/new_Y.html">new_Y()</a></code>. Then, you must submit that updated description of the input-output structure of the ECC to <code><a href="../reference/new_Y.html">new_Y()</a></code>. The following code demonstrates the approach.</p>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">iomats2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/calc_io_mats.html">calc_io_mats</a></span>(<span class="kw">R</span> <span class="kw">=</span> <span class="no">change_input_proportions</span>$<span class="no">R_prime</span>,
-                        <span class="kw">U</span> <span class="kw">=</span> <span class="no">change_input_proportions</span>$<span class="no">U_prime</span>,
-                        <span class="kw">U_feed</span> <span class="kw">=</span> <span class="no">change_input_proportions</span>$<span class="no">U_feed_prime</span>,
-                        <span class="kw">V</span> <span class="kw">=</span> <span class="no">change_input_proportions</span>$<span class="no">V_prime</span>,
-                        <span class="kw">Y</span> <span class="kw">=</span> <span class="no">Y</span>, <span class="kw">S_units</span> <span class="kw">=</span> <span class="no">S_units</span>)
-<span class="no">change_final_demand2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/new_Y.html">new_Y</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">iomats2</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">Y_prime</span> <span class="kw">=</span> <span class="no">Y_prime</span>)))
-<span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span>(<span class="kw">R</span> <span class="kw">=</span> <span class="no">change_final_demand2</span>$<span class="no">R_prime</span>,
-            <span class="kw">U</span> <span class="kw">=</span> <span class="no">change_final_demand2</span>$<span class="no">U_prime</span>,
-            <span class="kw">V</span> <span class="kw">=</span> <span class="no">change_final_demand2</span>$<span class="no">V_prime</span>,
-            <span class="kw">Y</span> <span class="kw">=</span> <span class="no">change_final_demand2</span>$<span class="no">Y_prime</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/magrittr/man/aliases.html">extract2</a></span>(<span class="st">"Sankey"</span>)</pre></body></html></div>
-<div id="htmlwidget-cabe0cbda9013c7406a2" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-cabe0cbda9013c7406a2">{"x":{"links":{"source":[0,0,1],"target":[2,3,0],"value":[4,2,30]},"nodes":{"name":["I","R1","Y1","Y2"],"group":["I","R1","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>The Sankey diagram above shows that we have successfully increased the demand from <code>Y1</code> while ensuring that all inputs to industry I come from R1p. The “trick” is to recalculate the input-output structure of the ECC between the two steps.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit">
+<span class="kw">iomats2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_io_mats.html">calc_io_mats</a></span>(R = <span class="kw">change_input_proportions</span><span class="op">$</span><span class="kw">R_prime</span>, 
+                        U = <span class="kw">change_input_proportions</span><span class="op">$</span><span class="kw">U_prime</span>, 
+                        U_feed = <span class="kw">change_input_proportions</span><span class="op">$</span><span class="kw">U_feed_prime</span>,
+                        V = <span class="kw">change_input_proportions</span><span class="op">$</span><span class="kw">V_prime</span>, 
+                        Y = <span class="kw">Y</span>, S_units = <span class="kw">S_units</span>)
+<span class="kw">change_final_demand2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_Y.html">new_Y</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw">iomats2</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(Y_prime = <span class="kw">Y_prime</span>)))
+<span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span>(R = <span class="kw">change_final_demand2</span><span class="op">$</span><span class="kw">R_prime</span>, 
+            U = <span class="kw">change_final_demand2</span><span class="op">$</span><span class="kw">U_prime</span>, 
+            V = <span class="kw">change_final_demand2</span><span class="op">$</span><span class="kw">V_prime</span>, 
+            Y = <span class="kw">change_final_demand2</span><span class="op">$</span><span class="kw">Y_prime</span>) <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/magrittr/man/aliases.html">extract2</a></span>(<span class="st">"Sankey"</span>)
+</pre></div>
+<div id="htmlwidget-ae1128b4161d84936bc1" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ae1128b4161d84936bc1">{"x":{"links":{"source":[0,0,1],"target":[2,3,0],"value":[4,2,30]},"nodes":{"name":["I","R1","Y1","Y2"],"group":["I","R1","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>The Sankey diagram above shows that we have successfully increased the demand from <code>Y1</code> while ensuring that all inputs to industry I come from R1p. The “trick” is to recalculate the input-output structure of the ECC between the two steps.</p>
 </div>
 </div>
 <div id="conclusion" class="section level1">
@@ -250,7 +260,7 @@ The R2 industry makes product R2p. Industry I makes product Ip. Product Ip is co
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

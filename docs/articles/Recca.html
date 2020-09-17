@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.24</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.25</span>
       </span>
     </div>
 
@@ -85,13 +85,13 @@
 
       
 
-      </header><script src="Recca_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Recca</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2020-08-17</h4>
+            <h4 class="date">2020-09-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/master/vignettes/Recca.Rmd"><code>vignettes/Recca.Rmd</code></a></small>
       <div class="hidden name"><code>Recca.Rmd</code></div>
@@ -107,7 +107,7 @@
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p><code>Recca</code> (<code>R</code> Energy Conversion Chain Analysis) is an <code>R</code> package that enables energy and exergy analysis of energy conversion chains. <code>Recca</code> makes extensive use of a matrix-based Physical Supply Use Table (PSUT) analysis technique that first appeared in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>. This vignette walks through many of the calculations from <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, guided by section numbers from the paper. We begin by discussing the design philosophy of the <code>Recca</code> package, followed by a discussion of the PSUT matrices that comprise an energy conversion chain (ECC). Thereafter, calculation of the input-output structure of an ECC is demonstrated. Finally, advanced calculations are shown, including changes in final demand, net energy analysis, industry efficiencies, and energy footprints.</p>
+<p><code>Recca</code> (<code>R</code> Energy Conversion Chain Analysis) is an <code>R</code> package that enables energy and exergy analysis of energy conversion chains. <code>Recca</code> makes extensive use of a matrix-based Physical Supply Use Table (PSUT) analysis technique that first appeared in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>. This vignette walks through many of the calculations from <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, guided by section numbers from the paper. We begin by discussing the design philosophy of the <code>Recca</code> package, followed by a discussion of the PSUT matrices that comprise an energy conversion chain (ECC). Thereafter, calculation of the input-output structure of an ECC is demonstrated. Finally, advanced calculations are shown, including changes in final demand, net energy analysis, industry efficiencies, and energy footprints.</p>
 </div>
 <div id="design-philosophy" class="section level2">
 <h2 class="hasAnchor">
@@ -124,34 +124,37 @@
 <div id="psut-matrices" class="section level2">
 <h2 class="hasAnchor">
 <a href="#psut-matrices" class="anchor"></a>PSUT matrices</h2>
-<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 2.2.2.)</p>
+<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 2.2.2.)</p>
 <p>For the examples that follow, we’ll use the <code>UKEnergy2000tidy</code> data frame. Each row of <code>UKEnergy2000tidy</code> data frame represents another datum for a portion of the ECC for the UK in 2000. <code>UKEnergy2000tidy</code> is in a format similar to data from the IEA or other organizations.</p>
 <p>For data in the format of <code>UKEnergy2000tidy</code>, we can create <code>S_units</code> matrices for each grouping using the <code><a href="../reference/S_units_from_tidy.html">S_units_from_tidy()</a></code> function.</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tibble</span>)
-<span class="no">S_units</span> <span class="kw">&lt;-</span> <span class="no">UKEnergy2000tidy</span> <span class="kw">%&gt;%</span>
-  <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">Country</span>, <span class="no">Year</span>, <span class="no">Energy.type</span>, <span class="no">Last.stage</span>) <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://tibble.tidyverse.org">tibble</a></span>)
+<span class="kw">S_units</span> <span class="op">&lt;-</span> <span class="kw">UKEnergy2000tidy</span> <span class="op">%&gt;%</span>
+  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="kw">Country</span>, <span class="kw">Year</span>, <span class="kw">Energy.type</span>, <span class="kw">Last.stage</span>) <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/S_units_from_tidy.html">S_units_from_tidy</a></span>()
-<span class="kw pkg">tibble</span><span class="kw ns">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span>(<span class="no">S_units</span>)
+<span class="kw">tibble</span>::<span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span>(<span class="kw">S_units</span>)
 <span class="co">#&gt; Rows: 4</span>
 <span class="co">#&gt; Columns: 5</span>
 <span class="co">#&gt; $ Country     &lt;chr&gt; "GBR", "GBR", "GBR", "GBR"</span>
 <span class="co">#&gt; $ Year        &lt;dbl&gt; 2000, 2000, 2000, 2000</span>
 <span class="co">#&gt; $ Energy.type &lt;chr&gt; "E", "E", "E", "X"</span>
 <span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final", "Services", "Useful", "Services"</span>
-<span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;matrix[12 x 1]&gt;, &lt;matrix[20 x 5]&gt;, &lt;matrix[16 x 1]&gt;, &lt;…</span></pre></body></html></div>
+<span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;matrix[12 x 1]&gt;, &lt;matrix[20 x 5]&gt;, &lt;matrix[16 x 1]&gt;, &lt;…</span>
+</pre></div>
 <p>And we can identify which entries belong in the resource (<span class="math inline">\(\mathbf{R}\)</span>), make (<span class="math inline">\(\mathbf{V}\)</span>), use (<span class="math inline">\(\mathbf{U}\)</span>), and final demand (<span class="math inline">\(\mathbf{Y}\)</span>) matrices with the <code><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html">IEATools::add_psut_matnames()</a></code> and <code><a href="https://rdrr.io/pkg/IEATools/man/add_row_col_meta.html">IEATools::add_row_col_meta()</a></code> functions.</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="no">WithNames</span> <span class="kw">&lt;-</span> <span class="no">UKEnergy2000tidy</span> <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="kw">WithNames</span> <span class="op">&lt;-</span> <span class="kw">UKEnergy2000tidy</span> <span class="op">%&gt;%</span>
   <span class="co"># Add a column indicating the matrix in which this entry belongs (U, V, or Y).</span>
-  <span class="kw pkg">IEATools</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html">add_psut_matnames</a></span>() <span class="kw">%&gt;%</span>
+  <span class="kw">IEATools</span>::<span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html">add_psut_matnames</a></span>() <span class="op">%&gt;%</span>
   <span class="co"># Add metadata columns for row names, column names, row types, and column types.</span>
-  <span class="kw pkg">IEATools</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_row_col_meta.html">add_row_col_meta</a></span>() <span class="kw">%&gt;%</span>
+  <span class="kw">IEATools</span>::<span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_row_col_meta.html">add_row_col_meta</a></span>() <span class="op">%&gt;%</span> 
   <span class="co"># Eliminate columns we no longer need</span>
-  <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(-<span class="no">Ledger.side</span>, -<span class="no">Flow.aggregation.point</span>, -<span class="no">Flow</span>, -<span class="no">Product</span>) <span class="kw">%&gt;%</span>
-  <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(
+  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="op">-</span><span class="kw">Ledger.side</span>, <span class="op">-</span><span class="kw">Flow.aggregation.point</span>, <span class="op">-</span><span class="kw">Flow</span>, <span class="op">-</span><span class="kw">Product</span>) <span class="op">%&gt;%</span>
+  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(
     <span class="co"># Ensure that all energy values are positive, as required for analysis.</span>
-    <span class="kw">E.dot</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(<span class="no">E.dot</span>)
+    E.dot = <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(<span class="kw">E.dot</span>)
   )
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">WithNames</span>)
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="kw">WithNames</span>)
 <span class="co">#&gt;   Country Year Energy.type Last.stage E.dot Unit matnames          rownames</span>
 <span class="co">#&gt; 1     GBR 2000           E      Final 50000 ktoe        R Resources - Crude</span>
 <span class="co">#&gt; 2     GBR 2000           E      Final 43000 ktoe        R    Resources - NG</span>
@@ -165,29 +168,31 @@
 <span class="co">#&gt; 3     NG - Wells Industry  Product</span>
 <span class="co">#&gt; 4 Crude - Fields Industry  Product</span>
 <span class="co">#&gt; 5  Crude - Dist. Industry  Product</span>
-<span class="co">#&gt; 6     NG - Dist. Industry  Product</span></pre></body></html></div>
+<span class="co">#&gt; 6     NG - Dist. Industry  Product</span>
+</pre></div>
 <p>After identifying the matrices, rownames, colnames, rowtypes, and coltypes, we can collapse all data to matrices and add a unit summation matrix (<code>S_units</code>).</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">AsMats</span> <span class="kw">&lt;-</span> <span class="no">WithNames</span> <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="kw">AsMats</span> <span class="op">&lt;-</span> <span class="kw">WithNames</span> <span class="op">%&gt;%</span>
   <span class="co"># Collapse to matrices using functions in the matsindf package</span>
-  <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">Country</span>, <span class="no">Year</span>, <span class="no">Energy.type</span>, <span class="no">Last.stage</span>, <span class="no">matnames</span>) <span class="kw">%&gt;%</span>
-  <span class="kw pkg">matsindf</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/matsindf/man/collapse_to_matrices.html">collapse_to_matrices</a></span>(<span class="kw">matnames</span> <span class="kw">=</span> <span class="st">"matnames"</span>, <span class="kw">matvals</span> <span class="kw">=</span> <span class="st">"E.dot"</span>,
-                       <span class="kw">rownames</span> <span class="kw">=</span> <span class="st">"rownames"</span>, <span class="kw">colnames</span> <span class="kw">=</span> <span class="st">"colnames"</span>,
-                       <span class="kw">rowtypes</span> <span class="kw">=</span> <span class="st">"rowtypes"</span>, <span class="kw">coltypes</span> <span class="kw">=</span> <span class="st">"coltypes"</span>) <span class="kw">%&gt;%</span>
-  <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(<span class="kw">matrix.name</span> <span class="kw">=</span> <span class="no">matnames</span>, <span class="kw">matrix</span> <span class="kw">=</span> <span class="no">E.dot</span>) <span class="kw">%&gt;%</span>
-  <span class="kw pkg">tidyr</span><span class="kw ns">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/spread.html">spread</a></span>(<span class="kw">key</span> <span class="kw">=</span> <span class="no">matrix.name</span>, <span class="kw">value</span> <span class="kw">=</span> <span class="no">matrix</span>) <span class="kw">%&gt;%</span>
+  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="kw">Country</span>, <span class="kw">Year</span>, <span class="kw">Energy.type</span>, <span class="kw">Last.stage</span>, <span class="kw">matnames</span>) <span class="op">%&gt;%</span>
+  <span class="kw">matsindf</span>::<span class="fu"><a href="https://rdrr.io/pkg/matsindf/man/collapse_to_matrices.html">collapse_to_matrices</a></span>(matnames = <span class="st">"matnames"</span>, matvals = <span class="st">"E.dot"</span>,
+                       rownames = <span class="st">"rownames"</span>, colnames = <span class="st">"colnames"</span>,
+                       rowtypes = <span class="st">"rowtypes"</span>, coltypes = <span class="st">"coltypes"</span>) <span class="op">%&gt;%</span>
+  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(matrix.name = <span class="kw">matnames</span>, matrix = <span class="kw">E.dot</span>) <span class="op">%&gt;%</span>
+  <span class="kw">tidyr</span>::<span class="fu"><a href="https://tidyr.tidyverse.org/reference/spread.html">spread</a></span>(key = <span class="kw">matrix.name</span>, value = <span class="kw">matrix</span>) <span class="op">%&gt;%</span> 
   <span class="co"># Do a little more cleanup</span>
-  <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(
+  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(
     <span class="co"># Create full U matrix</span>
-    <span class="kw">U</span> <span class="kw">=</span> <span class="kw pkg">matsbyname</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/sum_byname.html">sum_byname</a></span>(<span class="no">U_excl_EIOU</span>, <span class="no">U_EIOU</span>),
+    U = <span class="kw">matsbyname</span>::<span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/sum_byname.html">sum_byname</a></span>(<span class="kw">U_feed</span>, <span class="kw">U_EIOU</span>),
     <span class="co"># Create r_EIOU, a matrix that identifies the ratio of EIOU to other energy consumed.</span>
-    <span class="kw">r_EIOU</span> <span class="kw">=</span> <span class="kw pkg">matsbyname</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/quotient_byname.html">quotient_byname</a></span>(<span class="no">U_EIOU</span>, <span class="no">U</span>),
-    <span class="kw">r_EIOU</span> <span class="kw">=</span> <span class="kw pkg">matsbyname</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/replaceNaN_byname.html">replaceNaN_byname</a></span>(<span class="no">r_EIOU</span>, <span class="kw">val</span> <span class="kw">=</span> <span class="fl">0</span>)
-  ) <span class="kw">%&gt;%</span>
-  <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(-<span class="no">U_EIOU</span>, -<span class="no">U_excl_EIOU</span>) <span class="kw">%&gt;%</span>
+    r_EIOU = <span class="kw">matsbyname</span>::<span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/quotient_byname.html">quotient_byname</a></span>(<span class="kw">U_EIOU</span>, <span class="kw">U</span>),
+    r_EIOU = <span class="kw">matsbyname</span>::<span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/replaceNaN_byname.html">replaceNaN_byname</a></span>(<span class="kw">r_EIOU</span>, val = <span class="fl">0</span>)
+  ) <span class="op">%&gt;%</span> 
+  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="op">-</span><span class="kw">U_EIOU</span>, <span class="op">-</span><span class="kw">U_feed</span>) <span class="op">%&gt;%</span>
   <span class="co"># Add S_units matrices</span>
-  <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span>(<span class="no">S_units</span>, <span class="kw">by</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Country"</span>, <span class="st">"Year"</span>, <span class="st">"Energy.type"</span>, <span class="st">"Last.stage"</span>)) <span class="kw">%&gt;%</span>
-  <span class="kw pkg">tidyr</span><span class="kw ns">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/gather.html">gather</a></span>(<span class="kw">key</span> <span class="kw">=</span> <span class="no">matrix.name</span>, <span class="kw">value</span> <span class="kw">=</span> <span class="no">matrix</span>, <span class="no">R</span>, <span class="no">U</span>, <span class="no">V</span>, <span class="no">Y</span>, <span class="no">r_EIOU</span>, <span class="no">S_units</span>)
-<span class="kw pkg">tibble</span><span class="kw ns">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span>(<span class="no">AsMats</span>)
+  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span>(<span class="kw">S_units</span>, by = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Country"</span>, <span class="st">"Year"</span>, <span class="st">"Energy.type"</span>, <span class="st">"Last.stage"</span>)) <span class="op">%&gt;%</span>
+  <span class="kw">tidyr</span>::<span class="fu"><a href="https://tidyr.tidyverse.org/reference/gather.html">gather</a></span>(key = <span class="kw">matrix.name</span>, value = <span class="kw">matrix</span>, <span class="kw">R</span>, <span class="kw">U</span>, <span class="kw">V</span>, <span class="kw">Y</span>, <span class="kw">r_EIOU</span>, <span class="kw">S_units</span>)
+<span class="kw">tibble</span>::<span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span>(<span class="kw">AsMats</span>)
 <span class="co">#&gt; Rows: 24</span>
 <span class="co">#&gt; Columns: 6</span>
 <span class="co">#&gt; $ Country     &lt;chr&gt; "GBR", "GBR", "GBR", "GBR", "GBR", "GBR", "GBR", "GBR", "…</span>
@@ -195,44 +200,48 @@
 <span class="co">#&gt; $ Energy.type &lt;chr&gt; "E", "E", "E", "X", "E", "E", "E", "X", "E", "E", "E", "X…</span>
 <span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final", "Services", "Useful", "Services", "Final", "Serv…</span>
 <span class="co">#&gt; $ matrix.name &lt;chr&gt; "R", "R", "R", "R", "U", "U", "U", "U", "V", "V", "V", "V…</span>
-<span class="co">#&gt; $ matrix      &lt;list&gt; [&lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;mat…</span></pre></body></html></div>
+<span class="co">#&gt; $ matrix      &lt;list&gt; [&lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;mat…</span>
+</pre></div>
 <p>The <code>AsMats</code> data frame is essentially the same as the <code><a href="../reference/UKEnergy2000mats.html">Recca::UKEnergy2000mats</a></code> data frame. The remainder of this vignette uses the <code>UKEnergy2000mats</code> data frame.</p>
 </div>
 <div id="i-o-structure" class="section level2">
 <h2 class="hasAnchor">
 <a href="#i-o-structure" class="anchor"></a>I-O structure</h2>
-<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 2.2.4.)</p>
+<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 2.2.4.)</p>
 <div id="with-individual-matrices" class="section level3">
 <h3 class="hasAnchor">
 <a href="#with-individual-matrices" class="anchor"></a>With individual matrices</h3>
 <p>To determine the I-O structure of an ECC, use the <code><a href="../reference/calc_io_mats.html">calc_io_mats()</a></code> function.</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyr</span>)
-<span class="no">mats</span> <span class="kw">&lt;-</span> <span class="no">UKEnergy2000mats</span> <span class="kw">%&gt;%</span>
-  <span class="kw pkg">tidyr</span><span class="kw ns">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/spread.html">spread</a></span>(<span class="kw">key</span> <span class="kw">=</span> <span class="no">matrix.name</span>, <span class="kw">value</span> <span class="kw">=</span> <span class="no">matrix</span>) <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb4"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://tidyr.tidyverse.org">tidyr</a></span>)
+<span class="kw">mats</span> <span class="op">&lt;-</span> <span class="kw">UKEnergy2000mats</span> <span class="op">%&gt;%</span> 
+  <span class="kw">tidyr</span>::<span class="fu"><a href="https://tidyr.tidyverse.org/reference/spread.html">spread</a></span>(key = <span class="kw">matrix.name</span>, value = <span class="kw">matrix</span>) <span class="op">%&gt;%</span> 
   <span class="co"># Put rows in a natural order</span>
-  <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(
-    <span class="kw">Last.stage</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">Last.stage</span>, <span class="kw">levels</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Final"</span>, <span class="st">"Useful"</span>, <span class="st">"Services"</span>)),
-    <span class="kw">Energy.type</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">Energy.type</span>, <span class="kw">levels</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"E"</span>, <span class="st">"X"</span>))
-  ) <span class="kw">%&gt;%</span>
-  <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="no">Last.stage</span>, <span class="no">Energy.type</span>)
+  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(
+    Last.stage = <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="kw">Last.stage</span>, levels = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Final"</span>, <span class="st">"Useful"</span>, <span class="st">"Services"</span>)),
+    Energy.type = <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="kw">Energy.type</span>, levels = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"E"</span>, <span class="st">"X"</span>))
+  ) <span class="op">%&gt;%</span> 
+  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="kw">Last.stage</span>, <span class="kw">Energy.type</span>)
 <span class="co"># Use the calc_io_mats function with individual matrices, </span>
 <span class="co"># each taken from the first row of the UKEnergy2000mats data frame.</span>
-<span class="no">R</span> <span class="kw">&lt;-</span> <span class="no">mats</span>$<span class="no">R</span><span class="kw">[[</span><span class="fl">1</span>]]
-<span class="no">U</span> <span class="kw">&lt;-</span> <span class="no">mats</span>$<span class="no">U</span><span class="kw">[[</span><span class="fl">1</span>]]
-<span class="no">U_feed</span> <span class="kw">=</span> <span class="no">mats</span>$<span class="no">U_feed</span><span class="kw">[[</span><span class="fl">1</span>]]
-<span class="no">V</span> <span class="kw">&lt;-</span> <span class="no">mats</span>$<span class="no">V</span><span class="kw">[[</span><span class="fl">1</span>]]
-<span class="no">Y</span> <span class="kw">&lt;-</span> <span class="no">mats</span>$<span class="no">Y</span><span class="kw">[[</span><span class="fl">1</span>]]
-<span class="no">S_units</span> <span class="kw">&lt;-</span> <span class="no">mats</span>$<span class="no">S_units</span><span class="kw">[[</span><span class="fl">1</span>]]
-<span class="no">IO_list</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/calc_io_mats.html">calc_io_mats</a></span>(<span class="kw">R</span> <span class="kw">=</span> <span class="no">R</span>, <span class="kw">U</span> <span class="kw">=</span> <span class="no">U</span>, <span class="kw">U_feed</span> <span class="kw">=</span> <span class="no">U_feed</span>, <span class="kw">V</span> <span class="kw">=</span> <span class="no">V</span>, <span class="kw">Y</span> <span class="kw">=</span> <span class="no">Y</span>, <span class="kw">S_units</span> <span class="kw">=</span> <span class="no">S_units</span>)</pre></body></html></div>
+<span class="kw">R</span> <span class="op">&lt;-</span> <span class="kw">mats</span><span class="op">$</span><span class="kw">R</span>[[<span class="fl">1</span>]]
+<span class="kw">U</span> <span class="op">&lt;-</span> <span class="kw">mats</span><span class="op">$</span><span class="kw">U</span>[[<span class="fl">1</span>]]
+<span class="kw">U_feed</span> <span class="op">=</span> <span class="kw">mats</span><span class="op">$</span><span class="kw">U_feed</span>[[<span class="fl">1</span>]]
+<span class="kw">V</span> <span class="op">&lt;-</span> <span class="kw">mats</span><span class="op">$</span><span class="kw">V</span>[[<span class="fl">1</span>]]
+<span class="kw">Y</span> <span class="op">&lt;-</span> <span class="kw">mats</span><span class="op">$</span><span class="kw">Y</span>[[<span class="fl">1</span>]]
+<span class="kw">S_units</span> <span class="op">&lt;-</span> <span class="kw">mats</span><span class="op">$</span><span class="kw">S_units</span>[[<span class="fl">1</span>]]
+<span class="kw">IO_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_io_mats.html">calc_io_mats</a></span>(R = <span class="kw">R</span>, U = <span class="kw">U</span>, U_feed = <span class="kw">U_feed</span>, V = <span class="kw">V</span>, Y = <span class="kw">Y</span>, S_units = <span class="kw">S_units</span>)
+</pre></div>
 <p>Most <code>Recca</code> functions return a list when called with individual matrices as arguments. The <code><a href="../reference/calc_io_mats.html">calc_io_mats()</a></code> function gives several I-O matrices in its returned list.</p>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span>(<span class="no">IO_list</span>)
+<div class="sourceCode" id="cb5"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span>(<span class="kw">IO_list</span>)
 <span class="co">#&gt; [1] "list"</span>
-<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">IO_list</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="kw">IO_list</span>)
 <span class="co">#&gt;  [1] "y"          "q"          "f"          "g"          "W"         </span>
 <span class="co">#&gt;  [6] "Z"          "K"          "C"          "D"          "A"         </span>
 <span class="co">#&gt; [11] "L_pxp"      "L_ixp"      "Z_feed"     "K_feed"     "C_feed"    </span>
 <span class="co">#&gt; [16] "D_feed"     "A_feed"     "L_pxp_feed" "L_ixp_feed"</span>
-<span class="no">IO_list</span><span class="kw">[[</span><span class="st">"y"</span>]]
+<span class="kw">IO_list</span>[[<span class="st">"y"</span>]]
 <span class="co">#&gt;                Industry</span>
 <span class="co">#&gt; Diesel - Dist.    14750</span>
 <span class="co">#&gt; Elect - Grid       6000</span>
@@ -241,18 +250,20 @@
 <span class="co">#&gt; attr(,"rowtype")</span>
 <span class="co">#&gt; [1] "Product"</span>
 <span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "Industry"</span></pre></body></html></div>
+<span class="co">#&gt; [1] "Industry"</span>
+</pre></div>
 <p>The same calculations can be performed by supplying a named list to <code>Recca</code> functions. In this approach, all original data are returned in the list. So in this case, matrices <span class="math inline">\(\mathbf{U}\)</span>, <span class="math inline">\(\mathbf{V}\)</span>, <span class="math inline">\(\mathbf{Y}\)</span>, and <span class="math inline">\(\mathbf{S_{units}}\)</span> are also returned from the <code><a href="../reference/calc_io_mats.html">calc_io_mats()</a></code> function. When a list is supplied to a <code>Recca</code> function in the <code>.sutmats</code> argument, most other input arguments must be strings that identify the names of appropriate entries in the <code>.sutmats</code> list containing named vectors or matrices. Helpfully, the default values for other input arguments conform to a standard nomenclature. When using the standard nomenclature, most <code>Recca</code> functions can use the default arguments for input and output items in the list.</p>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">IO_from_list</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/calc_io_mats.html">calc_io_mats</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">R</span> <span class="kw">=</span> <span class="no">R</span>, <span class="kw">U</span> <span class="kw">=</span> <span class="no">U</span>, <span class="kw">U_feed</span> <span class="kw">=</span> <span class="no">U_feed</span>, <span class="kw">V</span> <span class="kw">=</span> <span class="no">V</span>, <span class="kw">Y</span> <span class="kw">=</span> <span class="no">Y</span>, <span class="kw">S_units</span> <span class="kw">=</span> <span class="no">S_units</span>))
-<span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span>(<span class="no">IO_from_list</span>)
+<div class="sourceCode" id="cb6"><pre class="downlit">
+<span class="kw">IO_from_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_io_mats.html">calc_io_mats</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(R = <span class="kw">R</span>, U = <span class="kw">U</span>, U_feed = <span class="kw">U_feed</span>, V = <span class="kw">V</span>, Y = <span class="kw">Y</span>, S_units = <span class="kw">S_units</span>))
+<span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span>(<span class="kw">IO_from_list</span>)
 <span class="co">#&gt; [1] "list"</span>
-<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">IO_from_list</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="kw">IO_from_list</span>)
 <span class="co">#&gt;  [1] "R"          "U"          "U_feed"     "V"          "Y"         </span>
 <span class="co">#&gt;  [6] "S_units"    "y"          "q"          "f"          "g"         </span>
 <span class="co">#&gt; [11] "W"          "Z"          "K"          "C"          "D"         </span>
 <span class="co">#&gt; [16] "A"          "L_pxp"      "L_ixp"      "Z_feed"     "K_feed"    </span>
 <span class="co">#&gt; [21] "C_feed"     "D_feed"     "A_feed"     "L_pxp_feed" "L_ixp_feed"</span>
-<span class="no">IO_from_list</span><span class="kw">[[</span><span class="st">"y"</span>]]
+<span class="kw">IO_from_list</span>[[<span class="st">"y"</span>]]
 <span class="co">#&gt;                Industry</span>
 <span class="co">#&gt; Diesel - Dist.    14750</span>
 <span class="co">#&gt; Elect - Grid       6000</span>
@@ -261,18 +272,22 @@
 <span class="co">#&gt; attr(,"rowtype")</span>
 <span class="co">#&gt; [1] "Product"</span>
 <span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "Industry"</span></pre></body></html></div>
+<span class="co">#&gt; [1] "Industry"</span>
+</pre></div>
 </div>
 <div id="from-a-matsindf-style-data-frame" class="section level3">
 <h3 class="hasAnchor">
 <a href="#from-a-matsindf-style-data-frame" class="anchor"></a>From a <code>matsindf</code>-style data frame</h3>
 <p>Most <code>Recca</code> functions can also operate on a <code>matsindf</code>-style data frame. (A <code>matsindf</code>-style data frame has matrices in cells of a data frame. See the <code>matsindf</code> package for additional information.) When a data frame is supplied to a <code>Recca</code> function in the <code>.sutmats</code> argument, most other input arguments must be strings that identify the names of appropriate columns in <code>.sutmats</code> containing named vectors or matrices. Helpfully, the default values for other input arguments conform to a standard nomenclature. When using the standard nomenclature, most <code>Recca</code> functions can use the default arguments for input and output columns. This approach yields very clean piped code, as shown below.</p>
 <p>To illustrate the above features of <code>Recca</code> functions, we’ll apply the <code>calc_io_mats</code> function to the entire <code>UKEnergy2000mats</code> data frame, calculating appropriate I-O matrices for each row. Used in this way, <code>Recca</code> functions act like specialized <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">dplyr::mutate()</a></code> functions, with new columns added to the right side of the data frame supplied to the <code>.sutmats</code> argument.</p>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="no">IO_df</span> <span class="kw">&lt;-</span> <span class="no">mats</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="../reference/calc_io_mats.html">calc_io_mats</a></span>()</pre></body></html></div>
+<div class="sourceCode" id="cb7"><pre class="downlit">
+<span class="kw">IO_df</span> <span class="op">&lt;-</span> <span class="kw">mats</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/calc_io_mats.html">calc_io_mats</a></span>()
+</pre></div>
 <p>By inspecting <code>IO_df</code>, we can see, for example, that one <span class="math inline">\(\mathbf{y}\)</span> vector was calculated for each of the four rows of <code>mats</code>. The same is true for all I-O matrices calculated by <code>calc_io_mats</code>.</p>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span>(<span class="no">IO_df</span>)
+<div class="sourceCode" id="cb8"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span>(<span class="kw">IO_df</span>)
 <span class="co">#&gt; [1] "data.frame"</span>
-<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">IO_df</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="kw">IO_df</span>)
 <span class="co">#&gt;  [1] "Country"     "Year"        "Energy.type" "Last.stage"  "R"          </span>
 <span class="co">#&gt;  [6] "r_EIOU"      "S_units"     "U"           "U_EIOU"      "U_feed"     </span>
 <span class="co">#&gt; [11] "V"           "Y"           "y"           "q"           "f"          </span>
@@ -280,7 +295,7 @@
 <span class="co">#&gt; [21] "D"           "A"           "L_pxp"       "L_ixp"       "Z_feed"     </span>
 <span class="co">#&gt; [26] "K_feed"      "C_feed"      "D_feed"      "A_feed"      "L_pxp_feed" </span>
 <span class="co">#&gt; [31] "L_ixp_feed"</span>
-<span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span>(<span class="no">IO_df</span>)
+<span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span>(<span class="kw">IO_df</span>)
 <span class="co">#&gt; Rows: 4</span>
 <span class="co">#&gt; Columns: 31</span>
 <span class="co">#&gt; $ Country     &lt;chr&gt; "GBR", "GBR", "GBR", "GBR"</span>
@@ -314,7 +329,7 @@
 <span class="co">#&gt; $ A_feed      &lt;list&gt; [&lt;matrix[9 x 12]&gt;, &lt;matrix[12 x 16]&gt;, &lt;matrix[16 x 20]&gt;,…</span>
 <span class="co">#&gt; $ L_pxp_feed  &lt;list&gt; [&lt;matrix[12 x 12]&gt;, &lt;matrix[16 x 16]&gt;, &lt;matrix[20 x 20]&gt;…</span>
 <span class="co">#&gt; $ L_ixp_feed  &lt;list&gt; [&lt;matrix[11 x 12]&gt;, &lt;matrix[15 x 16]&gt;, &lt;matrix[19 x 20]&gt;…</span>
-<span class="no">IO_df</span><span class="kw">[[</span><span class="st">"y"</span>]]<span class="kw">[[</span><span class="fl">1</span>]]
+<span class="kw">IO_df</span>[[<span class="st">"y"</span>]][[<span class="fl">1</span>]]
 <span class="co">#&gt;                Industry</span>
 <span class="co">#&gt; Diesel - Dist.    14750</span>
 <span class="co">#&gt; Elect - Grid       6000</span>
@@ -324,7 +339,7 @@
 <span class="co">#&gt; [1] "Product"</span>
 <span class="co">#&gt; attr(,"coltype")</span>
 <span class="co">#&gt; [1] "Industry"</span>
-<span class="no">IO_df</span><span class="kw">[[</span><span class="st">"y"</span>]]<span class="kw">[[</span><span class="fl">4</span>]]
+<span class="kw">IO_df</span>[[<span class="st">"y"</span>]][[<span class="fl">4</span>]]
 <span class="co">#&gt;                                 Industry</span>
 <span class="co">#&gt; Freight [tonne-km/year]     1.429166e+11</span>
 <span class="co">#&gt; Illumination [lumen-hrs/yr] 5.000000e+14</span>
@@ -333,21 +348,23 @@
 <span class="co">#&gt; attr(,"rowtype")</span>
 <span class="co">#&gt; [1] "Product"</span>
 <span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "Industry"</span></pre></body></html></div>
+<span class="co">#&gt; [1] "Industry"</span>
+</pre></div>
 <p>For the remainder of this vignette, operations will be performed on the entire <code>UKEnergy2000mats</code> data frame. But readers should remember that functions can be called on named lists or individual matrices, as well.</p>
 </div>
 </div>
 <div id="changes-in-final-demand" class="section level2">
 <h2 class="hasAnchor">
 <a href="#changes-in-final-demand" class="anchor"></a>Changes in final demand</h2>
-<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 2.2.5.)</p>
+<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 2.2.5.)</p>
 <p>One of the first applications of input-output analysis was estimating changes in industry outputs that would be required to meet new final demand. <code>Recca</code> allows similar calculations on energy conversion chains with the function <code><a href="../reference/new_Y.html">new_Y()</a></code>. Arguments to <code><a href="../reference/new_Y.html">new_Y()</a></code> include matrices that describe the input-output structure of the ECC and <code>Y_prime</code>, the new final demand matrix. <code><a href="../reference/new_Y.html">new_Y()</a></code> calculates <code>U_prime</code> and <code>V_prime</code> matrices which represent the ECC that would be required to meet the new final demand represented by <code>Y_prime</code>.</p>
-<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="no">Double_demand</span> <span class="kw">&lt;-</span> <span class="no">IO_df</span> <span class="kw">%&gt;%</span>
-  <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(
-    <span class="kw">Y_prime</span> <span class="kw">=</span> <span class="kw pkg">matsbyname</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/hadamardproduct_byname.html">hadamardproduct_byname</a></span>(<span class="fl">2</span>, <span class="no">Y</span>)
-  ) <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb9"><pre class="downlit">
+<span class="kw">Double_demand</span> <span class="op">&lt;-</span> <span class="kw">IO_df</span> <span class="op">%&gt;%</span> 
+  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(
+    Y_prime = <span class="kw">matsbyname</span>::<span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/hadamardproduct_byname.html">hadamardproduct_byname</a></span>(<span class="fl">2</span>, <span class="kw">Y</span>)
+  ) <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/new_Y.html">new_Y</a></span>()
-<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">Double_demand</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="kw">Double_demand</span>)
 <span class="co">#&gt;  [1] "Country"     "Year"        "Energy.type" "Last.stage"  "R"          </span>
 <span class="co">#&gt;  [6] "r_EIOU"      "S_units"     "U"           "U_EIOU"      "U_feed"     </span>
 <span class="co">#&gt; [11] "V"           "Y"           "y"           "q"           "f"          </span>
@@ -355,13 +372,13 @@
 <span class="co">#&gt; [21] "D"           "A"           "L_pxp"       "L_ixp"       "Z_feed"     </span>
 <span class="co">#&gt; [26] "K_feed"      "C_feed"      "D_feed"      "A_feed"      "L_pxp_feed" </span>
 <span class="co">#&gt; [31] "L_ixp_feed"  "Y_prime"     "U_prime"     "V_prime"</span>
-<span class="no">IO_df</span><span class="kw">[[</span><span class="st">"Y"</span>]]<span class="kw">[[</span><span class="fl">1</span>]][ , <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>,<span class="fl">2</span>)]
+<span class="kw">IO_df</span>[[<span class="st">"Y"</span>]][[<span class="fl">1</span>]][ , <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>,<span class="fl">2</span>)]
 <span class="co">#&gt;                Residential Transport</span>
 <span class="co">#&gt; Diesel - Dist.           0     14750</span>
 <span class="co">#&gt; Elect - Grid          6000         0</span>
 <span class="co">#&gt; NG - Dist.           25000         0</span>
 <span class="co">#&gt; Petrol - Dist.           0     26000</span>
-<span class="no">Double_demand</span><span class="kw">[[</span><span class="st">"Y_prime"</span>]]<span class="kw">[[</span><span class="fl">1</span>]]
+<span class="kw">Double_demand</span>[[<span class="st">"Y_prime"</span>]][[<span class="fl">1</span>]]
 <span class="co">#&gt;                Residential Transport</span>
 <span class="co">#&gt; Diesel - Dist.           0     29500</span>
 <span class="co">#&gt; Elect - Grid         12000         0</span>
@@ -371,7 +388,7 @@
 <span class="co">#&gt; [1] "Product"</span>
 <span class="co">#&gt; attr(,"coltype")</span>
 <span class="co">#&gt; [1] "Industry"</span>
-<span class="no">IO_df</span><span class="kw">[[</span><span class="st">"U"</span>]]<span class="kw">[[</span><span class="fl">1</span>]][ , <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Crude dist."</span>, <span class="st">"Diesel dist."</span>)]
+<span class="kw">IO_df</span>[[<span class="st">"U"</span>]][[<span class="fl">1</span>]][ , <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Crude dist."</span>, <span class="st">"Diesel dist."</span>)]
 <span class="co">#&gt;                Crude dist. Diesel dist.</span>
 <span class="co">#&gt; Crude                    0            0</span>
 <span class="co">#&gt; Crude - Dist.          500            0</span>
@@ -385,7 +402,7 @@
 <span class="co">#&gt; NG - Wells               0            0</span>
 <span class="co">#&gt; Petrol                   0            0</span>
 <span class="co">#&gt; Petrol - Dist.           0            0</span>
-<span class="no">Double_demand</span><span class="kw">[[</span><span class="st">"U_prime"</span>]]<span class="kw">[[</span><span class="fl">1</span>]][ , <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Crude dist."</span>, <span class="st">"Diesel dist."</span>)]
+<span class="kw">Double_demand</span>[[<span class="st">"U_prime"</span>]][[<span class="fl">1</span>]][ , <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Crude dist."</span>, <span class="st">"Diesel dist."</span>)]
 <span class="co">#&gt;                Crude dist. Diesel dist.</span>
 <span class="co">#&gt; Crude                    0            0</span>
 <span class="co">#&gt; Crude - Dist.         1000            0</span>
@@ -398,17 +415,19 @@
 <span class="co">#&gt; NG - Dist.               0            0</span>
 <span class="co">#&gt; NG - Wells               0            0</span>
 <span class="co">#&gt; Petrol                   0            0</span>
-<span class="co">#&gt; Petrol - Dist.           0            0</span></pre></body></html></div>
+<span class="co">#&gt; Petrol - Dist.           0            0</span>
+</pre></div>
 <p>See the vignette for the <a href="new-functions.html"><code>new_*()</code> functions</a> for more details.</p>
 </div>
 <div id="net-energy-analysis" class="section level2">
 <h2 class="hasAnchor">
 <a href="#net-energy-analysis" class="anchor"></a>Net energy analysis</h2>
-<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 3.1.)</p>
-<p>The energy production system itself consumes energy, and important metrics for energy conversion chain industries are energy return ratios (ERRs). <code>Recca</code> provides a function to calculate three ERRs, a gross energy ratio (GER), a net energy ratio (NER), and the ratio of NER to GER. GER is commonly called energy return on investment (EROI). (See <a href="https://doi.org/10.3390/en4081211">Brandt &amp; Dale <span class="citation">(2011)</span></a>.) These ERRs can be calculated for a variety of system boundaries. ERRs for the <span class="math inline">\(\gamma\)</span> system boundary can be calculated readily using the <code><a href="../reference/calc_ERRs_gamma.html">calc_ERRs_gamma()</a></code> function. All three ERRs are calculated at the same time. The ERRs are <code>NA</code> for industries in which inputs or outputs are unit-inhomogeneous. The ERRs are <code>Inf</code> for industries that make an energy product without consuming any energy from another processing chain (such as the Elect. grid). The results below are identical to Fig. 6 in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>.</p>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="no">ERRs</span> <span class="kw">&lt;-</span> <span class="no">IO_df</span> <span class="kw">%&gt;%</span>
+<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 3.1.)</p>
+<p>The energy production system itself consumes energy, and important metrics for energy conversion chain industries are energy return ratios (ERRs). <code>Recca</code> provides a function to calculate three ERRs, a gross energy ratio (GER), a net energy ratio (NER), and the ratio of NER to GER. GER is commonly called energy return on investment (EROI). (See <a href="https://doi.org/10.3390/en4081211">Brandt &amp; Dale <span class="citation">(2011)</span></a>.) These ERRs can be calculated for a variety of system boundaries. ERRs for the <span class="math inline">\(\gamma\)</span> system boundary can be calculated readily using the <code><a href="../reference/calc_ERRs_gamma.html">calc_ERRs_gamma()</a></code> function. All three ERRs are calculated at the same time. The ERRs are <code>NA</code> for industries in which inputs or outputs are unit-inhomogeneous. The ERRs are <code>Inf</code> for industries that make an energy product without consuming any energy from another processing chain (such as the Elect. grid). The results below are identical to Fig. 6 in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit">
+<span class="kw">ERRs</span> <span class="op">&lt;-</span> <span class="kw">IO_df</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/calc_ERRs_gamma.html">calc_ERRs_gamma</a></span>()
-<span class="no">ERRs</span>$<span class="no">ger_gamma</span><span class="kw">[[</span><span class="fl">1</span>]]
+<span class="kw">ERRs</span><span class="op">$</span><span class="kw">ger_gamma</span>[[<span class="fl">1</span>]]
 <span class="co">#&gt;                    ger_gamma</span>
 <span class="co">#&gt; Crude dist.        86.363636</span>
 <span class="co">#&gt; Diesel dist.       44.285714</span>
@@ -423,7 +442,7 @@
 <span class="co">#&gt; [1] "Industry"</span>
 <span class="co">#&gt; attr(,"coltype")</span>
 <span class="co">#&gt; [1] "Product"</span>
-<span class="no">ERRs</span>$<span class="no">ner_gamma</span><span class="kw">[[</span><span class="fl">1</span>]]
+<span class="kw">ERRs</span><span class="op">$</span><span class="kw">ner_gamma</span>[[<span class="fl">1</span>]]
 <span class="co">#&gt;                    ner_gamma</span>
 <span class="co">#&gt; Crude dist.        85.363636</span>
 <span class="co">#&gt; Diesel dist.       43.285714</span>
@@ -438,7 +457,7 @@
 <span class="co">#&gt; [1] "Industry"</span>
 <span class="co">#&gt; attr(,"coltype")</span>
 <span class="co">#&gt; [1] "Product"</span>
-<span class="no">ERRs</span>$<span class="no">r_gamma</span><span class="kw">[[</span><span class="fl">1</span>]]
+<span class="kw">ERRs</span><span class="op">$</span><span class="kw">r_gamma</span>[[<span class="fl">1</span>]]
 <span class="co">#&gt;                     r_gamma</span>
 <span class="co">#&gt; Crude dist.       0.9884211</span>
 <span class="co">#&gt; Diesel dist.      0.9774194</span>
@@ -452,16 +471,18 @@
 <span class="co">#&gt; attr(,"rowtype")</span>
 <span class="co">#&gt; [1] "Industry"</span>
 <span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "Product"</span></pre></body></html></div>
+<span class="co">#&gt; [1] "Product"</span>
+</pre></div>
 </div>
 <div id="efficiencies" class="section level2">
 <h2 class="hasAnchor">
 <a href="#efficiencies" class="anchor"></a>Efficiencies</h2>
-<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 3.2.)</p>
-<p>The efficiency of every industry in the ECC can be calculated quickly with the <code><a href="../reference/calc_eta_i.html">calc_eta_i()</a></code> function, which creates a column named <code>eta_i</code> (by default) at the right of the data frame. If a particular ECC has industries whose inputs or outputs are unit inhomogeneous, the <code>eta_i</code> vector will have <code>NA</code> values in the appropriate places. The results below are identical to Fig. 9 in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>.</p>
-<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="no">etas</span> <span class="kw">&lt;-</span> <span class="no">IO_df</span> <span class="kw">%&gt;%</span>
+<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 3.2.)</p>
+<p>The efficiency of every industry in the ECC can be calculated quickly with the <code><a href="../reference/calc_eta_i.html">calc_eta_i()</a></code> function, which creates a column named <code>eta_i</code> (by default) at the right of the data frame. If a particular ECC has industries whose inputs or outputs are unit inhomogeneous, the <code>eta_i</code> vector will have <code>NA</code> values in the appropriate places. The results below are identical to Fig. 9 in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit">
+<span class="kw">etas</span> <span class="op">&lt;-</span> <span class="kw">IO_df</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/calc_eta_i.html">calc_eta_i</a></span>()
-<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">etas</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="kw">etas</span>)
 <span class="co">#&gt;  [1] "Country"     "Year"        "Energy.type" "Last.stage"  "R"          </span>
 <span class="co">#&gt;  [6] "r_EIOU"      "S_units"     "U"           "U_EIOU"      "U_feed"     </span>
 <span class="co">#&gt; [11] "V"           "Y"           "y"           "q"           "f"          </span>
@@ -469,7 +490,7 @@
 <span class="co">#&gt; [21] "D"           "A"           "L_pxp"       "L_ixp"       "Z_feed"     </span>
 <span class="co">#&gt; [26] "K_feed"      "C_feed"      "D_feed"      "A_feed"      "L_pxp_feed" </span>
 <span class="co">#&gt; [31] "L_ixp_feed"  "eta_i"</span>
-<span class="no">etas</span><span class="kw">[[</span><span class="st">"eta_i"</span>]]<span class="kw">[[</span><span class="fl">1</span>]]
+<span class="kw">etas</span>[[<span class="st">"eta_i"</span>]][[<span class="fl">1</span>]]
 <span class="co">#&gt;                       eta_i</span>
 <span class="co">#&gt; Crude dist.       0.9885536</span>
 <span class="co">#&gt; Diesel dist.      0.9779180</span>
@@ -484,7 +505,7 @@
 <span class="co">#&gt; [1] "Industry"</span>
 <span class="co">#&gt; attr(,"coltype")</span>
 <span class="co">#&gt; [1] "Product"</span>
-<span class="no">etas</span><span class="kw">[[</span><span class="st">"eta_i"</span>]]<span class="kw">[[</span><span class="fl">3</span>]] <span class="co"># NAs indicate inhomogeneous units on inputs or outputs.</span>
+<span class="kw">etas</span>[[<span class="st">"eta_i"</span>]][[<span class="fl">3</span>]] <span class="co"># NAs indicate inhomogeneous units on inputs or outputs.</span>
 <span class="co">#&gt;                       eta_i</span>
 <span class="co">#&gt; Car engines       0.1154000</span>
 <span class="co">#&gt; Cars                     NA</span>
@@ -506,12 +527,13 @@
 <span class="co">#&gt; attr(,"rowtype")</span>
 <span class="co">#&gt; [1] "Industry"</span>
 <span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "Product"</span></pre></body></html></div>
+<span class="co">#&gt; [1] "Product"</span>
+</pre></div>
 </div>
 <div id="energy-footprints" class="section level2">
 <h2 class="hasAnchor">
 <a href="#energy-footprints" class="anchor"></a>Energy footprints</h2>
-<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 3.3.)</p>
+<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 3.3.)</p>
 <p>Final demand for energy contains embodied primary energy, the sum of all primary energy consumed and wasted throughout the ECC in the process of satisfying that final demand. <code>Recca</code> provides two functions to calculate embodied primary energy and important ratios, namely <code><a href="../reference/calc_embodied_mats.html">calc_embodied_mats()</a></code> and <code><a href="../reference/calc_embodied_etas.html">calc_embodied_etas()</a></code>.</p>
 <p>The function <code><a href="../reference/calc_embodied_mats.html">calc_embodied_mats()</a></code> calculates embodied energy in final demand products (<span class="math inline">\(p\)</span>) and final demand sectors (<span class="math inline">\(s\)</span>).</p>
 <p>Outputs from <code><a href="../reference/calc_embodied_mats.html">calc_embodied_mats()</a></code> include the following matrices:</p>
@@ -593,19 +615,20 @@
 </tr>
 <tr class="even">
 <td align="right"><span class="math inline">\(\eta_s\)</span></td>
-<td align="left">Energy consumed by final demand sector (rows) dividied by embodied energy input to the final demand sector</td>
+<td align="left">Energy consumed by final demand sector (rows) divided by embodied energy input to the final demand sector</td>
 </tr>
 </tbody>
 </table>
-<!-- These don't work at this time. --><!-- | $\colvec{\bm{\upeta}}_p$ | Final demand product (rows) divided by embodied energy of that final demand product | --><!-- | $\colvec{\bm{\upeta}}_s$ | Energy consumed by final demand sector (rows) dividied by embodied energy input to the final demand sector  | --><div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="no">primary_machine_names</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Resources - Crude"</span>, <span class="st">"Resources - NG"</span>)
+<!-- These don't work at this time. --><!-- | $\colvec{\bm{\upeta}}_p$ | Final demand product (rows) divided by embodied energy of that final demand product | --><!-- | $\colvec{\bm{\upeta}}_s$ | Energy consumed by final demand sector (rows) divided by embodied energy input to the final demand sector  | --><div class="sourceCode" id="cb12"><pre class="downlit">
+<span class="kw">primary_machine_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Resources - Crude"</span>, <span class="st">"Resources - NG"</span>)
 
-<span class="no">embodied_mats</span> <span class="kw">&lt;-</span> <span class="no">IO_df</span> <span class="kw">%&gt;%</span>
-  <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(
-    <span class="kw">U_EIOU</span> <span class="kw">=</span> <span class="kw pkg">matsbyname</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/hadamardproduct_byname.html">hadamardproduct_byname</a></span>(<span class="no">r_EIOU</span>, <span class="no">U</span>)
-  ) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../reference/calc_embodied_mats.html">calc_embodied_mats</a></span>() <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../reference/calc_embodied_etas.html">calc_embodied_etas</a></span>(<span class="kw">primary_machine_names</span> <span class="kw">=</span> <span class="no">primary_machine_names</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="no">embodied_mats</span>)
+<span class="kw">embodied_mats</span> <span class="op">&lt;-</span> <span class="kw">IO_df</span> <span class="op">%&gt;%</span> 
+  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(
+    U_EIOU = <span class="kw">matsbyname</span>::<span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/hadamardproduct_byname.html">hadamardproduct_byname</a></span>(<span class="kw">r_EIOU</span>, <span class="kw">U</span>)
+  ) <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/calc_embodied_mats.html">calc_embodied_mats</a></span>() <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/calc_embodied_etas.html">calc_embodied_etas</a></span>(primary_machine_names = <span class="kw">primary_machine_names</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="kw">embodied_mats</span>)
 <span class="co">#&gt;  [1] "Country"       "Year"          "Energy.type"   "Last.stage"   </span>
 <span class="co">#&gt;  [5] "R"             "r_EIOU"        "S_units"       "U"            </span>
 <span class="co">#&gt;  [9] "U_EIOU"        "U_feed"        "V"             "Y"            </span>
@@ -616,9 +639,11 @@
 <span class="co">#&gt; [29] "A_feed"        "L_pxp_feed"    "L_ixp_feed"    "G"            </span>
 <span class="co">#&gt; [33] "H"             "E"             "M_p"           "M_s"          </span>
 <span class="co">#&gt; [37] "F_footprint_p" "F_effects_p"   "F_footprint_s" "F_effects_s"  </span>
-<span class="co">#&gt; [41] "eta_p"         "eta_s"</span></pre></body></html></div>
-<p>Figure 15 in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a> shows primary-to-services energetic efficiencies for the ECC in the 3rd row of <code>IO_df</code>. The following code extracts those results. Rows of the vector give final demand services and their units. The column gives efficiencies in units of service per ktoe of energy.</p>
-<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="no">embodied_mats</span>$<span class="no">eta_p</span><span class="kw">[[</span><span class="fl">3</span>]]
+<span class="co">#&gt; [41] "eta_p"         "eta_s"</span>
+</pre></div>
+<p>Figure 15 in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a> shows primary-to-services energetic efficiencies for the ECC in the 3rd row of <code>IO_df</code>. The following code extracts those results. Rows of the vector give final demand services and their units. The column gives efficiencies in units of service per ktoe of energy.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit">
+<span class="kw">embodied_mats</span><span class="op">$</span><span class="kw">eta_p</span>[[<span class="fl">3</span>]]
 <span class="co">#&gt;                                Industry</span>
 <span class="co">#&gt; Freight [tonne-km/year]         8003565</span>
 <span class="co">#&gt; Illumination [lumen-hrs/yr] 30377575919</span>
@@ -627,12 +652,13 @@
 <span class="co">#&gt; attr(,"rowtype")</span>
 <span class="co">#&gt; [1] "Product"</span>
 <span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "Industry"</span></pre></body></html></div>
+<span class="co">#&gt; [1] "Industry"</span>
+</pre></div>
 </div>
 <div id="conclusion" class="section level2">
 <h2 class="hasAnchor">
 <a href="#conclusion" class="anchor"></a>Conclusion</h2>
-<p>This vignette demonstrated the use of the <code>Recca</code> package. <code>Recca</code> provides many useful functions for analyzing energy conversion chains within the PSUT framework first described in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>.</p>
+<p>This vignette demonstrated the use of the <code>Recca</code> package. <code>Recca</code> provides many useful functions for analyzing energy conversion chains within the PSUT framework first described in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>.</p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2 class="hasAnchor">
@@ -663,7 +689,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
