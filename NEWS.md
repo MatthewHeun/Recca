@@ -3,6 +3,7 @@
     * Now up to 407 tests, all of which pass.
     * Test coverage remains at 100 %.
 * Test coverage now up to 100%.
+* Created a new function `calc_embodied_EIOU()` that calculates different embodied EIOU matrices for a given final demand
 * Created a new function `calc_erois()` that calculates different vector of product-level and industry-level EROIs 
   using different assumptions.
 * Created a new function `calc_E_EIOU()` that calculates the `E_EIOU` matrix of EIOU energy use 
