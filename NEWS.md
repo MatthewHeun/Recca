@@ -1,9 +1,18 @@
+* New author Emmanueal Aramendia. Welcome!
+* Added tests for new features and old bugs.
+    * Now up to 407 tests, all of which pass.
+    * Test coverage remains at 100 %.
+* Test coverage now up to 100%.
+* Created a new function `calc_erois()` that calculates different vector of product-level and industry-level EROIs 
+  using different assumptions.
+* Created a new function `calc_E_EIOU()` that calculates the `E_EIOU` matrix of EIOU energy use 
+  by unit of industry output, split by product.
+  It also calculates the direct energy extension vector e_EIOU of total EIOU energy use
+  by unit of industry output.
 * Fixed a bug in one of the vignettes related to the move from `U_excl_EIOU` to `U_feed`.
 * `prep_UK2000.R` and `prep_perfectsub.R` scripts
   fixed to work with `IEATools`, which now uses
   `U_feed` instead of `U_excl_EIOU`.
-* Created a new function `calc_E_EIOU()` that calculates the `E_EIOU` matrix of EIOU energy use by unit of industry output, split by product. It also calculates the direct energy extension vector e_EIOU of total EIOU energy use by unit of industry output.
-* Created a new function `calc_erois()` that calculates different vector of product-level and industry-level EROIs using different assumptions.
 
 
 # Recca 0.1.24 (2020-03-17)

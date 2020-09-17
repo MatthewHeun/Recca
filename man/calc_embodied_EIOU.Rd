@@ -67,7 +67,7 @@ This function adds many additional columns to \code{.iomats}, each one containin
 The embodied EIOU matrices are calculated either:
 \itemize{
 \item by final demand sector (subscript "_s" appears in the name);
-\item by final demand products (subscrip "_p" appears in the name);
+\item by final demand products (subscript "_p" appears in the name);
 \item including only EIOU required for feedstock inputs production (subscript "_feed" appears in the name);
 \item including both EIOU required for feedstock and EIOU inputs production (no additional subscript).
 }

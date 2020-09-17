@@ -318,7 +318,6 @@ calc_embodied_etas <- function(.embodiedmats = NULL,
 }
 
 
-
 #' Calculate various embodied EIOU matrices
 #'
 #'This function calculates different embodied Energy Industry Own Use (EIOU) matrices (see details) for a given energy conversion chain
@@ -331,11 +330,12 @@ calc_embodied_etas <- function(.embodiedmats = NULL,
 #'
 #' The embodied EIOU matrices are calculated either:
 #' * by final demand sector (subscript "_s" appears in the name);
-#' * by final demand products (subscrip "_p" appears in the name);
+#' * by final demand products (subscript "_p" appears in the name);
 #' * including only EIOU required for feedstock inputs production (subscript "_feed" appears in the name);
 #' * including both EIOU required for feedstock and EIOU inputs production (no additional subscript).
 #'
-#' Note: All matrix multiplication (`%*%`) is performed "by name" using
+#' Note: All matrix multiplication (`%*%`) is performed "by name" usingyes
+#'
 #' `matsbyname::matrixproduct_byname()`.
 #'
 #'Output columns include:
