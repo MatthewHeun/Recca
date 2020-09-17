@@ -106,3 +106,5 @@ test_that("calc_erois() returns appropriate EROIs",{
   expect_equal(eroi_n_i_feed["NG dist.", "Industry"], 19.2120951562052)
   expect_equal(eroi_n_i_feed["Power plants", "Industry"], 6.17806476238947)
 })
+
+

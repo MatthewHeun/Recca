@@ -124,7 +124,7 @@ calc_E_EIOU <- function(.iomats = NULL,
 #'                      including only energy use for feedstock production.
 #'                      Default is "eroi_n_i_feed".
 #'
-#' @return A data frame that includes several additional EROIs in added columns.
+#' @return A data frame that includes several additional EROIs vectors in added columns.
 #'         See description for details.
 #'
 #' @export
