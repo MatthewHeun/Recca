@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.24</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.25</span>
       </span>
     </div>
 
@@ -132,9 +132,29 @@
       <small>Source: <a href='https://github.com/MatthewHeun/Recca/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="recca-0124-2020-03-17" class="section level1">
+    <div id="recca-0-1-25-2020-09-17" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.25">
+<a href="#recca-0-1-25-2020-09-17" class="anchor"></a>Recca 0.1.25 (2020-09-17)</h1>
+<ul>
+<li>New author Emmanueal Aramendia. Welcome!</li>
+<li>Added tests for new features and old bugs.
+<ul>
+<li>Now up to 407 tests, all of which pass.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul>
+</li>
+<li>Test coverage now up to 100%.</li>
+<li>Created a new function <code><a href="../reference/calc_embodied_EIOU.html">calc_embodied_EIOU()</a></code> that calculates different embodied EIOU matrices for a given final demand</li>
+<li>Created a new function <code><a href="../reference/calc_erois.html">calc_erois()</a></code> that calculates different vector of product-level and industry-level EROIs using different assumptions.</li>
+<li>Created a new function <code><a href="../reference/calc_E_EIOU.html">calc_E_EIOU()</a></code> that calculates the <code>E_EIOU</code> matrix of EIOU energy use by unit of industry output, split by product. It also calculates the direct energy extension vector e_EIOU of total EIOU energy use by unit of industry output.</li>
+<li>Fixed a bug in one of the vignettes related to the move from <code>U_excl_EIOU</code> to <code>U_feed</code>.</li>
+<li>
+<code>prep_UK2000.R</code> and <code>prep_perfectsub.R</code> scripts fixed to work with <code>IEATools</code>, which now uses <code>U_feed</code> instead of <code>U_excl_EIOU</code>.</li>
+</ul>
+</div>
+    <div id="recca-0-1-24-2020-03-17" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.24">
-<a href="#recca-0124-2020-03-17" class="anchor"></a>Recca 0.1.24 (2020-03-17)</h1>
+<a href="#recca-0-1-24-2020-03-17" class="anchor"></a>Recca 0.1.24 (2020-03-17)</h1>
 <ul>
 <li>New tests for new features and old bugs.
 <ul>
@@ -146,32 +166,32 @@
 <li>Calculate <code>Z_feed</code> and <code>A_feed</code> in <code><a href="../reference/calc_io_mats.html">calc_io_mats()</a></code>.</li>
 </ul>
 </div>
-    <div id="recca-0123-2020-03-17" class="section level1">
+    <div id="recca-0-1-23-2020-03-17" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.23">
-<a href="#recca-0123-2020-03-17" class="anchor"></a>Recca 0.1.23 (2020-03-17)</h1>
+<a href="#recca-0-1-23-2020-03-17" class="anchor"></a>Recca 0.1.23 (2020-03-17)</h1>
 <ul>
 <li>Added a <code>...</code> argument to <code><a href="../reference/make_sankey.html">make_sankey()</a></code>, which passes arguments to <code><a href="https://rdrr.io/pkg/networkD3/man/sankeyNetwork.html">networkD3::sankeyNetwork()</a></code>.</li>
 </ul>
 </div>
-    <div id="recca-0122-2020-05-02" class="section level1">
+    <div id="recca-0-1-22-2020-05-02" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.22">
-<a href="#recca-0122-2020-05-02" class="anchor"></a>Recca 0.1.22 (2020-05-02)</h1>
+<a href="#recca-0-1-22-2020-05-02" class="anchor"></a>Recca 0.1.22 (2020-05-02)</h1>
 <ul>
 <li>Fixed a bug in <code><a href="../reference/primary_aggregates.html">primary_aggregates()</a></code>. <code><a href="../reference/primary_aggregates.html">primary_aggregates()</a></code> had been assuming that either the <code>R</code> or the <code>V</code> matrix (but not both) could contain industries counted in total primary energy supply (production, imports, exports, etc.). However, that is not true. <code>R</code> is for resource industries, so imports, exports, marine and aviation bunkers, and stock changes are excluded from <code>R</code>. However, imports, exports, marine and aviation bunkers, and stock changes <em>are</em> included in total primary energy supply. I removed the conditional <code>xor</code> check for appearance of TPES industries in <code>R</code> and <code>V</code>. Everything seems to be working now.</li>
 </ul>
 </div>
-    <div id="recca-0121-2020-03-27" class="section level1">
+    <div id="recca-0-1-21-2020-03-27" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.21">
-<a href="#recca-0121-2020-03-27" class="anchor"></a>Recca 0.1.21 (2020-03-27)</h1>
+<a href="#recca-0-1-21-2020-03-27" class="anchor"></a>Recca 0.1.21 (2020-03-27)</h1>
 <ul>
 <li>Now up to 332 tests, all of which pass.</li>
 <li>Test coverage now up to 100%.</li>
 <li>Implemented energy balance checking for <code><a href="../reference/new_R_ps.html">new_R_ps()</a></code> with its own tolerance, by default <code>1e-6</code>.</li>
 </ul>
 </div>
-    <div id="recca-0120-2020-03-27" class="section level1">
+    <div id="recca-0-1-20-2020-03-27" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.20">
-<a href="#recca-0120-2020-03-27" class="anchor"></a>Recca 0.1.20 (2020-03-27)</h1>
+<a href="#recca-0-1-20-2020-03-27" class="anchor"></a>Recca 0.1.20 (2020-03-27)</h1>
 <ul>
 <li>Completed the conversion of the entire package to enable use of <code>R</code> matrices in the PSUT framework. This effort involved converting several functions to accept <em>either</em> 1) both <code>R</code> and <code>V</code> matrices in the <code>R</code> and <code>V</code> arguments or 2) nothing supplied to the <code>R</code> argument and <code>R + V</code> supplied to the <code>V</code> argument.</li>
 <li>Worked around a bug in <code><a href="https://rdrr.io/pkg/openxlsx/man/read.xlsx.html">openxlsx::read.xlsx()</a></code> that HTML-escapes referenced cells that contain “&amp;”, “&lt;”, or “&gt;”.<br>
@@ -182,31 +202,31 @@ See <a href="https://github.com/awalker89/openxlsx/issues/393" class="uri">https
 <li>Fixed typos in <code>Recca.Rmd</code> vignette.</li>
 </ul>
 </div>
-    <div id="recca-0119-2020-02-19" class="section level1">
+    <div id="recca-0-1-19-2020-02-19" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.19">
-<a href="#recca-0119-2020-02-19" class="anchor"></a>Recca 0.1.19 (2020-02-19)</h1>
+<a href="#recca-0-1-19-2020-02-19" class="anchor"></a>Recca 0.1.19 (2020-02-19)</h1>
 <ul>
 <li>Removed dependency on package <code>qgraph</code>. <code>qgraph</code> depended upon <code>graph</code>, which is apparently no longer available on CRAN. The dependency on <code>qgraph</code> was only for graphical representations of ECCs. But, graphical representations of ECCs are not presently implemented in <code>Recca</code>. Future versions of <code>Recca</code> may implement graphical representations. I can reassess the packages for graphing and Sankey diagrams at a later date.</li>
 </ul>
 </div>
-    <div id="recca-0118-2020-01-17" class="section level1">
+    <div id="recca-0-1-18-2020-01-17" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.18">
-<a href="#recca-0118-2020-01-17" class="anchor"></a>Recca 0.1.18 (2020-01-17)</h1>
+<a href="#recca-0-1-18-2020-01-17" class="anchor"></a>Recca 0.1.18 (2020-01-17)</h1>
 <ul>
 <li>Updates to synchronize with recent changes in other packages. In particular, there was one place where <code>group</code>ing on a column of a data frame with <code>NA</code> entries was causing a warning to be emitted. Now, the <code>grouping</code> happens after splitting the data frame into rows with <code>NA</code> entries and those without. Grouping and sorting happens only for the rows without <code>NA</code> values.</li>
 </ul>
 </div>
-    <div id="recca-0117-2019-02-25" class="section level1">
+    <div id="recca-0-1-17-2019-02-25" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.17">
-<a href="#recca-0117-2019-02-25" class="anchor"></a>Recca 0.1.17 (2019-02-25)</h1>
+<a href="#recca-0-1-17-2019-02-25" class="anchor"></a>Recca 0.1.17 (2019-02-25)</h1>
 <ul>
 <li>First draft of completed vignette.</li>
 <li>Removed ecc_layout function. It was not being used, and there is a create_sankey function, anyway.</li>
 </ul>
 </div>
-    <div id="recca-0116-2019-02-16" class="section level1">
+    <div id="recca-0-1-16-2019-02-16" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.16">
-<a href="#recca-0116-2019-02-16" class="anchor"></a>Recca 0.1.16 (2019-02-16)</h1>
+<a href="#recca-0-1-16-2019-02-16" class="anchor"></a>Recca 0.1.16 (2019-02-16)</h1>
 <ul>
 <li>Now automatically building in Travis.</li>
 <li>Added new <code><a href="../reference/reverse.html">reverse()</a></code> function to change flow direction of an ECC. <code><a href="../reference/reverse.html">reverse()</a></code> will be useful for downstream swim functions.</li>
@@ -220,16 +240,16 @@ See <a href="https://github.com/awalker89/openxlsx/issues/393" class="uri">https
 <li>Test coverage now up to 100%.</li>
 </ul>
 </div>
-    <div id="recca-0115-2019-01-09" class="section level1">
+    <div id="recca-0-1-15-2019-01-09" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.15">
-<a href="#recca-0115-2019-01-09" class="anchor"></a>Recca 0.1.15 (2019-01-09)</h1>
+<a href="#recca-0-1-15-2019-01-09" class="anchor"></a>Recca 0.1.15 (2019-01-09)</h1>
 <ul>
 <li>First draft of <code>new-functions</code> vignette now complete, including demonstrations of <code><a href="../reference/new_R_ps.html">new_R_ps()</a></code> and <code><a href="../reference/new_k_ps.html">new_k_ps()</a></code> functions.</li>
 </ul>
 </div>
-    <div id="recca-0114-2019-01-07" class="section level1">
+    <div id="recca-0-1-14-2019-01-07" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.14">
-<a href="#recca-0114-2019-01-07" class="anchor"></a>Recca 0.1.14 (2019-01-07)</h1>
+<a href="#recca-0-1-14-2019-01-07" class="anchor"></a>Recca 0.1.14 (2019-01-07)</h1>
 <ul>
 <li>New function <code><a href="../reference/make_sankey.html">make_sankey()</a></code> does what it says: makes a Sankey diagram. <code><a href="../reference/make_sankey.html">make_sankey()</a></code> is the first function that optionally uses the resource (<code>R</code>) matrix.</li>
 <li>
@@ -237,9 +257,9 @@ See <a href="https://github.com/awalker89/openxlsx/issues/393" class="uri">https
 <li>The vignette describing the <code>new*</code> functions now has a section on <code><a href="../reference/new_R_ps.html">new_R_ps()</a></code>.</li>
 </ul>
 </div>
-    <div id="recca-0113-2018-12-21" class="section level1">
+    <div id="recca-0-1-13-2018-12-21" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.13">
-<a href="#recca-0113-2018-12-21" class="anchor"></a>Recca 0.1.13 (2018-12-21)</h1>
+<a href="#recca-0-1-13-2018-12-21" class="anchor"></a>Recca 0.1.13 (2018-12-21)</h1>
 <ul>
 <li>
 <code><a href="../reference/calc_F_footprint_effects.html">calc_F_footprint_effects()</a></code> now cleans rows and columns (deletes rows and columns containing all 0s) before calculating row and column fractions.</li>
@@ -247,23 +267,23 @@ See <a href="https://github.com/awalker89/openxlsx/issues/393" class="uri">https
 <code><a href="../reference/calc_F_footprint_effects.html">calc_F_footprint_effects()</a></code> now calculates row and column fractions using <code><a href="https://rdrr.io/pkg/matsbyname/man/fractionize_byname.html">matsbyname::fractionize_byname()</a></code>, providing a speed boost.</li>
 </ul>
 </div>
-    <div id="recca-0112-2018-12-02" class="section level1">
+    <div id="recca-0-1-12-2018-12-02" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.12">
-<a href="#recca-0112-2018-12-02" class="anchor"></a>Recca 0.1.12 (2018-12-02)</h1>
+<a href="#recca-0-1-12-2018-12-02" class="anchor"></a>Recca 0.1.12 (2018-12-02)</h1>
 <ul>
 <li>Added a vignette discussing interactions among <code>new_*</code> functions.</li>
 </ul>
 </div>
-    <div id="recca-0111-2018-12-02" class="section level1">
+    <div id="recca-0-1-11-2018-12-02" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.11">
-<a href="#recca-0111-2018-12-02" class="anchor"></a>Recca 0.1.11 (2018-12-02)</h1>
+<a href="#recca-0-1-11-2018-12-02" class="anchor"></a>Recca 0.1.11 (2018-12-02)</h1>
 <ul>
 <li>Updates to embodied energy calculations to conform to updated <code><a href="https://rdrr.io/pkg/matsbyname/man/hatinv_byname.html">matsbyname::hatinv_byname()</a></code> which handles <code>0</code> values better.</li>
 </ul>
 </div>
-    <div id="recca-0110-2018-11-29" class="section level1">
+    <div id="recca-0-1-10-2018-11-29" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.10">
-<a href="#recca-0110-2018-11-29" class="anchor"></a>Recca 0.1.10 (2018-11-29)</h1>
+<a href="#recca-0-1-10-2018-11-29" class="anchor"></a>Recca 0.1.10 (2018-11-29)</h1>
 <ul>
 <li>Now importing <code>magrittr</code> pipe at high level.</li>
 <li>Now using <code><a href="https://rdrr.io/pkg/matsbyname/man/hatinv_byname.html">matsbyname::hatinv_byname()</a></code> function instead of <code>matsbyname::hatize_byname() %&gt;% matsbyname::invert_byname()</code>.</li>
@@ -273,61 +293,61 @@ See <a href="https://github.com/awalker89/openxlsx/issues/393" class="uri">https
 <li>Now up to 316 tests.</li>
 </ul>
 </div>
-    <div id="recca-019-2018-11-08" class="section level1">
+    <div id="recca-0-1-9-2018-11-08" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.9">
-<a href="#recca-019-2018-11-08" class="anchor"></a>Recca 0.1.9 (2018-11-08)</h1>
+<a href="#recca-0-1-9-2018-11-08" class="anchor"></a>Recca 0.1.9 (2018-11-08)</h1>
 <ul>
 <li>Breaking change: <code>reconstruct_UV</code> –&gt; <code>new_Y</code>. This change allows for several <code>new_*</code> functions that assess changes to the ECC when some part of the ECC changes.</li>
 <li>New function <code>new_k_ps</code> assesses changes to the ECC when proportion of inputs to an industry change under the assumption of perfect substitution.</li>
 <li>New functions <code>products_unit_homogeneous</code>, <code>inputs_unit_homogeneous</code>, and <code>outputs_unit_homogeneous</code> test whether products, inputs to all industries, and outputs from all industries are unit-homogeneous.</li>
 </ul>
 </div>
-    <div id="recca-018-2018-07-27" class="section level1">
+    <div id="recca-0-1-8-2018-07-27" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.8">
-<a href="#recca-018-2018-07-27" class="anchor"></a>Recca 0.1.8 (2018-07-27)</h1>
+<a href="#recca-0-1-8-2018-07-27" class="anchor"></a>Recca 0.1.8 (2018-07-27)</h1>
 <ul>
 <li>Added new function <code>node_list</code> which creates a node list from an edge list.</li>
 </ul>
 </div>
-    <div id="recca-017-2018-07-26" class="section level1">
+    <div id="recca-0-1-7-2018-07-26" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.7">
-<a href="#recca-017-2018-07-26" class="anchor"></a>Recca 0.1.7 (2018-07-26)</h1>
+<a href="#recca-0-1-7-2018-07-26" class="anchor"></a>Recca 0.1.7 (2018-07-26)</h1>
 <ul>
 <li>Added new function <code>edge_list</code> which creates an edge list from U, V, and Y matrices.</li>
 </ul>
 </div>
-    <div id="recca-016-2018-07-09" class="section level1">
+    <div id="recca-0-1-6-2018-07-09" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.6">
-<a href="#recca-016-2018-07-09" class="anchor"></a>Recca 0.1.6 (2018-07-09)</h1>
+<a href="#recca-0-1-6-2018-07-09" class="anchor"></a>Recca 0.1.6 (2018-07-09)</h1>
 <ul>
 <li>Fixed a bug in <code>verify_IEATable_energy_balance</code>. <code>err</code> –&gt; <code><a href="https://rdrr.io/r/base/name.html">as.name(err)</a></code>.</li>
 <li>Fixed a bug in <code>S_units_from_tidy</code>. Needed to change an argument name for <code><a href="https://rdrr.io/pkg/matsindf/man/collapse_to_matrices.html">matsindf::collapse_to_matrices</a></code> from <code>values</code> –&gt; <code>matvals</code>.</li>
 </ul>
 </div>
-    <div id="recca-015-2018-07-02" class="section level1">
+    <div id="recca-0-1-5-2018-07-02" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.5">
-<a href="#recca-015-2018-07-02" class="anchor"></a>Recca 0.1.5 (2018-07-02)</h1>
+<a href="#recca-0-1-5-2018-07-02" class="anchor"></a>Recca 0.1.5 (2018-07-02)</h1>
 <ul>
 <li>Added a column in the output of <code>verify_SUT_industry_production</code> that indicates which industries are problematic.</li>
 </ul>
 </div>
-    <div id="recca-014-2018-06-28" class="section level1">
+    <div id="recca-0-1-4-2018-06-28" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.4">
-<a href="#recca-014-2018-06-28" class="anchor"></a>Recca 0.1.4 (2018-06-28)</h1>
+<a href="#recca-0-1-4-2018-06-28" class="anchor"></a>Recca 0.1.4 (2018-06-28)</h1>
 <ul>
 <li>Fixed a bug in the <code>verify_IEATable_energy_balance</code> function: !!err –&gt; !!as.name(err)</li>
 </ul>
 </div>
-    <div id="recca-013-2018-06-27" class="section level1">
+    <div id="recca-0-1-3-2018-06-27" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.3">
-<a href="#recca-013-2018-06-27" class="anchor"></a>Recca 0.1.3 (2018-06-27)</h1>
+<a href="#recca-0-1-3-2018-06-27" class="anchor"></a>Recca 0.1.3 (2018-06-27)</h1>
 <ul>
 <li>Added <code>verify_IEATable_energy_balance</code> function</li>
 </ul>
 </div>
-    <div id="recca-012-2018-05-20" class="section level1">
+    <div id="recca-0-1-2-2018-05-20" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.2">
-<a href="#recca-012-2018-05-20" class="anchor"></a>Recca 0.1.2 (2018-05-20)</h1>
+<a href="#recca-0-1-2-2018-05-20" class="anchor"></a>Recca 0.1.2 (2018-05-20)</h1>
 <ul>
 <li>All functions now use the <code><a href="https://rdrr.io/pkg/matsindf/man/matsindf_apply.html">matsindf::matsindf_apply</a></code> function</li>
 <li>
@@ -336,17 +356,17 @@ See <a href="https://github.com/awalker89/openxlsx/issues/393" class="uri">https
 <li>Note that some API changes are expected, particularly name changes for <code>*_colname</code> arguments.</li>
 </ul>
 </div>
-    <div id="recca-011-2018-04-16" class="section level1">
+    <div id="recca-0-1-1-2018-04-16" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.1">
-<a href="#recca-011-2018-04-16" class="anchor"></a>Recca 0.1.1 (2018-04-16)</h1>
+<a href="#recca-0-1-1-2018-04-16" class="anchor"></a>Recca 0.1.1 (2018-04-16)</h1>
 <ul>
 <li>New function <code>calc_io_mats</code>: calculate input-output (PSUT version) matrices, including <code>y</code>, <code>q</code>, <code>g</code>, <code>W</code>, <code>Z</code>, <code>D</code>, <code>C</code>, <code>A</code>, <code>L_ixp</code>, and <code>L_pxp</code>.</li>
 <li>New function <code>reconstruct_UV</code>: Reconstruct the energy conversion chain (new <code>U</code> and <code>V</code> matrices) from a new final demand matrix (<code>Y</code>)</li>
 </ul>
 </div>
-    <div id="recca-010-2018-04-12" class="section level1">
+    <div id="recca-0-1-0-2018-04-12" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.0">
-<a href="#recca-010-2018-04-12" class="anchor"></a>Recca 0.1.0 (2018-04-12)</h1>
+<a href="#recca-0-1-0-2018-04-12" class="anchor"></a>Recca 0.1.0 (2018-04-12)</h1>
 <ul>
 <li>Initial version</li>
 <li>Includes:
@@ -378,7 +398,7 @@ See <a href="https://github.com/awalker89/openxlsx/issues/393" class="uri">https
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

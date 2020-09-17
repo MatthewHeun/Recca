@@ -75,7 +75,7 @@ This function takes a matrix description of an ECC and produces a Sankey diagram
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.24</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.25</span>
       </span>
     </div>
 
@@ -145,14 +145,14 @@ This function takes a matrix description of an ECC and produces a Sankey diagram
     </div>
 
     <pre class="usage"><span class='fu'>make_sankey</span>(
-  <span class='kw'>.sutmats</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>R</span> <span class='kw'>=</span> <span class='st'>"R"</span>,
-  <span class='kw'>U</span> <span class='kw'>=</span> <span class='st'>"U"</span>,
-  <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>,
-  <span class='kw'>Y</span> <span class='kw'>=</span> <span class='st'>"Y"</span>,
-  <span class='kw'>simplify_edges</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>sankey</span> <span class='kw'>=</span> <span class='st'>"Sankey"</span>,
-  <span class='no'>...</span>
+  .sutmats = <span class='kw'>NULL</span>,
+  R = <span class='st'>"R"</span>,
+  U = <span class='st'>"U"</span>,
+  V = <span class='st'>"V"</span>,
+  Y = <span class='st'>"Y"</span>,
+  simplify_edges = <span class='fl'>TRUE</span>,
+  sankey = <span class='st'>"Sankey"</span>,
+  <span class='kw'>...</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -189,7 +189,7 @@ Applies to every row of <code>.sutmats</code> if <code>.sutmats</code> is specif
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Arguments passed to <code><a href='https://rdrr.io/pkg/networkD3/man/sankeyNetwork.html'>networkD3::sankeyNetwork()</a></code>.</p></td>
+      <td><p>Arguments passed to <code><a href='https://rdrr.io/pkg/networkD3/man/sankeyNetwork.html'>networkD3::sankeyNetwork()</a></code>, mostly for formatting purposes.</p></td>
     </tr>
     </table>
 
@@ -202,19 +202,21 @@ Applies to every row of <code>.sutmats</code> if <code>.sutmats</code> is specif
 <p>If any of <code>R</code>, <code>U</code>, <code>V</code>, or <code>Y</code> is <code>NA</code>, <code>NA</code> is returned.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>magrittr</span>)</div><div class='output co'>#&gt; <span class='message'></span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://dplyr.tidyverse.org'>dplyr</a></span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'>magrittr</span>)
+</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Attaching package: ‘magrittr’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:tidyr’:</span>
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>    extract</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:testthat’:</span>
 #&gt; <span class='message'></span>
-#&gt; <span class='message'>    equals, is_less_than, not</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>networkD3</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>tidyr</span>)
-<span class='no'>UKEnergy2000mats</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='st'>"matrix.name"</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>"matrix"</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'>make_sankey</span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://rdrr.io/pkg/magrittr/man/aliases.html'>extract2</a></span>(<span class='st'>"Sankey"</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://rdrr.io/pkg/magrittr/man/aliases.html'>extract2</a></span>(<span class='fl'>1</span>)</div></pre>
+#&gt; <span class='message'>    equals, is_less_than, not</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://CRAN.R-project.org/package=networkD3'>networkD3</a></span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://tidyr.tidyverse.org'>tidyr</a></span>)
+<span class='kw'>UKEnergy2000mats</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span>(key = <span class='st'>"matrix.name"</span>, value = <span class='st'>"matrix"</span>) <span class='op'>%&gt;%</span>
+  <span class='fu'>make_sankey</span>() <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://rdrr.io/pkg/magrittr/man/aliases.html'>extract2</a></span>(<span class='st'>"Sankey"</span>) <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://rdrr.io/pkg/magrittr/man/aliases.html'>extract2</a></span>(<span class='fl'>1</span>)
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -230,7 +232,7 @@ Applies to every row of <code>.sutmats</code> if <code>.sutmats</code> is specif
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

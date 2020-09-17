@@ -73,7 +73,7 @@ grouping variables in .ieatidydata." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.24</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.25</span>
       </span>
     </div>
 
@@ -141,13 +141,13 @@ grouping variables in <code>.ieatidydata</code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>verify_IEATable_energy_balance</span>(
-  <span class='no'>.ieatidydata</span>,
-  <span class='kw'>ledger.side</span> <span class='kw'>=</span> <span class='st'>"Ledger.side"</span>,
-  <span class='kw'>energy</span> <span class='kw'>=</span> <span class='st'>"E.dot"</span>,
-  <span class='kw'>supply</span> <span class='kw'>=</span> <span class='st'>"Supply"</span>,
-  <span class='kw'>consumption</span> <span class='kw'>=</span> <span class='st'>"Consumption"</span>,
-  <span class='kw'>err</span> <span class='kw'>=</span> <span class='st'>".err"</span>,
-  <span class='kw'>tol</span> <span class='kw'>=</span> <span class='fl'>1e-06</span>
+  <span class='kw'>.ieatidydata</span>,
+  ledger.side = <span class='st'>"Ledger.side"</span>,
+  energy = <span class='st'>"E.dot"</span>,
+  supply = <span class='st'>"Supply"</span>,
+  consumption = <span class='st'>"Consumption"</span>,
+  err = <span class='st'>".err"</span>,
+  tol = <span class='fl'>1e-06</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -206,11 +206,12 @@ If energy balance is not observed for one or more of the groups,
 a warning is emitted.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='no'>UKEnergy2000tidy</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>Last.stage</span> <span class='kw'>%in%</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Final"</span>, <span class='st'>"Useful"</span>)) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>Country</span>, <span class='no'>Year</span>, <span class='no'>Energy.type</span>, <span class='no'>Last.stage</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'>verify_IEATable_energy_balance</span>(<span class='kw'>energy</span> <span class='kw'>=</span> <span class='st'>"E.dot"</span>)</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 2 x 7</span><span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://dplyr.tidyverse.org'>dplyr</a></span>)
+<span class='kw'>UKEnergy2000tidy</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>Last.stage</span> <span class='op'>%in%</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Final"</span>, <span class='st'>"Useful"</span>)) <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='kw'>Country</span>, <span class='kw'>Year</span>, <span class='kw'>Energy.type</span>, <span class='kw'>Last.stage</span>) <span class='op'>%&gt;%</span>
+  <span class='fu'>verify_IEATable_energy_balance</span>(energy = <span class='st'>"E.dot"</span>)
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 2 x 7</span><span>
 #&gt; </span><span style='color: #949494;'># Groups:   Country, Year, Energy.type [1]</span><span>
 #&gt;   Country  Year Energy.type Last.stage ESupply EConsumption  .err
 #&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
@@ -231,7 +232,7 @@ a warning is emitted.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

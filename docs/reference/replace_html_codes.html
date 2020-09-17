@@ -76,7 +76,7 @@ by default, describe replacements for &quot;&amp;amp;amp;&quot;, &quot;&amp;amp;
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.24</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.25</span>
       </span>
     </div>
 
@@ -147,8 +147,8 @@ by default, describe replacements for "<code>&amp;amp;</code>", "<code>&amp;lt;<
     </div>
 
     <pre class="usage"><span class='fu'>replace_html_codes</span>(
-  <span class='no'>text</span>,
-  <span class='kw'>replacements</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"&amp;amp;"</span>, <span class='st'>"&amp;"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"&amp;lt;"</span>, <span class='st'>"&lt;"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"&amp;gt;"</span>, <span class='st'>"&gt;"</span>))
+  <span class='kw'>text</span>,
+  replacements = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"&amp;amp;"</span>, <span class='st'>"&amp;"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"&amp;lt;"</span>, <span class='st'>"&lt;"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"&amp;gt;"</span>, <span class='st'>"&gt;"</span>))
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -178,7 +178,9 @@ conversion to vector.</p>
 due to a bug documented <a href='https://github.com/awalker89/openxlsx/issues/393'>here</a>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>replace_html_codes</span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='st'>"a"</span>, <span class='st'>"&amp;amp;"</span>, <span class='st'>"&amp;lt;"</span>, <span class='st'>"&amp;gt;"</span>, <span class='st'>"bcd"</span>))</div><div class='output co'>#&gt; [1] "a"   "&amp;"   "&lt;"   "&gt;"   "bcd"</div><div class='input'><span class='fu'>replace_html_codes</span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"&amp;amp;"</span>, <span class='st'>"&amp;amp;"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"&amp;lt;"</span>, <span class='st'>"&amp;lt;"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"&amp;gt;"</span>, <span class='st'>"&amp;gt;"</span>)))</div><div class='output co'>#&gt; [[1]]
+    <pre class="examples"><div class='input'><span class='fu'>replace_html_codes</span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='st'>"a"</span>, <span class='st'>"&amp;amp;"</span>, <span class='st'>"&amp;lt;"</span>, <span class='st'>"&amp;gt;"</span>, <span class='st'>"bcd"</span>))
+</div><div class='output co'>#&gt; [1] "a"   "&amp;"   "&lt;"   "&gt;"   "bcd"</div><div class='input'><span class='fu'>replace_html_codes</span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"&amp;amp;"</span>, <span class='st'>"&amp;amp;"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"&amp;lt;"</span>, <span class='st'>"&amp;lt;"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"&amp;gt;"</span>, <span class='st'>"&amp;gt;"</span>)))
+</div><div class='output co'>#&gt; [[1]]
 #&gt; [1] "&amp;" "&amp;"
 #&gt; 
 #&gt; [[2]]
@@ -202,7 +204,7 @@ due to a bug documented <a href='https://github.com/awalker89/openxlsx/issues/39
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
