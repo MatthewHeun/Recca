@@ -379,7 +379,6 @@ calc_embodied_etas <- function(.embodiedmats = NULL,
 #' @examples
 #' library(IEATools)
 #' UKEnergy2000mats %>%
-#'   dplyr::filter(Last.stage == "Final", Energy.type == "E") %>%
 #'   tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") %>%
 #'   calc_io_mats() %>%
 #'   calc_E_EIOU() %>%
