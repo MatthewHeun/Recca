@@ -1,6 +1,6 @@
 # Recca 0.1.25 (2020-09-17)
 
-* New author Emmanueal Aramendia. Welcome!
+* New author Emmanuel Aramendia. Welcome!
 * Added tests for new features and old bugs.
     * Now up to 407 tests, all of which pass.
     * Test coverage remains at 100 %.
