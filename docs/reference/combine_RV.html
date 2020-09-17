@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Combine resource (<code>R</code>) and make (<code>V</code>) matrices into a make plus resource (<code>R_plus_V</code>) matrix — combine_RV • Recca</title>
+<title>Combine resource (R) and make (V) matrices into a make plus resource (R_plus_V) matrix — combine_RV • Recca</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Combine resource (<code>R</code>) and make (<code>V</code>) matrices into a make plus resource (<code>R_plus_V</code>) matrix — combine_RV" />
+<meta property="og:title" content="Combine resource (R) and make (V) matrices into a make plus resource (R_plus_V) matrix — combine_RV" />
 <meta property="og:description" content="combine_RV is the inverse of separate_RV." />
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.24</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.25</span>
       </span>
     </div>
 
@@ -138,7 +138,7 @@
     <p><code>combine_RV</code> is the inverse of <code><a href='separate_RV.html'>separate_RV</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>combine_RV</span>(<span class='kw'>.sutmats</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>R</span> <span class='kw'>=</span> <span class='st'>"R"</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>, <span class='kw'>R_plus_V</span> <span class='kw'>=</span> <span class='st'>"R_plus_V"</span>)</pre>
+    <pre class="usage"><span class='fu'>combine_RV</span>(.sutmats = <span class='kw'>NULL</span>, R = <span class='st'>"R"</span>, V = <span class='st'>"V"</span>, R_plus_V = <span class='st'>"R_plus_V"</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -166,11 +166,12 @@
     <p>a list or data frame containing <code>R_plus_V</code></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>tidyr</span>)
-<span class='no'>UKEnergy2000mats</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='st'>"matrix.name"</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>"matrix"</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'>combine_RV</span>()</div><div class='output co'>#&gt;   Country Year Energy.type Last.stage                  R
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://dplyr.tidyverse.org'>dplyr</a></span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://tidyr.tidyverse.org'>tidyr</a></span>)
+<span class='kw'>UKEnergy2000mats</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span>(key = <span class='st'>"matrix.name"</span>, value = <span class='st'>"matrix"</span>) <span class='op'>%&gt;%</span>
+  <span class='fu'>combine_RV</span>()
+</div><div class='output co'>#&gt;   Country Year Energy.type Last.stage                  R
 #&gt; 1     GBR 2000           E      Final 50000, 0, 0, 43000
 #&gt; 2     GBR 2000           E   Services 50000, 0, 0, 43000
 #&gt; 3     GBR 2000           E     Useful 50000, 0, 0, 43000
@@ -230,7 +231,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
