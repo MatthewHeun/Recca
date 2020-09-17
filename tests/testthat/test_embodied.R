@@ -150,7 +150,6 @@ test_that("embodied energy calculations works as expected", {
 
 test_that("calc_embodied_EIOU() works correctly",{
   embodied_EIOU_mats <- UKEnergy2000mats %>%
-    dplyr::filter(Last.stage == "Final", Energy.type == "E") %>%
     tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") %>%
     calc_io_mats() %>%
     calc_E_EIOU() %>%
