@@ -1,3 +1,9 @@
+* Working to modernize the Recca code.
+    * Use R markdown in documentation (`` `term` `` instead of `\code{term}`).
+    * Use package constants for column name arguments 
+      (`Recca::sankey_cols$sankey` instead of "Sankey").
+
+
 # Recca 0.1.25 (2020-09-17)
 
 * New author Emmanuel Aramendia. Welcome!
