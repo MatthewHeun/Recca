@@ -6,30 +6,24 @@
 \usage{
 make_sankey(
   .sutmats = NULL,
-  R = "R",
-  U = "U",
-  V = "V",
-  Y = "Y",
+  R = Recca::psut_cols$R,
+  U = Recca::psut_cols$U,
+  V = Recca::psut_cols$V,
+  Y = Recca::psut_cols$Y,
   simplify_edges = TRUE,
-  sankey = "Sankey",
+  sankey = Recca::sankey_cols$sankey,
   ...
 )
 }
 \arguments{
-\item{.sutmats}{an optional data frame}
+\item{.sutmats}{an optional wide-by-matrices data frame}
 
-\item{R}{a resource matrix or the name of the column in \code{.sutmats} containing \code{R} matrices}
-
-\item{U}{a use matrix or the name of the column in \code{.sutmats} containing \code{U} matrices}
-
-\item{V}{a make matrix or the name of the column in \code{.sutmats} containing \code{V} matrices}
-
-\item{Y}{a final demand matrix or the name of the column in \code{.sutmats} containing \code{Y} matrices}
+\item{R, U, V, Y}{See \code{Recca::psut_cols}.}
 
 \item{simplify_edges}{a boolean which tells whether edges should be simplified.
 Applies to every row of \code{.sutmats} if \code{.sutmats} is specified.}
 
-\item{sankey}{the name of the output Sankey diagram or the name of the column in \code{.sutmats} containing Sankey diagrams}
+\item{sankey}{See \code{Recca::sankey_cols}.}
 
 \item{...}{Arguments passed to \code{networkD3::sankeyNetwork()}, mostly for formatting purposes.}
 }
