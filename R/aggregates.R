@@ -8,23 +8,24 @@
 #' Calculates aggregate primary energy from a data frame of Supply-Use matrices.
 #'
 #' @param .sutdata a data frame with columns of matrices from a supply-use analysis.
-#' @param p_industries a vector of names of industries to be aggregated as "primary".
-#'        These industries will appear in rows of the resource (`R`) and make (`V`) matrices and
+#' @param p_industries a vector of names of industries to be aggregated as "primary."
+#'        If `.sutdata` is a data frame, `p_industries` should be the name of a column in the data frame.
+#'        If `.sutdata` is `NULL`, `p_industries` can be a single vector of industry names.
+#'        These industries in `p_industries` will appear in rows of the resource (`R`) and make (`V`) matrices and
 #'        columns of the final demand matrix (`Y`).
 #'        Entries in `Y_p` will be subtracted from entries in `R_p + V_p` to obtain
-#'        the total primary energy aggregate.
+#'        the total primary energy aggregate,
+#'        where `*_p` is the primary part of those matrices.
 #' @param R,V,Y See `Recca::psut_cols`.
-#' @param V make (`V`) matrix or the name of the column in `.sutdata` containing same
-#' @param Y final demand (`Y`) matrix or the name of the column in `.sutdata` containing same
-#' @param by one of `Total`, `Product`, or `Flow` to indicate the desired aggregation:
+#' @param by One of "Total", "Product", or "Flow" to indicate the desired aggregation:
 #' \itemize{
-#'   \item `Total`: aggregation over both Product and Flow (the default)
-#'   \item `Product`: aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.)
-#'   \item `Flow`: aggregation by type of flow (Production, Imports, Exports, etc.)
+#'   \item "Total": aggregation over both Product and Flow (the default)
+#'   \item "Product": aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.)
+#'   \item "Flow": aggregation by type of flow (Production, Imports, Exports, etc.)
 #' }
-#' @param aggregate_primary the name for aggregates of primary energy on output
+#' @param aggregate_primary The name for aggregates of primary energy on output.
 #'
-#' @return a list or data frame containing aggregate primary energy
+#' @return A list or data frame containing aggregate primary energy.
 #'
 #' @export
 primary_aggregates <- function(.sutdata,
@@ -43,23 +44,23 @@ primary_aggregates <- function(.sutdata,
   aggfuncs <- list(total = "sumall_byname", product = "rowsums_byname", flow = "colsums_byname")
   agg_func <- match.fun(aggfuncs[[tolower(by)]])
 
-  prim_func <- function(R_mat = NULL, V_mat, Y_mat){
+  prim_func <- function(p_industries_vec, R_mat = NULL, V_mat, Y_mat){
     # Look for primary industries in each of R, V, and Y matrices
     RT_p <- matsbyname::transpose_byname(R_mat) %>%
       matsbyname::select_cols_byname(retain_pattern =
-                                       matsbyname::make_pattern(row_col_names = p_industries, pattern_type = "leading"))
+                                       matsbyname::make_pattern(row_col_names = p_industries_vec, pattern_type = "leading"))
     VT_p <- matsbyname::transpose_byname(V_mat) %>%
       matsbyname::select_cols_byname(retain_pattern =
-                                       matsbyname::make_pattern(row_col_names = p_industries, pattern_type = "leading"))
+                                       matsbyname::make_pattern(row_col_names = p_industries_vec, pattern_type = "leading"))
     # Get the primary industries from the Y matrix.
     Y_p <- Y_mat %>% matsbyname::select_cols_byname(retain_pattern =
-                                                      matsbyname::make_pattern(row_col_names = p_industries, pattern_type = "leading"))
+                                                      matsbyname::make_pattern(row_col_names = p_industries_vec, pattern_type = "leading"))
     # TPES in product x industry matrix format is RT_p + VT_p - Y_p.
     RVT_p_minus_Y_p <- matsbyname::sum_byname(RT_p, VT_p) %>% matsbyname::difference_byname(Y_p)
     agg_primary <- agg_func(RVT_p_minus_Y_p)
     list(agg_primary) %>% magrittr::set_names(aggregate_primary)
   }
-  matsindf::matsindf_apply(.sutdata, FUN = prim_func, R_mat = R, V_mat = V, Y_mat = Y)
+  matsindf::matsindf_apply(.sutdata, FUN = prim_func, p_industries_vec = p_industries, R_mat = R, V_mat = V, Y_mat = Y)
 }
 
 
@@ -103,11 +104,11 @@ finaldemand_aggregates <- function(.sutdata,
   aggfuncs <- list(Total = "sumall_byname", Product = "rowsums_byname", Sector = "colsums_byname")
   agg_func <- match.fun(aggfuncs[[by]])
 
-  fd_func <- function(U_mat, Y_mat, r_EIOU_mat){
+  fd_func <- function(fd_sectors_vec, U_mat, Y_mat, r_EIOU_mat){
     U_EIOU <- matsbyname::hadamardproduct_byname(r_EIOU_mat, U_mat)
     net <- Y_mat %>%
       matsbyname::select_cols_byname(retain_pattern =
-                                       matsbyname::make_pattern(row_col_names = fd_sectors, pattern_type = "leading")) %>%
+                                       matsbyname::make_pattern(row_col_names = fd_sectors_vec, pattern_type = "leading")) %>%
       agg_func()
     gross <- matsbyname::sum_byname(net, agg_func(U_EIOU))
     if (by == "Sector") {
@@ -118,7 +119,7 @@ finaldemand_aggregates <- function(.sutdata,
     }
     list(net, gross) %>% magrittr::set_names(c(net_aggregate_demand, gross_aggregate_demand))
   }
-  matsindf::matsindf_apply(.sutdata, FUN = fd_func, U_mat = U, Y_mat = Y, r_EIOU_mat = r_EIOU)
+  matsindf::matsindf_apply(.sutdata, FUN = fd_func, fd_sectors_vec = fd_sectors, U_mat = U, Y_mat = Y, r_EIOU_mat = r_EIOU)
 }
 
 
@@ -159,7 +160,7 @@ finaldemand_aggregates_with_units <- function(.sutdata,
 
   by <- match.arg(by)
 
-  fd_func <- function(U_mat, Y_mat, r_EIOU_mat, S_units_mat){
+  fd_func <- function(fd_sectors_vec, U_mat, Y_mat, r_EIOU_mat, S_units_mat){
     U_EIOU <- matsbyname::hadamardproduct_byname(r_EIOU_mat, U_mat)
     if (by == "Product") {
       net <- matsbyname::rowsums_byname(Y_mat)
@@ -171,7 +172,7 @@ finaldemand_aggregates_with_units <- function(.sutdata,
         matsbyname::transpose_byname(S_units_mat),
         Y_mat %>%
           matsbyname::select_cols_byname(retain_pattern =
-                                           matsbyname::make_pattern(row_col_names = fd_sectors,
+                                           matsbyname::make_pattern(row_col_names = fd_sectors_vec,
                                                                     pattern_type = "leading")))
       gross <- matsbyname::sum_byname(U_EIOU_bar, net)
       net <- matsbyname::transpose_byname(net)
@@ -183,7 +184,7 @@ finaldemand_aggregates_with_units <- function(.sutdata,
     }
     list(net, gross) %>% magrittr::set_names(c(net_aggregate_demand, gross_aggregate_demand))
   }
-  matsindf::matsindf_apply(.sutdata, FUN = fd_func, U_mat = U, Y_mat = Y, r_EIOU_mat = r_EIOU, S_units_mat = S_units)
+  matsindf::matsindf_apply(.sutdata, FUN = fd_func, fd_sectors_vec = fd_sectors, U_mat = U, Y_mat = Y, r_EIOU_mat = r_EIOU, S_units_mat = S_units)
 }
 
 
