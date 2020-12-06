@@ -5,9 +5,6 @@ library(matsbyname)
 library(matsindf)
 library(tidyr)
 
-###########################################################
-context("Aggregates")
-###########################################################
 
 test_that("primary aggregates of SUT data work as expected", {
   # Define primary industries
@@ -68,6 +65,7 @@ test_that("primary aggregates work when R is folded into V", {
 
   # Primary TOTAL aggregates
   primary_total_aggregates_sut <- UKEnergy2000mats %>%
+    # Make it wide-by-matrices
     tidyr::spread(key = matrix.name, value = matrix) %>%
     dplyr::mutate(
       V = matsbyname::sum_byname(R, V),
@@ -77,6 +75,42 @@ test_that("primary aggregates work when R is folded into V", {
                        aggregate_primary = "EX_total_agg.ktoe")
   expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
                       dplyr::select("EX_total_agg.ktoe"), 93000)
+})
+
+
+test_that("primary aggregates work when p_industries is different for each row of a data frame", {
+  p_industries_all <- c("Resources - Crude", "Resources - NG")
+  p_industries_crude <- "Resources - Crude"
+  p_industries_ng <- "Resources - NG"
+
+  # Primary TOTAL aggregates for both primary industries
+  primary_total_aggregates_total <- UKEnergy2000mats %>%
+    # Make it wide-by-matrices
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    primary_aggregates(p_industries = p_industries_all, by = "Total",
+                       aggregate_primary = Recca::aggregate_cols$aggregate_primary)
+  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
+                      dplyr::select(Recca::aggregate_cols$aggregate_primary), 93000)
+
+
+  # Primary TOTAL aggregates counting crude oil only
+  primary_total_aggregates_crude <- UKEnergy2000mats %>%
+    # Make it wide-by-matrices
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    primary_aggregates(p_industries = p_industries_crude, by = "Total",
+                       aggregate_primary = Recca::aggregate_cols$aggregate_primary)
+  expect_equivalent(primary_total_aggregates_crude %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
+                      dplyr::select(Recca::aggregate_cols$aggregate_primary), 50000)
+
+  # Primary TOTAL aggregates counting NG only
+  primary_total_aggregates_ng <- UKEnergy2000mats %>%
+    # Make it wide-by-matrices
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    primary_aggregates(p_industries = p_industries_ng, by = "Total",
+                       aggregate_primary = Recca::aggregate_cols$aggregate_primary)
+  expect_equivalent(primary_total_aggregates_ng %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
+                      dplyr::select(Recca::aggregate_cols$aggregate_primary), 43000)
+
 })
 
 
@@ -179,6 +213,7 @@ test_that("final demand aggregates of SUT data work as expected", {
                     142916629629)
 })
 
+
 test_that("primary_aggregates_IEA works as expected", {
   # Get a vector of primary industries for the example data set.
   # The vector of primary industries comes from the resource matrix (R).
@@ -194,6 +229,7 @@ test_that("primary_aggregates_IEA works as expected", {
   expect_equal(result[["EX_p_IEA.ktoe"]], c(93000, 93000, 93000, 98220))
 })
 
+
 test_that("finaldemand_aggregates_IEA works as expected", {
   iea_result <- UKEnergy2000tidy %>%
     # Can calculate only when all entries are in same units, i.e., only when last stage is final or useful energy.
@@ -207,6 +243,7 @@ test_that("finaldemand_aggregates_IEA works as expected", {
   expect_equal(iea_result[["EX_fd_net_IEA.ktoe"]], sut_result[["EX_fd_net.ktoe"]] %>% unlist())
   expect_equal(iea_result[["EX_fd_gross_IEA.ktoe"]], sut_result[["EX_fd_gross.ktoe"]] %>% unlist())
 })
+
 
 test_that("finaldemand_aggregates works for sectors", {
   sut_result <- UKEnergy2000mats %>%

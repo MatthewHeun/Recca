@@ -89,13 +89,13 @@ primary_aggregates <- function(.sutdata,
 finaldemand_aggregates <- function(.sutdata,
                                    fd_sectors,
                                    # Input names
-                                   U = "U",
-                                   Y = "Y",
-                                   r_EIOU = "r_EIOU",
+                                   U = Recca::psut_cols$U,
+                                   Y = Recca::psut_cols$Y,
+                                   r_EIOU = Recca::psut_cols$r_eiou,
                                    by = c("Total", "Product", "Sector"),
                                    # Output names
-                                   net_aggregate_demand = "EX_fd_net.ktoe",
-                                   gross_aggregate_demand = "EX_fd_gross.ktoe"){
+                                   net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
+                                   gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand){
 
   by <- match.arg(by)
 
@@ -120,6 +120,7 @@ finaldemand_aggregates <- function(.sutdata,
   }
   matsindf::matsindf_apply(.sutdata, FUN = fd_func, U_mat = U, Y_mat = Y, r_EIOU_mat = r_EIOU)
 }
+
 
 #' Final demand aggregate energy with units
 #'
@@ -147,14 +148,14 @@ finaldemand_aggregates <- function(.sutdata,
 finaldemand_aggregates_with_units <- function(.sutdata,
                                               fd_sectors,
                                               # Input names
-                                              U = "U",
-                                              Y = "Y",
-                                              r_EIOU = "r_EIOU",
-                                              S_units = "S_units",
+                                              U = Recca::psut_cols$U,
+                                              Y = Recca::psut_cols$Y,
+                                              r_EIOU = Recca::psut_cols$r_eiou,
+                                              S_units = Recca::psut_cols$s_units,
                                               by = c("Total", "Product", "Sector"),
                                               # Output names
-                                              net_aggregate_demand,
-                                              gross_aggregate_demand){
+                                              net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
+                                              gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand){
 
   by <- match.arg(by)
 
@@ -239,7 +240,7 @@ primary_aggregates_IEA <- function(.ieadata,
                                                     "International marine bunkers", "Stock changes"),
                                    eiou = "Energy industry own use",
                                    # Output name
-                                   aggregate_primary = "EX_p_IEA.ktoe"){
+                                   aggregate_primary = Recca::aggregate_cols$aggregate_primary_iea){
   flow <- as.name(flow)
   flow_aggregation_point <- as.name(flow_aggregation_point)
   energy <- as.name(energy)
@@ -310,8 +311,8 @@ finaldemand_aggregates_IEA <- function(.ieadata,
                                        consumption = "Consumption",
                                        eiou = "Energy industry own use",
                                        # Output names
-                                       aggregate_net_finaldemand = "EX_fd_net_IEA.ktoe",
-                                       aggregate_gross_finaldemand = "EX_fd_gross_IEA.ktoe"){
+                                       aggregate_net_finaldemand = Recca::aggregate_cols$aggregate_net_finaldemand_iea,
+                                       aggregate_gross_finaldemand = Recca::aggregate_cols$aggregate_gross_finaldemand_iea){
   ledger_side <- as.name(ledger_side)
   flow_aggregation_point <- as.name(flow_aggregation_point)
   flow <- as.name(flow)

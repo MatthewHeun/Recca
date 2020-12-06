@@ -7,12 +7,12 @@
 finaldemand_aggregates(
   .sutdata,
   fd_sectors,
-  U = "U",
-  Y = "Y",
-  r_EIOU = "r_EIOU",
+  U = Recca::psut_cols$U,
+  Y = Recca::psut_cols$Y,
+  r_EIOU = Recca::psut_cols$r_eiou,
   by = c("Total", "Product", "Sector"),
-  net_aggregate_demand = "EX_fd_net.ktoe",
-  gross_aggregate_demand = "EX_fd_gross.ktoe"
+  net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
+  gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand
 )
 }
 \arguments{

@@ -13,7 +13,7 @@ primary_aggregates_IEA(
     "Exports", "International aviation bunkers", "International marine bunkers",
     "Stock changes"),
   eiou = "Energy industry own use",
-  aggregate_primary = "EX_p_IEA.ktoe"
+  aggregate_primary = Recca::aggregate_cols$aggregate_primary_iea
 )
 }
 \arguments{
