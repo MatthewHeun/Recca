@@ -13,7 +13,7 @@
 #'        columns of the final demand matrix (`Y`).
 #'        Entries in `Y_p` will be subtracted from entries in `R_p + V_p` to obtain
 #'        the total primary energy aggregate.
-#' @param R resources (`R`) matrix or the name of the column in `.sutdata` containing same
+#' @param R,V,Y See `Recca::psut_cols`.
 #' @param V make (`V`) matrix or the name of the column in `.sutdata` containing same
 #' @param Y final demand (`Y`) matrix or the name of the column in `.sutdata` containing same
 #' @param by one of `Total`, `Product`, or `Flow` to indicate the desired aggregation:
@@ -31,12 +31,12 @@ primary_aggregates <- function(.sutdata,
                                # Vector of primary industries
                                p_industries,
                                # Input names
-                               R = "R",
-                               V = "V",
-                               Y = "Y",
+                               R = Recca::psut_cols$R,
+                               V = Recca::psut_cols$V,
+                               Y = Recca::psut_cols$Y,
                                by = c("Total", "Product", "Flow"),
                                # Output names
-                               aggregate_primary = "EX_p.ktoe"){
+                               aggregate_primary = Recca::aggregate_cols$aggregate_primary){
 
   by <- match.arg(by)
   # Figure out which function we need to use.

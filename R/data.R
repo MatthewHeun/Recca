@@ -27,6 +27,28 @@
 
 
 
+#' Aggregate data frame column names
+#'
+#' A string list containing named names of columns in aggregate data frames.
+#' Items in the list provide default values for column name function arguments
+#' to aggregation functions throughout the `Recca` package.
+#'
+#' @format A string list with `r length(aggregate_cols)` entries.
+#' \describe{
+#' \item{aggregate_primary}{The name of a column in a wide-by-matrices data frame containing aggregates of primary energy.}
+#' \item{net_aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of net final demand energy (excluding energy industry own use), regardless of whether the last stage is final energy or useful energy.}
+#' \item{gross_aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of gross final demand energy (including energy industry own use), regardless of whether the last stage is final energy or useful energy.}
+#' \item{aggregate_primary_iea}{The name of a column in an IEA-style frame containing aggregates of primary energy.}
+#' \item{net_aggregate_demand_iea}{The name of a column in an IEA-style frame containing aggregates of net final demand energy (excluding energy industry own use), regardless of whether the last stage is final energy or useful energy.}
+#' \item{gross_aggregate_demand_iea}{The name of a column in an IEA-style frame containing aggregates of gross final demand energy (including energy industry own use), regardless of whether the last stage is final energy or useful energy.}
+#' }
+#'
+#' @examples
+#' aggregate_cols
+"aggregate_cols"
+
+
+
 #' Sankey diagram data frame column names
 #'
 #' A string list containing named names of columns in Sankey data frames.

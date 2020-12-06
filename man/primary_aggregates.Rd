@@ -7,11 +7,11 @@
 primary_aggregates(
   .sutdata,
   p_industries,
-  R = "R",
-  V = "V",
-  Y = "Y",
+  R = Recca::psut_cols$R,
+  V = Recca::psut_cols$V,
+  Y = Recca::psut_cols$Y,
   by = c("Total", "Product", "Flow"),
-  aggregate_primary = "EX_p.ktoe"
+  aggregate_primary = Recca::aggregate_cols$aggregate_primary
 )
 }
 \arguments{
@@ -23,7 +23,7 @@ columns of the final demand matrix (\code{Y}).
 Entries in \code{Y_p} will be subtracted from entries in \code{R_p + V_p} to obtain
 the total primary energy aggregate.}
 
-\item{R}{resources (\code{R}) matrix or the name of the column in \code{.sutdata} containing same}
+\item{R, V, Y}{See \code{Recca::psut_cols}.}
 
 \item{V}{make (\code{V}) matrix or the name of the column in \code{.sutdata} containing same}
 
