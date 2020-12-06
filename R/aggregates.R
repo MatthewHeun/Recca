@@ -69,6 +69,8 @@ primary_aggregates <- function(.sutdata,
 #' Calculates aggregate final demand energy from a data frame of Supply-Use matrices.
 #' The calculation includes non-energy uses if they are present in the final demand matrix.
 #' The calculation does not include balancing items (Losses and Statistical differences).
+#' If `.sutdata` is a data frame, `fd_sectors` should be the name of a column in the data frame.
+#' If `.sutdata` is `NULL`, `fd_sectors` can be a single vector of industry names.
 #'
 #' @param .sutdata a data frame with columns of matrices from a supply-use analysis.
 #' @param fd_sectors a vector of names of sectors in final demand.
@@ -128,6 +130,8 @@ finaldemand_aggregates <- function(.sutdata,
 #' Calculates aggregate final demand energy and services from a data frame of Supply-Use matrices.
 #' The calculation includes non-energy uses if they are present in the final demand matrix.
 #' The calculation does not include balancing items (Losses and Statistical differences).
+#' If `.sutdata` is a data frame, `fd_sectors` should be the name of a column in the data frame.
+#' If `.sutdata` is `NULL`, `fd_sectors` can be a single vector of industry names.
 #'
 #' @param .sutdata a data frame with columns of matrices from a supply-use analysis.
 #' @param fd_sectors a vector of names of sectors in final demand.

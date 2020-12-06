@@ -44,4 +44,6 @@ a list or data frame containing \code{net_aggregate_demand} and \code{gross_aggr
 Calculates aggregate final demand energy from a data frame of Supply-Use matrices.
 The calculation includes non-energy uses if they are present in the final demand matrix.
 The calculation does not include balancing items (Losses and Statistical differences).
+If \code{.sutdata} is a data frame, \code{fd_sectors} should be the name of a column in the data frame.
+If \code{.sutdata} is \code{NULL}, \code{fd_sectors} can be a single vector of industry names.
 }
