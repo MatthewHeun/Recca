@@ -12,8 +12,8 @@ finaldemand_aggregates_IEA(
   energy = "E.dot",
   consumption = "Consumption",
   eiou = "Energy industry own use",
-  aggregate_net_finaldemand = "EX_fd_net_IEA.ktoe",
-  aggregate_gross_finaldemand = "EX_fd_gross_IEA.ktoe"
+  aggregate_net_finaldemand = Recca::aggregate_cols$aggregate_net_finaldemand_iea,
+  aggregate_gross_finaldemand = Recca::aggregate_cols$aggregate_gross_finaldemand_iea
 )
 }
 \arguments{

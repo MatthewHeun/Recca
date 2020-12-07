@@ -8,58 +8,59 @@
 #' Calculates aggregate primary energy from a data frame of Supply-Use matrices.
 #'
 #' @param .sutdata a data frame with columns of matrices from a supply-use analysis.
-#' @param p_industries a vector of names of industries to be aggregated as "primary".
-#'        These industries will appear in rows of the resource (`R`) and make (`V`) matrices and
+#' @param p_industries a vector of names of industries to be aggregated as "primary."
+#'        If `.sutdata` is a data frame, `p_industries` should be the name of a column in the data frame.
+#'        If `.sutdata` is `NULL`, `p_industries` can be a single vector of industry names.
+#'        These industries in `p_industries` will appear in rows of the resource (`R`) and make (`V`) matrices and
 #'        columns of the final demand matrix (`Y`).
 #'        Entries in `Y_p` will be subtracted from entries in `R_p + V_p` to obtain
-#'        the total primary energy aggregate.
-#' @param R resources (`R`) matrix or the name of the column in `.sutdata` containing same
-#' @param V make (`V`) matrix or the name of the column in `.sutdata` containing same
-#' @param Y final demand (`Y`) matrix or the name of the column in `.sutdata` containing same
-#' @param by one of `Total`, `Product`, or `Flow` to indicate the desired aggregation:
+#'        the total primary energy aggregate,
+#'        where `*_p` is the primary part of those matrices.
+#' @param R,V,Y See `Recca::psut_cols`.
+#' @param by One of "Total", "Product", or "Flow" to indicate the desired aggregation:
 #' \itemize{
-#'   \item `Total`: aggregation over both Product and Flow (the default)
-#'   \item `Product`: aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.)
-#'   \item `Flow`: aggregation by type of flow (Production, Imports, Exports, etc.)
+#'   \item "Total": aggregation over both Product and Flow (the default)
+#'   \item "Product": aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.)
+#'   \item "Flow": aggregation by type of flow (Production, Imports, Exports, etc.)
 #' }
-#' @param aggregate_primary the name for aggregates of primary energy on output
+#' @param aggregate_primary The name for aggregates of primary energy on output.
 #'
-#' @return a list or data frame containing aggregate primary energy
+#' @return A list or data frame containing aggregate primary energy.
 #'
 #' @export
 primary_aggregates <- function(.sutdata,
                                # Vector of primary industries
                                p_industries,
                                # Input names
-                               R = "R",
-                               V = "V",
-                               Y = "Y",
+                               R = Recca::psut_cols$R,
+                               V = Recca::psut_cols$V,
+                               Y = Recca::psut_cols$Y,
                                by = c("Total", "Product", "Flow"),
                                # Output names
-                               aggregate_primary = "EX_p.ktoe"){
+                               aggregate_primary = Recca::aggregate_cols$aggregate_primary){
 
   by <- match.arg(by)
   # Figure out which function we need to use.
   aggfuncs <- list(total = "sumall_byname", product = "rowsums_byname", flow = "colsums_byname")
   agg_func <- match.fun(aggfuncs[[tolower(by)]])
 
-  prim_func <- function(R_mat = NULL, V_mat, Y_mat){
+  prim_func <- function(p_industries_vec, R_mat = NULL, V_mat, Y_mat){
     # Look for primary industries in each of R, V, and Y matrices
     RT_p <- matsbyname::transpose_byname(R_mat) %>%
       matsbyname::select_cols_byname(retain_pattern =
-                                       matsbyname::make_pattern(row_col_names = p_industries, pattern_type = "leading"))
+                                       matsbyname::make_pattern(row_col_names = p_industries_vec, pattern_type = "leading"))
     VT_p <- matsbyname::transpose_byname(V_mat) %>%
       matsbyname::select_cols_byname(retain_pattern =
-                                       matsbyname::make_pattern(row_col_names = p_industries, pattern_type = "leading"))
+                                       matsbyname::make_pattern(row_col_names = p_industries_vec, pattern_type = "leading"))
     # Get the primary industries from the Y matrix.
     Y_p <- Y_mat %>% matsbyname::select_cols_byname(retain_pattern =
-                                                      matsbyname::make_pattern(row_col_names = p_industries, pattern_type = "leading"))
+                                                      matsbyname::make_pattern(row_col_names = p_industries_vec, pattern_type = "leading"))
     # TPES in product x industry matrix format is RT_p + VT_p - Y_p.
     RVT_p_minus_Y_p <- matsbyname::sum_byname(RT_p, VT_p) %>% matsbyname::difference_byname(Y_p)
     agg_primary <- agg_func(RVT_p_minus_Y_p)
     list(agg_primary) %>% magrittr::set_names(aggregate_primary)
   }
-  matsindf::matsindf_apply(.sutdata, FUN = prim_func, R_mat = R, V_mat = V, Y_mat = Y)
+  matsindf::matsindf_apply(.sutdata, FUN = prim_func, p_industries_vec = p_industries, R_mat = R, V_mat = V, Y_mat = Y)
 }
 
 
@@ -68,6 +69,8 @@ primary_aggregates <- function(.sutdata,
 #' Calculates aggregate final demand energy from a data frame of Supply-Use matrices.
 #' The calculation includes non-energy uses if they are present in the final demand matrix.
 #' The calculation does not include balancing items (Losses and Statistical differences).
+#' If `.sutdata` is a data frame, `fd_sectors` should be the name of a column in the data frame.
+#' If `.sutdata` is `NULL`, `fd_sectors` can be a single vector of industry names.
 #'
 #' @param .sutdata a data frame with columns of matrices from a supply-use analysis.
 #' @param fd_sectors a vector of names of sectors in final demand.
@@ -89,13 +92,13 @@ primary_aggregates <- function(.sutdata,
 finaldemand_aggregates <- function(.sutdata,
                                    fd_sectors,
                                    # Input names
-                                   U = "U",
-                                   Y = "Y",
-                                   r_EIOU = "r_EIOU",
+                                   U = Recca::psut_cols$U,
+                                   Y = Recca::psut_cols$Y,
+                                   r_EIOU = Recca::psut_cols$r_eiou,
                                    by = c("Total", "Product", "Sector"),
                                    # Output names
-                                   net_aggregate_demand = "EX_fd_net.ktoe",
-                                   gross_aggregate_demand = "EX_fd_gross.ktoe"){
+                                   net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
+                                   gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand){
 
   by <- match.arg(by)
 
@@ -103,11 +106,11 @@ finaldemand_aggregates <- function(.sutdata,
   aggfuncs <- list(Total = "sumall_byname", Product = "rowsums_byname", Sector = "colsums_byname")
   agg_func <- match.fun(aggfuncs[[by]])
 
-  fd_func <- function(U_mat, Y_mat, r_EIOU_mat){
+  fd_func <- function(fd_sectors_vec, U_mat, Y_mat, r_EIOU_mat){
     U_EIOU <- matsbyname::hadamardproduct_byname(r_EIOU_mat, U_mat)
     net <- Y_mat %>%
       matsbyname::select_cols_byname(retain_pattern =
-                                       matsbyname::make_pattern(row_col_names = fd_sectors, pattern_type = "leading")) %>%
+                                       matsbyname::make_pattern(row_col_names = fd_sectors_vec, pattern_type = "leading")) %>%
       agg_func()
     gross <- matsbyname::sum_byname(net, agg_func(U_EIOU))
     if (by == "Sector") {
@@ -118,14 +121,17 @@ finaldemand_aggregates <- function(.sutdata,
     }
     list(net, gross) %>% magrittr::set_names(c(net_aggregate_demand, gross_aggregate_demand))
   }
-  matsindf::matsindf_apply(.sutdata, FUN = fd_func, U_mat = U, Y_mat = Y, r_EIOU_mat = r_EIOU)
+  matsindf::matsindf_apply(.sutdata, FUN = fd_func, fd_sectors_vec = fd_sectors, U_mat = U, Y_mat = Y, r_EIOU_mat = r_EIOU)
 }
+
 
 #' Final demand aggregate energy with units
 #'
 #' Calculates aggregate final demand energy and services from a data frame of Supply-Use matrices.
 #' The calculation includes non-energy uses if they are present in the final demand matrix.
 #' The calculation does not include balancing items (Losses and Statistical differences).
+#' If `.sutdata` is a data frame, `fd_sectors` should be the name of a column in the data frame.
+#' If `.sutdata` is `NULL`, `fd_sectors` can be a single vector of industry names.
 #'
 #' @param .sutdata a data frame with columns of matrices from a supply-use analysis.
 #' @param fd_sectors a vector of names of sectors in final demand.
@@ -147,18 +153,18 @@ finaldemand_aggregates <- function(.sutdata,
 finaldemand_aggregates_with_units <- function(.sutdata,
                                               fd_sectors,
                                               # Input names
-                                              U = "U",
-                                              Y = "Y",
-                                              r_EIOU = "r_EIOU",
-                                              S_units = "S_units",
+                                              U = Recca::psut_cols$U,
+                                              Y = Recca::psut_cols$Y,
+                                              r_EIOU = Recca::psut_cols$r_eiou,
+                                              S_units = Recca::psut_cols$s_units,
                                               by = c("Total", "Product", "Sector"),
                                               # Output names
-                                              net_aggregate_demand,
-                                              gross_aggregate_demand){
+                                              net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
+                                              gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand){
 
   by <- match.arg(by)
 
-  fd_func <- function(U_mat, Y_mat, r_EIOU_mat, S_units_mat){
+  fd_func <- function(fd_sectors_vec, U_mat, Y_mat, r_EIOU_mat, S_units_mat){
     U_EIOU <- matsbyname::hadamardproduct_byname(r_EIOU_mat, U_mat)
     if (by == "Product") {
       net <- matsbyname::rowsums_byname(Y_mat)
@@ -170,7 +176,7 @@ finaldemand_aggregates_with_units <- function(.sutdata,
         matsbyname::transpose_byname(S_units_mat),
         Y_mat %>%
           matsbyname::select_cols_byname(retain_pattern =
-                                           matsbyname::make_pattern(row_col_names = fd_sectors,
+                                           matsbyname::make_pattern(row_col_names = fd_sectors_vec,
                                                                     pattern_type = "leading")))
       gross <- matsbyname::sum_byname(U_EIOU_bar, net)
       net <- matsbyname::transpose_byname(net)
@@ -182,7 +188,7 @@ finaldemand_aggregates_with_units <- function(.sutdata,
     }
     list(net, gross) %>% magrittr::set_names(c(net_aggregate_demand, gross_aggregate_demand))
   }
-  matsindf::matsindf_apply(.sutdata, FUN = fd_func, U_mat = U, Y_mat = Y, r_EIOU_mat = r_EIOU, S_units_mat = S_units)
+  matsindf::matsindf_apply(.sutdata, FUN = fd_func, fd_sectors_vec = fd_sectors, U_mat = U, Y_mat = Y, r_EIOU_mat = r_EIOU, S_units_mat = S_units)
 }
 
 
@@ -239,7 +245,7 @@ primary_aggregates_IEA <- function(.ieadata,
                                                     "International marine bunkers", "Stock changes"),
                                    eiou = "Energy industry own use",
                                    # Output name
-                                   aggregate_primary = "EX_p_IEA.ktoe"){
+                                   aggregate_primary = Recca::aggregate_cols$aggregate_primary_iea){
   flow <- as.name(flow)
   flow_aggregation_point <- as.name(flow_aggregation_point)
   energy <- as.name(energy)
@@ -310,8 +316,8 @@ finaldemand_aggregates_IEA <- function(.ieadata,
                                        consumption = "Consumption",
                                        eiou = "Energy industry own use",
                                        # Output names
-                                       aggregate_net_finaldemand = "EX_fd_net_IEA.ktoe",
-                                       aggregate_gross_finaldemand = "EX_fd_gross_IEA.ktoe"){
+                                       aggregate_net_finaldemand = Recca::aggregate_cols$aggregate_net_finaldemand_iea,
+                                       aggregate_gross_finaldemand = Recca::aggregate_cols$aggregate_gross_finaldemand_iea){
   ledger_side <- as.name(ledger_side)
   flow_aggregation_point <- as.name(flow_aggregation_point)
   flow <- as.name(flow)

@@ -7,39 +7,38 @@
 primary_aggregates(
   .sutdata,
   p_industries,
-  R = "R",
-  V = "V",
-  Y = "Y",
+  R = Recca::psut_cols$R,
+  V = Recca::psut_cols$V,
+  Y = Recca::psut_cols$Y,
   by = c("Total", "Product", "Flow"),
-  aggregate_primary = "EX_p.ktoe"
+  aggregate_primary = Recca::aggregate_cols$aggregate_primary
 )
 }
 \arguments{
 \item{.sutdata}{a data frame with columns of matrices from a supply-use analysis.}
 
-\item{p_industries}{a vector of names of industries to be aggregated as "primary".
-These industries will appear in rows of the resource (\code{R}) and make (\code{V}) matrices and
+\item{p_industries}{a vector of names of industries to be aggregated as "primary."
+If \code{.sutdata} is a data frame, \code{p_industries} should be the name of a column in the data frame.
+If \code{.sutdata} is \code{NULL}, \code{p_industries} can be a single vector of industry names.
+These industries in \code{p_industries} will appear in rows of the resource (\code{R}) and make (\code{V}) matrices and
 columns of the final demand matrix (\code{Y}).
 Entries in \code{Y_p} will be subtracted from entries in \code{R_p + V_p} to obtain
-the total primary energy aggregate.}
+the total primary energy aggregate,
+where \verb{*_p} is the primary part of those matrices.}
 
-\item{R}{resources (\code{R}) matrix or the name of the column in \code{.sutdata} containing same}
+\item{R, V, Y}{See \code{Recca::psut_cols}.}
 
-\item{V}{make (\code{V}) matrix or the name of the column in \code{.sutdata} containing same}
-
-\item{Y}{final demand (\code{Y}) matrix or the name of the column in \code{.sutdata} containing same}
-
-\item{by}{one of \code{Total}, \code{Product}, or \code{Flow} to indicate the desired aggregation:
+\item{by}{One of "Total", "Product", or "Flow" to indicate the desired aggregation:
 \itemize{
-\item \code{Total}: aggregation over both Product and Flow (the default)
-\item \code{Product}: aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.)
-\item \code{Flow}: aggregation by type of flow (Production, Imports, Exports, etc.)
+\item "Total": aggregation over both Product and Flow (the default)
+\item "Product": aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.)
+\item "Flow": aggregation by type of flow (Production, Imports, Exports, etc.)
 }}
 
-\item{aggregate_primary}{the name for aggregates of primary energy on output}
+\item{aggregate_primary}{The name for aggregates of primary energy on output.}
 }
 \value{
-a list or data frame containing aggregate primary energy
+A list or data frame containing aggregate primary energy.
 }
 \description{
 Calculates aggregate primary energy from a data frame of Supply-Use matrices.

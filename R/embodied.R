@@ -334,8 +334,7 @@ calc_embodied_etas <- function(.embodiedmats = NULL,
 #' * including only EIOU required for feedstock inputs production (subscript "_feed" appears in the name);
 #' * including both EIOU required for feedstock and EIOU inputs production (no additional subscript).
 #'
-#' Note: All matrix multiplication (`%*%`) is performed "by name" usingyes
-#'
+#' Note: All matrix multiplication (`%*%`) is performed "by name" using
 #' `matsbyname::matrixproduct_byname()`.
 #'
 #'Output columns include:
