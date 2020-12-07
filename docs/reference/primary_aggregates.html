@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.25</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.26</span>
       </span>
     </div>
 
@@ -138,15 +138,15 @@
     <p>Calculates aggregate primary energy from a data frame of Supply-Use matrices.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>primary_aggregates</span>(
-  <span class='kw'>.sutdata</span>,
-  <span class='kw'>p_industries</span>,
-  R = <span class='st'>"R"</span>,
-  V = <span class='st'>"V"</span>,
-  Y = <span class='st'>"Y"</span>,
-  by = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Total"</span>, <span class='st'>"Product"</span>, <span class='st'>"Flow"</span>),
-  aggregate_primary = <span class='st'>"EX_p.ktoe"</span>
-)</pre>
+    <pre class="usage"><span class='fu'>primary_aggregates</span><span class='op'>(</span>
+  <span class='va'>.sutdata</span>,
+  <span class='va'>p_industries</span>,
+  R <span class='op'>=</span> <span class='fu'>Recca</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>R</span>,
+  V <span class='op'>=</span> <span class='fu'>Recca</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>V</span>,
+  Y <span class='op'>=</span> <span class='fu'>Recca</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>Y</span>,
+  by <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Total"</span>, <span class='st'>"Product"</span>, <span class='st'>"Flow"</span><span class='op'>)</span>,
+  aggregate_primary <span class='op'>=</span> <span class='fu'>Recca</span><span class='fu'>::</span><span class='va'><a href='aggregate_cols.html'>aggregate_cols</a></span><span class='op'>$</span><span class='va'>aggregate_primary</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -157,41 +157,36 @@
     </tr>
     <tr>
       <th>p_industries</th>
-      <td><p>a vector of names of industries to be aggregated as "primary".
-These industries will appear in rows of the resource (<code>R</code>) and make (<code>V</code>) matrices and
+      <td><p>a vector of names of industries to be aggregated as "primary."
+If <code>.sutdata</code> is a data frame, <code>p_industries</code> should be the name of a column in the data frame.
+If <code>.sutdata</code> is <code>NULL</code>, <code>p_industries</code> can be a single vector of industry names.
+These industries in <code>p_industries</code> will appear in rows of the resource (<code>R</code>) and make (<code>V</code>) matrices and
 columns of the final demand matrix (<code>Y</code>).
 Entries in <code>Y_p</code> will be subtracted from entries in <code>R_p + V_p</code> to obtain
-the total primary energy aggregate.</p></td>
+the total primary energy aggregate,
+where <code>*_p</code> is the primary part of those matrices.</p></td>
     </tr>
     <tr>
-      <th>R</th>
-      <td><p>resources (<code>R</code>) matrix or the name of the column in <code>.sutdata</code> containing same</p></td>
-    </tr>
-    <tr>
-      <th>V</th>
-      <td><p>make (<code>V</code>) matrix or the name of the column in <code>.sutdata</code> containing same</p></td>
-    </tr>
-    <tr>
-      <th>Y</th>
-      <td><p>final demand (<code>Y</code>) matrix or the name of the column in <code>.sutdata</code> containing same</p></td>
+      <th>R, V, Y</th>
+      <td><p>See <code><a href='psut_cols.html'>Recca::psut_cols</a></code>.</p></td>
     </tr>
     <tr>
       <th>by</th>
-      <td><p>one of <code>Total</code>, <code>Product</code>, or <code>Flow</code> to indicate the desired aggregation:</p><ul>
-<li><p><code>Total</code>: aggregation over both Product and Flow (the default)</p></li>
-<li><p><code>Product</code>: aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.)</p></li>
-<li><p><code>Flow</code>: aggregation by type of flow (Production, Imports, Exports, etc.)</p></li>
+      <td><p>One of "Total", "Product", or "Flow" to indicate the desired aggregation:</p><ul>
+<li><p>"Total": aggregation over both Product and Flow (the default)</p></li>
+<li><p>"Product": aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.)</p></li>
+<li><p>"Flow": aggregation by type of flow (Production, Imports, Exports, etc.)</p></li>
 </ul></td>
     </tr>
     <tr>
       <th>aggregate_primary</th>
-      <td><p>the name for aggregates of primary energy on output</p></td>
+      <td><p>The name for aggregates of primary energy on output.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a list or data frame containing aggregate primary energy</p>
+    <p>A list or data frame containing aggregate primary energy.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

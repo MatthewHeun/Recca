@@ -1,3 +1,5 @@
+# Recca 0.1.26 (2020-12-06)
+
 * `primary_aggregates()`, `finaldemand_aggregates(), and `finaldemand_aggregates_with_units()`
   now require a column of `p_industries` or `fd_sectors` instead of a vector 
   when a `.sutdata` is a data frame.

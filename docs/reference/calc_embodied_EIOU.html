@@ -73,7 +73,7 @@ and final demand, using a data frame of input-output matrices in the physical su
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.25</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.26</span>
       </span>
     </div>
 
@@ -140,18 +140,18 @@ and final demand, using a data frame of input-output matrices in the physical su
 and final demand, using a data frame of input-output matrices in the physical supply-use table (PSUT) format.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>calc_embodied_EIOU</span>(
-  .iomats = <span class='kw'>NULL</span>,
-  e_EIOU = <span class='st'>"e_EIOU"</span>,
-  Y = <span class='st'>"Y"</span>,
-  y = <span class='st'>"y"</span>,
-  L_ixp = <span class='st'>"L_ixp"</span>,
-  L_ixp_feed = <span class='st'>"L_ixp_feed"</span>,
-  Q_EIOU_s = <span class='st'>"Q_EIOU_s"</span>,
-  Q_EIOU_p = <span class='st'>"Q_EIOU_p"</span>,
-  Q_EIOU_feed_s = <span class='st'>"Q_EIOU_feed_s"</span>,
-  Q_EIOU_feed_p = <span class='st'>"Q_EIOU_feed_p"</span>
-)</pre>
+    <pre class="usage"><span class='fu'>calc_embodied_EIOU</span><span class='op'>(</span>
+  .iomats <span class='op'>=</span> <span class='cn'>NULL</span>,
+  e_EIOU <span class='op'>=</span> <span class='st'>"e_EIOU"</span>,
+  Y <span class='op'>=</span> <span class='st'>"Y"</span>,
+  y <span class='op'>=</span> <span class='st'>"y"</span>,
+  L_ixp <span class='op'>=</span> <span class='st'>"L_ixp"</span>,
+  L_ixp_feed <span class='op'>=</span> <span class='st'>"L_ixp_feed"</span>,
+  Q_EIOU_s <span class='op'>=</span> <span class='st'>"Q_EIOU_s"</span>,
+  Q_EIOU_p <span class='op'>=</span> <span class='st'>"Q_EIOU_p"</span>,
+  Q_EIOU_feed_s <span class='op'>=</span> <span class='st'>"Q_EIOU_feed_s"</span>,
+  Q_EIOU_feed_p <span class='op'>=</span> <span class='st'>"Q_EIOU_feed_p"</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -226,8 +226,8 @@ functions as described in the example.</p>
 <li><p>including both EIOU required for feedstock and EIOU inputs production (no additional subscript).</p></li>
 </ul>
 
-<p>Note: All matrix multiplication (<code><a href='https://rdrr.io/r/base/matmult.html'>%*%</a></code>) is performed "by name" usingyes</p>
-<p><code><a href='https://rdrr.io/pkg/matsbyname/man/matrixproduct_byname.html'>matsbyname::matrixproduct_byname()</a></code>.</p>
+<p>Note: All matrix multiplication (<code><a href='https://rdrr.io/r/base/matmult.html'>%*%</a></code>) is performed "by name" using
+<code><a href='https://rdrr.io/pkg/matsbyname/man/matrixproduct_byname.html'>matsbyname::matrixproduct_byname()</a></code>.</p>
 <p>Output columns include:</p><ul>
 <li><p><code>Q_EIOU_s</code>: matrix of embodied EIOU by final demand sectors, including both energy use for feedstock and EIOU production.
 <code>Q_EIOU_s</code> is calculated by <code>e_EIOU_hat %*% L_ixp %*% Y</code>.</p></li>
@@ -241,12 +241,12 @@ functions as described in the example.</p>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'>IEATools</span>)
-<span class='kw'>UKEnergy2000mats</span> <span class='op'>%&gt;%</span>
-  <span class='kw'>tidyr</span>::<span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_wider.html'>pivot_wider</a></span>(names_from = <span class='st'>"matrix.name"</span>, values_from = <span class='st'>"matrix"</span>) <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='calc_io_mats.html'>calc_io_mats</a></span>() <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='calc_E_EIOU.html'>calc_E_EIOU</a></span>() <span class='op'>%&gt;%</span>
-  <span class='fu'>calc_embodied_EIOU</span>()
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>IEATools</span><span class='op'>)</span>
+<span class='va'>UKEnergy2000mats</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>tidyr</span><span class='fu'>::</span><span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_wider.html'>pivot_wider</a></span><span class='op'>(</span>names_from <span class='op'>=</span> <span class='st'>"matrix.name"</span>, values_from <span class='op'>=</span> <span class='st'>"matrix"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='calc_io_mats.html'>calc_io_mats</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='calc_E_EIOU.html'>calc_E_EIOU</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>calc_embodied_EIOU</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 4 x 37</span><span>
 #&gt;   Country  Year Energy.type Last.stage R     U     U_EIOU U_feed V     Y    
 #&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;lis&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lis&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;list&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;list&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lis&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lis&gt;</span><span>
