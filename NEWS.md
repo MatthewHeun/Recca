@@ -8,6 +8,9 @@
     * Use R markdown in documentation (`` `term` `` instead of `\code{term}`).
     * Use package constants for column name arguments 
       (`Recca::sankey_cols$sankey` instead of "Sankey").
+* New tests for the new feature.
+    * Now up to 413 tests, all passing.
+    * Test coverage remains at 100 %.
 
 
 # Recca 0.1.25 (2020-09-17)
