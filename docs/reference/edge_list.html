@@ -75,7 +75,7 @@ Edge lists is a typical data format for visualization software." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.25</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.26</span>
       </span>
     </div>
 
@@ -144,25 +144,25 @@ The edge list can be created from the <code>U</code>, <code>V</code>, and <code>
 Edge lists is a typical data format for visualization software.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>edge_list</span>(
-  .sutdata = <span class='kw'>NULL</span>,
-  R = <span class='st'>"R"</span>,
-  U = <span class='st'>"U"</span>,
-  V = <span class='st'>"V"</span>,
-  Y = <span class='st'>"Y"</span>,
-  edge_list = <span class='st'>"Edge list"</span>,
-  from = <span class='st'>"From"</span>,
-  to = <span class='st'>"To"</span>,
-  value = <span class='st'>"Value"</span>,
-  product = <span class='st'>"Product"</span>,
-  waste = <span class='st'>"Waste"</span>,
-  rowtypes = <span class='st'>"rowtype"</span>,
-  coltypes = <span class='st'>"coltype"</span>,
-  node_id = <span class='st'>"node_id"</span>,
-  first_node = <span class='fl'>0</span>,
-  edge_id = <span class='st'>"edge_id"</span>,
-  simplify_edges = <span class='fl'>TRUE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>edge_list</span><span class='op'>(</span>
+  .sutdata <span class='op'>=</span> <span class='cn'>NULL</span>,
+  R <span class='op'>=</span> <span class='st'>"R"</span>,
+  U <span class='op'>=</span> <span class='st'>"U"</span>,
+  V <span class='op'>=</span> <span class='st'>"V"</span>,
+  Y <span class='op'>=</span> <span class='st'>"Y"</span>,
+  edge_list <span class='op'>=</span> <span class='st'>"Edge list"</span>,
+  from <span class='op'>=</span> <span class='st'>"From"</span>,
+  to <span class='op'>=</span> <span class='st'>"To"</span>,
+  value <span class='op'>=</span> <span class='st'>"Value"</span>,
+  product <span class='op'>=</span> <span class='st'>"Product"</span>,
+  waste <span class='op'>=</span> <span class='st'>"Waste"</span>,
+  rowtypes <span class='op'>=</span> <span class='st'>"rowtype"</span>,
+  coltypes <span class='op'>=</span> <span class='st'>"coltype"</span>,
+  node_id <span class='op'>=</span> <span class='st'>"node_id"</span>,
+  first_node <span class='op'>=</span> <span class='fl'>0</span>,
+  edge_id <span class='op'>=</span> <span class='st'>"edge_id"</span>,
+  simplify_edges <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -259,13 +259,13 @@ In that event, the node named after the product is removed,
 and destinations are connected to the sources.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://github.com/MatthewHeun/matsbyname'>matsbyname</a></span>)
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://tidyr.tidyverse.org'>tidyr</a></span>)
-<span class='kw'>sutmats</span> <span class='op'>&lt;-</span> <span class='kw'>UKEnergy2000mats</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span>(key = <span class='kw'>matrix.name</span>, value = <span class='kw'>matrix</span>)
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/MatthewHeun/matsbyname'>matsbyname</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyr.tidyverse.org'>tidyr</a></span><span class='op'>)</span>
+<span class='va'>sutmats</span> <span class='op'>&lt;-</span> <span class='va'>UKEnergy2000mats</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span><span class='op'>(</span>key <span class='op'>=</span> <span class='va'>matrix.name</span>, value <span class='op'>=</span> <span class='va'>matrix</span><span class='op'>)</span>
 <span class='co'># Don't simplify edges and don't include waste edges</span>
-<span class='kw'>el_basic</span> <span class='op'>&lt;-</span> <span class='fu'>edge_list</span>(<span class='kw'>sutmats</span>, simplify_edges = <span class='fl'>FALSE</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='kw'>el_basic</span><span class='op'>$</span><span class='kw'>`Edge list`</span>[[<span class='fl'>1</span>]])
+<span class='va'>el_basic</span> <span class='op'>&lt;-</span> <span class='fu'>edge_list</span><span class='op'>(</span><span class='va'>sutmats</span>, simplify_edges <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>el_basic</span><span class='op'>$</span><span class='va'>`Edge list`</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;             From           To Value        Product edge_id From_node_id
 #&gt; 1  Crude - Dist.  Crude dist.   500  Crude - Dist.       1            0
 #&gt; 2 Crude - Fields  Crude dist. 47500 Crude - Fields       2            1
@@ -279,7 +279,7 @@ and destinations are connected to the sources.</p>
 #&gt; 3         14
 #&gt; 4         14
 #&gt; 5         17
-#&gt; 6         17</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span>(<span class='kw'>el_basic</span><span class='op'>$</span><span class='kw'>`Edge list`</span>[[<span class='fl'>1</span>]])
+#&gt; 6         17</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span><span class='op'>(</span><span class='va'>el_basic</span><span class='op'>$</span><span class='va'>`Edge list`</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                 From    To Value Product edge_id From_node_id To_node_id
 #&gt; 46 Gas wells &amp; proc. Waste  2075   Waste      46           21         25
 #&gt; 47          NG dist. Waste    50   Waste      47           20         25
@@ -287,8 +287,8 @@ and destinations are connected to the sources.</p>
 #&gt; 49    Oil refineries Waste  5075   Waste      49           16         25
 #&gt; 50      Petrol dist. Waste   750   Waste      50           22         25
 #&gt; 51      Power plants Waste  9700   Waste      51           18         25</div><div class='input'><span class='co'># Simplify edges and include waste</span>
-<span class='kw'>el</span> <span class='op'>&lt;-</span> <span class='fu'>edge_list</span>(<span class='kw'>sutmats</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='kw'>el</span><span class='op'>$</span><span class='kw'>`Edge list`</span>[[<span class='fl'>1</span>]])
+<span class='va'>el</span> <span class='op'>&lt;-</span> <span class='fu'>edge_list</span><span class='op'>(</span><span class='va'>sutmats</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>el</span><span class='op'>$</span><span class='va'>`Edge list`</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                From             To Value        Product edge_id From_node_id
 #&gt; 1 Resources - Crude     Oil fields 50000          Crude       1            0
 #&gt; 2       Crude dist.    Crude dist.   500  Crude - Dist.       2            1
@@ -303,7 +303,7 @@ and destinations are connected to the sources.</p>
 #&gt; 4          1
 #&gt; 5          2
 #&gt; 6          4</div><div class='input'><span class='co'># Now includes waste edges</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span>(<span class='kw'>el</span><span class='op'>$</span><span class='kw'>`Edge list`</span>[[<span class='fl'>1</span>]])
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span><span class='op'>(</span><span class='va'>el</span><span class='op'>$</span><span class='va'>`Edge list`</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                 From    To Value Product edge_id From_node_id To_node_id
 #&gt; 34 Gas wells &amp; proc. Waste  2075   Waste      34            9         13
 #&gt; 35          NG dist. Waste    50   Waste      35            8         13
@@ -311,8 +311,8 @@ and destinations are connected to the sources.</p>
 #&gt; 37    Oil refineries Waste  5075   Waste      37            3         13
 #&gt; 38      Petrol dist. Waste   750   Waste      38           10         13
 #&gt; 39      Power plants Waste  9700   Waste      39            5         13</div><div class='input'><span class='co'># Works with single matrices, too.</span>
-<span class='kw'>elmats</span> <span class='op'>&lt;-</span> <span class='fu'>edge_list</span>(R = <span class='kw'>sutmats</span><span class='op'>$</span><span class='kw'>R</span>[[<span class='fl'>1</span>]], U = <span class='kw'>sutmats</span><span class='op'>$</span><span class='kw'>U</span>[[<span class='fl'>1</span>]], V = <span class='kw'>sutmats</span><span class='op'>$</span><span class='kw'>V</span>[[<span class='fl'>1</span>]], Y = <span class='kw'>sutmats</span><span class='op'>$</span><span class='kw'>Y</span>[[<span class='fl'>1</span>]])
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='kw'>elmats</span>[[<span class='st'>"Edge list"</span>]])
+<span class='va'>elmats</span> <span class='op'>&lt;-</span> <span class='fu'>edge_list</span><span class='op'>(</span>R <span class='op'>=</span> <span class='va'>sutmats</span><span class='op'>$</span><span class='va'>R</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>, U <span class='op'>=</span> <span class='va'>sutmats</span><span class='op'>$</span><span class='va'>U</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>, V <span class='op'>=</span> <span class='va'>sutmats</span><span class='op'>$</span><span class='va'>V</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>, Y <span class='op'>=</span> <span class='va'>sutmats</span><span class='op'>$</span><span class='va'>Y</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>elmats</span><span class='op'>[[</span><span class='st'>"Edge list"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                From             To Value        Product edge_id From_node_id
 #&gt; 1 Resources - Crude     Oil fields 50000          Crude       1            0
 #&gt; 2       Crude dist.    Crude dist.   500  Crude - Dist.       2            1
@@ -326,7 +326,7 @@ and destinations are connected to the sources.</p>
 #&gt; 3          3
 #&gt; 4          1
 #&gt; 5          2
-#&gt; 6          4</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span>(<span class='kw'>elmats</span>[[<span class='st'>"Edge list"</span>]])
+#&gt; 6          4</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span><span class='op'>(</span><span class='va'>elmats</span><span class='op'>[[</span><span class='st'>"Edge list"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                 From    To Value Product edge_id From_node_id To_node_id
 #&gt; 34 Gas wells &amp; proc. Waste  2075   Waste      34            9         13
 #&gt; 35          NG dist. Waste    50   Waste      35            8         13
