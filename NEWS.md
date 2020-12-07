@@ -1,7 +1,16 @@
+* `primary_aggregates()`, `finaldemand_aggregates(), and `finaldemand_aggregates_with_units()`
+  now require a column of `p_industries` or `fd_sectors` instead of a vector 
+  when a `.sutdata` is a data frame.
+  This change works around a problem with a common use case where 
+  the caller would create the `fd_sectors` column from the column names of `Y` vectors 
+  in the data frame.
 * Working to modernize the Recca code.
     * Use R markdown in documentation (`` `term` `` instead of `\code{term}`).
     * Use package constants for column name arguments 
       (`Recca::sankey_cols$sankey` instead of "Sankey").
+* New tests for the new feature.
+    * Now up to 413 tests, all passing.
+    * Test coverage remains at 100 %.
 
 
 # Recca 0.1.25 (2020-09-17)
