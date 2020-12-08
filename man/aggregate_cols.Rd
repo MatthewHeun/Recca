@@ -5,7 +5,7 @@
 \alias{aggregate_cols}
 \title{Aggregate data frame column names}
 \format{
-A string list with 6 entries.
+A string list with 3 entries.
 \describe{
 \item{aggregate_primary}{The name of a column in a wide-by-matrices data frame containing aggregates of primary energy.}
 \item{net_aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of net final demand energy (excluding energy industry own use), regardless of whether the last stage is final energy or useful energy.}

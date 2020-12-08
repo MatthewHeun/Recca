@@ -1,3 +1,14 @@
+# Recca 0.1.27 (2020-12-08)
+
+* Move IEA aggregation functions out of this package and into the `IEATools` package.
+* Now using package constants for names of aggregate columns.
+  Column names match similar names in `IEATools`.
+* Now using better function-matching and -selecting code in `finaldemand_aggregates()`
+* Fewer tests due to moving some functions out of the package.
+    * Now 411 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
 # Recca 0.1.26 (2020-12-06)
 
 * `primary_aggregates()`, `finaldemand_aggregates(), and `finaldemand_aggregates_with_units()`
