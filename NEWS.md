@@ -1,3 +1,4 @@
+* Move IEA aggregation functions out of this package and into the `IEATools` package.
 * Now using package constants for names of aggregate columns.
   Column names match similar names in `IEATools`.
 * Now using better function-matching code in `finaldemand_aggregates()`
