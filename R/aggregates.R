@@ -18,16 +18,28 @@
 #'        where `*_p` is the primary part of those matrices.
 #' @param R,V,Y See `Recca::psut_cols`.
 #' @param by One of "Total", "Product", or "Flow" to indicate the desired aggregation:
-#' \itemize{
-#'   \item "Total": aggregation over both Product and Flow (the default)
-#'   \item "Product": aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.)
-#'   \item "Flow": aggregation by type of flow (Production, Imports, Exports, etc.)
-#' }
+#'        \itemize{
+#'          \item "Total": aggregation over both Product and Flow (the default)
+#'          \item "Product": aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.)
+#'          \item "Flow": aggregation by type of flow (Production, Imports, Exports, etc.)
+#'        }
 #' @param aggregate_primary The name for aggregates of primary energy on output.
 #'
 #' @return A list or data frame containing aggregate primary energy.
 #'
 #' @export
+#'
+#' @examples
+#' library(matsbyname)
+#' p_industries <- c("Resources - Crude", "Resources - NG")
+#' # Calculate primary total aggregates
+#' res <- UKEnergy2000mats %>%
+#'   tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") %>%
+#'   dplyr::mutate(
+#'     p_industries = rep(list(p_industries), times = nrow(.))
+#'   ) %>%
+#'   primary_aggregates(p_industries = "p_industries", by = "Total")
+#' res[[Recca::aggregate_cols$aggregate_primary]]
 primary_aggregates <- function(.sutdata,
                                # Vector of primary industries
                                p_industries,
@@ -41,8 +53,10 @@ primary_aggregates <- function(.sutdata,
 
   by <- match.arg(by)
   # Figure out which function we need to use.
-  aggfuncs <- list(total = "sumall_byname", product = "rowsums_byname", flow = "colsums_byname")
-  agg_func <- match.fun(aggfuncs[[tolower(by)]])
+  aggfuncs <- list(Total = "sumall_byname", Product = "rowsums_byname", Flow = "colsums_byname")
+  # agg_func <- match.fun(aggfuncs[[tolower(by)]])
+  agg_func <- get(aggfuncs[[by]], envir = as.environment("package:matsbyname"))
+
 
   prim_func <- function(p_industries_vec, R_mat = NULL, V_mat, Y_mat){
     # Look for primary industries in each of R, V, and Y matrices
@@ -72,23 +86,31 @@ primary_aggregates <- function(.sutdata,
 #' If `.sutdata` is a data frame, `fd_sectors` should be the name of a column in the data frame.
 #' If `.sutdata` is `NULL`, `fd_sectors` can be a single vector of industry names.
 #'
-#' @param .sutdata a data frame with columns of matrices from a supply-use analysis.
-#' @param fd_sectors a vector of names of sectors in final demand.
-#' @param U use (\code{U}) matrix or name of the column in \code{.sutdata} containing same
-#' @param Y final demand (\code{Y}) matrix or name of the column in \code{.sutdata} containing same
-#' @param r_EIOU matrix of ratios of EIOU for the make (\code{U}) matrix or name of the column in \code{.sutdata} containing same
-#' @param by one of "Product", "Sector", or "Total" to indicate the desired aggregation:
-#' "Product" for aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.),
-#' "Sector" for aggregation by final demand sector (Agriculture/forestry, Domestic navigation, etc.), or
-#' "Total" for aggregation over both Product and Sector (the default).
-#' @param net_aggregate_demand the name of net energy demand on output.
-#' Each entry is \code{sumall(Y_fd)}.
-#' @param gross_aggregate_demand the name of gross energy demand on output.
-#' Each entry is calculated by \code{sumall(Y_fd)} + \code{sumall(U_EIOU)}.
+#' @param .sutdata A data frame with columns of matrices from a supply-use analysis.
+#' @param fd_sectors A vector of names of sectors in final demand.
+#' @param U,Y,r_EIOU See `Recca::psut_cols`.
+#' @param by One of "Product", "Sector", or "Total" to indicate the desired aggregation:
+#'           "Product" for aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.),
+#'           "Sector" for aggregation by final demand sector (Agriculture/forestry, Domestic navigation, etc.), or
+#'           "Total" for aggregation over both Product and Sector (the default).
+#' @param net_aggregate_demand,gross_aggregate_demand See `Recca::aggregate_cols`.
+#'        Net energy demand is calculated by `sumall(Y_fd)`.
+#'        Gross energy demand is calculated by `sumall(Y_fd) + sumall(U_EIOU)`.
 #'
-#' @return a list or data frame containing \code{net_aggregate_demand} and \code{gross_aggregate_demand}
+#' @return A list or data frame containing `net_aggregate_demand` and `gross_aggregate_demand` columns.
 #'
 #' @export
+#'
+#' @examples
+#' library(matsbyname)
+#' UKEnergy2000mats %>%
+#'   tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") %>%
+#'   dplyr::mutate(
+#'     fd_sectors = rep(list(c("Residential", "Transport")), times = nrow(.))
+#'   ) %>%
+#'   dplyr::filter(Last.stage %in% c(IEATools::last_stages$final,
+#'                                   IEATools::last_stages$useful)) %>%
+#'   finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Sector")
 finaldemand_aggregates <- function(.sutdata,
                                    fd_sectors,
                                    # Input names

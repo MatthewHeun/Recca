@@ -16,8 +16,7 @@ test_that("primary aggregates of SUT data work as expected", {
     dplyr::mutate(
       p_industries = rep(list(p_industries), times = nrow(.))
     ) %>%
-    primary_aggregates(p_industries = "p_industries", by = "Total",
-                       aggregate_primary = "EX_total_agg.ktoe")
+    primary_aggregates(p_industries = "p_industries", by = "Total", aggregate_primary = "EX_total_agg.ktoe")
   expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
                       dplyr::select("EX_total_agg.ktoe"), 93000)
   expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$useful) %>%

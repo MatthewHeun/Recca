@@ -43,3 +43,15 @@ A list or data frame containing aggregate primary energy.
 \description{
 Calculates aggregate primary energy from a data frame of Supply-Use matrices.
 }
+\examples{
+library(matsbyname)
+p_industries <- c("Resources - Crude", "Resources - NG")
+# Calculate primary total aggregates
+res <- UKEnergy2000mats \%>\%
+  tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") \%>\%
+  dplyr::mutate(
+    p_industries = rep(list(p_industries), times = nrow(.))
+  ) \%>\%
+  primary_aggregates(p_industries = "p_industries", by = "Total")
+res[[Recca::aggregate_cols$aggregate_primary]]
+}
