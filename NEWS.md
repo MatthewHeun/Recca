@@ -1,3 +1,8 @@
+* Now using package constants for names of aggregate columns.
+  Column names match similar names in `IEATools`.
+* Now using better function-matching code in `finaldemand_aggregates()`
+
+
 # Recca 0.1.26 (2020-12-06)
 
 * `primary_aggregates()`, `finaldemand_aggregates(), and `finaldemand_aggregates_with_units()`
