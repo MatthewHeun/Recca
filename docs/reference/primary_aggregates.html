@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.26</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.27</span>
       </span>
     </div>
 
@@ -188,6 +188,18 @@ where <code>*_p</code> is the primary part of those matrices.</p></td>
 
     <p>A list or data frame containing aggregate primary energy.</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/MatthewHeun/matsbyname'>matsbyname</a></span><span class='op'>)</span>
+<span class='va'>p_industries</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Resources - Crude"</span>, <span class='st'>"Resources - NG"</span><span class='op'>)</span>
+<span class='co'># Calculate primary total aggregates</span>
+<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='va'>UKEnergy2000mats</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>tidyr</span><span class='fu'>::</span><span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_wider.html'>pivot_wider</a></span><span class='op'>(</span>names_from <span class='op'>=</span> <span class='st'>"matrix.name"</span>, values_from <span class='op'>=</span> <span class='st'>"matrix"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>
+    p_industries <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>p_industries</span><span class='op'>)</span>, times <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>.</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>primary_aggregates</span><span class='op'>(</span>p_industries <span class='op'>=</span> <span class='st'>"p_industries"</span>, by <span class='op'>=</span> <span class='st'>"Total"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in primary_aggregates(., p_industries = "p_industries", by = "Total"): unused arguments (p_industries = "p_industries", by = "Total")</span></div><div class='input'><span class='va'>res</span><span class='op'>[[</span><span class='fu'>Recca</span><span class='fu'>::</span><span class='va'><a href='aggregate_cols.html'>aggregate_cols</a></span><span class='op'>$</span><span class='va'>aggregate_primary</span><span class='op'>]</span><span class='op'>]</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'res' not found</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
