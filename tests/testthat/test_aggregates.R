@@ -256,38 +256,33 @@ test_that("final demand aggregates of SUT data work as expected", {
 })
 
 
-test_that("primary_aggregates_IEA works as expected", {
-  # Get a vector of primary industries for the example data set.
-  # The vector of primary industries comes from the resource matrix (R).
-  r_ind <- UKEnergy2000mats %>%
-    tidyr::spread(key = matrix.name, value = matrix) %>%
-    extract2("R") %>%
-    extract2(1) %>%
-    rownames()
-
+test_that("IEATools::primary_aggregates_IEA() works as expected on the UKEnergy2000tidy data frame", {
   result <- UKEnergy2000tidy %>%
-    dplyr::group_by(Country, Year, Energy.type, Last.stage) %>%
-    primary_aggregates_IEA(p_industries = r_ind)
-  expect_equal(result[["EX_p_IEA.ktoe"]], c(93000, 93000, 93000, 98220))
-})
-
-
-test_that("finaldemand_aggregates_IEA works as expected", {
-  iea_result <- UKEnergy2000tidy %>%
-    # Can calculate only when all entries are in same units, i.e., only when last stage is final or useful energy.
-    dplyr::filter(Last.stage %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
-    dplyr::group_by(Country, Year, Energy.type, Last.stage) %>%
-    finaldemand_aggregates_IEA()
-  sut_result <- UKEnergy2000mats %>%
-    tidyr::spread(key = matrix.name, value = matrix) %>%
     dplyr::mutate(
-      fd_sectors = rep(list(c("Residential", "Transport")), times = nrow(.))
+      Method = "PCM"
     ) %>%
-    dplyr::filter(Last.stage %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
-    finaldemand_aggregates(fd_sectors = "fd_sectors")
-  expect_equal(iea_result[["EX_fd_net_IEA.ktoe"]], sut_result[["EX_fd_net.ktoe"]] %>% unlist())
-  expect_equal(iea_result[["EX_fd_gross_IEA.ktoe"]], sut_result[["EX_fd_gross.ktoe"]] %>% unlist())
+    dplyr::group_by(Country, Method, Year, Energy.type, Last.stage) %>%
+    IEATools::primary_aggregates()
+  expect_equal(result[["E.dot"]], c(93000, 93000, 93000, 98220))
 })
+
+
+# test_that("finaldemand_aggregates_IEA works as expected", {
+#   iea_result <- UKEnergy2000tidy %>%
+#     # Can calculate only when all entries are in same units, i.e., only when last stage is final or useful energy.
+#     dplyr::filter(Last.stage %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
+#     dplyr::group_by(Country, Year, Energy.type, Last.stage) %>%
+#     finaldemand_aggregates_IEA()
+#   sut_result <- UKEnergy2000mats %>%
+#     tidyr::spread(key = matrix.name, value = matrix) %>%
+#     dplyr::mutate(
+#       fd_sectors = rep(list(c("Residential", "Transport")), times = nrow(.))
+#     ) %>%
+#     dplyr::filter(Last.stage %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
+#     finaldemand_aggregates(fd_sectors = "fd_sectors")
+#   expect_equal(iea_result[["EX_fd_net_IEA.ktoe"]], sut_result[["EX_fd_net.ktoe"]] %>% unlist())
+#   expect_equal(iea_result[["EX_fd_gross_IEA.ktoe"]], sut_result[["EX_fd_gross.ktoe"]] %>% unlist())
+# })
 
 
 test_that("finaldemand_aggregates works for sectors", {
