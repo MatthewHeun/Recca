@@ -2,6 +2,9 @@
 * Now using package constants for names of aggregate columns.
   Column names match similar names in `IEATools`.
 * Now using better function-matching and -selecting code in `finaldemand_aggregates()`
+* Fewer tests due to moving some functions out of the package.
+    * Now 411 tests, all passing.
+    * Test coverage remains at 100 %.
 
 
 # Recca 0.1.26 (2020-12-06)
