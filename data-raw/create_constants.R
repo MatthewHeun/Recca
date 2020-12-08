@@ -29,12 +29,9 @@ usethis::use_data(psut_cols, overwrite = TRUE)
 #
 # Default names for columns in aggregate data frames
 #
-aggregate_cols <- list(aggregate_primary = "EX_p.ktoe",
-                       net_aggregate_demand = "EX_fd_net.ktoe",
-                       gross_aggregate_demand = "EX_fd_gross.ktoe",
-                       aggregate_primary_iea = "EX_p_IEA.ktoe",
-                       aggregate_net_finaldemand_iea = "EX_fd_net_IEA.ktoe",
-                       aggregate_gross_finaldemand_iea = "EX_fd_gross_IEA.ktoe")
+aggregate_cols <- list(aggregate_primary = "EX.p",
+                       net_aggregate_demand = "EX.d_net",
+                       gross_aggregate_demand = "EX.d_gross")
 usethis::use_data(aggregate_cols, overwrite = TRUE)
 
 

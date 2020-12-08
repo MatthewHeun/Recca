@@ -293,7 +293,7 @@ test_that("finaldemand_aggregates works for sectors", {
     ) %>%
     dplyr::filter(Last.stage %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
     finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Sector")
-  expect_equal(sut_result$EX_fd_net.ktoe[[1]][1,1], 31000)
+  expect_equal(sut_result[[Recca::aggregate_cols$net_aggregate_demand]][[1]][1,1], 31000)
   expect_equal(sut_result$EX_fd_net.ktoe[[1]][2,1], 40750)
   expect_equal(sut_result$EX_fd_net.ktoe[[2]][1,1], 4200.4)
   expect_equal(sut_result$EX_fd_net.ktoe[[2]][2,1], 21714.9805)
