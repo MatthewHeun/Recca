@@ -262,7 +262,7 @@ test_that("IEATools::primary_aggregates_IEA() works as expected on the UKEnergy2
     ) %>%
     dplyr::group_by(Country, Method, Year, Energy.type, Last.stage) %>%
     IEATools::primary_aggregates()
-  expect_equal(result[["E.dot"]], c(93000, 93000, 93000, 98220))
+  expect_equal(result[[Recca::aggregate_cols$aggregate_primary]], c(93000, 93000, 93000, 98220))
 })
 
 
