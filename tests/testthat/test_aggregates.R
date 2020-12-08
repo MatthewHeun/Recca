@@ -267,24 +267,6 @@ test_that("IEATools::primary_aggregates_IEA() works as expected on the UKEnergy2
 })
 
 
-# test_that("finaldemand_aggregates_IEA works as expected", {
-#   iea_result <- UKEnergy2000tidy %>%
-#     # Can calculate only when all entries are in same units, i.e., only when last stage is final or useful energy.
-#     dplyr::filter(Last.stage %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
-#     dplyr::group_by(Country, Year, Energy.type, Last.stage) %>%
-#     finaldemand_aggregates_IEA()
-#   sut_result <- UKEnergy2000mats %>%
-#     tidyr::spread(key = matrix.name, value = matrix) %>%
-#     dplyr::mutate(
-#       fd_sectors = rep(list(c("Residential", "Transport")), times = nrow(.))
-#     ) %>%
-#     dplyr::filter(Last.stage %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
-#     finaldemand_aggregates(fd_sectors = "fd_sectors")
-#   expect_equal(iea_result[["EX_fd_net_IEA.ktoe"]], sut_result[["EX_fd_net.ktoe"]] %>% unlist())
-#   expect_equal(iea_result[["EX_fd_gross_IEA.ktoe"]], sut_result[["EX_fd_gross.ktoe"]] %>% unlist())
-# })
-
-
 test_that("finaldemand_aggregates works for sectors", {
   sut_result <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
@@ -294,19 +276,19 @@ test_that("finaldemand_aggregates works for sectors", {
     dplyr::filter(Last.stage %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
     finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Sector")
   expect_equal(sut_result[[Recca::aggregate_cols$net_aggregate_demand]][[1]][1,1], 31000)
-  expect_equal(sut_result$EX_fd_net.ktoe[[1]][2,1], 40750)
-  expect_equal(sut_result$EX_fd_net.ktoe[[2]][1,1], 4200.4)
-  expect_equal(sut_result$EX_fd_net.ktoe[[2]][2,1], 21714.9805)
+  expect_equal(sut_result[[Recca::aggregate_cols$net_aggregate_demand]][[1]][2,1], 40750)
+  expect_equal(sut_result[[Recca::aggregate_cols$net_aggregate_demand]][[2]][1,1], 4200.4)
+  expect_equal(sut_result[[Recca::aggregate_cols$net_aggregate_demand]][[2]][2,1], 21714.9805)
 
-  expect_equal(sut_result$EX_fd_gross.ktoe[[1]][1,1], 550)
-  expect_equal(sut_result$EX_fd_gross.ktoe[[1]][2,1], 350)
-  expect_equal(sut_result$EX_fd_gross.ktoe[[1]][4,1], 2075)
-  expect_equal(sut_result$EX_fd_gross.ktoe[[1]][11,1], 40750)
+  expect_equal(sut_result[[Recca::aggregate_cols$gross_aggregate_demand]][[1]][1,1], 550)
+  expect_equal(sut_result[[Recca::aggregate_cols$gross_aggregate_demand]][[1]][2,1], 350)
+  expect_equal(sut_result[[Recca::aggregate_cols$gross_aggregate_demand]][[1]][4,1], 2075)
+  expect_equal(sut_result[[Recca::aggregate_cols$gross_aggregate_demand]][[1]][11,1], 40750)
 
-  expect_equal(sut_result$EX_fd_gross.ktoe[[2]][1,1], 0)
-  expect_equal(sut_result$EX_fd_gross.ktoe[[2]][2,1], 45)
-  expect_equal(sut_result$EX_fd_gross.ktoe[[2]][6,1], 75)
-  expect_equal(sut_result$EX_fd_gross.ktoe[[2]][11,1], 26.9997)
-  expect_equal(sut_result$EX_fd_gross.ktoe[[2]][14,1], 21714.9805)
+  expect_equal(sut_result[[Recca::aggregate_cols$gross_aggregate_demand]][[2]][1,1], 0)
+  expect_equal(sut_result[[Recca::aggregate_cols$gross_aggregate_demand]][[2]][2,1], 45)
+  expect_equal(sut_result[[Recca::aggregate_cols$gross_aggregate_demand]][[2]][6,1], 75)
+  expect_equal(sut_result[[Recca::aggregate_cols$gross_aggregate_demand]][[2]][11,1], 26.9997)
+  expect_equal(sut_result[[Recca::aggregate_cols$gross_aggregate_demand]][[2]][14,1], 21714.9805)
 })
 

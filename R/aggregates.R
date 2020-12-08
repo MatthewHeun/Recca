@@ -104,7 +104,7 @@ finaldemand_aggregates <- function(.sutdata,
 
   # Decide which aggregation function to use
   aggfuncs <- list(Total = "sumall_byname", Product = "rowsums_byname", Sector = "colsums_byname")
-  agg_func <- match.fun(aggfuncs[[by]])
+  agg_func <- get(aggfuncs[[by]], envir = as.environment("package:matsbyname"))
 
   fd_func <- function(fd_sectors_vec, U_mat, Y_mat, r_EIOU_mat){
     U_EIOU <- matsbyname::hadamardproduct_byname(r_EIOU_mat, U_mat)
