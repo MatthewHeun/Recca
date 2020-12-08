@@ -74,7 +74,7 @@ to aggregation functions throughout the Recca package." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.26</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.27</span>
       </span>
     </div>
 
@@ -147,7 +147,7 @@ to aggregation functions throughout the <code>Recca</code> package.</p>
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A string list with 6 entries.</p><dl>
+    <p>A string list with 3 entries.</p><dl>
 <dt>aggregate_primary</dt><dd><p>The name of a column in a wide-by-matrices data frame containing aggregates of primary energy.</p></dd>
 <dt>net_aggregate_demand</dt><dd><p>The name of a column in a wide-by-matrices data frame containing aggregates of net final demand energy (excluding energy industry own use), regardless of whether the last stage is final energy or useful energy.</p></dd>
 <dt>gross_aggregate_demand</dt><dd><p>The name of a column in a wide-by-matrices data frame containing aggregates of gross final demand energy (including energy industry own use), regardless of whether the last stage is final energy or useful energy.</p></dd>
@@ -161,22 +161,13 @@ to aggregation functions throughout the <code>Recca</code> package.</p>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>aggregate_cols</span>
 </div><div class='output co'>#&gt; $aggregate_primary
-#&gt; [1] "EX_p.ktoe"
+#&gt; [1] "EX.p"
 #&gt; 
 #&gt; $net_aggregate_demand
-#&gt; [1] "EX_fd_net.ktoe"
+#&gt; [1] "EX.d_net"
 #&gt; 
 #&gt; $gross_aggregate_demand
-#&gt; [1] "EX_fd_gross.ktoe"
-#&gt; 
-#&gt; $aggregate_primary_iea
-#&gt; [1] "EX_p_IEA.ktoe"
-#&gt; 
-#&gt; $aggregate_net_finaldemand_iea
-#&gt; [1] "EX_fd_net_IEA.ktoe"
-#&gt; 
-#&gt; $aggregate_gross_finaldemand_iea
-#&gt; [1] "EX_fd_gross_IEA.ktoe"
+#&gt; [1] "EX.d_gross"
 #&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

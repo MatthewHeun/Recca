@@ -1,3 +1,5 @@
+# Recca 0.1.27 (2020-12-08)
+
 * Move IEA aggregation functions out of this package and into the `IEATools` package.
 * Now using package constants for names of aggregate columns.
   Column names match similar names in `IEATools`.
