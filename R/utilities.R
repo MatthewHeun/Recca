@@ -606,4 +606,31 @@ replace_html_codes <- function(text,
 }
 
 
+#' Scrape primary industry names from R, V, and Y matrices
+#'
+#' Primary industry names are needed for aggregation.
+#' This function interrogates the row and column names of R, V, and Y matrices
+#' for names that start with `IEATools::tpes_flows`.
+#' The assumption is that many of these row and column names may have
+#' compound names in the form "Resources \[of Oil and gas extraction\]".
+#' So this function looks for leading strings.
+#'
+#' @param .sutdata An optional data frame containing columns of PSUT matrices
+#' @param p_industries A vector of prefixes for primary industry names.
+#' @param R The name of the `R` matrix column in `.sutdata` or an `R` matrix.
+#' @param V The name of the `V` matrix column in `.sutdata` or a `V` matrix.
+#' @param Y The name of the `Y` matrix column in `.sutdata` or a `Y` matrix.
+#'
+#' @return A vector of full names of primary industries in the `R`, `V`, and `Y` matrices.
+#'
+#' @export
+#'
+#' @examples
+scrape_p_industry_names <- function(.sutdata,
+                                    p_industries,
+                                    # Input names
+                                    R = Recca::psut_cols$R,
+                                    V = Recca::psut_cols$V,
+                                    Y = Recca::psut_cols$Y) {
 
+}

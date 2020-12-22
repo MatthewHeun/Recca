@@ -344,4 +344,9 @@ test_that("unescape_html_codes works as expected", {
 })
 
 
-
+test_that("scrape_p_industry_names() works as expected", {
+  R = matrix(c(1, 0,
+               0, 2), nrow = 2, byrow = TRUE,
+             dimnames = list(c("Resources [of Oil and gas extraction]", "Imports [of Electricity]"),
+                             c("Crude oil", "Electricity")))
+})
