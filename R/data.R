@@ -66,6 +66,25 @@
 
 
 
+#' Primary industry column names
+#'
+#' A string list containing named names of columns in SUT data frames.
+#' Items in the list provide default values for column name function arguments
+#' throughout the `Recca` package.
+#'
+#' @format A string list with `r length(industry_cols)` entries.
+#' \describe{
+#' \item{p_industries_prefixes}{The name of a column in a wide-by-matrices data frame containing prefixes for names of primary industries.}
+#' \item{p_industries_complete}{The name of a column in a wide-by-matrices data frame containing complete names of primary industries.}
+#' }
+#'
+#' @examples
+#' industry_cols
+"industry_cols"
+
+
+
+
 #' Energy consumption in the UK in 2000
 #'
 #' A dataset containing approximations to
