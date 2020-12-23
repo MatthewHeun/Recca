@@ -16,6 +16,8 @@
 #'        Entries in `Y_p` will be subtracted from entries in `R_p + V_p` to obtain
 #'        the total primary energy aggregate,
 #'        where `*_p` is the primary part of those matrices.
+#'        The function `find_p_industry_names()` might be helpful to find
+#'        primary industry names if they can be identified by prefixes.
 #' @param R,V,Y See `Recca::psut_cols`.
 #' @param by One of "Total", "Product", or "Flow" to indicate the desired aggregation:
 #'        \itemize{
