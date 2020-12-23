@@ -344,9 +344,68 @@ test_that("unescape_html_codes works as expected", {
 })
 
 
-test_that("scrape_p_industry_names() works as expected", {
-  R = matrix(c(1, 0,
-               0, 2), nrow = 2, byrow = TRUE,
-             dimnames = list(c("Resources [of Oil and gas extraction]", "Imports [of Electricity]"),
-                             c("Crude oil", "Electricity")))
+test_that("match_p_industry_names() works as expected", {
+  Rrows <- c("Resources [of Oil and gas extraction]", "Resources [of Coal mines]")
+  R <- matrix(c(1, 0,
+                0, 2), nrow = 2, byrow = TRUE,
+             dimnames = list(Rrows,
+                             c("Crude oil", "Brown coal")))
+  Vrows <- c("Imports [of Crude oil]", "Stock changes [of Bituminous coal]")
+  V <- matrix(c(3, 0,
+                0, 4), nrow = 2, byrow = TRUE,
+              dimnames = list(Vrows, c("Crude oil", "Bituminous coal")))
+  Ycols <- c("Exports [of Electricity]", "International marine bunkers [of Gas/diesel oil]")
+  Y <- matrix(c(5, 0,
+                0, 6), nrow = 2, byrow = TRUE,
+              dimnames = list(c("Electricity", "Gas/diesel oil"), Ycols))
+  p_industries_prefixes <- c("Resources", "Imports", "Exports", "Stock changes", "International marine bunkers")
+  # Need to make sure these are all lists, so that the different types
+  # (p_industries are strings and R, V, and Y are matrices)
+  # are handled correctly by the function.
+  p_industries_full_names <- match_p_industry_names(p_industries_prefixes = list(p_industries_prefixes), R = list(R), V = list(V), Y = list(Y))
+
+  expect_equal(p_industries_full_names, c(Rrows, Vrows, Ycols))
+
+  # Try with a null matrix.
+  expect_error(match_p_industry_names(p_industries = list(p_industries), R = list(R), V = NULL, Y = list(Y)),
+               "zero-length inputs cannot be mixed with those of non-zero length")
+
+  # Try with a data frame.
+  DF <- tibble::tibble(R = list(R,R), V = list(V,V), Y = list(Y,Y),
+                       p_industries = list(p_industries, "Resources"),
+                       expected = list(c(Rrows, Vrows, Ycols), Rrows))
+  DF_augmented <- DF %>%
+    dplyr::mutate(
+      actual = match_p_industry_names(p_industries = "p_industries")
+    )
+
+  # DF <- tibble::tibble(R = list(R,R,R,R,R,R), V = list(V,V,V,V,V,V), Y = list(Y,Y,Y,Y,Y,Y),
+  #                      p_industries = list(p_industries, "Resources", "Imports", "Stock changes", "Exports", "International marine bunkers"),
+  #                      expected = list(c(Rrows, Vrows, Ycols), Rrows, Vrows[[1]], Vrows[[2]], Ycols[[1]], Ycols[[2]]))
+  # DF_augmented <- match_p_industry_names(DF, p_industries = "p_industries")
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

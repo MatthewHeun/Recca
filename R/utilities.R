@@ -609,28 +609,62 @@ replace_html_codes <- function(text,
 #' Scrape primary industry names from R, V, and Y matrices
 #'
 #' Primary industry names are needed for aggregation.
-#' This function interrogates the row and column names of R, V, and Y matrices
-#' for names that start with `IEATools::tpes_flows`.
+#' This function interrogates the row names of R and V and the column names Y matrices
+#' for names that start with `p_industries`.
 #' The assumption is that many of these row and column names may have
-#' compound names in the form "Resources \[of Oil and gas extraction\]".
+#' compound names of the form "Resources \[of Oil and gas extraction\]".
 #' So this function looks for leading strings.
+#' If "Resources" is in `p_industries`,
+#' "Resources \[of Oil and gas extraction\]" will be among the returned strings.
+#'
+#' Note all of `R`, `V`, and `Y` need to be specified.
 #'
 #' @param .sutdata An optional data frame containing columns of PSUT matrices
-#' @param p_industries A vector of prefixes for primary industry names.
+#' @param p_industries_prefixes A vector of prefixes for primary industry names.
 #' @param R The name of the `R` matrix column in `.sutdata` or an `R` matrix.
 #' @param V The name of the `V` matrix column in `.sutdata` or a `V` matrix.
 #' @param Y The name of the `Y` matrix column in `.sutdata` or a `Y` matrix.
+#' @param p_industries The name of the output column containing complete names of primary industries.
+#'        Default is `Recca::industry_cols$p_industries_complete`.
 #'
-#' @return A vector of full names of primary industries in the `R`, `V`, and `Y` matrices.
+#' @return A vector or vectors of full names of primary industries in the `R`, `V`, and `Y` matrices.
 #'
 #' @export
 #'
 #' @examples
-scrape_p_industry_names <- function(.sutdata,
-                                    p_industries,
-                                    # Input names
-                                    R = Recca::psut_cols$R,
-                                    V = Recca::psut_cols$V,
-                                    Y = Recca::psut_cols$Y) {
+match_p_industry_names <- function(.sutdata = NULL,
+                                   p_industries_prefixes = Recca::industry_cols$p_industries_prefixes,
+                                   # Input names
+                                   R = Recca::psut_cols$R,
+                                   V = Recca::psut_cols$V,
+                                   Y = Recca::psut_cols$Y,
+                                   # Output column name
+                                   p_industries_complete = Recca::industry_cols$p_industries_complete) {
 
+  name_matching_func <- function(p_industries_prefixes_vec, R_mat = NULL, V_mat = NULL, Y_mat = NULL) {
+    # Transpose Y matrix so we can operate on rows of all matrices.
+    mats <- list(R_mat, V_mat, matsbyname::transpose_byname(Y_mat))
+
+    full_p_industry_names <- lapply(mats, function(m) {
+      m %>%
+        matsbyname::select_rows_byname(retain_pattern =
+                                         matsbyname::make_pattern(row_col_names = p_industries_prefixes_vec, pattern_type = "leading")) %>%
+        matsbyname::getrownames_byname()
+    }) %>%
+      # Flatten
+      unlist() %>%
+      # And re-list
+      list() %>%
+      magrittr::set_names(p_industries_complete)
+  }
+
+  matsindf::matsindf_apply(.sutdata,
+                           FUN = name_matching_func,
+                           p_industries_prefixes_vec = p_industries_prefixes,
+                           R_mat = R,
+                           V_mat = V,
+                           Y_mat = Y) %>%
+    # Comes back as a 1-column data frame.
+    # Pull it apart to provide a vector.
+    unlist()
 }
