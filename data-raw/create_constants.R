@@ -45,7 +45,7 @@ usethis::use_data(sankey_cols, overwrite = TRUE)
 #
 # Give the column names of industry information
 #
-industry_cols <- list(p_industries_prefixes = "p_industries_prefixes",
+industry_cols <- list(p_industry_prefixes = "p_industry_prefixes",
                       p_industries_complete = "p_industries_complete")
 usethis::use_data(industry_cols, overwrite = TRUE)
 
