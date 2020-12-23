@@ -1,3 +1,14 @@
+# Recca 0.1.28 (2020-12-23)
+
+* New function `find_p_industry_names()` looks at `R`, `V`, and `Y` matrices 
+  to find names of primary industries (industries that produce primary energy).
+  The function looks for prefixes among row (`R` and `V`) and column (`Y`) names
+  to identify primary industries.
+* New tests for new function.
+    * Now 416 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
 # Recca 0.1.27 (2020-12-08)
 
 * Move IEA aggregation functions out of this package and into the `IEATools` package.
