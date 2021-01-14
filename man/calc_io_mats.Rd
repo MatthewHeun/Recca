@@ -6,6 +6,7 @@
 \usage{
 calc_io_mats(
   .sutdata = NULL,
+  method_q_calculation = "sum_U_Y_rows",
   R = "R",
   U = "U",
   U_feed = "U_feed",
@@ -35,6 +36,9 @@ calc_io_mats(
 }
 \arguments{
 \item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
+
+\item{method_q_calculation}{specified the method which with the q vector should be calculated. Default is \code{sum_U_Y_rows}.
+Alternatively, an analyst can choose to use the \code{sum_R_V_cols} method. In the case of a balanced ECC, the method does not matter.}
 
 \item{R}{resources (\code{R}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{R}".}
 

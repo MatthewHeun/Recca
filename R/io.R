@@ -161,7 +161,7 @@ calc_yqfgW <- function(.sutdata = NULL,
     } else if (method_q_calculation == "sum_R_V_cols") {
       q_vec <- matsbyname::transpose_byname(
         matsbyname::sum_byname(
-          matsbyname::colsums_byname(R_mat), matsbyname::sum_byname(V_mat)
+          matsbyname::colsums_byname(R_mat), matsbyname::colsums_byname(V_mat)
           )
         )
     } else {

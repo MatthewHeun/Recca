@@ -110,7 +110,7 @@ test_that("calculating y, q, f, g, W, A, and L works as expected", {
 
   q_mats_R_V <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
-    calc_yqfgW()
+    calc_yqfgW(method_q_calculation = "sum_R_V_cols")
 
   expect_equal(
     q_mats_U_Y[["q"]][[1]], q_mats_R_V[["q"]][[1]]
@@ -125,6 +125,7 @@ test_that("calculating y, q, f, g, W, A, and L works as expected", {
       tidyr::spread(key = matrix.name, value = matrix) %>%
       calc_yqfgW(method_q_calculation = "Method_not_supported")
   )
+
 })
 
 
