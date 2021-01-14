@@ -101,6 +101,30 @@ test_that("calculating y, q, f, g, W, A, and L works as expected", {
                       dplyr::select(matvals) %>%
                       unlist(),
                     51918.7186937)
+
+  # Now, focus on whether we get the same q for the two methods: sum_U_Y_rows and sum_R_V_cols
+  # First, sum_U_Y_rows
+  q_mats_U_Y <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    calc_yqfgW()
+
+  q_mats_R_V <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    calc_yqfgW()
+
+  expect_equal(
+    q_mats_U_Y[["q"]][[1]], q_mats_R_V[["q"]][[1]]
+  )
+
+  expect_identical(
+    q_mats_U_Y[["q"]][[1]], q_mats_R_V[["q"]][[1]]
+  )
+
+  expect_error(
+    UKEnergy2000mats %>%
+      tidyr::spread(key = matrix.name, value = matrix) %>%
+      calc_yqfgW(method_q_calculation = "Method_not_supported")
+  )
 })
 
 
