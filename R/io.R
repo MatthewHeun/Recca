@@ -7,8 +7,10 @@
 #' Calculate several input-output matrices
 #'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
-#' @param method_q_calculation specified the method which with the q vector should be calculated. Default is `sum_U_Y_rows`.
-#' Alternatively, an analyst can choose to use the `sum_R_V_cols` method. In the case of a balanced ECC, the method does not matter.
+#' @param method_q_calculation Specifies the method which with the q vector should be calculated.
+#'                             Default is `sum_U_Y_rows`.
+#'                             Alternatively, an analyst can choose to use the `sum_R_V_cols` method.
+#'                             In the case of a balanced ECC, the method does not matter.
 #' @param R resources (`R`) matrix or name of the column in `.sutmats` that contains same. Default is "`R`".
 #' @param U use (`U`) matrix or name of the column in `.sutmats`` that contains same. Default is "U".
 #' @param U_feed use matrix or name of the column in `.sutmats` that contains same. Default is "U_feed".
@@ -66,13 +68,16 @@
 #'   select(Country, Year, Energy.type, Last.stage, U, U_feed, V, Y, r_EIOU, S_units) %>%
 #'   calc_io_mats()
 calc_io_mats <- function(.sutdata = NULL,
-                         method_q_calculation = "sum_U_Y_rows",
+                         method_q_calculation = c("sum_U_Y_rows", "sum_R_V_cols"),
                          # Input names
                          R = "R", U = "U", U_feed = "U_feed", V = "V", Y = "Y", S_units = "S_units",
                          # Output names
                          y = "y", q = "q", f = "f", g = "g", W = "W", K = "K",
                          Z = "Z", C = "C", D = "D", A = "A", L_ixp = "L_ixp", L_pxp = "L_pxp",
                          Z_feed = "Z_feed", K_feed = "K_feed", C_feed = "C_feed", D_feed = "D_feed", A_feed = "A_feed", L_ixp_feed = "L_ixp_feed", L_pxp_feed = "L_pxp_feed"){
+
+  method_q_calculation <- match.arg(method_q_calculation)
+
   io_func <- function(R_mat = NULL, U_mat, U_feed_mat, V_mat, Y_mat, S_units_mat = NULL){
     yqfgW <- calc_yqfgW(method_q_calculation = method_q_calculation,
                         R = R_mat, U = U_mat, V = V_mat, Y = Y_mat, S_units = S_units_mat,
@@ -123,8 +128,10 @@ calc_io_mats <- function(.sutdata = NULL,
 #' The checks for unit homogeneity are performed only when an \code{S_units} matrix is present.
 #'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
-#' @param method_q_calculation specified the method which with the q vector should be calculated. Default is `sum_U_Y_rows`.
-#' Alternatively, an analyst can choose to use the `sum_R_V_cols` method. In the case of a balanced ECC, the method does not matter.
+#' @param method_q_calculation Specifies the method which with the q vector should be calculated.
+#'                             Default is `sum_U_Y_rows`.
+#'                             Alternatively, an analyst can choose to use the `sum_R_V_cols` method.
+#'                             In the case of a balanced ECC, the method does not matter.
 #' @param R resources (`R`) matrix or name of the column in `.sutmats` that contains same. Default is "`R`".
 #' @param U use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".
 #' @param V make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "\code{V}".
@@ -146,26 +153,25 @@ calc_io_mats <- function(.sutdata = NULL,
 #' @return a list or data frame containing \code{y}, \code{q},
 #'          \code{f}, \code{g}, and \code{W}.
 calc_yqfgW <- function(.sutdata = NULL,
-                       method_q_calculation = "sum_U_Y_rows",
+                       method_q_calculation = c("sum_U_Y_rows", "sum_R_V_cols"),
                        # Input names
                        R = "R", U = "U", V = "V", Y = "Y", S_units = "S_units",
                        # Output columns
                        y = "y", q = "q",
                        f = "f", g = "g",
                        W = "W"){
+
+  method_q_calculation <- match.arg(method_q_calculation)
+
   yqfgw_func <- function(R_mat = NULL, U_mat, V_mat, Y_mat, S_units_mat = NULL){
     y_vec <- matsbyname::rowsums_byname(Y_mat)
 
     if (method_q_calculation == "sum_U_Y_rows") {
       q_vec <- matsbyname::sum_byname(matsbyname::rowsums_byname(U_mat), y_vec)
-    } else if (method_q_calculation == "sum_R_V_cols") {
-      q_vec <- matsbyname::transpose_byname(
-        matsbyname::sum_byname(
-          matsbyname::colsums_byname(R_mat), matsbyname::colsums_byname(V_mat)
-          )
-        )
-    } else {
-      stop("The method provided as input to the method_q_calculation argument is not supported. Please check documentation.")
+    }
+    if (method_q_calculation == "sum_R_V_cols") {
+      q_vec <- matsbyname::sum_byname(matsbyname::colsums_byname(R_mat), matsbyname::colsums_byname(V_mat)) %>%
+        matsbyname::transpose_byname()
     }
 
     f_vec <- matsbyname::colsums_byname(U_mat) %>% matsbyname::transpose_byname() # vectors are always column vectors
