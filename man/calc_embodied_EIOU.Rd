@@ -72,8 +72,7 @@ The embodied EIOU matrices are calculated either:
 \item including both EIOU required for feedstock and EIOU inputs production (no additional subscript).
 }
 
-Note: All matrix multiplication (\code{\%*\%}) is performed "by name" usingyes
-
+Note: All matrix multiplication (\code{\%*\%}) is performed "by name" using
 \code{matsbyname::matrixproduct_byname()}.
 
 Output columns include:

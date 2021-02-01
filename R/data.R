@@ -1,3 +1,90 @@
+#' Physical Supply-Use Table (PSUT) data frame column names
+#'
+#' A string list containing named names of columns in PSUT data frames.
+#' Items in the list provide default values for column name function arguments
+#' throughout the `Recca` package.
+#'
+#' Note that some of the values are repeated,
+#' thereby providing synonyms.
+#' E.g., both `resources` and `R` point to the "R" column name.
+#'
+#' @format A string list with `r length(psut_cols)` entries.
+#' \describe{
+#' \item{resources,R}{The name of a column in a wide-by-matrices data frame containing resource (`R`) matrices.}
+#' \item{U_feed}{The name of a column in a wide-by-matrices data frame containing use (`U`) matrices that exclude energy industry own use.}
+#' \item{U_eiou}{The name of a column in a wide-by-matrices data frame containing use (`U`) matrices that contain exclusively energy industry own use.}
+#' \item{U}{The name of a column in a wide data-by-matrices frame containing use (`U`) matrices that are the sum of `U_feed` and `U_eiou` matrices.}
+#' \item{r_eiou}{The name of a column in a wide-by-matrices data frame containing the ratio of `U_eiou` and `U` matrices.}
+#' \item{make,V}{The name of a column in a wide-by-matrices data frame containing make (`V`) matrices.}
+#' \item{final_demand,Y}{The name of a column in a wide-by-matrices data frame containing final demand (`Y`) matrices.}
+#' \item{s_units}{The name of a column in a wide-by-matrices data frame containing unit summation (`S_units`) matrices.}
+#' \item{matvals}{The name of a column in a tidy data frame containing matrices.}
+#' }
+#'
+#' @examples
+#' psut_cols
+"psut_cols"
+
+
+
+#' Aggregate data frame column names
+#'
+#' A string list containing named names of columns in aggregate data frames.
+#' Items in the list provide default values for column name function arguments
+#' to aggregation functions throughout the `Recca` package.
+#'
+#' @format A string list with `r length(aggregate_cols)` entries.
+#' \describe{
+#' \item{aggregate_primary}{The name of a column in a wide-by-matrices data frame containing aggregates of primary energy.}
+#' \item{net_aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of net final demand energy (excluding energy industry own use), regardless of whether the last stage is final energy or useful energy.}
+#' \item{gross_aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of gross final demand energy (including energy industry own use), regardless of whether the last stage is final energy or useful energy.}
+#' \item{aggregate_primary_iea}{The name of a column in an IEA-style frame containing aggregates of primary energy.}
+#' \item{net_aggregate_demand_iea}{The name of a column in an IEA-style frame containing aggregates of net final demand energy (excluding energy industry own use), regardless of whether the last stage is final energy or useful energy.}
+#' \item{gross_aggregate_demand_iea}{The name of a column in an IEA-style frame containing aggregates of gross final demand energy (including energy industry own use), regardless of whether the last stage is final energy or useful energy.}
+#' }
+#'
+#' @examples
+#' aggregate_cols
+"aggregate_cols"
+
+
+
+#' Sankey diagram data frame column names
+#'
+#' A string list containing named names of columns in Sankey data frames.
+#' Items in the list provide default values for column name function arguments
+#' throughout the `Recca` package.
+#'
+#' @format A string list with `r length(sankey_cols)` entries.
+#' \describe{
+#' \item{sankey}{The name of a column in a wide-by-matrices data frame containing Sankey diagrams.}
+#' }
+#'
+#' @examples
+#' sankey_cols
+"sankey_cols"
+
+
+
+#' Primary industry column names
+#'
+#' A string list containing named names of columns in SUT data frames.
+#' Items in the list provide default values for column name function arguments
+#' throughout the `Recca` package.
+#'
+#' @format A string list with `r length(industry_cols)` entries.
+#' \describe{
+#' \item{p_industries_prefixes}{The name of a column in a wide-by-matrices data frame containing prefixes for names of primary industries.}
+#' \item{p_industries_complete}{The name of a column in a wide-by-matrices data frame containing complete names of primary industries.}
+#' }
+#'
+#' @examples
+#' industry_cols
+"industry_cols"
+
+
+
+
 #' Energy consumption in the UK in 2000
 #'
 #' A dataset containing approximations to

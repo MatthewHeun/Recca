@@ -1,3 +1,49 @@
+# Recca 0.1.29 (2020-02-01)
+
+* A `method_q_calculation` argument has been added to
+  the `calc_io_mats()` function.
+  This enables to calculate the q vector using either
+  a consumption-side or supply-side perspective.
+
+# Recca 0.1.28 (2020-12-23)
+
+* New function `find_p_industry_names()` looks at `R`, `V`, and `Y` matrices 
+  to find names of primary industries (industries that produce primary energy).
+  The function looks for prefixes among row (`R` and `V`) and column (`Y`) names
+  to identify primary industries.
+* New tests for new function.
+    * Now 416 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
+# Recca 0.1.27 (2020-12-08)
+
+* Move IEA aggregation functions out of this package and into the `IEATools` package.
+* Now using package constants for names of aggregate columns.
+  Column names match similar names in `IEATools`.
+* Now using better function-matching and -selecting code in `finaldemand_aggregates()`
+* Fewer tests due to moving some functions out of the package.
+    * Now 411 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
+# Recca 0.1.26 (2020-12-06)
+
+* `primary_aggregates()`, `finaldemand_aggregates(), and `finaldemand_aggregates_with_units()`
+  now require a column of `p_industries` or `fd_sectors` instead of a vector 
+  when a `.sutdata` is a data frame.
+  This change works around a problem with a common use case where 
+  the caller would create the `fd_sectors` column from the column names of `Y` vectors 
+  in the data frame.
+* Working to modernize the Recca code.
+    * Use R markdown in documentation (`` `term` `` instead of `\code{term}`).
+    * Use package constants for column name arguments 
+      (`Recca::sankey_cols$sankey` instead of "Sankey").
+* New tests for the new feature.
+    * Now up to 413 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
 # Recca 0.1.25 (2020-09-17)
 
 * New author Emmanuel Aramendia. Welcome!

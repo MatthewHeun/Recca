@@ -75,7 +75,7 @@ This function takes a matrix description of an ECC and produces a Sankey diagram
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.25</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.29</span>
       </span>
     </div>
 
@@ -146,12 +146,12 @@ This function takes a matrix description of an ECC and produces a Sankey diagram
 
     <pre class="usage"><span class='fu'>make_sankey</span>(
   .sutmats = <span class='kw'>NULL</span>,
-  R = <span class='st'>"R"</span>,
-  U = <span class='st'>"U"</span>,
-  V = <span class='st'>"V"</span>,
-  Y = <span class='st'>"Y"</span>,
+  R = <span class='kw'>Recca</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>R</span>,
+  U = <span class='kw'>Recca</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>U</span>,
+  V = <span class='kw'>Recca</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>V</span>,
+  Y = <span class='kw'>Recca</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>Y</span>,
   simplify_edges = <span class='fl'>TRUE</span>,
-  sankey = <span class='st'>"Sankey"</span>,
+  sankey = <span class='kw'>Recca</span>::<span class='kw'><a href='sankey_cols.html'>sankey_cols</a></span><span class='op'>$</span><span class='kw'>sankey</span>,
   <span class='kw'>...</span>
 )</pre>
 
@@ -160,23 +160,11 @@ This function takes a matrix description of an ECC and produces a Sankey diagram
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.sutmats</th>
-      <td><p>an optional data frame</p></td>
+      <td><p>an optional wide-by-matrices data frame</p></td>
     </tr>
     <tr>
-      <th>R</th>
-      <td><p>a resource matrix or the name of the column in <code>.sutmats</code> containing <code>R</code> matrices</p></td>
-    </tr>
-    <tr>
-      <th>U</th>
-      <td><p>a use matrix or the name of the column in <code>.sutmats</code> containing <code>U</code> matrices</p></td>
-    </tr>
-    <tr>
-      <th>V</th>
-      <td><p>a make matrix or the name of the column in <code>.sutmats</code> containing <code>V</code> matrices</p></td>
-    </tr>
-    <tr>
-      <th>Y</th>
-      <td><p>a final demand matrix or the name of the column in <code>.sutmats</code> containing <code>Y</code> matrices</p></td>
+      <th>R, U, V, Y</th>
+      <td><p>See <code><a href='psut_cols.html'>Recca::psut_cols</a></code>.</p></td>
     </tr>
     <tr>
       <th>simplify_edges</th>
@@ -185,7 +173,7 @@ Applies to every row of <code>.sutmats</code> if <code>.sutmats</code> is specif
     </tr>
     <tr>
       <th>sankey</th>
-      <td><p>the name of the output Sankey diagram or the name of the column in <code>.sutmats</code> containing Sankey diagrams</p></td>
+      <td><p>See <code><a href='sankey_cols.html'>Recca::sankey_cols</a></code>.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -203,7 +191,7 @@ Applies to every row of <code>.sutmats</code> if <code>.sutmats</code> is specif
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://dplyr.tidyverse.org'>dplyr</a></span>)
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'>magrittr</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://magrittr.tidyverse.org'>magrittr</a></span>)
 </div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Attaching package: ‘magrittr’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:tidyr’:</span>
 #&gt; <span class='message'></span>
@@ -214,8 +202,8 @@ Applies to every row of <code>.sutmats</code> if <code>.sutmats</code> is specif
 <span class='kw'>UKEnergy2000mats</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span>(key = <span class='st'>"matrix.name"</span>, value = <span class='st'>"matrix"</span>) <span class='op'>%&gt;%</span>
   <span class='fu'>make_sankey</span>() <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://rdrr.io/pkg/magrittr/man/aliases.html'>extract2</a></span>(<span class='st'>"Sankey"</span>) <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://rdrr.io/pkg/magrittr/man/aliases.html'>extract2</a></span>(<span class='fl'>1</span>)
+  <span class='fu'><a href='https://magrittr.tidyverse.org/reference/aliases.html'>extract2</a></span>(<span class='st'>"Sankey"</span>) <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://magrittr.tidyverse.org/reference/aliases.html'>extract2</a></span>(<span class='fl'>1</span>)
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -228,7 +216,7 @@ Applies to every row of <code>.sutmats</code> if <code>.sutmats</code> is specif
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Heun.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
 </div>
 
 <div class="pkgdown">

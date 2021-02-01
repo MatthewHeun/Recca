@@ -74,7 +74,7 @@ FALSE otherwise." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.25</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.29</span>
       </span>
     </div>
 
@@ -178,12 +178,12 @@ Default is "<code>.products_unit_homogeneous</code>".</p></td>
 <p>importFrom magrittr extract2</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'>magrittr</span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://magrittr.tidyverse.org'>magrittr</a></span>)
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://tidyr.tidyverse.org'>tidyr</a></span>)
 <span class='kw'>UKEnergy2000mats</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span>(key = <span class='st'>"matrix.name"</span>, value = <span class='st'>"matrix"</span>) <span class='op'>%&gt;%</span>
   <span class='fu'>products_unit_homogeneous</span>() <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://rdrr.io/pkg/magrittr/man/aliases.html'>extract2</a></span>(<span class='st'>".products_unit_homogeneous"</span>)
+  <span class='fu'><a href='https://magrittr.tidyverse.org/reference/aliases.html'>extract2</a></span>(<span class='st'>".products_unit_homogeneous"</span>)
 </div><div class='output co'>#&gt; [[1]]
 #&gt; [1] TRUE
 #&gt; 
@@ -207,7 +207,7 @@ Default is "<code>.products_unit_homogeneous</code>".</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Heun.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
 </div>
 
 <div class="pkgdown">

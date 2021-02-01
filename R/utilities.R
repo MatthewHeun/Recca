@@ -606,4 +606,98 @@ replace_html_codes <- function(text,
 }
 
 
+#' Scrape primary industry names from R, V, and Y matrices
+#'
+#' Primary industry names are needed for aggregation.
+#' This function interrogates the row names of R and V and the column names Y matrices
+#' for names that start with `p_industries`.
+#' The assumption is that many of these row and column names may have
+#' compound names of the form "Resources \[of Oil and gas extraction\]".
+#' So this function looks for leading strings.
+#' If "Resources" is in `p_industries`,
+#' "Resources \[of Oil and gas extraction\]" will be among the returned strings.
+#'
+#' Note all of `R`, `V`, and `Y` need to be specified.
+#'
+#' @param .sutdata An optional data frame containing columns of PSUT matrices
+#' @param p_industry_prefixes The name of a column in `.sutdata` containing
+#'                            vectors of prefixes that identify primary industry names, or
+#'                            a vector of prefixes that identify primary industry names.
+#'                            Default is `Recca::industry_cols$p_industry_prefixes`.
+#'                            Hint: `IEATools::tpes_flows` contains a good list of
+#'                            primary industry prefixes.
+#' @param R The name of the `R` matrix column in `.sutdata` or an `R` matrix.
+#' @param V The name of the `V` matrix column in `.sutdata` or a `V` matrix.
+#' @param Y The name of the `Y` matrix column in `.sutdata` or a `Y` matrix.
+#' @param p_industries_complete The name of the output column containing complete names of primary industries.
+#'        Default is `Recca::industry_cols$p_industries_complete`.
+#'
+#' @return If `.sutdata` is a data frame, a data frame with additional column `p_industries_complete`.
+#'         If `.sutdata` is a list of named matrices (`R`, `V`, and `Y`),
+#'         A vector or vectors of full names of primary industries in the `R`, `V`, and `Y` matrices,
+#'         a list of primary industries.
+#'
+#' @export
+#'
+#' @examples
+#' Rrows <- c("Resources [of Oil and gas extraction]", "Resources [of Coal mines]")
+#' R <- matrix(c(1, 0,
+#'               0, 2), nrow = 2, byrow = TRUE,
+#'             dimnames = list(Rrows, c("Crude oil", "Brown coal")))
+#' Vrows <- c("Imports [of Crude oil]", "Stock changes [of Bituminous coal]")
+#' V <- matrix(c(3, 0,
+#'               0, 4), nrow = 2, byrow = TRUE,
+#'             dimnames = list(Vrows, c("Crude oil", "Bituminous coal")))
+#' Ycols <- c("Exports [of Electricity]", "International marine bunkers [of Gas/diesel oil]")
+#' Y <- matrix(c(5, 0,
+#'               0, 6), nrow = 2, byrow = TRUE,
+#'             dimnames = list(c("Electricity", "Gas/diesel oil"), Ycols))
+#' p_industry_prefixes <- c("Resources", "Imports", "Exports",
+#'                          "Stock changes", "International marine bunkers")
+#' # This function works with individual matrices, so long as they are
+#' # first wrapped in `list()`.
+#' find_p_industry_names(p_industry_prefixes = list(p_industry_prefixes),
+#'                       R = list(R), V = list(V), Y = list(Y))
+#' # Also works in the context of a data frame.
+#' # Use a `tibble`, because it handles matrices better
+#' res <- tibble::tibble(R = list(R,R), V = list(V,V), Y = list(Y,Y),
+#'                      p_industries = list(p_industry_prefixes, "Resources")) %>%
+#'  find_p_industry_names(p_industry_prefixes = "p_industries")
+#' res$p_industries_complete[[1]]
+#' res$p_industries_complete[[2]]
+find_p_industry_names <- function(.sutdata = NULL,
+                                  p_industry_prefixes = Recca::industry_cols$p_industry_prefixes,
+                                  # Input names
+                                  R = Recca::psut_cols$R,
+                                  V = Recca::psut_cols$V,
+                                  Y = Recca::psut_cols$Y,
+                                  # Output column name
+                                  p_industries_complete = Recca::industry_cols$p_industries_complete) {
 
+  name_matching_func <- function(p_industry_prefixes_vec, R_mat = NULL, V_mat = NULL, Y_mat = NULL) {
+    # Transpose Y matrix so we can operate on rows of all matrices.
+    mats <- list(R_mat, V_mat, matsbyname::transpose_byname(Y_mat))
+
+    full_p_industry_names <- lapply(mats, function(m) {
+      m %>%
+        matsbyname::select_rows_byname(retain_pattern =
+                                         matsbyname::make_pattern(row_col_names = p_industry_prefixes_vec, pattern_type = "leading")) %>%
+        matsbyname::getrownames_byname()
+    }) %>%
+      # flatten
+      unlist()
+    # If we don't have a list, make a list.
+    if (!is.list(full_p_industry_names)) {
+      full_p_industry_names <- list(full_p_industry_names)
+    }
+    full_p_industry_names %>%
+      magrittr::set_names(p_industries_complete)
+  }
+
+  matsindf::matsindf_apply(.sutdata,
+                           FUN = name_matching_func,
+                           p_industry_prefixes_vec = p_industry_prefixes,
+                           R_mat = R,
+                           V_mat = V,
+                           Y_mat = Y)
+}

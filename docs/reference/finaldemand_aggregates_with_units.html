@@ -42,7 +42,9 @@
 <meta property="og:title" content="Final demand aggregate energy with units — finaldemand_aggregates_with_units" />
 <meta property="og:description" content="Calculates aggregate final demand energy and services from a data frame of Supply-Use matrices.
 The calculation includes non-energy uses if they are present in the final demand matrix.
-The calculation does not include balancing items (Losses and Statistical differences)." />
+The calculation does not include balancing items (Losses and Statistical differences).
+If .sutdata is a data frame, fd_sectors should be the name of a column in the data frame.
+If .sutdata is NULL, fd_sectors can be a single vector of industry names." />
 
 
 
@@ -74,7 +76,7 @@ The calculation does not include balancing items (Losses and Statistical differe
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.25</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.29</span>
       </span>
     </div>
 
@@ -139,19 +141,21 @@ The calculation does not include balancing items (Losses and Statistical differe
     <div class="ref-description">
     <p>Calculates aggregate final demand energy and services from a data frame of Supply-Use matrices.
 The calculation includes non-energy uses if they are present in the final demand matrix.
-The calculation does not include balancing items (Losses and Statistical differences).</p>
+The calculation does not include balancing items (Losses and Statistical differences).
+If <code>.sutdata</code> is a data frame, <code>fd_sectors</code> should be the name of a column in the data frame.
+If <code>.sutdata</code> is <code>NULL</code>, <code>fd_sectors</code> can be a single vector of industry names.</p>
     </div>
 
     <pre class="usage"><span class='fu'>finaldemand_aggregates_with_units</span>(
   <span class='kw'>.sutdata</span>,
   <span class='kw'>fd_sectors</span>,
-  U = <span class='st'>"U"</span>,
-  Y = <span class='st'>"Y"</span>,
-  r_EIOU = <span class='st'>"r_EIOU"</span>,
-  S_units = <span class='st'>"S_units"</span>,
+  U = <span class='kw'>Recca</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>U</span>,
+  Y = <span class='kw'>Recca</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>Y</span>,
+  r_EIOU = <span class='kw'>Recca</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>r_eiou</span>,
+  S_units = <span class='kw'>Recca</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>s_units</span>,
   by = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Total"</span>, <span class='st'>"Product"</span>, <span class='st'>"Sector"</span>),
-  <span class='kw'>net_aggregate_demand</span>,
-  <span class='kw'>gross_aggregate_demand</span>
+  net_aggregate_demand = <span class='kw'>Recca</span>::<span class='kw'><a href='aggregate_cols.html'>aggregate_cols</a></span><span class='op'>$</span><span class='kw'>net_aggregate_demand</span>,
+  gross_aggregate_demand = <span class='kw'>Recca</span>::<span class='kw'><a href='aggregate_cols.html'>aggregate_cols</a></span><span class='op'>$</span><span class='kw'>gross_aggregate_demand</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -214,7 +218,7 @@ and gross aggregate energy demand</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Heun.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
 </div>
 
 <div class="pkgdown">
