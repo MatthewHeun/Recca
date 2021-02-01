@@ -74,7 +74,7 @@ while the e_EIOU vector contains the total EIOU by unit of industry output." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.27</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.29</span>
       </span>
     </div>
 
@@ -142,13 +142,13 @@ energy conversion chain. The returned <code>E_EIOU</code> matrix contains the by
 while the <code>e_EIOU</code> vector contains the total EIOU by unit of industry output.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>calc_E_EIOU</span><span class='op'>(</span>
-  .iomats <span class='op'>=</span> <span class='cn'>NULL</span>,
-  g <span class='op'>=</span> <span class='st'>"g"</span>,
-  U_EIOU <span class='op'>=</span> <span class='st'>"U_EIOU"</span>,
-  E_EIOU <span class='op'>=</span> <span class='st'>"E_EIOU"</span>,
-  e_EIOU <span class='op'>=</span> <span class='st'>"e_EIOU"</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>calc_E_EIOU</span>(
+  .iomats = <span class='kw'>NULL</span>,
+  g = <span class='st'>"g"</span>,
+  U_EIOU = <span class='st'>"U_EIOU"</span>,
+  E_EIOU = <span class='st'>"E_EIOU"</span>,
+  e_EIOU = <span class='st'>"e_EIOU"</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -185,15 +185,15 @@ while the <code>e_EIOU</code> vector contains the total EIOU by unit of industry
 <p>The output <code>e_EIOU</code> vector is sum of <code>E_EIOU</code> columns: <code>transpose(i) %*% E_EIOU</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>IEATools</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'>IEATools</span>)
 </div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Attaching package: ‘IEATools’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:Recca’:</span>
 #&gt; <span class='message'></span>
-#&gt; <span class='message'>    finaldemand_aggregates, primary_aggregates</span></div><div class='input'><span class='va'>UKEnergy2000mats</span> <span class='op'>%&gt;%</span>
-   <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>Last.stage</span> <span class='op'>==</span> <span class='st'>"Final"</span>, <span class='va'>Energy.type</span> <span class='op'>==</span> <span class='st'>"E"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-   <span class='fu'>tidyr</span><span class='fu'>::</span><span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_wider.html'>pivot_wider</a></span><span class='op'>(</span>names_from <span class='op'>=</span> <span class='st'>"matrix.name"</span>, values_from <span class='op'>=</span> <span class='st'>"matrix"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-   <span class='fu'><a href='calc_io_mats.html'>calc_io_mats</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-   <span class='fu'>calc_E_EIOU</span><span class='op'>(</span><span class='op'>)</span>
+#&gt; <span class='message'>    finaldemand_aggregates, primary_aggregates, psut_cols</span></div><div class='input'><span class='kw'>UKEnergy2000mats</span> <span class='op'>%&gt;%</span>
+   <span class='kw'>dplyr</span>::<span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>Last.stage</span> <span class='op'>==</span> <span class='st'>"Final"</span>, <span class='kw'>Energy.type</span> <span class='op'>==</span> <span class='st'>"E"</span>) <span class='op'>%&gt;%</span>
+   <span class='kw'>tidyr</span>::<span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_wider.html'>pivot_wider</a></span>(names_from = <span class='st'>"matrix.name"</span>, values_from = <span class='st'>"matrix"</span>) <span class='op'>%&gt;%</span>
+   <span class='fu'><a href='calc_io_mats.html'>calc_io_mats</a></span>() <span class='op'>%&gt;%</span>
+   <span class='fu'>calc_E_EIOU</span>()
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 1 x 33</span><span>
 #&gt;   Country  Year Energy.type Last.stage R     U     U_EIOU U_feed V     Y    
 #&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;lis&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lis&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;list&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;list&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lis&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lis&gt;</span><span>
@@ -214,7 +214,7 @@ while the <code>e_EIOU</code> vector contains the total EIOU by unit of industry
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Heun.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
 </div>
 
 <div class="pkgdown">

@@ -76,7 +76,7 @@ If .sutdata is NULL, fd_sectors can be a single vector of industry names." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.27</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.29</span>
       </span>
     </div>
 
@@ -146,17 +146,17 @@ If <code>.sutdata</code> is a data frame, <code>fd_sectors</code> should be the 
 If <code>.sutdata</code> is <code>NULL</code>, <code>fd_sectors</code> can be a single vector of industry names.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>finaldemand_aggregates_with_units</span><span class='op'>(</span>
-  <span class='va'>.sutdata</span>,
-  <span class='va'>fd_sectors</span>,
-  U <span class='op'>=</span> <span class='fu'>Recca</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>U</span>,
-  Y <span class='op'>=</span> <span class='fu'>Recca</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>Y</span>,
-  r_EIOU <span class='op'>=</span> <span class='fu'>Recca</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>r_eiou</span>,
-  S_units <span class='op'>=</span> <span class='fu'>Recca</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>s_units</span>,
-  by <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Total"</span>, <span class='st'>"Product"</span>, <span class='st'>"Sector"</span><span class='op'>)</span>,
-  net_aggregate_demand <span class='op'>=</span> <span class='fu'>Recca</span><span class='fu'>::</span><span class='va'><a href='aggregate_cols.html'>aggregate_cols</a></span><span class='op'>$</span><span class='va'>net_aggregate_demand</span>,
-  gross_aggregate_demand <span class='op'>=</span> <span class='fu'>Recca</span><span class='fu'>::</span><span class='va'><a href='aggregate_cols.html'>aggregate_cols</a></span><span class='op'>$</span><span class='va'>gross_aggregate_demand</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>finaldemand_aggregates_with_units</span>(
+  <span class='kw'>.sutdata</span>,
+  <span class='kw'>fd_sectors</span>,
+  U = <span class='kw'>Recca</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>U</span>,
+  Y = <span class='kw'>Recca</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>Y</span>,
+  r_EIOU = <span class='kw'>Recca</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>r_eiou</span>,
+  S_units = <span class='kw'>Recca</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>s_units</span>,
+  by = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Total"</span>, <span class='st'>"Product"</span>, <span class='st'>"Sector"</span>),
+  net_aggregate_demand = <span class='kw'>Recca</span>::<span class='kw'><a href='aggregate_cols.html'>aggregate_cols</a></span><span class='op'>$</span><span class='kw'>net_aggregate_demand</span>,
+  gross_aggregate_demand = <span class='kw'>Recca</span>::<span class='kw'><a href='aggregate_cols.html'>aggregate_cols</a></span><span class='op'>$</span><span class='kw'>gross_aggregate_demand</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -218,7 +218,7 @@ and gross aggregate energy demand</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Heun.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
 </div>
 
 <div class="pkgdown">
