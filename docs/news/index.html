@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.27</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.29</span>
       </span>
     </div>
 
@@ -132,6 +132,26 @@
       <small>Source: <a href='https://github.com/MatthewHeun/Recca/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="recca-0129-2020-02-01" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.29">
+<a href="#recca-0129-2020-02-01" class="anchor"></a>Recca 0.1.29 (2020-02-01)</h1>
+<ul>
+<li>A <code>method_q_calculation</code> argument has been added to the <code><a href="../reference/calc_io_mats.html">calc_io_mats()</a></code> function. This enables to calculate the q vector using either a consumption-side or supply-side perspective.</li>
+</ul>
+</div>
+    <div id="recca-0128-2020-12-23" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.28">
+<a href="#recca-0128-2020-12-23" class="anchor"></a>Recca 0.1.28 (2020-12-23)</h1>
+<ul>
+<li>New function <code><a href="../reference/find_p_industry_names.html">find_p_industry_names()</a></code> looks at <code>R</code>, <code>V</code>, and <code>Y</code> matrices to find names of primary industries (industries that produce primary energy). The function looks for prefixes among row (<code>R</code> and <code>V</code>) and column (<code>Y</code>) names to identify primary industries.</li>
+<li>New tests for new function.
+<ul>
+<li>Now 416 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul>
+</li>
+</ul>
+</div>
     <div id="recca-0127-2020-12-08" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.27">
 <a href="#recca-0127-2020-12-08" class="anchor"></a>Recca 0.1.27 (2020-12-08)</h1>
@@ -153,7 +173,7 @@
 <a href="#recca-0126-2020-12-06" class="anchor"></a>Recca 0.1.26 (2020-12-06)</h1>
 <ul>
 <li>
-<code><a href="../reference/primary_aggregates.html">primary_aggregates()</a></code>, <code>finaldemand_aggregates(), and</code>finaldemand_aggregates_with_units()<code>now require a column of</code>p_industries<code>or</code>fd_sectors<code>instead of a vector    when a</code>.sutdata<code>is a data frame.   This change works around a problem with a common use case where    the caller would create the</code>fd_sectors<code>column from the column names of</code>Y` vectors in the data frame.</li>
+<code><a href="../reference/primary_aggregates.html">primary_aggregates()</a></code>, <code>finaldemand_aggregates(), and</code>finaldemand_aggregates_with_units()<code>now require a column of</code>p_industries<code>or</code>fd_sectors<code>instead of a vector  when a</code>.sutdata<code>is a data frame. This change works around a problem with a common use case where  the caller would create the</code>fd_sectors<code>column from the column names of</code>Y` vectors in the data frame.</li>
 <li>Working to modernize the Recca code.
 <ul>
 <li>Use R markdown in documentation (<code>`term`</code> instead of <code>\code{term}</code>).</li>
@@ -430,7 +450,7 @@ See <a href="https://github.com/awalker89/openxlsx/issues/393" class="uri">https
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Heun.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
 </div>
 
 <div class="pkgdown">

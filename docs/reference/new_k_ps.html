@@ -77,7 +77,7 @@ The final demand matrix (Y) is unchanged." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.27</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.29</span>
       </span>
     </div>
 
@@ -148,23 +148,23 @@ Changes are made upstream of the changed industry inputs.
 The final demand matrix (<code>Y</code>) is unchanged.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>new_k_ps</span><span class='op'>(</span>
-  .sutmats <span class='op'>=</span> <span class='cn'>NULL</span>,
-  k_prime <span class='op'>=</span> <span class='st'>"k_prime"</span>,
-  R <span class='op'>=</span> <span class='st'>"R"</span>,
-  U <span class='op'>=</span> <span class='st'>"U"</span>,
-  V <span class='op'>=</span> <span class='st'>"V"</span>,
-  Y <span class='op'>=</span> <span class='st'>"Y"</span>,
-  K <span class='op'>=</span> <span class='st'>"K"</span>,
-  L_ixp <span class='op'>=</span> <span class='st'>"L_ixp"</span>,
-  L_pxp <span class='op'>=</span> <span class='st'>"L_pxp"</span>,
-  Z <span class='op'>=</span> <span class='st'>"Z"</span>,
-  D <span class='op'>=</span> <span class='st'>"D"</span>,
-  f <span class='op'>=</span> <span class='st'>"f"</span>,
-  R_prime <span class='op'>=</span> <span class='st'>"R_prime"</span>,
-  U_prime <span class='op'>=</span> <span class='st'>"U_prime"</span>,
-  V_prime <span class='op'>=</span> <span class='st'>"V_prime"</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>new_k_ps</span>(
+  .sutmats = <span class='kw'>NULL</span>,
+  k_prime = <span class='st'>"k_prime"</span>,
+  R = <span class='st'>"R"</span>,
+  U = <span class='st'>"U"</span>,
+  V = <span class='st'>"V"</span>,
+  Y = <span class='st'>"Y"</span>,
+  K = <span class='st'>"K"</span>,
+  L_ixp = <span class='st'>"L_ixp"</span>,
+  L_pxp = <span class='st'>"L_pxp"</span>,
+  Z = <span class='st'>"Z"</span>,
+  D = <span class='st'>"D"</span>,
+  f = <span class='st'>"f"</span>,
+  R_prime = <span class='st'>"R_prime"</span>,
+  U_prime = <span class='st'>"U_prime"</span>,
+  V_prime = <span class='st'>"V_prime"</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -255,40 +255,40 @@ If <code>.sutmats</code> is <code>NULL</code> (the default), output is a list wi
 and input arguments should be single matrices or vectors.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/MatthewHeun/matsbyname'>matsbyname</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyr.tidyverse.org'>tidyr</a></span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://dplyr.tidyverse.org'>dplyr</a></span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://github.com/MatthewHeun/matsbyname'>matsbyname</a></span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://tidyr.tidyverse.org'>tidyr</a></span>)
 <span class='co'># To demonstrate calculating changes to an energy conversion chain due to changes</span>
 <span class='co'># in perfectly-substitutable inputs to an intermediate industry,</span>
 <span class='co'># we use the PerfectSubmats data frame.</span>
 <span class='co'># But we need to calculate several important input-output matrices first.</span>
-<span class='va'>io_mats</span> <span class='op'>&lt;-</span> <span class='va'>PerfectSubmats</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>tidyr</span><span class='fu'>::</span><span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span><span class='op'>(</span>key <span class='op'>=</span> <span class='st'>"matrix.name"</span>, value <span class='op'>=</span> <span class='st'>"matrix"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='calc_io_mats.html'>calc_io_mats</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='kw'>io_mats</span> <span class='op'>&lt;-</span> <span class='kw'>PerfectSubmats</span> <span class='op'>%&gt;%</span>
+  <span class='kw'>tidyr</span>::<span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span>(key = <span class='st'>"matrix.name"</span>, value = <span class='st'>"matrix"</span>) <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='calc_io_mats.html'>calc_io_mats</a></span>()
 <span class='co'># Next, find the K matrix that contains the fraction of each type of energy</span>
 <span class='co'># that enters each industry</span>
-<span class='va'>K</span> <span class='op'>&lt;-</span> <span class='va'>io_mats</span><span class='op'>$</span><span class='va'>K</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>
+<span class='kw'>K</span> <span class='op'>&lt;-</span> <span class='kw'>io_mats</span><span class='op'>$</span><span class='kw'>K</span>[[<span class='fl'>1</span>]]
 <span class='co'># Develop a new column vector for inputs to the Electric transport sector.</span>
 <span class='co'># As provided, the Electric transport sector is dominated by Renewable elec.</span>
 <span class='co'># What if the electricity input to the Electric transport sector</span>
 <span class='co'># were split 50/50 between Renewable elect and FF elec?</span>
-<span class='va'>k_prime_vec</span> <span class='op'>&lt;-</span> <span class='va'>K</span><span class='op'>[</span>, <span class='st'>"Electric transport"</span>, drop <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>]</span>
-<span class='va'>k_prime_vec</span><span class='op'>[</span><span class='st'>"FF elec"</span>, <span class='st'>"Electric transport"</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fl'>0.5</span>
-<span class='va'>k_prime_vec</span><span class='op'>[</span><span class='st'>"Ren elec"</span>, <span class='st'>"Electric transport"</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fl'>0.5</span>
+<span class='kw'>k_prime_vec</span> <span class='op'>&lt;-</span> <span class='kw'>K</span>[, <span class='st'>"Electric transport"</span>, drop = <span class='fl'>FALSE</span>]
+<span class='kw'>k_prime_vec</span>[<span class='st'>"FF elec"</span>, <span class='st'>"Electric transport"</span>] <span class='op'>&lt;-</span> <span class='fl'>0.5</span>
+<span class='kw'>k_prime_vec</span>[<span class='st'>"Ren elec"</span>, <span class='st'>"Electric transport"</span>] <span class='op'>&lt;-</span> <span class='fl'>0.5</span>
 <span class='co'># Add k_prime_vec to the io_mats data frame.</span>
-<span class='va'>io_mats</span> <span class='op'>&lt;-</span> <span class='va'>io_mats</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>
+<span class='kw'>io_mats</span> <span class='op'>&lt;-</span> <span class='kw'>io_mats</span> <span class='op'>%&gt;%</span>
+  <span class='kw'>dplyr</span>::<span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(
     <span class='co'># Set up a new k_prime vector for Electric transport.</span>
     <span class='co'># That vector will be used for the infininte substitution calculation.</span>
-    k_prime <span class='op'>=</span> <span class='fu'>matsbyname</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/matsbyname/man/select_cols_byname.html'>select_cols_byname</a></span><span class='op'>(</span><span class='va'>K</span>, retain_pattern <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/matsbyname/man/make_pattern.html'>make_pattern</a></span><span class='op'>(</span><span class='st'>"Electric transport"</span>,
-                                                                  pattern_type <span class='op'>=</span> <span class='st'>"exact"</span><span class='op'>)</span><span class='op'>)</span>,
-    k_prime <span class='op'>=</span> <span class='fu'>matsbyname</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/matsbyname/man/make_list.html'>make_list</a></span><span class='op'>(</span><span class='va'>k_prime_vec</span>, n <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
-  <span class='op'>)</span>
+    k_prime = <span class='kw'>matsbyname</span>::<span class='fu'><a href='https://rdrr.io/pkg/matsbyname/man/select_cols_byname.html'>select_cols_byname</a></span>(<span class='kw'>K</span>, retain_pattern = <span class='fu'><a href='https://rdrr.io/pkg/matsbyname/man/make_pattern.html'>make_pattern</a></span>(<span class='st'>"Electric transport"</span>,
+                                                                  pattern_type = <span class='st'>"exact"</span>)),
+    k_prime = <span class='kw'>matsbyname</span>::<span class='fu'><a href='https://rdrr.io/pkg/matsbyname/man/make_list.html'>make_list</a></span>(<span class='kw'>k_prime_vec</span>, n = <span class='fl'>1</span>)
+  )
 <span class='co'># Now do the calculation of U_prime and V_prime matrices.</span>
-<span class='va'>new_UV</span> <span class='op'>&lt;-</span> <span class='fu'>new_k_ps</span><span class='op'>(</span><span class='va'>io_mats</span><span class='op'>)</span>
+<span class='kw'>new_UV</span> <span class='op'>&lt;-</span> <span class='fu'>new_k_ps</span>(<span class='kw'>io_mats</span>)
 <span class='co'># There is much more FF extraction now than before.</span>
-<span class='va'>io_mats</span><span class='op'>$</span><span class='va'>U</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>[</span><span class='st'>"FF"</span>, <span class='st'>"FF extraction"</span><span class='op'>]</span>
-</div><div class='output co'>#&gt; [1] 87</div><div class='input'><span class='va'>new_UV</span><span class='op'>$</span><span class='va'>U_prime</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>[</span><span class='st'>"FF"</span>, <span class='st'>"FF extraction"</span><span class='op'>]</span>
+<span class='kw'>io_mats</span><span class='op'>$</span><span class='kw'>U</span>[[<span class='fl'>1</span>]][<span class='st'>"FF"</span>, <span class='st'>"FF extraction"</span>]
+</div><div class='output co'>#&gt; [1] 87</div><div class='input'><span class='kw'>new_UV</span><span class='op'>$</span><span class='kw'>U_prime</span>[[<span class='fl'>1</span>]][<span class='st'>"FF"</span>, <span class='st'>"FF extraction"</span>]
 </div><div class='output co'>#&gt; [1] 101.8523</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -301,7 +301,7 @@ and input arguments should be single matrices or vectors.</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Heun.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
 </div>
 
 <div class="pkgdown">
