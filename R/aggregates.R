@@ -53,6 +53,10 @@ primary_aggregates <- function(.sutdata,
                                # Output names
                                aggregate_primary = Recca::aggregate_cols$aggregate_primary){
 
+  # Ensure that the caller has matsbyname installed and on the package search path.
+  assertthat::assert_that(requireNamespace("matsbyname"),
+                          msg = "package 'matsbyname' is required but not available.")
+
   by <- match.arg(by)
   # Figure out which function we need to use.
   aggfuncs <- list(Total = "sumall_byname", Product = "rowsums_byname", Flow = "colsums_byname")
@@ -123,6 +127,10 @@ finaldemand_aggregates <- function(.sutdata,
                                    # Output names
                                    net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
                                    gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand){
+
+  # Ensure that the caller has matsbyname installed and on the package search path.
+  assertthat::assert_that(requireNamespace("matsbyname"),
+                          msg = "package 'matsbyname' is required but not available.")
 
   by <- match.arg(by)
 
