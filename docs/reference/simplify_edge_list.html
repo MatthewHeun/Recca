@@ -75,7 +75,7 @@ See examples." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.27</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.29</span>
       </span>
     </div>
 
@@ -144,13 +144,13 @@ Then, every "to" node for that product can have the product's "from" be its "fro
 See examples.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>simplify_edge_list</span><span class='op'>(</span>
-  <span class='va'>edge_list</span>,
-  from <span class='op'>=</span> <span class='st'>"From"</span>,
-  to <span class='op'>=</span> <span class='st'>"To"</span>,
-  value <span class='op'>=</span> <span class='st'>"Value"</span>,
-  product <span class='op'>=</span> <span class='st'>"Product"</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>simplify_edge_list</span>(
+  <span class='kw'>edge_list</span>,
+  from = <span class='st'>"From"</span>,
+  to = <span class='st'>"To"</span>,
+  value = <span class='st'>"Value"</span>,
+  product = <span class='st'>"Product"</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -182,15 +182,15 @@ See examples.</p>
     <p>a simplified edge list</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>el</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>From <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"A"</span>, <span class='st'>"Oil"</span><span class='op'>)</span>, To <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Oil"</span>, <span class='st'>"C"</span><span class='op'>)</span>,
-                 Value <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>42</span>, <span class='fl'>42</span><span class='op'>)</span>, Product <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Oil"</span>, <span class='st'>"Oil"</span><span class='op'>)</span>,
-                 stringsAsFactors <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='kw'>el</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(From = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"A"</span>, <span class='st'>"Oil"</span>), To = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Oil"</span>, <span class='st'>"C"</span>),
+                 Value = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>42</span>, <span class='fl'>42</span>), Product = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Oil"</span>, <span class='st'>"Oil"</span>),
+                 stringsAsFactors = <span class='fl'>FALSE</span>)
 <span class='co'># Oil flows from A to C through its product node (Oil)</span>
-<span class='va'>el</span>
+<span class='kw'>el</span>
 </div><div class='output co'>#&gt;   From  To Value Product
 #&gt; 1    A Oil    42     Oil
 #&gt; 2  Oil   C    42     Oil</div><div class='input'><span class='co'># Simplify to have Oil flow from A to C without the product node</span>
-<span class='fu'>simplify_edge_list</span><span class='op'>(</span><span class='va'>el</span><span class='op'>)</span>
+<span class='fu'>simplify_edge_list</span>(<span class='kw'>el</span>)
 </div><div class='output co'>#&gt;   From To Value Product
 #&gt; 1    A  C    42     Oil</div></pre>
   </div>
@@ -204,7 +204,7 @@ See examples.</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Heun.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
 </div>
 
 <div class="pkgdown">

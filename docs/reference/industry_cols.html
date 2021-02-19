@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Calculate embodied energy matrices — calc_M • Recca</title>
+<title>Primary industry column names — industry_cols • Recca</title>
 
 
 <!-- jquery -->
@@ -39,11 +39,10 @@
 
 
 
-<meta property="og:title" content="Calculate embodied energy matrices — calc_M" />
-<meta property="og:description" content="Q is calculated by e_hat * G,
-but the e_hat column contains lists of matrices,
-so the Q column will also contain lists of matrices.
-In each list, there is one Q matrix for each Product in the Energy Conversion Chain." />
+<meta property="og:title" content="Primary industry column names — industry_cols" />
+<meta property="og:description" content="A string list containing named names of columns in SUT data frames.
+Items in the list provide default values for column name function arguments
+throughout the Recca package." />
 
 
 
@@ -132,77 +131,37 @@ In each list, there is one Q matrix for each Product in the Energy Conversion Ch
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Calculate embodied energy matrices</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MatthewHeun/Recca/blob/master/R/embodied.R'><code>R/embodied.R</code></a></small>
-    <div class="hidden name"><code>calc_M.Rd</code></div>
+    <h1>Primary industry column names</h1>
+    <small class="dont-index">Source: <a href='https://github.com/MatthewHeun/Recca/blob/master/R/data.R'><code>R/data.R</code></a></small>
+    <div class="hidden name"><code>industry_cols.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p><code>Q</code> is calculated by <code>e_hat * G</code>,
-but the e_hat column contains lists of matrices,
-so the <code>Q</code> column will also contain lists of matrices.
-In each list, there is one Q matrix for each Product in the Energy Conversion Chain.</p>
+    <p>A string list containing named names of columns in SUT data frames.
+Items in the list provide default values for column name function arguments
+throughout the <code>Recca</code> package.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>calc_M</span>(
-  .YqGHEdata = <span class='kw'>NULL</span>,
-  Y = <span class='st'>"Y"</span>,
-  q = <span class='st'>"q"</span>,
-  G = <span class='st'>"G"</span>,
-  E = <span class='st'>"E"</span>,
-  tol = <span class='fl'>1e-04</span>,
-  M_p = <span class='st'>"M_p"</span>,
-  M_s = <span class='st'>"M_s"</span>
-)</pre>
+    <pre class="usage"><span class='kw'>industry_cols</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>.YqGHEdata</th>
-      <td><p>a data frame containing columns with <code>q</code> vectors
-and <code>Y</code>, <code>G</code>, <code>H</code>, and <code>E</code> matrices.
-<code>.YqGEdata</code> will likely have been obtained from the <code><a href='calc_GH.html'>calc_GH</a></code> and <code><a href='calc_E.html'>calc_E</a></code> functions.</p></td>
-    </tr>
-    <tr>
-      <th>Y</th>
-      <td><p>final demand (<code>Y</code>) matrix or name of the column in <code>.YqHGEdata</code> containing same. Default is "<code>Y</code>".</p></td>
-    </tr>
-    <tr>
-      <th>q</th>
-      <td><p><code>q</code> column vector or name of the column in <code>.YqHGEdata</code> containing same. Default is "<code>q</code>".
-<code>q</code> is calculated by <code>U*i + y</code>.</p></td>
-    </tr>
-    <tr>
-      <th>G</th>
-      <td><p><code>G</code> matrix or name of the column in <code>.YqHGEdata</code> containing same. Default is "<code>G</code>".
-<code>G</code> is calculated by <code>L_ixp * y_hat</code>.</p></td>
-    </tr>
-    <tr>
-      <th>E</th>
-      <td><p><code>E</code> matrix or name of the column in <code>.YqHGEdata</code> containing same. Default is "<code>E</code>".
-<code>E</code> is calculated by <code>W * g_hat_inv</code>.</p></td>
-    </tr>
-    <tr>
-      <th>tol</th>
-      <td><p>the allowable energy balance error.</p></td>
-    </tr>
-    <tr>
-      <th>M_p</th>
-      <td><p>the name for matrices of embodied energy in products on output. Default is "<code>M_p</code>".
-These matrices contain embodied products in rows and embodying products in columns.</p></td>
-    </tr>
-    <tr>
-      <th>M_s</th>
-      <td><p>the name for matrices of embodied energy consumed by final demand sectors. Default is "<code>M_s</code>".
-These matrices contain embodied products in rows and consuming final demand sectors in columns.</p></td>
-    </tr>
-    </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>a list or data frame of embodied energy matrices</p>
+    <p>A string list with 2 entries.</p><dl>
+<dt>p_industries_prefixes</dt><dd><p>The name of a column in a wide-by-matrices data frame containing prefixes for names of primary industries.</p></dd>
+<dt>p_industries_complete</dt><dd><p>The name of a column in a wide-by-matrices data frame containing complete names of primary industries.</p></dd>
 
+</dl>
+
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>industry_cols</span>
+</div><div class='output co'>#&gt; $p_industry_prefixes
+#&gt; [1] "p_industry_prefixes"
+#&gt; 
+#&gt; $p_industries_complete
+#&gt; [1] "p_industries_complete"
+#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

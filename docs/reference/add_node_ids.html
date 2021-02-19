@@ -75,7 +75,7 @@ and one for &quot;To&quot;." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.27</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.29</span>
       </span>
     </div>
 
@@ -144,13 +144,13 @@ and a "<code>To</code>" node, two columns of node IDs are added, one for "<code>
 and one for "<code>To</code>".</p>
     </div>
 
-    <pre class="usage"><span class='fu'>add_node_ids</span><span class='op'>(</span>
-  <span class='va'>edge_list</span>,
-  from <span class='op'>=</span> <span class='st'>"From"</span>,
-  to <span class='op'>=</span> <span class='st'>"To"</span>,
-  node_id <span class='op'>=</span> <span class='st'>"node_id"</span>,
-  first_node <span class='op'>=</span> <span class='fl'>0</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>add_node_ids</span>(
+  <span class='kw'>edge_list</span>,
+  from = <span class='st'>"From"</span>,
+  to = <span class='st'>"To"</span>,
+  node_id = <span class='st'>"node_id"</span>,
+  first_node = <span class='fl'>0</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -186,12 +186,12 @@ and one for "<code>To</code>".</p>
 the value of the <code>from</code> and <code>to</code> arguments with the value of the <code>node_id</code> argument.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/MatthewHeun/matsbyname'>matsbyname</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyr.tidyverse.org'>tidyr</a></span><span class='op'>)</span>
-<span class='va'>sutmats</span> <span class='op'>&lt;-</span> <span class='va'>UKEnergy2000mats</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span><span class='op'>(</span>key <span class='op'>=</span> <span class='va'>matrix.name</span>, value <span class='op'>=</span> <span class='va'>matrix</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://github.com/MatthewHeun/matsbyname'>matsbyname</a></span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://tidyr.tidyverse.org'>tidyr</a></span>)
+<span class='kw'>sutmats</span> <span class='op'>&lt;-</span> <span class='kw'>UKEnergy2000mats</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span>(key = <span class='kw'>matrix.name</span>, value = <span class='kw'>matrix</span>)
 <span class='co'># Suppress adding node IDs</span>
-<span class='va'>elDF</span> <span class='op'>&lt;-</span> <span class='fu'><a href='edge_list.html'>edge_list</a></span><span class='op'>(</span><span class='va'>sutmats</span>, node_id <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span><span class='op'>$</span><span class='va'>`Edge list`</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>
-<span class='fu'>add_node_ids</span><span class='op'>(</span><span class='va'>elDF</span><span class='op'>)</span>
+<span class='kw'>elDF</span> <span class='op'>&lt;-</span> <span class='fu'><a href='edge_list.html'>edge_list</a></span>(<span class='kw'>sutmats</span>, node_id = <span class='kw'>NULL</span>)<span class='op'>$</span><span class='kw'>`Edge list`</span>[[<span class='fl'>1</span>]]
+<span class='fu'>add_node_ids</span>(<span class='kw'>elDF</span>)
 </div><div class='output co'>#&gt;                 From                To Value        Product edge_id
 #&gt; 1  Resources - Crude        Oil fields 50000          Crude       1
 #&gt; 2        Crude dist.       Crude dist.   500  Crude - Dist.       2
@@ -283,7 +283,7 @@ the value of the <code>from</code> and <code>to</code> arguments with the value 
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Heun.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
 </div>
 
 <div class="pkgdown">
