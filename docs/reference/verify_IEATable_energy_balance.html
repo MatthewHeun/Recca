@@ -73,7 +73,7 @@ grouping variables in .ieatidydata." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.29</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.30</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@ grouping variables in .ieatidydata." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -113,7 +113,7 @@ grouping variables in .ieatidydata." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/MatthewHeun/Recca/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -140,15 +140,15 @@ grouping variables in .ieatidydata." />
 grouping variables in <code>.ieatidydata</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>verify_IEATable_energy_balance</span>(
-  <span class='kw'>.ieatidydata</span>,
-  ledger.side = <span class='st'>"Ledger.side"</span>,
-  energy = <span class='st'>"E.dot"</span>,
-  supply = <span class='st'>"Supply"</span>,
-  consumption = <span class='st'>"Consumption"</span>,
-  err = <span class='st'>".err"</span>,
-  tol = <span class='fl'>1e-06</span>
-)</pre>
+    <pre class="usage"><span class='fu'>verify_IEATable_energy_balance</span><span class='op'>(</span>
+  <span class='va'>.ieatidydata</span>,
+  ledger.side <span class='op'>=</span> <span class='st'>"Ledger.side"</span>,
+  energy <span class='op'>=</span> <span class='st'>"E.dot"</span>,
+  supply <span class='op'>=</span> <span class='st'>"Supply"</span>,
+  consumption <span class='op'>=</span> <span class='st'>"Consumption"</span>,
+  err <span class='op'>=</span> <span class='st'>".err"</span>,
+  tol <span class='op'>=</span> <span class='fl'>1e-06</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -206,11 +206,11 @@ If energy balance is not observed for one or more of the groups,
 a warning is emitted.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://dplyr.tidyverse.org'>dplyr</a></span>)
-<span class='kw'>UKEnergy2000tidy</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>Last.stage</span> <span class='op'>%in%</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Final"</span>, <span class='st'>"Useful"</span>)) <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='kw'>Country</span>, <span class='kw'>Year</span>, <span class='kw'>Energy.type</span>, <span class='kw'>Last.stage</span>) <span class='op'>%&gt;%</span>
-  <span class='fu'>verify_IEATable_energy_balance</span>(energy = <span class='st'>"E.dot"</span>)
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
+<span class='va'>UKEnergy2000tidy</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>Last.stage</span> <span class='op'>%in%</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Final"</span>, <span class='st'>"Useful"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>Country</span>, <span class='va'>Year</span>, <span class='va'>Energy.type</span>, <span class='va'>Last.stage</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>verify_IEATable_energy_balance</span><span class='op'>(</span>energy <span class='op'>=</span> <span class='st'>"E.dot"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 2 x 7</span><span>
 #&gt; </span><span style='color: #949494;'># Groups:   Country, Year, Energy.type [1]</span><span>
 #&gt;   Country  Year Energy.type Last.stage ESupply EConsumption  .err
