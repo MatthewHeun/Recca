@@ -18,7 +18,9 @@ finaldemand_aggregates(
 \arguments{
 \item{.sutdata}{A data frame with columns of matrices from a supply-use analysis.}
 
-\item{fd_sectors}{A vector of names of sectors in final demand.}
+\item{fd_sectors}{A vector of names of sectors in final demand.
+Names should include columns in the \code{Y} and \code{U_EIOU} matrices
+to cover both net (in \code{Y}) and gross (in \code{Y} and \code{U_EIOU}) final demand.}
 
 \item{U, Y, r_EIOU}{See \code{Recca::psut_cols}.}
 

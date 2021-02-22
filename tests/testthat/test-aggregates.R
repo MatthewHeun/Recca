@@ -291,3 +291,18 @@ test_that("finaldemand_aggregates works for sectors", {
   expect_equal(sut_result[[Recca::aggregate_cols$gross_aggregate_demand]][[2]][14,1], 21714.9805)
 })
 
+
+test_that("finaldemand_aggregates works with U_EIOU", {
+  sut_result <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    dplyr::mutate(
+      fd_sectors = rep(list(c("Residential", "Transport", "Oil fields")), times = nrow(.))
+    ) %>%
+    dplyr::filter(Last.stage %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
+    finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Sector")
+
+  expect_equal(matsbyname::getrownames_byname(sut_result$EX.d_gross[[1]]),
+               sut_result$fd_sectors[[1]] %>% sort())
+
+})
+
