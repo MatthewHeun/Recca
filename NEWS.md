@@ -1,3 +1,5 @@
+# Recca 0.1.30 (2020-02-22)
+
 * Fixed bugs in `finaldemand_aggregates()` and `finaldemand_aggregates_with_units()`
   where argument `fd_sectors` was not respected for gross energy aggregation.
 * New and revamped tests to guard against regression.
