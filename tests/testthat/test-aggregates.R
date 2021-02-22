@@ -148,7 +148,7 @@ test_that("primary aggregates work when p_industries is different for each row o
 
 test_that("final demand aggregates of SUT data work as expected", {
   # Define final demand sectors
-  fd_sectors <- c("Residential", "Transport")
+  fd_sectors <- c("Residential", "Transport", "Oil fields")
 
   # Final demand TOTAL aggregates
   final_demand_total_aggregates_sut <- UKEnergy2000mats %>%
@@ -165,7 +165,7 @@ test_that("final demand aggregates of SUT data work as expected", {
   expect_equivalent(final_demand_total_aggregates_sut %>%
                       dplyr::filter(Last.stage == "Final", Energy.type == "E", matnames == "EX_total_gross_agg.ktoe", colnames == "ktoe") %>%
                       dplyr::select(matvals) %>% unlist(),
-                    83275)
+                    74325)
   expect_equivalent(final_demand_total_aggregates_sut %>%
                       dplyr::filter(Last.stage == "Useful", Energy.type == "E", matnames == "EX_total_net_agg.ktoe", colnames == "ktoe") %>%
                       dplyr::select(matvals) %>% unlist(),
@@ -192,9 +192,9 @@ test_that("final demand aggregates of SUT data work as expected", {
     tidyr::gather(key = "matnames", value = "matvals", EX_product_net_agg.ktoe, EX_product_gross_agg.ktoe) %>%
     matsindf::expand_to_tidy(drop = 0)
   expect_equivalent(final_demand_product_aggregates_sut %>%
-                      dplyr::filter(Last.stage == "Final", Energy.type == "E", matnames == "EX_product_gross_agg.ktoe", rownames == "Crude - Dist.") %>%
+                      dplyr::filter(Last.stage == "Final", Energy.type == "E", matnames == "EX_product_gross_agg.ktoe", rownames == "Crude - Fields") %>%
                       dplyr::select(matvals) %>% unlist(),
-                    500)
+                    2500)
   expect_equivalent(final_demand_product_aggregates_sut %>%
                       dplyr::filter(Last.stage == "Final", Energy.type == "E", matnames == "EX_product_net_agg.ktoe", rownames == "Elect - Grid") %>%
                       dplyr::select(matvals) %>% unlist(),
@@ -229,9 +229,9 @@ test_that("final demand aggregates of SUT data work as expected", {
     tidyr::gather(key = "matnames", value = "matvals", EX_sector_net_agg.ktoe, EX_sector_gross_agg.ktoe) %>%
     matsindf::expand_to_tidy(drop = 0)
   expect_equivalent(final_demand_sector_aggregates_sut %>%
-                      dplyr::filter(Last.stage == "Final", Energy.type == "E", matnames == "EX_sector_gross_agg.ktoe", rownames == "Crude dist.") %>%
+                      dplyr::filter(Last.stage == "Final", Energy.type == "E", matnames == "EX_sector_gross_agg.ktoe", rownames == "Oil fields") %>%
                       dplyr::select(matvals) %>% unlist(),
-                    550)
+                    2575)
   expect_equivalent(final_demand_sector_aggregates_sut %>%
                       dplyr::filter(Last.stage == "Final", Energy.type == "E", matnames == "EX_sector_net_agg.ktoe", rownames == "Residential") %>%
                       dplyr::select(matvals) %>% unlist(),
@@ -245,7 +245,7 @@ test_that("final demand aggregates of SUT data work as expected", {
                       dplyr::select(matvals) %>% unlist(),
                     4200.4)
   expect_equivalent(final_demand_sector_aggregates_sut %>%
-                      dplyr::filter(Last.stage == "Services", Energy.type == "E", matnames == "EX_sector_gross_agg.ktoe", rownames == "Gas wells & proc.") %>%
+                      dplyr::filter(Last.stage == "Services", Energy.type == "E", matnames == "EX_sector_gross_agg.ktoe", rownames == "Oil fields") %>%
                       dplyr::select(matvals) %>% unlist(),
                     75)
   expect_equivalent(final_demand_sector_aggregates_sut %>%
@@ -270,7 +270,7 @@ test_that("finaldemand_aggregates works for sectors", {
   sut_result <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
     dplyr::mutate(
-      fd_sectors = rep(list(c("Residential", "Transport")), times = nrow(.))
+      fd_sectors = rep(list(c("Residential", "Transport", "Oil fields")), times = nrow(.))
     ) %>%
     dplyr::filter(Last.stage %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
     finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Sector")
@@ -279,16 +279,22 @@ test_that("finaldemand_aggregates works for sectors", {
   expect_equal(sut_result[[Recca::aggregate_cols$net_aggregate_demand]][[2]][1,1], 4200.4)
   expect_equal(sut_result[[Recca::aggregate_cols$net_aggregate_demand]][[2]][2,1], 21714.9805)
 
-  expect_equal(sut_result[[Recca::aggregate_cols$gross_aggregate_demand]][[1]][1,1], 550)
-  expect_equal(sut_result[[Recca::aggregate_cols$gross_aggregate_demand]][[1]][2,1], 350)
-  expect_equal(sut_result[[Recca::aggregate_cols$gross_aggregate_demand]][[1]][4,1], 2075)
-  expect_equal(sut_result[[Recca::aggregate_cols$gross_aggregate_demand]][[1]][11,1], 40750)
+  # Testing final demand by sector for the three fd_sectors at the final stage
+  # Oil fields
+  expect_equal(sut_result[[Recca::aggregate_cols$gross_aggregate_demand]][[1]][1,1], 2575)
+  # Residential
+  expect_equal(sut_result[[Recca::aggregate_cols$gross_aggregate_demand]][[1]][2,1], 31000)
+  # Transport
+  expect_equal(sut_result[[Recca::aggregate_cols$gross_aggregate_demand]][[1]][3,1], 40750)
 
-  expect_equal(sut_result[[Recca::aggregate_cols$gross_aggregate_demand]][[2]][1,1], 0)
-  expect_equal(sut_result[[Recca::aggregate_cols$gross_aggregate_demand]][[2]][2,1], 45)
-  expect_equal(sut_result[[Recca::aggregate_cols$gross_aggregate_demand]][[2]][6,1], 75)
-  expect_equal(sut_result[[Recca::aggregate_cols$gross_aggregate_demand]][[2]][11,1], 26.9997)
-  expect_equal(sut_result[[Recca::aggregate_cols$gross_aggregate_demand]][[2]][14,1], 21714.9805)
+  # Testing final demand by sector for the three fd_sectors at the useful stage
+  # Oil fields
+  expect_equal(sut_result[[Recca::aggregate_cols$gross_aggregate_demand]][[2]][1,1], 75)
+  # Residential
+  expect_equal(sut_result[[Recca::aggregate_cols$gross_aggregate_demand]][[2]][2,1], 4200.4)
+  # Transport
+  expect_equal(sut_result[[Recca::aggregate_cols$gross_aggregate_demand]][[2]][3,1], 21714.9805)
+
 })
 
 
