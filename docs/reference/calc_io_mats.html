@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.27</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.30</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -112,7 +112,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/MatthewHeun/Recca/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -140,6 +140,7 @@
 
     <pre class="usage"><span class='fu'>calc_io_mats</span><span class='op'>(</span>
   .sutdata <span class='op'>=</span> <span class='cn'>NULL</span>,
+  method_q_calculation <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"sum_U_Y_rows"</span>, <span class='st'>"sum_R_V_cols"</span><span class='op'>)</span>,
   R <span class='op'>=</span> <span class='st'>"R"</span>,
   U <span class='op'>=</span> <span class='st'>"U"</span>,
   U_feed <span class='op'>=</span> <span class='st'>"U_feed"</span>,
@@ -173,6 +174,13 @@
     <tr>
       <th>.sutdata</th>
       <td><p>a data frame of supply-use table matrices with matrices arranged in columns.</p></td>
+    </tr>
+    <tr>
+      <th>method_q_calculation</th>
+      <td><p>Specifies the method which with the q vector should be calculated.
+Default is <code>sum_U_Y_rows</code>.
+Alternatively, an analyst can choose to use the <code>sum_R_V_cols</code> method.
+In the case of a balanced ECC, the method does not matter.</p></td>
     </tr>
     <tr>
       <th>R</th>
@@ -447,7 +455,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Heun.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
 </div>
 
 <div class="pkgdown">

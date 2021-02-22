@@ -1,11 +1,13 @@
 Package: Recca
 Type: Package
 Title: R Energy Conversion Chain Analysis
-Version: 0.1.28
-Date: 2020-12-23
+Version: 0.1.30
+Date: 2020-02-22
 Authors@R: c(person("Matthew", "Heun", role = c("aut", "cre"),
                      comment = c(ORCID = "0000-0002-7438-214X"),
-                     email = "matthew.heun@me.com"))
+                     email = "matthew.heun@me.com"),
+                     person(given = "Emmanuel", family = "Aramendia", role = "aut"))
+Author: Matthew Heun [aut, cre], Emmanuel Aramendia [aut]
 Maintainer: Matthew Heun <matthew.heun@me.com>
 Description: Provides functions to analyze energy conversion chains using a 
     physical supply use table (PSUT) approach.

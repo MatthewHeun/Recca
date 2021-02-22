@@ -76,7 +76,7 @@ If .sutdata is NULL, fd_sectors can be a single vector of industry names." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.27</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.30</span>
       </span>
     </div>
 
@@ -84,7 +84,7 @@ If .sutdata is NULL, fd_sectors can be a single vector of industry names." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -116,7 +116,7 @@ If .sutdata is NULL, fd_sectors can be a single vector of industry names." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/MatthewHeun/Recca/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -166,7 +166,9 @@ If <code>.sutdata</code> is <code>NULL</code>, <code>fd_sectors</code> can be a 
     </tr>
     <tr>
       <th>fd_sectors</th>
-      <td><p>A vector of names of sectors in final demand.</p></td>
+      <td><p>A vector of names of sectors in final demand.
+Names should include columns in the <code>Y</code> and <code>U_EIOU</code> matrices
+to cover both net (in <code>Y</code>) and gross (in <code>Y</code> and <code>U_EIOU</code>) final demand.</p></td>
     </tr>
     <tr>
       <th>U, Y, r_EIOU</th>
@@ -213,7 +215,7 @@ Gross energy demand is calculated by <code>sumall(Y_fd) + sumall(U_EIOU)</code>.
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Heun.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
 </div>
 
 <div class="pkgdown">

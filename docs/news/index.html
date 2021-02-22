@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.27</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.30</span>
       </span>
     </div>
 
@@ -79,7 +79,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -111,7 +111,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/MatthewHeun/Recca/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -132,6 +132,39 @@
       <small>Source: <a href='https://github.com/MatthewHeun/Recca/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="recca-0130-2020-02-22" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.30">
+<a href="#recca-0130-2020-02-22" class="anchor"></a>Recca 0.1.30 (2020-02-22)</h1>
+<ul>
+<li>Fixed bugs in <code><a href="../reference/finaldemand_aggregates.html">finaldemand_aggregates()</a></code> and <code><a href="../reference/finaldemand_aggregates_with_units.html">finaldemand_aggregates_with_units()</a></code> where argument <code>fd_sectors</code> was not respected for gross energy aggregation.</li>
+<li>New and revamped tests to guard against regression.
+<ul>
+<li>Now 417 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul>
+</li>
+</ul>
+</div>
+    <div id="recca-0129-2020-02-01" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.29">
+<a href="#recca-0129-2020-02-01" class="anchor"></a>Recca 0.1.29 (2020-02-01)</h1>
+<ul>
+<li>A <code>method_q_calculation</code> argument has been added to the <code><a href="../reference/calc_io_mats.html">calc_io_mats()</a></code> function. This enables to calculate the q vector using either a consumption-side or supply-side perspective.</li>
+</ul>
+</div>
+    <div id="recca-0128-2020-12-23" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.28">
+<a href="#recca-0128-2020-12-23" class="anchor"></a>Recca 0.1.28 (2020-12-23)</h1>
+<ul>
+<li>New function <code><a href="../reference/find_p_industry_names.html">find_p_industry_names()</a></code> looks at <code>R</code>, <code>V</code>, and <code>Y</code> matrices to find names of primary industries (industries that produce primary energy). The function looks for prefixes among row (<code>R</code> and <code>V</code>) and column (<code>Y</code>) names to identify primary industries.</li>
+<li>New tests for new function.
+<ul>
+<li>Now 416 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul>
+</li>
+</ul>
+</div>
     <div id="recca-0127-2020-12-08" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.27">
 <a href="#recca-0127-2020-12-08" class="anchor"></a>Recca 0.1.27 (2020-12-08)</h1>
@@ -430,7 +463,7 @@ See <a href="https://github.com/awalker89/openxlsx/issues/393" class="uri">https
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Heun.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
 </div>
 
 <div class="pkgdown">

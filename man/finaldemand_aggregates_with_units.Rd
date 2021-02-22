@@ -17,29 +17,31 @@ finaldemand_aggregates_with_units(
 )
 }
 \arguments{
-\item{.sutdata}{a data frame with columns of matrices from a supply-use analysis.}
+\item{.sutdata}{A data frame with columns of matrices from a supply-use analysis.}
 
-\item{fd_sectors}{a vector of names of sectors in final demand.}
+\item{fd_sectors}{A vector of names of sectors in final demand.
+Names should include columns in the \code{Y} and \code{U_EIOU} matrices
+to cover both net (in \code{Y}) and gross (in \code{Y} and \code{U_EIOU}) final demand.}
 
-\item{U}{use (\code{U}) matrix or name of the column in \code{.sutdata} containing same}
+\item{U}{Use (\code{U}) matrix or name of the column in \code{.sutdata} containing same}
 
-\item{Y}{final demand (\code{Y}) matrix or name of the column in \code{.sutdata} containing same}
+\item{Y}{Final demand (\code{Y}) matrix or name of the column in \code{.sutdata} containing same}
 
-\item{r_EIOU}{matrix of ratios of EIOU for the make (\code{U}) matrix or name of the column in \code{.sutdata} containing same}
+\item{r_EIOU}{Matrix of ratios of EIOU for the make (\code{U}) matrix or name of the column in \code{.sutdata} containing same}
 
-\item{S_units}{the name of the column in \code{.sutdata} containing \code{S_units} matrices.}
+\item{S_units}{The name of the column in \code{.sutdata} containing \code{S_units} matrices.}
 
-\item{by}{one of "Product", "Sector", or "Total" to indicate the desired aggregation:
+\item{by}{One of "Product", "Sector", or "Total" to indicate the desired aggregation:
 "Product" for aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.),
 "Sector" for aggregation by final demand sector (Agriculture/forestry, Domestic navigation, etc.), or
 "Total" for aggregation over both Product and Sector (the default).}
 
-\item{net_aggregate_demand}{the name of net energy demand (which excludes energy industry own use) on output.}
+\item{net_aggregate_demand}{The name of net energy demand (which excludes energy industry own use) on output.}
 
-\item{gross_aggregate_demand}{the name of gross energy demand (which includes energy industry own use) on output.}
+\item{gross_aggregate_demand}{The name of gross energy demand (which includes energy industry own use) on output.}
 }
 \value{
-a list or data frame containing net aggregate energy demand
+A list or data frame containing net aggregate energy demand
 and gross aggregate energy demand
 }
 \description{

@@ -24,7 +24,9 @@ These industries in \code{p_industries} will appear in rows of the resource (\co
 columns of the final demand matrix (\code{Y}).
 Entries in \code{Y_p} will be subtracted from entries in \code{R_p + V_p} to obtain
 the total primary energy aggregate,
-where \verb{*_p} is the primary part of those matrices.}
+where \verb{*_p} is the primary part of those matrices.
+The function \code{find_p_industry_names()} might be helpful to find
+primary industry names if they can be identified by prefixes.}
 
 \item{R, V, Y}{See \code{Recca::psut_cols}.}
 

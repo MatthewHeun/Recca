@@ -16,6 +16,8 @@
 #'        Entries in `Y_p` will be subtracted from entries in `R_p + V_p` to obtain
 #'        the total primary energy aggregate,
 #'        where `*_p` is the primary part of those matrices.
+#'        The function `find_p_industry_names()` might be helpful to find
+#'        primary industry names if they can be identified by prefixes.
 #' @param R,V,Y See `Recca::psut_cols`.
 #' @param by One of "Total", "Product", or "Flow" to indicate the desired aggregation:
 #'        \itemize{
@@ -50,6 +52,10 @@ primary_aggregates <- function(.sutdata,
                                by = c("Total", "Product", "Flow"),
                                # Output names
                                aggregate_primary = Recca::aggregate_cols$aggregate_primary){
+
+  # Ensure that the caller has matsbyname installed and on the package search path.
+  assertthat::assert_that(requireNamespace("matsbyname"),
+                          msg = "package 'matsbyname' is required but not available.")
 
   by <- match.arg(by)
   # Figure out which function we need to use.
@@ -88,6 +94,8 @@ primary_aggregates <- function(.sutdata,
 #'
 #' @param .sutdata A data frame with columns of matrices from a supply-use analysis.
 #' @param fd_sectors A vector of names of sectors in final demand.
+#'                   Names should include columns in the `Y` and `U_EIOU` matrices
+#'                   to cover both net (in `Y`) and gross (in `Y` and `U_EIOU`) final demand.
 #' @param U,Y,r_EIOU See `Recca::psut_cols`.
 #' @param by One of "Product", "Sector", or "Total" to indicate the desired aggregation:
 #'           "Product" for aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.),
@@ -122,6 +130,10 @@ finaldemand_aggregates <- function(.sutdata,
                                    net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
                                    gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand){
 
+  # Ensure that the caller has matsbyname installed and on the package search path.
+  assertthat::assert_that(requireNamespace("matsbyname"),
+                          msg = "package 'matsbyname' is required but not available.")
+
   by <- match.arg(by)
 
   # Decide which aggregation function to use
@@ -134,7 +146,11 @@ finaldemand_aggregates <- function(.sutdata,
       matsbyname::select_cols_byname(retain_pattern =
                                        matsbyname::make_pattern(row_col_names = fd_sectors_vec, pattern_type = "leading")) %>%
       agg_func()
-    gross <- matsbyname::sum_byname(net, agg_func(U_EIOU))
+    gross <- U_EIOU %>%
+      matsbyname::select_cols_byname(retain_pattern =
+                                       matsbyname::make_pattern(row_col_names = fd_sectors_vec, pattern_type = "leading")) %>%
+      agg_func() %>%
+      matsbyname::sum_byname(net)
     if (by == "Sector") {
       # If "Sector" aggregation is requested, the results will be row vectors.
       # Convert to column vectors.
@@ -155,21 +171,23 @@ finaldemand_aggregates <- function(.sutdata,
 #' If `.sutdata` is a data frame, `fd_sectors` should be the name of a column in the data frame.
 #' If `.sutdata` is `NULL`, `fd_sectors` can be a single vector of industry names.
 #'
-#' @param .sutdata a data frame with columns of matrices from a supply-use analysis.
-#' @param fd_sectors a vector of names of sectors in final demand.
-#' @param U use (\code{U}) matrix or name of the column in \code{.sutdata} containing same
-#' @param Y final demand (\code{Y}) matrix or name of the column in \code{.sutdata} containing same
-#' @param r_EIOU matrix of ratios of EIOU for the make (\code{U}) matrix or name of the column in \code{.sutdata} containing same
-#' @param S_units the name of the column in \code{.sutdata} containing \code{S_units} matrices.
-#' @param by one of "Product", "Sector", or "Total" to indicate the desired aggregation:
-#' "Product" for aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.),
-#' "Sector" for aggregation by final demand sector (Agriculture/forestry, Domestic navigation, etc.), or
-#' "Total" for aggregation over both Product and Sector (the default).
-#' @param net_aggregate_demand the name of net energy demand (which excludes energy industry own use) on output.
-#' @param gross_aggregate_demand the name of gross energy demand (which includes energy industry own use) on output.
+#' @param .sutdata A data frame with columns of matrices from a supply-use analysis.
+#' @param fd_sectors A vector of names of sectors in final demand.
+#'                   Names should include columns in the `Y` and `U_EIOU` matrices
+#'                   to cover both net (in `Y`) and gross (in `Y` and `U_EIOU`) final demand.
+#' @param U Use (\code{U}) matrix or name of the column in \code{.sutdata} containing same
+#' @param Y Final demand (\code{Y}) matrix or name of the column in \code{.sutdata} containing same
+#' @param r_EIOU Matrix of ratios of EIOU for the make (\code{U}) matrix or name of the column in \code{.sutdata} containing same
+#' @param S_units The name of the column in \code{.sutdata} containing \code{S_units} matrices.
+#' @param by One of "Product", "Sector", or "Total" to indicate the desired aggregation:
+#'           "Product" for aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.),
+#'           "Sector" for aggregation by final demand sector (Agriculture/forestry, Domestic navigation, etc.), or
+#'           "Total" for aggregation over both Product and Sector (the default).
+#' @param net_aggregate_demand The name of net energy demand (which excludes energy industry own use) on output.
+#' @param gross_aggregate_demand The name of gross energy demand (which includes energy industry own use) on output.
 #'
-#' @return a list or data frame containing net aggregate energy demand
-#' and gross aggregate energy demand
+#' @return A list or data frame containing net aggregate energy demand
+#'         and gross aggregate energy demand
 #'
 #' @export
 finaldemand_aggregates_with_units <- function(.sutdata,
@@ -188,18 +206,22 @@ finaldemand_aggregates_with_units <- function(.sutdata,
 
   fd_func <- function(fd_sectors_vec, U_mat, Y_mat, r_EIOU_mat, S_units_mat){
     U_EIOU <- matsbyname::hadamardproduct_byname(r_EIOU_mat, U_mat)
+    # Filter columns of interest
+    U_EIOU <- U_EIOU %>%
+      matsbyname::select_cols_byname(retain_pattern =
+                                       matsbyname::make_pattern(row_col_names = fd_sectors_vec,
+                                                                pattern_type = "leading"))
+    Y_mat <- Y_mat %>%
+      matsbyname::select_cols_byname(retain_pattern =
+                                       matsbyname::make_pattern(row_col_names = fd_sectors_vec,
+                                                                pattern_type = "leading"))
     if (by == "Product") {
       net <- matsbyname::rowsums_byname(Y_mat)
       gross <- matsbyname::sum_byname(matsbyname::rowsums_byname(U_EIOU), net)
     } else {
       # by is "Total" or "Sector".
       U_EIOU_bar <- matsbyname::matrixproduct_byname(matsbyname::transpose_byname(S_units_mat), U_EIOU)
-      net <- matsbyname::matrixproduct_byname(
-        matsbyname::transpose_byname(S_units_mat),
-        Y_mat %>%
-          matsbyname::select_cols_byname(retain_pattern =
-                                           matsbyname::make_pattern(row_col_names = fd_sectors_vec,
-                                                                    pattern_type = "leading")))
+      net <- matsbyname::matrixproduct_byname(matsbyname::transpose_byname(S_units_mat), Y_mat)
       gross <- matsbyname::sum_byname(U_EIOU_bar, net)
       net <- matsbyname::transpose_byname(net)
       gross <- matsbyname::transpose_byname(gross)

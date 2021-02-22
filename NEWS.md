@@ -1,3 +1,20 @@
+# Recca 0.1.30 (2020-02-22)
+
+* Fixed bugs in `finaldemand_aggregates()` and `finaldemand_aggregates_with_units()`
+  where argument `fd_sectors` was not respected for gross energy aggregation.
+* New and revamped tests to guard against regression.
+    * Now 417 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
+# Recca 0.1.29 (2020-02-01)
+
+* A `method_q_calculation` argument has been added to
+  the `calc_io_mats()` function.
+  This enables to calculate the q vector using either
+  a consumption-side or supply-side perspective.
+
+
 # Recca 0.1.28 (2020-12-23)
 
 * New function `find_p_industry_names()` looks at `R`, `V`, and `Y` matrices 
