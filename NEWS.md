@@ -1,3 +1,10 @@
+* New argument to aggregation functions: `pattern_type`
+  which tells how to match primary and final demand sector names for aggregation.
+* New tests for new feature.
+    * Now 421 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
 # Recca 0.1.30 (2020-02-22)
 
 * Fixed bugs in `finaldemand_aggregates()` and `finaldemand_aggregates_with_units()`

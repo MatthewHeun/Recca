@@ -7,6 +7,7 @@
 finaldemand_aggregates_with_units(
   .sutdata,
   fd_sectors,
+  pattern_type = c("exact", "leading", "trailing", "anywhere"),
   U = Recca::psut_cols$U,
   Y = Recca::psut_cols$Y,
   r_EIOU = Recca::psut_cols$r_eiou,
@@ -22,6 +23,14 @@ finaldemand_aggregates_with_units(
 \item{fd_sectors}{A vector of names of sectors in final demand.
 Names should include columns in the \code{Y} and \code{U_EIOU} matrices
 to cover both net (in \code{Y}) and gross (in \code{Y} and \code{U_EIOU}) final demand.}
+
+\item{pattern_type}{One of "exact", "leading", "trailing", or "anywhere" which specifies
+how matches are made for \code{fd_sectors}.
+If "exact", exact matches specify the sectors to be aggregated.
+If "leading", sectors are aggregated if any entry in \code{fd_sectors} matches the leading part of a final demand sector's name.
+If "trailing", sectors are aggregated if any entry in \code{fd_sectors} matches the trailing part of a final demand sector's name.
+If "anywhere", sectors are aggregated if any entry in \code{fd_sectors} matches any part of a final demand sector's name.
+Default is "exact".}
 
 \item{U}{Use (\code{U}) matrix or name of the column in \code{.sutdata} containing same}
 

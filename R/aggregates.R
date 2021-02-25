@@ -18,6 +18,13 @@
 #'        where `*_p` is the primary part of those matrices.
 #'        The function `find_p_industry_names()` might be helpful to find
 #'        primary industry names if they can be identified by prefixes.
+#' @param pattern_type One of "exact", "leading", "trailing", or "anywhere" which specifies
+#'                     how matches are made for `fd_sectors`.
+#'                     If "exact", exact matches specify the sectors to be aggregated.
+#'                     If "leading", sectors are aggregated if any entry in `fd_sectors` matches the leading part of a final demand sector's name.
+#'                     If "trailing", sectors are aggregated if any entry in `fd_sectors` matches the trailing part of a final demand sector's name.
+#'                     If "anywhere", sectors are aggregated if any entry in `fd_sectors` matches any part of a final demand sector's name.
+#'                     Default is "leading" to enable primary industries such as "Resources \[of Crude oil\]".
 #' @param R,V,Y See `Recca::psut_cols`.
 #' @param by One of "Total", "Product", or "Flow" to indicate the desired aggregation:
 #'        \itemize{
@@ -45,6 +52,7 @@
 primary_aggregates <- function(.sutdata,
                                # Vector of primary industries
                                p_industries,
+                               pattern_type = c("exact", "leading", "trailing", "anywhere"),
                                # Input names
                                R = Recca::psut_cols$R,
                                V = Recca::psut_cols$V,
@@ -57,10 +65,11 @@ primary_aggregates <- function(.sutdata,
   assertthat::assert_that(requireNamespace("matsbyname"),
                           msg = "package 'matsbyname' is required but not available.")
 
+  pattern_type <- match.arg(pattern_type)
   by <- match.arg(by)
+
   # Figure out which function we need to use.
   aggfuncs <- list(Total = "sumall_byname", Product = "rowsums_byname", Flow = "colsums_byname")
-  # agg_func <- match.fun(aggfuncs[[tolower(by)]])
   agg_func <- get(aggfuncs[[by]], envir = as.environment("package:matsbyname"))
 
 
@@ -68,13 +77,13 @@ primary_aggregates <- function(.sutdata,
     # Look for primary industries in each of R, V, and Y matrices
     RT_p <- matsbyname::transpose_byname(R_mat) %>%
       matsbyname::select_cols_byname(retain_pattern =
-                                       matsbyname::make_pattern(row_col_names = p_industries_vec, pattern_type = "leading"))
+                                       matsbyname::make_pattern(row_col_names = p_industries_vec, pattern_type = pattern_type))
     VT_p <- matsbyname::transpose_byname(V_mat) %>%
       matsbyname::select_cols_byname(retain_pattern =
-                                       matsbyname::make_pattern(row_col_names = p_industries_vec, pattern_type = "leading"))
+                                       matsbyname::make_pattern(row_col_names = p_industries_vec, pattern_type = pattern_type))
     # Get the primary industries from the Y matrix.
     Y_p <- Y_mat %>% matsbyname::select_cols_byname(retain_pattern =
-                                                      matsbyname::make_pattern(row_col_names = p_industries_vec, pattern_type = "leading"))
+                                                      matsbyname::make_pattern(row_col_names = p_industries_vec, pattern_type = pattern_type))
     # TPES in product x industry matrix format is RT_p + VT_p - Y_p.
     RVT_p_minus_Y_p <- matsbyname::sum_byname(RT_p, VT_p) %>% matsbyname::difference_byname(Y_p)
     agg_primary <- agg_func(RVT_p_minus_Y_p)
@@ -96,6 +105,13 @@ primary_aggregates <- function(.sutdata,
 #' @param fd_sectors A vector of names of sectors in final demand.
 #'                   Names should include columns in the `Y` and `U_EIOU` matrices
 #'                   to cover both net (in `Y`) and gross (in `Y` and `U_EIOU`) final demand.
+#' @param pattern_type One of "exact", "leading", "trailing", or "anywhere" which specifies
+#'                     how matches are made for `fd_sectors`.
+#'                     If "exact", exact matches specify the sectors to be aggregated.
+#'                     If "leading", sectors are aggregated if any entry in `fd_sectors` matches the leading part of a final demand sector's name.
+#'                     If "trailing", sectors are aggregated if any entry in `fd_sectors` matches the trailing part of a final demand sector's name.
+#'                     If "anywhere", sectors are aggregated if any entry in `fd_sectors` matches any part of a final demand sector's name.
+#'                     Default is "exact".
 #' @param U,Y,r_EIOU See `Recca::psut_cols`.
 #' @param by One of "Product", "Sector", or "Total" to indicate the desired aggregation:
 #'           "Product" for aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.),
@@ -121,6 +137,7 @@ primary_aggregates <- function(.sutdata,
 #'   finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Sector")
 finaldemand_aggregates <- function(.sutdata,
                                    fd_sectors,
+                                   pattern_type = c("exact", "leading", "trailing", "anywhere"),
                                    # Input names
                                    U = Recca::psut_cols$U,
                                    Y = Recca::psut_cols$Y,
@@ -130,10 +147,12 @@ finaldemand_aggregates <- function(.sutdata,
                                    net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
                                    gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand){
 
+
   # Ensure that the caller has matsbyname installed and on the package search path.
   assertthat::assert_that(requireNamespace("matsbyname"),
                           msg = "package 'matsbyname' is required but not available.")
 
+  pattern_type <- match.arg(pattern_type)
   by <- match.arg(by)
 
   # Decide which aggregation function to use
@@ -144,11 +163,11 @@ finaldemand_aggregates <- function(.sutdata,
     U_EIOU <- matsbyname::hadamardproduct_byname(r_EIOU_mat, U_mat)
     net <- Y_mat %>%
       matsbyname::select_cols_byname(retain_pattern =
-                                       matsbyname::make_pattern(row_col_names = fd_sectors_vec, pattern_type = "leading")) %>%
+                                       matsbyname::make_pattern(row_col_names = fd_sectors_vec, pattern_type = pattern_type)) %>%
       agg_func()
     gross <- U_EIOU %>%
       matsbyname::select_cols_byname(retain_pattern =
-                                       matsbyname::make_pattern(row_col_names = fd_sectors_vec, pattern_type = "leading")) %>%
+                                       matsbyname::make_pattern(row_col_names = fd_sectors_vec, pattern_type = pattern_type)) %>%
       agg_func() %>%
       matsbyname::sum_byname(net)
     if (by == "Sector") {
@@ -175,6 +194,13 @@ finaldemand_aggregates <- function(.sutdata,
 #' @param fd_sectors A vector of names of sectors in final demand.
 #'                   Names should include columns in the `Y` and `U_EIOU` matrices
 #'                   to cover both net (in `Y`) and gross (in `Y` and `U_EIOU`) final demand.
+#' @param pattern_type One of "exact", "leading", "trailing", or "anywhere" which specifies
+#'                     how matches are made for `fd_sectors`.
+#'                     If "exact", exact matches specify the sectors to be aggregated.
+#'                     If "leading", sectors are aggregated if any entry in `fd_sectors` matches the leading part of a final demand sector's name.
+#'                     If "trailing", sectors are aggregated if any entry in `fd_sectors` matches the trailing part of a final demand sector's name.
+#'                     If "anywhere", sectors are aggregated if any entry in `fd_sectors` matches any part of a final demand sector's name.
+#'                     Default is "exact".
 #' @param U Use (\code{U}) matrix or name of the column in \code{.sutdata} containing same
 #' @param Y Final demand (\code{Y}) matrix or name of the column in \code{.sutdata} containing same
 #' @param r_EIOU Matrix of ratios of EIOU for the make (\code{U}) matrix or name of the column in \code{.sutdata} containing same
@@ -192,6 +218,7 @@ finaldemand_aggregates <- function(.sutdata,
 #' @export
 finaldemand_aggregates_with_units <- function(.sutdata,
                                               fd_sectors,
+                                              pattern_type = c("exact", "leading", "trailing", "anywhere"),
                                               # Input names
                                               U = Recca::psut_cols$U,
                                               Y = Recca::psut_cols$Y,
@@ -202,6 +229,7 @@ finaldemand_aggregates_with_units <- function(.sutdata,
                                               net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
                                               gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand){
 
+  pattern_type <- match.arg(pattern_type)
   by <- match.arg(by)
 
   fd_func <- function(fd_sectors_vec, U_mat, Y_mat, r_EIOU_mat, S_units_mat){
@@ -210,11 +238,11 @@ finaldemand_aggregates_with_units <- function(.sutdata,
     U_EIOU <- U_EIOU %>%
       matsbyname::select_cols_byname(retain_pattern =
                                        matsbyname::make_pattern(row_col_names = fd_sectors_vec,
-                                                                pattern_type = "leading"))
+                                                                pattern_type = pattern_type))
     Y_mat <- Y_mat %>%
       matsbyname::select_cols_byname(retain_pattern =
                                        matsbyname::make_pattern(row_col_names = fd_sectors_vec,
-                                                                pattern_type = "leading"))
+                                                                pattern_type = pattern_type))
     if (by == "Product") {
       net <- matsbyname::rowsums_byname(Y_mat)
       gross <- matsbyname::sum_byname(matsbyname::rowsums_byname(U_EIOU), net)
