@@ -7,6 +7,7 @@
 primary_aggregates(
   .sutdata,
   p_industries,
+  pattern_type = c("exact", "leading", "trailing", "anywhere"),
   R = Recca::psut_cols$R,
   V = Recca::psut_cols$V,
   Y = Recca::psut_cols$Y,
@@ -27,6 +28,14 @@ the total primary energy aggregate,
 where \verb{*_p} is the primary part of those matrices.
 The function \code{find_p_industry_names()} might be helpful to find
 primary industry names if they can be identified by prefixes.}
+
+\item{pattern_type}{One of "exact", "leading", "trailing", or "anywhere" which specifies
+how matches are made for \code{fd_sectors}.
+If "exact", exact matches specify the sectors to be aggregated.
+If "leading", sectors are aggregated if any entry in \code{fd_sectors} matches the leading part of a final demand sector's name.
+If "trailing", sectors are aggregated if any entry in \code{fd_sectors} matches the trailing part of a final demand sector's name.
+If "anywhere", sectors are aggregated if any entry in \code{fd_sectors} matches any part of a final demand sector's name.
+Default is "leading" to enable primary industries such as "Resources [of Crude oil]".}
 
 \item{R, V, Y}{See \code{Recca::psut_cols}.}
 

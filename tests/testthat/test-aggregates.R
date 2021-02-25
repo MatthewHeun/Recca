@@ -68,6 +68,29 @@ test_that("primary aggregates of SUT data work as expected", {
 })
 
 
+test_that("primary aggregates works with leading pattern for names", {
+  # Define primary industries
+  p_industries <- c("Resources", "Resources")
+
+  # Primary TOTAL aggregates
+  primary_total_aggregates_sut <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    dplyr::mutate(
+      p_industries = rep(list(p_industries), times = nrow(.))
+    ) %>%
+    primary_aggregates(p_industries = "p_industries", pattern_type = "leading", by = "Total", aggregate_primary = "EX_total_agg.ktoe")
+  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
+                      dplyr::select("EX_total_agg.ktoe"), 93000)
+  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$useful) %>%
+                      dplyr::select("EX_total_agg.ktoe"), 93000)
+  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Energy.type == "E", Last.stage == IEATools::last_stages$services) %>%
+                      dplyr::select("EX_total_agg.ktoe"), 93000)
+  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Energy.type == "X", Last.stage == IEATools::last_stages$services) %>%
+                      dplyr::select("EX_total_agg.ktoe"), 98220)
+
+})
+
+
 test_that("primary aggregates work when R is folded into V", {
   p_industries <- c("Resources - Crude", "Resources - NG")
 
