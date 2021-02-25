@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.30</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.31</span>
       </span>
     </div>
 
@@ -141,6 +141,7 @@
     <pre class="usage"><span class='fu'>primary_aggregates</span><span class='op'>(</span>
   <span class='va'>.sutdata</span>,
   <span class='va'>p_industries</span>,
+  pattern_type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"exact"</span>, <span class='st'>"leading"</span>, <span class='st'>"trailing"</span>, <span class='st'>"anywhere"</span><span class='op'>)</span>,
   R <span class='op'>=</span> <span class='fu'>Recca</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>R</span>,
   V <span class='op'>=</span> <span class='fu'>Recca</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>V</span>,
   Y <span class='op'>=</span> <span class='fu'>Recca</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>Y</span>,
@@ -167,6 +168,16 @@ the total primary energy aggregate,
 where <code>*_p</code> is the primary part of those matrices.
 The function <code><a href='find_p_industry_names.html'>find_p_industry_names()</a></code> might be helpful to find
 primary industry names if they can be identified by prefixes.</p></td>
+    </tr>
+    <tr>
+      <th>pattern_type</th>
+      <td><p>One of "exact", "leading", "trailing", or "anywhere" which specifies
+how matches are made for <code>fd_sectors</code>.
+If "exact", exact matches specify the sectors to be aggregated.
+If "leading", sectors are aggregated if any entry in <code>fd_sectors</code> matches the leading part of a final demand sector's name.
+If "trailing", sectors are aggregated if any entry in <code>fd_sectors</code> matches the trailing part of a final demand sector's name.
+If "anywhere", sectors are aggregated if any entry in <code>fd_sectors</code> matches any part of a final demand sector's name.
+Default is "leading" to enable primary industries such as "Resources [of Crude oil]".</p></td>
     </tr>
     <tr>
       <th>R, V, Y</th>

@@ -1,3 +1,5 @@
+# Recca 0.1.31 (2020-02-25)
+
 * New argument to aggregation functions: `pattern_type`
   which tells how to match primary and final demand sector names for aggregation.
 * New tests for new feature.
