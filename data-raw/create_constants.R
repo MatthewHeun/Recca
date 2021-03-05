@@ -21,7 +21,8 @@ psut_cols <- list(resources = "R",
                   final_demand = "Y",
                   Y = "Y",
                   s_units = "S_units",
-                  matvals = "matvals")
+                  matvals = "matvals",
+                  sector = "Sector")
 usethis::use_data(psut_cols, overwrite = TRUE)
 
 
