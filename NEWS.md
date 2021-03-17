@@ -1,3 +1,5 @@
+# Recca 0.1.32 (2021-03-16)
+
 * Modified aggregation functions to use simpler (but verbose)
   `if` statements to choose aggregation functions.
   This change works around an error when calling the aggregation functions
