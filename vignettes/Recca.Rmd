@@ -144,12 +144,12 @@ AsMats <- WithNames %>%
   # Do a little more cleanup
   dplyr::mutate(
     # Create full U matrix
-    U = matsbyname::sum_byname(U_excl_EIOU, U_EIOU),
+    U = matsbyname::sum_byname(U_feed, U_EIOU),
     # Create r_EIOU, a matrix that identifies the ratio of EIOU to other energy consumed.
     r_EIOU = matsbyname::quotient_byname(U_EIOU, U),
     r_EIOU = matsbyname::replaceNaN_byname(r_EIOU, val = 0)
   ) %>% 
-  dplyr::select(-U_EIOU, -U_excl_EIOU) %>%
+  dplyr::select(-U_EIOU, -U_feed) %>%
   # Add S_units matrices
   dplyr::left_join(S_units, by = c("Country", "Year", "Energy.type", "Last.stage")) %>%
   tidyr::gather(key = matrix.name, value = matrix, R, U, V, Y, r_EIOU, S_units)
@@ -388,10 +388,10 @@ The `calc_embodied_etas()` function does this computation.
 | Matrix | Description |
 |---:|:---------------------------------------------------|
 | $\eta_p$ | Final demand product (rows) divided by embodied energy of that final demand product |
-| $\eta_s$ | Energy consumed by final demand sector (rows) dividied by embodied energy input to the final demand sector  |
+| $\eta_s$ | Energy consumed by final demand sector (rows) divided by embodied energy input to the final demand sector  |
 <!-- These don't work at this time. -->
 <!-- | $\colvec{\bm{\upeta}}_p$ | Final demand product (rows) divided by embodied energy of that final demand product | -->
-<!-- | $\colvec{\bm{\upeta}}_s$ | Energy consumed by final demand sector (rows) dividied by embodied energy input to the final demand sector  | -->
+<!-- | $\colvec{\bm{\upeta}}_s$ | Energy consumed by final demand sector (rows) divided by embodied energy input to the final demand sector  | -->
 
 ```{r}
 primary_machine_names <- c("Resources - Crude", "Resources - NG")

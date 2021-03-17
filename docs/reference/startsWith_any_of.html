@@ -73,7 +73,7 @@ starts with any of the strings in target and FALSE otherwise." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.24</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.32</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@ starts with any of the strings in target and FALSE otherwise." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -113,7 +113,7 @@ starts with any of the strings in target and FALSE otherwise." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/MatthewHeun/Recca/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -140,7 +140,7 @@ starts with any of the strings in target and FALSE otherwise." />
 starts with any of the strings in <code>target</code> and <code>FALSE</code> otherwise.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>startsWith_any_of</span>(<span class='no'>x</span>, <span class='no'>prefixes</span>)</pre>
+    <pre class="usage"><span class='fu'>startsWith_any_of</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>prefixes</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -169,9 +169,13 @@ of applying the test (does <code>x</code> start with any of <code>target</code>)
 for each item in <code>x</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>startsWith_any_of</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"prefix - suffix"</span>, <span class='kw'>prefixes</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"a"</span>, <span class='st'>"b"</span>, <span class='st'>"prefix"</span>))</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>startsWith_any_of</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"prefix - suffix"</span>, <span class='kw'>prefixes</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"a"</span>, <span class='st'>"b"</span>, <span class='st'>"c"</span>))</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'>startsWith_any_of</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"prefix - suffix"</span>, <span class='kw'>prefixes</span> <span class='kw'>=</span> <span class='st'>"suffix"</span>)</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'>startsWith_any_of</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Production - Crude"</span>, <span class='st'>"Production - NG"</span>,
-                         <span class='st'>"Exports - Oil"</span>, <span class='st'>"Exports - Crude"</span>),
-                   <span class='kw'>prefixes</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Production"</span>, <span class='st'>"Imports"</span>))</div><div class='output co'>#&gt; [1]  TRUE  TRUE FALSE FALSE</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'>startsWith_any_of</span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"prefix - suffix"</span>, prefixes <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"a"</span>, <span class='st'>"b"</span>, <span class='st'>"prefix"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>startsWith_any_of</span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"prefix - suffix"</span>, prefixes <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"a"</span>, <span class='st'>"b"</span>, <span class='st'>"c"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'>startsWith_any_of</span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"prefix - suffix"</span>, prefixes <span class='op'>=</span> <span class='st'>"suffix"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'>startsWith_any_of</span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Production - Crude"</span>, <span class='st'>"Production - NG"</span>,
+                         <span class='st'>"Exports - Oil"</span>, <span class='st'>"Exports - Crude"</span><span class='op'>)</span>,
+                   prefixes <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Production"</span>, <span class='st'>"Imports"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1]  TRUE  TRUE FALSE FALSE</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -183,11 +187,11 @@ for each item in <code>x</code>.</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Heun.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.24</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.32</span>
       </span>
     </div>
 
@@ -39,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -71,7 +71,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/MatthewHeun/Recca/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -85,13 +85,13 @@
 
       
 
-      </header><script src="new-functions_files/accessible-code-block-0.0.1/empty-anchor.js"></script><script src="new-functions_files/htmlwidgets-1.5.1/htmlwidgets.js"></script><script src="new-functions_files/d3-4.5.0/d3.min.js"></script><script src="new-functions_files/sankey-1/sankey.js"></script><script src="new-functions_files/sankeyNetwork-binding-0.4/sankeyNetwork.js"></script><div class="row">
+      </header><script src="new-functions_files/header-attrs-2.7/header-attrs.js"></script><script src="new-functions_files/htmlwidgets-1.5.3/htmlwidgets.js"></script><script src="new-functions_files/d3-4.5.0/d3.min.js"></script><script src="new-functions_files/sankey-1/sankey.js"></script><script src="new-functions_files/sankeyNetwork-binding-0.4/sankeyNetwork.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>new_* functions</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2020-08-17</h4>
+            <h4 class="date">2021-03-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/master/vignettes/new-functions.Rmd"><code>vignettes/new-functions.Rmd</code></a></small>
       <div class="hidden name"><code>new-functions.Rmd</code></div>
@@ -101,37 +101,37 @@
     
     
 <!-- Establish some helpful LaTeX shortcuts for equations -->
-
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
 <p><code>Recca</code> is an <code>R</code> package that builds upon input-output (I-O) analysis, developed originally to analyze money flow through economies, to analyze energy conversion chains (ECCs). Historically, input-output (I-O) analysis has been used to analyze “what-if” scenarios involving changes to the production structure of an economy. A common scenario asks “how will the structure of intermediate industries (represented by <span class="math inline">\(\mathbf{U}\)</span> and <span class="math inline">\(\mathbf{V}\)</span> matrices) change when final demand (represented by the <span class="math inline">\(\mathbf{Y}\)</span> matrix) changes?” In the economic arena, Leontief’s early work answered this question via a matrix inversion that now bears his name, the “Leontief inverse (<span class="math inline">\(\mathbf{L}\)</span>)” <span class="citation">(Leontief 1941)</span>. Analysts with an I-O background will know the famous equation <span class="math inline">\(\mathbf{L} = (\mathbf{I} - \mathbf{A})^{-1}\)</span>.</p>
 <p>The <code>Recca</code> package provides functions that perform several “what if” analyses for the analyst. Each function has the name <code>new_*</code>, where <code><a href="https://rdrr.io/r/base/Arithmetic.html">*</a></code> indicates the changed matrix or portion of the ECC. Some functions have the suffix <code>_ps</code> to indicate the functions assume perfect substitution (<code>ps</code>) of industry inputs throughout the ECC. The <code>new_*</code> functions return the resource (<span class="math inline">\(\mathbf{R}\)</span>), use (<span class="math inline">\(\mathbf{U}\)</span>), make (<span class="math inline">\(\mathbf{V}\)</span>), and final demand (<span class="math inline">\(\mathbf{Y}\)</span>) matrices that would be present under the conditions given by arguments to the <code>new_*</code> functions. Arguments for new or changed versions of vectors or matrices are given the suffix <code>_prime</code> in the <code>new_*</code> functions. For example, the changed version of the use matrix (<span class="math inline">\(\mathbf{U}\)</span>) is called <code>U_prime</code>.</p>
 <p>For the examples that follow, we’ll use one ECC from the <code>UKEnergy2000mats</code> data frame which represents a portion of the primary and final energy flows through the UK in the year 2000.</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">magrittr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">matsbyname</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">matsindf</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">Recca</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyr</span>)
-<span class="no">OurECC</span> <span class="kw">&lt;-</span> <span class="no">UKEnergy2000mats</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">Last.stage</span> <span class="kw">==</span> <span class="st">"Final"</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/spread.html">spread</a></span>(<span class="kw">key</span> <span class="kw">=</span> <span class="st">"matrix.name"</span>, <span class="kw">value</span> <span class="kw">=</span> <span class="st">"matrix"</span>)
-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(<span class="no">OurECC</span>)
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org">magrittr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/MatthewHeun/matsbyname">matsbyname</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/MatthewHeun/matsindf">matsindf</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/MatthewHeun/Recca">Recca</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org">tidyr</a></span><span class="op">)</span>
+<span class="va">OurECC</span> <span class="op">&lt;-</span> <span class="va">UKEnergy2000mats</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Last.stage</span> <span class="op">==</span> <span class="st">"Final"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/spread.html">spread</a></span><span class="op">(</span>key <span class="op">=</span> <span class="st">"matrix.name"</span>, value <span class="op">=</span> <span class="st">"matrix"</span><span class="op">)</span>
+<span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">OurECC</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 1</span>
 <span class="co">#&gt; Columns: 12</span>
 <span class="co">#&gt; $ Country     &lt;chr&gt; "GBR"</span>
 <span class="co">#&gt; $ Year        &lt;dbl&gt; 2000</span>
 <span class="co">#&gt; $ Energy.type &lt;chr&gt; "E"</span>
 <span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final"</span>
-<span class="co">#&gt; $ R           &lt;list&gt; [&lt;matrix[2 x 2]&gt;]</span>
-<span class="co">#&gt; $ r_EIOU      &lt;list&gt; [&lt;matrix[12 x 9]&gt;]</span>
-<span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;matrix[12 x 1]&gt;]</span>
-<span class="co">#&gt; $ U           &lt;list&gt; [&lt;matrix[12 x 9]&gt;]</span>
-<span class="co">#&gt; $ U_EIOU      &lt;list&gt; [&lt;matrix[7 x 8]&gt;]</span>
-<span class="co">#&gt; $ U_feed      &lt;list&gt; [&lt;matrix[9 x 9]&gt;]</span>
-<span class="co">#&gt; $ V           &lt;list&gt; [&lt;matrix[9 x 10]&gt;]</span>
-<span class="co">#&gt; $ Y           &lt;list&gt; [&lt;matrix[4 x 2]&gt;]</span></pre></body></html></div>
+<span class="co">#&gt; $ R           &lt;list&gt; &lt;&lt;matrix[2 x 2]&gt;&gt;</span>
+<span class="co">#&gt; $ r_EIOU      &lt;list&gt; &lt;&lt;matrix[12 x 9]&gt;&gt;</span>
+<span class="co">#&gt; $ S_units     &lt;list&gt; &lt;&lt;matrix[12 x 1]&gt;&gt;</span>
+<span class="co">#&gt; $ U           &lt;list&gt; &lt;&lt;matrix[12 x 9]&gt;&gt;</span>
+<span class="co">#&gt; $ U_EIOU      &lt;list&gt; &lt;&lt;matrix[7 x 8]&gt;&gt;</span>
+<span class="co">#&gt; $ U_feed      &lt;list&gt; &lt;&lt;matrix[9 x 9]&gt;&gt;</span>
+<span class="co">#&gt; $ V           &lt;list&gt; &lt;&lt;matrix[9 x 10]&gt;&gt;</span>
+<span class="co">#&gt; $ Y           &lt;list&gt; &lt;&lt;matrix[4 x 2]&gt;&gt;</span></code></pre></div>
 <p>After a short discussion of the inputs to the <code>new_*</code> functions, each type of analysis is described in turn.</p>
 </div>
 <div id="inputs-to-new_-functions" class="section level2">
@@ -143,54 +143,56 @@
 <a href="#matrices-that-describe-the-ecc" class="anchor"></a>Matrices that describe the ECC</h3>
 <p>The <code>new_*</code> functions take as inputs resource (<span class="math inline">\(\mathbf{R}\)</span>), use (<span class="math inline">\(\mathbf{U}\)</span>), make (<span class="math inline">\(\mathbf{V}\)</span>), and final demand (<span class="math inline">\(\mathbf{Y}\)</span>) matrices that describe the ECC.</p>
 <p>To look at the ECC, we can draw a Sankey diagram. A Sankey diagram for the first row of the <code>UKEnergyMatsWithR</code> data frame is given below.</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span>(<span class="no">OurECC</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/magrittr/man/aliases.html">extract2</a></span>(<span class="st">"Sankey"</span>) <span class="kw">%&gt;%</span> <span class="co"># Extracts the "Sankey" column</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/magrittr/man/aliases.html">extract2</a></span>(<span class="fl">1</span>) <span class="co"># Extracts the first row of the "Sankey" column</span></pre></body></html></div>
-<div id="htmlwidget-45153356a3444a37b4fc" style="width:672px;height:384px;" class="sankeyNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-45153356a3444a37b4fc">{"x":{"links":{"source":[0,1,1,2,2,3,3,4,4,4,4,4,4,4,5,6,6,6,6,6,6,6,7,8,8,9,9,3,10,10,1,4,6,9,8,2,3,10,5],"target":[2,1,3,1,2,4,3,1,4,9,8,2,10,11,6,1,9,8,2,3,5,12,9,5,12,9,8,10,10,11,13,13,13,13,13,13,13,13,13],"value":[50000,500,47000,47500,2500,15500,5000,25,350,50,25,50,250,14750,6400,25,25,25,25,75,100,6000,43000,16000,25000,2000,41000,26500,500,26000,550,350,125,2075,50,2575,5075,750,9700]},"nodes":{"name":["Resources - Crude","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources - NG","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"],"group":["Resources - Crude","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources - NG","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span><span class="op">(</span><span class="va">OurECC</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html">extract2</a></span><span class="op">(</span><span class="st">"Sankey"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co"># Extracts the "Sankey" column</span>
+  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html">extract2</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="co"># Extracts the first row of the "Sankey" column</span></code></pre></div>
+<div id="htmlwidget-2e4f66195bd8ddec0c4c" style="width:672px;height:384px;" class="sankeyNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2e4f66195bd8ddec0c4c">{"x":{"links":{"source":[0,1,1,2,2,3,3,4,4,4,4,4,4,4,5,6,6,6,6,6,6,6,7,8,8,9,9,3,10,10,1,4,6,9,8,2,3,10,5],"target":[2,1,3,1,2,4,3,1,4,9,8,2,10,11,6,1,9,8,2,3,5,12,9,5,12,9,8,10,10,11,13,13,13,13,13,13,13,13,13],"value":[50000,500,47000,47500,2500,15500,5000,25,350,50,25,50,250,14750,6400,25,25,25,25,75,100,6000,43000,16000,25000,2000,41000,26500,500,26000,550,350,125,2075,50,2575,5075,750,9700]},"nodes":{"name":["Resources - Crude","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources - NG","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"],"group":["Resources - Crude","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources - NG","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="matrices-that-describe-the-input-output-structure-of-the-ecc" class="section level3">
 <h3 class="hasAnchor">
 <a href="#matrices-that-describe-the-input-output-structure-of-the-ecc" class="anchor"></a>Matrices that describe the input-output structure of the ECC</h3>
 <p>Each <code>new_*</code> function requires basic knowledge about the I-O structure of the ECCs in the form of named vectors and matrices. Thus, the first step in any “what-if” analysis is to calculate the input-output structure of the energy conversion chain. The <code><a href="../reference/calc_io_mats.html">calc_io_mats()</a></code> function is the simplest way to obtain the necessary I-O structure, which appears as additional columns appended at the right of the <code>OurECC</code> data frame in our example. (The names of the additional columns are given by arguments to the <code><a href="../reference/calc_io_mats.html">calc_io_mats()</a></code> function.)</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">IO_mats</span> <span class="kw">&lt;-</span> <span class="no">OurECC</span> <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">IO_mats</span> <span class="op">&lt;-</span> <span class="va">OurECC</span> <span class="op">%&gt;%</span> 
   <span class="co"># Obtain the I-O structure of the ECCs</span>
-  <span class="fu"><a href="../reference/calc_io_mats.html">calc_io_mats</a></span>()
+  <span class="fu"><a href="../reference/calc_io_mats.html">calc_io_mats</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co"># Note additional columns appended to the data frame.</span>
-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(<span class="no">IO_mats</span>)
+<span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">IO_mats</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 1</span>
 <span class="co">#&gt; Columns: 31</span>
 <span class="co">#&gt; $ Country     &lt;chr&gt; "GBR"</span>
 <span class="co">#&gt; $ Year        &lt;dbl&gt; 2000</span>
 <span class="co">#&gt; $ Energy.type &lt;chr&gt; "E"</span>
 <span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final"</span>
-<span class="co">#&gt; $ R           &lt;list&gt; [&lt;matrix[2 x 2]&gt;]</span>
-<span class="co">#&gt; $ r_EIOU      &lt;list&gt; [&lt;matrix[12 x 9]&gt;]</span>
-<span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;matrix[12 x 1]&gt;]</span>
-<span class="co">#&gt; $ U           &lt;list&gt; [&lt;matrix[12 x 9]&gt;]</span>
-<span class="co">#&gt; $ U_EIOU      &lt;list&gt; [&lt;matrix[7 x 8]&gt;]</span>
-<span class="co">#&gt; $ U_feed      &lt;list&gt; [&lt;matrix[9 x 9]&gt;]</span>
-<span class="co">#&gt; $ V           &lt;list&gt; [&lt;matrix[9 x 10]&gt;]</span>
-<span class="co">#&gt; $ Y           &lt;list&gt; [&lt;matrix[4 x 2]&gt;]</span>
-<span class="co">#&gt; $ y           &lt;list&gt; [&lt;matrix[4 x 1]&gt;]</span>
-<span class="co">#&gt; $ q           &lt;list&gt; [&lt;matrix[12 x 1]&gt;]</span>
-<span class="co">#&gt; $ f           &lt;list&gt; [&lt;matrix[9 x 1]&gt;]</span>
-<span class="co">#&gt; $ g           &lt;list&gt; [&lt;matrix[11 x 1]&gt;]</span>
-<span class="co">#&gt; $ W           &lt;list&gt; [&lt;matrix[12 x 11]&gt;]</span>
-<span class="co">#&gt; $ Z           &lt;list&gt; [&lt;matrix[12 x 11]&gt;]</span>
-<span class="co">#&gt; $ K           &lt;list&gt; [&lt;matrix[12 x 9]&gt;]</span>
-<span class="co">#&gt; $ C           &lt;list&gt; [&lt;matrix[12 x 11]&gt;]</span>
-<span class="co">#&gt; $ D           &lt;list&gt; [&lt;matrix[11 x 12]&gt;]</span>
-<span class="co">#&gt; $ A           &lt;list&gt; [&lt;matrix[12 x 12]&gt;]</span>
-<span class="co">#&gt; $ L_pxp       &lt;list&gt; [&lt;matrix[12 x 12]&gt;]</span>
-<span class="co">#&gt; $ L_ixp       &lt;list&gt; [&lt;matrix[11 x 12]&gt;]</span>
-<span class="co">#&gt; $ Z_feed      &lt;list&gt; [&lt;matrix[9 x 11]&gt;]</span>
-<span class="co">#&gt; $ K_feed      &lt;list&gt; [&lt;matrix[9 x 9]&gt;]</span>
-<span class="co">#&gt; $ C_feed      &lt;list&gt; [&lt;matrix[12 x 11]&gt;]</span>
-<span class="co">#&gt; $ D_feed      &lt;list&gt; [&lt;matrix[11 x 12]&gt;]</span>
-<span class="co">#&gt; $ A_feed      &lt;list&gt; [&lt;matrix[9 x 12]&gt;]</span>
-<span class="co">#&gt; $ L_pxp_feed  &lt;list&gt; [&lt;matrix[12 x 12]&gt;]</span>
-<span class="co">#&gt; $ L_ixp_feed  &lt;list&gt; [&lt;matrix[11 x 12]&gt;]</span></pre></body></html></div>
+<span class="co">#&gt; $ R           &lt;list&gt; &lt;&lt;matrix[2 x 2]&gt;&gt;</span>
+<span class="co">#&gt; $ r_EIOU      &lt;list&gt; &lt;&lt;matrix[12 x 9]&gt;&gt;</span>
+<span class="co">#&gt; $ S_units     &lt;list&gt; &lt;&lt;matrix[12 x 1]&gt;&gt;</span>
+<span class="co">#&gt; $ U           &lt;list&gt; &lt;&lt;matrix[12 x 9]&gt;&gt;</span>
+<span class="co">#&gt; $ U_EIOU      &lt;list&gt; &lt;&lt;matrix[7 x 8]&gt;&gt;</span>
+<span class="co">#&gt; $ U_feed      &lt;list&gt; &lt;&lt;matrix[9 x 9]&gt;&gt;</span>
+<span class="co">#&gt; $ V           &lt;list&gt; &lt;&lt;matrix[9 x 10]&gt;&gt;</span>
+<span class="co">#&gt; $ Y           &lt;list&gt; &lt;&lt;matrix[4 x 2]&gt;&gt;</span>
+<span class="co">#&gt; $ y           &lt;list&gt; &lt;&lt;matrix[4 x 1]&gt;&gt;</span>
+<span class="co">#&gt; $ q           &lt;list&gt; &lt;&lt;matrix[12 x 1]&gt;&gt;</span>
+<span class="co">#&gt; $ f           &lt;list&gt; &lt;&lt;matrix[9 x 1]&gt;&gt;</span>
+<span class="co">#&gt; $ g           &lt;list&gt; &lt;&lt;matrix[11 x 1]&gt;&gt;</span>
+<span class="co">#&gt; $ W           &lt;list&gt; &lt;&lt;matrix[12 x 11]&gt;&gt;</span>
+<span class="co">#&gt; $ Z           &lt;list&gt; &lt;&lt;matrix[12 x 11]&gt;&gt;</span>
+<span class="co">#&gt; $ K           &lt;list&gt; &lt;&lt;matrix[12 x 9]&gt;&gt;</span>
+<span class="co">#&gt; $ C           &lt;list&gt; &lt;&lt;matrix[12 x 11]&gt;&gt;</span>
+<span class="co">#&gt; $ D           &lt;list&gt; &lt;&lt;matrix[11 x 12]&gt;&gt;</span>
+<span class="co">#&gt; $ A           &lt;list&gt; &lt;&lt;matrix[12 x 12]&gt;&gt;</span>
+<span class="co">#&gt; $ L_pxp       &lt;list&gt; &lt;&lt;matrix[12 x 12]&gt;&gt;</span>
+<span class="co">#&gt; $ L_ixp       &lt;list&gt; &lt;&lt;matrix[11 x 12]&gt;&gt;</span>
+<span class="co">#&gt; $ Z_feed      &lt;list&gt; &lt;&lt;matrix[9 x 11]&gt;&gt;</span>
+<span class="co">#&gt; $ K_feed      &lt;list&gt; &lt;&lt;matrix[9 x 9]&gt;&gt;</span>
+<span class="co">#&gt; $ C_feed      &lt;list&gt; &lt;&lt;matrix[12 x 11]&gt;&gt;</span>
+<span class="co">#&gt; $ D_feed      &lt;list&gt; &lt;&lt;matrix[11 x 12]&gt;&gt;</span>
+<span class="co">#&gt; $ A_feed      &lt;list&gt; &lt;&lt;matrix[9 x 12]&gt;&gt;</span>
+<span class="co">#&gt; $ L_pxp_feed  &lt;list&gt; &lt;&lt;matrix[12 x 12]&gt;&gt;</span>
+<span class="co">#&gt; $ L_ixp_feed  &lt;list&gt; &lt;&lt;matrix[11 x 12]&gt;&gt;</span></code></pre></div>
 <p>With the I-O structure of the ECC determined (and represented by the <span class="math inline">\(\mathbf{q}\)</span>, <span class="math inline">\(\mathbf{f}\)</span>, and <span class="math inline">\(\mathbf{g}\)</span> vectors and the <span class="math inline">\(\mathbf{W}\)</span>, <span class="math inline">\(\mathbf{Z}\)</span>, <span class="math inline">\(\mathbf{K}\)</span>, <span class="math inline">\(\mathbf{C}\)</span>, <span class="math inline">\(\mathbf{D}\)</span>, <span class="math inline">\(\mathbf{A}\)</span>, <span class="math inline">\(\mathbf{L_{pxp}}\)</span>, and <span class="math inline">\(\mathbf{L_{ixp}}\)</span> matrices), we can use the <code>new_*</code> functions to ask “what if” questions.</p>
 </div>
 </div>
@@ -198,15 +200,16 @@
 <h2 class="hasAnchor">
 <a href="#what-if-final-demand-changes-function-new_y" class="anchor"></a>What if final demand changes? Function new_Y()</h2>
 <p>The classic I-O question is “what if final demand (<span class="math inline">\(\mathbf{Y}\)</span>) changes?” <code>Recca</code> has a function for that: <code><a href="../reference/new_Y.html">new_Y()</a></code>. The <code><a href="../reference/new_Y.html">new_Y()</a></code> function looks upstream in the ECC to determine the effects of a change in final demand. To demonstrate, we’ll double the <code>Residential</code> final demand for electricity from the grid (<code>Elect - Grid</code>) in our ECC.</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">double</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">x</span>){
-  <span class="fl">2</span>*<span class="no">x</span>
-}
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">double</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span>
+  <span class="fl">2</span><span class="op">*</span><span class="va">x</span>
+<span class="op">}</span>
 
-<span class="no">DoubleRes</span> <span class="kw">&lt;-</span> <span class="no">IO_mats</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(
-    <span class="kw">Y_prime</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/elementapply_byname.html">elementapply_byname</a></span>(<span class="no">double</span>, <span class="kw">a</span> <span class="kw">=</span> <span class="no">Y</span>, <span class="kw">row</span> <span class="kw">=</span> <span class="st">"Elect - Grid"</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="st">"Residential"</span>)
-  )
-<span class="no">DoubleRes</span>$<span class="no">Y</span><span class="kw">[[</span><span class="fl">1</span>]]
+<span class="va">DoubleRes</span> <span class="op">&lt;-</span> <span class="va">IO_mats</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>
+    Y_prime <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/elementapply_byname.html">elementapply_byname</a></span><span class="op">(</span><span class="va">double</span>, a <span class="op">=</span> <span class="va">Y</span>, row <span class="op">=</span> <span class="st">"Elect - Grid"</span>, col <span class="op">=</span> <span class="st">"Residential"</span><span class="op">)</span>
+  <span class="op">)</span>
+<span class="va">DoubleRes</span><span class="op">$</span><span class="va">Y</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
 <span class="co">#&gt;                Residential Transport</span>
 <span class="co">#&gt; Diesel - Dist.           0     14750</span>
 <span class="co">#&gt; Elect - Grid          6000         0</span>
@@ -216,7 +219,7 @@
 <span class="co">#&gt; [1] "Product"</span>
 <span class="co">#&gt; attr(,"coltype")</span>
 <span class="co">#&gt; [1] "Industry"</span>
-<span class="no">DoubleRes</span>$<span class="no">Y_prime</span><span class="kw">[[</span><span class="fl">1</span>]]
+<span class="va">DoubleRes</span><span class="op">$</span><span class="va">Y_prime</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
 <span class="co">#&gt;                Residential Transport</span>
 <span class="co">#&gt; Diesel - Dist.           0     14750</span>
 <span class="co">#&gt; Elect - Grid         12000         0</span>
@@ -225,20 +228,22 @@
 <span class="co">#&gt; attr(,"rowtype")</span>
 <span class="co">#&gt; [1] "Product"</span>
 <span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "Industry"</span></pre></body></html></div>
+<span class="co">#&gt; [1] "Industry"</span></code></pre></div>
 <p>Now we can use the <code><a href="../reference/new_Y.html">new_Y()</a></code> function to estimate the ECC with the larger final demand for residential electricity. The original Sankey diagram is:</p>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span>(<span class="no">OurECC</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/magrittr/man/aliases.html">extract2</a></span>(<span class="st">"Sankey"</span>) <span class="kw">%&gt;%</span> <span class="co"># Extracts the "Sankey" column</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/magrittr/man/aliases.html">extract2</a></span>(<span class="fl">1</span>)            <span class="co"># Extracts the first row of the "Sankey" column</span></pre></body></html></div>
-<div id="htmlwidget-a1d8d02c213eb2d04e18" style="width:672px;height:384px;" class="sankeyNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-a1d8d02c213eb2d04e18">{"x":{"links":{"source":[0,1,1,2,2,3,3,4,4,4,4,4,4,4,5,6,6,6,6,6,6,6,7,8,8,9,9,3,10,10,1,4,6,9,8,2,3,10,5],"target":[2,1,3,1,2,4,3,1,4,9,8,2,10,11,6,1,9,8,2,3,5,12,9,5,12,9,8,10,10,11,13,13,13,13,13,13,13,13,13],"value":[50000,500,47000,47500,2500,15500,5000,25,350,50,25,50,250,14750,6400,25,25,25,25,75,100,6000,43000,16000,25000,2000,41000,26500,500,26000,550,350,125,2075,50,2575,5075,750,9700]},"nodes":{"name":["Resources - Crude","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources - NG","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"],"group":["Resources - Crude","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources - NG","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>The new Sankey diagram is:</p>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">DoubleRes</span> <span class="kw">&lt;-</span> <span class="no">DoubleRes</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../reference/new_Y.html">new_Y</a></span>()
-<span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span>(<span class="no">DoubleRes</span>, <span class="kw">R</span> <span class="kw">=</span> <span class="st">"R_prime"</span>, <span class="kw">U</span> <span class="kw">=</span> <span class="st">"U_prime"</span>, <span class="kw">V</span> <span class="kw">=</span> <span class="st">"V_prime"</span>, <span class="kw">Y</span> <span class="kw">=</span> <span class="st">"Y_prime"</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/magrittr/man/aliases.html">extract2</a></span>(<span class="st">"Sankey"</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/magrittr/man/aliases.html">extract2</a></span>(<span class="fl">1</span>)</pre></body></html></div>
-<div id="htmlwidget-0b73c23cfd0398975d14" style="width:672px;height:384px;" class="sankeyNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-0b73c23cfd0398975d14">{"x":{"links":{"source":[0,1,1,2,2,3,3,4,4,4,4,4,4,4,5,6,6,6,6,6,6,6,7,8,8,9,9,3,10,10,1,4,6,9,8,2,3,10,5],"target":[2,1,3,1,2,4,3,1,4,9,8,2,10,11,6,1,9,8,2,3,5,12,9,5,12,9,8,10,10,11,13,13,13,13,13,13,13,13,13],"value":[50034.8117944957,500.348117944957,47032.7230868259,47533.0712047709,2501.74058972478,15529.2419073764,5003.48117944957,25.0174058972478,350.660301134305,69.0195923668707,34.5097961834353,50.0348117944957,250,14750,12638.4262963336,25.0174058972478,34.5097961834353,34.5097961834353,25.0174058972478,75.0522176917435,197.475410880212,12000,59356.8494355088,31596.065740834,25000,2760.78369467483,56596.065740834,26500,500,26000,550.382929739455,350.660301134305,246.844263600266,2864.31308322512,69.0195923668707,2576.79280741652,5078.53339714131,750,19155.1148553806]},"nodes":{"name":["Resources - Crude","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources - NG","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"],"group":["Resources - Crude","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources - NG","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>Output from the electricity grid is clearly larger now than before. Also, upstream demand for natural gas is now larger than the upstream demand for crude, whereas in the original Sankey diagram, demand for crude was larger than the demand for natural gas.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span><span class="op">(</span><span class="va">OurECC</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html">extract2</a></span><span class="op">(</span><span class="st">"Sankey"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co"># Extracts the "Sankey" column</span>
+  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html">extract2</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>            <span class="co"># Extracts the first row of the "Sankey" column</span></code></pre></div>
+<div id="htmlwidget-5e8a1c21e16814f869c6" style="width:672px;height:384px;" class="sankeyNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-5e8a1c21e16814f869c6">{"x":{"links":{"source":[0,1,1,2,2,3,3,4,4,4,4,4,4,4,5,6,6,6,6,6,6,6,7,8,8,9,9,3,10,10,1,4,6,9,8,2,3,10,5],"target":[2,1,3,1,2,4,3,1,4,9,8,2,10,11,6,1,9,8,2,3,5,12,9,5,12,9,8,10,10,11,13,13,13,13,13,13,13,13,13],"value":[50000,500,47000,47500,2500,15500,5000,25,350,50,25,50,250,14750,6400,25,25,25,25,75,100,6000,43000,16000,25000,2000,41000,26500,500,26000,550,350,125,2075,50,2575,5075,750,9700]},"nodes":{"name":["Resources - Crude","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources - NG","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"],"group":["Resources - Crude","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources - NG","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>The new Sankey diagram is:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">DoubleRes</span> <span class="op">&lt;-</span> <span class="va">DoubleRes</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/new_Y.html">new_Y</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span><span class="op">(</span><span class="va">DoubleRes</span>, R <span class="op">=</span> <span class="st">"R_prime"</span>, U <span class="op">=</span> <span class="st">"U_prime"</span>, V <span class="op">=</span> <span class="st">"V_prime"</span>, Y <span class="op">=</span> <span class="st">"Y_prime"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html">extract2</a></span><span class="op">(</span><span class="st">"Sankey"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html">extract2</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></code></pre></div>
+<div id="htmlwidget-9905c75389cc172630a3" style="width:672px;height:384px;" class="sankeyNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-9905c75389cc172630a3">{"x":{"links":{"source":[0,1,1,2,2,3,3,4,4,4,4,4,4,4,5,6,6,6,6,6,6,6,7,8,8,9,9,3,10,10,1,4,6,9,8,2,3,10,5],"target":[2,1,3,1,2,4,3,1,4,9,8,2,10,11,6,1,9,8,2,3,5,12,9,5,12,9,8,10,10,11,13,13,13,13,13,13,13,13,13],"value":[50034.8117944957,500.348117944957,47032.7230868259,47533.0712047709,2501.74058972478,15529.2419073764,5003.48117944957,25.0174058972478,350.660301134305,69.0195923668707,34.5097961834353,50.0348117944957,250,14750,12638.4262963336,25.0174058972478,34.5097961834353,34.5097961834353,25.0174058972478,75.0522176917435,197.475410880212,12000,59356.8494355088,31596.065740834,25000,2760.78369467483,56596.065740834,26500,500,26000,550.382929739455,350.660301134305,246.844263600266,2864.31308322512,69.0195923668707,2576.79280741652,5078.53339714131,750,19155.1148553806]},"nodes":{"name":["Resources - Crude","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources - NG","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"],"group":["Resources - Crude","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources - NG","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>Output from the electricity grid is clearly larger now than before. Also, upstream demand for natural gas is now larger than the upstream demand for crude, whereas in the original Sankey diagram, demand for crude was larger than the demand for natural gas.</p>
 </div>
 <div id="what-if-resources-change-function-new_r_ps" class="section level2">
 <h2 class="hasAnchor">
@@ -248,136 +253,144 @@
 <h3 class="hasAnchor">
 <a href="#resource-matrices-and-vectors" class="anchor"></a>Resource matrices and vectors</h3>
 <p>The rate of resource extraction is given by the <span class="math inline">\(\mathbf{R}\)</span> matrix or by the <span class="math inline">\(\mathbf{r}\)</span> vector. The resource matrix (<span class="math inline">\(\mathbf{R}\)</span>) is Industry<span class="math inline">\(\times\)</span>Product. Its industries are usually named <code>Resources - &lt;Product&gt;</code>, where <code>&lt;Product&gt;</code> is the name of the Product produced by that industry. (<code><a href="https://rdrr.io/pkg/matsbyname/man/clean_byname.html">clean_byname()</a></code> removes <code>0</code> rows and columns for clarity.)</p>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="no">OurECC</span>$<span class="no">R</span><span class="kw">[[</span><span class="fl">1</span>]] <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/clean_byname.html">clean_byname</a></span>()
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">OurECC</span><span class="op">$</span><span class="va">R</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/clean_byname.html">clean_byname</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt;                   Crude    NG</span>
 <span class="co">#&gt; Resources - Crude 50000     0</span>
 <span class="co">#&gt; Resources - NG        0 43000</span>
 <span class="co">#&gt; attr(,"rowtype")</span>
 <span class="co">#&gt; [1] "Industry"</span>
 <span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "Product"</span></pre></body></html></div>
+<span class="co">#&gt; [1] "Product"</span></code></pre></div>
 <p>The resource vector (<span class="math inline">\(\mathbf{r}\)</span>) is a Product column vector containing Products that are resources.</p>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="no">rvecs</span> <span class="kw">&lt;-</span> <span class="no">OurECC</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span>(
-    <span class="kw">r</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/clean_byname.html">clean_byname</a></span>(<span class="no">R</span>) <span class="kw">%&gt;%</span>
-      <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/colsums_byname.html">colsums_byname</a></span>() <span class="kw">%&gt;%</span>
-      <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/transpose_byname.html">transpose_byname</a></span>()
-  )
-<span class="no">rvecs</span>$<span class="no">r</span><span class="kw">[[</span><span class="fl">1</span>]]
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">rvecs</span> <span class="op">&lt;-</span> <span class="va">OurECC</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">transmute</a></span><span class="op">(</span>
+    r <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/clean_byname.html">clean_byname</a></span><span class="op">(</span><span class="va">R</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+      <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/colsums_byname.html">colsums_byname</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+      <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/transpose_byname.html">transpose_byname</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="op">)</span>
+<span class="va">rvecs</span><span class="op">$</span><span class="va">r</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
 <span class="co">#&gt;       Industry</span>
 <span class="co">#&gt; Crude    50000</span>
 <span class="co">#&gt; NG       43000</span>
 <span class="co">#&gt; attr(,"rowtype")</span>
 <span class="co">#&gt; [1] "Product"</span>
 <span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "Industry"</span></pre></body></html></div>
+<span class="co">#&gt; [1] "Industry"</span></code></pre></div>
 </div>
 <div id="industry-efficiencies-and-a-new-resource-matrix" class="section level3">
 <h3 class="hasAnchor">
 <a href="#industry-efficiencies-and-a-new-resource-matrix" class="anchor"></a>Industry efficiencies and a new resource matrix</h3>
 <p>The baseline <span class="math inline">\(\mathbf{R}\)</span> matrix is shown above. Let’s say we want to estimate the effect of a 50 % reduction in the production rate of crude oil. So, we cut <code>Resources - Crude</code> in half. To execute this reduction, we’ll use the <code><a href="https://rdrr.io/pkg/matsbyname/man/elementapply_byname.html">matsbyname::elementapply_byname()</a></code> function.</p>
-<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="no">half</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">x</span>){
-  <span class="no">x</span>/<span class="fl">2</span>
-}
-<span class="no">HalfCrude</span> <span class="kw">&lt;-</span> <span class="no">IO_mats</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(
-    <span class="kw">R_prime</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/elementapply_byname.html">elementapply_byname</a></span>(<span class="no">half</span>, <span class="kw">a</span> <span class="kw">=</span> <span class="no">R</span>, <span class="kw">row</span> <span class="kw">=</span> <span class="st">"Resources - Crude"</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="st">"Crude"</span>)
-  )
-<span class="no">HalfCrude</span>$<span class="no">R_prime</span><span class="kw">[[</span><span class="fl">1</span>]] <span class="kw">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/clean_byname.html">clean_byname</a></span>()
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">half</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span>
+  <span class="va">x</span><span class="op">/</span><span class="fl">2</span>
+<span class="op">}</span>
+<span class="va">HalfCrude</span> <span class="op">&lt;-</span> <span class="va">IO_mats</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>
+    R_prime <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/elementapply_byname.html">elementapply_byname</a></span><span class="op">(</span><span class="va">half</span>, a <span class="op">=</span> <span class="va">R</span>, row <span class="op">=</span> <span class="st">"Resources - Crude"</span>, col <span class="op">=</span> <span class="st">"Crude"</span><span class="op">)</span>
+  <span class="op">)</span>
+<span class="va">HalfCrude</span><span class="op">$</span><span class="va">R_prime</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/clean_byname.html">clean_byname</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt;                   Crude    NG</span>
 <span class="co">#&gt; Resources - Crude 25000     0</span>
 <span class="co">#&gt; Resources - NG        0 43000</span>
 <span class="co">#&gt; attr(,"rowtype")</span>
 <span class="co">#&gt; [1] "Industry"</span>
 <span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "Product"</span></pre></body></html></div>
+<span class="co">#&gt; [1] "Product"</span></code></pre></div>
 <p>Now we use the <code>new_R()</code> function to estimate changes in the ECC. But first, we need to calculate the efficiency of all sectors in the ECC using the <code><a href="../reference/calc_eta_i.html">calc_eta_i()</a></code> function.</p>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="no">HalfCrude</span> <span class="kw">&lt;-</span> <span class="no">HalfCrude</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../reference/calc_eta_i.html">calc_eta_i</a></span>() <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../reference/new_R_ps.html">new_R_ps</a></span>()
-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(<span class="no">HalfCrude</span>)
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">HalfCrude</span> <span class="op">&lt;-</span> <span class="va">HalfCrude</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/calc_eta_i.html">calc_eta_i</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/new_R_ps.html">new_R_ps</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">HalfCrude</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 1</span>
 <span class="co">#&gt; Columns: 36</span>
 <span class="co">#&gt; $ Country     &lt;chr&gt; "GBR"</span>
 <span class="co">#&gt; $ Year        &lt;dbl&gt; 2000</span>
 <span class="co">#&gt; $ Energy.type &lt;chr&gt; "E"</span>
 <span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final"</span>
-<span class="co">#&gt; $ R           &lt;list&gt; [&lt;matrix[2 x 2]&gt;]</span>
-<span class="co">#&gt; $ r_EIOU      &lt;list&gt; [&lt;matrix[12 x 9]&gt;]</span>
-<span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;matrix[12 x 1]&gt;]</span>
-<span class="co">#&gt; $ U           &lt;list&gt; [&lt;matrix[12 x 9]&gt;]</span>
-<span class="co">#&gt; $ U_EIOU      &lt;list&gt; [&lt;matrix[7 x 8]&gt;]</span>
-<span class="co">#&gt; $ U_feed      &lt;list&gt; [&lt;matrix[9 x 9]&gt;]</span>
-<span class="co">#&gt; $ V           &lt;list&gt; [&lt;matrix[9 x 10]&gt;]</span>
-<span class="co">#&gt; $ Y           &lt;list&gt; [&lt;matrix[4 x 2]&gt;]</span>
-<span class="co">#&gt; $ y           &lt;list&gt; [&lt;matrix[4 x 1]&gt;]</span>
-<span class="co">#&gt; $ q           &lt;list&gt; [&lt;matrix[12 x 1]&gt;]</span>
-<span class="co">#&gt; $ f           &lt;list&gt; [&lt;matrix[9 x 1]&gt;]</span>
-<span class="co">#&gt; $ g           &lt;list&gt; [&lt;matrix[11 x 1]&gt;]</span>
-<span class="co">#&gt; $ W           &lt;list&gt; [&lt;matrix[12 x 11]&gt;]</span>
-<span class="co">#&gt; $ Z           &lt;list&gt; [&lt;matrix[12 x 11]&gt;]</span>
-<span class="co">#&gt; $ K           &lt;list&gt; [&lt;matrix[12 x 9]&gt;]</span>
-<span class="co">#&gt; $ C           &lt;list&gt; [&lt;matrix[12 x 11]&gt;]</span>
-<span class="co">#&gt; $ D           &lt;list&gt; [&lt;matrix[11 x 12]&gt;]</span>
-<span class="co">#&gt; $ A           &lt;list&gt; [&lt;matrix[12 x 12]&gt;]</span>
-<span class="co">#&gt; $ L_pxp       &lt;list&gt; [&lt;matrix[12 x 12]&gt;]</span>
-<span class="co">#&gt; $ L_ixp       &lt;list&gt; [&lt;matrix[11 x 12]&gt;]</span>
-<span class="co">#&gt; $ Z_feed      &lt;list&gt; [&lt;matrix[9 x 11]&gt;]</span>
-<span class="co">#&gt; $ K_feed      &lt;list&gt; [&lt;matrix[9 x 9]&gt;]</span>
-<span class="co">#&gt; $ C_feed      &lt;list&gt; [&lt;matrix[12 x 11]&gt;]</span>
-<span class="co">#&gt; $ D_feed      &lt;list&gt; [&lt;matrix[11 x 12]&gt;]</span>
-<span class="co">#&gt; $ A_feed      &lt;list&gt; [&lt;matrix[9 x 12]&gt;]</span>
-<span class="co">#&gt; $ L_pxp_feed  &lt;list&gt; [&lt;matrix[12 x 12]&gt;]</span>
-<span class="co">#&gt; $ L_ixp_feed  &lt;list&gt; [&lt;matrix[11 x 12]&gt;]</span>
-<span class="co">#&gt; $ R_prime     &lt;list&gt; [&lt;matrix[2 x 2]&gt;]</span>
-<span class="co">#&gt; $ eta_i       &lt;list&gt; [&lt;matrix[9 x 1]&gt;]</span>
-<span class="co">#&gt; $ U_prime     &lt;list&gt; [&lt;matrix[12 x 9]&gt;]</span>
-<span class="co">#&gt; $ V_prime     &lt;list&gt; [&lt;matrix[9 x 12]&gt;]</span>
-<span class="co">#&gt; $ Y_prime     &lt;list&gt; [&lt;matrix[12 x 2]&gt;]</span></pre></body></html></div>
+<span class="co">#&gt; $ R           &lt;list&gt; &lt;&lt;matrix[2 x 2]&gt;&gt;</span>
+<span class="co">#&gt; $ r_EIOU      &lt;list&gt; &lt;&lt;matrix[12 x 9]&gt;&gt;</span>
+<span class="co">#&gt; $ S_units     &lt;list&gt; &lt;&lt;matrix[12 x 1]&gt;&gt;</span>
+<span class="co">#&gt; $ U           &lt;list&gt; &lt;&lt;matrix[12 x 9]&gt;&gt;</span>
+<span class="co">#&gt; $ U_EIOU      &lt;list&gt; &lt;&lt;matrix[7 x 8]&gt;&gt;</span>
+<span class="co">#&gt; $ U_feed      &lt;list&gt; &lt;&lt;matrix[9 x 9]&gt;&gt;</span>
+<span class="co">#&gt; $ V           &lt;list&gt; &lt;&lt;matrix[9 x 10]&gt;&gt;</span>
+<span class="co">#&gt; $ Y           &lt;list&gt; &lt;&lt;matrix[4 x 2]&gt;&gt;</span>
+<span class="co">#&gt; $ y           &lt;list&gt; &lt;&lt;matrix[4 x 1]&gt;&gt;</span>
+<span class="co">#&gt; $ q           &lt;list&gt; &lt;&lt;matrix[12 x 1]&gt;&gt;</span>
+<span class="co">#&gt; $ f           &lt;list&gt; &lt;&lt;matrix[9 x 1]&gt;&gt;</span>
+<span class="co">#&gt; $ g           &lt;list&gt; &lt;&lt;matrix[11 x 1]&gt;&gt;</span>
+<span class="co">#&gt; $ W           &lt;list&gt; &lt;&lt;matrix[12 x 11]&gt;&gt;</span>
+<span class="co">#&gt; $ Z           &lt;list&gt; &lt;&lt;matrix[12 x 11]&gt;&gt;</span>
+<span class="co">#&gt; $ K           &lt;list&gt; &lt;&lt;matrix[12 x 9]&gt;&gt;</span>
+<span class="co">#&gt; $ C           &lt;list&gt; &lt;&lt;matrix[12 x 11]&gt;&gt;</span>
+<span class="co">#&gt; $ D           &lt;list&gt; &lt;&lt;matrix[11 x 12]&gt;&gt;</span>
+<span class="co">#&gt; $ A           &lt;list&gt; &lt;&lt;matrix[12 x 12]&gt;&gt;</span>
+<span class="co">#&gt; $ L_pxp       &lt;list&gt; &lt;&lt;matrix[12 x 12]&gt;&gt;</span>
+<span class="co">#&gt; $ L_ixp       &lt;list&gt; &lt;&lt;matrix[11 x 12]&gt;&gt;</span>
+<span class="co">#&gt; $ Z_feed      &lt;list&gt; &lt;&lt;matrix[9 x 11]&gt;&gt;</span>
+<span class="co">#&gt; $ K_feed      &lt;list&gt; &lt;&lt;matrix[9 x 9]&gt;&gt;</span>
+<span class="co">#&gt; $ C_feed      &lt;list&gt; &lt;&lt;matrix[12 x 11]&gt;&gt;</span>
+<span class="co">#&gt; $ D_feed      &lt;list&gt; &lt;&lt;matrix[11 x 12]&gt;&gt;</span>
+<span class="co">#&gt; $ A_feed      &lt;list&gt; &lt;&lt;matrix[9 x 12]&gt;&gt;</span>
+<span class="co">#&gt; $ L_pxp_feed  &lt;list&gt; &lt;&lt;matrix[12 x 12]&gt;&gt;</span>
+<span class="co">#&gt; $ L_ixp_feed  &lt;list&gt; &lt;&lt;matrix[11 x 12]&gt;&gt;</span>
+<span class="co">#&gt; $ R_prime     &lt;list&gt; &lt;&lt;matrix[2 x 2]&gt;&gt;</span>
+<span class="co">#&gt; $ eta_i       &lt;list&gt; &lt;&lt;matrix[9 x 1]&gt;&gt;</span>
+<span class="co">#&gt; $ U_prime     &lt;list&gt; &lt;&lt;matrix[12 x 9]&gt;&gt;</span>
+<span class="co">#&gt; $ V_prime     &lt;list&gt; &lt;&lt;matrix[9 x 12]&gt;&gt;</span>
+<span class="co">#&gt; $ Y_prime     &lt;list&gt; &lt;&lt;matrix[12 x 2]&gt;&gt;</span></code></pre></div>
 <p>After re-calculating the <code>HalfCrude</code> ECC (specifically, after calculating <code>U_prime</code>, <code>V_prime</code>, and <code>Y_prime</code>), we can visualize the effect of lower crude oil availability with a modified Sankey diagram.</p>
 <p>First, we have the original Sankey diagram.</p>
-<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span>(<span class="no">OurECC</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/magrittr/man/aliases.html">extract2</a></span>(<span class="st">"Sankey"</span>) <span class="kw">%&gt;%</span> <span class="co"># Extracts the "Sankey" column</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/magrittr/man/aliases.html">extract2</a></span>(<span class="fl">1</span>) <span class="co"># Extracts the first row of the "Sankey" column</span></pre></body></html></div>
-<div id="htmlwidget-5574e0d45b28aadb27a7" style="width:672px;height:384px;" class="sankeyNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-5574e0d45b28aadb27a7">{"x":{"links":{"source":[0,1,1,2,2,3,3,4,4,4,4,4,4,4,5,6,6,6,6,6,6,6,7,8,8,9,9,3,10,10,1,4,6,9,8,2,3,10,5],"target":[2,1,3,1,2,4,3,1,4,9,8,2,10,11,6,1,9,8,2,3,5,12,9,5,12,9,8,10,10,11,13,13,13,13,13,13,13,13,13],"value":[50000,500,47000,47500,2500,15500,5000,25,350,50,25,50,250,14750,6400,25,25,25,25,75,100,6000,43000,16000,25000,2000,41000,26500,500,26000,550,350,125,2075,50,2575,5075,750,9700]},"nodes":{"name":["Resources - Crude","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources - NG","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"],"group":["Resources - Crude","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources - NG","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>And here is the modified Sankey diagram showing the much smaller <code>Resources - Crude</code> extraction rate.</p>
-<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span>(<span class="no">HalfCrude</span>, <span class="kw">R</span> <span class="kw">=</span> <span class="st">"R_prime"</span>, <span class="kw">U</span> <span class="kw">=</span> <span class="st">"U_prime"</span>, <span class="kw">V</span> <span class="kw">=</span> <span class="st">"V_prime"</span>, <span class="kw">Y</span> <span class="kw">=</span> <span class="st">"Y_prime"</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/magrittr/man/aliases.html">extract2</a></span>(<span class="st">"Sankey"</span>) <span class="kw">%&gt;%</span> <span class="co"># Extracts the "Sankey" column</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/magrittr/man/aliases.html">extract2</a></span>(<span class="fl">1</span>) <span class="co"># Extracts the first row of the "Sankey" column</span></pre></body></html></div>
-<div id="htmlwidget-91eccc4f56dc29c3e05e" style="width:672px;height:384px;" class="sankeyNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-91eccc4f56dc29c3e05e">{"x":{"links":{"source":[0,1,1,2,2,3,3,4,4,4,4,4,4,4,5,6,6,6,6,6,6,6,7,8,8,9,9,3,10,10,1,4,6,9,8,2,3,10,5],"target":[2,1,3,1,2,4,3,1,4,9,8,2,10,11,6,1,9,8,2,3,5,12,9,5,12,9,8,10,10,11,13,13,13,13,13,13,13,13,13],"value":[25000,250.256665815559,23524.1265866625,23761.8982993485,1250.6262262815,7770.26947846955,2506.53854144179,12.532692707209,175.457697900925,25.0653854144179,12.532692707209,25.0653854144179,125.32692707209,7394.28869725328,6394.34931301765,24.9779270039752,24.9779270039752,24.9779270039752,24.9779270039752,74.9337810119256,99.9117080159008,5994.70248095405,43000,15985.8732825441,24977.9270039752,1998.84124491786,40976.2455208161,13284.6542696415,250.653854144179,13034.0004154973,275.282332397112,175.457697900925,124.889635019876,2073.79779160229,49.9558540079548,1288.14501306994,2544.13661956342,375.980781216266,9691.43567754238]},"nodes":{"name":["Resources - Crude","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources - NG","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"],"group":["Resources - Crude","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources - NG","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>The Sankey diagrams clearly show that reducing the availability of crude oil (<code>Resources - crude</code>) means that less <code>Transport</code> final demand can be satisfied.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span><span class="op">(</span><span class="va">OurECC</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html">extract2</a></span><span class="op">(</span><span class="st">"Sankey"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co"># Extracts the "Sankey" column</span>
+  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html">extract2</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="co"># Extracts the first row of the "Sankey" column</span></code></pre></div>
+<div id="htmlwidget-47000a084b27eca51e67" style="width:672px;height:384px;" class="sankeyNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-47000a084b27eca51e67">{"x":{"links":{"source":[0,1,1,2,2,3,3,4,4,4,4,4,4,4,5,6,6,6,6,6,6,6,7,8,8,9,9,3,10,10,1,4,6,9,8,2,3,10,5],"target":[2,1,3,1,2,4,3,1,4,9,8,2,10,11,6,1,9,8,2,3,5,12,9,5,12,9,8,10,10,11,13,13,13,13,13,13,13,13,13],"value":[50000,500,47000,47500,2500,15500,5000,25,350,50,25,50,250,14750,6400,25,25,25,25,75,100,6000,43000,16000,25000,2000,41000,26500,500,26000,550,350,125,2075,50,2575,5075,750,9700]},"nodes":{"name":["Resources - Crude","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources - NG","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"],"group":["Resources - Crude","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources - NG","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>And here is the modified Sankey diagram showing the much smaller <code>Resources - Crude</code> extraction rate.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span><span class="op">(</span><span class="va">HalfCrude</span>, R <span class="op">=</span> <span class="st">"R_prime"</span>, U <span class="op">=</span> <span class="st">"U_prime"</span>, V <span class="op">=</span> <span class="st">"V_prime"</span>, Y <span class="op">=</span> <span class="st">"Y_prime"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html">extract2</a></span><span class="op">(</span><span class="st">"Sankey"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co"># Extracts the "Sankey" column</span>
+  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html">extract2</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="co"># Extracts the first row of the "Sankey" column</span></code></pre></div>
+<div id="htmlwidget-2422a09c642e10e8996e" style="width:672px;height:384px;" class="sankeyNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2422a09c642e10e8996e">{"x":{"links":{"source":[0,1,1,2,2,3,3,4,4,4,4,4,4,4,5,6,6,6,6,6,6,6,7,8,8,9,9,3,10,10,1,4,6,9,8,2,3,10,5],"target":[2,1,3,1,2,4,3,1,4,9,8,2,10,11,6,1,9,8,2,3,5,12,9,5,12,9,8,10,10,11,13,13,13,13,13,13,13,13,13],"value":[25000,250.256665815559,23524.1265866625,23761.8982993485,1250.6262262815,7770.26947846955,2506.53854144179,12.532692707209,175.457697900925,25.0653854144179,12.532692707209,25.0653854144179,125.32692707209,7394.28869725328,6394.34931301765,24.9779270039752,24.9779270039752,24.9779270039752,24.9779270039752,74.9337810119256,99.9117080159008,5994.70248095405,43000,15985.8732825441,24977.9270039752,1998.84124491786,40976.2455208161,13284.6542696415,250.653854144179,13034.0004154973,275.282332397112,175.457697900925,124.889635019876,2073.79779160229,49.9558540079548,1288.14501306994,2544.13661956342,375.980781216266,9691.43567754238]},"nodes":{"name":["Resources - Crude","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources - NG","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"],"group":["Resources - Crude","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources - NG","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>The Sankey diagrams clearly show that reducing the availability of crude oil (<code>Resources - crude</code>) means that less <code>Transport</code> final demand can be satisfied.</p>
 <p>Note that both ECCs are in complete energy balance.</p>
-<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="no">OurECC</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../reference/verify_SUT_energy_balance_with_units.html">verify_SUT_energy_balance_with_units</a></span>() <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">Country</span>, <span class="no">Year</span>, <span class="no">Energy.type</span>, <span class="no">Last.stage</span>,
-         <span class="no">.SUT_prod_energy_balance</span>, <span class="no">.SUT_ind_energy_balance</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">OurECC</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/verify_SUT_energy_balance_with_units.html">verify_SUT_energy_balance_with_units</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Country</span>, <span class="va">Year</span>, <span class="va">Energy.type</span>, <span class="va">Last.stage</span>, 
+         <span class="va">.SUT_prod_energy_balance</span>, <span class="va">.SUT_ind_energy_balance</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 1</span>
 <span class="co">#&gt; Columns: 6</span>
 <span class="co">#&gt; $ Country                  &lt;chr&gt; "GBR"</span>
 <span class="co">#&gt; $ Year                     &lt;dbl&gt; 2000</span>
 <span class="co">#&gt; $ Energy.type              &lt;chr&gt; "E"</span>
 <span class="co">#&gt; $ Last.stage               &lt;chr&gt; "Final"</span>
-<span class="co">#&gt; $ .SUT_prod_energy_balance &lt;list&gt; [TRUE]</span>
-<span class="co">#&gt; $ .SUT_ind_energy_balance  &lt;list&gt; [TRUE]</span></pre></body></html></div>
-<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="no">HalfCrude</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">K</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(
-    <span class="kw">R_plus_V_prime</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/sum_byname.html">sum_byname</a></span>(<span class="no">R_prime</span>, <span class="no">V_prime</span>)
-  ) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../reference/verify_SUT_energy_balance.html">verify_SUT_energy_balance</a></span>(<span class="kw">R</span> <span class="kw">=</span> <span class="st">"R_prime"</span>, <span class="kw">U</span> <span class="kw">=</span> <span class="st">"U_prime"</span>, <span class="kw">V</span> <span class="kw">=</span> <span class="st">"V_prime"</span>,
-                            <span class="kw">Y</span> <span class="kw">=</span> <span class="st">"Y_prime"</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">Country</span>, <span class="no">Year</span>, <span class="no">Energy.type</span>, <span class="no">Last.stage</span>,
-         <span class="no">.SUT_energy_balance</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()
+<span class="co">#&gt; $ .SUT_prod_energy_balance &lt;list&gt; TRUE</span>
+<span class="co">#&gt; $ .SUT_ind_energy_balance  &lt;list&gt; TRUE</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">HalfCrude</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">K</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>
+    R_plus_V_prime <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/sum_byname.html">sum_byname</a></span><span class="op">(</span><span class="va">R_prime</span>, <span class="va">V_prime</span><span class="op">)</span>
+  <span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/verify_SUT_energy_balance.html">verify_SUT_energy_balance</a></span><span class="op">(</span>R <span class="op">=</span> <span class="st">"R_prime"</span>, U <span class="op">=</span> <span class="st">"U_prime"</span>, V <span class="op">=</span> <span class="st">"V_prime"</span>, 
+                            Y <span class="op">=</span> <span class="st">"Y_prime"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Country</span>, <span class="va">Year</span>, <span class="va">Energy.type</span>, <span class="va">Last.stage</span>,
+         <span class="va">.SUT_energy_balance</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 1</span>
 <span class="co">#&gt; Columns: 5</span>
 <span class="co">#&gt; $ Country             &lt;chr&gt; "GBR"</span>
 <span class="co">#&gt; $ Year                &lt;dbl&gt; 2000</span>
 <span class="co">#&gt; $ Energy.type         &lt;chr&gt; "E"</span>
 <span class="co">#&gt; $ Last.stage          &lt;chr&gt; "Final"</span>
-<span class="co">#&gt; $ .SUT_energy_balance &lt;list&gt; [TRUE]</span></pre></body></html></div>
+<span class="co">#&gt; $ .SUT_energy_balance &lt;list&gt; TRUE</span></code></pre></div>
 </div>
 </div>
 <div id="what-if-perfectly-substitutable-inputs-to-an-intermediate-industry-change-function-new_k_ps" class="section level2">
@@ -388,62 +401,65 @@
 <p>ECC below has two resource industries (R1 and R2), one intermediate industry (I), and two final demand sectors (Y1 and Y2). The R1 industry makes product R1p.<br>
 The R2 industry makes product R2p. Industry I makes product Ip. Product Ip is consumed by final demand sectors Y1 and Y2.</p>
 <p>The use (<span class="math inline">\(\mathbf{U}\)</span>), make (<span class="math inline">\(\mathbf{V}\)</span>), final demand (<span class="math inline">\(\mathbf{Y}\)</span>), and unit summation (<span class="math inline">\(\mathbf{S}_{units}\)</span>) matrices are given below.</p>
-<div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="no">U</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">10</span>,
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">U</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">10</span>,
               <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">10</span>,
-              <span class="fl">0</span>, <span class="fl">0</span>,  <span class="fl">0</span>),
-            <span class="kw">byrow</span> <span class="kw">=</span> <span class="fl">TRUE</span>, <span class="kw">nrow</span> <span class="kw">=</span> <span class="fl">3</span>, <span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">3</span>,
-            <span class="kw">dimnames</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"R1p"</span>, <span class="st">"R2p"</span>, <span class="st">"Ip"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"R1"</span>, <span class="st">"R2"</span>, <span class="st">"I"</span>))) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setrowtype.html">setrowtype</a></span>(<span class="st">"Products"</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setcoltype.html">setcoltype</a></span>(<span class="st">"Industries"</span>)
+              <span class="fl">0</span>, <span class="fl">0</span>,  <span class="fl">0</span><span class="op">)</span>,
+            byrow <span class="op">=</span> <span class="cn">TRUE</span>, nrow <span class="op">=</span> <span class="fl">3</span>, ncol <span class="op">=</span> <span class="fl">3</span>,
+            dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"R1p"</span>, <span class="st">"R2p"</span>, <span class="st">"Ip"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"R1"</span>, <span class="st">"R2"</span>, <span class="st">"I"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setrowtype.html">setrowtype</a></span><span class="op">(</span><span class="st">"Products"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setcoltype.html">setcoltype</a></span><span class="op">(</span><span class="st">"Industries"</span><span class="op">)</span>
 
 <span class="co"># There is no EIOU, so U_feed is the same as U</span>
-<span class="no">U_feed</span> <span class="kw">&lt;-</span> <span class="no">U</span>
+<span class="va">U_feed</span> <span class="op">&lt;-</span> <span class="va">U</span>
 
-<span class="no">R_plus_V</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">10</span>,  <span class="fl">0</span>, <span class="fl">0</span>,
-               <span class="fl">0</span>, <span class="fl">10</span>, <span class="fl">0</span>,
-               <span class="fl">0</span>,  <span class="fl">0</span>, <span class="fl">4</span>),
-            <span class="kw">byrow</span> <span class="kw">=</span> <span class="fl">TRUE</span>, <span class="kw">nrow</span> <span class="kw">=</span> <span class="fl">3</span>, <span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">3</span>,
-            <span class="kw">dimnames</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"R1"</span>, <span class="st">"R2"</span>, <span class="st">"I"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"R1p"</span>, <span class="st">"R2p"</span>, <span class="st">"Ip"</span>))) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setrowtype.html">setrowtype</a></span>(<span class="st">"Industries"</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setcoltype.html">setcoltype</a></span>(<span class="st">"Products"</span>)
+<span class="va">R_plus_V</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">10</span>,  <span class="fl">0</span>, <span class="fl">0</span>,
+               <span class="fl">0</span>, <span class="fl">10</span>, <span class="fl">0</span>, 
+               <span class="fl">0</span>,  <span class="fl">0</span>, <span class="fl">4</span><span class="op">)</span>, 
+            byrow <span class="op">=</span> <span class="cn">TRUE</span>, nrow <span class="op">=</span> <span class="fl">3</span>, ncol <span class="op">=</span> <span class="fl">3</span>, 
+            dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"R1"</span>, <span class="st">"R2"</span>, <span class="st">"I"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"R1p"</span>, <span class="st">"R2p"</span>, <span class="st">"Ip"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setrowtype.html">setrowtype</a></span><span class="op">(</span><span class="st">"Industries"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setcoltype.html">setcoltype</a></span><span class="op">(</span><span class="st">"Products"</span><span class="op">)</span>
 
-<span class="no">Y</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>, <span class="fl">0</span>,
-              <span class="fl">0</span>, <span class="fl">0</span>,
-              <span class="fl">2</span>, <span class="fl">2</span>),
-            <span class="kw">byrow</span> <span class="kw">=</span> <span class="fl">TRUE</span>, <span class="kw">nrow</span> <span class="kw">=</span> <span class="fl">3</span>, <span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">2</span>,
-            <span class="kw">dimnames</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"R1p"</span>, <span class="st">"R2p"</span>, <span class="st">"Ip"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Y1"</span>, <span class="st">"Y2"</span>))) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setrowtype.html">setrowtype</a></span>(<span class="st">"Products"</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setcoltype.html">setcoltype</a></span>(<span class="st">"Industries"</span>)
+<span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>,
+              <span class="fl">0</span>, <span class="fl">0</span>, 
+              <span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>,
+            byrow <span class="op">=</span> <span class="cn">TRUE</span>, nrow <span class="op">=</span> <span class="fl">3</span>, ncol <span class="op">=</span> <span class="fl">2</span>,
+            dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"R1p"</span>, <span class="st">"R2p"</span>, <span class="st">"Ip"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Y1"</span>, <span class="st">"Y2"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setrowtype.html">setrowtype</a></span><span class="op">(</span><span class="st">"Products"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setcoltype.html">setcoltype</a></span><span class="op">(</span><span class="st">"Industries"</span><span class="op">)</span>
 
-<span class="no">RV</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/separate_RV.html">separate_RV</a></span>(<span class="kw">U</span> <span class="kw">=</span> <span class="no">U</span>, <span class="kw">R_plus_V</span> <span class="kw">=</span> <span class="no">R_plus_V</span>)
-<span class="no">R</span> <span class="kw">&lt;-</span> <span class="no">RV</span>$<span class="no">R</span>
-<span class="no">V</span> <span class="kw">&lt;-</span> <span class="no">RV</span>$<span class="no">V</span>
+<span class="va">RV</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/separate_RV.html">separate_RV</a></span><span class="op">(</span>U <span class="op">=</span> <span class="va">U</span>, R_plus_V <span class="op">=</span> <span class="va">R_plus_V</span><span class="op">)</span>
+<span class="va">R</span> <span class="op">&lt;-</span> <span class="va">RV</span><span class="op">$</span><span class="va">R</span>
+<span class="va">V</span> <span class="op">&lt;-</span> <span class="va">RV</span><span class="op">$</span><span class="va">V</span>
 
-<span class="no">S_units</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>,
-                    <span class="fl">1</span>,
-                    <span class="fl">1</span>),
-                  <span class="kw">byrow</span> <span class="kw">=</span> <span class="fl">TRUE</span>, <span class="kw">nrow</span> <span class="kw">=</span> <span class="fl">3</span>, <span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">1</span>,
-                  <span class="kw">dimnames</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"R1p"</span>, <span class="st">"R2p"</span>, <span class="st">"Ip"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"quad"</span>))) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setrowtype.html">setrowtype</a></span>(<span class="st">"Products"</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setcoltype.html">setcoltype</a></span>(<span class="st">"Units"</span>)</pre></body></html></div>
+<span class="va">S_units</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, 
+                    <span class="fl">1</span>, 
+                    <span class="fl">1</span><span class="op">)</span>, 
+                  byrow <span class="op">=</span> <span class="cn">TRUE</span>, nrow <span class="op">=</span> <span class="fl">3</span>, ncol <span class="op">=</span> <span class="fl">1</span>,
+                  dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"R1p"</span>, <span class="st">"R2p"</span>, <span class="st">"Ip"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"quad"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setrowtype.html">setrowtype</a></span><span class="op">(</span><span class="st">"Products"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setcoltype.html">setcoltype</a></span><span class="op">(</span><span class="st">"Units"</span><span class="op">)</span></code></pre></div>
 <p>The Sankey diagram for this simple ECC is given below.</p>
-<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span>(<span class="kw">R</span> <span class="kw">=</span> <span class="no">R</span>, <span class="kw">U</span> <span class="kw">=</span> <span class="no">U</span>, <span class="kw">V</span> <span class="kw">=</span> <span class="no">V</span>, <span class="kw">Y</span> <span class="kw">=</span> <span class="no">Y</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/magrittr/man/aliases.html">extract2</a></span>(<span class="st">"Sankey"</span>)</pre></body></html></div>
-<div id="htmlwidget-58fb7d126df677e2a405" style="width:672px;height:384px;" class="sankeyNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-58fb7d126df677e2a405">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[2,2,10,10]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>We can change the proportion of inputs to industry I using <code><a href="../reference/new_k_ps.html">new_k_ps()</a></code>. To do so, we must first calculate the input-output structure of the ECC using the <code><a href="../reference/calc_io_mats.html">calc_io_mats()</a></code> function. Then, we call the <code><a href="../reference/new_k_ps.html">new_k_ps()</a></code> function with a new k vector that indicates industry I now uses 75/25 mixture of <code>R1</code> and <code>R2</code> instead of a 50/50 split between <code>R1</code> and <code>R2</code>.</p>
-<div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="no">simple_iomats</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/calc_io_mats.html">calc_io_mats</a></span>(<span class="kw">R</span> <span class="kw">=</span> <span class="no">R</span>, <span class="kw">U</span> <span class="kw">=</span> <span class="no">U</span>, <span class="kw">U_feed</span> <span class="kw">=</span> <span class="no">U_feed</span>, <span class="kw">V</span> <span class="kw">=</span> <span class="no">V</span>, <span class="kw">Y</span> <span class="kw">=</span> <span class="no">Y</span>, <span class="kw">S_units</span> <span class="kw">=</span> <span class="no">S_units</span>)
-<span class="no">k_prime</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.75</span>,
-                    <span class="fl">0.25</span>),
-                  <span class="kw">byrow</span> <span class="kw">=</span> <span class="fl">TRUE</span>, <span class="kw">nrow</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">ncol</span> <span class="kw">=</span> <span class="fl">1</span>,
-                  <span class="kw">dimnames</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"R1p"</span>, <span class="st">"R2p"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"I"</span>))) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setrowtype.html">setrowtype</a></span>(<span class="st">"Products"</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setcoltype.html">setcoltype</a></span>(<span class="st">"Industries"</span>)
-<span class="no">change_input_proportions</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/new_k_ps.html">new_k_ps</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">simple_iomats</span>,
-                                       <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">R</span> <span class="kw">=</span> <span class="no">R</span>, <span class="kw">U</span> <span class="kw">=</span> <span class="no">U</span>, <span class="kw">V</span> <span class="kw">=</span> <span class="no">V</span>, <span class="kw">Y</span> <span class="kw">=</span> <span class="no">Y</span>,
-                                            <span class="kw">S_units</span> <span class="kw">=</span> <span class="no">S_units</span>,
-                                            <span class="kw">k_prime</span> <span class="kw">=</span> <span class="no">k_prime</span>)))
-<span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span>(<span class="kw">R</span> <span class="kw">=</span> <span class="no">change_input_proportions</span>$<span class="no">R_prime</span>,
-            <span class="kw">U</span> <span class="kw">=</span> <span class="no">change_input_proportions</span>$<span class="no">U_prime</span>,
-            <span class="kw">V</span> <span class="kw">=</span> <span class="no">change_input_proportions</span>$<span class="no">V_prime</span>,
-            <span class="kw">Y</span> <span class="kw">=</span> <span class="no">Y</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/magrittr/man/aliases.html">extract2</a></span>(<span class="st">"Sankey"</span>)</pre></body></html></div>
-<div id="htmlwidget-055f9de89dbdc693115d" style="width:672px;height:384px;" class="sankeyNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-055f9de89dbdc693115d">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[2,2,15,5]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>In response to the different demands from industry <code>I</code>, the rate of resource extraction from <code>R1</code> would need to grow, and the rate of resource extraction from supply <code>R2</code> would need to shrink. If there were additional upstream industries, they would also change in response to the new ratio of inputs to industry <code>I</code>.</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span><span class="op">(</span>R <span class="op">=</span> <span class="va">R</span>, U <span class="op">=</span> <span class="va">U</span>, V <span class="op">=</span> <span class="va">V</span>, Y <span class="op">=</span> <span class="va">Y</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html">extract2</a></span><span class="op">(</span><span class="st">"Sankey"</span><span class="op">)</span></code></pre></div>
+<div id="htmlwidget-3685dabc78830d0c36c4" style="width:672px;height:384px;" class="sankeyNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3685dabc78830d0c36c4">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[2,2,10,10]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>We can change the proportion of inputs to industry I using <code><a href="../reference/new_k_ps.html">new_k_ps()</a></code>. To do so, we must first calculate the input-output structure of the ECC using the <code><a href="../reference/calc_io_mats.html">calc_io_mats()</a></code> function. Then, we call the <code><a href="../reference/new_k_ps.html">new_k_ps()</a></code> function with a new k vector that indicates industry I now uses 75/25 mixture of <code>R1</code> and <code>R2</code> instead of a 50/50 split between <code>R1</code> and <code>R2</code>.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">simple_iomats</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_io_mats.html">calc_io_mats</a></span><span class="op">(</span>R <span class="op">=</span> <span class="va">R</span>, U <span class="op">=</span> <span class="va">U</span>, U_feed <span class="op">=</span> <span class="va">U_feed</span>, V <span class="op">=</span> <span class="va">V</span>, Y <span class="op">=</span> <span class="va">Y</span>, S_units <span class="op">=</span> <span class="va">S_units</span><span class="op">)</span>
+<span class="va">k_prime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.75</span>,
+                    <span class="fl">0.25</span><span class="op">)</span>, 
+                  byrow <span class="op">=</span> <span class="cn">TRUE</span>, nrow <span class="op">=</span> <span class="fl">2</span>, ncol <span class="op">=</span> <span class="fl">1</span>,
+                  dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"R1p"</span>, <span class="st">"R2p"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"I"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setrowtype.html">setrowtype</a></span><span class="op">(</span><span class="st">"Products"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/setcoltype.html">setcoltype</a></span><span class="op">(</span><span class="st">"Industries"</span><span class="op">)</span>
+<span class="va">change_input_proportions</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_k_ps.html">new_k_ps</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">simple_iomats</span>, 
+                                       <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>R <span class="op">=</span> <span class="va">R</span>, U <span class="op">=</span> <span class="va">U</span>, V <span class="op">=</span> <span class="va">V</span>, Y <span class="op">=</span> <span class="va">Y</span>, 
+                                            S_units <span class="op">=</span> <span class="va">S_units</span>, 
+                                            k_prime <span class="op">=</span> <span class="va">k_prime</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span><span class="op">(</span>R <span class="op">=</span> <span class="va">change_input_proportions</span><span class="op">$</span><span class="va">R_prime</span>, 
+            U <span class="op">=</span> <span class="va">change_input_proportions</span><span class="op">$</span><span class="va">U_prime</span>, 
+            V <span class="op">=</span> <span class="va">change_input_proportions</span><span class="op">$</span><span class="va">V_prime</span>, 
+            Y <span class="op">=</span> <span class="va">Y</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html">extract2</a></span><span class="op">(</span><span class="st">"Sankey"</span><span class="op">)</span></code></pre></div>
+<div id="htmlwidget-98c22e52e5eea94a2c58" style="width:672px;height:384px;" class="sankeyNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-98c22e52e5eea94a2c58">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[2,2,15,5]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>In response to the different demands from industry <code>I</code>, the rate of resource extraction from <code>R1</code> would need to grow, and the rate of resource extraction from supply <code>R2</code> would need to shrink. If there were additional upstream industries, they would also change in response to the new ratio of inputs to industry <code>I</code>.</p>
 </div>
 <div id="conclusion" class="section level2">
 <h2 class="hasAnchor">
@@ -457,17 +473,17 @@ The R2 industry makes product R2p. Industry I makes product Ip. Product Ip is co
 <li>
 <code><a href="../reference/new_k_ps.html">new_k_ps()</a></code> estimates changes upstream of inputs to an intermediate industry.</li>
 </ul>
-<p>The first of these functions (<code><a href="../reference/new_Y.html">new_Y()</a></code>) was demonstrated in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>. The second and third functions (<code><a href="../reference/new_R_ps.html">new_R_ps()</a></code> and <code><a href="../reference/new_k_ps.html">new_k_ps()</a></code>) are shown here for the first time.</p>
+<p>The first of these functions (<code><a href="../reference/new_Y.html">new_Y()</a></code>) was demonstrated in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>. The second and third functions (<code><a href="../reference/new_R_ps.html">new_R_ps()</a></code> and <code><a href="../reference/new_k_ps.html">new_k_ps()</a></code>) are shown here for the first time.</p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h2>
-<div id="refs" class="references">
-<div id="ref-Heun:2018">
-<p>Heun, Matthew Kuperus, Anne Owen, and Paul E. Brockway. 2018. “A Physical Supply-Use Table Framework for Energy Analysis on the Energy Conversion Chain.” <em>Applied Energy</em> 226 (September): 1134–62. <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">https://doi.org/10.1016/j.apenergy.2018.05.109</a>.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Heun:2018" class="csl-entry">
+Heun, Matthew Kuperus, Anne Owen, and Paul E. Brockway. 2018. <span>“A Physical Supply-Use Table Framework for Energy Analysis on the Energy Conversion Chain.”</span> <em>Applied Energy</em> 226 (September): 1134–62. <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">https://doi.org/10.1016/j.apenergy.2018.05.109</a>.
 </div>
-<div id="ref-Leontief:1941">
-<p>Leontief, Wassily W. 1941. <em>The Structure of American Economy, 1919-1929: An Empirical Application of Equilibrium Analysis</em>. Cambridge, Massachusetts: Harvard University Press.</p>
+<div id="ref-Leontief:1941" class="csl-entry">
+Leontief, Wassily W. 1941. <em>The Structure of <span>A</span>merican Economy, 1919-1929: An Empirical Application of Equilibrium Analysis</em>. Cambridge, Massachusetts: Harvard University Press.
 </div>
 </div>
 </div>
@@ -484,11 +500,11 @@ The R2 industry makes product R2p. Industry I makes product Ip. Product Ip is co
 
 
       <footer><div class="copyright">
-  <p>Developed by Matthew Heun.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

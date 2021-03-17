@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.24</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.32</span>
       </span>
     </div>
 
@@ -79,7 +79,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -111,7 +111,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/MatthewHeun/Recca/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -132,6 +132,121 @@
       <small>Source: <a href='https://github.com/MatthewHeun/Recca/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="recca-0132-2021-03-16" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.32">
+<a href="#recca-0132-2021-03-16" class="anchor"></a>Recca 0.1.32 (2021-03-16)</h1>
+<ul>
+<li>Modified aggregation functions to use simpler (but verbose) <code>if</code> statements to choose aggregation functions. This change works around an error when calling the aggregation functions from other packages.</li>
+<li>New tests for new code paths.
+<ul>
+<li>Now at 435 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul>
+</li>
+</ul>
+</div>
+    <div id="recca-0131-2021-02-25" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.31">
+<a href="#recca-0131-2021-02-25" class="anchor"></a>Recca 0.1.31 (2021-02-25)</h1>
+<ul>
+<li>New argument to aggregation functions: <code>pattern_type</code> which tells how to match primary and final demand sector names for aggregation.</li>
+<li>New tests for new feature.
+<ul>
+<li>Now 421 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul>
+</li>
+</ul>
+</div>
+    <div id="recca-0130-2021-02-22" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.30">
+<a href="#recca-0130-2021-02-22" class="anchor"></a>Recca 0.1.30 (2021-02-22)</h1>
+<ul>
+<li>Fixed bugs in <code><a href="../reference/finaldemand_aggregates.html">finaldemand_aggregates()</a></code> and <code><a href="../reference/finaldemand_aggregates_with_units.html">finaldemand_aggregates_with_units()</a></code> where argument <code>fd_sectors</code> was not respected for gross energy aggregation.</li>
+<li>New and revamped tests to guard against regression.
+<ul>
+<li>Now 417 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul>
+</li>
+</ul>
+</div>
+    <div id="recca-0129-2021-02-01" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.29">
+<a href="#recca-0129-2021-02-01" class="anchor"></a>Recca 0.1.29 (2021-02-01)</h1>
+<ul>
+<li>A <code>method_q_calculation</code> argument has been added to the <code><a href="../reference/calc_io_mats.html">calc_io_mats()</a></code> function. This enables to calculate the q vector using either a consumption-side or supply-side perspective.</li>
+</ul>
+</div>
+    <div id="recca-0128-2020-12-23" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.28">
+<a href="#recca-0128-2020-12-23" class="anchor"></a>Recca 0.1.28 (2020-12-23)</h1>
+<ul>
+<li>New function <code><a href="../reference/find_p_industry_names.html">find_p_industry_names()</a></code> looks at <code>R</code>, <code>V</code>, and <code>Y</code> matrices to find names of primary industries (industries that produce primary energy). The function looks for prefixes among row (<code>R</code> and <code>V</code>) and column (<code>Y</code>) names to identify primary industries.</li>
+<li>New tests for new function.
+<ul>
+<li>Now 416 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul>
+</li>
+</ul>
+</div>
+    <div id="recca-0127-2020-12-08" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.27">
+<a href="#recca-0127-2020-12-08" class="anchor"></a>Recca 0.1.27 (2020-12-08)</h1>
+<ul>
+<li>Move IEA aggregation functions out of this package and into the <code>IEATools</code> package.</li>
+<li>Now using package constants for names of aggregate columns. Column names match similar names in <code>IEATools</code>.</li>
+<li>Now using better function-matching and -selecting code in <code><a href="../reference/finaldemand_aggregates.html">finaldemand_aggregates()</a></code>
+</li>
+<li>Fewer tests due to moving some functions out of the package.
+<ul>
+<li>Now 411 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul>
+</li>
+</ul>
+</div>
+    <div id="recca-0126-2020-12-06" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.26">
+<a href="#recca-0126-2020-12-06" class="anchor"></a>Recca 0.1.26 (2020-12-06)</h1>
+<ul>
+<li>
+<code><a href="../reference/primary_aggregates.html">primary_aggregates()</a></code>, <code>finaldemand_aggregates(), and</code>finaldemand_aggregates_with_units()<code>now require a column of</code>p_industries<code>or</code>fd_sectors<code>instead of a vector    when a</code>.sutdata<code>is a data frame.   This change works around a problem with a common use case where    the caller would create the</code>fd_sectors<code>column from the column names of</code>Y` vectors in the data frame.</li>
+<li>Working to modernize the Recca code.
+<ul>
+<li>Use R markdown in documentation (<code>`term`</code> instead of <code>\code{term}</code>).</li>
+<li>Use package constants for column name arguments (<code>Recca::sankey_cols$sankey</code> instead of “Sankey”).</li>
+</ul>
+</li>
+<li>New tests for the new feature.
+<ul>
+<li>Now up to 413 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul>
+</li>
+</ul>
+</div>
+    <div id="recca-0125-2020-09-17" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.25">
+<a href="#recca-0125-2020-09-17" class="anchor"></a>Recca 0.1.25 (2020-09-17)</h1>
+<ul>
+<li>New author Emmanuel Aramendia. Welcome!</li>
+<li>Added tests for new features and old bugs.
+<ul>
+<li>Now up to 407 tests, all of which pass.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul>
+</li>
+<li>Test coverage now up to 100%.</li>
+<li>Created a new function <code><a href="../reference/calc_embodied_EIOU.html">calc_embodied_EIOU()</a></code> that calculates different embodied EIOU matrices for a given final demand</li>
+<li>Created a new function <code><a href="../reference/calc_erois.html">calc_erois()</a></code> that calculates different vector of product-level and industry-level EROIs using different assumptions.</li>
+<li>Created a new function <code><a href="../reference/calc_E_EIOU.html">calc_E_EIOU()</a></code> that calculates the <code>E_EIOU</code> matrix of EIOU energy use by unit of industry output, split by product. It also calculates the direct energy extension vector e_EIOU of total EIOU energy use by unit of industry output.</li>
+<li>Fixed a bug in one of the vignettes related to the move from <code>U_excl_EIOU</code> to <code>U_feed</code>.</li>
+<li>
+<code>prep_UK2000.R</code> and <code>prep_perfectsub.R</code> scripts fixed to work with <code>IEATools</code>, which now uses <code>U_feed</code> instead of <code>U_excl_EIOU</code>.</li>
+</ul>
+</div>
     <div id="recca-0124-2020-03-17" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.24">
 <a href="#recca-0124-2020-03-17" class="anchor"></a>Recca 0.1.24 (2020-03-17)</h1>
@@ -374,11 +489,11 @@ See <a href="https://github.com/awalker89/openxlsx/issues/393" class="uri">https
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Heun.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

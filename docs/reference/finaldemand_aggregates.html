@@ -42,7 +42,9 @@
 <meta property="og:title" content="Final demand aggregate energy — finaldemand_aggregates" />
 <meta property="og:description" content="Calculates aggregate final demand energy from a data frame of Supply-Use matrices.
 The calculation includes non-energy uses if they are present in the final demand matrix.
-The calculation does not include balancing items (Losses and Statistical differences)." />
+The calculation does not include balancing items (Losses and Statistical differences).
+If .sutdata is a data frame, fd_sectors should be the name of a column in the data frame.
+If .sutdata is NULL, fd_sectors can be a single vector of industry names." />
 
 
 
@@ -74,7 +76,7 @@ The calculation does not include balancing items (Losses and Statistical differe
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.24</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.32</span>
       </span>
     </div>
 
@@ -82,7 +84,7 @@ The calculation does not include balancing items (Losses and Statistical differe
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -114,7 +116,7 @@ The calculation does not include balancing items (Losses and Statistical differe
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/MatthewHeun/Recca/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -139,66 +141,80 @@ The calculation does not include balancing items (Losses and Statistical differe
     <div class="ref-description">
     <p>Calculates aggregate final demand energy from a data frame of Supply-Use matrices.
 The calculation includes non-energy uses if they are present in the final demand matrix.
-The calculation does not include balancing items (Losses and Statistical differences).</p>
+The calculation does not include balancing items (Losses and Statistical differences).
+If <code>.sutdata</code> is a data frame, <code>fd_sectors</code> should be the name of a column in the data frame.
+If <code>.sutdata</code> is <code>NULL</code>, <code>fd_sectors</code> can be a single vector of industry names.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>finaldemand_aggregates</span>(
-  <span class='no'>.sutdata</span>,
-  <span class='no'>fd_sectors</span>,
-  <span class='kw'>U</span> <span class='kw'>=</span> <span class='st'>"U"</span>,
-  <span class='kw'>Y</span> <span class='kw'>=</span> <span class='st'>"Y"</span>,
-  <span class='kw'>r_EIOU</span> <span class='kw'>=</span> <span class='st'>"r_EIOU"</span>,
-  <span class='kw'>by</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Total"</span>, <span class='st'>"Product"</span>, <span class='st'>"Sector"</span>),
-  <span class='kw'>net_aggregate_demand</span> <span class='kw'>=</span> <span class='st'>"EX_fd_net.ktoe"</span>,
-  <span class='kw'>gross_aggregate_demand</span> <span class='kw'>=</span> <span class='st'>"EX_fd_gross.ktoe"</span>
-)</pre>
+    <pre class="usage"><span class='fu'>finaldemand_aggregates</span><span class='op'>(</span>
+  <span class='va'>.sutdata</span>,
+  <span class='va'>fd_sectors</span>,
+  pattern_type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"exact"</span>, <span class='st'>"leading"</span>, <span class='st'>"trailing"</span>, <span class='st'>"anywhere"</span><span class='op'>)</span>,
+  U <span class='op'>=</span> <span class='fu'>Recca</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>U</span>,
+  Y <span class='op'>=</span> <span class='fu'>Recca</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>Y</span>,
+  r_EIOU <span class='op'>=</span> <span class='fu'>Recca</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>r_eiou</span>,
+  by <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Total"</span>, <span class='st'>"Product"</span>, <span class='st'>"Sector"</span><span class='op'>)</span>,
+  net_aggregate_demand <span class='op'>=</span> <span class='fu'>Recca</span><span class='fu'>::</span><span class='va'><a href='aggregate_cols.html'>aggregate_cols</a></span><span class='op'>$</span><span class='va'>net_aggregate_demand</span>,
+  gross_aggregate_demand <span class='op'>=</span> <span class='fu'>Recca</span><span class='fu'>::</span><span class='va'><a href='aggregate_cols.html'>aggregate_cols</a></span><span class='op'>$</span><span class='va'>gross_aggregate_demand</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.sutdata</th>
-      <td><p>a data frame with columns of matrices from a supply-use analysis.</p></td>
+      <td><p>A data frame with columns of matrices from a supply-use analysis.</p></td>
     </tr>
     <tr>
       <th>fd_sectors</th>
-      <td><p>a vector of names of sectors in final demand.</p></td>
+      <td><p>A vector of names of sectors in final demand.
+Names should include columns in the <code>Y</code> and <code>U_EIOU</code> matrices
+to cover both net (in <code>Y</code>) and gross (in <code>Y</code> and <code>U_EIOU</code>) final demand.</p></td>
     </tr>
     <tr>
-      <th>U</th>
-      <td><p>use (<code>U</code>) matrix or name of the column in <code>.sutdata</code> containing same</p></td>
+      <th>pattern_type</th>
+      <td><p>One of "exact", "leading", "trailing", or "anywhere" which specifies
+how matches are made for <code>fd_sectors</code>.
+If "exact", exact matches specify the sectors to be aggregated.
+If "leading", sectors are aggregated if any entry in <code>fd_sectors</code> matches the leading part of a final demand sector's name.
+If "trailing", sectors are aggregated if any entry in <code>fd_sectors</code> matches the trailing part of a final demand sector's name.
+If "anywhere", sectors are aggregated if any entry in <code>fd_sectors</code> matches any part of a final demand sector's name.
+Default is "exact".</p></td>
     </tr>
     <tr>
-      <th>Y</th>
-      <td><p>final demand (<code>Y</code>) matrix or name of the column in <code>.sutdata</code> containing same</p></td>
-    </tr>
-    <tr>
-      <th>r_EIOU</th>
-      <td><p>matrix of ratios of EIOU for the make (<code>U</code>) matrix or name of the column in <code>.sutdata</code> containing same</p></td>
+      <th>U, Y, r_EIOU</th>
+      <td><p>See <code><a href='psut_cols.html'>Recca::psut_cols</a></code>.</p></td>
     </tr>
     <tr>
       <th>by</th>
-      <td><p>one of "Product", "Sector", or "Total" to indicate the desired aggregation:
+      <td><p>One of "Product", "Sector", or "Total" to indicate the desired aggregation:
 "Product" for aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.),
 "Sector" for aggregation by final demand sector (Agriculture/forestry, Domestic navigation, etc.), or
 "Total" for aggregation over both Product and Sector (the default).</p></td>
     </tr>
     <tr>
-      <th>net_aggregate_demand</th>
-      <td><p>the name of net energy demand on output.
-Each entry is <code>sumall(Y_fd)</code>.</p></td>
-    </tr>
-    <tr>
-      <th>gross_aggregate_demand</th>
-      <td><p>the name of gross energy demand on output.
-Each entry is calculated by <code>sumall(Y_fd)</code> + <code>sumall(U_EIOU)</code>.</p></td>
+      <th>net_aggregate_demand, gross_aggregate_demand</th>
+      <td><p>See <code><a href='aggregate_cols.html'>Recca::aggregate_cols</a></code>.
+Net energy demand is calculated by <code>sumall(Y_fd)</code>.
+Gross energy demand is calculated by <code>sumall(Y_fd) + sumall(U_EIOU)</code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a list or data frame containing <code>net_aggregate_demand</code> and <code>gross_aggregate_demand</code></p>
+    <p>A list or data frame containing <code>net_aggregate_demand</code> and <code>gross_aggregate_demand</code> columns.</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/MatthewHeun/matsbyname'>matsbyname</a></span><span class='op'>)</span>
+<span class='va'>UKEnergy2000mats</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>tidyr</span><span class='fu'>::</span><span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_wider.html'>pivot_wider</a></span><span class='op'>(</span>names_from <span class='op'>=</span> <span class='st'>"matrix.name"</span>, values_from <span class='op'>=</span> <span class='st'>"matrix"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>
+    fd_sectors <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Residential"</span>, <span class='st'>"Transport"</span><span class='op'>)</span><span class='op'>)</span>, times <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>.</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>Last.stage</span> <span class='op'>%in%</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='https://rdrr.io/pkg/IEATools/man/last_stages.html'>last_stages</a></span><span class='op'>$</span><span class='va'>final</span>,
+                                  <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='https://rdrr.io/pkg/IEATools/man/last_stages.html'>last_stages</a></span><span class='op'>$</span><span class='va'>useful</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>finaldemand_aggregates</span><span class='op'>(</span>fd_sectors <span class='op'>=</span> <span class='st'>"fd_sectors"</span>, by <span class='op'>=</span> <span class='st'>"Sector"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in finaldemand_aggregates(., fd_sectors = "fd_sectors", by = "Sector"): unused arguments (fd_sectors = "fd_sectors", by = "Sector")</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -210,11 +226,11 @@ Each entry is calculated by <code>sumall(Y_fd)</code> + <code>sumall(U_EIOU)</co
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Heun.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

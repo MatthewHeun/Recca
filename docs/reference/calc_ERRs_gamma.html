@@ -76,7 +76,7 @@ Applied Energy, vol 226, pp. 1134-1162." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.24</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.32</span>
       </span>
     </div>
 
@@ -84,7 +84,7 @@ Applied Energy, vol 226, pp. 1134-1162." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -116,7 +116,7 @@ Applied Energy, vol 226, pp. 1134-1162." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/MatthewHeun/Recca/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -146,17 +146,17 @@ A physical supply-use table framework for energy analysis on the energy conversi
 Applied Energy, vol 226, pp. 1134-1162.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>calc_ERRs_gamma</span>(
-  <span class='no'>.sutmats</span>,
-  <span class='kw'>U</span> <span class='kw'>=</span> <span class='st'>"U"</span>,
-  <span class='kw'>r_EIOU</span> <span class='kw'>=</span> <span class='st'>"r_EIOU"</span>,
-  <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>,
-  <span class='kw'>g</span> <span class='kw'>=</span> <span class='st'>"g"</span>,
-  <span class='kw'>S_units</span> <span class='kw'>=</span> <span class='st'>"S_units"</span>,
-  <span class='kw'>ger_gamma</span> <span class='kw'>=</span> <span class='st'>"ger_gamma"</span>,
-  <span class='kw'>ner_gamma</span> <span class='kw'>=</span> <span class='st'>"ner_gamma"</span>,
-  <span class='kw'>r_gamma</span> <span class='kw'>=</span> <span class='st'>"r_gamma"</span>
-)</pre>
+    <pre class="usage"><span class='fu'>calc_ERRs_gamma</span><span class='op'>(</span>
+  <span class='va'>.sutmats</span>,
+  U <span class='op'>=</span> <span class='st'>"U"</span>,
+  r_EIOU <span class='op'>=</span> <span class='st'>"r_EIOU"</span>,
+  V <span class='op'>=</span> <span class='st'>"V"</span>,
+  g <span class='op'>=</span> <span class='st'>"g"</span>,
+  S_units <span class='op'>=</span> <span class='st'>"S_units"</span>,
+  ger_gamma <span class='op'>=</span> <span class='st'>"ger_gamma"</span>,
+  ner_gamma <span class='op'>=</span> <span class='st'>"ner_gamma"</span>,
+  r_gamma <span class='op'>=</span> <span class='st'>"r_gamma"</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -209,12 +209,13 @@ iff the units for inputs and outputs for that industry are unit-homogeneous.
 If units for inputs or outputs are heterogeneous for an industry, <code>NA</code> is the result.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>tidyr</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>Recca</span>)
-<span class='no'>UKEnergy2000mats</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='st'>"matrix.name"</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='st'>"matrix"</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='calc_io_mats.html'>calc_io_mats</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>calc_ERRs_gamma</span>()</div><div class='output co'>#&gt;   Country Year Energy.type Last.stage                  R
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyr.tidyverse.org'>tidyr</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/MatthewHeun/Recca'>Recca</a></span><span class='op'>)</span>
+<span class='va'>UKEnergy2000mats</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span><span class='op'>(</span>key <span class='op'>=</span> <span class='st'>"matrix.name"</span>, value <span class='op'>=</span> <span class='st'>"matrix"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='calc_io_mats.html'>calc_io_mats</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>calc_ERRs_gamma</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   Country Year Energy.type Last.stage                  R
 #&gt; 1     GBR 2000           E      Final 50000, 0, 0, 43000
 #&gt; 2     GBR 2000           E   Services 50000, 0, 0, 43000
 #&gt; 3     GBR 2000           E     Useful 50000, 0, 0, 43000
@@ -375,11 +376,11 @@ If units for inputs or outputs are heterogeneous for an industry, <code>NA</code
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Heun.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

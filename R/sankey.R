@@ -7,17 +7,14 @@
 #'
 #' At present, this function uses the `networkD3` package to draw the Sankey diagram.
 #'
-#' If any of \code{R}, \code{U}, \code{V}, or \code{Y} is \code{NA}, \code{NA} is returned.
+#' If any of `R`, `U`, `V`, or `Y` is `NA`, `NA` is returned.
 #'
-#' @param .sutmats an optional data frame
-#' @param R a resource matrix or the name of the column in \code{.sutmats} containing \code{R} matrices
-#' @param U a use matrix or the name of the column in \code{.sutmats} containing \code{U} matrices
-#' @param V a make matrix or the name of the column in \code{.sutmats} containing \code{V} matrices
-#' @param Y a final demand matrix or the name of the column in \code{.sutmats} containing \code{Y} matrices
+#' @param .sutmats an optional wide-by-matrices data frame
+#' @param R,U,V,Y See `Recca::psut_cols`.
 #' @param simplify_edges a boolean which tells whether edges should be simplified.
-#'        Applies to every row of \code{.sutmats} if \code{.sutmats} is specified.
-#' @param sankey the name of the output Sankey diagram or the name of the column in \code{.sutmats} containing Sankey diagrams
-#' @param ... Arguments passed to `networkD3::sankeyNetwork()`.
+#'        Applies to every row of `.sutmats` if `.sutmats` is specified.
+#' @param sankey See `Recca::sankey_cols`.
+#' @param ... Arguments passed to `networkD3::sankeyNetwork()`, mostly for formatting purposes.
 #'
 #' @return a Sankey diagram
 #'
@@ -33,8 +30,14 @@
 #'   make_sankey() %>%
 #'   extract2("Sankey") %>%
 #'   extract2(1)
-make_sankey <- function(.sutmats = NULL, R = "R", U = "U", V = "V", Y = "Y", simplify_edges = TRUE,
-                        sankey = "Sankey", ...){
+make_sankey <- function(.sutmats = NULL,
+                        R = Recca::psut_cols$R,
+                        U = Recca::psut_cols$U,
+                        V = Recca::psut_cols$V,
+                        Y = Recca::psut_cols$Y,
+                        simplify_edges = TRUE,
+                        sankey = Recca::sankey_cols$sankey,
+                        ...){
   sankey_func <- function(R_mat = NULL, U_mat, V_mat, Y_mat){
     # Check for NA values. If any NA values are found, need to return NA.
     # But we can't check R_mat for NA if it is NULL.
@@ -59,12 +62,7 @@ make_sankey <- function(.sutmats = NULL, R = "R", U = "U", V = "V", Y = "Y", sim
     s <- networkD3::sankeyNetwork(Links = el, Nodes = nl,
                        Source = "From_node_id", Target = "To_node_id", Value = "Value",
                        NodeID = "Node",
-                       ...
-                       # units = "Quads",
-                       # LinkGroup = "type",
-                       # colourScale = mycolor, fontSize = 20, nodeWidth = 30,
-                       # iterations = 500, nodePadding = 14, fontSize = 20
-                       )
+                       ...)
     list(s) %>% magrittr::set_names(sankey)
   }
   matsindf::matsindf_apply(.sutmats, FUN = sankey_func, R_mat = R, U_mat = U, V_mat = V, Y_mat = Y)

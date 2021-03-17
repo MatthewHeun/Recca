@@ -316,3 +316,106 @@ calc_embodied_etas <- function(.embodiedmats = NULL,
   }
   matsindf::matsindf_apply(.embodiedmats, FUN = eta_func, Y_mat = Y, G_mat = G, H_mat = H)
 }
+
+
+#' Calculate various embodied EIOU matrices
+#'
+#'This function calculates different embodied Energy Industry Own Use (EIOU) matrices (see details) for a given energy conversion chain
+#'and final demand, using a data frame of input-output matrices in the physical supply-use table (PSUT) format.
+#'
+#'The argument `.iomats` should be a wide-by-matrices data frame, obtained combining the `calc_iomats()` and `calc_E_EIOU()`
+#'functions as described in the example.
+#'
+#' This function adds many additional columns to `.iomats`, each one containing particular embodied EIOU matrices.
+#'
+#' The embodied EIOU matrices are calculated either:
+#' * by final demand sector (subscript "_s" appears in the name);
+#' * by final demand products (subscript "_p" appears in the name);
+#' * including only EIOU required for feedstock inputs production (subscript "_feed" appears in the name);
+#' * including both EIOU required for feedstock and EIOU inputs production (no additional subscript).
+#'
+#' Note: All matrix multiplication (`%*%`) is performed "by name" using
+#' `matsbyname::matrixproduct_byname()`.
+#'
+#'Output columns include:
+#' * `Q_EIOU_s`: matrix of embodied EIOU by final demand sectors, including both energy use for feedstock and EIOU production.
+#'   `Q_EIOU_s` is calculated by `e_EIOU_hat %*% L_ixp %*% Y`.
+#' * `Q_EIOU_p`: matrix of embodied EIOU by final demand products, including both energy use for feedstock and EIOU production.
+#'   `Q_EIOU_p` is calculated by `e_EIOU_hat %*% L_ixp %*% y_hat`.
+#' * `Q_EIOU_feed_s`: matrix of embodied EIOU by final demand sectors, including only energy use for feedstock production.
+#'   `Q_EIOU_feed_s` is calculated by `e_EIOU_hat %*% L_ixp_feed %*% Y`.
+#' * `Q_EIOU_feed_p`: matrix of embodied EIOU by final demand products, including only energy use for feedstock production.
+#'   `Q_EIOU_feed_p` is calculated by `e_EIOU_hat %*% L_ixp_feed %*% y_hat`.
+#'
+#' @param .iomats A wide-by-matrices data frame containing matrices that describe the Input-Output structure
+#' (using the supply-use table format) of an Energy Conversion Chain.
+#' `.iomats` will likely have been obtained combining the `calc_io_mats()` and `calc_E_EIOU()` functions.
+#' See the example.?c
+#' @param e_EIOU The name of the column containing the direct energy use extension vector.
+#'               Default is "e_EIOU".
+#' @param Y The name of the column containing final demand `Y` matrices in `.iomats`.
+#'          Default is "Y".
+#' @param y The name of the column containing total final demand by product `y` vectors in `iomats`.
+#'          Default is "y".
+#' @param L_ixp The name of the column containing `L_ixp` matrices in `.iomats`.
+#'              Default is "L_ixp".
+#' @param L_ixp_feed The name of the column containing `L_ixp_feed` matrix in `.iomats`.
+#'                   Default is "L_ixp_feed".
+#' @param Q_EIOU_s The name of the output column containing the EIOU embodied by final demand sectors, including both energy use for feedstock and EIOU production.
+#'                 Default is "Q_EIOU_s".
+#' @param Q_EIOU_p The name of the output column containing the EIOU embodied by final demand products, including both energy use for feedstock and EIOU production.
+#'                 Default is "Q_EIOU_p".
+#' @param Q_EIOU_feed_s The name of the output column containing the EIOU embodied by final demand sectors, including only energy use for feedstock production.
+#'                 Default is "Q_EIOU_feed_s".
+#' @param Q_EIOU_feed_p The name of the output column containing the EIOU embodied by final demand products, including only energy use for feedstock production.
+#'                 Default is "Q_EIOU_feed_p".
+#'
+#' @return A data frame that contains several embodied EIOU matrices in added columns.
+#'         See description for details.
+#'
+#' @export
+#'
+#' @examples
+#' library(IEATools)
+#' UKEnergy2000mats %>%
+#'   tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") %>%
+#'   calc_io_mats() %>%
+#'   calc_E_EIOU() %>%
+#'   calc_embodied_EIOU()
+calc_embodied_EIOU <- function(.iomats = NULL,
+                               # Input names
+                               e_EIOU = "e_EIOU",
+                               Y = "Y", y = "y",
+                               L_ixp = "L_ixp", L_ixp_feed = "L_ixp_feed",
+                               # Output names
+                               #G = "G", H = "H", G_feed = "G_feed", H_feed = "H_feed",
+                               Q_EIOU_s = "Q_EIOU_s", Q_EIOU_p = "Q_EIOU_p",
+                               Q_EIOU_feed_s = "Q_EIOU_feed_s", Q_EIOU_feed_p = "Q_EIOU_feed_p"
+                               ){
+
+  embodied_EIOU_func <- function(e_EIOU_vec, y_vec, Y_mat, L_ixp_mat, L_ixp_feed_mat){
+
+    e_EIOU_hat_vec <- matsbyname::hatize_byname(e_EIOU_vec)
+    y_hat_vec <- matsbyname::hatize_byname(y_vec)
+
+
+    Q_EIOU_p_mat <- matsbyname::matrixproduct_byname(e_EIOU_hat_vec,
+                                                     matsbyname::matrixproduct_byname(L_ixp_mat, y_hat_vec))
+
+    Q_EIOU_s_mat <- matsbyname::matrixproduct_byname(e_EIOU_hat_vec,
+                                                     matsbyname::matrixproduct_byname(L_ixp_mat, Y_mat))
+
+
+    Q_EIOU_feed_p_mat <- matsbyname::matrixproduct_byname(e_EIOU_hat_vec,
+                                                          matsbyname::matrixproduct_byname(L_ixp_feed_mat, y_hat_vec))
+    Q_EIOU_feed_s_mat <-matsbyname::matrixproduct_byname(e_EIOU_hat_vec,
+                                                          matsbyname::matrixproduct_byname(L_ixp_feed_mat, Y_mat))
+
+    list(Q_EIOU_p_mat, Q_EIOU_s_mat, Q_EIOU_feed_p_mat, Q_EIOU_feed_s_mat) %>%
+      magrittr::set_names(c(Q_EIOU_p, Q_EIOU_s, Q_EIOU_feed_p, Q_EIOU_feed_s))
+
+  }
+  matsindf::matsindf_apply(.iomats, FUN = embodied_EIOU_func, e_EIOU_vec = e_EIOU, Y_mat = Y, y_vec = y,
+                           L_ixp_mat = L_ixp, L_ixp_feed_mat = L_ixp_feed)
+}
+# EAR, 11/09/2020

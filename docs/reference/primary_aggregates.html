@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.24</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.32</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -112,7 +112,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/MatthewHeun/Recca/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -138,15 +138,16 @@
     <p>Calculates aggregate primary energy from a data frame of Supply-Use matrices.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>primary_aggregates</span>(
-  <span class='no'>.sutdata</span>,
-  <span class='no'>p_industries</span>,
-  <span class='kw'>R</span> <span class='kw'>=</span> <span class='st'>"R"</span>,
-  <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>,
-  <span class='kw'>Y</span> <span class='kw'>=</span> <span class='st'>"Y"</span>,
-  <span class='kw'>by</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Total"</span>, <span class='st'>"Product"</span>, <span class='st'>"Flow"</span>),
-  <span class='kw'>aggregate_primary</span> <span class='kw'>=</span> <span class='st'>"EX_p.ktoe"</span>
-)</pre>
+    <pre class="usage"><span class='fu'>primary_aggregates</span><span class='op'>(</span>
+  <span class='va'>.sutdata</span>,
+  <span class='va'>p_industries</span>,
+  pattern_type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"exact"</span>, <span class='st'>"leading"</span>, <span class='st'>"trailing"</span>, <span class='st'>"anywhere"</span><span class='op'>)</span>,
+  R <span class='op'>=</span> <span class='fu'>Recca</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>R</span>,
+  V <span class='op'>=</span> <span class='fu'>Recca</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>V</span>,
+  Y <span class='op'>=</span> <span class='fu'>Recca</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>Y</span>,
+  by <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Total"</span>, <span class='st'>"Product"</span>, <span class='st'>"Flow"</span><span class='op'>)</span>,
+  aggregate_primary <span class='op'>=</span> <span class='fu'>Recca</span><span class='fu'>::</span><span class='va'><a href='aggregate_cols.html'>aggregate_cols</a></span><span class='op'>$</span><span class='va'>aggregate_primary</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -157,42 +158,61 @@
     </tr>
     <tr>
       <th>p_industries</th>
-      <td><p>a vector of names of industries to be aggregated as "primary".
-These industries will appear in rows of the resource (<code>R</code>) and make (<code>V</code>) matrices and
+      <td><p>a vector of names of industries to be aggregated as "primary."
+If <code>.sutdata</code> is a data frame, <code>p_industries</code> should be the name of a column in the data frame.
+If <code>.sutdata</code> is <code>NULL</code>, <code>p_industries</code> can be a single vector of industry names.
+These industries in <code>p_industries</code> will appear in rows of the resource (<code>R</code>) and make (<code>V</code>) matrices and
 columns of the final demand matrix (<code>Y</code>).
 Entries in <code>Y_p</code> will be subtracted from entries in <code>R_p + V_p</code> to obtain
-the total primary energy aggregate.</p></td>
+the total primary energy aggregate,
+where <code>*_p</code> is the primary part of those matrices.
+The function <code><a href='find_p_industry_names.html'>find_p_industry_names()</a></code> might be helpful to find
+primary industry names if they can be identified by prefixes.</p></td>
     </tr>
     <tr>
-      <th>R</th>
-      <td><p>resources (<code>R</code>) matrix or the name of the column in <code>.sutdata</code> containing same</p></td>
+      <th>pattern_type</th>
+      <td><p>One of "exact", "leading", "trailing", or "anywhere" which specifies
+how matches are made for <code>fd_sectors</code>.
+If "exact", exact matches specify the sectors to be aggregated.
+If "leading", sectors are aggregated if any entry in <code>fd_sectors</code> matches the leading part of a final demand sector's name.
+If "trailing", sectors are aggregated if any entry in <code>fd_sectors</code> matches the trailing part of a final demand sector's name.
+If "anywhere", sectors are aggregated if any entry in <code>fd_sectors</code> matches any part of a final demand sector's name.
+Default is "leading" to enable primary industries such as "Resources [of Crude oil]".</p></td>
     </tr>
     <tr>
-      <th>V</th>
-      <td><p>make (<code>V</code>) matrix or the name of the column in <code>.sutdata</code> containing same</p></td>
-    </tr>
-    <tr>
-      <th>Y</th>
-      <td><p>final demand (<code>Y</code>) matrix or the name of the column in <code>.sutdata</code> containing same</p></td>
+      <th>R, V, Y</th>
+      <td><p>See <code><a href='psut_cols.html'>Recca::psut_cols</a></code>.</p></td>
     </tr>
     <tr>
       <th>by</th>
-      <td><p>one of <code>Total</code>, <code>Product</code>, or <code>Flow</code> to indicate the desired aggregation:</p><ul>
-<li><p><code>Total</code>: aggregation over both Product and Flow (the default)</p></li>
-<li><p><code>Product</code>: aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.)</p></li>
-<li><p><code>Flow</code>: aggregation by type of flow (Production, Imports, Exports, etc.)</p></li>
+      <td><p>One of "Total", "Product", or "Flow" to indicate the desired aggregation:</p><ul>
+<li><p>"Total": aggregation over both Product and Flow (the default)</p></li>
+<li><p>"Product": aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.)</p></li>
+<li><p>"Flow": aggregation by type of flow (Production, Imports, Exports, etc.)</p></li>
 </ul></td>
     </tr>
     <tr>
       <th>aggregate_primary</th>
-      <td><p>the name for aggregates of primary energy on output</p></td>
+      <td><p>The name for aggregates of primary energy on output.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a list or data frame containing aggregate primary energy</p>
+    <p>A list or data frame containing aggregate primary energy.</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/MatthewHeun/matsbyname'>matsbyname</a></span><span class='op'>)</span>
+<span class='va'>p_industries</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Resources - Crude"</span>, <span class='st'>"Resources - NG"</span><span class='op'>)</span>
+<span class='co'># Calculate primary total aggregates</span>
+<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='va'>UKEnergy2000mats</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>tidyr</span><span class='fu'>::</span><span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_wider.html'>pivot_wider</a></span><span class='op'>(</span>names_from <span class='op'>=</span> <span class='st'>"matrix.name"</span>, values_from <span class='op'>=</span> <span class='st'>"matrix"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>
+    p_industries <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>p_industries</span><span class='op'>)</span>, times <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>.</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>primary_aggregates</span><span class='op'>(</span>p_industries <span class='op'>=</span> <span class='st'>"p_industries"</span>, by <span class='op'>=</span> <span class='st'>"Total"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in primary_aggregates(., p_industries = "p_industries", by = "Total"): unused arguments (p_industries = "p_industries", by = "Total")</span></div><div class='input'><span class='va'>res</span><span class='op'>[[</span><span class='fu'>Recca</span><span class='fu'>::</span><span class='va'><a href='aggregate_cols.html'>aggregate_cols</a></span><span class='op'>$</span><span class='va'>aggregate_primary</span><span class='op'>]</span><span class='op'>]</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'res' not found</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -204,11 +224,11 @@ the total primary energy aggregate.</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Heun.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
