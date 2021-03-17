@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.31</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.32</span>
       </span>
     </div>
 
@@ -132,9 +132,22 @@
       <small>Source: <a href='https://github.com/MatthewHeun/Recca/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="recca-0131-2020-02-25" class="section level1">
+    <div id="recca-0132-2021-03-16" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.32">
+<a href="#recca-0132-2021-03-16" class="anchor"></a>Recca 0.1.32 (2021-03-16)</h1>
+<ul>
+<li>Modified aggregation functions to use simpler (but verbose) <code>if</code> statements to choose aggregation functions. This change works around an error when calling the aggregation functions from other packages.</li>
+<li>New tests for new code paths.
+<ul>
+<li>Now at 435 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul>
+</li>
+</ul>
+</div>
+    <div id="recca-0131-2021-02-25" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.31">
-<a href="#recca-0131-2020-02-25" class="anchor"></a>Recca 0.1.31 (2020-02-25)</h1>
+<a href="#recca-0131-2021-02-25" class="anchor"></a>Recca 0.1.31 (2021-02-25)</h1>
 <ul>
 <li>New argument to aggregation functions: <code>pattern_type</code> which tells how to match primary and final demand sector names for aggregation.</li>
 <li>New tests for new feature.
@@ -145,9 +158,9 @@
 </li>
 </ul>
 </div>
-    <div id="recca-0130-2020-02-22" class="section level1">
+    <div id="recca-0130-2021-02-22" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.30">
-<a href="#recca-0130-2020-02-22" class="anchor"></a>Recca 0.1.30 (2020-02-22)</h1>
+<a href="#recca-0130-2021-02-22" class="anchor"></a>Recca 0.1.30 (2021-02-22)</h1>
 <ul>
 <li>Fixed bugs in <code><a href="../reference/finaldemand_aggregates.html">finaldemand_aggregates()</a></code> and <code><a href="../reference/finaldemand_aggregates_with_units.html">finaldemand_aggregates_with_units()</a></code> where argument <code>fd_sectors</code> was not respected for gross energy aggregation.</li>
 <li>New and revamped tests to guard against regression.
@@ -158,9 +171,9 @@
 </li>
 </ul>
 </div>
-    <div id="recca-0129-2020-02-01" class="section level1">
+    <div id="recca-0129-2021-02-01" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.29">
-<a href="#recca-0129-2020-02-01" class="anchor"></a>Recca 0.1.29 (2020-02-01)</h1>
+<a href="#recca-0129-2021-02-01" class="anchor"></a>Recca 0.1.29 (2021-02-01)</h1>
 <ul>
 <li>A <code>method_q_calculation</code> argument has been added to the <code><a href="../reference/calc_io_mats.html">calc_io_mats()</a></code> function. This enables to calculate the q vector using either a consumption-side or supply-side perspective.</li>
 </ul>
