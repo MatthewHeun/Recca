@@ -68,11 +68,6 @@ primary_aggregates <- function(.sutdata,
   pattern_type <- match.arg(pattern_type)
   by <- match.arg(by)
 
-  # Figure out which function we need to use.
-  aggfuncs <- list(Total = "sumall_byname", Product = "rowsums_byname", Flow = "colsums_byname")
-  agg_func <- get(aggfuncs[[by]], envir = as.environment("package:matsbyname"))
-
-
   prim_func <- function(p_industries_vec, R_mat = NULL, V_mat, Y_mat){
     # Look for primary industries in each of R, V, and Y matrices
     RT_p <- matsbyname::transpose_byname(R_mat) %>%
@@ -86,7 +81,18 @@ primary_aggregates <- function(.sutdata,
                                                       matsbyname::make_pattern(row_col_names = p_industries_vec, pattern_type = pattern_type))
     # TPES in product x industry matrix format is RT_p + VT_p - Y_p.
     RVT_p_minus_Y_p <- matsbyname::sum_byname(RT_p, VT_p) %>% matsbyname::difference_byname(Y_p)
-    agg_primary <- agg_func(RVT_p_minus_Y_p)
+
+    # Use the right function for the requested aggregation
+    if (by == "Total") {
+      agg_primary <- matsbyname::sumall_byname(RVT_p_minus_Y_p)
+    } else if (by == "Product") {
+      agg_primary <- matsbyname::rowsums_byname(RVT_p_minus_Y_p)
+    } else if (by == "Flow") {
+      agg_primary <- matsbyname::colsums_byname(RVT_p_minus_Y_p)
+    }
+    # No need for a last "else" clause, because match.arg ensures we have only one of
+    # "Total", "Product", or "Flow".
+
     list(agg_primary) %>% magrittr::set_names(aggregate_primary)
   }
   matsindf::matsindf_apply(.sutdata, FUN = prim_func, p_industries_vec = p_industries, R_mat = R, V_mat = V, Y_mat = Y)
@@ -155,21 +161,39 @@ finaldemand_aggregates <- function(.sutdata,
   pattern_type <- match.arg(pattern_type)
   by <- match.arg(by)
 
-  # Decide which aggregation function to use
-  aggfuncs <- list(Total = "sumall_byname", Product = "rowsums_byname", Sector = "colsums_byname")
-  agg_func <- get(aggfuncs[[by]], envir = as.environment("package:matsbyname"))
-
   fd_func <- function(fd_sectors_vec, U_mat, Y_mat, r_EIOU_mat){
     U_EIOU <- matsbyname::hadamardproduct_byname(r_EIOU_mat, U_mat)
-    net <- Y_mat %>%
+
+    net_prelim <- Y_mat %>%
       matsbyname::select_cols_byname(retain_pattern =
-                                       matsbyname::make_pattern(row_col_names = fd_sectors_vec, pattern_type = pattern_type)) %>%
-      agg_func()
-    gross <- U_EIOU %>%
+                                       matsbyname::make_pattern(row_col_names = fd_sectors_vec, pattern_type = pattern_type))
+    gross_prelim <- U_EIOU %>%
       matsbyname::select_cols_byname(retain_pattern =
-                                       matsbyname::make_pattern(row_col_names = fd_sectors_vec, pattern_type = pattern_type)) %>%
-      agg_func() %>%
-      matsbyname::sum_byname(net)
+                                       matsbyname::make_pattern(row_col_names = fd_sectors_vec, pattern_type = pattern_type))
+
+    # Use the right function for the requested aggregation
+    if (by == "Total") {
+      net <- net_prelim %>%
+        matsbyname::sumall_byname()
+      gross <- gross_prelim %>%
+        matsbyname::sumall_byname() %>%
+        matsbyname::sum_byname(net)
+    } else if (by == "Product") {
+      net <- net_prelim %>%
+        matsbyname::rowsums_byname()
+      gross <- gross_prelim %>%
+        matsbyname::rowsums_byname() %>%
+        matsbyname::sum_byname(net)
+    } else if (by == "Sector") {
+      net <- net_prelim %>%
+        matsbyname::colsums_byname()
+      gross <- gross_prelim %>%
+        matsbyname::colsums_byname() %>%
+        matsbyname::sum_byname(net)
+    }
+    # No need for a last "else" clause, because match.arg ensures we have only one of
+    # "Total", "Product", or "Flow".
+
     if (by == "Sector") {
       # If "Sector" aggregation is requested, the results will be row vectors.
       # Convert to column vectors.

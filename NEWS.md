@@ -1,3 +1,12 @@
+* Modified aggregation functions to use simpler (but verbose)
+  `if` statements to choose aggregation functions.
+  This change works around an error when calling the aggregation functions
+  from other packages.
+* New tests for new code paths.
+    * Now at 435 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
 # Recca 0.1.31 (2020-02-25)
 
 * New argument to aggregation functions: `pattern_type`
