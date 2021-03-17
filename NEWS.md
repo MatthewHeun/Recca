@@ -2,8 +2,8 @@
   `if` statements to choose aggregation functions.
   This change works around an error when calling the aggregation functions
   from other packages.
-* No new tests.
-    * Still at 421 tests, all passing.
+* New tests for new code paths.
+    * Now at 435 tests, all passing.
     * Test coverage remains at 100 %.
 
 
