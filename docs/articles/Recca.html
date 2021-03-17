@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.31</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.32</span>
       </span>
     </div>
 
@@ -91,7 +91,7 @@
       <h1 data-toc-skip>Recca</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2021-02-25</h4>
+            <h4 class="date">2021-03-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/master/vignettes/Recca.Rmd"><code>vignettes/Recca.Rmd</code></a></small>
       <div class="hidden name"><code>Recca.Rmd</code></div>
@@ -129,14 +129,14 @@
 <span class="va">S_units</span> <span class="op">&lt;-</span> <span class="va">UKEnergy2000tidy</span> <span class="op">%&gt;%</span>
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">Country</span>, <span class="va">Year</span>, <span class="va">Energy.type</span>, <span class="va">Last.stage</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/S_units_from_tidy.html">S_units_from_tidy</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">S_units</span><span class="op">)</span>
+<span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">S_units</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 4</span>
 <span class="co">#&gt; Columns: 5</span>
 <span class="co">#&gt; $ Country     &lt;chr&gt; "GBR", "GBR", "GBR", "GBR"</span>
 <span class="co">#&gt; $ Year        &lt;dbl&gt; 2000, 2000, 2000, 2000</span>
 <span class="co">#&gt; $ Energy.type &lt;chr&gt; "E", "E", "E", "X"</span>
 <span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final", "Services", "Useful", "Services"</span>
-<span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;matrix[12 x 1]&gt;, &lt;matrix[20 x 5]&gt;, &lt;matrix[16 x 1]&gt;, &lt;ma…</span></code></pre></div>
+<span class="co">#&gt; $ S_units     &lt;list&gt; &lt;&lt;matrix[12 x 1]&gt;&gt;, &lt;&lt;matrix[20 x 5]&gt;&gt;, &lt;&lt;matrix[16 x 1]&gt;&gt;…</span></code></pre></div>
 <p>And we can identify which entries belong in the resource (<span class="math inline">\(\mathbf{R}\)</span>), make (<span class="math inline">\(\mathbf{V}\)</span>), use (<span class="math inline">\(\mathbf{U}\)</span>), and final demand (<span class="math inline">\(\mathbf{Y}\)</span>) matrices with the <code><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html">IEATools::add_psut_matnames()</a></code> and <code><a href="https://rdrr.io/pkg/IEATools/man/add_row_col_meta.html">IEATools::add_row_col_meta()</a></code> functions.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">WithNames</span> <span class="op">&lt;-</span> <span class="va">UKEnergy2000tidy</span> <span class="op">%&gt;%</span>
@@ -187,7 +187,7 @@
   <span class="co"># Add S_units matrices</span>
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span><span class="va">S_units</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Country"</span>, <span class="st">"Year"</span>, <span class="st">"Energy.type"</span>, <span class="st">"Last.stage"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/gather.html">gather</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">matrix.name</span>, value <span class="op">=</span> <span class="va">matrix</span>, <span class="va">R</span>, <span class="va">U</span>, <span class="va">V</span>, <span class="va">Y</span>, <span class="va">r_EIOU</span>, <span class="va">S_units</span><span class="op">)</span>
-<span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">AsMats</span><span class="op">)</span>
+<span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">AsMats</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 24</span>
 <span class="co">#&gt; Columns: 6</span>
 <span class="co">#&gt; $ Country     &lt;chr&gt; "GBR", "GBR", "GBR", "GBR", "GBR", "GBR", "GBR", "GBR", "G…</span>
@@ -195,7 +195,7 @@
 <span class="co">#&gt; $ Energy.type &lt;chr&gt; "E", "E", "E", "X", "E", "E", "E", "X", "E", "E", "E", "X"…</span>
 <span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final", "Services", "Useful", "Services", "Final", "Servi…</span>
 <span class="co">#&gt; $ matrix.name &lt;chr&gt; "R", "R", "R", "R", "U", "U", "U", "U", "V", "V", "V", "V"…</span>
-<span class="co">#&gt; $ matrix      &lt;list&gt; [&lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matr…</span></code></pre></div>
+<span class="co">#&gt; $ matrix      &lt;list&gt; &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 2]&gt;&gt;, …</span></code></pre></div>
 <p>The <code>AsMats</code> data frame is essentially the same as the <code><a href="../reference/UKEnergy2000mats.html">Recca::UKEnergy2000mats</a></code> data frame. The remainder of this vignette uses the <code>UKEnergy2000mats</code> data frame.</p>
 </div>
 <div id="i-o-structure" class="section level2">
@@ -285,40 +285,40 @@
 <span class="co">#&gt; [21] "D"           "A"           "L_pxp"       "L_ixp"       "Z_feed"     </span>
 <span class="co">#&gt; [26] "K_feed"      "C_feed"      "D_feed"      "A_feed"      "L_pxp_feed" </span>
 <span class="co">#&gt; [31] "L_ixp_feed"</span>
-<span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">IO_df</span><span class="op">)</span>
+<span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">IO_df</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 4</span>
 <span class="co">#&gt; Columns: 31</span>
 <span class="co">#&gt; $ Country     &lt;chr&gt; "GBR", "GBR", "GBR", "GBR"</span>
 <span class="co">#&gt; $ Year        &lt;dbl&gt; 2000, 2000, 2000, 2000</span>
 <span class="co">#&gt; $ Energy.type &lt;fct&gt; E, E, E, X</span>
 <span class="co">#&gt; $ Last.stage  &lt;fct&gt; Final, Useful, Services, Services</span>
-<span class="co">#&gt; $ R           &lt;list&gt; [&lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matri…</span>
-<span class="co">#&gt; $ r_EIOU      &lt;list&gt; [&lt;matrix[12 x 9]&gt;, &lt;matrix[13 x 13]&gt;, &lt;matrix[17 x 17]&gt;, &lt;…</span>
-<span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;matrix[12 x 1]&gt;, &lt;matrix[16 x 1]&gt;, &lt;matrix[20 x 5]&gt;, &lt;ma…</span>
-<span class="co">#&gt; $ U           &lt;list&gt; [&lt;matrix[12 x 9]&gt;, &lt;matrix[13 x 13]&gt;, &lt;matrix[17 x 17]&gt;, &lt;…</span>
-<span class="co">#&gt; $ U_EIOU      &lt;list&gt; [&lt;matrix[7 x 8]&gt;, &lt;matrix[3 x 8]&gt;, &lt;matrix[3 x 8]&gt;, &lt;matr…</span>
-<span class="co">#&gt; $ U_feed      &lt;list&gt; [&lt;matrix[9 x 9]&gt;, &lt;matrix[12 x 13]&gt;, &lt;matrix[16 x 17]&gt;, &lt;…</span>
-<span class="co">#&gt; $ V           &lt;list&gt; [&lt;matrix[9 x 10]&gt;, &lt;matrix[13 x 14]&gt;, &lt;matrix[17 x 18]&gt;, …</span>
-<span class="co">#&gt; $ Y           &lt;list&gt; [&lt;matrix[4 x 2]&gt;, &lt;matrix[4 x 2]&gt;, &lt;matrix[4 x 2]&gt;, &lt;matr…</span>
-<span class="co">#&gt; $ y           &lt;list&gt; [&lt;matrix[4 x 1]&gt;, &lt;matrix[4 x 1]&gt;, &lt;matrix[4 x 1]&gt;, &lt;matr…</span>
-<span class="co">#&gt; $ q           &lt;list&gt; [&lt;matrix[12 x 1]&gt;, &lt;matrix[16 x 1]&gt;, &lt;matrix[20 x 1]&gt;, &lt;m…</span>
-<span class="co">#&gt; $ f           &lt;list&gt; [&lt;matrix[9 x 1]&gt;, &lt;matrix[13 x 1]&gt;, &lt;matrix[17 x 1]&gt;, &lt;ma…</span>
-<span class="co">#&gt; $ g           &lt;list&gt; [&lt;matrix[11 x 1]&gt;, &lt;matrix[15 x 1]&gt;, &lt;matrix[19 x 1]&gt;, &lt;m…</span>
-<span class="co">#&gt; $ W           &lt;list&gt; [&lt;matrix[12 x 11]&gt;, &lt;matrix[16 x 15]&gt;, &lt;matrix[20 x 19]&gt;,…</span>
-<span class="co">#&gt; $ Z           &lt;list&gt; [&lt;matrix[12 x 11]&gt;, &lt;matrix[13 x 15]&gt;, &lt;matrix[17 x 19]&gt;,…</span>
-<span class="co">#&gt; $ K           &lt;list&gt; [&lt;matrix[12 x 9]&gt;, &lt;matrix[13 x 13]&gt;, NA, NA]</span>
-<span class="co">#&gt; $ C           &lt;list&gt; [&lt;matrix[12 x 11]&gt;, &lt;matrix[16 x 15]&gt;, &lt;matrix[20 x 19]&gt;,…</span>
-<span class="co">#&gt; $ D           &lt;list&gt; [&lt;matrix[11 x 12]&gt;, &lt;matrix[15 x 16]&gt;, &lt;matrix[19 x 20]&gt;,…</span>
-<span class="co">#&gt; $ A           &lt;list&gt; [&lt;matrix[12 x 12]&gt;, &lt;matrix[13 x 16]&gt;, &lt;matrix[17 x 20]&gt;,…</span>
-<span class="co">#&gt; $ L_pxp       &lt;list&gt; [&lt;matrix[12 x 12]&gt;, &lt;matrix[16 x 16]&gt;, &lt;matrix[20 x 20]&gt;,…</span>
-<span class="co">#&gt; $ L_ixp       &lt;list&gt; [&lt;matrix[11 x 12]&gt;, &lt;matrix[15 x 16]&gt;, &lt;matrix[19 x 20]&gt;,…</span>
-<span class="co">#&gt; $ Z_feed      &lt;list&gt; [&lt;matrix[9 x 11]&gt;, &lt;matrix[12 x 15]&gt;, &lt;matrix[16 x 19]&gt;, …</span>
-<span class="co">#&gt; $ K_feed      &lt;list&gt; [&lt;matrix[9 x 9]&gt;, &lt;matrix[12 x 13]&gt;, NA, NA]</span>
-<span class="co">#&gt; $ C_feed      &lt;list&gt; [&lt;matrix[12 x 11]&gt;, &lt;matrix[16 x 15]&gt;, &lt;matrix[20 x 19]&gt;,…</span>
-<span class="co">#&gt; $ D_feed      &lt;list&gt; [&lt;matrix[11 x 12]&gt;, &lt;matrix[15 x 16]&gt;, &lt;matrix[19 x 20]&gt;,…</span>
-<span class="co">#&gt; $ A_feed      &lt;list&gt; [&lt;matrix[9 x 12]&gt;, &lt;matrix[12 x 16]&gt;, &lt;matrix[16 x 20]&gt;, …</span>
-<span class="co">#&gt; $ L_pxp_feed  &lt;list&gt; [&lt;matrix[12 x 12]&gt;, &lt;matrix[16 x 16]&gt;, &lt;matrix[20 x 20]&gt;,…</span>
-<span class="co">#&gt; $ L_ixp_feed  &lt;list&gt; [&lt;matrix[11 x 12]&gt;, &lt;matrix[15 x 16]&gt;, &lt;matrix[19 x 20]&gt;,…</span>
+<span class="co">#&gt; $ R           &lt;list&gt; &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;…</span>
+<span class="co">#&gt; $ r_EIOU      &lt;list&gt; &lt;&lt;matrix[12 x 9]&gt;&gt;, &lt;&lt;matrix[13 x 13]&gt;&gt;, &lt;&lt;matrix[17 x 17]…</span>
+<span class="co">#&gt; $ S_units     &lt;list&gt; &lt;&lt;matrix[12 x 1]&gt;&gt;, &lt;&lt;matrix[16 x 1]&gt;&gt;, &lt;&lt;matrix[20 x 5]&gt;&gt;…</span>
+<span class="co">#&gt; $ U           &lt;list&gt; &lt;&lt;matrix[12 x 9]&gt;&gt;, &lt;&lt;matrix[13 x 13]&gt;&gt;, &lt;&lt;matrix[17 x 17]…</span>
+<span class="co">#&gt; $ U_EIOU      &lt;list&gt; &lt;&lt;matrix[7 x 8]&gt;&gt;, &lt;&lt;matrix[3 x 8]&gt;&gt;, &lt;&lt;matrix[3 x 8]&gt;&gt;, …</span>
+<span class="co">#&gt; $ U_feed      &lt;list&gt; &lt;&lt;matrix[9 x 9]&gt;&gt;, &lt;&lt;matrix[12 x 13]&gt;&gt;, &lt;&lt;matrix[16 x 17]…</span>
+<span class="co">#&gt; $ V           &lt;list&gt; &lt;&lt;matrix[9 x 10]&gt;&gt;, &lt;&lt;matrix[13 x 14]&gt;&gt;, &lt;&lt;matrix[17 x 18…</span>
+<span class="co">#&gt; $ Y           &lt;list&gt; &lt;&lt;matrix[4 x 2]&gt;&gt;, &lt;&lt;matrix[4 x 2]&gt;&gt;, &lt;&lt;matrix[4 x 2]&gt;&gt;, …</span>
+<span class="co">#&gt; $ y           &lt;list&gt; &lt;&lt;matrix[4 x 1]&gt;&gt;, &lt;&lt;matrix[4 x 1]&gt;&gt;, &lt;&lt;matrix[4 x 1]&gt;&gt;, …</span>
+<span class="co">#&gt; $ q           &lt;list&gt; &lt;&lt;matrix[12 x 1]&gt;&gt;, &lt;&lt;matrix[16 x 1]&gt;&gt;, &lt;&lt;matrix[20 x 1]&gt;…</span>
+<span class="co">#&gt; $ f           &lt;list&gt; &lt;&lt;matrix[9 x 1]&gt;&gt;, &lt;&lt;matrix[13 x 1]&gt;&gt;, &lt;&lt;matrix[17 x 1]&gt;&gt;…</span>
+<span class="co">#&gt; $ g           &lt;list&gt; &lt;&lt;matrix[11 x 1]&gt;&gt;, &lt;&lt;matrix[15 x 1]&gt;&gt;, &lt;&lt;matrix[19 x 1]&gt;…</span>
+<span class="co">#&gt; $ W           &lt;list&gt; &lt;&lt;matrix[12 x 11]&gt;&gt;, &lt;&lt;matrix[16 x 15]&gt;&gt;, &lt;&lt;matrix[20 x 1…</span>
+<span class="co">#&gt; $ Z           &lt;list&gt; &lt;&lt;matrix[12 x 11]&gt;&gt;, &lt;&lt;matrix[13 x 15]&gt;&gt;, &lt;&lt;matrix[17 x 1…</span>
+<span class="co">#&gt; $ K           &lt;list&gt; &lt;&lt;matrix[12 x 9]&gt;&gt;, &lt;&lt;matrix[13 x 13]&gt;&gt;, NA, NA</span>
+<span class="co">#&gt; $ C           &lt;list&gt; &lt;&lt;matrix[12 x 11]&gt;&gt;, &lt;&lt;matrix[16 x 15]&gt;&gt;, &lt;&lt;matrix[20 x 1…</span>
+<span class="co">#&gt; $ D           &lt;list&gt; &lt;&lt;matrix[11 x 12]&gt;&gt;, &lt;&lt;matrix[15 x 16]&gt;&gt;, &lt;&lt;matrix[19 x 2…</span>
+<span class="co">#&gt; $ A           &lt;list&gt; &lt;&lt;matrix[12 x 12]&gt;&gt;, &lt;&lt;matrix[13 x 16]&gt;&gt;, &lt;&lt;matrix[17 x 2…</span>
+<span class="co">#&gt; $ L_pxp       &lt;list&gt; &lt;&lt;matrix[12 x 12]&gt;&gt;, &lt;&lt;matrix[16 x 16]&gt;&gt;, &lt;&lt;matrix[20 x 2…</span>
+<span class="co">#&gt; $ L_ixp       &lt;list&gt; &lt;&lt;matrix[11 x 12]&gt;&gt;, &lt;&lt;matrix[15 x 16]&gt;&gt;, &lt;&lt;matrix[19 x 2…</span>
+<span class="co">#&gt; $ Z_feed      &lt;list&gt; &lt;&lt;matrix[9 x 11]&gt;&gt;, &lt;&lt;matrix[12 x 15]&gt;&gt;, &lt;&lt;matrix[16 x 19…</span>
+<span class="co">#&gt; $ K_feed      &lt;list&gt; &lt;&lt;matrix[9 x 9]&gt;&gt;, &lt;&lt;matrix[12 x 13]&gt;&gt;, NA, NA</span>
+<span class="co">#&gt; $ C_feed      &lt;list&gt; &lt;&lt;matrix[12 x 11]&gt;&gt;, &lt;&lt;matrix[16 x 15]&gt;&gt;, &lt;&lt;matrix[20 x 1…</span>
+<span class="co">#&gt; $ D_feed      &lt;list&gt; &lt;&lt;matrix[11 x 12]&gt;&gt;, &lt;&lt;matrix[15 x 16]&gt;&gt;, &lt;&lt;matrix[19 x 2…</span>
+<span class="co">#&gt; $ A_feed      &lt;list&gt; &lt;&lt;matrix[9 x 12]&gt;&gt;, &lt;&lt;matrix[12 x 16]&gt;&gt;, &lt;&lt;matrix[16 x 20…</span>
+<span class="co">#&gt; $ L_pxp_feed  &lt;list&gt; &lt;&lt;matrix[12 x 12]&gt;&gt;, &lt;&lt;matrix[16 x 16]&gt;&gt;, &lt;&lt;matrix[20 x 2…</span>
+<span class="co">#&gt; $ L_ixp_feed  &lt;list&gt; &lt;&lt;matrix[11 x 12]&gt;&gt;, &lt;&lt;matrix[15 x 16]&gt;&gt;, &lt;&lt;matrix[19 x 2…</span>
 <span class="va">IO_df</span><span class="op">[[</span><span class="st">"y"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
 <span class="co">#&gt;                Industry</span>
 <span class="co">#&gt; Diesel - Dist.    14750</span>
