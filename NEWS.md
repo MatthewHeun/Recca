@@ -9,7 +9,7 @@
     * Test coverage remains at 100 %.
 
 
-# Recca 0.1.31 (2020-02-25)
+# Recca 0.1.31 (2021-02-25)
 
 * New argument to aggregation functions: `pattern_type`
   which tells how to match primary and final demand sector names for aggregation.
@@ -18,7 +18,7 @@
     * Test coverage remains at 100 %.
 
 
-# Recca 0.1.30 (2020-02-22)
+# Recca 0.1.30 (2021-02-22)
 
 * Fixed bugs in `finaldemand_aggregates()` and `finaldemand_aggregates_with_units()`
   where argument `fd_sectors` was not respected for gross energy aggregation.
@@ -27,7 +27,7 @@
     * Test coverage remains at 100 %.
 
 
-# Recca 0.1.29 (2020-02-01)
+# Recca 0.1.29 (2021-02-01)
 
 * A `method_q_calculation` argument has been added to
   the `calc_io_mats()` function.
