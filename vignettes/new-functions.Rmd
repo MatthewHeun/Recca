@@ -401,7 +401,7 @@ they would also change in response to the new ratio of inputs to industry `I`.
 * `new_k_ps()` estimates changes upstream of inputs to an intermediate industry.
 
 The first of these functions (`new_Y()`) was demonstrated in 
-[Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
+[Heun et al. [-@Heun:2018]](doi:10.1016/j.apenergy.2018.05.109).
 The second and third functions (`new_R_ps()` and `new_k_ps()`) are shown here for the first time.
 
 

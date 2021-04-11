@@ -54,8 +54,8 @@ energy and exergy analysis of energy conversion chains.
 `Recca` makes extensive use of a matrix-based 
 Physical Supply Use Table (PSUT) analysis technique
 that first appeared in 
-[Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
-This vignette walks through many of the calculations from [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109),
+[Heun et al. [-@Heun:2018]](doi:10.1016/j.apenergy.2018.05.109).
+This vignette walks through many of the calculations from [Heun et al. [-@Heun:2018]](doi:10.1016/j.apenergy.2018.05.109),
 guided by section numbers from the paper.
 We begin by discussing the design philosophy of the `Recca` package, 
 followed by a discussion of the PSUT matrices that comprise an energy conversion chain (ECC).
@@ -90,7 +90,7 @@ thereby allowing cleaner code.
 
 ## PSUT matrices
 
-(Reference [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 2.2.2.)
+(Reference [Heun et al. [-@Heun:2018]](doi:10.1016/j.apenergy.2018.05.109), Section 2.2.2.)
 
 For the examples that follow, we'll use the `UKEnergy2000tidy` data frame.
 Each row of `UKEnergy2000tidy` data frame represents 
@@ -162,7 +162,7 @@ The remainder of this vignette uses the `UKEnergy2000mats` data frame.
 
 ## I-O structure
 
-(Reference [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 2.2.4.)
+(Reference [Heun et al. [-@Heun:2018]](doi:10.1016/j.apenergy.2018.05.109), Section 2.2.4.)
 
 
 ### With individual matrices
@@ -266,7 +266,7 @@ individual matrices, as well.
 
 ## Changes in final demand
 
-(Reference [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 2.2.5.)
+(Reference [Heun et al. [-@Heun:2018]](doi:10.1016/j.apenergy.2018.05.109), Section 2.2.5.)
 
 One of the first applications of input-output analysis was estimating changes in industry outputs
 that would be required to meet new final demand. 
@@ -295,7 +295,7 @@ See the vignette for the [`new_*()` functions](new-functions.html) for more deta
 
 ## Net energy analysis
 
-(Reference [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 3.1.)
+(Reference [Heun et al. [-@Heun:2018]](doi:10.1016/j.apenergy.2018.05.109), Section 3.1.)
 
 The energy production system itself consumes energy, and 
 important metrics for energy conversion chain industries are energy return ratios (ERRs).
@@ -326,7 +326,7 @@ ERRs$r_gamma[[1]]
 
 ## Efficiencies
 
-(Reference [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 3.2.)
+(Reference [Heun et al. [-@Heun:2018]](doi:10.1016/j.apenergy.2018.05.109), Section 3.2.)
 
 The efficiency of every industry in the ECC can be calculated quickly with the `calc_eta_i()` function,
 which creates a column named `eta_i` (by default) at the right of the data frame.
@@ -346,7 +346,7 @@ etas[["eta_i"]][[3]] # NAs indicate inhomogeneous units on inputs or outputs.
 
 ## Energy footprints
 
-(Reference [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 3.3.)
+(Reference [Heun et al. [-@Heun:2018]](doi:10.1016/j.apenergy.2018.05.109), Section 3.3.)
 
 Final demand for energy contains embodied primary energy,
 the sum of all primary energy consumed and wasted 
@@ -405,7 +405,7 @@ embodied_mats <- IO_df %>%
 names(embodied_mats)
 ```
 
-Figure 15 in [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109)
+Figure 15 in [Heun et al. [-@Heun:2018]](doi:10.1016/j.apenergy.2018.05.109)
 shows primary-to-services energetic efficiencies for the ECC in the 3rd row of `IO_df`.
 The following code extracts those results. 
 Rows of the vector give final demand services and their units.
@@ -421,7 +421,7 @@ embodied_mats$eta_p[[3]]
 This vignette demonstrated the use of the `Recca` package. 
 `Recca` provides many useful functions for analyzing energy conversion chains
 within the PSUT framework first described in 
-[Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
+[Heun et al. [-@Heun:2018]](doi:10.1016/j.apenergy.2018.05.109).
 
 
 ## References

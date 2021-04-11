@@ -20,7 +20,7 @@ A data frame with 186 rows and 9 variables:
 }
 }
 \source{
-\url{https://doi.org/10.1016/j.apenergy.2018.05.109}
+\doi{10.1016/j.apenergy.2018.05.109}
 }
 \usage{
 UKEnergy2000tidy
