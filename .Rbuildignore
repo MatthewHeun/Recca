@@ -8,7 +8,7 @@
 ^README\.html$
 ^cran-comments\.md$
 ^cran-comments\.html$
-^\.travis\.yml$
 recca_workflow.aux
 recca_workflow.bbl
 recca_workflow.blg
+^\.github$
