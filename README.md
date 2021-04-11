@@ -10,6 +10,7 @@ status](https://www.r-pkg.org/badges/version/Recca)](https://cran.r-project.org/
 [![Project Status: WIP – Initial development is in progress, but there
 has not yet been a stable, usable release suitable for the
 public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+[![R-CMD-check](https://github.com/MatthewHeun/Recca/workflows/R-CMD-check/badge.svg)](https://github.com/MatthewHeun/Recca/actions)
 [![Coverage
 status](https://codecov.io/gh/MatthewHeun/Recca/branch/master/graph/badge.svg)](https://codecov.io/github/MatthewHeun/Recca?branch=master)
 
