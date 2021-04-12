@@ -112,7 +112,7 @@
 #'   \item{E.dot}{value of the energy, exergy, or service flow in ktoe}
 #'   \item{Unit}{unit in which quantity is expressed}
 #' }
-#' @source \url{https://doi.org/10.1016/j.apenergy.2018.05.109}
+#' @source \doi{10.1016/j.apenergy.2018.05.109}
 "UKEnergy2000tidy"
 
 
@@ -140,7 +140,7 @@
 #'   \item{matrix.name}{gives the name of the matrix}
 #'   \item{matrix}{gives use (U), make (V), final demand (Y), r_EIOU, and S_units matrices}
 #' }
-#' @source \url{https://doi.org/10.1016/j.apenergy.2018.05.109}
+#' @source \doi{10.1016/j.apenergy.2018.05.109}
 "UKEnergy2000mats"
 
 
