@@ -1,3 +1,6 @@
+* Updated to stable and active status badges.
+
+
 # Recca 0.1.34 (2021-04-11)
 
 * Fix lingering problems in R-CMD-check after the move to GitHub Actions
