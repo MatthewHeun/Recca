@@ -1,3 +1,12 @@
+# Recca 0.1.34 (2021-04-11)
+
+* Fix lingering problems in R-CMD-check after the move to GitHub Actions
+  for continuous integration testing. 
+* New new tests.
+    * Still at 435 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
 # Recca 0.1.33 (2021-04-11)
 
 * Move from Travis to GitHub Actions for continuous integration testing.
