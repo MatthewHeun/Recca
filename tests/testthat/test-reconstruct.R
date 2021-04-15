@@ -1,6 +1,3 @@
-###########################################################
-context("Reconstructing PSUT matrices from a new Y matrix")
-###########################################################
 
 test_that("reconstructing U and V from single matrices works as expected", {
   alliomats <- UKEnergy2000mats %>%
@@ -17,6 +14,7 @@ test_that("reconstructing U and V from single matrices works as expected", {
     expect_equal(UV$V_prime, allUV$V_prime[[i]])
   }
 })
+
 
 test_that("reconstructing U and V from a new Y matrix works as expected", {
   # Try with Y_prime <- Y, thereby simply trying to duplicate the original U and V matrices
@@ -82,11 +80,7 @@ test_that("reconstructing U and V from a new Y matrix works as expected", {
 })
 
 
-###########################################################
-context("New perfectly substitutable inputs in k")
-###########################################################
-
-test_that("new_k_ps works as expected", {
+test_that("new_k_ps() works as expected", {
   perfectsub_mats <- PerfectSubmats %>%
     tidyr::spread(key = "matrix.name", value = "matrix")
 
@@ -177,7 +171,7 @@ test_that("new_k_ps works as expected", {
 })
 
 
-test_that("1-industry ECC works with new_k_ps", {
+test_that("1-industry ECC works with new_k_ps()", {
   # This test arises from interactions with Jianwei Du at University of Texas at Austin.
   # To investigate the issues that Jianwei raised,
   # I'll make the simplest possible ECC that retains the features to be tested,
@@ -234,11 +228,7 @@ test_that("1-industry ECC works with new_k_ps", {
 })
 
 
-###########################################################
-context("New primary industries")
-###########################################################
-
-test_that("new_R works as expected", {
+test_that("new_R_ps() works as expected", {
   setup <- UKEnergy2000mats %>%
     spread(key = "matrix.name", value = "matrix") %>%
     # When Last.stage is "services", we get units problems.
@@ -296,7 +286,7 @@ test_that("new_R works as expected", {
     mutate(
       R_prime = matsbyname::hadamardproduct_byname(2, R)
     ) %>%
-    # Now call the new_R function which will calculate
+    # Now call the new_R_ps function which will calculate
     # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
     # given R_prime.
     # Each of the *_prime matrices should be 2x their originals,
