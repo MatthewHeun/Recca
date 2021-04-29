@@ -58,10 +58,15 @@ new_Y <- function(.sutmats = NULL,
 
   new_Y_func <- function(Y_prime_mat, L_ixp_mat, L_pxp_mat, Z_mat, D_mat, R_mat){
     y_prime_vec <- matsbyname::rowsums_byname(Y_prime_mat)
+
     g_prime_vec <- matsbyname::matrixproduct_byname(L_ixp_mat, y_prime_vec)
+
     q_prime_vec <- matsbyname::matrixproduct_byname(L_pxp_mat, y_prime_vec)
+
     U_prime_mat <- matsbyname::matrixproduct_byname(Z_mat, matsbyname::hatize_byname(g_prime_vec))
+
     V_prime_mat <- matsbyname::matrixproduct_byname(D_mat, matsbyname::hatize_byname(q_prime_vec))
+
     W_prime_mat <- matsbyname::difference_byname(
       matsbyname::transpose_byname(V_prime_mat),
       U_prime_mat
