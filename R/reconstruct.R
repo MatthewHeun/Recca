@@ -52,7 +52,7 @@
 new_Y <- function(.sutmats = NULL,
                   # Input names
                   Y_prime = "Y_prime", L_ixp = "L_ixp", L_pxp = "L_pxp",
-                  Z = "Z", D = "D",
+                  Z = "Z", D = "D", R = "R",
                   # Output names
                   U_prime = "U_prime", V_prime = "V_prime", W_prime = "W_prime", R_prime = "R_prime"){
 
@@ -72,8 +72,8 @@ new_Y <- function(.sutmats = NULL,
         matsbyname::hatinv_byname() %>%
         matsbyname::matrixproduct_byname(R_mat),
       matsbyname::difference_byname(y_prime_vec, matsbyname::rowsums_byname(W_prime_mat)) %>%
-        matsbyname::transpose_byname()
-    )
+        matsbyname::hatize_byname()
+        )
 
     list(U_prime_mat, V_prime_mat, W_prime_mat, R_prime_mat) %>% magrittr::set_names(c(U_prime, V_prime, W_prime, R_prime))
   }

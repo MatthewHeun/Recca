@@ -4,17 +4,22 @@ context("Reconstructing PSUT matrices from a new Y matrix")
 
 test_that("reconstructing U and V from single matrices works as expected", {
   alliomats <- UKEnergy2000mats %>%
-    spread(key = matrix.name, value = matrix) %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
     calc_io_mats()
+
   allUV <- new_Y(alliomats, Y_prime = "Y")
+
   for (i in 1:nrow(allUV)) {
     UV <- new_Y(Y_prime = alliomats$Y[[i]],
                 L_ixp = alliomats$L_ixp[[i]],
                 L_pxp = alliomats$L_pxp[[i]],
                 Z = alliomats$Z[[i]],
-                D = alliomats$D[[i]])
+                D = alliomats$D[[i]],
+                R = alliomats$R[[i]])
     expect_equal(UV$U_prime, allUV$U_prime[[i]])
     expect_equal(UV$V_prime, allUV$V_prime[[i]])
+    expect_equal(UV$W_prime, allUV$W_prime[[i]])
+    expect_equal(UV$R_prime, allUV$R_prime[[i]])
   }
 })
 
