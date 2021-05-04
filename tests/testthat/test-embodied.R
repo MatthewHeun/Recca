@@ -7,20 +7,20 @@ test_that("embodied energy calculations works as expected", {
   # The vector of primary industries comes from the resource matrix (R).
   primary_machine_names <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
-    extract2("R") %>%
-    extract2(1) %>%
+    magrittr::extract2("R") %>%
+    magrittr::extract2(1) %>%
     rownames()
 
   # Calculate all embodied matrices
   emb_mats <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
     dplyr::select(Country, Year, Energy.type, Last.stage, R, U, U_feed, V, Y, r_EIOU, S_units) %>%
-    calc_io_mats() %>%
+    Recca::calc_io_mats() %>%
     dplyr::mutate(
-      U_EIOU = hadamardproduct_byname(r_EIOU, U)
+      U_EIOU = matsbyname::hadamardproduct_byname(r_EIOU, U)
     ) %>%
-    calc_embodied_mats() %>%
-    calc_embodied_etas(primary_machine_names = primary_machine_names)
+    Recca::calc_embodied_mats() %>%
+    Recca::calc_embodied_etas(primary_machine_names = primary_machine_names)
 
   # Focus on G and H matrices
   GH <- emb_mats %>%

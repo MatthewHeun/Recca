@@ -9,10 +9,10 @@ test_that("calculating y, q, f, g, W, A, and L works as expected", {
     calc_A() %>%
     calc_L()
 
-  # Focus on y, q, f, g, and W
+  # Focus on y, q, f, g, r, and W
   yqfgW <- io_mats %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, y, q, f, g, W) %>%
-    tidyr::gather(key = "matnames", value = "matvals", y, q, f, g, W) %>%
+    dplyr::select(Country, Year, Energy.type, Last.stage, y, q, f, g, W, r) %>%
+    tidyr::gather(key = "matnames", value = "matvals", y, q, f, g, W, r) %>%
     matsindf::expand_to_tidy(drop = 0)
   expect_equivalent(yqfgW %>%
                       dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "f", rownames == "Crude dist.", colnames == "Product") %>%
@@ -25,7 +25,7 @@ test_that("calculating y, q, f, g, W, A, and L works as expected", {
                       unlist(),
                     47500)
   expect_equivalent(yqfgW %>%
-                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "g", rownames == "Resources - Crude", colnames == "Product") %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "r", rownames == "Resources - Crude", colnames == "Product") %>%
                       dplyr::select(matvals) %>%
                       unlist(),
                     50000)
@@ -44,6 +44,11 @@ test_that("calculating y, q, f, g, W, A, and L works as expected", {
                       dplyr::select(matvals) %>%
                       unlist(),
                     7.5e10)
+  expect_equivalent(yqfgW %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "r", rownames == "Resources - NG", colnames == "Product") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
+                    43000)
 
   # Focus on C and A
   CA <- io_mats %>%
@@ -76,11 +81,12 @@ test_that("calculating y, q, f, g, W, A, and L works as expected", {
     dplyr::select(Country, Year, Energy.type, Last.stage, L_ixp, L_pxp) %>%
     tidyr::gather(key = "matnames", value = "matvals", L_ixp, L_pxp) %>%
     matsindf::expand_to_tidy(drop = 0)
-  expect_equivalent(L %>%
-                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "L_ixp", rownames == "Resources - Crude", colnames == "Crude") %>%
-                      dplyr::select(matvals) %>%
-                      unlist(),
-                    1)
+  expect_equal(L %>%
+                dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "L_ixp", rownames == "Resources - Crude", colnames == "Crude") %>%
+                dplyr::select(matvals) %>%
+                 dplyr::pull() %>%
+                length(),
+                    0)
   expect_equivalent(L %>%
                       dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "L_pxp", rownames == "Freight [tonne-km/year]", colnames == "Diesel - Dist.") %>%
                       dplyr::select(matvals) %>%
