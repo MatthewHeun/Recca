@@ -72,7 +72,7 @@ calc_io_mats <- function(.sutdata = NULL,
                          # Input names
                          R = "R", U = "U", U_feed = "U_feed", V = "V", Y = "Y", S_units = "S_units",
                          # Output names
-                         y = "y", q = "q", f = "f", g = "g", W = "W", K = "K",
+                         y = "y", q = "q", f = "f", g = "g", r = "r", W = "W", K = "K",
                          Z = "Z", C = "C", D = "D", A = "A", L_ixp = "L_ixp", L_pxp = "L_pxp",
                          Z_feed = "Z_feed", K_feed = "K_feed", C_feed = "C_feed", D_feed = "D_feed", A_feed = "A_feed", L_ixp_feed = "L_ixp_feed", L_pxp_feed = "L_pxp_feed"){
 
@@ -81,14 +81,16 @@ calc_io_mats <- function(.sutdata = NULL,
   io_func <- function(R_mat = NULL, U_mat, U_feed_mat, V_mat, Y_mat, S_units_mat = NULL){
     yqfgW <- calc_yqfgW(method_q_calculation = method_q_calculation,
                         R = R_mat, U = U_mat, V = V_mat, Y = Y_mat, S_units = S_units_mat,
-                        y = y, q = q,
-                        f = f, g = g,
+                        y = y, q = q, f = f, g = g, r = r,
                         W = W)
+
     q_vec <- yqfgW[[q]]
     f_vec <- yqfgW[[f]]
     g_vec <- yqfgW[[g]]
+
     ZKCDA <- calc_A(R = R_mat, U = U_mat, V = V_mat, q = q_vec, f = f_vec, g = g_vec,
                     Z = Z, K = K, C = C, D = D, A = A)
+
     D_mat <- ZKCDA[[D]]
     A_mat <- ZKCDA[[A]]
     L_mats <- calc_L(D = D_mat, A = A_mat,
@@ -157,8 +159,7 @@ calc_yqfgW <- function(.sutdata = NULL,
                        # Input names
                        R = "R", U = "U", V = "V", Y = "Y", S_units = "S_units",
                        # Output columns
-                       y = "y", q = "q",
-                       f = "f", g = "g",
+                       y = "y", q = "q", f = "f", g = "g", r = "r",
                        W = "W"){
 
   method_q_calculation <- match.arg(method_q_calculation)
@@ -183,6 +184,7 @@ calc_yqfgW <- function(.sutdata = NULL,
       R_plus_V_mat <- matsbyname::sum_byname(R_mat, V_mat)
     }
     g_vec <- matsbyname::rowsums_byname(V_mat)
+    r_vec <- matsbyname::rowsums_byname(R_mat)
     W_mat <- matsbyname::difference_byname(matsbyname::transpose_byname(V_mat), U_mat)
     # Deal with any unit homogeneity issues for f and g.
     if (!is.null(S_units_mat)) {
@@ -204,8 +206,8 @@ calc_yqfgW <- function(.sutdata = NULL,
       g_vec[which(!RV_bar_units_OK)] <- NA_real_
     }
     # Put the values in a list and return the list
-    list(y_vec, q_vec, f_vec, g_vec, W_mat) %>%
-      magrittr::set_names(c(y, q, f, g, W))
+    list(y_vec, q_vec, f_vec, g_vec, r_vec, W_mat) %>%
+      magrittr::set_names(c(y, q, f, g, r, W))
   }
   matsindf::matsindf_apply(.sutdata, FUN = yqfgw_func, R_mat = R, U_mat = U, V_mat = V, Y_mat = Y, S_units_mat = S_units)
 }
