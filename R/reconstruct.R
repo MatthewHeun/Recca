@@ -52,11 +52,11 @@
 new_Y <- function(.sutmats = NULL,
                   # Input names
                   Y_prime = "Y_prime", L_ixp = "L_ixp", L_pxp = "L_pxp",
-                  Z = "Z", D = "D", R = "R",
+                  Z = "Z", D = "D", R = "R", r = "r",
                   # Output names
                   U_prime = "U_prime", V_prime = "V_prime", W_prime = "W_prime", R_prime = "R_prime"){
 
-  new_Y_func <- function(Y_prime_mat, L_ixp_mat, L_pxp_mat, Z_mat, D_mat, R_mat){
+  new_Y_func <- function(Y_prime_mat, L_ixp_mat, L_pxp_mat, Z_mat, D_mat, R_mat, r_vec){
     y_prime_vec <- matsbyname::rowsums_byname(Y_prime_mat)
 
     g_prime_vec <- matsbyname::matrixproduct_byname(L_ixp_mat, y_prime_vec)
@@ -73,7 +73,7 @@ new_Y <- function(.sutmats = NULL,
     )
 
     R_prime_mat <- matsbyname::matrixproduct_byname(
-      matsbyname::rowsums_byname(R_mat) %>%
+      r_vec %>%
         matsbyname::hatinv_byname() %>%
         matsbyname::matrixproduct_byname(R_mat),
       matsbyname::difference_byname(y_prime_vec, matsbyname::rowsums_byname(W_prime_mat)) %>%
@@ -85,7 +85,7 @@ new_Y <- function(.sutmats = NULL,
 
   matsindf::matsindf_apply(.sutmats, FUN = new_Y_func,
                  Y_prime_mat = Y_prime, L_ixp_mat = L_ixp, L_pxp_mat = L_pxp,
-                 Z_mat = Z, D_mat = D, R_mat = R)
+                 Z_mat = Z, D_mat = D, R_mat = R, r_vec = r)
 }
 
 
