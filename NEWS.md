@@ -1,3 +1,5 @@
+* Added new file `new_R_ps_example.xlsx` that demonstrates 
+  equations for swimming "downstream."
 * Updated to stable and active status badges.
 
 
