@@ -11,8 +11,8 @@ test_that("calculating y, q, f, g, h, W, A, and L works as expected", {
 
   # Focus on y, q, f, g, h, r, and W
   yqfgW <- io_mats %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, y, q, f, g, W, r) %>%
-    tidyr::gather(key = "matnames", value = "matvals", y, q, f, g, W, r) %>%
+    dplyr::select(Country, Year, Energy.type, Last.stage, y, q, f, g, W, r, h) %>%
+    tidyr::gather(key = "matnames", value = "matvals", y, q, f, g, W, r, h) %>%
     matsindf::expand_to_tidy(drop = 0)
   expect_equivalent(yqfgW %>%
                       dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "f", rownames == "Crude dist.", colnames == "Product") %>%
@@ -49,32 +49,103 @@ test_that("calculating y, q, f, g, h, W, A, and L works as expected", {
                       dplyr::select(matvals) %>%
                       unlist(),
                     43000)
+  expect_equivalent(yqfgW %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "h", rownames == "Industry", colnames == "Crude") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
+                    50000)
+  expect_equivalent(yqfgW %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "h", rownames == "Industry", colnames == "NG") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
+                    43000)
 
-  # Focus on C and A
-  CA <- io_mats %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, C, A) %>%
-    tidyr::gather(key = "matnames", value = "matvals", C, A) %>%
+  # Focus on C, D, O, and A
+  CDAO <- io_mats %>%
+    dplyr::select(Country, Year, Energy.type, Last.stage, C, A, D, O) %>%
+    tidyr::gather(key = "matnames", value = "matvals", C, A, D, O) %>%
     matsindf::expand_to_tidy(drop = 0)
-  expect_equivalent(CA %>%
+
+  # A matrix:
+  expect_equivalent(CDAO %>%
                       dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "A", rownames == "Crude - Dist.", colnames == "Crude - Dist.") %>%
                       dplyr::select(matvals) %>%
                       unlist(),
                     0.01052632)
-  expect_equivalent(CA %>%
+  expect_equivalent(CDAO %>%
                       dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$useful, matnames == "A", rownames == "Elect - Grid", colnames == "Diesel") %>%
                       dplyr::select(matvals) %>%
                       unlist(),
                     0.001785714)
-  expect_equivalent(CA %>%
+  # C matrix:
+  expect_equivalent(CDAO %>%
                       dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, matnames == "C", rownames == "Light", colnames == "Light fixtures") %>%
                       dplyr::select(matvals) %>%
                       unlist(),
                     1)
-  expect_equivalent(CA %>%
+  expect_equivalent(CDAO %>%
                       dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, matnames == "C", rownames == "Petrol", colnames == "Oil refineries") %>%
                       dplyr::select(matvals) %>%
                       unlist(),
                     0.63095238095238104)
+  # D matrix:
+  expect_equivalent(CDAO %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, matnames == "D", rownames == "Oil fields", colnames == "Crude - Fields") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
+                    1)
+  expect_equivalent(CDAO %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, matnames == "D", rownames == "Power plants", colnames == "Elect") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
+                    1)
+
+  D_x_services <- io_mats$D[[1]]
+  expect_equivalent(D_x_services[["Oil fields", "Diesel"]], 0)
+
+  sum_D <- matsbyname::colsums_byname(D_x_services)
+  # All colsums should be either 1 or zero.
+  expect_true(
+    all(
+      (sum_D == 1 || sum_D == 0)
+    )
+  )
+
+
+  # O matrix:
+  expect_equivalent(CDAO %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, matnames == "O", rownames == "Resources - Crude", colnames == "Crude") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
+                    1)
+  expect_equivalent(CDAO %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, matnames == "O", rownames == "Resources - NG", colnames == "NG") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
+                    1)
+  expect_equivalent(CDAO %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "O", rownames == "Resources - Crude", colnames == "Crude") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
+                    1)
+  expect_equivalent(CDAO %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "O", rownames == "Resources - NG", colnames == "NG") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
+                    1)
+
+  O_x_services <- io_mats$O[[1]]
+  expect_equivalent(O_x_services[["Resources - Crude", "NG"]], 0)
+  expect_equivalent(O_x_services[["Resources - NG", "Crude"]], 0)
+
+  sum_O <- matsbyname::colsums_byname(O_x_services)
+  # All colsums should be either 1 or zero.
+  expect_true(
+    all(
+      (sum_O == 1 || sum_O == 0)
+    )
+  )
+
 
   # Focus on L matrices (L_ixp and L_pxp)
   L <- io_mats %>%
@@ -221,6 +292,9 @@ test_that("calc_io_mats give correct _feed matrices", {
   expect_identical(C_final, C_feed_final)
 
   # Check O_feed
+  O_feed_final <- feed_mats$O_feed[[1]]
+  O_final <- feed_mats$O[[1]]
+  expect_identical(O_feed_final, O_final)
 })
 
 
@@ -282,6 +356,7 @@ test_that("calculating IO matrices works as expected", {
   g <- yqfgW[["g"]]
   expect_true(is.na(g[1, 1]))
   expect_true(is.na(g[2, 1]))
+  # Here add for h vector.
 })
 
 
