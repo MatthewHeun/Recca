@@ -2,14 +2,14 @@
 context("IO calculations")
 ###########################################################
 
-test_that("calculating y, q, f, g, W, A, and L works as expected", {
+test_that("calculating y, q, f, g, h, W, A, and L works as expected", {
   io_mats <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
     calc_yqfgW() %>%
     calc_A() %>%
     calc_L()
 
-  # Focus on y, q, f, g, r, and W
+  # Focus on y, q, f, g, h, r, and W
   yqfgW <- io_mats %>%
     dplyr::select(Country, Year, Energy.type, Last.stage, y, q, f, g, W, r) %>%
     tidyr::gather(key = "matnames", value = "matvals", y, q, f, g, W, r) %>%
@@ -220,24 +220,7 @@ test_that("calc_io_mats give correct _feed matrices", {
   C_final <- feed_mats$C[[1]]
   expect_identical(C_final, C_feed_final)
 
-
-  ###############
-  # Emmanuel:
-  # I got things to a stable state.
-  # All tests are working again.
-  #
-  # Add additional tests here.
-  # Be sure to check all "_feed" matrices.
-  # You might also check that the C_feed and D_feed matrices are same as the C and D matrices,
-  # as you expect they will be.
-  #
-  # Here is the workflow:
-  # * Build the package Build|Install and Restart
-  # * Test the package Build|Test Package
-  # * Check the package Build|Check Package
-  #
-  # As of this moment (17 Aug 2020), all three are working perfectly.
-  ###############
+  # Check O_feed
 })
 
 

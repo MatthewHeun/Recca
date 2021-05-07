@@ -11,8 +11,14 @@ new_Y(
   L_pxp = "L_pxp",
   Z = "Z",
   D = "D",
+  R = "R",
+  r = "r",
+  h = "h",
+  O = "O",
   U_prime = "U_prime",
-  V_prime = "V_prime"
+  V_prime = "V_prime",
+  W_prime = "W_prime",
+  R_prime = "R_prime"
 )
 }
 \arguments{

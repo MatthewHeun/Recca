@@ -16,6 +16,8 @@ calc_yqfgW(
   q = "q",
   f = "f",
   g = "g",
+  h = "h",
+  r = "r",
   W = "W"
 )
 }

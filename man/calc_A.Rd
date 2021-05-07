@@ -12,11 +12,13 @@ calc_A(
   q = "q",
   f = "f",
   g = "g",
+  r = "r",
   Z = "Z",
   K = "K",
   C = "C",
   D = "D",
-  A = "A"
+  A = "A",
+  O = "O"
 )
 }
 \arguments{
