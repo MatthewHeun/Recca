@@ -14,7 +14,9 @@ test_that("reconstructing U, V, W, and R from single matrices works as expected"
                 Z = alliomats$Z[[i]],
                 D = alliomats$D[[i]],
                 R = alliomats$R[[i]],
-                r = alliomats$r[[i]])
+                r = alliomats$r[[i]],
+                O = alliomats$O[[i]],
+                h = alliomats$h[[i]])
     expect_equal(UV$U_prime, allUV$U_prime[[i]])
     expect_equal(UV$V_prime, allUV$V_prime[[i]])
     expect_equal(UV$W_prime, allUV$W_prime[[i]])
