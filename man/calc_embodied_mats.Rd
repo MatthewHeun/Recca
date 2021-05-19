@@ -25,7 +25,8 @@ calc_embodied_mats(
 }
 \arguments{
 \item{.iomats}{a data frame containing matrices that describe the Input-Output structure
-(using the supply-use table format) of an Energy Conversion Chain.
+(using the supply-use table format)
+of an Energy Conversion Chain.
 \code{.iomats} will likely have been obtained from the \code{\link{calc_io_mats}} function.}
 
 \item{Y}{final demand (\code{Y}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{Y}".}

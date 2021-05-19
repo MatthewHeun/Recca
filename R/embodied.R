@@ -5,8 +5,9 @@
 #' Calculate various embodied energy matrices
 #'
 #' @param .iomats a data frame containing matrices that describe the Input-Output structure
-#' (using the supply-use table format) of an Energy Conversion Chain.
-#' \code{.iomats} will likely have been obtained from the \code{\link{calc_io_mats}} function.
+#'                (using the supply-use table format)
+#'                of an Energy Conversion Chain.
+#'                \code{.iomats} will likely have been obtained from the \code{\link{calc_io_mats}} function.
 #' @param Y final demand (\code{Y}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{Y}".
 #' @param q final demand (\code{q}) vector or name of the column in \code{.iodata} containing same. Default is "\code{q}".
 #' @param L_ixp industry-by-product Leontief (\code{L_ixp}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{L_ixp}"
