@@ -330,7 +330,7 @@ new_k_ps <- function(.sutmats = NULL,
 #' doubleR$U_prime[[1]]
 #' doubleR$V_prime[[1]]
 #' doubleR$Y_prime[[1]]
-new_R_ps <- function(.sutmats = NULL,
+new_R_ps_iter <- function(.sutmats = NULL,
                   # Input names
                   R_prime = "R_prime",
                   U = "U", V = "V", Y = "Y", S_units = "S_units",
@@ -436,6 +436,39 @@ new_R_ps <- function(.sutmats = NULL,
   matsindf::matsindf_apply(.sutmats, FUN = new_R_func, R_prime_mat = R_prime, U_mat = U, V_mat = V, Y_mat = Y, S_units_mat = S_units,
                            q_vec = q, C_mat = C, eta_i_vec = eta_i)
 }
+
+
+
+
+
+
+
+
+new_R_ps <- function(.sutmats = NULL,
+                          # Input names
+                          R_prime = "R_prime",
+                          U = "U", V = "V",
+                          q = "q", f = "f",
+                          # Output names
+                          U_prime = "U_prime", V_prime = "V_prime", W_prime = "W_prime", Y_prime = "Y_prime"){
+
+  new_R_func <- function(R_prime_mat, U_mat, V_mat, q_vec, f_vec){
+
+
+    # Let's see if we have energy balance.
+    verify_SUT_energy_balance_with_units(R = R_prime_mat, U = U_prime_mat, V = V_prime_mat, Y = Y_prime_mat)
+
+    # Return the new U, V, and Y matrices.
+    list(U_prime_mat, V_prime_mat, W_prime_mat, Y_prime_mat) %>% magrittr::set_names(c(U_prime, V_prime, W_prime, Y_prime))
+
+
+  }
+
+  matsindf::matsindf_apply(.sutmats, FUN = new_R_func, R_prime_mat = R_prime, U_mat = U, V_mat = V,
+                           q_vec = q, f_vec = f)
+}
+
+
 
 
 
