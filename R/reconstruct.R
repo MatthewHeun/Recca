@@ -447,16 +447,76 @@ new_R_ps_iter <- function(.sutmats = NULL,
 new_R_ps <- function(.sutmats = NULL,
                           # Input names
                           R_prime = "R_prime",
-                          U = "U", V = "V",
+                          U = "U", V = "V", Y = "Y",
                           q = "q", f = "f",
                           # Output names
                           U_prime = "U_prime", V_prime = "V_prime", W_prime = "W_prime", Y_prime = "Y_prime"){
 
-  new_R_func <- function(R_prime_mat, U_mat, V_mat, q_vec, f_vec){
+  new_R_func <- function(R_prime_mat, U_mat, V_mat, Y_mat, q_vec, f_vec){
+
+    # Calculating all symmetric IO matrices:
+    Z_sym_mat <- matsbyname::matrixproduct_byname(
+      matsbyname::transpose_byname(V_mat),
+      matsbyname::hatinv_byname(f_vec)
+    )
+
+    C_sym_mat <- matsbyname::matrixproduct_byname(
+      U_mat,
+      matsbyname::hatinv_byname(f_vec)
+    )
+
+    D_sym_mat <- matsbyname::matrixproduct_byname(
+      matsbyname::transpose_byname(U_mat),
+      matsbyname::hatinv_byname(q_vec)
+    )
+
+    O_sym_mat <- matsbyname::matrixproduct_byname(
+      matsbyname::hatinv_byname(q_vec),
+      Y_mat
+    )
+
+    A_sym_mat <- matsbyname::matrixproduct_byname(
+      Z_sym_mat,
+      D_sym_mat
+    )
+
+    L_pxp_sym_mat <- matsbyname::Iminus_byname(A_sym_mat) %>% matsbyname::invert_byname()
+
+    L_ixp_sym_mat <- matsbyname::matrixproduct_byname(
+      D_sym_mat,
+      L_pxp_sym_mat
+    )
+
+
+    # Now, calculating the set of prime matrices:
+    q_prime_vec <- matsbyname::matrixproduct_byname(
+      L_pxp_sym,
+      matsbyname::transpose_byname(R_prime_mat) %>% matsbyname::rowsums_byname()
+    )
+
+    Y_prime_mat <- matsbyname::matrixproduct_byname(
+      matsbyname::hatize_byname(q_prime_vec),
+      O_sym_mat
+    )
+
+    U_prime_mat <- matsbyname::matrixproduct_byname(
+      matsbyname::hatize_byname(q_prime_vec),
+      matsbyname::transpose_byname(D_sym_mat)
+    )
+
+    V_prime_mat <- matsbyname::matrixproduct_byname(
+      L_ixp_sym_mat,
+      matsbyname::transpose_byname(R_prime_mat) %>% matsbyname::rowsums_byname()
+    )
+
+    W_prime_mat <- matsbyname::difference_byname(
+      matsbyname::transpose_byname(V_prime_mat),
+      U_prime_mat
+    )
 
 
     # Let's see if we have energy balance.
-    verify_SUT_energy_balance_with_units(R = R_prime_mat, U = U_prime_mat, V = V_prime_mat, Y = Y_prime_mat)
+    #verify_SUT_energy_balance_with_units(R = R_prime_mat, U = U_prime_mat, V = V_prime_mat, Y = Y_prime_mat)
 
     # Return the new U, V, and Y matrices.
     list(U_prime_mat, V_prime_mat, W_prime_mat, Y_prime_mat) %>% magrittr::set_names(c(U_prime, V_prime, W_prime, Y_prime))
@@ -464,7 +524,7 @@ new_R_ps <- function(.sutmats = NULL,
 
   }
 
-  matsindf::matsindf_apply(.sutmats, FUN = new_R_func, R_prime_mat = R_prime, U_mat = U, V_mat = V,
+  matsindf::matsindf_apply(.sutmats, FUN = new_R_func, R_prime_mat = R_prime, U_mat = U, V_mat = V, Y_mat = Y,
                            q_vec = q, f_vec = f)
 }
 
