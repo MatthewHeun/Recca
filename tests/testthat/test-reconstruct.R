@@ -365,8 +365,6 @@ test_that("new_R_ps() works as expected", {
     tidyr::spread(key = "matrix.name", value = "matrix") %>%
     # Calculate the input-output matrices which are inputs to the new_R function.
     calc_io_mats() %>%
-    # Calculate the efficiency of every industry in the ECC.
-    #calc_eta_i() %>%
     # Make an R_prime matrix that gives twice the resource inputs to the economy.
     dplyr::mutate(
       R_prime = matsbyname::hadamardproduct_byname(2, R)
