@@ -490,7 +490,7 @@ new_R_ps <- function(.sutmats = NULL,
 
     # Now, calculating the set of prime matrices:
     q_prime_vec <- matsbyname::matrixproduct_byname(
-      L_pxp_sym,
+      L_pxp_sym_mat,
       matsbyname::transpose_byname(R_prime_mat) %>% matsbyname::rowsums_byname()
     )
 
@@ -504,9 +504,14 @@ new_R_ps <- function(.sutmats = NULL,
       matsbyname::transpose_byname(D_sym_mat)
     )
 
+    # Issue here.
     V_prime_mat <- matsbyname::matrixproduct_byname(
-      L_ixp_sym_mat,
-      matsbyname::transpose_byname(R_prime_mat) %>% matsbyname::rowsums_byname()
+      matsbyname::matrixproduct_byname(
+        L_ixp_sym_mat,
+        matsbyname::transpose_byname(R_prime_mat) %>% matsbyname::rowsums_byname()
+      ) %>%
+        matsbyname::hatize_byname(),
+      matsbyname::transpose_byname(Z_sym_mat)
     )
 
     W_prime_mat <- matsbyname::difference_byname(
