@@ -521,7 +521,7 @@ new_R_ps <- function(.sutmats = NULL,
 
 
     # Let's see if we have energy balance.
-    #verify_SUT_energy_balance_with_units(R = R_prime_mat, U = U_prime_mat, V = V_prime_mat, Y = Y_prime_mat)
+    verify_SUT_energy_balance(R = R_prime_mat, U = U_prime_mat, V = V_prime_mat, Y = Y_prime_mat)
 
     # Return the new U, V, and Y matrices.
     list(U_prime_mat, V_prime_mat, W_prime_mat, Y_prime_mat) %>% magrittr::set_names(c(U_prime, V_prime, W_prime, Y_prime))

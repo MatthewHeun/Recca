@@ -281,8 +281,6 @@ test_that("new_R_ps() works as expected", {
     dplyr::filter(Last.stage != IEATools::last_stages$services) %>%
     # Calculate the input-output matrices which are inputs to the new_R function.
     calc_io_mats() %>%
-    # Calculate the efficiency of every industry in the ECC.
-    calc_eta_i() %>%
     # Make an R_prime matrix that gives the same the resource inputs to the economy.
     # For testing purposes!
     dplyr::mutate(
@@ -298,14 +296,16 @@ test_that("new_R_ps() works as expected", {
     # Clean the rows of U_prime and Y_prime, because they contain Products that are not present in U.
     dplyr::mutate(
       U_prime = matsbyname::clean_byname(U_prime, margin = 1),
-      Y_prime = matsbyname::clean_byname(Y_prime, margin = 1)
+      Y_prime = matsbyname::clean_byname(Y_prime, margin = 1),
+      W_prime = matsbyname::clean_byname(W_prime, margin = 1)
     ) %>%
     # Set up the expectations
     dplyr::mutate(
       # When R_prime = R, we expect to recover same U, V, and Y.
       expected_U = U,
       expected_V = V,
-      expected_Y = Y
+      expected_Y = Y,
+      expected_W = W
     )
 
   # Test that everything worked as expected
@@ -313,22 +313,19 @@ test_that("new_R_ps() works as expected", {
     expect_true(matsbyname::equal_byname(newRsameasoldR$U_prime[[i]], newRsameasoldR$expected_U[[i]]))
     expect_true(matsbyname::equal_byname(newRsameasoldR$V_prime[[i]], newRsameasoldR$expected_V[[i]]))
     expect_true(matsbyname::equal_byname(newRsameasoldR$Y_prime[[i]], newRsameasoldR$expected_Y[[i]]))
+    expect_true(matsbyname::equal_byname(newRsameasoldR$W_prime[[i]], newRsameasoldR$expected_W[[i]]))
   }
 
-  # Also try when the maxiter argument is set too small.
-  expect_error(setup[1, ] %>% new_R_ps(maxiter = 1), "maxiter = 1 reached without convergence in new_R")
 
   doubleR <- UKEnergy2000mats %>%
-    spread(key = "matrix.name", value = "matrix") %>%
+    tidyr::spread(key = "matrix.name", value = "matrix") %>%
     # When Last.stage is "services", we get units problems.
     # Avoid by using only ECCs with "Final" and "Useful" as the Last.stage.
-    filter(Last.stage != IEATools::last_stages$services) %>%
+    dplyr::filter(Last.stage != IEATools::last_stages$services) %>%
     # Calculate the input-output matrices which are inputs to the new_R function.
     calc_io_mats() %>%
-    # Calculate the efficiency of every industry in the ECC.
-    calc_eta_i() %>%
     # Make an R_prime matrix that gives twice the resource inputs to the economy.
-    mutate(
+    dplyr::mutate(
       R_prime = matsbyname::hadamardproduct_byname(2, R)
     ) %>%
     # Now call the new_R_ps function which will calculate
@@ -338,16 +335,18 @@ test_that("new_R_ps() works as expected", {
     # because R_prime is 2x relative to R.
     new_R_ps() %>%
     # Clean the rows of U_prime, because they contain Products that are not present in U.
-    mutate(
+    dplyr::mutate(
       # Eliminate zero rows or cols that appear after the new_R_ps() call.
       U_prime = matsbyname::clean_byname(U_prime, margin = 1),
       V_prime = matsbyname::clean_byname(V_prime, margin = 2),
-      Y_prime = matsbyname::clean_byname(Y_prime, margin = 1)
+      Y_prime = matsbyname::clean_byname(Y_prime, margin = 1),
+      W_prime = matsbyname::clean_byname(W_prime, margin = 1)
     ) %>%
-    mutate(
+    dplyr::mutate(
       expected_U = matsbyname::hadamardproduct_byname(2, U),
       expected_V = matsbyname::hadamardproduct_byname(2, V),
-      expected_Y = matsbyname::hadamardproduct_byname(2, Y)
+      expected_Y = matsbyname::hadamardproduct_byname(2, Y),
+      expected_W = matsbyname::hadamardproduct_byname(2, W)
     )
 
   # Test that everything worked as expected
@@ -355,6 +354,7 @@ test_that("new_R_ps() works as expected", {
     expect_equal(doubleR$U_prime[[i]], doubleR$expected_U[[i]])
     expect_equal(doubleR$V_prime[[i]], doubleR$expected_V[[i]])
     expect_equal(doubleR$Y_prime[[i]], doubleR$expected_Y[[i]])
+    expect_equal(doubleR$W_prime[[i]], doubleR$expected_W[[i]])
   }
 
   # Test when the units on Products in U are not all same.
@@ -366,7 +366,7 @@ test_that("new_R_ps() works as expected", {
     # Calculate the input-output matrices which are inputs to the new_R function.
     calc_io_mats() %>%
     # Calculate the efficiency of every industry in the ECC.
-    calc_eta_i() %>%
+    #calc_eta_i() %>%
     # Make an R_prime matrix that gives twice the resource inputs to the economy.
     dplyr::mutate(
       R_prime = matsbyname::hadamardproduct_byname(2, R)
