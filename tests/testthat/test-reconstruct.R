@@ -275,17 +275,17 @@ test_that("1-industry ECC works with new_k_ps()", {
 
 test_that("new_R_ps() works as expected", {
   setup <- UKEnergy2000mats %>%
-    spread(key = "matrix.name", value = "matrix") %>%
+    tidyr::spread(key = "matrix.name", value = "matrix") %>%
     # When Last.stage is "services", we get units problems.
     # Avoid by using only ECCs with "Final" and "Useful" as the Last.stage.
-    filter(Last.stage != IEATools::last_stages$services) %>%
+    dplyr::filter(Last.stage != IEATools::last_stages$services) %>%
     # Calculate the input-output matrices which are inputs to the new_R function.
     calc_io_mats() %>%
     # Calculate the efficiency of every industry in the ECC.
     calc_eta_i() %>%
     # Make an R_prime matrix that gives the same the resource inputs to the economy.
     # For testing purposes!
-    mutate(
+    dplyr::mutate(
       R_prime = R
     )
   # Now call the new_R_ps function which will calculate
@@ -296,12 +296,12 @@ test_that("new_R_ps() works as expected", {
   newRsameasoldR <- setup %>%
     new_R_ps() %>%
     # Clean the rows of U_prime and Y_prime, because they contain Products that are not present in U.
-    mutate(
-      U_prime = clean_byname(U_prime, margin = 1),
-      Y_prime = clean_byname(Y_prime, margin = 1)
+    dplyr::mutate(
+      U_prime = matsbyname::clean_byname(U_prime, margin = 1),
+      Y_prime = matsbyname::clean_byname(Y_prime, margin = 1)
     ) %>%
     # Set up the expectations
-    mutate(
+    dplyr::mutate(
       # When R_prime = R, we expect to recover same U, V, and Y.
       expected_U = U,
       expected_V = V,
@@ -362,14 +362,14 @@ test_that("new_R_ps() works as expected", {
   # Input units are not all same for the Last.stage = "services" cases.
   # So don't filter out the "services" rows.
   WithDiffUnits <- UKEnergy2000mats %>%
-    spread(key = "matrix.name", value = "matrix") %>%
+    tidyr::spread(key = "matrix.name", value = "matrix") %>%
     # Calculate the input-output matrices which are inputs to the new_R function.
     calc_io_mats() %>%
     # Calculate the efficiency of every industry in the ECC.
     calc_eta_i() %>%
     # Make an R_prime matrix that gives twice the resource inputs to the economy.
-    mutate(
-      R_prime = hadamardproduct_byname(2, R)
+    dplyr::mutate(
+      R_prime = matsbyname::hadamardproduct_byname(2, R)
     ) %>%
     # Now call the new_R function which will calculate
     # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
