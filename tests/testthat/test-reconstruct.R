@@ -377,9 +377,10 @@ test_that("new_R_ps() works as expected", {
     # Each of the *_prime matrices should be 2x their originals,
     # because R_prime is 2x relative to R.
     new_R_ps()
+
   for (i in c(2,4)) {
-    expect_true(is.na(WithDiffUnits$U_prime[[i]]))
-    expect_true(is.na(WithDiffUnits$V_prime[[i]]))
-    expect_true(is.na(WithDiffUnits$Y_prime[[i]]))
+    expect_true(all(is.na(WithDiffUnits$U_prime[[i]])))
+    expect_true(all(is.na(WithDiffUnits$V_prime[[i]])))
+    expect_true(all(is.na(WithDiffUnits$Y_prime[[i]])))
   }
 })
