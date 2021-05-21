@@ -317,6 +317,7 @@ test_that("1-industry ECC works with new_k_ps()", {
 })
 
 
+
 test_that("new_R_ps() works as expected", {
   setup <- UKEnergy2000mats %>%
     tidyr::spread(key = "matrix.name", value = "matrix") %>%
