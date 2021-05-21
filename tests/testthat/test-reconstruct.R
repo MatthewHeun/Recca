@@ -91,41 +91,16 @@ test_that("reconstructing U, V, W, and R from a new Y matrix works as expected",
                       dplyr::select(matvals) %>%
                       unlist(),
                     6238.6014610456)
-
-  Reconstructed_Residential %>%
-    dplyr::filter(matnames == "R_prime") %>%
-    glimpse()
-
-  View(Reconstructed_Residential$R[[1]])
-  View(Reconstructed_Residential$R_prime[[1]])
-
-
-  # Testing R_prime matrix, too:
-  # Crude oil - resources
-  Reconstructed %>%
-    magrittr::extract2("R_prime") %>%
-    matsindf::expand_to_tidy() %>%
-    dplyr::filter(rownames == "Resources - Crude", colnames == "Crude") %>%
-    magrittr::extract2("matvals") %>%
-    dplyr::first() %>%
-    expect_equal(50000)
-
-  Reconstructed %>%
-    magrittr::extract2("R_prime") %>%
-    matsindf::expand_to_tidy() %>%
-    dplyr::filter(rownames == "Resources - Crude", colnames == "Crude") %>%
-    magrittr::extract2("matvals") %>%
-    dplyr::last() %>%
-    expect_equal(53500)
-
-  # NG - resources
-  Reconstructed %>%
-    magrittr::extract2("R_prime") %>%
-    matsindf::expand_to_tidy() %>%
-    dplyr::filter(rownames == "Resources - NG", colnames == "NG") %>%
-    magrittr::extract2("matvals") %>%
-    dplyr::first() %>%
-    expect_equal(43000)
+  expect_equivalent(Reconstructed_Residential %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "R_prime", rownames == "Resources - NG", colnames == "NG") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
+                    16356.84944)
+  expect_equivalent(Reconstructed_Residential %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$useful, matnames == "R_prime", rownames == "Resources - Crude", colnames == "Crude") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
+                    102.20081)
 
 
   # Double Y matrix
@@ -138,13 +113,54 @@ test_that("reconstructing U, V, W, and R from a new Y matrix works as expected",
     ) %>%
     new_Y()
 
+  # Testing R_prime matrix:
+  Reconstructed_Double_Y %>%
+    magrittr::extract2("R_prime") %>%
+    matsindf::expand_to_tidy() %>%
+    dplyr::filter(rownames == "Resources - Crude", colnames == "Crude") %>%
+    magrittr::extract2("matvals") %>%
+    dplyr::first() %>%
+    expect_equal(100000)
 
+  Reconstructed_Double_Y %>%
+    magrittr::extract2("R_prime") %>%
+    matsindf::expand_to_tidy() %>%
+    dplyr::filter(rownames == "Resources - Crude", colnames == "Crude") %>%
+    magrittr::extract2("matvals") %>%
+    dplyr::last() %>%
+    expect_equal(53500*2)
 
-  View(Reconstructed_Double_Y$Y[[1]])
-  View(Reconstructed_Double_Y$Y_prime[[1]])
+  Reconstructed_Double_Y %>%
+    magrittr::extract2("R_prime") %>%
+    matsindf::expand_to_tidy() %>%
+    dplyr::filter(rownames == "Resources - NG", colnames == "NG") %>%
+    magrittr::extract2("matvals") %>%
+    dplyr::first() %>%
+    expect_equal(86000)
 
-  View(Reconstructed_Double_Y$R[[1]])
-  View(Reconstructed_Double_Y$R_prime[[1]])
+  # Test all matrices:
+  res <- Reconstructed_Double_Y %>%
+    dplyr::mutate(
+      U_double = matsbyname::hadamardproduct_byname(U, 2),
+      V_double = matsbyname::hadamardproduct_byname(V, 2),
+      W_double = matsbyname::hadamardproduct_byname(W, 2),
+      R_double = matsbyname::hadamardproduct_byname(R, 2),
+      # Take the difference between primes and doubles
+      U_diff = matsbyname::difference_byname(U_double, U_prime),
+      V_diff = matsbyname::difference_byname(V_double, V_prime),
+      W_diff = matsbyname::difference_byname(W_double, W_prime),
+      R_diff = matsbyname::difference_byname(R_double, R_prime),
+      # Check if it is the 0 matrix
+      UOK = matsbyname::iszero_byname(U_diff),
+      VOK = matsbyname::iszero_byname(V_diff),
+      WOK = matsbyname::iszero_byname(W_diff),
+      ROK = matsbyname::iszero_byname(W_diff),
+    )
+
+  expect_true(all(as.logical(res$UOK)))
+  expect_true(all(as.logical(res$VOK)))
+  expect_true(all(as.logical(res$WOK)))
+  expect_true(all(as.logical(res$ROK)))
 })
 
 
