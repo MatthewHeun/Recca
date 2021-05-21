@@ -151,10 +151,10 @@ test_that("reconstructing U, V, W, and R from a new Y matrix works as expected",
       W_diff = matsbyname::difference_byname(W_double, W_prime),
       R_diff = matsbyname::difference_byname(R_double, R_prime),
       # Check if it is the 0 matrix
-      UOK = matsbyname::iszero_byname(U_diff),
-      VOK = matsbyname::iszero_byname(V_diff),
-      WOK = matsbyname::iszero_byname(W_diff),
-      ROK = matsbyname::iszero_byname(W_diff),
+      UOK = matsbyname::iszero_byname(U_diff, tol = 1e-3),
+      VOK = matsbyname::iszero_byname(V_diff, tol = 1e-3),
+      WOK = matsbyname::iszero_byname(W_diff, tol = 1e-3),
+      ROK = matsbyname::iszero_byname(W_diff, tol = 1e-3),
     )
 
   expect_true(all(as.logical(res$UOK)))
