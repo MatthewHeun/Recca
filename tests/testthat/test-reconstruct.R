@@ -67,9 +67,10 @@ test_that("reconstructing U, V, W, and R from a new Y matrix works as expected",
       Y_prime = list(Y_prime_finalE, Y_prime_servicesE, Y_prime_usefulE, Y_prime_servicesX)
     ) %>%
     new_Y() %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, U_prime, V_prime) %>%
-    tidyr::gather(key = "matnames", value = "matvals", U_prime, V_prime) %>%
+    dplyr::select(Country, Year, Energy.type, Last.stage, U_prime, V_prime, R_prime) %>%
+    tidyr::gather(key = "matnames", value = "matvals", U_prime, V_prime, R_prime) %>%
     matsindf::expand_to_tidy(drop = 0)
+
   expect_equivalent(Reconstructed_Residential %>%
                       dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "U_prime", rownames == "Crude - Dist.", colnames == "Crude dist.") %>%
                       dplyr::select(matvals) %>%
@@ -90,6 +91,14 @@ test_that("reconstructing U, V, W, and R from a new Y matrix works as expected",
                       dplyr::select(matvals) %>%
                       unlist(),
                     6238.6014610456)
+
+  Reconstructed_Residential %>%
+    dplyr::filter(matnames == "R_prime") %>%
+    glimpse()
+
+  View(Reconstructed_Residential$R[[1]])
+  View(Reconstructed_Residential$R_prime[[1]])
+
 
   # Testing R_prime matrix, too:
   # Crude oil - resources
@@ -117,6 +126,25 @@ test_that("reconstructing U, V, W, and R from a new Y matrix works as expected",
     magrittr::extract2("matvals") %>%
     dplyr::first() %>%
     expect_equal(43000)
+
+
+  # Double Y matrix
+  Reconstructed_Double_Y <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    dplyr::select(Country, Year, Energy.type, Last.stage, U, U_feed, V, Y, r_EIOU, S_units, R) %>%
+    calc_io_mats() %>%
+    dplyr::mutate(
+      Y_prime = matsbyname::hadamardproduct_byname(Y, 2)
+    ) %>%
+    new_Y()
+
+
+
+  View(Reconstructed_Double_Y$Y[[1]])
+  View(Reconstructed_Double_Y$Y_prime[[1]])
+
+  View(Reconstructed_Double_Y$R[[1]])
+  View(Reconstructed_Double_Y$R_prime[[1]])
 })
 
 
