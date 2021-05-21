@@ -57,6 +57,7 @@ new_Y <- function(.sutmats = NULL,
                   U_prime = "U_prime", V_prime = "V_prime", W_prime = "W_prime", R_prime = "R_prime"){
 
   new_Y_func <- function(Y_prime_mat, L_ixp_mat, L_pxp_mat, Z_mat, D_mat, O_mat, R_mat, r_vec, h_vec){
+
     y_prime_vec <- matsbyname::rowsums_byname(Y_prime_mat)
 
     g_prime_vec <- matsbyname::matrixproduct_byname(L_ixp_mat, y_prime_vec)
@@ -80,7 +81,17 @@ new_Y <- function(.sutmats = NULL,
     #     matsbyname::hatize_byname()
     #     )
 
-    R_prime_mat <- matsbyname::matrixproduct_byname(O_mat, matsbyname::hatize_byname(h_vec))
+    y_prime_minus_W_i <- y_prime_vec %>%
+      matsbyname::difference_byname(
+        matsbyname::rowsums_byname(W_prime_mat)
+      )
+
+    R_prime_mat <- matsbyname::matrixproduct_byname(
+      O_mat,
+      matsbyname::transpose_byname(
+        matsbyname::hatize_byname(y_prime_minus_W_i)
+      )
+    )
 
     list(U_prime_mat, V_prime_mat, W_prime_mat, R_prime_mat) %>% magrittr::set_names(c(U_prime, V_prime, W_prime, R_prime))
   }
