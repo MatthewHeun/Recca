@@ -179,6 +179,10 @@ test_that("reconstructing U, V, W, and R from a new Y matrix works as expected",
     ) %>%
     glimpse()
 
+  Reconstructed_NULL %>%
+    dplyr::filter(! is.null(R_prime)) %>%
+    glimpse()
+
   expect_equal(Reconstructed_NULL$Y_prime[[1]], NULL)
   expect_equal(Reconstructed_NULL$U_prime[[1]], NULL)
   expect_equal(Reconstructed_NULL$V_prime[[1]], NULL)
