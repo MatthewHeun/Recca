@@ -161,6 +161,32 @@ test_that("reconstructing U, V, W, and R from a new Y matrix works as expected",
   expect_true(all(as.logical(res$VOK)))
   expect_true(all(as.logical(res$WOK)))
   expect_true(all(as.logical(res$ROK)))
+
+
+  # Test to define a NULL new Y matrix
+  Reconstructed_NULL <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    dplyr::select(Country, Year, Energy.type, Last.stage, U, U_feed, V, Y, r_EIOU, S_units, R) %>%
+    calc_io_mats() %>%
+    dplyr::mutate(
+      Y_prime = matsbyname::select_cols_byname(
+        Y,
+        "a_pattern_that_does_not_exist_anywgere"
+      )
+    ) %>%
+    Recca::new_Y(
+      Y_prime = "Y_prime"
+    ) %>%
+    glimpse()
+
+  expect_equal(Reconstructed_NULL$Y_prime[[1]], NULL)
+  expect_equal(Reconstructed_NULL$U_prime[[1]], NULL)
+  expect_equal(Reconstructed_NULL$V_prime[[1]], NULL)
+  expect_equal(Reconstructed_NULL$W_prime[[1]], NULL)
+  expect_equal(Reconstructed_NULL$R_prime[[1]], NULL)
+  expect_equal(Reconstructed_NULL$V_prime[[2]], NULL)
+  expect_equal(Reconstructed_NULL$W_prime[[3]], NULL)
+  expect_equal(Reconstructed_NULL$R_prime[[4]], NULL)
 })
 
 

@@ -58,40 +58,47 @@ new_Y <- function(.sutmats = NULL,
 
   new_Y_func <- function(Y_prime_mat, L_ixp_mat, L_pxp_mat, Z_mat, D_mat, O_mat, R_mat, r_vec, h_vec){
 
-    y_prime_vec <- matsbyname::rowsums_byname(Y_prime_mat)
+    if (is.null(Y_prime_mat)){
+      U_prime_mat <- NULL
+      V_prime_mat <- NULL
+      W_prime_mat <- NULL
+      R_prime_mat <- NULL
+    } else {
+      y_prime_vec <- matsbyname::rowsums_byname(Y_prime_mat)
 
-    g_prime_vec <- matsbyname::matrixproduct_byname(L_ixp_mat, y_prime_vec)
+      g_prime_vec <- matsbyname::matrixproduct_byname(L_ixp_mat, y_prime_vec)
 
-    q_prime_vec <- matsbyname::matrixproduct_byname(L_pxp_mat, y_prime_vec)
+      q_prime_vec <- matsbyname::matrixproduct_byname(L_pxp_mat, y_prime_vec)
 
-    U_prime_mat <- matsbyname::matrixproduct_byname(Z_mat, matsbyname::hatize_byname(g_prime_vec))
+      U_prime_mat <- matsbyname::matrixproduct_byname(Z_mat, matsbyname::hatize_byname(g_prime_vec))
 
-    V_prime_mat <- matsbyname::matrixproduct_byname(D_mat, matsbyname::hatize_byname(q_prime_vec))
+      V_prime_mat <- matsbyname::matrixproduct_byname(D_mat, matsbyname::hatize_byname(q_prime_vec))
 
-    W_prime_mat <- matsbyname::difference_byname(
-      matsbyname::transpose_byname(V_prime_mat),
-      U_prime_mat
-    )
-
-    # R_prime_mat <- matsbyname::matrixproduct_byname(
-    #   r_vec %>%
-    #     matsbyname::hatinv_byname() %>%
-    #     matsbyname::matrixproduct_byname(R_mat),
-    #   matsbyname::difference_byname(y_prime_vec, matsbyname::rowsums_byname(W_prime_mat)) %>%
-    #     matsbyname::hatize_byname()
-    #     )
-
-    y_prime_minus_W_i <- y_prime_vec %>%
-      matsbyname::difference_byname(
-        matsbyname::rowsums_byname(W_prime_mat)
+      W_prime_mat <- matsbyname::difference_byname(
+        matsbyname::transpose_byname(V_prime_mat),
+        U_prime_mat
       )
 
-    R_prime_mat <- matsbyname::matrixproduct_byname(
-      O_mat,
-      matsbyname::transpose_byname(
-        matsbyname::hatize_byname(y_prime_minus_W_i)
+      # R_prime_mat <- matsbyname::matrixproduct_byname(
+      #   r_vec %>%
+      #     matsbyname::hatinv_byname() %>%
+      #     matsbyname::matrixproduct_byname(R_mat),
+      #   matsbyname::difference_byname(y_prime_vec, matsbyname::rowsums_byname(W_prime_mat)) %>%
+      #     matsbyname::hatize_byname()
+      #     )
+
+      y_prime_minus_W_i <- y_prime_vec %>%
+        matsbyname::difference_byname(
+          matsbyname::rowsums_byname(W_prime_mat)
+        )
+
+      R_prime_mat <- matsbyname::matrixproduct_byname(
+        O_mat,
+        matsbyname::transpose_byname(
+          matsbyname::hatize_byname(y_prime_minus_W_i)
+        )
       )
-    )
+    }
 
     list(U_prime_mat, V_prime_mat, W_prime_mat, R_prime_mat) %>% magrittr::set_names(c(U_prime, V_prime, W_prime, R_prime))
   }
