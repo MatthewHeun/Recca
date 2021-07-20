@@ -40,14 +40,14 @@
 calc_embodied_mats <- function(.iomats = NULL,
                                # Input names
                                Y = "Y", q = "q",
-                               L_ixp = "L_ixp", g = "g", W = "W", U_EIOU = "U_EIOU",
+                               L_ixp = "L_ixp", A = "A", g = "g", W = "W", U_EIOU = "U_EIOU", R = "R",
                                # Output names
                                G = "G", H = "H", E = "E",
                                M_p = "M_p", M_s = "M_s",
                                F_footprint_p = "F_footprint_p", F_effects_p = "F_effects_p",
                                F_footprint_s = "F_footprint_s", F_effects_s = "F_effects_s"){
-  embodied_func <- function(Y_mat, q_vec, L_ixp_mat, g_vec, W_mat, U_EIOU_mat){
-    GH_list <- calc_GH(Y = Y_mat, L_ixp = L_ixp_mat,
+  embodied_func <- function(Y_mat, q_vec, L_ixp_mat, g_vec, W_mat, U_EIOU_mat, A_mat, R_mat){
+    GH_list <- calc_GH(Y = Y_mat, L_ixp = L_ixp_mat, R = R_mat, A = A_mat, q = q_vec,
                        G = G, H = H)
     G_mat <- GH_list[[G]]
     E_list <- calc_E(g = g_vec, W = W_mat, U_EIOU = U_EIOU_mat,
@@ -63,7 +63,7 @@ calc_embodied_mats <- function(.iomats = NULL,
     c(GH_list, E_list, M_list, F_list) %>% magrittr::set_names(c(names(GH_list), names(E_list), names(M_list), names(F_list)))
   }
   matsindf::matsindf_apply(.iomats, FUN = embodied_func, Y_mat = Y, q_vec = q,
-                 L_ixp_mat = L_ixp, g_vec = g, W_mat = W, U_EIOU_mat = U_EIOU)
+                 L_ixp_mat = L_ixp, g_vec = g, W_mat = W, U_EIOU_mat = U_EIOU, A_mat = A, R_mat = R)
 }
 
 #' Calculate the \code{G} and \code{H} matrices for embodied energy calculations
@@ -82,16 +82,39 @@ calc_embodied_mats <- function(.iomats = NULL,
 #' @export
 calc_GH <- function(.iomats = NULL,
                     # Input columns
-                    Y = "Y", L_ixp = "L_ixp",
+                    Y = "Y", L_ixp = "L_ixp", R = "R", A = "A", q = "q",
                     # Output columns
-                    G = "G", H = "H"){
-  GH_func <- function(Y_mat, L_ixp_mat){
-    y <- matsbyname::rowsums_byname(Y)
-    G_mat <- matsbyname::matrixproduct_byname(L_ixp, matsbyname::hatize_byname(y))
-    H_mat <- matsbyname::matrixproduct_byname(L_ixp, Y)
-    list(G_mat, H_mat) %>% magrittr::set_names(c(G, H))
+                    G_V = "G_V", G_R = "G_R", G = "G",
+                    H_V = "H_V", H_R = "H_R", H = "H"){
+  GH_func <- function(Y_mat, L_ixp_mat, R_mat, A_mat, q_vec){
+
+    # Calculating y
+    y <- matsbyname::rowsums_byname(Y_mat)
+
+    # Calculating G_V and G_R
+    G_V_mat <- matsbyname::matrixproduct_byname(L_ixp, matsbyname::hatize_byname(y))
+    G_R_mat <- R_mat %>%
+      matsbyname::matrixproduct_byname(matsbyname::hatinv_byname(q_vec)) %>%
+      matsbyname::matrixproduct_byname(matsbyname::invert_byname(
+        matsbyname::Iminus_byname(A_mat))) %>%
+      matsbyname::matrixproduct_byname(matsbyname::hatize_byname(y))
+
+    # Calculating H_V and H_R
+    H_V_mat <- matsbyname::matrixproduct_byname(L_ixp, Y)
+    H_R_mat <- R_mat %>%
+      matsbyname::matrixproduct_byname(matsbyname::hatinv_byname(q_vec)) %>%
+      matsbyname::matrixproduct_byname(matsbyname::invert_byname(
+        matsbyname::Iminus_byname(A_mat))) %>%
+      matsbyname::matrixproduct_byname(Y_mat)
+
+    # Calculating G and H
+    G_mat <- matsbyname::sum_byname(G_V_mat, G_R_mat)
+    H_mat <- matsbyname::sum_byname(H_V_mat, H_R_mat)
+
+    # Naming and returning matrices
+    list(G_V_mat, G_R_mat, G_mat, H_V_mat, H_R_mat, H_mat) %>% magrittr::set_names(c(G_V, G_R, G, H_V, H_R, H))
   }
-  matsindf::matsindf_apply(.iomats, FUN = GH_func, Y_mat = Y, L_ixp_mat = L_ixp)
+  matsindf::matsindf_apply(.iomats, FUN = GH_func, Y_mat = Y, L_ixp_mat = L_ixp, R_mat = R, A_mat = A, q_vec = q)
 }
 
 #' Calculate the \code{E} matrix for embodied energy calculations

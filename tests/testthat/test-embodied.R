@@ -27,6 +27,7 @@ test_that("embodied energy calculations works as expected", {
     dplyr::select(Country, Year, Energy.type, Last.stage, G, H) %>%
     tidyr::gather(key = "matnames", value = "matvals", G, H) %>%
     matsindf::expand_to_tidy(drop = 0)
+
   expect_equivalent(GH %>%
                       dplyr::filter(Last.stage == IEATools::last_stages$final, Energy.type == IEATools::energy_types$e, matnames == "G", rownames == "Crude dist.", colnames == "Diesel - Dist.") %>%
                       dplyr::select(matvals) %>%
