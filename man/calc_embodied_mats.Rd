@@ -8,10 +8,16 @@ calc_embodied_mats(
   .iomats = NULL,
   Y = "Y",
   q = "q",
-  L_ixp = "L_ixp",
   g = "g",
+  r = "r",
+  L_ixp = "L_ixp",
+  A = "A",
   W = "W",
   U_EIOU = "U_EIOU",
+  R = "R",
+  V = "V",
+  U = "U",
+  U_feed = "U_feed",
   G = "G",
   H = "H",
   E = "E",
@@ -33,9 +39,9 @@ of an Energy Conversion Chain.
 
 \item{q}{final demand (\code{q}) vector or name of the column in \code{.iodata} containing same. Default is "\code{q}".}
 
-\item{L_ixp}{industry-by-product Leontief (\code{L_ixp}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{L_ixp}"}
-
 \item{g}{name of the \code{g} vector on output. Default is "\code{g}".}
+
+\item{L_ixp}{industry-by-product Leontief (\code{L_ixp}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{L_ixp}"}
 
 \item{W}{name of the \code{W} matrix on output. Default is "\code{W}".}
 

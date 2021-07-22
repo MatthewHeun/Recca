@@ -41,17 +41,17 @@ calc_embodied_mats <- function(.iomats = NULL,
                                # Input names
                                Y = "Y", q = "q", g = "g", r = "r",
                                L_ixp = "L_ixp", A = "A", W = "W", U_EIOU = "U_EIOU",
-                               R = "R", V = "V", U = "U",
+                               R = "R", V = "V", U = "U", U_feed = "U_feed",
                                # Output names
                                G = "G", H = "H", E = "E",
                                M_p = "M_p", M_s = "M_s",
                                F_footprint_p = "F_footprint_p", F_effects_p = "F_effects_p",
                                F_footprint_s = "F_footprint_s", F_effects_s = "F_effects_s"){
-  embodied_func <- function(Y_mat, q_vec, L_ixp_mat, g_vec, r_vec, W_mat, U_EIOU_mat, A_mat, R_mat, V_mat, U_mat){
+  embodied_func <- function(Y_mat, q_vec, L_ixp_mat, g_vec, r_vec, W_mat, U_EIOU_mat, A_mat, R_mat, V_mat, U_mat, U_feed_mat){
     GH_list <- calc_GH(Y = Y_mat, L_ixp = L_ixp_mat, R = R_mat, A = A_mat, q = q_vec,
                        G = G, H = H)
     G_mat <- GH_list[[G]]
-    E_list <- calc_E(R = R_mat, V = V_mat, U = U_mat, g = g_vec, r = r_vec)
+    E_list <- calc_E(R = R_mat, V = V_mat, U_feed = U_feed_mat, g = g_vec, r = r_vec)
     E_mat <- E_list[[E]]
     M_list <- calc_M(Y = Y_mat, q = q_vec, G = G_mat, E = E_mat,
                      M_p = M_p, M_s = M_s)
@@ -63,7 +63,7 @@ calc_embodied_mats <- function(.iomats = NULL,
     c(GH_list, E_list, M_list, F_list) %>% magrittr::set_names(c(names(GH_list), names(E_list), names(M_list), names(F_list)))
   }
   matsindf::matsindf_apply(.iomats, FUN = embodied_func, Y_mat = Y, q_vec = q, r_vec = r,
-                 L_ixp_mat = L_ixp, g_vec = g, W_mat = W, U_EIOU_mat = U_EIOU, A_mat = A, R_mat = R, V_mat = V, U_mat = U)
+                 L_ixp_mat = L_ixp, g_vec = g, W_mat = W, U_EIOU_mat = U_EIOU, A_mat = A, R_mat = R, V_mat = V, U_mat = U, U_feed_mat = U_feed)
 }
 
 #' Calculate the \code{G} and \code{H} matrices for embodied energy calculations
@@ -132,14 +132,14 @@ calc_GH <- function(.iomats = NULL,
 #' @export
 calc_E <- function(.iomats = NULL,
                    # Input names
-                   R = "R", V = "V", U = "U", g = "g", r = "r",
+                   R = "R", V = "V", U_feed = "U_feed", g = "g", r = "r",
                    # Output name
                    E = "E"){
-  E_func <- function(R_mat, V_mat, U_mat, g_vec, r_vec){
+  E_func <- function(R_mat, V_mat, U_feed_mat, g_vec, r_vec){
 
     R_T_plus_U_T_minus_U <- matsbyname::sum_byname(R_mat, V_mat) %>%
       matsbyname::transpose_byname() %>%
-      matsbyname::difference_byname(U_mat)
+      matsbyname::difference_byname(U_feed_mat)
 
     r_plus_g <- matsbyname::sum_byname(g_vec, r_vec)
 
@@ -147,7 +147,7 @@ calc_E <- function(.iomats = NULL,
 
     list(E_mat) %>% magrittr::set_names(E)
   }
-  matsindf::matsindf_apply(.iomats, FUN = E_func, R_mat = R, V_mat = V, U_mat = U, g_vec = g, r_vec = r)
+  matsindf::matsindf_apply(.iomats, FUN = E_func, R_mat = R, V_mat = V, U_feed_mat = U_feed, g_vec = g, r_vec = r)
 }
 
 
