@@ -248,7 +248,7 @@ calc_A <- function(.sutdata = NULL,
                    Z = "Z", K = "K", C = "C", D = "D", A = "A", O = "O"){
   A_func <- function(R_mat, U_mat, V_mat, q_vec, f_vec, g_vec, r_vec){
     if (is.null(R_mat)) {
-      # No R matrix, just use the V matrix, assuming that resouces are included there.
+      # No R matrix, just use the V matrix, assuming that resources are included there.
       R_plus_V_mat <- V_mat
     } else {
       # An R matrix is present. Sum R and V before proceeding.
