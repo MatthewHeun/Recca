@@ -39,9 +39,9 @@
 #' @export
 calc_embodied_mats <- function(.iomats = NULL,
                                # Input names
-                               Y = "Y", q = "q", g = "g", r = "r",
-                               L_ixp = "L_ixp", A = "A", W = "W", U_EIOU = "U_EIOU",
-                               R = "R", V = "V", U = "U", U_feed = "U_feed",
+                               q = "q", g = "g", r = "r",
+                               L_ixp = "L_ixp", A = "A",
+                               R = "R", V = "V", U_feed = "U_feed", Y = "Y",
                                # Output names
                                G = "G", H = "H", E = "E",
                                M_p = "M_p", M_s = "M_s",
@@ -63,7 +63,7 @@ calc_embodied_mats <- function(.iomats = NULL,
     c(GH_list, E_list, M_list, F_list) %>% magrittr::set_names(c(names(GH_list), names(E_list), names(M_list), names(F_list)))
   }
   matsindf::matsindf_apply(.iomats, FUN = embodied_func, Y_mat = Y, q_vec = q, r_vec = r,
-                 L_ixp_mat = L_ixp, g_vec = g, W_mat = W, U_EIOU_mat = U_EIOU, A_mat = A, R_mat = R, V_mat = V, U_mat = U, U_feed_mat = U_feed)
+                 L_ixp_mat = L_ixp, g_vec = g, A_mat = A, R_mat = R, V_mat = V, U_feed_mat = U_feed)
 }
 
 #' Calculate the \code{G} and \code{H} matrices for embodied energy calculations

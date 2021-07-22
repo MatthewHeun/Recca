@@ -6,18 +6,15 @@
 \usage{
 calc_embodied_mats(
   .iomats = NULL,
-  Y = "Y",
   q = "q",
   g = "g",
   r = "r",
   L_ixp = "L_ixp",
   A = "A",
-  W = "W",
-  U_EIOU = "U_EIOU",
   R = "R",
   V = "V",
-  U = "U",
   U_feed = "U_feed",
+  Y = "Y",
   G = "G",
   H = "H",
   E = "E",
@@ -35,17 +32,13 @@ calc_embodied_mats(
 of an Energy Conversion Chain.
 \code{.iomats} will likely have been obtained from the \code{\link{calc_io_mats}} function.}
 
-\item{Y}{final demand (\code{Y}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{Y}".}
-
 \item{q}{final demand (\code{q}) vector or name of the column in \code{.iodata} containing same. Default is "\code{q}".}
 
 \item{g}{name of the \code{g} vector on output. Default is "\code{g}".}
 
 \item{L_ixp}{industry-by-product Leontief (\code{L_ixp}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{L_ixp}"}
 
-\item{W}{name of the \code{W} matrix on output. Default is "\code{W}".}
-
-\item{U_EIOU}{name of the \code{U_EIOU} matrices on output. Default is "\code{U_EIOU}".}
+\item{Y}{final demand (\code{Y}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{Y}".}
 
 \item{G}{name of the \code{G} matrix on output.
 \code{G} is calculated by \code{L_ixp * y_hat}. Default is "\code{G}".}
@@ -74,6 +67,10 @@ Default is "\code{M_p}".}
 
 \item{F_effects_s}{name of the \code{F_effects_s} matrix on output.
 \code{F_effects_s} is calculated by \code{(M_s * i)_hat_inv * M_s}. Default is "\code{F_effects_s}".}
+
+\item{W}{name of the \code{W} matrix on output. Default is "\code{W}".}
+
+\item{U_EIOU}{name of the \code{U_EIOU} matrices on output. Default is "\code{U_EIOU}".}
 }
 \value{
 a list or data frame containing embodied energy matrices
