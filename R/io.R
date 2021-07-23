@@ -215,6 +215,7 @@ calc_yqfgW <- function(.sutdata = NULL,
   matsindf::matsindf_apply(.sutdata, FUN = yqfgw_func, R_mat = R, U_mat = U, V_mat = V, Y_mat = Y, S_units_mat = S_units)
 }
 
+
 #' Calculate \code{Z}, \code{D}, \code{C}, and \code{A} matrices
 #'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
@@ -254,6 +255,14 @@ calc_A <- function(.sutdata = NULL,
       # An R matrix is present. Sum R and V before proceeding.
       R_plus_V_mat <- matsbyname::sum_byname(R_mat, V_mat)
     }
+    # If g is a 1-row vector (because V_mat has only 1 row),
+    # need to strip off the column name, because hatinv(g) will fail.
+    # But actually we don't care about the name of the single column in the g vector,
+    # so delete the column name.
+    # We use hatinv(g) in several places below, so calculate it once here.
+    ghatinv <- g_vec %>%
+      matsbyname::setcolnames_byname(NULL) %>%
+      matsbyname::hatinv_byname()
     # The calculation of C and Z will fail when g contains NA values.
     # NA values can be created when V has any industry whose outputs are unit inhomogeneous.
     # Test here if any entry in g is NA.
@@ -262,13 +271,13 @@ calc_A <- function(.sutdata = NULL,
       C_mat <- NA_real_ %>%
         # rowtype of C_mat is rowtype(transpose(R_plus_V_mat)), which is same as coltype(R_plus_V_mat))
         matsbyname::setrowtype(matsbyname::coltype(V_mat)) %>%
-        matsbyname::setcoltype(matsbyname::coltype(matsbyname::hatinv_byname(g_vec)))
+        matsbyname::setcoltype(matsbyname::coltype(ghatinv))
       Z_mat <- NA_real_ %>%
         matsbyname::setrowtype(matsbyname::rowtype(U_mat)) %>%
-        matsbyname::setcoltype(matsbyname::coltype(matsbyname::hatinv_byname(g_vec)))
+        matsbyname::setcoltype(matsbyname::coltype(ghatinv))
     } else {
-      C_mat <- matsbyname::matrixproduct_byname(matsbyname::transpose_byname(V_mat), matsbyname::hatinv_byname(g_vec))
-      Z_mat <- matsbyname::matrixproduct_byname(U_mat, matsbyname::hatinv_byname(g_vec))
+      C_mat <- matsbyname::matrixproduct_byname(matsbyname::transpose_byname(V_mat), ghatinv)
+      Z_mat <- matsbyname::matrixproduct_byname(U_mat, ghatinv)
     }
     # The calculation of K will fail when f contains NA values.
     # NA values can be created when U has any industry whose inputs are inhomogeneous.
