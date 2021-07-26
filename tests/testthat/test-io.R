@@ -105,11 +105,17 @@ test_that("calculating y, q, f, g, h, W, A, and L works as expected", {
 
   sum_D <- matsbyname::colsums_byname(D_x_services)
   # All colsums should be either 1 or zero.
-  expect_true(
-    all(
-      (sum_D == 1 || sum_D == 0)
-    )
-  )
+  # expect_true(
+  #   all(
+  #     (sum_D == 1 || sum_D == 0)
+  #   )
+  # )
+  # Use a trick here. TRUE is counted as 1 in arithmetic, and FALSE is counted as 0.
+  # When we add are_1 and are_0, we're adding logicals together.
+  # If we expect everything to be either a 1 or a 0, we should get only 1 when we sum them.
+  are_1 <- abs(sum_D - 1) < 1e-10
+  are_0 <- abs(sum_D) < 1e-10
+  expect_true(all(are_1 + are_0))
 
 
   # O matrix:
@@ -140,11 +146,16 @@ test_that("calculating y, q, f, g, h, W, A, and L works as expected", {
 
   sum_O <- matsbyname::colsums_byname(O_x_services)
   # All colsums should be either 1 or zero.
-  expect_true(
-    all(
-      (sum_O == 1 || sum_O == 0)
-    )
-  )
+  # expect_true(
+  #   all(
+  #     (sum_O == 1 || sum_O == 0)
+  #   )
+  # )
+  are_1 <- abs(sum_O - 1) < 1e-10
+  are_0 <- abs(sum_O) < 1e-10
+  expect_true(all(are_1 + are_0))
+
+
 
 
   # Focus on L matrices (L_ixp and L_pxp)
