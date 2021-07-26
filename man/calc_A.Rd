@@ -28,29 +28,29 @@ calc_A(
 \code{R} is an optional argument.
 If all of \code{R} is added to \code{V}, this argument can be left unspecified.}
 
-\item{U}{use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".}
+\item{U}{Use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "U".}
 
-\item{V}{make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "\code{V}".}
+\item{V}{Make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "V".}
 
-\item{q}{\code{q} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{q}".}
+\item{q}{A \code{q} vector or name of the column in \code{.sutmats} that contains same. Default is "q".}
 
-\item{f}{\code{f} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{r}".}
+\item{f}{An \code{f} vector or name of the column in \code{.sutmats} that contains same. Default is "r".}
 
-\item{g}{\code{g} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{g}".}
+\item{g}{A \code{g} vector or name of the column in \code{.sutmats} that contains same. Default is "g".}
 
-\item{Z}{name for \code{Z} matrix on output. Default is "\code{Z}".
+\item{Z}{The name for \code{Z} matrix on output. Default is "Z".
 \code{Z} is calculated by \code{U * g_hat_inv}.}
 
-\item{K}{name for \code{K} matrix on output. Default is "\code{K}".
+\item{K}{The name for \code{K} matrix on output. Default is "K".
 \code{K} is calculated by \code{U * f_hat_inv}.}
 
-\item{C}{name for \code{C} matrix on output. Default is "\code{C}".
+\item{C}{The name for \code{C} matrix on output. Default is "C".
 \code{C} is calculated by \code{transpose(V) * g_hat_inv}.}
 
-\item{D}{name for \code{D} matrix on output. Default is "\code{D}".
+\item{D}{The name for \code{D} matrix on output. Default is "D".
 \code{D} is calculated by \code{V * q_hat_inv}.}
 
-\item{A}{name for \code{A} matrix on output. Default is "\code{A}".
+\item{A}{The name for \code{A} matrix on output. Default is "A".
 \code{A} is calculated by \code{Z * D}.}
 }
 \value{

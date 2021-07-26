@@ -29,29 +29,27 @@ Default is \code{sum_U_Y_rows}.
 Alternatively, an analyst can choose to use the \code{sum_R_V_cols} method.
 In the case of a balanced ECC, the method does not matter.}
 
-\item{R}{resources (\code{R}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{R}".}
+\item{R}{The resources (\code{R}) matrix or name of the column in \code{.sutmats} that contains same. Default is "R".}
 
-\item{U}{use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".}
+\item{U}{The use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "U".}
 
-\item{V}{make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "\code{V}".}
+\item{V}{The make (\code{V}) matrix or name of the column in \code{.sutmats} that contains same. Default is "V".}
 
-\item{Y}{final demand (\code{Y}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Y}".}
+\item{S_units}{The \code{S_units} matrix or name of the column in \code{.sutmats} that contains same. Default is "S_units".}
 
-\item{S_units}{\code{S_units} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{S_units}".}
-
-\item{y}{name for \code{y} vector on output. Default is "\code{y}".
+\item{y}{The name for the \code{y} vector on output. Default is "y".
 \code{y} is calculated by \code{rowsums(Y)}.}
 
-\item{q}{name for \code{q} vector on output. Default is "\code{q}".
+\item{q}{The name for the \code{q} vector on output. Default is "q".
 \code{q} is calculated by \code{rowsums(U) + y}.}
 
-\item{f}{name for \code{f} vector on output. Default is "\code{f}".
+\item{f}{The name for the \code{f} vector on output. Default is "f".
 \code{f} is calculated by \code{colsums(U)}.}
 
-\item{g}{name for \code{g} vector on output. Default is "\code{g}".
+\item{g}{The name for the \code{g} vector on output. Default is "g".
 \code{g} is calculated by \code{rowsums(V)}.}
 
-\item{W}{name for \code{W} matrix on output. Default is "\code{W}".
+\item{W}{The name for the \code{W} matrix on output. Default is "W".
 \code{W} is calculated by \code{transpose(V) - U}.}
 }
 \value{
