@@ -92,17 +92,17 @@ calc_GH <- function(.iomats = NULL,
     y <- matsbyname::rowsums_byname(Y_mat)
 
     # Calculating G_V and G_R
-    G_V_mat <- matsbyname::matrixproduct_byname(L_ixp, matsbyname::hatize_byname(y))
+    G_V_mat <- matsbyname::matrixproduct_byname(L_ixp, matsbyname::hatize_byname(y, keep = "rownames"))
     G_R_mat <- R_mat %>%
-      matsbyname::matrixproduct_byname(matsbyname::hatinv_byname(q_vec)) %>%
+      matsbyname::matrixproduct_byname(matsbyname::hatinv_byname(q_vec, keep = "rownames")) %>%
       matsbyname::matrixproduct_byname(matsbyname::invert_byname(
         matsbyname::Iminus_byname(A_mat))) %>%
-      matsbyname::matrixproduct_byname(matsbyname::hatize_byname(y))
+      matsbyname::matrixproduct_byname(matsbyname::hatize_byname(y, keep = "rownames"))
 
     # Calculating H_V and H_R
     H_V_mat <- matsbyname::matrixproduct_byname(L_ixp, Y)
     H_R_mat <- R_mat %>%
-      matsbyname::matrixproduct_byname(matsbyname::hatinv_byname(q_vec)) %>%
+      matsbyname::matrixproduct_byname(matsbyname::hatinv_byname(q_vec, keep = "rownames")) %>%
       matsbyname::matrixproduct_byname(matsbyname::invert_byname(
         matsbyname::Iminus_byname(A_mat))) %>%
       matsbyname::matrixproduct_byname(Y_mat)
@@ -143,7 +143,7 @@ calc_E <- function(.iomats = NULL,
 
     r_plus_g <- matsbyname::sum_byname(g_vec, r_vec)
 
-    E_mat <- matsbyname::matrixproduct_byname(R_T_plus_U_T_minus_U, matsbyname::hatinv_byname(r_plus_g))
+    E_mat <- matsbyname::matrixproduct_byname(R_T_plus_U_T_minus_U, matsbyname::hatinv_byname(r_plus_g, keep = "rownames"))
 
     list(E_mat) %>% magrittr::set_names(E)
   }
@@ -190,7 +190,7 @@ calc_M <- function(.YqGHEdata = NULL,
     e_vecs <- matsbyname::list_of_rows_or_cols(E_mat, margin = 1)
     # Form one e_hat matrix for each e vector in each list.
     # !!e_hat_colname := matsbyname::hatize_byname(!!as.name(e_colname)),
-    e_hat_list <- lapply(e_vecs, FUN = matsbyname::hatize_byname)
+    e_hat_list <- lapply(e_vecs, FUN = matsbyname::hatize_byname, keep = "rownames")
     # Calculate Q matrices
     G_list <- matsbyname::make_list(G_mat, n = length(e_hat_list), lenx = 1)
     Q_list <- Map(matsbyname::matrixproduct_byname, e_hat_list, G_list)
@@ -219,7 +219,7 @@ calc_M <- function(.YqGHEdata = NULL,
       matsbyname::setrownames_byname(names(Qposcolsums_list)) %>%
       matsbyname::setrowtype(matsbyname::rowtype(E_mat)) %>% matsbyname::setcoltype(matsbyname::rowtype(E_mat))
     # Calculate the "per-sector" embodied energy.
-    M_s_mat <- matsbyname::matrixproduct_byname(M_p_mat, q_vec %>% matsbyname::hatinv_byname() %>% matsbyname::matrixproduct_byname(Y_mat))
+    M_s_mat <- matsbyname::matrixproduct_byname(M_p_mat, q_vec %>% matsbyname::hatinv_byname(keep = "rownames") %>% matsbyname::matrixproduct_byname(Y_mat))
     # Verify energy balance for embodied matrices (M_p)
     # It should be that q - rowsums(M_p) = 0
     err = q_vec %>% matsbyname::setcolnames_byname("err") %>% matsbyname::setcoltype("err") %>%
@@ -427,8 +427,8 @@ calc_embodied_EIOU <- function(.iomats = NULL,
 
   embodied_EIOU_func <- function(e_EIOU_vec, y_vec, Y_mat, L_ixp_mat, L_ixp_feed_mat){
 
-    e_EIOU_hat_vec <- matsbyname::hatize_byname(e_EIOU_vec)
-    y_hat_vec <- matsbyname::hatize_byname(y_vec)
+    e_EIOU_hat_vec <- matsbyname::hatize_byname(e_EIOU_vec, keep = "rownames")
+    y_hat_vec <- matsbyname::hatize_byname(y_vec, keep = "rownames")
 
 
     Q_EIOU_p_mat <- matsbyname::matrixproduct_byname(e_EIOU_hat_vec,

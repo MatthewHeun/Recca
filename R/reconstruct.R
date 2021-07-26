@@ -70,9 +70,9 @@ new_Y <- function(.sutmats = NULL,
 
       q_prime_vec <- matsbyname::matrixproduct_byname(L_pxp_mat, y_prime_vec)
 
-      U_prime_mat <- matsbyname::matrixproduct_byname(Z_mat, matsbyname::hatize_byname(g_prime_vec))
+      U_prime_mat <- matsbyname::matrixproduct_byname(Z_mat, matsbyname::hatize_byname(g_prime_vec, keep = "rownames"))
 
-      V_prime_mat <- matsbyname::matrixproduct_byname(D_mat, matsbyname::hatize_byname(q_prime_vec))
+      V_prime_mat <- matsbyname::matrixproduct_byname(D_mat, matsbyname::hatize_byname(q_prime_vec, keep = "rownames"))
 
       W_prime_mat <- matsbyname::difference_byname(
         matsbyname::transpose_byname(V_prime_mat),
@@ -95,7 +95,7 @@ new_Y <- function(.sutmats = NULL,
       R_prime_mat <- matsbyname::matrixproduct_byname(
         O_mat,
         matsbyname::transpose_byname(
-          matsbyname::hatize_byname(y_prime_minus_W_i)
+          matsbyname::hatize_byname(y_prime_minus_W_i, keep = "rownames")
         )
       )
     }
@@ -235,8 +235,8 @@ new_k_ps <- function(.sutmats = NULL,
 
     # We need the matrix product of k_prime_1 and f_hat in several places.
     # Calculate it here now.
-    k_prime_1_f_hat <- matsbyname::matrixproduct_byname(k_prime_1, matsbyname::hatize_byname(f_vec))
-    k_prime_2_f_hat <- matsbyname::matrixproduct_byname(k_prime_2, matsbyname::hatize_byname(f_vec))
+    k_prime_1_f_hat <- matsbyname::matrixproduct_byname(k_prime_1, matsbyname::hatize_byname(f_vec, keep = "rownames"))
+    k_prime_2_f_hat <- matsbyname::matrixproduct_byname(k_prime_2, matsbyname::hatize_byname(f_vec, keep = "rownames"))
 
     # Get y_prime, g_prime, and q_prime vectors.
     y_prime_1 <- matsbyname::rowsums_byname(k_prime_1_f_hat)
@@ -249,12 +249,12 @@ new_k_ps <- function(.sutmats = NULL,
     q_prime_2 <- matsbyname::matrixproduct_byname(L_pxp_mat, y_prime_2)
 
     # Calculate U_prime_1 and U_prime_2
-    U_prime_1 <- matsbyname::sum_byname(matsbyname::matrixproduct_byname(Z_mat, matsbyname::hatize_byname(g_prime_1)), k_prime_1_f_hat)
-    U_prime_2 <- matsbyname::sum_byname(matsbyname::matrixproduct_byname(Z_mat, matsbyname::hatize_byname(g_prime_2)), k_prime_2_f_hat)
+    U_prime_1 <- matsbyname::sum_byname(matsbyname::matrixproduct_byname(Z_mat, matsbyname::hatize_byname(g_prime_1, keep = "rownames")), k_prime_1_f_hat)
+    U_prime_2 <- matsbyname::sum_byname(matsbyname::matrixproduct_byname(Z_mat, matsbyname::hatize_byname(g_prime_2, keep = "rownames")), k_prime_2_f_hat)
 
     # Calculate V_prime_1 and V_prime_2
-    V_prime_1 <- matsbyname::matrixproduct_byname(D_mat, matsbyname::hatize_byname(q_prime_1))
-    V_prime_2 <- matsbyname::matrixproduct_byname(D_mat, matsbyname::hatize_byname(q_prime_2))
+    V_prime_1 <- matsbyname::matrixproduct_byname(D_mat, matsbyname::hatize_byname(q_prime_1, keep = "rownames"))
+    V_prime_2 <- matsbyname::matrixproduct_byname(D_mat, matsbyname::hatize_byname(q_prime_2, keep = "rownames"))
 
     # Now subtract the "1" versions and add the "2" versions.
     U_prime_mat <- matsbyname::difference_byname(U_mat, U_prime_1) %>% matsbyname::sum_byname(U_prime_2)
@@ -350,21 +350,21 @@ new_R_ps <- function(.sutmats = NULL,
     # Calculating all symmetric IO matrices:
     Z_sym_mat <- matsbyname::matrixproduct_byname(
       matsbyname::transpose_byname(V_mat),
-      matsbyname::hatinv_byname(f_vec)
+      matsbyname::hatinv_byname(f_vec, keep = "rownames")
     )
 
     C_sym_mat <- matsbyname::matrixproduct_byname(
       U_mat,
-      matsbyname::hatinv_byname(f_vec)
+      matsbyname::hatinv_byname(f_vec, keep = "rownames")
     )
 
     D_sym_mat <- matsbyname::matrixproduct_byname(
       matsbyname::transpose_byname(U_mat),
-      matsbyname::hatinv_byname(q_vec)
+      matsbyname::hatinv_byname(q_vec, keep = "rownames")
     )
 
     O_sym_mat <- matsbyname::matrixproduct_byname(
-      matsbyname::hatinv_byname(q_vec),
+      matsbyname::hatinv_byname(q_vec, keep = "rownames"),
       Y_mat
     )
 
@@ -388,12 +388,12 @@ new_R_ps <- function(.sutmats = NULL,
     )
 
     Y_prime_mat <- matsbyname::matrixproduct_byname(
-      matsbyname::hatize_byname(q_prime_vec),
+      matsbyname::hatize_byname(q_prime_vec, keep = "rownames"),
       O_sym_mat
     )
 
     U_prime_mat <- matsbyname::matrixproduct_byname(
-      matsbyname::hatize_byname(q_prime_vec),
+      matsbyname::hatize_byname(q_prime_vec, keep = "rownames"),
       matsbyname::transpose_byname(D_sym_mat)
     )
 
@@ -403,7 +403,7 @@ new_R_ps <- function(.sutmats = NULL,
         L_ixp_sym_mat,
         matsbyname::transpose_byname(R_prime_mat) %>% matsbyname::rowsums_byname()
       ) %>%
-        matsbyname::hatize_byname(),
+        matsbyname::hatize_byname(keep = "rownames"),
       matsbyname::transpose_byname(Z_sym_mat)
     )
 

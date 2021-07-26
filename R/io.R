@@ -261,8 +261,7 @@ calc_A <- function(.sutdata = NULL,
     # so delete the column name.
     # We use hatinv(g) in several places below, so calculate it once here.
     ghatinv <- g_vec %>%
-      matsbyname::setcolnames_byname(NULL) %>%
-      matsbyname::hatinv_byname()
+      matsbyname::hatinv_byname(keep = "rownames")
     # The calculation of C and Z will fail when g contains NA values.
     # NA values can be created when V has any industry whose outputs are unit inhomogeneous.
     # Test here if any entry in g is NA.
@@ -286,14 +285,14 @@ calc_A <- function(.sutdata = NULL,
     if (any(is.na(f_vec))) {
       K_mat <- NA_real_ %>%
         matsbyname::setrowtype(U_mat) %>%
-        matsbyname::setcoltype(matsbyname::coltype(matsbyname::hatinv_byname(f_vec)))
+        matsbyname::setcoltype(matsbyname::coltype(matsbyname::hatinv_byname(f_vec, keep = "rownames")))
     } else {
-      K_mat <- matsbyname::matrixproduct_byname(U_mat, matsbyname::hatinv_byname(f_vec))
+      K_mat <- matsbyname::matrixproduct_byname(U_mat, matsbyname::hatinv_byname(f_vec, keep = "rownames"))
     }
 
-    D_mat <- matsbyname::matrixproduct_byname(V_mat, matsbyname::hatinv_byname(q_vec))
+    D_mat <- matsbyname::matrixproduct_byname(V_mat, matsbyname::hatinv_byname(q_vec, keep = "rownames"))
     A_mat <- matsbyname::matrixproduct_byname(Z_mat, D_mat)
-    O_mat <- matsbyname::matrixproduct_byname(matsbyname::hatinv_byname(r_vec), R_mat)
+    O_mat <- matsbyname::matrixproduct_byname(matsbyname::hatinv_byname(r_vec, keep = "rownames"), R_mat)
 
     # Put all output matrices in a list and return it.
     list(Z_mat, K_mat, C_mat, D_mat, A_mat, O_mat) %>%

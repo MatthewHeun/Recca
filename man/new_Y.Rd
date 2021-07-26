@@ -69,7 +69,7 @@ UKEnergy2000mats \%>\%
   calc_io_mats() \%>\%
   mutate(
     # Give new Y matrices that are double the existing Y matrices
-    Y_prime = hadamardproduct_byname(2, Y)
+    Y_prime = matsbyname::hadamardproduct_byname(2, Y)
   ) \%>\%
   # Should give U_prime and V_prime matrices that are double the existing U and V matrices
   new_Y()
