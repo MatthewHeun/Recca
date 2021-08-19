@@ -35,6 +35,8 @@ In the case of a balanced ECC, the method does not matter.}
 
 \item{V}{The make (\code{V}) matrix or name of the column in \code{.sutmats} that contains same. Default is "V".}
 
+\item{Y}{The final demand matrix (\code{Y}) or name of the column in \code{.sutmats} that contains same. Default is "Y".}
+
 \item{S_units}{The \code{S_units} matrix or name of the column in \code{.sutmats} that contains same. Default is "S_units".}
 
 \item{y}{The name for the \code{y} vector on output. Default is "y".
@@ -48,6 +50,12 @@ In the case of a balanced ECC, the method does not matter.}
 
 \item{g}{The name for the \code{g} vector on output. Default is "g".
 \code{g} is calculated by \code{rowsums(V)}.}
+
+\item{h}{The name for the \code{h} vector on output. Default is "h".
+\code{h} is calculated by \code{colsums(transpose(R))}.}
+
+\item{r}{The name for the \code{r} vector on output. Default is "r".
+\code{r} is calculated by \code{rowsums(R)}.}
 
 \item{W}{The name for the \code{W} matrix on output. Default is "W".
 \code{W} is calculated by \code{transpose(V) - U}.}

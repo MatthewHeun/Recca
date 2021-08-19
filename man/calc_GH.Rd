@@ -27,11 +27,31 @@ calc_GH(
 
 \item{L_ixp}{industry-by-product Leontief (\code{L_ixp}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{L_ixp}".}
 
+\item{R}{Resources (\code{R}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{R}".}
+
+\item{A}{The name of the \code{A} matrix column in the \code{.iomats} data frame.
+Default is "A".}
+
+\item{q}{The name of the \code{q} vector in the \code{.iomats} data frame.
+Default is "q".}
+
+\item{G_V}{name for the \code{G_V} matrix on output. Default is "\code{G_V}".
+\code{G_V} is calculated by \code{L_ixp * y_hat}.}
+
+\item{G_R}{name for the \code{G_R} matrix on output. Default is "\code{G_R}".
+\code{G_R} is calculated by \code{R * q_hat_inv * L_pxp * y_hat}.}
+
 \item{G}{name for the \code{G} matrix on output. Default is "\code{G}".
-\code{G} is calculated by \code{L_ixp * y_hat}.}
+\code{G} is calculated by \code{G_R + G_V}.}
+
+\item{H_V}{name for the \code{H_V} matrix on output. Default is "\code{H_V}".
+\code{H_V} is calculated by \code{L_ixp * Y}.}
+
+\item{H_R}{name for the \code{H_R} matrix on output. Default is "\code{H_R}".
+\code{H_R} is calculated by \code{R * q_hat_inv * L_pxp * Y}.}
 
 \item{H}{name for the \code{H} matrix on output. Default is "\code{H}".
-\code{G} is calculated by \code{L_ixp * Y}.}
+\code{H} is calculated by \code{H_V + H_R}.}
 }
 \value{
 a list or data frame containing \code{G} and \code{H} matrices.

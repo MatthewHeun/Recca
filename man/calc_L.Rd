@@ -11,13 +11,13 @@ calc_L(.sutdata = NULL, D = "D", A = "A", L_pxp = "L_pxp", L_ixp = "L_ixp")
 
 \item{D}{\code{D} matrix or name of the column in \code{.sutmats} that contains same. Default is "D".}
 
+\item{A}{\code{A} matrix or name of the column in \code{.sutmats} that contains same. Default is "A".}
+
 \item{L_pxp}{name for \code{L_pxp} matrix on output. Default is "L_pxp".
 \code{L_pxp} is calculated by \code{(I - Z*D)^-1}.}
 
 \item{L_ixp}{name for \code{L_ixp} matrix on output. Default is "L_ixp".
 \code{L_ixp} is calculated by \code{D * L_pxp}.}
-
-\item{An}{\code{A} matrix or name of the column in \code{.sutmats} that contains same. Default is "A".}
 }
 \value{
 a list or data frame containing \code{L_pxp} and \code{L_ixp} matrices

@@ -9,11 +9,14 @@
 #'                of an Energy Conversion Chain.
 #'                \code{.iomats} will likely have been obtained from the \code{\link{calc_io_mats}} function.
 #' @param Y final demand (\code{Y}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{Y}".
+#' @param R Resources (\code{R}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{R}".
+#' @param V Supply (\code{R}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{V}".
+#' @param U_feed Feedstock use (\code{U_feed}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{U_feed}".
 #' @param q final demand (\code{q}) vector or name of the column in \code{.iodata} containing same. Default is "\code{q}".
-#' @param L_ixp industry-by-product Leontief (\code{L_ixp}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{L_ixp}"
 #' @param g name of the \code{g} vector on output. Default is "\code{g}".
-#' @param W name of the \code{W} matrix on output. Default is "\code{W}".
-#' @param U_EIOU name of the \code{U_EIOU} matrices on output. Default is "\code{U_EIOU}".
+#' @param r name of the \code{r} vector on output. Default is "\code{r}".
+#' @param A name of the `A` matrix in the `.iomats` data frame. Default is "A".
+#' @param L_ixp industry-by-product Leontief (\code{L_ixp}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{L_ixp}"
 #' @param G name of the \code{G} matrix on output.
 #'        \code{G} is calculated by \code{L_ixp * y_hat}. Default is "\code{G}".
 #' @param H name of the \code{H} matrix on output.
@@ -71,11 +74,25 @@ calc_embodied_mats <- function(.iomats = NULL,
 #' @param .iomats a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.
 #' \code{.iomats} will likely have been obtained from the \code{\link{calc_io_mats}} function.
 #' @param Y final demand (\code{Y}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{Y}".
+#' @param R Resources (\code{R}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{R}".
+#' @param A The name of the `A` matrix column in the `.iomats` data frame.
+#'          Default is "A".
+#' @param q The name of the `q` vector in the `.iomats` data frame.
+#'          Default is "q".
 #' @param L_ixp industry-by-product Leontief (\code{L_ixp}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{L_ixp}".
 #' @param G name for the \code{G} matrix on output. Default is "\code{G}".
-#'        \code{G} is calculated by \code{L_ixp * y_hat}.
+#'        \code{G} is calculated by \code{G_R + G_V}.
+#' @param G_V name for the \code{G_V} matrix on output. Default is "\code{G_V}".
+#'        \code{G_V} is calculated by `L_ixp * y_hat`.
+#' @param G_R name for the \code{G_R} matrix on output. Default is "\code{G_R}".
+#'        \code{G_R} is calculated by `R * q_hat_inv * L_pxp * y_hat`.
 #' @param H name for the \code{H} matrix on output. Default is "\code{H}".
-#'        \code{G} is calculated by \code{L_ixp * Y}.
+#'        \code{H} is calculated by \code{H_V + H_R}.
+#' @param H_V name for the \code{H_V} matrix on output. Default is "\code{H_V}".
+#'        \code{H_V} is calculated by `L_ixp * Y`.
+#' @param H_R name for the \code{H_R} matrix on output. Default is "\code{H_R}".
+#'        \code{H_R} is calculated by `R * q_hat_inv * L_pxp * Y`.
+#'
 #'
 #' @return a list or data frame containing \code{G} and \code{H} matrices.
 #'
@@ -117,17 +134,22 @@ calc_GH <- function(.iomats = NULL,
   matsindf::matsindf_apply(.iomats, FUN = GH_func, Y_mat = Y, L_ixp_mat = L_ixp, R_mat = R, A_mat = A, q_vec = q)
 }
 
-#' Calculate the \code{E} matrix for embodied energy calculations
+#' Calculate the `E` matrix for embodied energy calculations
 #'
 #' @param .iomats a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.
 #' \code{.iomats} will likely have been obtained from the \code{\link{calc_io_mats}} function.
-#' @param g final demand (\code{g}) vector or name of the column in \code{.iomats} containing same. Default is "\code{g}".
-#' @param W product-by-industry value added (\code{W}) matrix or name of the column in \code{.iomats} containing same. Default is "\code{W}".
-#' @param U_EIOU energy industry own use matrix or name of the column in \code{.iomats} containing same. Default is "\code{U_EIOU}".
-#' @param E the name for the \code{E} matrix on output. Default is "\code{E}".
-#'        \code{E} is calculated by \code{W * g_hat_inv}.
+#' @param g The name of the `g` vector in `.iomats`. Default is "g".
+#' @param r The name of the `r` vector in the `iomats`. Default is "r".
+#' @param V The name of the `V` matrix column.
+#'          Default is "V".
+#' @param R The name of the `R` matrix column.
+#'          Default is "R".
+#' @param U_feed The name of the `U_feed` matrix column.
+#'          Default is "U_feed".
+#' @param E the name for the `E` matrix on output. Default is "E".
+#'        \code{E} is calculated by `W * g_hat_inv`.
 #'
-#' @return list or data frame containing \code{E} matrices
+#' @return list or data frame containing `E` matrices
 #'
 #' @export
 calc_E <- function(.iomats = NULL,

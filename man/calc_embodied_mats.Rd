@@ -36,7 +36,17 @@ of an Energy Conversion Chain.
 
 \item{g}{name of the \code{g} vector on output. Default is "\code{g}".}
 
+\item{r}{name of the \code{r} vector on output. Default is "\code{r}".}
+
 \item{L_ixp}{industry-by-product Leontief (\code{L_ixp}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{L_ixp}"}
+
+\item{A}{name of the \code{A} matrix in the \code{.iomats} data frame. Default is "A".}
+
+\item{R}{Resources (\code{R}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{R}".}
+
+\item{V}{Supply (\code{R}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{V}".}
+
+\item{U_feed}{Feedstock use (\code{U_feed}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{U_feed}".}
 
 \item{Y}{final demand (\code{Y}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{Y}".}
 
@@ -67,10 +77,6 @@ Default is "\code{M_p}".}
 
 \item{F_effects_s}{name of the \code{F_effects_s} matrix on output.
 \code{F_effects_s} is calculated by \code{(M_s * i)_hat_inv * M_s}. Default is "\code{F_effects_s}".}
-
-\item{W}{name of the \code{W} matrix on output. Default is "\code{W}".}
-
-\item{U_EIOU}{name of the \code{U_EIOU} matrices on output. Default is "\code{U_EIOU}".}
 }
 \value{
 a list or data frame containing embodied energy matrices

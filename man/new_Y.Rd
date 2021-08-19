@@ -34,9 +34,23 @@ new_Y(
 
 \item{D}{a \code{D} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{D}".}
 
+\item{R}{a \code{R} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{R}".}
+
+\item{r}{The name of the \code{r} vector.
+Default is "r".}
+
+\item{h}{The name of the \code{h} vector.
+Default is "h".}
+
+\item{O}{a \code{O} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{O}".}
+
 \item{U_prime}{the name for new \code{U} matrices. Default is "\code{U_prime}".}
 
 \item{V_prime}{the name for new \code{V} matrices. Default is "\code{V_prime}".}
+
+\item{W_prime}{the name for new \code{W} matrices. Default is "\code{W_prime}".}
+
+\item{R_prime}{the name for new \code{R} matrices. Default is "\code{R_prime}".}
 }
 \value{
 a list or data frame with \code{U_prime} and \code{V_prime} matrices

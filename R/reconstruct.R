@@ -23,13 +23,21 @@
 #' and input arguments should be single matrices or vectors.
 #'
 #' @param .sutmats a data frame of supply-use table matrices with matrices arranged in columns.
+#' @param R a \code{R} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{R}".
 #' @param Y_prime a new final demand matrix or name of a column in \code{.sutmats} containing same. Default is "\code{Y_prime}".
 #' @param L_ixp an \code{L_ixp} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{L_ixp}".
 #' @param L_pxp an \code{L_pxp} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{L_pxp}".
 #' @param Z a \code{Z} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{Z}".
 #' @param D a \code{D} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{D}".
+#' @param O a \code{O} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{O}".
+#' @param r The name of the `r` vector.
+#'          Default is "r".
+#' @param h The name of the `h` vector.
+#'          Default is "h".
 #' @param U_prime the name for new \code{U} matrices. Default is "\code{U_prime}".
 #' @param V_prime the name for new \code{V} matrices. Default is "\code{V_prime}".
+#' @param W_prime the name for new \code{W} matrices. Default is "\code{W_prime}".
+#' @param R_prime the name for new \code{R} matrices. Default is "\code{R_prime}".
 #'
 #' @return a list or data frame with \code{U_prime} and \code{V_prime} matrices
 #'

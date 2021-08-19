@@ -70,6 +70,12 @@ In the case of a balanced ECC, the method does not matter.}
 \item{g}{name for \code{g} vector on output. Default is "g".
 \code{g} is calculated by \code{rowsums(V)}.}
 
+\item{h}{name for \code{h} vector on output. Default is "h".
+\code{h} is calculated by \code{colsums(transpose(R))}.}
+
+\item{r}{name for \code{r} vector on output. Default is "r".
+\code{r} is calculated by \code{rowsums(R)}.}
+
 \item{W}{name for \code{W} matrix on output. Default is "W".
 \code{W} is calculated by \code{transpose(V) - U}.}
 
@@ -94,6 +100,9 @@ In the case of a balanced ECC, the method does not matter.}
 \item{L_pxp}{name for \code{L_pxp_feed} matrix on output. Default is "L_pxp_feed".
 \code{L_pxp} is calculated by \code{(I - Z*D)^-1}.}
 
+\item{O}{name for \code{O} matrix on output. Default is "O".
+\code{O} is calculated by \code{r_hat_inv * R}.}
+
 \item{Z_feed}{name for \code{Z_feed} matrix on output. Default is "Z_feed".
 \code{Z_feed} is calculated by \code{U_feed * g_hat_inv}.}
 
@@ -105,6 +114,9 @@ In the case of a balanced ECC, the method does not matter.}
 
 \item{D_feed}{name for \code{D_feed} matrix on output. Default is "D_feed".
 \code{D_feed} is calculated by \code{V * q_hat_inv}.}
+
+\item{O_feed}{name for \code{O_feed} matrix on output. Default is "O_feed".
+\code{O_feed} is calculated by \code{V * q_hat_inv}.}
 
 \item{A_feed}{name for \code{A_feed} matrix on output. Default is "A_feed".
 \code{A_feed} is calculated by \code{Z_feed * D_feed}.}
