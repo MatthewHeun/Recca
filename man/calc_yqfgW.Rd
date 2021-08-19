@@ -35,7 +35,7 @@ In the case of a balanced ECC, the method does not matter.}
 
 \item{V}{The make (\code{V}) matrix or name of the column in \code{.sutmats} that contains same. Default is "V".}
 
-\item{Y}{The final demand matrix (\code{Y}) or name of the column in \code{.sutmats} that contains same. Default is "Y".}
+\item{Y}{The final demand (\code{Y}) matrix or name of the column in `.sutmats`` that contains same. Default is "Y".}
 
 \item{S_units}{The \code{S_units} matrix or name of the column in \code{.sutmats} that contains same. Default is "S_units".}
 
