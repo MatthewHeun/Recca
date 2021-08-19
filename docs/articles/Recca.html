@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.33</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.34</span>
       </span>
     </div>
 
@@ -85,13 +85,13 @@
 
       
 
-      </header><script src="Recca_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
+      </header><script src="Recca_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Recca</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2021-04-11</h4>
+            <h4 class="date">2021-08-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/master/vignettes/Recca.Rmd"><code>vignettes/Recca.Rmd</code></a></small>
       <div class="hidden name"><code>Recca.Rmd</code></div>
@@ -230,10 +230,11 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">IO_list</span><span class="op">)</span>
 <span class="co">#&gt; [1] "list"</span>
 <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">IO_list</span><span class="op">)</span>
-<span class="co">#&gt;  [1] "y"          "q"          "f"          "g"          "W"         </span>
-<span class="co">#&gt;  [6] "Z"          "K"          "C"          "D"          "A"         </span>
-<span class="co">#&gt; [11] "L_pxp"      "L_ixp"      "Z_feed"     "K_feed"     "C_feed"    </span>
-<span class="co">#&gt; [16] "D_feed"     "A_feed"     "L_pxp_feed" "L_ixp_feed"</span>
+<span class="co">#&gt;  [1] "y"          "q"          "f"          "g"          "h"         </span>
+<span class="co">#&gt;  [6] "r"          "W"          "Z"          "K"          "C"         </span>
+<span class="co">#&gt; [11] "D"          "A"          "O"          "L_pxp"      "L_ixp"     </span>
+<span class="co">#&gt; [16] "Z_feed"     "K_feed"     "C_feed"     "D_feed"     "A_feed"    </span>
+<span class="co">#&gt; [21] "O_feed"     "L_pxp_feed" "L_ixp_feed"</span>
 <span class="va">IO_list</span><span class="op">[[</span><span class="st">"y"</span><span class="op">]</span><span class="op">]</span>
 <span class="co">#&gt;                Industry</span>
 <span class="co">#&gt; Diesel - Dist.    14750</span>
@@ -252,9 +253,10 @@
 <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">IO_from_list</span><span class="op">)</span>
 <span class="co">#&gt;  [1] "R"          "U"          "U_feed"     "V"          "Y"         </span>
 <span class="co">#&gt;  [6] "S_units"    "y"          "q"          "f"          "g"         </span>
-<span class="co">#&gt; [11] "W"          "Z"          "K"          "C"          "D"         </span>
-<span class="co">#&gt; [16] "A"          "L_pxp"      "L_ixp"      "Z_feed"     "K_feed"    </span>
-<span class="co">#&gt; [21] "C_feed"     "D_feed"     "A_feed"     "L_pxp_feed" "L_ixp_feed"</span>
+<span class="co">#&gt; [11] "h"          "r"          "W"          "Z"          "K"         </span>
+<span class="co">#&gt; [16] "C"          "D"          "A"          "O"          "L_pxp"     </span>
+<span class="co">#&gt; [21] "L_ixp"      "Z_feed"     "K_feed"     "C_feed"     "D_feed"    </span>
+<span class="co">#&gt; [26] "A_feed"     "O_feed"     "L_pxp_feed" "L_ixp_feed"</span>
 <span class="va">IO_from_list</span><span class="op">[[</span><span class="st">"y"</span><span class="op">]</span><span class="op">]</span>
 <span class="co">#&gt;                Industry</span>
 <span class="co">#&gt; Diesel - Dist.    14750</span>
@@ -281,13 +283,13 @@
 <span class="co">#&gt;  [1] "Country"     "Year"        "Energy.type" "Last.stage"  "R"          </span>
 <span class="co">#&gt;  [6] "r_EIOU"      "S_units"     "U"           "U_EIOU"      "U_feed"     </span>
 <span class="co">#&gt; [11] "V"           "Y"           "y"           "q"           "f"          </span>
-<span class="co">#&gt; [16] "g"           "W"           "Z"           "K"           "C"          </span>
-<span class="co">#&gt; [21] "D"           "A"           "L_pxp"       "L_ixp"       "Z_feed"     </span>
-<span class="co">#&gt; [26] "K_feed"      "C_feed"      "D_feed"      "A_feed"      "L_pxp_feed" </span>
-<span class="co">#&gt; [31] "L_ixp_feed"</span>
+<span class="co">#&gt; [16] "g"           "h"           "r"           "W"           "Z"          </span>
+<span class="co">#&gt; [21] "K"           "C"           "D"           "A"           "O"          </span>
+<span class="co">#&gt; [26] "L_pxp"       "L_ixp"       "Z_feed"      "K_feed"      "C_feed"     </span>
+<span class="co">#&gt; [31] "D_feed"      "A_feed"      "O_feed"      "L_pxp_feed"  "L_ixp_feed"</span>
 <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">IO_df</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 4</span>
-<span class="co">#&gt; Columns: 31</span>
+<span class="co">#&gt; Columns: 35</span>
 <span class="co">#&gt; $ Country     &lt;chr&gt; "GBR", "GBR", "GBR", "GBR"</span>
 <span class="co">#&gt; $ Year        &lt;dbl&gt; 2000, 2000, 2000, 2000</span>
 <span class="co">#&gt; $ Energy.type &lt;fct&gt; E, E, E, X</span>
@@ -303,22 +305,26 @@
 <span class="co">#&gt; $ y           &lt;list&gt; &lt;&lt;matrix[4 x 1]&gt;&gt;, &lt;&lt;matrix[4 x 1]&gt;&gt;, &lt;&lt;matrix[4 x 1]&gt;&gt;, …</span>
 <span class="co">#&gt; $ q           &lt;list&gt; &lt;&lt;matrix[12 x 1]&gt;&gt;, &lt;&lt;matrix[16 x 1]&gt;&gt;, &lt;&lt;matrix[20 x 1]&gt;…</span>
 <span class="co">#&gt; $ f           &lt;list&gt; &lt;&lt;matrix[9 x 1]&gt;&gt;, &lt;&lt;matrix[13 x 1]&gt;&gt;, &lt;&lt;matrix[17 x 1]&gt;&gt;…</span>
-<span class="co">#&gt; $ g           &lt;list&gt; &lt;&lt;matrix[11 x 1]&gt;&gt;, &lt;&lt;matrix[15 x 1]&gt;&gt;, &lt;&lt;matrix[19 x 1]&gt;…</span>
-<span class="co">#&gt; $ W           &lt;list&gt; &lt;&lt;matrix[12 x 11]&gt;&gt;, &lt;&lt;matrix[16 x 15]&gt;&gt;, &lt;&lt;matrix[20 x 1…</span>
-<span class="co">#&gt; $ Z           &lt;list&gt; &lt;&lt;matrix[12 x 11]&gt;&gt;, &lt;&lt;matrix[13 x 15]&gt;&gt;, &lt;&lt;matrix[17 x 1…</span>
+<span class="co">#&gt; $ g           &lt;list&gt; &lt;&lt;matrix[9 x 1]&gt;&gt;, &lt;&lt;matrix[13 x 1]&gt;&gt;, &lt;&lt;matrix[17 x 1]&gt;&gt;…</span>
+<span class="co">#&gt; $ h           &lt;list&gt; &lt;&lt;matrix[1 x 2]&gt;&gt;, &lt;&lt;matrix[1 x 2]&gt;&gt;, &lt;&lt;matrix[1 x 2]&gt;&gt;, …</span>
+<span class="co">#&gt; $ r           &lt;list&gt; &lt;&lt;matrix[2 x 1]&gt;&gt;, &lt;&lt;matrix[2 x 1]&gt;&gt;, &lt;&lt;matrix[2 x 1]&gt;&gt;, …</span>
+<span class="co">#&gt; $ W           &lt;list&gt; &lt;&lt;matrix[12 x 9]&gt;&gt;, &lt;&lt;matrix[16 x 13]&gt;&gt;, &lt;&lt;matrix[20 x 17…</span>
+<span class="co">#&gt; $ Z           &lt;list&gt; &lt;&lt;matrix[12 x 9]&gt;&gt;, &lt;&lt;matrix[13 x 13]&gt;&gt;, &lt;&lt;matrix[17 x 17…</span>
 <span class="co">#&gt; $ K           &lt;list&gt; &lt;&lt;matrix[12 x 9]&gt;&gt;, &lt;&lt;matrix[13 x 13]&gt;&gt;, NA, NA</span>
-<span class="co">#&gt; $ C           &lt;list&gt; &lt;&lt;matrix[12 x 11]&gt;&gt;, &lt;&lt;matrix[16 x 15]&gt;&gt;, &lt;&lt;matrix[20 x 1…</span>
-<span class="co">#&gt; $ D           &lt;list&gt; &lt;&lt;matrix[11 x 12]&gt;&gt;, &lt;&lt;matrix[15 x 16]&gt;&gt;, &lt;&lt;matrix[19 x 2…</span>
+<span class="co">#&gt; $ C           &lt;list&gt; &lt;&lt;matrix[10 x 9]&gt;&gt;, &lt;&lt;matrix[14 x 13]&gt;&gt;, &lt;&lt;matrix[18 x 17…</span>
+<span class="co">#&gt; $ D           &lt;list&gt; &lt;&lt;matrix[9 x 12]&gt;&gt;, &lt;&lt;matrix[13 x 16]&gt;&gt;, &lt;&lt;matrix[17 x 20…</span>
 <span class="co">#&gt; $ A           &lt;list&gt; &lt;&lt;matrix[12 x 12]&gt;&gt;, &lt;&lt;matrix[13 x 16]&gt;&gt;, &lt;&lt;matrix[17 x 2…</span>
+<span class="co">#&gt; $ O           &lt;list&gt; &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 2]&gt;&gt;, …</span>
 <span class="co">#&gt; $ L_pxp       &lt;list&gt; &lt;&lt;matrix[12 x 12]&gt;&gt;, &lt;&lt;matrix[16 x 16]&gt;&gt;, &lt;&lt;matrix[20 x 2…</span>
-<span class="co">#&gt; $ L_ixp       &lt;list&gt; &lt;&lt;matrix[11 x 12]&gt;&gt;, &lt;&lt;matrix[15 x 16]&gt;&gt;, &lt;&lt;matrix[19 x 2…</span>
-<span class="co">#&gt; $ Z_feed      &lt;list&gt; &lt;&lt;matrix[9 x 11]&gt;&gt;, &lt;&lt;matrix[12 x 15]&gt;&gt;, &lt;&lt;matrix[16 x 19…</span>
+<span class="co">#&gt; $ L_ixp       &lt;list&gt; &lt;&lt;matrix[9 x 12]&gt;&gt;, &lt;&lt;matrix[13 x 16]&gt;&gt;, &lt;&lt;matrix[17 x 20…</span>
+<span class="co">#&gt; $ Z_feed      &lt;list&gt; &lt;&lt;matrix[9 x 9]&gt;&gt;, &lt;&lt;matrix[12 x 13]&gt;&gt;, &lt;&lt;matrix[16 x 17]…</span>
 <span class="co">#&gt; $ K_feed      &lt;list&gt; &lt;&lt;matrix[9 x 9]&gt;&gt;, &lt;&lt;matrix[12 x 13]&gt;&gt;, NA, NA</span>
-<span class="co">#&gt; $ C_feed      &lt;list&gt; &lt;&lt;matrix[12 x 11]&gt;&gt;, &lt;&lt;matrix[16 x 15]&gt;&gt;, &lt;&lt;matrix[20 x 1…</span>
-<span class="co">#&gt; $ D_feed      &lt;list&gt; &lt;&lt;matrix[11 x 12]&gt;&gt;, &lt;&lt;matrix[15 x 16]&gt;&gt;, &lt;&lt;matrix[19 x 2…</span>
+<span class="co">#&gt; $ C_feed      &lt;list&gt; &lt;&lt;matrix[10 x 9]&gt;&gt;, &lt;&lt;matrix[14 x 13]&gt;&gt;, &lt;&lt;matrix[18 x 17…</span>
+<span class="co">#&gt; $ D_feed      &lt;list&gt; &lt;&lt;matrix[9 x 12]&gt;&gt;, &lt;&lt;matrix[13 x 16]&gt;&gt;, &lt;&lt;matrix[17 x 20…</span>
 <span class="co">#&gt; $ A_feed      &lt;list&gt; &lt;&lt;matrix[9 x 12]&gt;&gt;, &lt;&lt;matrix[12 x 16]&gt;&gt;, &lt;&lt;matrix[16 x 20…</span>
+<span class="co">#&gt; $ O_feed      &lt;list&gt; &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 2]&gt;&gt;, …</span>
 <span class="co">#&gt; $ L_pxp_feed  &lt;list&gt; &lt;&lt;matrix[12 x 12]&gt;&gt;, &lt;&lt;matrix[16 x 16]&gt;&gt;, &lt;&lt;matrix[20 x 2…</span>
-<span class="co">#&gt; $ L_ixp_feed  &lt;list&gt; &lt;&lt;matrix[11 x 12]&gt;&gt;, &lt;&lt;matrix[15 x 16]&gt;&gt;, &lt;&lt;matrix[19 x 2…</span>
+<span class="co">#&gt; $ L_ixp_feed  &lt;list&gt; &lt;&lt;matrix[9 x 12]&gt;&gt;, &lt;&lt;matrix[13 x 16]&gt;&gt;, &lt;&lt;matrix[17 x 20…</span>
 <span class="va">IO_df</span><span class="op">[[</span><span class="st">"y"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
 <span class="co">#&gt;                Industry</span>
 <span class="co">#&gt; Diesel - Dist.    14750</span>
@@ -357,10 +363,11 @@
 <span class="co">#&gt;  [1] "Country"     "Year"        "Energy.type" "Last.stage"  "R"          </span>
 <span class="co">#&gt;  [6] "r_EIOU"      "S_units"     "U"           "U_EIOU"      "U_feed"     </span>
 <span class="co">#&gt; [11] "V"           "Y"           "y"           "q"           "f"          </span>
-<span class="co">#&gt; [16] "g"           "W"           "Z"           "K"           "C"          </span>
-<span class="co">#&gt; [21] "D"           "A"           "L_pxp"       "L_ixp"       "Z_feed"     </span>
-<span class="co">#&gt; [26] "K_feed"      "C_feed"      "D_feed"      "A_feed"      "L_pxp_feed" </span>
-<span class="co">#&gt; [31] "L_ixp_feed"  "Y_prime"     "U_prime"     "V_prime"</span>
+<span class="co">#&gt; [16] "g"           "h"           "r"           "W"           "Z"          </span>
+<span class="co">#&gt; [21] "K"           "C"           "D"           "A"           "O"          </span>
+<span class="co">#&gt; [26] "L_pxp"       "L_ixp"       "Z_feed"      "K_feed"      "C_feed"     </span>
+<span class="co">#&gt; [31] "D_feed"      "A_feed"      "O_feed"      "L_pxp_feed"  "L_ixp_feed" </span>
+<span class="co">#&gt; [36] "Y_prime"     "U_prime"     "V_prime"     "W_prime"     "R_prime"</span>
 <span class="va">IO_df</span><span class="op">[[</span><span class="st">"Y"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span> , <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">]</span>
 <span class="co">#&gt;                Residential Transport</span>
 <span class="co">#&gt; Diesel - Dist.           0     14750</span>
@@ -473,10 +480,11 @@
 <span class="co">#&gt;  [1] "Country"     "Year"        "Energy.type" "Last.stage"  "R"          </span>
 <span class="co">#&gt;  [6] "r_EIOU"      "S_units"     "U"           "U_EIOU"      "U_feed"     </span>
 <span class="co">#&gt; [11] "V"           "Y"           "y"           "q"           "f"          </span>
-<span class="co">#&gt; [16] "g"           "W"           "Z"           "K"           "C"          </span>
-<span class="co">#&gt; [21] "D"           "A"           "L_pxp"       "L_ixp"       "Z_feed"     </span>
-<span class="co">#&gt; [26] "K_feed"      "C_feed"      "D_feed"      "A_feed"      "L_pxp_feed" </span>
-<span class="co">#&gt; [31] "L_ixp_feed"  "eta_i"</span>
+<span class="co">#&gt; [16] "g"           "h"           "r"           "W"           "Z"          </span>
+<span class="co">#&gt; [21] "K"           "C"           "D"           "A"           "O"          </span>
+<span class="co">#&gt; [26] "L_pxp"       "L_ixp"       "Z_feed"      "K_feed"      "C_feed"     </span>
+<span class="co">#&gt; [31] "D_feed"      "A_feed"      "O_feed"      "L_pxp_feed"  "L_ixp_feed" </span>
+<span class="co">#&gt; [36] "eta_i"</span>
 <span class="va">etas</span><span class="op">[[</span><span class="st">"eta_i"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
 <span class="co">#&gt;                       eta_i</span>
 <span class="co">#&gt; Crude dist.       0.9885536</span>
@@ -619,13 +627,15 @@
 <span class="co">#&gt;  [5] "R"             "r_EIOU"        "S_units"       "U"            </span>
 <span class="co">#&gt;  [9] "U_EIOU"        "U_feed"        "V"             "Y"            </span>
 <span class="co">#&gt; [13] "y"             "q"             "f"             "g"            </span>
-<span class="co">#&gt; [17] "W"             "Z"             "K"             "C"            </span>
-<span class="co">#&gt; [21] "D"             "A"             "L_pxp"         "L_ixp"        </span>
-<span class="co">#&gt; [25] "Z_feed"        "K_feed"        "C_feed"        "D_feed"       </span>
-<span class="co">#&gt; [29] "A_feed"        "L_pxp_feed"    "L_ixp_feed"    "G"            </span>
-<span class="co">#&gt; [33] "H"             "E"             "M_p"           "M_s"          </span>
-<span class="co">#&gt; [37] "F_footprint_p" "F_effects_p"   "F_footprint_s" "F_effects_s"  </span>
-<span class="co">#&gt; [41] "eta_p"         "eta_s"</span></code></pre></div>
+<span class="co">#&gt; [17] "h"             "r"             "W"             "Z"            </span>
+<span class="co">#&gt; [21] "K"             "C"             "D"             "A"            </span>
+<span class="co">#&gt; [25] "O"             "L_pxp"         "L_ixp"         "Z_feed"       </span>
+<span class="co">#&gt; [29] "K_feed"        "C_feed"        "D_feed"        "A_feed"       </span>
+<span class="co">#&gt; [33] "O_feed"        "L_pxp_feed"    "L_ixp_feed"    "G_V"          </span>
+<span class="co">#&gt; [37] "G_R"           "G"             "H_V"           "H_R"          </span>
+<span class="co">#&gt; [41] "H"             "E"             "M_p"           "M_s"          </span>
+<span class="co">#&gt; [45] "F_footprint_p" "F_effects_p"   "F_footprint_s" "F_effects_s"  </span>
+<span class="co">#&gt; [49] "eta_p"         "eta_s"</span></code></pre></div>
 <p>Figure 15 in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a> shows primary-to-services energetic efficiencies for the ECC in the 3rd row of <code>IO_df</code>. The following code extracts those results. Rows of the vector give final demand services and their units. The column gives efficiencies in units of service per ktoe of energy.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">embodied_mats</span><span class="op">$</span><span class="va">eta_p</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span>

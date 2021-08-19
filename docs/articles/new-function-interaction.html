@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.33</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.34</span>
       </span>
     </div>
 
@@ -85,13 +85,13 @@
 
       
 
-      </header><script src="new-function-interaction_files/header-attrs-2.7/header-attrs.js"></script><script src="new-function-interaction_files/htmlwidgets-1.5.3/htmlwidgets.js"></script><script src="new-function-interaction_files/d3-4.5.0/d3.min.js"></script><script src="new-function-interaction_files/sankey-1/sankey.js"></script><script src="new-function-interaction_files/sankeyNetwork-binding-0.4/sankeyNetwork.js"></script><div class="row">
+      </header><script src="new-function-interaction_files/header-attrs-2.6/header-attrs.js"></script><script src="new-function-interaction_files/htmlwidgets-1.5.3/htmlwidgets.js"></script><script src="new-function-interaction_files/d3-4.5.0/d3.min.js"></script><script src="new-function-interaction_files/sankey-1/sankey.js"></script><script src="new-function-interaction_files/sankeyNetwork-binding-0.4/sankeyNetwork.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>new_* function interactions</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2021-04-11</h4>
+            <h4 class="date">2021-08-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/master/vignettes/new-function-interaction.Rmd"><code>vignettes/new-function-interaction.Rmd</code></a></small>
       <div class="hidden name"><code>new-function-interaction.Rmd</code></div>
@@ -155,8 +155,8 @@ The R2 industry makes product R2p. Industry I makes product Ip. Product Ip is co
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span><span class="op">(</span>R <span class="op">=</span> <span class="va">R</span>, U <span class="op">=</span> <span class="va">U</span>, V <span class="op">=</span> <span class="va">V</span>, Y <span class="op">=</span> <span class="va">Y</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html">extract2</a></span><span class="op">(</span><span class="st">"Sankey"</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-b8f11b64bcd4c35c9c8f" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-b8f11b64bcd4c35c9c8f">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[2,2,10,10]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-ca60d1aca88cd8f09199" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ca60d1aca88cd8f09199">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[2,2,10,10]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="adjust-inputs-to-industry-i" class="section level2">
 <h2 class="hasAnchor">
@@ -181,8 +181,8 @@ The R2 industry makes product R2p. Industry I makes product Ip. Product Ip is co
             V <span class="op">=</span> <span class="va">change_input_proportions</span><span class="op">$</span><span class="va">V_prime</span>, 
             Y <span class="op">=</span> <span class="va">Y</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html">extract2</a></span><span class="op">(</span><span class="st">"Sankey"</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-b8c984096e3f9da48d66" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-b8c984096e3f9da48d66">{"x":{"links":{"source":[0,0,1],"target":[2,3,0],"value":[2,2,20]},"nodes":{"name":["I","R1","Y1","Y2"],"group":["I","R1","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-08489316958dd194725d" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-08489316958dd194725d">{"x":{"links":{"source":[0,0,1],"target":[2,3,0],"value":[2,2,20]},"nodes":{"name":["I","R1","Y1","Y2"],"group":["I","R1","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="change-final-demand" class="section level2">
 <h2 class="hasAnchor">
@@ -205,8 +205,8 @@ The R2 industry makes product R2p. Industry I makes product Ip. Product Ip is co
             V <span class="op">=</span> <span class="va">change_final_demand</span><span class="op">$</span><span class="va">V_prime</span>, 
             Y <span class="op">=</span> <span class="va">change_final_demand</span><span class="op">$</span><span class="va">Y_prime</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html">extract2</a></span><span class="op">(</span><span class="st">"Sankey"</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-26135bbbc940386eecc5" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-26135bbbc940386eecc5">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[4,2,15,15]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>Industry I is back to using both R1p and R2p in a 50/50 split to make its output. Both R1p and R2p now supply 15 quads to I to account for increased final demand.</p>
+<div id="htmlwidget-6673a7de0ed62bf64c54" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-6673a7de0ed62bf64c54">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[4,2,15,15]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>Industry I is back to using both R1p and R2p in a 50/50 split to make its output. Both R1p and R2p now supply 15 quads to I to account for increased final demand.</p>
 <p>The <code><a href="../reference/new_Y.html">new_Y()</a></code> function is performing exactly as expected, given that <code>iomats</code> was supplied to <code><a href="../reference/new_Y.html">new_Y()</a></code>. <code>iomats</code> contains information about an ECC in which industry I’s inputs are split 50/50 between R1p and R2p. So when <code><a href="../reference/new_Y.html">new_Y()</a></code> calculates a new ECC, it assumes that industry I’s needs are a 50/50 split between R1p and R2p.</p>
 <p>In fact, it would be a mistake to think that <code><a href="../reference/new_Y.html">new_Y()</a></code> would give anything but a 50/50 split between R1p and R2p when using the <code>iomats</code> description of the ECC.</p>
 </div>
@@ -226,8 +226,8 @@ The R2 industry makes product R2p. Industry I makes product Ip. Product Ip is co
             V <span class="op">=</span> <span class="va">change_final_demand2</span><span class="op">$</span><span class="va">V_prime</span>, 
             Y <span class="op">=</span> <span class="va">change_final_demand2</span><span class="op">$</span><span class="va">Y_prime</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html">extract2</a></span><span class="op">(</span><span class="st">"Sankey"</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-5503471d39bd6d25dd33" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
-<script type="application/json" data-for="htmlwidget-5503471d39bd6d25dd33">{"x":{"links":{"source":[0,0,1],"target":[2,3,0],"value":[4,2,30]},"nodes":{"name":["I","R1","Y1","Y2"],"group":["I","R1","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>The Sankey diagram above shows that we have successfully increased the demand from <code>Y1</code> while ensuring that all inputs to industry I come from R1p. The “trick” is to recalculate the input-output structure of the ECC between the two steps.</p>
+<div id="htmlwidget-98f14feb91c3ed00e4b9" style="width:700px;height:432.632880098888px;" class="sankeyNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-98f14feb91c3ed00e4b9">{"x":{"links":{"source":[0,0,1],"target":[2,3,0],"value":[4,2,30]},"nodes":{"name":["I","R1","Y1","Y2"],"group":["I","R1","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>The Sankey diagram above shows that we have successfully increased the demand from <code>Y1</code> while ensuring that all inputs to industry I come from R1p. The “trick” is to recalculate the input-output structure of the ECC between the two steps.</p>
 </div>
 </div>
 <div id="conclusion" class="section level1">
