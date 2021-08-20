@@ -4,19 +4,34 @@
 \alias{calc_E}
 \title{Calculate the \code{E} matrix for embodied energy calculations}
 \usage{
-calc_E(.iomats = NULL, g = "g", W = "W", U_EIOU = "U_EIOU", E = "E")
+calc_E(
+  .iomats = NULL,
+  R = "R",
+  V = "V",
+  U_feed = "U_feed",
+  g = "g",
+  r = "r",
+  E = "E"
+)
 }
 \arguments{
 \item{.iomats}{a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.
 \code{.iomats} will likely have been obtained from the \code{\link{calc_io_mats}} function.}
 
-\item{g}{final demand (\code{g}) vector or name of the column in \code{.iomats} containing same. Default is "\code{g}".}
+\item{R}{The name of the \code{R} matrix column.
+Default is "R".}
 
-\item{W}{product-by-industry value added (\code{W}) matrix or name of the column in \code{.iomats} containing same. Default is "\code{W}".}
+\item{V}{The name of the \code{V} matrix column.
+Default is "V".}
 
-\item{U_EIOU}{energy industry own use matrix or name of the column in \code{.iomats} containing same. Default is "\code{U_EIOU}".}
+\item{U_feed}{The name of the \code{U_feed} matrix column.
+Default is "U_feed".}
 
-\item{E}{the name for the \code{E} matrix on output. Default is "\code{E}".
+\item{g}{The name of the \code{g} vector in \code{.iomats}. Default is "g".}
+
+\item{r}{The name of the \code{r} vector in the \code{iomats}. Default is "r".}
+
+\item{E}{the name for the \code{E} matrix on output. Default is "E".
 \code{E} is calculated by \code{W * g_hat_inv}.}
 }
 \value{

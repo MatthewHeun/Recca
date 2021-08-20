@@ -1,62 +1,76 @@
 
-test_that("reconstructing U and V from single matrices works as expected", {
+test_that("reconstructing U, V, W, and R from single matrices works as expected", {
+
   alliomats <- UKEnergy2000mats %>%
-    spread(key = matrix.name, value = matrix) %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
     calc_io_mats()
+
   allUV <- new_Y(alliomats, Y_prime = "Y")
+
   for (i in 1:nrow(allUV)) {
     UV <- new_Y(Y_prime = alliomats$Y[[i]],
                 L_ixp = alliomats$L_ixp[[i]],
                 L_pxp = alliomats$L_pxp[[i]],
                 Z = alliomats$Z[[i]],
-                D = alliomats$D[[i]])
+                D = alliomats$D[[i]],
+                R = alliomats$R[[i]],
+                r = alliomats$r[[i]],
+                O = alliomats$O[[i]],
+                h = alliomats$h[[i]])
     expect_equal(UV$U_prime, allUV$U_prime[[i]])
     expect_equal(UV$V_prime, allUV$V_prime[[i]])
+    expect_equal(UV$W_prime, allUV$W_prime[[i]])
+    expect_equal(UV$R_prime, allUV$R_prime[[i]])
   }
 })
 
-
-test_that("reconstructing U and V from a new Y matrix works as expected", {
+test_that("reconstructing U, V, W, and R from a new Y matrix works as expected", {
   # Try with Y_prime <- Y, thereby simply trying to duplicate the original U and V matrices
   Reconstructed <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, U, U_feed, V, Y, r_EIOU, S_units) %>%
+    dplyr::select(Country, Year, Energy.type, Last.stage, U, U_feed, V, Y, r_EIOU, S_units, R) %>%
     calc_io_mats() %>%
     dplyr::mutate(
       Y_prime = Y
     ) %>%
-    new_Y() %>%
+    Recca::new_Y() %>%
     dplyr::mutate(
       # Take the difference between U_prime and U and V_prime and V
-      U_diff = difference_byname(U_prime, U),
-      V_diff = difference_byname(V_prime, V),
+      U_diff = matsbyname::difference_byname(U_prime, U),
+      V_diff = matsbyname::difference_byname(V_prime, V),
+      W_diff = matsbyname::difference_byname(W_prime, W),
+      R_diff = matsbyname::difference_byname(R_prime, R),
       # The differences should be the 0 matrix, within tolerance
       UOK = matsbyname::iszero_byname(U_diff, tol = 5e-5),
-      VOK = matsbyname::iszero_byname(V_diff, tol = 5e-5)
+      VOK = matsbyname::iszero_byname(V_diff, tol = 5e-5),
+      WOK = matsbyname::iszero_byname(W_diff, tol = 5e-5),
+      ROK = matsbyname::iszero_byname(R_diff, tol = 5e-5)
     )
   expect_true(all(as.logical(Reconstructed$UOK)))
   expect_true(all(as.logical(Reconstructed$VOK)))
-
+  expect_true(all(as.logical(Reconstructed$WOK)))
+  expect_true(all(as.logical(Reconstructed$ROK)))
 
   # Try a list of new Y matrices, each of which contains only the final demand for residential lighting.
   Y_prime_finalE <- matrix(6000, nrow = 1, ncol = 1, dimnames = list("Elect - Grid", "Residential")) %>%
-    setrowtype("Product") %>% setcoltype("Industry")
+    matsbyname::setrowtype("Product") %>% matsbyname::setcoltype("Industry")
   Y_prime_usefulE <- matrix(1200, nrow = 1, ncol = 1, dimnames = list("Light", "Residential")) %>%
-    setrowtype("Product") %>% setcoltype("Industry")
+    matsbyname::setrowtype("Product") %>% matsbyname::setcoltype("Industry")
   Y_prime_servicesE <- matrix(5e14, nrow = 1, ncol = 1, dimnames = list("Illumination [lumen-hrs/yr]", "Residential")) %>%
-    setrowtype("Product") %>% setcoltype("Industry")
+    matsbyname::setrowtype("Product") %>% matsbyname::setcoltype("Industry")
   Y_prime_servicesX <- matrix(5e14, nrow = 1, ncol = 1, dimnames = list("Illumination [lumen-hrs/yr]", "Residential")) %>%
-    setrowtype("Product") %>% setcoltype("Industry")
+    matsbyname::setrowtype("Product") %>% matsbyname::setcoltype("Industry")
 
   Reconstructed_Residential <- Reconstructed %>%
-    dplyr::select(-Y_prime, -U_prime, -V_prime, -U_diff, -V_diff, -UOK, -VOK) %>%
+    dplyr::select(-Y_prime, -U_prime, -V_prime, -W_prime, -R_prime, -U_diff, -V_diff, -W_diff, -R_diff, -UOK, -VOK, -WOK, -ROK) %>%
     dplyr::mutate(
       Y_prime = list(Y_prime_finalE, Y_prime_servicesE, Y_prime_usefulE, Y_prime_servicesX)
     ) %>%
     new_Y() %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, U_prime, V_prime) %>%
-    tidyr::gather(key = "matnames", value = "matvals", U_prime, V_prime) %>%
+    dplyr::select(Country, Year, Energy.type, Last.stage, U_prime, V_prime, R_prime) %>%
+    tidyr::gather(key = "matnames", value = "matvals", U_prime, V_prime, R_prime) %>%
     matsindf::expand_to_tidy(drop = 0)
+
   expect_equivalent(Reconstructed_Residential %>%
                       dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "U_prime", rownames == "Crude - Dist.", colnames == "Crude dist.") %>%
                       dplyr::select(matvals) %>%
@@ -77,14 +91,114 @@ test_that("reconstructing U and V from a new Y matrix works as expected", {
                       dplyr::select(matvals) %>%
                       unlist(),
                     6238.6014610456)
+  expect_equivalent(Reconstructed_Residential %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "R_prime", rownames == "Resources - NG", colnames == "NG") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
+                    16356.84944)
+  expect_equivalent(Reconstructed_Residential %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$useful, matnames == "R_prime", rownames == "Resources - Crude", colnames == "Crude") %>%
+                      dplyr::select(matvals) %>%
+                      unlist(),
+                    102.20081)
+
+
+  # Double Y matrix
+  Reconstructed_Double_Y <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    dplyr::select(Country, Year, Energy.type, Last.stage, U, U_feed, V, Y, r_EIOU, S_units, R) %>%
+    calc_io_mats() %>%
+    dplyr::mutate(
+      Y_prime = matsbyname::hadamardproduct_byname(Y, 2)
+    ) %>%
+    new_Y()
+
+  # Testing R_prime matrix:
+  Reconstructed_Double_Y %>%
+    magrittr::extract2("R_prime") %>%
+    matsindf::expand_to_tidy() %>%
+    dplyr::filter(rownames == "Resources - Crude", colnames == "Crude") %>%
+    magrittr::extract2("matvals") %>%
+    dplyr::first() %>%
+    expect_equal(100000)
+
+  Reconstructed_Double_Y %>%
+    magrittr::extract2("R_prime") %>%
+    matsindf::expand_to_tidy() %>%
+    dplyr::filter(rownames == "Resources - Crude", colnames == "Crude") %>%
+    magrittr::extract2("matvals") %>%
+    dplyr::last() %>%
+    expect_equal(53500*2)
+
+  Reconstructed_Double_Y %>%
+    magrittr::extract2("R_prime") %>%
+    matsindf::expand_to_tidy() %>%
+    dplyr::filter(rownames == "Resources - NG", colnames == "NG") %>%
+    magrittr::extract2("matvals") %>%
+    dplyr::first() %>%
+    expect_equal(86000)
+
+  # Test all matrices:
+  res <- Reconstructed_Double_Y %>%
+    dplyr::mutate(
+      U_double = matsbyname::hadamardproduct_byname(U, 2),
+      V_double = matsbyname::hadamardproduct_byname(V, 2),
+      W_double = matsbyname::hadamardproduct_byname(W, 2),
+      R_double = matsbyname::hadamardproduct_byname(R, 2),
+      # Take the difference between primes and doubles
+      U_diff = matsbyname::difference_byname(U_double, U_prime),
+      V_diff = matsbyname::difference_byname(V_double, V_prime),
+      W_diff = matsbyname::difference_byname(W_double, W_prime),
+      R_diff = matsbyname::difference_byname(R_double, R_prime),
+      # Check if it is the 0 matrix
+      UOK = matsbyname::iszero_byname(U_diff, tol = 1e-3),
+      VOK = matsbyname::iszero_byname(V_diff, tol = 1e-3),
+      WOK = matsbyname::iszero_byname(W_diff, tol = 1e-3),
+      ROK = matsbyname::iszero_byname(W_diff, tol = 1e-3),
+    )
+
+  expect_true(all(as.logical(res$UOK)))
+  expect_true(all(as.logical(res$VOK)))
+  expect_true(all(as.logical(res$WOK)))
+  expect_true(all(as.logical(res$ROK)))
+
+
+  # Test to define a NULL new Y matrix
+  Reconstructed_NULL <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    dplyr::select(Country, Year, Energy.type, Last.stage, U, U_feed, V, Y, r_EIOU, S_units, R) %>%
+    calc_io_mats() %>%
+    dplyr::mutate(
+      Y_prime = matsbyname::select_cols_byname(
+        Y,
+        "a_pattern_that_does_not_exist_anywgere"
+      )
+    ) %>%
+    Recca::new_Y(
+      Y_prime = "Y_prime"
+    )
+
+  Reconstructed_NULL %>%
+    dplyr::filter(! is.null(R_prime))
+
+  expect_equal(Reconstructed_NULL$Y_prime[[1]], NULL)
+  expect_equal(Reconstructed_NULL$U_prime[[1]], NULL)
+  expect_equal(Reconstructed_NULL$V_prime[[1]], NULL)
+  expect_equal(Reconstructed_NULL$W_prime[[1]], NULL)
+  expect_equal(Reconstructed_NULL$R_prime[[1]], NULL)
+  expect_equal(Reconstructed_NULL$V_prime[[2]], NULL)
+  expect_equal(Reconstructed_NULL$W_prime[[3]], NULL)
+  expect_equal(Reconstructed_NULL$R_prime[[4]], NULL)
 })
+
+
 
 
 test_that("new_k_ps() works as expected", {
   perfectsub_mats <- PerfectSubmats %>%
     tidyr::spread(key = "matrix.name", value = "matrix")
 
-  io_mats <- perfectsub_mats %>% calc_io_mats()
+  io_mats <- perfectsub_mats %>% Recca::calc_io_mats()
   K <- io_mats$K[[1]]
   expect_equal(K["FF", "FF extraction"], 1)
   expect_equal(K["FF elec", "Buildings"], 0.2725225225)
@@ -132,11 +246,14 @@ test_that("new_k_ps() works as expected", {
                       dplyr::select(matvals) %>%
                       unlist(),
                     25.2)
-  expect_equivalent(new_UV_noR %>%
-                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "V_prime", rownames == "Resources - Rens", colnames == "Rens") %>%
-                      dplyr::select(matvals) %>%
-                      unlist(),
-                    49.75)
+
+  # This test below is part of the R_prime matrix.
+  # So we need to change the new_k_ps() matrix before implementing the test.
+  # expect_equivalent(new_UV_noR %>%
+  #                     dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "V_prime", rownames == "Resources - Rens", colnames == "Rens") %>%
+  #                     dplyr::select(matvals) %>%
+  #                     unlist(),
+  #                   49.75)
 
   # Now test when an R matrix is present.
   new_UV_withR <- io_mats %>%
@@ -163,11 +280,11 @@ test_that("new_k_ps() works as expected", {
                  unlist() %>%
                  length(),
                0)
-  expect_equivalent(new_UV_withR %>%
-                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "R_prime", rownames == "Resources - Rens", colnames == "Rens") %>%
-                      dplyr::select(matvals) %>%
-                      unlist(),
-                    49.75)
+  # expect_equivalent(new_UV_withR %>%
+  #                     dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "R_prime", rownames == "Resources - Rens", colnames == "Rens") %>%
+  #                     dplyr::select(matvals) %>%
+  #                     unlist(),
+  #                   49.75)
 })
 
 
@@ -228,19 +345,18 @@ test_that("1-industry ECC works with new_k_ps()", {
 })
 
 
+
 test_that("new_R_ps() works as expected", {
   setup <- UKEnergy2000mats %>%
-    spread(key = "matrix.name", value = "matrix") %>%
+    tidyr::spread(key = "matrix.name", value = "matrix") %>%
     # When Last.stage is "services", we get units problems.
     # Avoid by using only ECCs with "Final" and "Useful" as the Last.stage.
-    filter(Last.stage != IEATools::last_stages$services) %>%
+    dplyr::filter(Last.stage != IEATools::last_stages$services) %>%
     # Calculate the input-output matrices which are inputs to the new_R function.
     calc_io_mats() %>%
-    # Calculate the efficiency of every industry in the ECC.
-    calc_eta_i() %>%
     # Make an R_prime matrix that gives the same the resource inputs to the economy.
     # For testing purposes!
-    mutate(
+    dplyr::mutate(
       R_prime = R
     )
   # Now call the new_R_ps function which will calculate
@@ -251,16 +367,18 @@ test_that("new_R_ps() works as expected", {
   newRsameasoldR <- setup %>%
     new_R_ps() %>%
     # Clean the rows of U_prime and Y_prime, because they contain Products that are not present in U.
-    mutate(
-      U_prime = clean_byname(U_prime, margin = 1),
-      Y_prime = clean_byname(Y_prime, margin = 1)
+    dplyr::mutate(
+      U_prime = matsbyname::clean_byname(U_prime, margin = 1),
+      Y_prime = matsbyname::clean_byname(Y_prime, margin = 1),
+      W_prime = matsbyname::clean_byname(W_prime, margin = 1)
     ) %>%
     # Set up the expectations
-    mutate(
+    dplyr::mutate(
       # When R_prime = R, we expect to recover same U, V, and Y.
       expected_U = U,
       expected_V = V,
-      expected_Y = Y
+      expected_Y = Y,
+      expected_W = W
     )
 
   # Test that everything worked as expected
@@ -268,22 +386,19 @@ test_that("new_R_ps() works as expected", {
     expect_true(matsbyname::equal_byname(newRsameasoldR$U_prime[[i]], newRsameasoldR$expected_U[[i]]))
     expect_true(matsbyname::equal_byname(newRsameasoldR$V_prime[[i]], newRsameasoldR$expected_V[[i]]))
     expect_true(matsbyname::equal_byname(newRsameasoldR$Y_prime[[i]], newRsameasoldR$expected_Y[[i]]))
+    expect_true(matsbyname::equal_byname(newRsameasoldR$W_prime[[i]], newRsameasoldR$expected_W[[i]]))
   }
 
-  # Also try when the maxiter argument is set too small.
-  expect_error(setup[1, ] %>% new_R_ps(maxiter = 1), "maxiter = 1 reached without convergence in new_R")
 
   doubleR <- UKEnergy2000mats %>%
-    spread(key = "matrix.name", value = "matrix") %>%
+    tidyr::spread(key = "matrix.name", value = "matrix") %>%
     # When Last.stage is "services", we get units problems.
     # Avoid by using only ECCs with "Final" and "Useful" as the Last.stage.
-    filter(Last.stage != IEATools::last_stages$services) %>%
+    dplyr::filter(Last.stage != IEATools::last_stages$services) %>%
     # Calculate the input-output matrices which are inputs to the new_R function.
     calc_io_mats() %>%
-    # Calculate the efficiency of every industry in the ECC.
-    calc_eta_i() %>%
     # Make an R_prime matrix that gives twice the resource inputs to the economy.
-    mutate(
+    dplyr::mutate(
       R_prime = matsbyname::hadamardproduct_byname(2, R)
     ) %>%
     # Now call the new_R_ps function which will calculate
@@ -293,16 +408,18 @@ test_that("new_R_ps() works as expected", {
     # because R_prime is 2x relative to R.
     new_R_ps() %>%
     # Clean the rows of U_prime, because they contain Products that are not present in U.
-    mutate(
+    dplyr::mutate(
       # Eliminate zero rows or cols that appear after the new_R_ps() call.
       U_prime = matsbyname::clean_byname(U_prime, margin = 1),
       V_prime = matsbyname::clean_byname(V_prime, margin = 2),
-      Y_prime = matsbyname::clean_byname(Y_prime, margin = 1)
+      Y_prime = matsbyname::clean_byname(Y_prime, margin = 1),
+      W_prime = matsbyname::clean_byname(W_prime, margin = 1)
     ) %>%
-    mutate(
+    dplyr::mutate(
       expected_U = matsbyname::hadamardproduct_byname(2, U),
       expected_V = matsbyname::hadamardproduct_byname(2, V),
-      expected_Y = matsbyname::hadamardproduct_byname(2, Y)
+      expected_Y = matsbyname::hadamardproduct_byname(2, Y),
+      expected_W = matsbyname::hadamardproduct_byname(2, W)
     )
 
   # Test that everything worked as expected
@@ -310,6 +427,7 @@ test_that("new_R_ps() works as expected", {
     expect_equal(doubleR$U_prime[[i]], doubleR$expected_U[[i]])
     expect_equal(doubleR$V_prime[[i]], doubleR$expected_V[[i]])
     expect_equal(doubleR$Y_prime[[i]], doubleR$expected_Y[[i]])
+    expect_equal(doubleR$W_prime[[i]], doubleR$expected_W[[i]])
   }
 
   # Test when the units on Products in U are not all same.
@@ -317,14 +435,12 @@ test_that("new_R_ps() works as expected", {
   # Input units are not all same for the Last.stage = "services" cases.
   # So don't filter out the "services" rows.
   WithDiffUnits <- UKEnergy2000mats %>%
-    spread(key = "matrix.name", value = "matrix") %>%
+    tidyr::spread(key = "matrix.name", value = "matrix") %>%
     # Calculate the input-output matrices which are inputs to the new_R function.
     calc_io_mats() %>%
-    # Calculate the efficiency of every industry in the ECC.
-    calc_eta_i() %>%
     # Make an R_prime matrix that gives twice the resource inputs to the economy.
-    mutate(
-      R_prime = hadamardproduct_byname(2, R)
+    dplyr::mutate(
+      R_prime = matsbyname::hadamardproduct_byname(2, R)
     ) %>%
     # Now call the new_R function which will calculate
     # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
@@ -332,9 +448,10 @@ test_that("new_R_ps() works as expected", {
     # Each of the *_prime matrices should be 2x their originals,
     # because R_prime is 2x relative to R.
     new_R_ps()
+
   for (i in c(2,4)) {
-    expect_true(is.na(WithDiffUnits$U_prime[[i]]))
-    expect_true(is.na(WithDiffUnits$V_prime[[i]]))
-    expect_true(is.na(WithDiffUnits$Y_prime[[i]]))
+    expect_true(all(is.na(WithDiffUnits$U_prime[[i]])))
+    expect_true(all(is.na(WithDiffUnits$V_prime[[i]])))
+    expect_true(all(is.na(WithDiffUnits$Y_prime[[i]])))
   }
 })

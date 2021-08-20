@@ -23,13 +23,21 @@
 #' and input arguments should be single matrices or vectors.
 #'
 #' @param .sutmats a data frame of supply-use table matrices with matrices arranged in columns.
+#' @param R a \code{R} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{R}".
 #' @param Y_prime a new final demand matrix or name of a column in \code{.sutmats} containing same. Default is "\code{Y_prime}".
 #' @param L_ixp an \code{L_ixp} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{L_ixp}".
 #' @param L_pxp an \code{L_pxp} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{L_pxp}".
 #' @param Z a \code{Z} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{Z}".
 #' @param D a \code{D} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{D}".
+#' @param O a \code{O} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{O}".
+#' @param r The name of the `r` vector.
+#'          Default is "r".
+#' @param h The name of the `h` vector.
+#'          Default is "h".
 #' @param U_prime the name for new \code{U} matrices. Default is "\code{U_prime}".
 #' @param V_prime the name for new \code{V} matrices. Default is "\code{V_prime}".
+#' @param W_prime the name for new \code{W} matrices. Default is "\code{W_prime}".
+#' @param R_prime the name for new \code{R} matrices. Default is "\code{R_prime}".
 #'
 #' @return a list or data frame with \code{U_prime} and \code{V_prime} matrices
 #'
@@ -41,32 +49,72 @@
 #' library(tidyr)
 #' UKEnergy2000mats %>%
 #'   spread(key = matrix.name, value = matrix) %>%
-#'   select(Country, Year, Energy.type, Last.stage, U, U_feed, V, Y, r_EIOU, S_units) %>%
+#'   select(Country, Year, Energy.type, Last.stage, R, U, U_feed, V, Y, r_EIOU, S_units) %>%
 #'   calc_io_mats() %>%
 #'   mutate(
 #'     # Give new Y matrices that are double the existing Y matrices
-#'     Y_prime = hadamardproduct_byname(2, Y)
+#'     Y_prime = matsbyname::hadamardproduct_byname(2, Y)
 #'   ) %>%
 #'   # Should give U_prime and V_prime matrices that are double the existing U and V matrices
 #'   new_Y()
 new_Y <- function(.sutmats = NULL,
                   # Input names
                   Y_prime = "Y_prime", L_ixp = "L_ixp", L_pxp = "L_pxp",
-                  Z = "Z", D = "D",
+                  Z = "Z", D = "D", R = "R", r = "r", h = "h", O = "O",
                   # Output names
-                  U_prime = "U_prime", V_prime = "V_prime"){
+                  U_prime = "U_prime", V_prime = "V_prime", W_prime = "W_prime", R_prime = "R_prime"){
 
-  new_Y_func <- function(Y_prime_mat, L_ixp_mat, L_pxp_mat, Z_mat, D_mat){
-    y_prime_vec <- matsbyname::rowsums_byname(Y_prime_mat)
-    g_prime_vec <- matsbyname::matrixproduct_byname(L_ixp_mat, y_prime_vec)
-    q_prime_vec <- matsbyname::matrixproduct_byname(L_pxp_mat, y_prime_vec)
-    U_prime_mat <- matsbyname::matrixproduct_byname(Z_mat, matsbyname::hatize_byname(g_prime_vec))
-    V_prime_mat <- matsbyname::matrixproduct_byname(D_mat, matsbyname::hatize_byname(q_prime_vec))
-    list(U_prime_mat, V_prime_mat) %>% magrittr::set_names(c(U_prime, V_prime))
+  new_Y_func <- function(Y_prime_mat, L_ixp_mat, L_pxp_mat, Z_mat, D_mat, O_mat, R_mat, r_vec, h_vec){
+
+    if (is.null(Y_prime_mat)){
+      U_prime_mat <- NULL
+      V_prime_mat <- NULL
+      W_prime_mat <- NULL
+      R_prime_mat <- NULL
+    } else {
+      y_prime_vec <- matsbyname::rowsums_byname(Y_prime_mat)
+
+      g_prime_vec <- matsbyname::matrixproduct_byname(L_ixp_mat, y_prime_vec)
+
+      q_prime_vec <- matsbyname::matrixproduct_byname(L_pxp_mat, y_prime_vec)
+
+      U_prime_mat <- matsbyname::matrixproduct_byname(Z_mat, matsbyname::hatize_byname(g_prime_vec, keep = "rownames"))
+
+      V_prime_mat <- matsbyname::matrixproduct_byname(D_mat, matsbyname::hatize_byname(q_prime_vec, keep = "rownames"))
+
+      W_prime_mat <- matsbyname::difference_byname(
+        matsbyname::transpose_byname(V_prime_mat),
+        U_prime_mat
+      )
+
+      # R_prime_mat <- matsbyname::matrixproduct_byname(
+      #   r_vec %>%
+      #     matsbyname::hatinv_byname() %>%
+      #     matsbyname::matrixproduct_byname(R_mat),
+      #   matsbyname::difference_byname(y_prime_vec, matsbyname::rowsums_byname(W_prime_mat)) %>%
+      #     matsbyname::hatize_byname()
+      #     )
+
+      y_prime_minus_W_i <- y_prime_vec %>%
+        matsbyname::difference_byname(
+          matsbyname::rowsums_byname(W_prime_mat)
+        )
+
+      R_prime_mat <- matsbyname::matrixproduct_byname(
+        O_mat,
+        matsbyname::transpose_byname(
+          matsbyname::hatize_byname(y_prime_minus_W_i, keep = "rownames")
+        )
+      )
+    }
+
+    list(U_prime_mat, V_prime_mat, W_prime_mat, R_prime_mat) %>% magrittr::set_names(c(U_prime, V_prime, W_prime, R_prime))
   }
+
   matsindf::matsindf_apply(.sutmats, FUN = new_Y_func,
                  Y_prime_mat = Y_prime, L_ixp_mat = L_ixp, L_pxp_mat = L_pxp,
-                 Z_mat = Z, D_mat = D)
+                 Z_mat = Z, D_mat = D, O_mat = O, R_mat = R,
+                 r_vec = r, h_vec = h)
 }
 
 
@@ -195,8 +243,8 @@ new_k_ps <- function(.sutmats = NULL,
 
     # We need the matrix product of k_prime_1 and f_hat in several places.
     # Calculate it here now.
-    k_prime_1_f_hat <- matsbyname::matrixproduct_byname(k_prime_1, matsbyname::hatize_byname(f_vec))
-    k_prime_2_f_hat <- matsbyname::matrixproduct_byname(k_prime_2, matsbyname::hatize_byname(f_vec))
+    k_prime_1_f_hat <- matsbyname::matrixproduct_byname(k_prime_1, matsbyname::hatize_byname(f_vec, keep = "rownames"))
+    k_prime_2_f_hat <- matsbyname::matrixproduct_byname(k_prime_2, matsbyname::hatize_byname(f_vec, keep = "rownames"))
 
     # Get y_prime, g_prime, and q_prime vectors.
     y_prime_1 <- matsbyname::rowsums_byname(k_prime_1_f_hat)
@@ -209,12 +257,12 @@ new_k_ps <- function(.sutmats = NULL,
     q_prime_2 <- matsbyname::matrixproduct_byname(L_pxp_mat, y_prime_2)
 
     # Calculate U_prime_1 and U_prime_2
-    U_prime_1 <- matsbyname::sum_byname(matsbyname::matrixproduct_byname(Z_mat, matsbyname::hatize_byname(g_prime_1)), k_prime_1_f_hat)
-    U_prime_2 <- matsbyname::sum_byname(matsbyname::matrixproduct_byname(Z_mat, matsbyname::hatize_byname(g_prime_2)), k_prime_2_f_hat)
+    U_prime_1 <- matsbyname::sum_byname(matsbyname::matrixproduct_byname(Z_mat, matsbyname::hatize_byname(g_prime_1, keep = "rownames")), k_prime_1_f_hat)
+    U_prime_2 <- matsbyname::sum_byname(matsbyname::matrixproduct_byname(Z_mat, matsbyname::hatize_byname(g_prime_2, keep = "rownames")), k_prime_2_f_hat)
 
     # Calculate V_prime_1 and V_prime_2
-    V_prime_1 <- matsbyname::matrixproduct_byname(D_mat, matsbyname::hatize_byname(q_prime_1))
-    V_prime_2 <- matsbyname::matrixproduct_byname(D_mat, matsbyname::hatize_byname(q_prime_2))
+    V_prime_1 <- matsbyname::matrixproduct_byname(D_mat, matsbyname::hatize_byname(q_prime_1, keep = "rownames"))
+    V_prime_2 <- matsbyname::matrixproduct_byname(D_mat, matsbyname::hatize_byname(q_prime_2, keep = "rownames"))
 
     # Now subtract the "1" versions and add the "2" versions.
     U_prime_mat <- matsbyname::difference_byname(U_mat, U_prime_1) %>% matsbyname::sum_byname(U_prime_2)
@@ -244,176 +292,146 @@ new_k_ps <- function(.sutmats = NULL,
 }
 
 
-#' Assess the effect of new levels of resources
+
+#' Calculates downstream effects of a new level of extracted resources
 #'
-#' This function calculates the effect of changing the resources available to an energy conversion chain.
-#' New versions of \code{U}, \code{V}, and \code{Y} matrices are returned
-#' as \code{U_prime}, \code{V_prime}, and \code{Y_prime}.
+#' This function calculates the effect of changing the resources available to an ECC,
+#' i.e. of a new resources matrix `R` on the rest of the ECC matrices (`U`, `V`, `W`, and `Ý`).
+#' New versions of the `U`, `V`, `W`, and `Ý` matrices are returned,
+#' and respectively called `U_prime`, `V_prime`, `W_prime`, and `Ý_prime`.
 #' This function assumes that each industry's inputs are perfectly substitutable (ps).
 #'
-#' Inputs \code{U}, \code{V}, \code{Y},
-#' \code{S_units}, \code{q}, and \code{C}
-#' can be
-#' conveniently calculated by the function \code{\link{calc_io_mats}};
-#' \code{eta_i} can be calculated with \code{\link{calc_eta_i}}.
-#'
 #' Each industry must be unit-homogeneous on its inputs.
-#' If not, \code{NA} is returned as the result for \code{U_prime}, \code{V_prime}, and \code{Y_prime}.
+#' If not, a matrix populated with \code{NA} is returned as the result for
+#' \code{U_prime}, \code{V_prime}, and \code{Y_prime}.
 #'
 #' @param .sutmats a data frame of supply-use table matrices with matrices arranged in columns.
-#' @param R_prime a new resource matrix or name of a column in \code{.sutmats} containing same. Default is "\code{R_prime}".
-#' @param U use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{U}".
-#' @param V make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "\code{V}".
-#' @param Y final demand (\code{Y}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{Y}".
-#' @param S_units \code{S_units} matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{S_units}".
-#' @param q \code{q} vector or name of the column in \code{.sutmats} that contains same. Default is "\code{q}".
-#' @param C a \code{C} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{C}".
-#' @param eta_i an \code{eta_i} vector or name of a column in \code{.sutmats} containing same. Default is "\code{eta_i}".
-#' @param maxiter the maximum allowable number of iterations when calculating the effects of a new \code{R} matrix.
-#'        Default is \code{100}.
-#' @param convergence_tol the maximum allowable change in any one entry of the \code{U}, \code{V}, and \code{Y} matrices
-#'        from one iteration to the next. Default is 0,
-#'        i.e., when two subsequent iterations produce the same values,
-#'        the algorithm has converged.
-#' @param e_bal_tol the maximum allowable difference in energy ECC energy balance. Default is `1e-6`.
-#' @param U_prime name for the \code{U_prime} matrix on output. Default is "\code{U_prime}".
-#' @param V_prime name for the \code{V_prime} matrix on output. Default is "\code{V_prime}".
-#' @param Y_prime name for the \code{Y_prime} matrix on output. Default is "\code{Y_prime}".
+#' @param R_prime The name of the new R matrix column in the input data frame, for which the new ECC must be assessed.
+#'                Default is "R_prime".
+#' @param U The name of the U matrix column in the input data frame.
+#'          Default is "U".
+#' @param V The name of the V matrix column in the input data frame.
+#'          Default is "V".
+#' @param Y The name of the Y matrix column in the input data frame.
+#'          Default is "Y".
+#' @param q The name of the q vector column in the input data frame.
+#'          Default is "q".
+#' @param f The name of the f vector column in the input data frame.
+#'          Default is "f".
+#' @param U_prime The name of the output column containing the new U matrices.
+#'                Default is "U_prime".
+#' @param V_prime The name of the output column containing the new V matrices.
+#'                Default is "V_prime".
+#' @param W_prime The name of the output column containing the new W matrices.
+#'                Default is "W_prime".
+#' @param Y_prime The name of the output column containing the new Y matrices.
+#'                Default is "Y_prime".
 #'
-#' @return a list or data frame containing \code{U_prime}, \code{V_prime}, and \code{Y_prime} matrices
-#'
+#' @return A data frame with added columns representing each of the new `U_prime`, `V_prime`, `W_prime`, and `Ý_prime` matrices.
 #' @export
 #'
 #' @examples
-#' library(dplyr)
-#' library(matsbyname)
-#' library(tidyr)
-#' doubleR <- UKEnergy2000mats %>%
-#'   spread(key = "matrix.name", value = "matrix") %>%
-#'   # Calculate the input-output matrices which are inputs to the new_R function.
-#'   calc_io_mats() %>%
-#'   # Calculate the efficiency of every industry in the ECC.
-#'   calc_eta_i() %>%
-#'   # Make an R_prime matrix that gives twice the resource inputs to the economy.
-#'   mutate(
-#'     R_prime = hadamardproduct_byname(2, R)
-#'   ) %>%
-#'   # Now call the new_R function which will calculate
-#'   # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
-#'   # given R_prime.
-#'   # Each of the *_prime matrices should be 2x their originals,
-#'   # because R_prime is 2x relative to R.
-#'   # Rows with Last.stage == "services" are NA.
-#'   new_R_ps()
-#' doubleR$U_prime[[1]]
-#' doubleR$V_prime[[1]]
-#' doubleR$Y_prime[[1]]
+#' UKEnergy2000mats %>%
+#' tidyr::spread(key = "matrix.name", value = "matrix") %>%
+#' # Calculate the input-output matrices which are inputs to the new_R function.
+#'  calc_io_mats() %>%
+#' # Make an R_prime matrix that gives twice the resource inputs to the economy.
+#'  dplyr::mutate(
+#'    R_prime = matsbyname::hadamardproduct_byname(2, R)
+#'  ) %>%
+#' # Now call the new_R function which will calculate
+#' # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
+#' # given R_prime.
+#' # Each of the *_prime matrices should be 2x their originals,
+#' # because R_prime is 2x relative to R.
+#'  new_R_ps()
 new_R_ps <- function(.sutmats = NULL,
-                  # Input names
-                  R_prime = "R_prime",
-                  U = "U", V = "V", Y = "Y", S_units = "S_units",
-                  q = "q", C = "C", eta_i = "eta_i",
-                  maxiter = 100,
-                  convergence_tol = 0,
-                  e_bal_tol = 1e-6,
-                  # Output names
-                  U_prime = "U_prime", V_prime = "V_prime", Y_prime = "Y_prime"){
-  new_R_func <- function(R_prime_mat, U_mat, V_mat, Y_mat, S_units_mat, q_vec, C_mat, eta_i_vec){
-    iter <- 0
+                          # Input names
+                          R_prime = "R_prime",
+                          U = "U", V = "V", Y = "Y",
+                          q = "q", f = "f",
+                          # Output names
+                          U_prime = "U_prime", V_prime = "V_prime", W_prime = "W_prime", Y_prime = "Y_prime"){
 
-    # Verify that inputs to each industry are unit-homogeneous
-    if (!(inputs_unit_homogeneous(U = U_mat, S_units = S_units_mat)[[".inputs_unit_homogeneous"]])) {
-      # The method employed here works only when the units on input to all industries are same.
-      # If we have a situation where units are not all same, we will return NA
-      return(list(NA_real_, NA_real_, NA_real_) %>%
-               magrittr::set_names(c(U_prime, V_prime, Y_prime)))
-    }
+  new_R_func <- function(R_prime_mat, U_mat, V_mat, Y_mat, q_vec, f_vec){
 
-    # Calculate some quantities that we'll use on each iteration.
+    # Calculating all symmetric IO matrices:
+    Z_sym_mat <- matsbyname::matrixproduct_byname(
+      matsbyname::transpose_byname(V_mat),
+      matsbyname::hatinv_byname(f_vec, keep = "rownames")
+    )
 
-    # q_hat_inv_times_U
-    q_hat_inv_times_U <- matsbyname::matrixproduct_byname(matsbyname::hatinv_byname(q_vec), U_mat)
+    C_sym_mat <- matsbyname::matrixproduct_byname(
+      U_mat,
+      matsbyname::hatinv_byname(f_vec, keep = "rownames")
+    )
 
-    # Column sums of the R_prime matrix
-    iR_prime <- matsbyname::colsums_byname(R_prime_mat)
+    D_sym_mat <- matsbyname::matrixproduct_byname(
+      matsbyname::transpose_byname(U_mat),
+      matsbyname::hatinv_byname(q_vec, keep = "rownames")
+    )
 
-    # Set up an initial V_prime, which is a V matrix with all zeroes.
-    # The easiest way to make that matrix is to multiply V by 0.
-    V_prime_mat <- matsbyname::hadamardproduct_byname(0, V_mat)
+    O_sym_mat <- matsbyname::matrixproduct_byname(
+      matsbyname::hatinv_byname(q_vec, keep = "rownames"),
+      Y_mat
+    )
 
-    # Values for y and Y_hat_inv * Y will be needed later.
-    y_vec <- matsbyname::rowsums_byname(Y_mat)
-    y_hat_inv_Y <- matsbyname::matrixproduct_byname(matsbyname::hatinv_byname(y_vec), Y_mat)
-    # Set up a value for Y_prime.
-    # The easiest way to make Y_prime is to multiply Y by 0.
-    Y_prime_mat <- matsbyname::hadamardproduct_byname(0, Y_mat)
+    A_sym_mat <- matsbyname::matrixproduct_byname(
+      Z_sym_mat,
+      D_sym_mat
+    )
 
-    # Set up "previous" matrices for convergence comparison
-    U_prime_mat_prev <- matsbyname::hadamardproduct_byname(0, U_mat)
-    V_prime_mat_prev <- V_prime_mat
-    Y_prime_mat_prev <- Y_prime_mat
+    L_pxp_sym_mat <- matsbyname::Iminus_byname(A_sym_mat) %>% matsbyname::invert_byname()
 
-    # Step numbers correspond to the file UTEI_Sankey_Simple_ECC_downstream_Swim.xlsx
-    # Use a do-while loop structure for this algorithm.
-    repeat {
-      # Step 0: Calculate q_prime_hat
-      # Note that we're making q_prime into a column vector. Purpose: compatibility with the calculation of y_prime later.
-      q_prime <- matsbyname::sum_byname(iR_prime, matsbyname::colsums_byname(V_prime_mat)) %>% matsbyname::transpose_byname()
-      q_hat_prime <- q_prime %>% matsbyname::hatize_byname()
-      # Index the iteration counter
-      iter <- iter + 1
-      # Step 1: Calculate U_prime
-      U_prime_mat <- matsbyname::matrixproduct_byname(q_hat_prime, q_hat_inv_times_U)
-      # Step 2: Calculate U_bar_prime
-      U_bar_prime <- matsbyname::transpose_byname(S_units_mat) %>% matsbyname::matrixproduct_byname(U_prime_mat)
-      # Step 3: Calculate column sums of U_bar_prime
-      i_U_bar_prime <- matsbyname::colsums_byname(U_bar_prime)
-      # Step 4: Calculate i_U_bar_prime_hat
-      i_U_bar_hat_prime <- matsbyname::hatize_byname(i_U_bar_prime)
-      # Step 5: Calculate g_prime
-      g_prime <- matsbyname::matrixproduct_byname(i_U_bar_hat_prime, eta_i_vec)
-      # Step 6: Calculate g_prime_hat
-      g_hat_prime <- matsbyname::hatize_byname(g_prime)
-      # Step 7: Calculate V_prime
-      V_prime_mat <- matsbyname::matrixproduct_byname(C_mat, g_hat_prime) %>% matsbyname::transpose_byname()
-      # Step 8: Calculate Y_prime
-      y_prime <- matsbyname::difference_byname(q_prime, matsbyname::rowsums_byname(U_prime_mat))
-      y_hat_prime <- matsbyname::hatize_byname(y_prime)
-      Y_prime_mat <- matsbyname::matrixproduct_byname(y_hat_prime, y_hat_inv_Y)
+    L_ixp_sym_mat <- matsbyname::matrixproduct_byname(
+      D_sym_mat,
+      L_pxp_sym_mat
+    )
 
-      # Check convergence condition
-      # Calculate only as many differences as necessary.
-      if (matsbyname::difference_byname(Y_prime_mat, Y_prime_mat_prev) %>% matsbyname::iszero_byname(tol = convergence_tol)) {
-        if (matsbyname::difference_byname(V_prime_mat, V_prime_mat_prev) %>% matsbyname::iszero_byname(tol = convergence_tol)) {
-          if (matsbyname::difference_byname(U_prime_mat, U_prime_mat_prev) %>% matsbyname::iszero_byname(tol = convergence_tol)) {
-            # If we get here, all of U_prime, V_prime, and Y_prime
-            # are same as their respective *_prev values within tol.
-            # This is the stopping condition, so break.
-            break
-          }
-        }
-      }
 
-      # Check to see if we have exceeded the maximum number of iterations
-      if (iter >= maxiter) {
-        stop(paste("maxiter =", maxiter, "reached without convergence in new_R"))
-      }
-      # Prepare for next iteration
-      U_prime_mat_prev <- U_prime_mat
-      V_prime_mat_prev <- V_prime_mat
-      Y_prime_mat_prev <- Y_prime_mat
-    }
+    # Now, calculating the set of prime matrices:
+    q_prime_vec <- matsbyname::matrixproduct_byname(
+      L_pxp_sym_mat,
+      matsbyname::transpose_byname(R_prime_mat) %>% matsbyname::rowsums_byname()
+    )
 
-    # We think we converged. Let's see if we have energy balance.
-    verify_SUT_energy_balance_with_units(R = R_prime_mat, U = U_prime_mat, V = V_prime_mat, Y = Y_prime_mat, S_units = S_units_mat, tol = e_bal_tol)
+    Y_prime_mat <- matsbyname::matrixproduct_byname(
+      matsbyname::hatize_byname(q_prime_vec, keep = "rownames"),
+      O_sym_mat
+    )
+
+    U_prime_mat <- matsbyname::matrixproduct_byname(
+      matsbyname::hatize_byname(q_prime_vec, keep = "rownames"),
+      matsbyname::transpose_byname(D_sym_mat)
+    )
+
+    # Issue here.
+    V_prime_mat <- matsbyname::matrixproduct_byname(
+      matsbyname::matrixproduct_byname(
+        L_ixp_sym_mat,
+        matsbyname::transpose_byname(R_prime_mat) %>% matsbyname::rowsums_byname()
+      ) %>%
+        matsbyname::hatize_byname(keep = "rownames"),
+      matsbyname::transpose_byname(Z_sym_mat)
+    )
+
+    W_prime_mat <- matsbyname::difference_byname(
+      matsbyname::transpose_byname(V_prime_mat),
+      U_prime_mat
+    )
+
 
     # Return the new U, V, and Y matrices.
-    list(U_prime_mat, V_prime_mat, Y_prime_mat) %>% magrittr::set_names(c(U_prime, V_prime, Y_prime))
+    list(U_prime_mat, V_prime_mat, W_prime_mat, Y_prime_mat) %>% magrittr::set_names(c(U_prime, V_prime, W_prime, Y_prime))
+
+
   }
 
-  matsindf::matsindf_apply(.sutmats, FUN = new_R_func, R_prime_mat = R_prime, U_mat = U, V_mat = V, Y_mat = Y, S_units_mat = S_units,
-                           q_vec = q, C_mat = C, eta_i_vec = eta_i)
+  matsindf::matsindf_apply(.sutmats, FUN = new_R_func, R_prime_mat = R_prime, U_mat = U, V_mat = V, Y_mat = Y,
+                           q_vec = q, f_vec = f)
 }
+
+
 
 
 
