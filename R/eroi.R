@@ -38,7 +38,7 @@ calc_E_EIOU <- function(.iomats = NULL,
                         e_EIOU = "e_EIOU"){
 
   E_EIOU_func <- function(g_vec, U_EIOU_mat){
-    E_EIOU_mat <- matsbyname::matrixproduct_byname(U_EIOU_mat, g_vec %>% matsbyname::hatinv_byname())
+    E_EIOU_mat <- matsbyname::matrixproduct_byname(U_EIOU_mat, g_vec %>% matsbyname::hatinv_byname(keep = "rownames"))
     e_EIOU_vec <- matsbyname::colsums_byname(E_EIOU_mat) %>%
       matsbyname::transpose_byname()
     list(E_EIOU_mat, e_EIOU_vec) %>% magrittr::set_names(c(E_EIOU, e_EIOU))
@@ -157,7 +157,7 @@ calc_erois <- function(.iomats = NULL,
 ){
   calc_eroi_func <- function(e_EIOU_vec, L_ixp_mat, L_ixp_feed_mat, D_mat, C_mat){
     # First; including both energy use for feedstock and energy use production
-    eroi_g_p_inv_vec <- matsbyname::matrixproduct_byname(matsbyname::hatize_byname(e_EIOU_vec), L_ixp_mat) %>%
+    eroi_g_p_inv_vec <- matsbyname::matrixproduct_byname(matsbyname::hatize_byname(e_EIOU_vec, keep = "rownames"), L_ixp_mat) %>%
       matsbyname::colsums_byname() %>%
       matsbyname::transpose_byname()
 
@@ -171,7 +171,7 @@ calc_erois <- function(.iomats = NULL,
     eroi_n_i_vec <- eroi_g_i_vec - 1
 
     # Second, including only energy use for feedstock production
-    eroi_g_p_feed_inv_vec <- matsbyname::matrixproduct_byname(matsbyname::hatize_byname(e_EIOU_vec), L_ixp_feed_mat) %>%
+    eroi_g_p_feed_inv_vec <- matsbyname::matrixproduct_byname(matsbyname::hatize_byname(e_EIOU_vec, keep = "rownames"), L_ixp_feed_mat) %>%
       matsbyname::colsums_byname() %>%
       matsbyname::transpose_byname()
 

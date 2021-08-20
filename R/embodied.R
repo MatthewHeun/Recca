@@ -5,14 +5,18 @@
 #' Calculate various embodied energy matrices
 #'
 #' @param .iomats a data frame containing matrices that describe the Input-Output structure
-#' (using the supply-use table format) of an Energy Conversion Chain.
-#' \code{.iomats} will likely have been obtained from the \code{\link{calc_io_mats}} function.
+#'                (using the supply-use table format)
+#'                of an Energy Conversion Chain.
+#'                \code{.iomats} will likely have been obtained from the \code{\link{calc_io_mats}} function.
 #' @param Y final demand (\code{Y}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{Y}".
+#' @param R Resources (\code{R}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{R}".
+#' @param V Supply (\code{R}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{V}".
+#' @param U_feed Feedstock use (\code{U_feed}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{U_feed}".
 #' @param q final demand (\code{q}) vector or name of the column in \code{.iodata} containing same. Default is "\code{q}".
-#' @param L_ixp industry-by-product Leontief (\code{L_ixp}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{L_ixp}"
 #' @param g name of the \code{g} vector on output. Default is "\code{g}".
-#' @param W name of the \code{W} matrix on output. Default is "\code{W}".
-#' @param U_EIOU name of the \code{U_EIOU} matrices on output. Default is "\code{U_EIOU}".
+#' @param r name of the \code{r} vector on output. Default is "\code{r}".
+#' @param A name of the `A` matrix in the `.iomats` data frame. Default is "A".
+#' @param L_ixp industry-by-product Leontief (\code{L_ixp}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{L_ixp}"
 #' @param G name of the \code{G} matrix on output.
 #'        \code{G} is calculated by \code{L_ixp * y_hat}. Default is "\code{G}".
 #' @param H name of the \code{H} matrix on output.
@@ -38,19 +42,19 @@
 #' @export
 calc_embodied_mats <- function(.iomats = NULL,
                                # Input names
-                               Y = "Y", q = "q",
-                               L_ixp = "L_ixp", g = "g", W = "W", U_EIOU = "U_EIOU",
+                               q = "q", g = "g", r = "r",
+                               L_ixp = "L_ixp", A = "A",
+                               R = "R", V = "V", U_feed = "U_feed", Y = "Y",
                                # Output names
                                G = "G", H = "H", E = "E",
                                M_p = "M_p", M_s = "M_s",
                                F_footprint_p = "F_footprint_p", F_effects_p = "F_effects_p",
                                F_footprint_s = "F_footprint_s", F_effects_s = "F_effects_s"){
-  embodied_func <- function(Y_mat, q_vec, L_ixp_mat, g_vec, W_mat, U_EIOU_mat){
-    GH_list <- calc_GH(Y = Y_mat, L_ixp = L_ixp_mat,
+  embodied_func <- function(Y_mat, q_vec, L_ixp_mat, g_vec, r_vec, W_mat, U_EIOU_mat, A_mat, R_mat, V_mat, U_mat, U_feed_mat){
+    GH_list <- calc_GH(Y = Y_mat, L_ixp = L_ixp_mat, R = R_mat, A = A_mat, q = q_vec,
                        G = G, H = H)
     G_mat <- GH_list[[G]]
-    E_list <- calc_E(g = g_vec, W = W_mat, U_EIOU = U_EIOU_mat,
-                     E = E)
+    E_list <- calc_E(R = R_mat, V = V_mat, U_feed = U_feed_mat, g = g_vec, r = r_vec)
     E_mat <- E_list[[E]]
     M_list <- calc_M(Y = Y_mat, q = q_vec, G = G_mat, E = E_mat,
                      M_p = M_p, M_s = M_s)
@@ -61,8 +65,8 @@ calc_embodied_mats <- function(.iomats = NULL,
                                      F_footprint_s = F_footprint_s, F_effects_s = F_effects_s)
     c(GH_list, E_list, M_list, F_list) %>% magrittr::set_names(c(names(GH_list), names(E_list), names(M_list), names(F_list)))
   }
-  matsindf::matsindf_apply(.iomats, FUN = embodied_func, Y_mat = Y, q_vec = q,
-                 L_ixp_mat = L_ixp, g_vec = g, W_mat = W, U_EIOU_mat = U_EIOU)
+  matsindf::matsindf_apply(.iomats, FUN = embodied_func, Y_mat = Y, q_vec = q, r_vec = r,
+                 L_ixp_mat = L_ixp, g_vec = g, A_mat = A, R_mat = R, V_mat = V, U_feed_mat = U_feed)
 }
 
 #' Calculate the \code{G} and \code{H} matrices for embodied energy calculations
@@ -70,52 +74,102 @@ calc_embodied_mats <- function(.iomats = NULL,
 #' @param .iomats a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.
 #' \code{.iomats} will likely have been obtained from the \code{\link{calc_io_mats}} function.
 #' @param Y final demand (\code{Y}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{Y}".
+#' @param R Resources (\code{R}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{R}".
+#' @param A The name of the `A` matrix column in the `.iomats` data frame.
+#'          Default is "A".
+#' @param q The name of the `q` vector in the `.iomats` data frame.
+#'          Default is "q".
 #' @param L_ixp industry-by-product Leontief (\code{L_ixp}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{L_ixp}".
 #' @param G name for the \code{G} matrix on output. Default is "\code{G}".
-#'        \code{G} is calculated by \code{L_ixp * y_hat}.
+#'        \code{G} is calculated by \code{G_R + G_V}.
+#' @param G_V name for the \code{G_V} matrix on output. Default is "\code{G_V}".
+#'        \code{G_V} is calculated by `L_ixp * y_hat`.
+#' @param G_R name for the \code{G_R} matrix on output. Default is "\code{G_R}".
+#'        \code{G_R} is calculated by `R * q_hat_inv * L_pxp * y_hat`.
 #' @param H name for the \code{H} matrix on output. Default is "\code{H}".
-#'        \code{G} is calculated by \code{L_ixp * Y}.
+#'        \code{H} is calculated by \code{H_V + H_R}.
+#' @param H_V name for the \code{H_V} matrix on output. Default is "\code{H_V}".
+#'        \code{H_V} is calculated by `L_ixp * Y`.
+#' @param H_R name for the \code{H_R} matrix on output. Default is "\code{H_R}".
+#'        \code{H_R} is calculated by `R * q_hat_inv * L_pxp * Y`.
+#'
 #'
 #' @return a list or data frame containing \code{G} and \code{H} matrices.
 #'
 #' @export
 calc_GH <- function(.iomats = NULL,
                     # Input columns
-                    Y = "Y", L_ixp = "L_ixp",
+                    Y = "Y", L_ixp = "L_ixp", R = "R", A = "A", q = "q",
                     # Output columns
-                    G = "G", H = "H"){
-  GH_func <- function(Y_mat, L_ixp_mat){
-    y <- matsbyname::rowsums_byname(Y)
-    G_mat <- matsbyname::matrixproduct_byname(L_ixp, matsbyname::hatize_byname(y))
-    H_mat <- matsbyname::matrixproduct_byname(L_ixp, Y)
-    list(G_mat, H_mat) %>% magrittr::set_names(c(G, H))
+                    G_V = "G_V", G_R = "G_R", G = "G",
+                    H_V = "H_V", H_R = "H_R", H = "H"){
+  GH_func <- function(Y_mat, L_ixp_mat, R_mat, A_mat, q_vec){
+
+    # Calculating y
+    y <- matsbyname::rowsums_byname(Y_mat)
+
+    # Calculating G_V and G_R
+    G_V_mat <- matsbyname::matrixproduct_byname(L_ixp, matsbyname::hatize_byname(y, keep = "rownames"))
+    G_R_mat <- R_mat %>%
+      matsbyname::matrixproduct_byname(matsbyname::hatinv_byname(q_vec, keep = "rownames")) %>%
+      matsbyname::matrixproduct_byname(matsbyname::invert_byname(
+        matsbyname::Iminus_byname(A_mat))) %>%
+      matsbyname::matrixproduct_byname(matsbyname::hatize_byname(y, keep = "rownames"))
+
+    # Calculating H_V and H_R
+    H_V_mat <- matsbyname::matrixproduct_byname(L_ixp, Y)
+    H_R_mat <- R_mat %>%
+      matsbyname::matrixproduct_byname(matsbyname::hatinv_byname(q_vec, keep = "rownames")) %>%
+      matsbyname::matrixproduct_byname(matsbyname::invert_byname(
+        matsbyname::Iminus_byname(A_mat))) %>%
+      matsbyname::matrixproduct_byname(Y_mat)
+
+    # Calculating G and H
+    G_mat <- matsbyname::sum_byname(G_V_mat, G_R_mat)
+    H_mat <- matsbyname::sum_byname(H_V_mat, H_R_mat)
+
+    # Naming and returning matrices
+    list(G_V_mat, G_R_mat, G_mat, H_V_mat, H_R_mat, H_mat) %>% magrittr::set_names(c(G_V, G_R, G, H_V, H_R, H))
   }
-  matsindf::matsindf_apply(.iomats, FUN = GH_func, Y_mat = Y, L_ixp_mat = L_ixp)
+  matsindf::matsindf_apply(.iomats, FUN = GH_func, Y_mat = Y, L_ixp_mat = L_ixp, R_mat = R, A_mat = A, q_vec = q)
 }
 
-#' Calculate the \code{E} matrix for embodied energy calculations
+#' Calculate the `E` matrix for embodied energy calculations
 #'
 #' @param .iomats a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.
 #' \code{.iomats} will likely have been obtained from the \code{\link{calc_io_mats}} function.
-#' @param g final demand (\code{g}) vector or name of the column in \code{.iomats} containing same. Default is "\code{g}".
-#' @param W product-by-industry value added (\code{W}) matrix or name of the column in \code{.iomats} containing same. Default is "\code{W}".
-#' @param U_EIOU energy industry own use matrix or name of the column in \code{.iomats} containing same. Default is "\code{U_EIOU}".
-#' @param E the name for the \code{E} matrix on output. Default is "\code{E}".
-#'        \code{E} is calculated by \code{W * g_hat_inv}.
+#' @param g The name of the `g` vector in `.iomats`. Default is "g".
+#' @param r The name of the `r` vector in the `iomats`. Default is "r".
+#' @param V The name of the `V` matrix column.
+#'          Default is "V".
+#' @param R The name of the `R` matrix column.
+#'          Default is "R".
+#' @param U_feed The name of the `U_feed` matrix column.
+#'          Default is "U_feed".
+#' @param E the name for the `E` matrix on output. Default is "E".
+#'        \code{E} is calculated by `W * g_hat_inv`.
 #'
-#' @return list or data frame containing \code{E} matrices
+#' @return list or data frame containing `E` matrices
 #'
 #' @export
 calc_E <- function(.iomats = NULL,
                    # Input names
-                   g = "g", W = "W", U_EIOU = "U_EIOU",
+                   R = "R", V = "V", U_feed = "U_feed", g = "g", r = "r",
                    # Output name
                    E = "E"){
-  E_func <- function(g_vec, W_mat, U_EIOU_mat){
-    E_mat <- matsbyname::matrixproduct_byname(matsbyname::sum_byname(W_mat, U_EIOU_mat), g_vec %>% matsbyname::hatinv_byname())
+  E_func <- function(R_mat, V_mat, U_feed_mat, g_vec, r_vec){
+
+    R_T_plus_U_T_minus_U <- matsbyname::sum_byname(R_mat, V_mat) %>%
+      matsbyname::transpose_byname() %>%
+      matsbyname::difference_byname(U_feed_mat)
+
+    r_plus_g <- matsbyname::sum_byname(g_vec, r_vec)
+
+    E_mat <- matsbyname::matrixproduct_byname(R_T_plus_U_T_minus_U, matsbyname::hatinv_byname(r_plus_g, keep = "rownames"))
+
     list(E_mat) %>% magrittr::set_names(E)
   }
-  matsindf::matsindf_apply(.iomats, FUN = E_func, g_vec = g, W_mat = W, U_EIOU_mat = U_EIOU)
+  matsindf::matsindf_apply(.iomats, FUN = E_func, R_mat = R, V_mat = V, U_feed_mat = U_feed, g_vec = g, r_vec = r)
 }
 
 
@@ -158,7 +212,7 @@ calc_M <- function(.YqGHEdata = NULL,
     e_vecs <- matsbyname::list_of_rows_or_cols(E_mat, margin = 1)
     # Form one e_hat matrix for each e vector in each list.
     # !!e_hat_colname := matsbyname::hatize_byname(!!as.name(e_colname)),
-    e_hat_list <- lapply(e_vecs, FUN = matsbyname::hatize_byname)
+    e_hat_list <- lapply(e_vecs, FUN = matsbyname::hatize_byname, keep = "rownames")
     # Calculate Q matrices
     G_list <- matsbyname::make_list(G_mat, n = length(e_hat_list), lenx = 1)
     Q_list <- Map(matsbyname::matrixproduct_byname, e_hat_list, G_list)
@@ -187,7 +241,7 @@ calc_M <- function(.YqGHEdata = NULL,
       matsbyname::setrownames_byname(names(Qposcolsums_list)) %>%
       matsbyname::setrowtype(matsbyname::rowtype(E_mat)) %>% matsbyname::setcoltype(matsbyname::rowtype(E_mat))
     # Calculate the "per-sector" embodied energy.
-    M_s_mat <- matsbyname::matrixproduct_byname(M_p_mat, q_vec %>% matsbyname::hatinv_byname() %>% matsbyname::matrixproduct_byname(Y_mat))
+    M_s_mat <- matsbyname::matrixproduct_byname(M_p_mat, q_vec %>% matsbyname::hatinv_byname(keep = "rownames") %>% matsbyname::matrixproduct_byname(Y_mat))
     # Verify energy balance for embodied matrices (M_p)
     # It should be that q - rowsums(M_p) = 0
     err = q_vec %>% matsbyname::setcolnames_byname("err") %>% matsbyname::setcoltype("err") %>%
@@ -395,8 +449,8 @@ calc_embodied_EIOU <- function(.iomats = NULL,
 
   embodied_EIOU_func <- function(e_EIOU_vec, y_vec, Y_mat, L_ixp_mat, L_ixp_feed_mat){
 
-    e_EIOU_hat_vec <- matsbyname::hatize_byname(e_EIOU_vec)
-    y_hat_vec <- matsbyname::hatize_byname(y_vec)
+    e_EIOU_hat_vec <- matsbyname::hatize_byname(e_EIOU_vec, keep = "rownames")
+    y_hat_vec <- matsbyname::hatize_byname(y_vec, keep = "rownames")
 
 
     Q_EIOU_p_mat <- matsbyname::matrixproduct_byname(e_EIOU_hat_vec,

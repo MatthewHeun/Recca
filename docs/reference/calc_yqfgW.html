@@ -80,7 +80,7 @@ The checks for unit homogeneity are performed only when an S_units matrix is pre
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.33</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.35</span>
       </span>
     </div>
 
@@ -166,6 +166,8 @@ The checks for unit homogeneity are performed only when an <code>S_units</code> 
   q <span class='op'>=</span> <span class='st'>"q"</span>,
   f <span class='op'>=</span> <span class='st'>"f"</span>,
   g <span class='op'>=</span> <span class='st'>"g"</span>,
+  h <span class='op'>=</span> <span class='st'>"h"</span>,
+  r <span class='op'>=</span> <span class='st'>"r"</span>,
   W <span class='op'>=</span> <span class='st'>"W"</span>
 <span class='op'>)</span></pre>
 
@@ -185,47 +187,57 @@ In the case of a balanced ECC, the method does not matter.</p></td>
     </tr>
     <tr>
       <th>R</th>
-      <td><p>resources (<code>R</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "<code>R</code>".</p></td>
+      <td><p>The resources (<code>R</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "R".</p></td>
     </tr>
     <tr>
       <th>U</th>
-      <td><p>use (<code>U</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "<code>U</code>".</p></td>
+      <td><p>The use (<code>U</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "U".</p></td>
     </tr>
     <tr>
       <th>V</th>
-      <td><p>make (<code>V</code>) matrix or name of the column in <code>.sutmats</code>that contains same. Default is "<code>V</code>".</p></td>
+      <td><p>The make (<code>V</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "V".</p></td>
     </tr>
     <tr>
       <th>Y</th>
-      <td><p>final demand (<code>Y</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "<code>Y</code>".</p></td>
+      <td><p>The final demand (<code>Y</code>) matrix or name of the column in `.sutmats`` that contains same. Default is "Y".</p></td>
     </tr>
     <tr>
       <th>S_units</th>
-      <td><p><code>S_units</code> matrix or name of the column in <code>.sutmats</code> that contains same. Default is "<code>S_units</code>".</p></td>
+      <td><p>The <code>S_units</code> matrix or name of the column in <code>.sutmats</code> that contains same. Default is "S_units".</p></td>
     </tr>
     <tr>
       <th>y</th>
-      <td><p>name for <code>y</code> vector on output. Default is "<code>y</code>".
+      <td><p>The name for the <code>y</code> vector on output. Default is "y".
 <code>y</code> is calculated by <code>rowsums(Y)</code>.</p></td>
     </tr>
     <tr>
       <th>q</th>
-      <td><p>name for <code>q</code> vector on output. Default is "<code>q</code>".
+      <td><p>The name for the <code>q</code> vector on output. Default is "q".
 <code>q</code> is calculated by <code>rowsums(U) + y</code>.</p></td>
     </tr>
     <tr>
       <th>f</th>
-      <td><p>name for <code>f</code> vector on output. Default is "<code>f</code>".
+      <td><p>The name for the <code>f</code> vector on output. Default is "f".
 <code>f</code> is calculated by <code>colsums(U)</code>.</p></td>
     </tr>
     <tr>
       <th>g</th>
-      <td><p>name for <code>g</code> vector on output. Default is "<code>g</code>".
+      <td><p>The name for the <code>g</code> vector on output. Default is "g".
 <code>g</code> is calculated by <code>rowsums(V)</code>.</p></td>
     </tr>
     <tr>
+      <th>h</th>
+      <td><p>The name for the <code>h</code> vector on output. Default is "h".
+<code>h</code> is calculated by <code>colsums(transpose(R))</code>.</p></td>
+    </tr>
+    <tr>
+      <th>r</th>
+      <td><p>The name for the <code>r</code> vector on output. Default is "r".
+<code>r</code> is calculated by <code>rowsums(R)</code>.</p></td>
+    </tr>
+    <tr>
       <th>W</th>
-      <td><p>name for <code>W</code> matrix on output. Default is "<code>W</code>".
+      <td><p>The name for the <code>W</code> matrix on output. Default is "W".
 <code>W</code> is calculated by <code>transpose(V) - U</code>.</p></td>
     </tr>
     </table>

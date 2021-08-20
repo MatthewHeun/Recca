@@ -6,12 +6,15 @@
 \usage{
 calc_embodied_mats(
   .iomats = NULL,
-  Y = "Y",
   q = "q",
-  L_ixp = "L_ixp",
   g = "g",
-  W = "W",
-  U_EIOU = "U_EIOU",
+  r = "r",
+  L_ixp = "L_ixp",
+  A = "A",
+  R = "R",
+  V = "V",
+  U_feed = "U_feed",
+  Y = "Y",
   G = "G",
   H = "H",
   E = "E",
@@ -25,20 +28,27 @@ calc_embodied_mats(
 }
 \arguments{
 \item{.iomats}{a data frame containing matrices that describe the Input-Output structure
-(using the supply-use table format) of an Energy Conversion Chain.
+(using the supply-use table format)
+of an Energy Conversion Chain.
 \code{.iomats} will likely have been obtained from the \code{\link{calc_io_mats}} function.}
-
-\item{Y}{final demand (\code{Y}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{Y}".}
 
 \item{q}{final demand (\code{q}) vector or name of the column in \code{.iodata} containing same. Default is "\code{q}".}
 
-\item{L_ixp}{industry-by-product Leontief (\code{L_ixp}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{L_ixp}"}
-
 \item{g}{name of the \code{g} vector on output. Default is "\code{g}".}
 
-\item{W}{name of the \code{W} matrix on output. Default is "\code{W}".}
+\item{r}{name of the \code{r} vector on output. Default is "\code{r}".}
 
-\item{U_EIOU}{name of the \code{U_EIOU} matrices on output. Default is "\code{U_EIOU}".}
+\item{L_ixp}{industry-by-product Leontief (\code{L_ixp}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{L_ixp}"}
+
+\item{A}{name of the \code{A} matrix in the \code{.iomats} data frame. Default is "A".}
+
+\item{R}{Resources (\code{R}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{R}".}
+
+\item{V}{Supply (\code{R}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{V}".}
+
+\item{U_feed}{Feedstock use (\code{U_feed}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{U_feed}".}
+
+\item{Y}{final demand (\code{Y}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{Y}".}
 
 \item{G}{name of the \code{G} matrix on output.
 \code{G} is calculated by \code{L_ixp * y_hat}. Default is "\code{G}".}

@@ -11,8 +11,14 @@ new_Y(
   L_pxp = "L_pxp",
   Z = "Z",
   D = "D",
+  R = "R",
+  r = "r",
+  h = "h",
+  O = "O",
   U_prime = "U_prime",
-  V_prime = "V_prime"
+  V_prime = "V_prime",
+  W_prime = "W_prime",
+  R_prime = "R_prime"
 )
 }
 \arguments{
@@ -28,9 +34,23 @@ new_Y(
 
 \item{D}{a \code{D} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{D}".}
 
+\item{R}{a \code{R} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{R}".}
+
+\item{r}{The name of the \code{r} vector.
+Default is "r".}
+
+\item{h}{The name of the \code{h} vector.
+Default is "h".}
+
+\item{O}{a \code{O} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{O}".}
+
 \item{U_prime}{the name for new \code{U} matrices. Default is "\code{U_prime}".}
 
 \item{V_prime}{the name for new \code{V} matrices. Default is "\code{V_prime}".}
+
+\item{W_prime}{the name for new \code{W} matrices. Default is "\code{W_prime}".}
+
+\item{R_prime}{the name for new \code{R} matrices. Default is "\code{R_prime}".}
 }
 \value{
 a list or data frame with \code{U_prime} and \code{V_prime} matrices
@@ -59,11 +79,11 @@ library(matsbyname)
 library(tidyr)
 UKEnergy2000mats \%>\%
   spread(key = matrix.name, value = matrix) \%>\%
-  select(Country, Year, Energy.type, Last.stage, U, U_feed, V, Y, r_EIOU, S_units) \%>\%
+  select(Country, Year, Energy.type, Last.stage, R, U, U_feed, V, Y, r_EIOU, S_units) \%>\%
   calc_io_mats() \%>\%
   mutate(
     # Give new Y matrices that are double the existing Y matrices
-    Y_prime = hadamardproduct_byname(2, Y)
+    Y_prime = matsbyname::hadamardproduct_byname(2, Y)
   ) \%>\%
   # Should give U_prime and V_prime matrices that are double the existing U and V matrices
   new_Y()

@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.33</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.35</span>
       </span>
     </div>
 
@@ -138,7 +138,15 @@
     <p>Calculate the <code>E</code> matrix for embodied energy calculations</p>
     </div>
 
-    <pre class="usage"><span class='fu'>calc_E</span><span class='op'>(</span>.iomats <span class='op'>=</span> <span class='cn'>NULL</span>, g <span class='op'>=</span> <span class='st'>"g"</span>, W <span class='op'>=</span> <span class='st'>"W"</span>, U_EIOU <span class='op'>=</span> <span class='st'>"U_EIOU"</span>, E <span class='op'>=</span> <span class='st'>"E"</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>calc_E</span><span class='op'>(</span>
+  .iomats <span class='op'>=</span> <span class='cn'>NULL</span>,
+  R <span class='op'>=</span> <span class='st'>"R"</span>,
+  V <span class='op'>=</span> <span class='st'>"V"</span>,
+  U_feed <span class='op'>=</span> <span class='st'>"U_feed"</span>,
+  g <span class='op'>=</span> <span class='st'>"g"</span>,
+  r <span class='op'>=</span> <span class='st'>"r"</span>,
+  E <span class='op'>=</span> <span class='st'>"E"</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -149,20 +157,31 @@
 <code>.iomats</code> will likely have been obtained from the <code><a href='calc_io_mats.html'>calc_io_mats</a></code> function.</p></td>
     </tr>
     <tr>
+      <th>R</th>
+      <td><p>The name of the <code>R</code> matrix column.
+Default is "R".</p></td>
+    </tr>
+    <tr>
+      <th>V</th>
+      <td><p>The name of the <code>V</code> matrix column.
+Default is "V".</p></td>
+    </tr>
+    <tr>
+      <th>U_feed</th>
+      <td><p>The name of the <code>U_feed</code> matrix column.
+Default is "U_feed".</p></td>
+    </tr>
+    <tr>
       <th>g</th>
-      <td><p>final demand (<code>g</code>) vector or name of the column in <code>.iomats</code> containing same. Default is "<code>g</code>".</p></td>
+      <td><p>The name of the <code>g</code> vector in <code>.iomats</code>. Default is "g".</p></td>
     </tr>
     <tr>
-      <th>W</th>
-      <td><p>product-by-industry value added (<code>W</code>) matrix or name of the column in <code>.iomats</code> containing same. Default is "<code>W</code>".</p></td>
-    </tr>
-    <tr>
-      <th>U_EIOU</th>
-      <td><p>energy industry own use matrix or name of the column in <code>.iomats</code> containing same. Default is "<code>U_EIOU</code>".</p></td>
+      <th>r</th>
+      <td><p>The name of the <code>r</code> vector in the <code>iomats</code>. Default is "r".</p></td>
     </tr>
     <tr>
       <th>E</th>
-      <td><p>the name for the <code>E</code> matrix on output. Default is "<code>E</code>".
+      <td><p>the name for the <code>E</code> matrix on output. Default is "E".
 <code>E</code> is calculated by <code>W * g_hat_inv</code>.</p></td>
     </tr>
     </table>

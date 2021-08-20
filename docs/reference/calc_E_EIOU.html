@@ -74,7 +74,7 @@ while the e_EIOU vector contains the total EIOU by unit of industry output." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.33</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.35</span>
       </span>
     </div>
 
@@ -194,15 +194,16 @@ while the <code>e_EIOU</code> vector contains the total EIOU by unit of industry
    <span class='fu'>tidyr</span><span class='fu'>::</span><span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_wider.html'>pivot_wider</a></span><span class='op'>(</span>names_from <span class='op'>=</span> <span class='st'>"matrix.name"</span>, values_from <span class='op'>=</span> <span class='st'>"matrix"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
    <span class='fu'><a href='calc_io_mats.html'>calc_io_mats</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
    <span class='fu'>calc_E_EIOU</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 1 x 33</span><span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 1 × 37</span>
 #&gt;   Country  Year Energy.type Last.stage R      U      U_EIOU  U_feed  V     Y    
-#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;list&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;list&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;list&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;list&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;lis&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lis&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'>1</span><span> GBR      </span><span style='text-decoration: underline;'>2</span><span>000 E           Final      </span><span style='color: #949494;'>&lt;dbl[</span><span>… </span><span style='color: #949494;'>&lt;dbl[</span><span>… </span><span style='color: #949494;'>&lt;dbl[,</span><span>… </span><span style='color: #949494;'>&lt;dbl[,</span><span>… </span><span style='color: #949494;'>&lt;dbl</span><span>… </span><span style='color: #949494;'>&lt;dbl</span><span>…
-#&gt; </span><span style='color: #949494;'># … with 23 more variables: r_EIOU &lt;list&gt;, S_units &lt;list&gt;, y &lt;list&gt;, q &lt;list&gt;,</span><span>
-#&gt; </span><span style='color: #949494;'>#   f &lt;list&gt;, g &lt;list&gt;, W &lt;list&gt;, Z &lt;list&gt;, K &lt;list&gt;, C &lt;list&gt;, D &lt;list&gt;,</span><span>
-#&gt; </span><span style='color: #949494;'>#   A &lt;list&gt;, L_pxp &lt;list&gt;, L_ixp &lt;list&gt;, Z_feed &lt;list&gt;, K_feed &lt;list&gt;,</span><span>
-#&gt; </span><span style='color: #949494;'>#   C_feed &lt;list&gt;, D_feed &lt;list&gt;, A_feed &lt;list&gt;, L_pxp_feed &lt;list&gt;,</span><span>
-#&gt; </span><span style='color: #949494;'>#   L_ixp_feed &lt;list&gt;, E_EIOU &lt;list&gt;, e_EIOU &lt;list&gt;</span><span></div></span></pre>
+#&gt;   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>      <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;lis&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;lis&gt;</span>
+#&gt; <span style='color: #BCBCBC;'>1</span> GBR      <span style='text-decoration: underline;'>2</span>000 E           Final      <span style='color: #949494;'>&lt;dbl </span>… <span style='color: #949494;'>&lt;dbl </span>… <span style='color: #949494;'>&lt;dbl [</span>… <span style='color: #949494;'>&lt;dbl [</span>… <span style='color: #949494;'>&lt;dbl</span>… <span style='color: #949494;'>&lt;dbl</span>…
+#&gt; <span style='color: #949494;'># … with 27 more variables: r_EIOU &lt;list&gt;, S_units &lt;list&gt;, y &lt;list&gt;, q &lt;list&gt;,</span>
+#&gt; <span style='color: #949494;'>#   f &lt;list&gt;, g &lt;list&gt;, h &lt;list&gt;, r &lt;list&gt;, W &lt;list&gt;, Z &lt;list&gt;, K &lt;list&gt;,</span>
+#&gt; <span style='color: #949494;'>#   C &lt;list&gt;, D &lt;list&gt;, A &lt;list&gt;, O &lt;list&gt;, L_pxp &lt;list&gt;, L_ixp &lt;list&gt;,</span>
+#&gt; <span style='color: #949494;'>#   Z_feed &lt;list&gt;, K_feed &lt;list&gt;, C_feed &lt;list&gt;, D_feed &lt;list&gt;, A_feed &lt;list&gt;,</span>
+#&gt; <span style='color: #949494;'>#   O_feed &lt;list&gt;, L_pxp_feed &lt;list&gt;, L_ixp_feed &lt;list&gt;, E_EIOU &lt;list&gt;,</span>
+#&gt; <span style='color: #949494;'>#   e_EIOU &lt;list&gt;</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

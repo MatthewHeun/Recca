@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.33</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.35</span>
       </span>
     </div>
 
@@ -146,11 +146,13 @@
   q <span class='op'>=</span> <span class='st'>"q"</span>,
   f <span class='op'>=</span> <span class='st'>"f"</span>,
   g <span class='op'>=</span> <span class='st'>"g"</span>,
+  r <span class='op'>=</span> <span class='st'>"r"</span>,
   Z <span class='op'>=</span> <span class='st'>"Z"</span>,
   K <span class='op'>=</span> <span class='st'>"K"</span>,
   C <span class='op'>=</span> <span class='st'>"C"</span>,
   D <span class='op'>=</span> <span class='st'>"D"</span>,
-  A <span class='op'>=</span> <span class='st'>"A"</span>
+  A <span class='op'>=</span> <span class='st'>"A"</span>,
+  O <span class='op'>=</span> <span class='st'>"O"</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -168,48 +170,57 @@ If all of <code>R</code> is added to <code>V</code>, this argument can be left u
     </tr>
     <tr>
       <th>U</th>
-      <td><p>use (<code>U</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "<code>U</code>".</p></td>
+      <td><p>Use (<code>U</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "U".</p></td>
     </tr>
     <tr>
       <th>V</th>
-      <td><p>make (<code>V</code>) matrix or name of the column in <code>.sutmats</code>that contains same. Default is "<code>V</code>".</p></td>
+      <td><p>Make (<code>V</code>) matrix or name of the column in <code>.sutmats</code>that contains same. Default is "V".</p></td>
     </tr>
     <tr>
       <th>q</th>
-      <td><p><code>q</code> vector or name of the column in <code>.sutmats</code> that contains same. Default is "<code>q</code>".</p></td>
+      <td><p>A <code>q</code> vector or name of the column in <code>.sutmats</code> that contains same. Default is "q".</p></td>
     </tr>
     <tr>
       <th>f</th>
-      <td><p><code>f</code> vector or name of the column in <code>.sutmats</code> that contains same. Default is "<code>r</code>".</p></td>
+      <td><p>An <code>f</code> vector or name of the column in <code>.sutmats</code> that contains same. Default is "r".</p></td>
     </tr>
     <tr>
       <th>g</th>
-      <td><p><code>g</code> vector or name of the column in <code>.sutmats</code> that contains same. Default is "<code>g</code>".</p></td>
+      <td><p>A <code>g</code> vector or name of the column in <code>.sutmats</code> that contains same. Default is "g".</p></td>
+    </tr>
+    <tr>
+      <th>r</th>
+      <td><p>A <code>r</code> vector or name of the column in <code>.sutmats</code> that contains same. Default is "r".</p></td>
     </tr>
     <tr>
       <th>Z</th>
-      <td><p>name for <code>Z</code> matrix on output. Default is "<code>Z</code>".
+      <td><p>The name for <code>Z</code> matrix on output. Default is "Z".
 <code>Z</code> is calculated by <code>U * g_hat_inv</code>.</p></td>
     </tr>
     <tr>
       <th>K</th>
-      <td><p>name for <code>K</code> matrix on output. Default is "<code>K</code>".
+      <td><p>The name for <code>K</code> matrix on output. Default is "K".
 <code>K</code> is calculated by <code>U * f_hat_inv</code>.</p></td>
     </tr>
     <tr>
       <th>C</th>
-      <td><p>name for <code>C</code> matrix on output. Default is "<code>C</code>".
+      <td><p>The name for <code>C</code> matrix on output. Default is "C".
 <code>C</code> is calculated by <code>transpose(V) * g_hat_inv</code>.</p></td>
     </tr>
     <tr>
       <th>D</th>
-      <td><p>name for <code>D</code> matrix on output. Default is "<code>D</code>".
+      <td><p>The name for <code>D</code> matrix on output. Default is "D".
 <code>D</code> is calculated by <code>V * q_hat_inv</code>.</p></td>
     </tr>
     <tr>
       <th>A</th>
-      <td><p>name for <code>A</code> matrix on output. Default is "<code>A</code>".
+      <td><p>The name for <code>A</code> matrix on output. Default is "A".
 <code>A</code> is calculated by <code>Z * D</code>.</p></td>
+    </tr>
+    <tr>
+      <th>O</th>
+      <td><p>The name for <code>O</code> matrix on output. Default is "O".
+<code>O</code> is calculated by <code>r_hat_inv * R</code>.</p></td>
     </tr>
     </table>
 

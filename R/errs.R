@@ -48,7 +48,7 @@ calc_ERRs_gamma <- function(.sutmats,
     # Equation 8 gives the gross energy ratio (ger) for each industry.
     ger <- matsbyname::hadamardproduct_byname(U_mat, r_EIOU_mat) %>%
       matsbyname::colsums_byname() %>%
-      matsbyname::hatinv_byname() %>%
+      matsbyname::hatinv_byname(keep = "colnames") %>%
       matsbyname::matrixproduct_byname(g_vec)
     ger <- magrittr::set_colnames(ger, ger_gamma)
     # Equation 9 gives the net energy ratio for each industry.

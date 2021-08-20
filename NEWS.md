@@ -1,3 +1,13 @@
+# Recca 0.1.35 (2021-08-20)
+
+* R matrix formulation now adopted for input output calculations,
+  for upstream and downstream swims, as well as for embodied
+  energy calculations.
+* Added new file `new_R_ps_example.xlsx` that demonstrates 
+  equations for swimming "downstream."
+* Updated to stable and active status badges.
+
+
 # Recca 0.1.34 (2021-04-11)
 
 * Fix lingering problems in R-CMD-check after the move to GitHub Actions
