@@ -1,3 +1,5 @@
+# Recca 0.1.35 (2021-08-20)
+
 * R matrix formulation now adopted for input output calculations,
   for upstream and downstream swims, as well as for embodied
   energy calculations.
