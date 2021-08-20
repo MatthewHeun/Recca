@@ -1,3 +1,7 @@
+
+* Get started file updated. Some matrices definitions (G, H, E)
+  needed to be updated.
+
 # Recca 0.1.35 (2021-08-20)
 
 * R matrix formulation now adopted for input output calculations,
