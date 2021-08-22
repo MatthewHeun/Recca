@@ -1,4 +1,4 @@
-# Recca 0.1.35 (2021-08-20)
+# Recca 0.1.35 (2021-08-20) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5226086.svg)](https://doi.org/10.5281/zenodo.5226086)
 
 * R matrix formulation now adopted for input output calculations,
   for upstream and downstream swims, as well as for embodied
