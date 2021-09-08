@@ -69,6 +69,7 @@ calc_embodied_mats <- function(.iomats = NULL,
                  L_ixp_mat = L_ixp, g_vec = g, A_mat = A, R_mat = R, V_mat = V, U_feed_mat = U_feed)
 }
 
+
 #' Calculate the \code{G} and \code{H} matrices for embodied energy calculations
 #'
 #' @param .iomats a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.
@@ -256,6 +257,7 @@ calc_M <- function(.YqGHEdata = NULL,
   matsindf::matsindf_apply(.YqGHEdata, FUN = M_func, Y_mat = Y, q_vec = q, G_mat = G, E_mat = E)
 }
 
+
 #' Upstream footprint and downstream effects matrices
 #'
 #' Calculates upstream footprint matrices (\code{F_footprint_p}, \code{F_footprint_s})
@@ -318,6 +320,7 @@ calc_F_footprint_effects <- function(.Mmats = NULL,
   }
   matsindf::matsindf_apply(.Mmats, FUN = F_func, M_p_mat = M_p, M_s_mat = M_s)
 }
+
 
 #' Embodied energy efficiencies
 #'
