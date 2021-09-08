@@ -7,37 +7,27 @@
 #' @param .iomats a data frame containing matrices that describe the Input-Output structure
 #'                (using the supply-use table format)
 #'                of an Energy Conversion Chain.
-#'                \code{.iomats} will likely have been obtained from the \code{\link{calc_io_mats}} function.
-#' @param Y final demand (\code{Y}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{Y}".
-#' @param R Resources (\code{R}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{R}".
-#' @param V Supply (\code{R}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{V}".
-#' @param U_feed Feedstock use (\code{U_feed}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{U_feed}".
-#' @param q final demand (\code{q}) vector or name of the column in \code{.iodata} containing same. Default is "\code{q}".
-#' @param g name of the \code{g} vector on output. Default is "\code{g}".
-#' @param r name of the \code{r} vector on output. Default is "\code{r}".
-#' @param A name of the `A` matrix in the `.iomats` data frame. Default is "A".
-#' @param L_ixp industry-by-product Leontief (\code{L_ixp}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{L_ixp}"
-#' @param G name of the \code{G} matrix on output.
-#'        \code{G} is calculated by \code{L_ixp * y_hat}. Default is "\code{G}".
-#' @param H name of the \code{H} matrix on output.
-#'        \code{H} is calculated by \code{L_ixp * Y}. Default is "\code{H}".
-#' @param E name of \code{E} matrix on output.
-#'        \code{E} is calculated by \code{W * g_hat_inv}. Default is "\code{E}".
-#' @param M_p name of the \code{M_p} matrix on output.
-#'        \code{M_p} is formed from column sums of positive entries in the various Qx matrices.
-#'        Default is "\code{M_p}".
-#' @param M_s name of the \code{M_s} matrix on output.
-#'        \code{M_s} is constructed by \code{M_p * q_hat_inv * Y}. Default is "\code{M_s}".
-#' @param F_footprint_p name of the \code{F_footprint_p} matrix on output.
-#'        \code{F_footprint_p} is calculated by \code{M_p * (M_p^T * i)_hat_inv}. Default is "\code{F_footprint_p}".
-#' @param F_effects_p name of the \code{F_effects_p} matrix on output.
-#'        \code{F_effects_p} is calculated by \code{(M_p * i)_hat_inv * M_p}. Default is "\code{F_effects_p}".
-#' @param F_footprint_s name of the \code{F_footprint_s} matrix on output.
-#'        \code{F_footprint_s} is calculated by \code{M_s * (M_s^T *i)_hat_inv}. Default is "\code{F_footprint_s}".
-#' @param F_effects_s name of the \code{F_effects_s} matrix on output.
-#'        \code{F_effects_s} is calculated by \code{(M_s * i)_hat_inv * M_s}. Default is "\code{F_effects_s}".
+#'                `.iomats` will likely have been obtained from the `calc_io_mats()` function.
+#' @param q Final demand (**q**) vector or name of the column in `.iomats` containing same. Default is "q".
+#' @param g A **g** vector or name of the column in `.iomats` containing same. Default is "g".
+#' @param r An **r** vector or name of the column in `.iomats` containing same. Default is "r".
+#' @param L_ixp Industry-by-product Leontief (**L_ixp**) matrix or name of the column in `.iomats` containing same. Default is "L_ixp".
+#' @param A An **A** matrix or name of the column in `.iomats` containing same. Default is "A".
+#' @param R A resources (**R**) matrix or name of the column in `.iomats` containing same. Default is "R".
+#' @param V A make (**V**) matrix or name of the column in `.iomats` containing same. Default is "V".
+#' @param U_feed A feedstock use (**U_feed**) matrix or name of the column in `.iomats` containing same. Default is "U_feed".
+#' @param Y A final demand (**Y**) matrix or name of the column in `.iomats` containing same. Default is "Y".
+#' @param G The name of the **G** matrix on output. **G** is calculated by `L_ixp %*% y_hat`. Default is "G".
+#' @param H The name of the **H** matrix on output. **H** is calculated by `L_ixp %*% Y`. Default is "H".
+#' @param E The name of the **E** matrix on output. **E** is calculated by `W %*% g_hat_inv`. Default is "E".
+#' @param M_p The name of the **M_p** matrix on output. **M_p** is formed from column sums of positive entries in the various **Q**_x matrices. Default is "M_p".
+#' @param M_s The name of the **M_s** matrix on output. **M_s** is calculated by `M_p %*% q_hat_inv %*% Y`. Default is "M_s".
+#' @param F_footprint_p The name of the **F_footprint_p** matrix on output. **F_footprint_p** is calculated by `M_p %*% (M_p^T %*% i)_hat_inv`. Default is "F_footprint_p".
+#' @param F_effects_p The name of the **F_effects_p** matrix on output. **F_effects_p** is calculated by `(M_p %*% i)_hat_inv %*% M_p`. Default is "F_effects_p".
+#' @param F_footprint_s The name of the **F_footprint_s** matrix on output. **F_footprint_s** is calculated by `M_s %*% (M_s^T %*% i)_hat_inv`. Default is "F_footprint_s".
+#' @param F_effects_s The name of the **F_effects_s** matrix on output. **F_effects_s** is calculated by `(M_s %*% i)_hat_inv %*% M_s`. Default is "F_effects_s".
 #'
-#' @return a list or data frame containing embodied energy matrices
+#' @return A list or data frame containing embodied energy matrices.
 #'
 #' @export
 calc_embodied_mats <- function(.iomats = NULL,
@@ -139,18 +129,14 @@ calc_GH <- function(.iomats = NULL,
 #'
 #' @param .iomats a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.
 #' \code{.iomats} will likely have been obtained from the \code{\link{calc_io_mats}} function.
-#' @param g The name of the `g` vector in `.iomats`. Default is "g".
-#' @param r The name of the `r` vector in the `iomats`. Default is "r".
-#' @param V The name of the `V` matrix column.
-#'          Default is "V".
-#' @param R The name of the `R` matrix column.
-#'          Default is "R".
-#' @param U_feed The name of the `U_feed` matrix column.
-#'          Default is "U_feed".
-#' @param E the name for the `E` matrix on output. Default is "E".
-#'        \code{E} is calculated by `W * g_hat_inv`.
+#' @param R A resources (**R**) matrix or name of column in `.iomats` containing same. Default is "R".
+#' @param V A make (**V**) matrix or name of column in `.iomats` containing same. Default is "V".
+#' @param U_feed A feedstock use (**U_feed**) matrix or name of column in `.iomats` containing same. Default is "U_feed".
+#' @param g A **g** vector or name of column in `.iomats` containing same. Default is "g".
+#' @param r An **r** vector or name of column in `.iomats` containing same. Default is "r".
+#' @param E The name for the **E** matrix on output. **E** is calculated by `W %*% g_hat_inv`. Default is "E".
 #'
-#' @return list or data frame containing `E` matrices
+#' @return A list or data frame containing `E` matrices.
 #'
 #' @export
 calc_E <- function(.iomats = NULL,
@@ -176,28 +162,25 @@ calc_E <- function(.iomats = NULL,
 
 #' Calculate embodied energy matrices
 #'
-#' \code{Q} is calculated by \code{e_hat * G},
-#' but the e_hat column contains lists of matrices,
-#' so the \code{Q} column will also contain lists of matrices.
-#' In each list, there is one Q matrix for each Product in the Energy Conversion Chain.
-
-#' @param .YqGHEdata a data frame containing columns with \code{q} vectors
-#' and \code{Y}, \code{G}, \code{H}, and \code{E} matrices.
-#' \code{.YqGEdata} will likely have been obtained from the \code{\link{calc_GH}} and \code{\link{calc_E}} functions.
-#' @param Y final demand (\code{Y}) matrix or name of the column in \code{.YqHGEdata} containing same. Default is "\code{Y}".
-#' @param q \code{q} column vector or name of the column in \code{.YqHGEdata} containing same. Default is "\code{q}".
-#'        \code{q} is calculated by \code{U*i + y}.
-#' @param G \code{G} matrix or name of the column in \code{.YqHGEdata} containing same. Default is "\code{G}".
-#'        \code{G} is calculated by \code{L_ixp * y_hat}.
-#' @param E \code{E} matrix or name of the column in \code{.YqHGEdata} containing same. Default is "\code{E}".
-#'        \code{E} is calculated by \code{W * g_hat_inv}.
-#' @param tol the allowable energy balance error.
-#' @param M_p the name for matrices of embodied energy in products on output. Default is "\code{M_p}".
-#'        These matrices contain embodied products in rows and embodying products in columns.
-#' @param M_s the name for matrices of embodied energy consumed by final demand sectors. Default is "\code{M_s}".
-#'        These matrices contain embodied products in rows and consuming final demand sectors in columns.
+#' **M** is calculated by `e_hat * G`,
+#' but `e_hat` contains lists of matrices,
+#' so the **M** is also contain lists of matrices.
+#' In each list, there is one **M** matrix for each Product in the Energy conversion chain.
 #'
-#' @return a list or data frame of embodied energy matrices
+#' @param .YqGHEdata A data frame containing columns of **q** vectors
+#'                   and **Y**, **G**, **H**, and **E** matrices.
+#'                   `.YqGEdata` will likely have been obtained from the `calc_GH()` and `calc_E()` functions.
+#' @param Y A final demand (**Y**) matrix or name of the column in `.YqHGEdata` containing same. Default is "Y".
+#' @param q A **q** column vector or name of the column in `.YqHGEdata` containing same. Default is "q".
+#' @param G A **G** matrix or name of the column in `.YqHGEdata` containing same. Default is "G".
+#' @param E An **E** matrix or name of the column in `.YqHGEdata` containing same. Default is "E".
+#' @param tol The allowable energy balance error.
+#' @param M_p The name for matrices of embodied energy in products on output. Default is "M_p".
+#'            These matrices contain embodied products in rows and embodying products in columns.
+#' @param M_s The name for matrices of embodied energy consumed by final demand sectors. Default is "M_s".
+#'            These matrices contain embodied products in rows and consuming final demand sectors in columns.
+#'
+#' @return A list or data frame of embodied energy matrices.
 #'
 #' @export
 calc_M <- function(.YqGHEdata = NULL,
@@ -260,22 +243,22 @@ calc_M <- function(.YqGHEdata = NULL,
 
 #' Upstream footprint and downstream effects matrices
 #'
-#' Calculates upstream footprint matrices (\code{F_footprint_p}, \code{F_footprint_s})
-#' and downstream effects matrices (\code{F_effects_p}, \code{F_effects_s})
-#' given embodied matrices \code{M_p} and \code{M_s}.
-#' Column sums of \code{F_footprint} are 1.
-#' Row sums of \code{F_effects} are 1.
+#' Calculates upstream footprint matrices (**F_footprint_p** and **F_footprint_s**)
+#' and downstream effects matrices (**F_effects_p** and **F_effects_s**)
+#' given embodied matrices **M_p** and **M_s**.
+#' Column sums of **F_footprint** are `1`.
+#' Row sums of **F_effects** are `1`.
 #'
-#' @param .Mmats a data frame containing a column of embodied matrices
-#' @param M_p embodied product matrix or name of the column in \code{.Mmats} containing same. Default is "\code{M_p}".
-#' @param M_s embodied sector matrix or name of the column in \code{.Mmats} containing same. Default is "\code{M_s}".
-#' @param F_footprint_p the name for \code{F_footprint_p} matrices on output. Default is "\code{F_footprint_p}".
-#' @param F_effects_p the name for \code{F_effects_p} matrices on output. Default is "\code{F_effects_p}".
-#' @param F_footprint_s the name for \code{F_footprint_s} matrices on output. Default is "\code{F_footprint_s}".
-#' @param F_effects_s the name for \code{F_effects_s} matrices on output. Default is "\code{F_effects_s}".
+#' @param .Mmats A data frame containing a column of embodied matrices.
+#' @param M_p An embodied product matrix or name of the column in `.Mmats` containing same. Default is "M_p".
+#' @param M_s An embodied sector matrix or name of the column in `.Mmats` containing same. Default is "M_s".
+#' @param F_footprint_p The name for **F_footprint_p** matrices on output. Default is "F_footprint_p".
+#' @param F_effects_p The name for **F_effects_p** matrices on output. Default is "F_effects_p".
+#' @param F_footprint_s The name for **F_footprint_s** matrices on output. Default is "F_footprint_s".
+#' @param F_effects_s The name for **F_effects_s** matrices on output. Default is "F_effects_s".
 #'
-#' @return a list or data frame containing \code{F_footprint_p}, \code{F_effects_p},
-#' \code{F_footprint_s}, and \code{F_effects_s} matrices
+#' @return A list or data frame containing **F_footprint_p**, **F_effects_p**,
+#'         **F_footprint_s**, and **F_effects_s** matrices.
 #'
 #' @export
 calc_F_footprint_effects <- function(.Mmats = NULL,
@@ -328,23 +311,23 @@ calc_F_footprint_effects <- function(.Mmats = NULL,
 #' for a product produced by the ECC or
 #' for the energy consumed by a final demand sector of the ECC.
 #' This function calculates both.
-#' \code{eta_s} gives sector-based embodied energy efficiency, and
-#' \code{eta_p} gives product-based embodied energy efficiency.
+#' **eta_s** gives sector-based embodied energy efficiency, and
+#' **eta_p** gives product-based embodied energy efficiency.
 #'
-#' Note that these efficiencies (\code{eta_s} and \code{eta_p}) are different from
+#' Note that these efficiencies (**eta_s** and **eta_p**) are different from
 #' energy conversion industry efficiencies.
 #' To calculate energy conversion industry efficiencies, use the
-#' \code{\link{calc_eta_i}} function.
+#' `calc_eta_i()` function.
 #'
-#' @param .embodiedmats a data frame containing columns of \code{Y}, \code{G}, and \code{H} matrices
-#' @param primary_machine_names a list of strings representing names of Industries whose output is counted in Total Primary Energy Supply (TPES)
-#' @param Y final demand \code{Y} matrix or name of a column in \code{.embodiedmats} containing same. Default is "\code{Y}".
-#' @param G \code{G} matrix or name of a column in \code{.embodiedmats} containing same. Default is "\code{G}".
-#' @param H \code{H} matrix or name of a column in \code{.embodiedmats} containing same. Default is "\code{H}".
-#' @param eta_p the name for product-based efficiencies on output. Default is "\code{eta_p}".
-#' @param eta_s the name for final-demand-sector-based efficiencies on output. Default is "\code{eta_s}".
+#' @param .embodiedmats A data frame containing columns of **Y**, **G**, and **H** matrices.
+#' @param primary_machine_names A list of strings representing names of Industries whose output is counted in Total Energy Supply (TPES).
+#' @param Y A final demand (**Y**) matrix or name of a column in `.embodiedmats` containing same. Default is "Y".
+#' @param G A **G**  matrix or name of a column in `.embodiedmats` containing same. Default is "G".
+#' @param H An **H** matrix or name of a column in `.embodiedmats` containing same. Default is "H".
+#' @param eta_p The name for product-based efficiencies on output. Default is "eta_p".
+#' @param eta_s The name for final-demand-sector-based efficiencies on output. Default is "eta_s".
 #'
-#' @return a list or data frame containing embodied energy efficiencies
+#' @return A list or data frame containing embodied energy efficiencies.
 #'
 #' @export
 calc_embodied_etas <- function(.embodiedmats = NULL,
@@ -405,19 +388,14 @@ calc_embodied_etas <- function(.embodiedmats = NULL,
 #'   `Q_EIOU_feed_p` is calculated by `e_EIOU_hat %*% L_ixp_feed %*% y_hat`.
 #'
 #' @param .iomats A wide-by-matrices data frame containing matrices that describe the Input-Output structure
-#' (using the supply-use table format) of an Energy Conversion Chain.
-#' `.iomats` will likely have been obtained combining the `calc_io_mats()` and `calc_E_EIOU()` functions.
-#' See the example.?c
-#' @param e_EIOU The name of the column containing the direct energy use extension vector.
-#'               Default is "e_EIOU".
-#' @param Y The name of the column containing final demand `Y` matrices in `.iomats`.
-#'          Default is "Y".
-#' @param y The name of the column containing total final demand by product `y` vectors in `iomats`.
-#'          Default is "y".
-#' @param L_ixp The name of the column containing `L_ixp` matrices in `.iomats`.
-#'              Default is "L_ixp".
-#' @param L_ixp_feed The name of the column containing `L_ixp_feed` matrix in `.iomats`.
-#'                   Default is "L_ixp_feed".
+#'        (using the supply-use table format) of an Energy Conversion Chain.
+#'        `.iomats` will likely have been obtained combining the `calc_io_mats()` and `calc_E_EIOU()` functions.
+#'        See the examples.
+#' @param e_EIOU A direct energy use extension vector or name of column in `.iomats` containing same. Default is "e_EIOU".
+#' @param Y A final demand matrix (**Y**) or name of column in `.iomats` containing same. Default is "Y".
+#' @param y A **y** vector or name of column in `.iomats` containing same. Default is "y".
+#' @param L_ixp An **L_ixp** matrix or name of column in `.iomats` containing same. Default is "L_ixp".
+#' @param L_ixp_feed An **L_ixp_feed** matrix or name of column in `.iomats` containing same. Default is "L_ixp_feed".
 #' @param Q_EIOU_s The name of the output column containing the EIOU embodied by final demand sectors, including both energy use for feedstock and EIOU production.
 #'                 Default is "Q_EIOU_s".
 #' @param Q_EIOU_p The name of the output column containing the EIOU embodied by final demand products, including both energy use for feedstock and EIOU production.

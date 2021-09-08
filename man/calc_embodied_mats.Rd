@@ -30,56 +30,46 @@ calc_embodied_mats(
 \item{.iomats}{a data frame containing matrices that describe the Input-Output structure
 (using the supply-use table format)
 of an Energy Conversion Chain.
-\code{.iomats} will likely have been obtained from the \code{\link{calc_io_mats}} function.}
+\code{.iomats} will likely have been obtained from the \code{calc_io_mats()} function.}
 
-\item{q}{final demand (\code{q}) vector or name of the column in \code{.iodata} containing same. Default is "\code{q}".}
+\item{q}{Final demand (\strong{q}) vector or name of the column in \code{.iomats} containing same. Default is "q".}
 
-\item{g}{name of the \code{g} vector on output. Default is "\code{g}".}
+\item{g}{A \strong{g} vector or name of the column in \code{.iomats} containing same. Default is "g".}
 
-\item{r}{name of the \code{r} vector on output. Default is "\code{r}".}
+\item{r}{An \strong{r} vector or name of the column in \code{.iomats} containing same. Default is "r".}
 
-\item{L_ixp}{industry-by-product Leontief (\code{L_ixp}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{L_ixp}"}
+\item{L_ixp}{Industry-by-product Leontief (\strong{L_ixp}) matrix or name of the column in \code{.iomats} containing same. Default is "L_ixp".}
 
-\item{A}{name of the \code{A} matrix in the \code{.iomats} data frame. Default is "A".}
+\item{A}{An \strong{A} matrix or name of the column in \code{.iomats} containing same. Default is "A".}
 
-\item{R}{Resources (\code{R}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{R}".}
+\item{R}{A resources (\strong{R}) matrix or name of the column in \code{.iomats} containing same. Default is "R".}
 
-\item{V}{Supply (\code{R}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{V}".}
+\item{V}{A make (\strong{V}) matrix or name of the column in \code{.iomats} containing same. Default is "V".}
 
-\item{U_feed}{Feedstock use (\code{U_feed}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{U_feed}".}
+\item{U_feed}{A feedstock use (\strong{U_feed}) matrix or name of the column in \code{.iomats} containing same. Default is "U_feed".}
 
-\item{Y}{final demand (\code{Y}) matrix or name of the column in \code{.iodata} containing same. Default is "\code{Y}".}
+\item{Y}{A final demand (\strong{Y}) matrix or name of the column in \code{.iomats} containing same. Default is "Y".}
 
-\item{G}{name of the \code{G} matrix on output.
-\code{G} is calculated by \code{L_ixp * y_hat}. Default is "\code{G}".}
+\item{G}{The name of the \strong{G} matrix on output. \strong{G} is calculated by \code{L_ixp * y_hat}. Default is "G".}
 
-\item{H}{name of the \code{H} matrix on output.
-\code{H} is calculated by \code{L_ixp * Y}. Default is "\code{H}".}
+\item{H}{The name of the \strong{H} matrix on output. \strong{H} is calculated by \code{L_ixp * Y}. Default is "H".}
 
-\item{E}{name of \code{E} matrix on output.
-\code{E} is calculated by \code{W * g_hat_inv}. Default is "\code{E}".}
+\item{E}{The name of the \strong{E} matrix on output. \strong{E} is calculated by \code{W * g_hat_inv}. Default is "E".}
 
-\item{M_p}{name of the \code{M_p} matrix on output.
-\code{M_p} is formed from column sums of positive entries in the various Qx matrices.
-Default is "\code{M_p}".}
+\item{M_p}{The name of the \strong{M_p} matrix on output. \strong{M_p} is formed from column sums of positive entries in the various \strong{Q}_x matrices. Default is "M_p".}
 
-\item{M_s}{name of the \code{M_s} matrix on output.
-\code{M_s} is constructed by \code{M_p * q_hat_inv * Y}. Default is "\code{M_s}".}
+\item{M_s}{The name of the \strong{M_s} matrix on output. \strong{M_s} is calculated by \code{M_p * q_hat_inv * Y}. Default is "M_s".}
 
-\item{F_footprint_p}{name of the \code{F_footprint_p} matrix on output.
-\code{F_footprint_p} is calculated by \code{M_p * (M_p^T * i)_hat_inv}. Default is "\code{F_footprint_p}".}
+\item{F_footprint_p}{The name of the \strong{F_footprint_p} matrix on output. \strong{F_footprint_p} is calculated by \verb{M_p * (M_p^T * i)_hat_inv}. Default is "F_footprint_p".}
 
-\item{F_effects_p}{name of the \code{F_effects_p} matrix on output.
-\code{F_effects_p} is calculated by \code{(M_p * i)_hat_inv * M_p}. Default is "\code{F_effects_p}".}
+\item{F_effects_p}{The name of the \strong{F_effects_p} matrix on output. \strong{F_effects_p} is calculated by \verb{(M_p * i)_hat_inv * M_p}. Default is "F_effects_p".}
 
-\item{F_footprint_s}{name of the \code{F_footprint_s} matrix on output.
-\code{F_footprint_s} is calculated by \code{M_s * (M_s^T *i)_hat_inv}. Default is "\code{F_footprint_s}".}
+\item{F_footprint_s}{The name of the \strong{F_footprint_s} matrix on output. \strong{F_footprint_s} is calculated by \verb{M_s * (M_s^T *i)_hat_inv}. Default is "F_footprint_s".}
 
-\item{F_effects_s}{name of the \code{F_effects_s} matrix on output.
-\code{F_effects_s} is calculated by \code{(M_s * i)_hat_inv * M_s}. Default is "\code{F_effects_s}".}
+\item{F_effects_s}{The name of the \strong{F_effects_s} matrix on output. \strong{F_effects_s} is calculated by \verb{(M_s * i)_hat_inv * M_s}. Default is "F_effects_s".}
 }
 \value{
-a list or data frame containing embodied energy matrices
+A list or data frame containing embodied energy matrices.
 }
 \description{
 Calculate various embodied energy matrices

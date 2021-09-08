@@ -21,22 +21,17 @@ calc_embodied_EIOU(
 \item{.iomats}{A wide-by-matrices data frame containing matrices that describe the Input-Output structure
 (using the supply-use table format) of an Energy Conversion Chain.
 \code{.iomats} will likely have been obtained combining the \code{calc_io_mats()} and \code{calc_E_EIOU()} functions.
-See the example.?c}
+See the examples.}
 
-\item{e_EIOU}{The name of the column containing the direct energy use extension vector.
-Default is "e_EIOU".}
+\item{e_EIOU}{A direct energy use extension vector or name of column in \code{.iomats} containing same. Default is "e_EIOU".}
 
-\item{Y}{The name of the column containing final demand \code{Y} matrices in \code{.iomats}.
-Default is "Y".}
+\item{Y}{A final demand matrix (\strong{Y}) or name of column in \code{.iomats} containing same. Default is "Y".}
 
-\item{y}{The name of the column containing total final demand by product \code{y} vectors in \code{iomats}.
-Default is "y".}
+\item{y}{A \strong{y} vecrtor or name of column in \code{.iomats} containing same. Default is "y".}
 
-\item{L_ixp}{The name of the column containing \code{L_ixp} matrices in \code{.iomats}.
-Default is "L_ixp".}
+\item{L_ixp}{An \strong{L_ixp} matrix or name of column in \code{.iomats} containing same. Default is "L_ixp".}
 
-\item{L_ixp_feed}{The name of the column containing \code{L_ixp_feed} matrix in \code{.iomats}.
-Default is "L_ixp_feed".}
+\item{L_ixp_feed}{An \strong{L_ixp_feed} matrix or name of column in \code{.iomats} containing same. Default is "L_ixp_feed".}
 
 \item{Q_EIOU_s}{The name of the output column containing the EIOU embodied by final demand sectors, including both energy use for feedstock and EIOU production.
 Default is "Q_EIOU_s".}
