@@ -51,12 +51,6 @@
 #'        `K_feed` is calculated by `U_feed * f_hat_inv`.
 #' @param Z_feed name for `Z_feed` matrix on output. Default is "Z_feed".
 #'        `Z_feed` is calculated by `U_feed * g_hat_inv`.
-#' @param C_feed name for `C_feed` matrix on output. Default is "C_feed".
-#'        `C_feed` is calculated by `transpose(V) * g_hat_inv`.
-#' @param D_feed name for `D_feed` matrix on output. Default is "D_feed".
-#'        `D_feed` is calculated by `V * q_hat_inv`.
-#' @param O_feed name for `O_feed` matrix on output. Default is "O_feed".
-#'        `O_feed` is calculated by `V * q_hat_inv`.
 #' @param A_feed name for `A_feed` matrix on output. Default is "A_feed".
 #'        `A_feed` is calculated by `Z_feed * D_feed`.
 #' @param L_ixp_feed name for `L_ixp_feed` matrix on output. Default is "L_ixp_feed".
@@ -82,7 +76,7 @@ calc_io_mats <- function(.sutdata = NULL,
                          # Output names
                          y = "y", q = "q", f = "f", g = "g", h = "h", r = "r", W = "W", K = "K",
                          Z = "Z", C = "C", D = "D", A = "A", L_ixp = "L_ixp", L_pxp = "L_pxp", O = "O",
-                         Z_feed = "Z_feed", K_feed = "K_feed", C_feed = "C_feed", D_feed = "D_feed", O_feed = "O_feed", A_feed = "A_feed", L_ixp_feed = "L_ixp_feed", L_pxp_feed = "L_pxp_feed"){
+                         Z_feed = "Z_feed", K_feed = "K_feed", A_feed = "A_feed", L_ixp_feed = "L_ixp_feed", L_pxp_feed = "L_pxp_feed"){
 
   method_q_calculation <- match.arg(method_q_calculation)
 
@@ -110,8 +104,12 @@ calc_io_mats <- function(.sutdata = NULL,
 
     # Work on the "_feed" matrices.
 
-    ZKCDA_feed <- calc_A(R = R_mat, U = U_feed_mat, V = V_mat, q = q_vec, f = f_vec, g = g_vec, r = r_vec,
-                    Z = Z_feed, K = K_feed, C = C_feed, D = D_feed, A = A_feed, O = O_feed)
+    ZKCDA_all_feed <- calc_A(R = R_mat, U = U_feed_mat, V = V_mat, q = q_vec, f = f_vec, g = g_vec, r = r_vec,
+                    Z = Z_feed, K = K_feed, C = C, D = D, A = A_feed, O = O)
+    ZKCDA_feed <- list(Z_feed = ZKCDA_all_feed[[Z_feed]],
+                       K_feed = ZKCDA_all_feed[[K_feed]],
+                       A_feed = ZKCDA_all_feed[[A_feed]])
+
     A_feed_mat <- ZKCDA_feed[[A_feed]]
     L_feed_mats <- calc_L(D = D_mat, A = A_feed_mat,
                      L_ixp = L_ixp_feed, L_pxp = L_pxp_feed)

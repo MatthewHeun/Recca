@@ -40,10 +40,10 @@
 
 
 <meta property="og:title" content="Calculate embodied energy matrices — calc_M" />
-<meta property="og:description" content="Q is calculated by e_hat * G,
-but the e_hat column contains lists of matrices,
-so the Q column will also contain lists of matrices.
-In each list, there is one Q matrix for each Product in the Energy Conversion Chain." />
+<meta property="og:description" content="M is calculated by e_hat * G,
+but e_hat contains lists of matrices,
+so the M is also contain lists of matrices.
+In each list, there is one M matrix for each Product in the Energy conversion chain." />
 
 
 
@@ -138,10 +138,10 @@ In each list, there is one Q matrix for each Product in the Energy Conversion Ch
     </div>
 
     <div class="ref-description">
-    <p><code>Q</code> is calculated by <code>e_hat * G</code>,
-but the e_hat column contains lists of matrices,
-so the <code>Q</code> column will also contain lists of matrices.
-In each list, there is one Q matrix for each Product in the Energy Conversion Chain.</p>
+    <p><strong>M</strong> is calculated by <code>e_hat * G</code>,
+but <code>e_hat</code> contains lists of matrices,
+so the <strong>M</strong> is also contain lists of matrices.
+In each list, there is one <strong>M</strong> matrix for each Product in the Energy conversion chain.</p>
     </div>
 
     <pre class="usage"><span class='fu'>calc_M</span><span class='op'>(</span>
@@ -160,48 +160,45 @@ In each list, there is one Q matrix for each Product in the Energy Conversion Ch
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.YqGHEdata</th>
-      <td><p>a data frame containing columns with <code>q</code> vectors
-and <code>Y</code>, <code>G</code>, <code>H</code>, and <code>E</code> matrices.
-<code>.YqGEdata</code> will likely have been obtained from the <code><a href='calc_GH.html'>calc_GH</a></code> and <code><a href='calc_E.html'>calc_E</a></code> functions.</p></td>
+      <td><p>A data frame containing columns of <strong>q</strong> vectors
+and <strong>Y</strong>, <strong>G</strong>, <strong>H</strong>, and <strong>E</strong> matrices.
+<code>.YqGEdata</code> will likely have been obtained from the <code><a href='calc_GH.html'>calc_GH()</a></code> and <code><a href='calc_E.html'>calc_E()</a></code> functions.</p></td>
     </tr>
     <tr>
       <th>Y</th>
-      <td><p>final demand (<code>Y</code>) matrix or name of the column in <code>.YqHGEdata</code> containing same. Default is "<code>Y</code>".</p></td>
+      <td><p>A final demand (<strong>Y</strong>) matrix or name of the column in <code>.YqHGEdata</code> containing same. Default is "Y".</p></td>
     </tr>
     <tr>
       <th>q</th>
-      <td><p><code>q</code> column vector or name of the column in <code>.YqHGEdata</code> containing same. Default is "<code>q</code>".
-<code>q</code> is calculated by <code>U*i + y</code>.</p></td>
+      <td><p>A <strong>q</strong> column vector or name of the column in <code>.YqHGEdata</code> containing same. Default is "q".</p></td>
     </tr>
     <tr>
       <th>G</th>
-      <td><p><code>G</code> matrix or name of the column in <code>.YqHGEdata</code> containing same. Default is "<code>G</code>".
-<code>G</code> is calculated by <code>L_ixp * y_hat</code>.</p></td>
+      <td><p>A <strong>G</strong> matrix or name of the column in <code>.YqHGEdata</code> containing same. Default is "G".</p></td>
     </tr>
     <tr>
       <th>E</th>
-      <td><p><code>E</code> matrix or name of the column in <code>.YqHGEdata</code> containing same. Default is "<code>E</code>".
-<code>E</code> is calculated by <code>W * g_hat_inv</code>.</p></td>
+      <td><p>An <strong>E</strong> matrix or name of the column in <code>.YqHGEdata</code> containing same. Default is "E".</p></td>
     </tr>
     <tr>
       <th>tol</th>
-      <td><p>the allowable energy balance error.</p></td>
+      <td><p>The allowable energy balance error.</p></td>
     </tr>
     <tr>
       <th>M_p</th>
-      <td><p>the name for matrices of embodied energy in products on output. Default is "<code>M_p</code>".
+      <td><p>The name for matrices of embodied energy in products on output. Default is "M_p".
 These matrices contain embodied products in rows and embodying products in columns.</p></td>
     </tr>
     <tr>
       <th>M_s</th>
-      <td><p>the name for matrices of embodied energy consumed by final demand sectors. Default is "<code>M_s</code>".
+      <td><p>The name for matrices of embodied energy consumed by final demand sectors. Default is "M_s".
 These matrices contain embodied products in rows and consuming final demand sectors in columns.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a list or data frame of embodied energy matrices</p>
+    <p>A list or data frame of embodied energy matrices.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

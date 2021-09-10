@@ -15,34 +15,34 @@ calc_embodied_etas(
 )
 }
 \arguments{
-\item{.embodiedmats}{a data frame containing columns of \code{Y}, \code{G}, and \code{H} matrices}
+\item{.embodiedmats}{A data frame containing columns of \strong{Y}, \strong{G}, and \strong{H} matrices.}
 
-\item{primary_machine_names}{a list of strings representing names of Industries whose output is counted in Total Primary Energy Supply (TPES)}
+\item{primary_machine_names}{A list of strings representing names of Industries whose output is counted in Total Energy Supply (TPES).}
 
-\item{Y}{final demand \code{Y} matrix or name of a column in \code{.embodiedmats} containing same. Default is "\code{Y}".}
+\item{Y}{A final demand (\strong{Y}) matrix or name of a column in \code{.embodiedmats} containing same. Default is "Y".}
 
-\item{G}{\code{G} matrix or name of a column in \code{.embodiedmats} containing same. Default is "\code{G}".}
+\item{G}{A \strong{G}  matrix or name of a column in \code{.embodiedmats} containing same. Default is "G".}
 
-\item{H}{\code{H} matrix or name of a column in \code{.embodiedmats} containing same. Default is "\code{H}".}
+\item{H}{An \strong{H} matrix or name of a column in \code{.embodiedmats} containing same. Default is "H".}
 
-\item{eta_p}{the name for product-based efficiencies on output. Default is "\code{eta_p}".}
+\item{eta_p}{The name for product-based efficiencies on output. Default is "eta_p".}
 
-\item{eta_s}{the name for final-demand-sector-based efficiencies on output. Default is "\code{eta_s}".}
+\item{eta_s}{The name for final-demand-sector-based efficiencies on output. Default is "eta_s".}
 }
 \value{
-a list or data frame containing embodied energy efficiencies
+A list or data frame containing embodied energy efficiencies.
 }
 \description{
 Embodied energy efficiencies are based on the total upstream primary energy demand
 for a product produced by the ECC or
 for the energy consumed by a final demand sector of the ECC.
 This function calculates both.
-\code{eta_s} gives sector-based embodied energy efficiency, and
-\code{eta_p} gives product-based embodied energy efficiency.
+\strong{eta_s} gives sector-based embodied energy efficiency, and
+\strong{eta_p} gives product-based embodied energy efficiency.
 }
 \details{
-Note that these efficiencies (\code{eta_s} and \code{eta_p}) are different from
+Note that these efficiencies (\strong{eta_s} and \strong{eta_p}) are different from
 energy conversion industry efficiencies.
 To calculate energy conversion industry efficiencies, use the
-\code{\link{calc_eta_i}} function.
+\code{calc_eta_i()} function.
 }

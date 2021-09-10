@@ -30,9 +30,6 @@ calc_io_mats(
   O = "O",
   Z_feed = "Z_feed",
   K_feed = "K_feed",
-  C_feed = "C_feed",
-  D_feed = "D_feed",
-  O_feed = "O_feed",
   A_feed = "A_feed",
   L_ixp_feed = "L_ixp_feed",
   L_pxp_feed = "L_pxp_feed"
@@ -108,15 +105,6 @@ In the case of a balanced ECC, the method does not matter.}
 
 \item{K_feed}{name for \code{K_feed} matrix on output. Default is "K_feed".
 \code{K_feed} is calculated by \code{U_feed * f_hat_inv}.}
-
-\item{C_feed}{name for \code{C_feed} matrix on output. Default is "C_feed".
-\code{C_feed} is calculated by \code{transpose(V) * g_hat_inv}.}
-
-\item{D_feed}{name for \code{D_feed} matrix on output. Default is "D_feed".
-\code{D_feed} is calculated by \code{V * q_hat_inv}.}
-
-\item{O_feed}{name for \code{O_feed} matrix on output. Default is "O_feed".
-\code{O_feed} is calculated by \code{V * q_hat_inv}.}
 
 \item{A_feed}{name for \code{A_feed} matrix on output. Default is "A_feed".
 \code{A_feed} is calculated by \code{Z_feed * D_feed}.}

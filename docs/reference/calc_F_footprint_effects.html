@@ -40,8 +40,8 @@
 
 
 <meta property="og:title" content="Upstream footprint and downstream effects matrices — calc_F_footprint_effects" />
-<meta property="og:description" content="Calculates upstream footprint matrices (F_footprint_p, F_footprint_s)
-and downstream effects matrices (F_effects_p, F_effects_s)
+<meta property="og:description" content="Calculates upstream footprint matrices (F_footprint_p and F_footprint_s)
+and downstream effects matrices (F_effects_p and F_effects_s)
 given embodied matrices M_p and M_s.
 Column sums of F_footprint are 1.
 Row sums of F_effects are 1." />
@@ -139,11 +139,11 @@ Row sums of F_effects are 1." />
     </div>
 
     <div class="ref-description">
-    <p>Calculates upstream footprint matrices (<code>F_footprint_p</code>, <code>F_footprint_s</code>)
-and downstream effects matrices (<code>F_effects_p</code>, <code>F_effects_s</code>)
-given embodied matrices <code>M_p</code> and <code>M_s</code>.
-Column sums of <code>F_footprint</code> are 1.
-Row sums of <code>F_effects</code> are 1.</p>
+    <p>Calculates upstream footprint matrices (<strong>F_footprint_p</strong> and <strong>F_footprint_s</strong>)
+and downstream effects matrices (<strong>F_effects_p</strong> and <strong>F_effects_s</strong>)
+given embodied matrices <strong>M_p</strong> and <strong>M_s</strong>.
+Column sums of <strong>F_footprint</strong> are <code>1</code>.
+Row sums of <strong>F_effects</strong> are <code>1</code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>calc_F_footprint_effects</span><span class='op'>(</span>
@@ -161,31 +161,31 @@ Row sums of <code>F_effects</code> are 1.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.Mmats</th>
-      <td><p>a data frame containing a column of embodied matrices</p></td>
+      <td><p>A data frame containing a column of embodied matrices.</p></td>
     </tr>
     <tr>
       <th>M_p</th>
-      <td><p>embodied product matrix or name of the column in <code>.Mmats</code> containing same. Default is "<code>M_p</code>".</p></td>
+      <td><p>An embodied product matrix or name of the column in <code>.Mmats</code> containing same. Default is "M_p".</p></td>
     </tr>
     <tr>
       <th>M_s</th>
-      <td><p>embodied sector matrix or name of the column in <code>.Mmats</code> containing same. Default is "<code>M_s</code>".</p></td>
+      <td><p>An embodied sector matrix or name of the column in <code>.Mmats</code> containing same. Default is "M_s".</p></td>
     </tr>
     <tr>
       <th>F_footprint_p</th>
-      <td><p>the name for <code>F_footprint_p</code> matrices on output. Default is "<code>F_footprint_p</code>".</p></td>
+      <td><p>The name for <strong>F_footprint_p</strong> matrices on output. Default is "F_footprint_p".</p></td>
     </tr>
     <tr>
       <th>F_effects_p</th>
-      <td><p>the name for <code>F_effects_p</code> matrices on output. Default is "<code>F_effects_p</code>".</p></td>
+      <td><p>The name for <strong>F_effects_p</strong> matrices on output. Default is "F_effects_p".</p></td>
     </tr>
     <tr>
       <th>F_footprint_s</th>
-      <td><p>the name for <code>F_footprint_s</code> matrices on output. Default is "<code>F_footprint_s</code>".</p></td>
+      <td><p>The name for <strong>F_footprint_s</strong> matrices on output. Default is "F_footprint_s".</p></td>
     </tr>
     <tr>
       <th>F_effects_s</th>
-      <td><p>the name for <code>F_effects_s</code> matrices on output. Default is "<code>F_effects_s</code>".</p></td>
+      <td><p>The name for <strong>F_effects_s</strong> matrices on output. Default is "F_effects_s".</p></td>
     </tr>
     </table>
 
