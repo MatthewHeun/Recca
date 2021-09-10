@@ -290,22 +290,6 @@ test_that("calc_io_mats give correct _feed matrices", {
   expect_equal(L_ixp_feed_final["Gas wells & proc.", "Elect - Grid"], 2.549800797)
   expect_equal(L_ixp_feed_final["Power plants", "Elect - Grid"], 1.019920319)
   expect_equal(L_ixp_feed_final["Petrol dist.", "Petrol - Dist."], 1)
-
-
-  # Check D_feed
-  D_feed_final <- feed_mats$D_feed[[1]]
-  D_final <- feed_mats$D[[1]]
-  expect_identical(D_final, D_feed_final)
-
-  # Check C_feed
-  C_feed_final <- feed_mats$C_feed[[1]]
-  C_final <- feed_mats$C[[1]]
-  expect_identical(C_final, C_feed_final)
-
-  # Check O_feed
-  O_feed_final <- feed_mats$O_feed[[1]]
-  O_final <- feed_mats$O[[1]]
-  expect_identical(O_feed_final, O_final)
 })
 
 

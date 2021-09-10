@@ -168,95 +168,85 @@
       <td><p>a data frame containing matrices that describe the Input-Output structure
 (using the supply-use table format)
 of an Energy Conversion Chain.
-<code>.iomats</code> will likely have been obtained from the <code><a href='calc_io_mats.html'>calc_io_mats</a></code> function.</p></td>
+<code>.iomats</code> will likely have been obtained from the <code><a href='calc_io_mats.html'>calc_io_mats()</a></code> function.</p></td>
     </tr>
     <tr>
       <th>q</th>
-      <td><p>final demand (<code>q</code>) vector or name of the column in <code>.iodata</code> containing same. Default is "<code>q</code>".</p></td>
+      <td><p>Final demand (<strong>q</strong>) vector or name of the column in <code>.iomats</code> containing same. Default is "q".</p></td>
     </tr>
     <tr>
       <th>g</th>
-      <td><p>name of the <code>g</code> vector on output. Default is "<code>g</code>".</p></td>
+      <td><p>A <strong>g</strong> vector or name of the column in <code>.iomats</code> containing same. Default is "g".</p></td>
     </tr>
     <tr>
       <th>r</th>
-      <td><p>name of the <code>r</code> vector on output. Default is "<code>r</code>".</p></td>
+      <td><p>An <strong>r</strong> vector or name of the column in <code>.iomats</code> containing same. Default is "r".</p></td>
     </tr>
     <tr>
       <th>L_ixp</th>
-      <td><p>industry-by-product Leontief (<code>L_ixp</code>) matrix or name of the column in <code>.iodata</code> containing same. Default is "<code>L_ixp</code>"</p></td>
+      <td><p>Industry-by-product Leontief (<strong>L_ixp</strong>) matrix or name of the column in <code>.iomats</code> containing same. Default is "L_ixp".</p></td>
     </tr>
     <tr>
       <th>A</th>
-      <td><p>name of the <code>A</code> matrix in the <code>.iomats</code> data frame. Default is "A".</p></td>
+      <td><p>An <strong>A</strong> matrix or name of the column in <code>.iomats</code> containing same. Default is "A".</p></td>
     </tr>
     <tr>
       <th>R</th>
-      <td><p>Resources (<code>R</code>) matrix or name of the column in <code>.iodata</code> containing same. Default is "<code>R</code>".</p></td>
+      <td><p>A resources (<strong>R</strong>) matrix or name of the column in <code>.iomats</code> containing same. Default is "R".</p></td>
     </tr>
     <tr>
       <th>V</th>
-      <td><p>Supply (<code>R</code>) matrix or name of the column in <code>.iodata</code> containing same. Default is "<code>V</code>".</p></td>
+      <td><p>A make (<strong>V</strong>) matrix or name of the column in <code>.iomats</code> containing same. Default is "V".</p></td>
     </tr>
     <tr>
       <th>U_feed</th>
-      <td><p>Feedstock use (<code>U_feed</code>) matrix or name of the column in <code>.iodata</code> containing same. Default is "<code>U_feed</code>".</p></td>
+      <td><p>A feedstock use (<strong>U_feed</strong>) matrix or name of the column in <code>.iomats</code> containing same. Default is "U_feed".</p></td>
     </tr>
     <tr>
       <th>Y</th>
-      <td><p>final demand (<code>Y</code>) matrix or name of the column in <code>.iodata</code> containing same. Default is "<code>Y</code>".</p></td>
+      <td><p>A final demand (<strong>Y</strong>) matrix or name of the column in <code>.iomats</code> containing same. Default is "Y".</p></td>
     </tr>
     <tr>
       <th>G</th>
-      <td><p>name of the <code>G</code> matrix on output.
-<code>G</code> is calculated by <code>L_ixp * y_hat</code>. Default is "<code>G</code>".</p></td>
+      <td><p>The name of the <strong>G</strong> matrix on output. <strong>G</strong> is calculated by <code>L_ixp * y_hat</code>. Default is "G".</p></td>
     </tr>
     <tr>
       <th>H</th>
-      <td><p>name of the <code>H</code> matrix on output.
-<code>H</code> is calculated by <code>L_ixp * Y</code>. Default is "<code>H</code>".</p></td>
+      <td><p>The name of the <strong>H</strong> matrix on output. <strong>H</strong> is calculated by <code>L_ixp * Y</code>. Default is "H".</p></td>
     </tr>
     <tr>
       <th>E</th>
-      <td><p>name of <code>E</code> matrix on output.
-<code>E</code> is calculated by <code>W * g_hat_inv</code>. Default is "<code>E</code>".</p></td>
+      <td><p>The name of the <strong>E</strong> matrix on output. <strong>E</strong> is calculated by <code>W * g_hat_inv</code>. Default is "E".</p></td>
     </tr>
     <tr>
       <th>M_p</th>
-      <td><p>name of the <code>M_p</code> matrix on output.
-<code>M_p</code> is formed from column sums of positive entries in the various Qx matrices.
-Default is "<code>M_p</code>".</p></td>
+      <td><p>The name of the <strong>M_p</strong> matrix on output. <strong>M_p</strong> is formed from column sums of positive entries in the various <strong>Q</strong>_x matrices. Default is "M_p".</p></td>
     </tr>
     <tr>
       <th>M_s</th>
-      <td><p>name of the <code>M_s</code> matrix on output.
-<code>M_s</code> is constructed by <code>M_p * q_hat_inv * Y</code>. Default is "<code>M_s</code>".</p></td>
+      <td><p>The name of the <strong>M_s</strong> matrix on output. <strong>M_s</strong> is calculated by <code>M_p * q_hat_inv * Y</code>. Default is "M_s".</p></td>
     </tr>
     <tr>
       <th>F_footprint_p</th>
-      <td><p>name of the <code>F_footprint_p</code> matrix on output.
-<code>F_footprint_p</code> is calculated by <code>M_p * (M_p^T * i)_hat_inv</code>. Default is "<code>F_footprint_p</code>".</p></td>
+      <td><p>The name of the <strong>F_footprint_p</strong> matrix on output. <strong>F_footprint_p</strong> is calculated by <code>M_p * (M_p^T * i)_hat_inv</code>. Default is "F_footprint_p".</p></td>
     </tr>
     <tr>
       <th>F_effects_p</th>
-      <td><p>name of the <code>F_effects_p</code> matrix on output.
-<code>F_effects_p</code> is calculated by <code>(M_p * i)_hat_inv * M_p</code>. Default is "<code>F_effects_p</code>".</p></td>
+      <td><p>The name of the <strong>F_effects_p</strong> matrix on output. <strong>F_effects_p</strong> is calculated by <code>(M_p * i)_hat_inv * M_p</code>. Default is "F_effects_p".</p></td>
     </tr>
     <tr>
       <th>F_footprint_s</th>
-      <td><p>name of the <code>F_footprint_s</code> matrix on output.
-<code>F_footprint_s</code> is calculated by <code>M_s * (M_s^T *i)_hat_inv</code>. Default is "<code>F_footprint_s</code>".</p></td>
+      <td><p>The name of the <strong>F_footprint_s</strong> matrix on output. <strong>F_footprint_s</strong> is calculated by <code>M_s * (M_s^T *i)_hat_inv</code>. Default is "F_footprint_s".</p></td>
     </tr>
     <tr>
       <th>F_effects_s</th>
-      <td><p>name of the <code>F_effects_s</code> matrix on output.
-<code>F_effects_s</code> is calculated by <code>(M_s * i)_hat_inv * M_s</code>. Default is "<code>F_effects_s</code>".</p></td>
+      <td><p>The name of the <strong>F_effects_s</strong> matrix on output. <strong>F_effects_s</strong> is calculated by <code>(M_s * i)_hat_inv * M_s</code>. Default is "F_effects_s".</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a list or data frame containing embodied energy matrices</p>
+    <p>A list or data frame containing embodied energy matrices.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

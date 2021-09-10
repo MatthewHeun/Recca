@@ -85,13 +85,13 @@
 
       
 
-      </header><script src="Recca_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
+      </header><script src="Recca_files/header-attrs-2.10/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Recca</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2021-08-20</h4>
+            <h4 class="date">2021-09-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/master/vignettes/Recca.Rmd"><code>vignettes/Recca.Rmd</code></a></small>
       <div class="hidden name"><code>Recca.Rmd</code></div>
@@ -104,7 +104,7 @@
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p><code>Recca</code> (<code>R</code> Energy Conversion Chain Analysis) is an <code>R</code> package that enables energy and exergy analysis of energy conversion chains. <code>Recca</code> makes extensive use of a matrix-based Physical Supply Use Table (PSUT) analysis technique that first appeared in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>. This vignette walks through many of the calculations from <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, guided by section numbers from the paper. We begin by discussing the design philosophy of the <code>Recca</code> package, followed by a discussion of the PSUT matrices that comprise an energy conversion chain (ECC). Thereafter, calculation of the input-output structure of an ECC is demonstrated. Finally, advanced calculations are shown, including changes in final demand, net energy analysis, industry efficiencies, and energy footprints.</p>
+<p><code>Recca</code> (<code>R</code> Energy Conversion Chain Analysis) is an <code>R</code> package that enables energy and exergy analysis of energy conversion chains. <code>Recca</code> makes extensive use of a matrix-based Physical Supply Use Table (PSUT) analysis technique that first appeared in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. [-@Heun:2018]</a>. This vignette walks through many of the calculations from <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. [-@Heun:2018]</a>, guided by section numbers from the paper. We begin by discussing the design philosophy of the <code>Recca</code> package, followed by a discussion of the PSUT matrices that comprise an energy conversion chain (ECC). Thereafter, calculation of the input-output structure of an ECC is demonstrated. Finally, advanced calculations are shown, including changes in final demand, net energy analysis, industry efficiencies, and energy footprints.</p>
 </div>
 <div id="design-philosophy" class="section level2">
 <h2 class="hasAnchor">
@@ -121,7 +121,7 @@
 <div id="psut-matrices" class="section level2">
 <h2 class="hasAnchor">
 <a href="#psut-matrices" class="anchor"></a>PSUT matrices</h2>
-<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 2.2.2.)</p>
+<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. [-@Heun:2018]</a>, Section 2.2.2.)</p>
 <p>For the examples that follow, we’ll use the <code>UKEnergy2000tidy</code> data frame. Each row of <code>UKEnergy2000tidy</code> data frame represents another datum for a portion of the ECC for the UK in 2000. <code>UKEnergy2000tidy</code> is in a format similar to data from the IEA or other organizations.</p>
 <p>For data in the format of <code>UKEnergy2000tidy</code>, we can create <code>S_units</code> matrices for each grouping using the <code><a href="../reference/S_units_from_tidy.html">S_units_from_tidy()</a></code> function.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -201,7 +201,7 @@
 <div id="i-o-structure" class="section level2">
 <h2 class="hasAnchor">
 <a href="#i-o-structure" class="anchor"></a>I-O structure</h2>
-<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 2.2.4.)</p>
+<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. [-@Heun:2018]</a>, Section 2.2.4.)</p>
 <div id="with-individual-matrices" class="section level3">
 <h3 class="hasAnchor">
 <a href="#with-individual-matrices" class="anchor"></a>With individual matrices</h3>
@@ -351,7 +351,7 @@
 <div id="changes-in-final-demand" class="section level2">
 <h2 class="hasAnchor">
 <a href="#changes-in-final-demand" class="anchor"></a>Changes in final demand</h2>
-<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 2.2.5.)</p>
+<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. [-@Heun:2018]</a>, Section 2.2.5.)</p>
 <p>One of the first applications of input-output analysis was estimating changes in industry outputs that would be required to meet new final demand. <code>Recca</code> allows similar calculations on energy conversion chains with the function <code><a href="../reference/new_Y.html">new_Y()</a></code>. Arguments to <code><a href="../reference/new_Y.html">new_Y()</a></code> include matrices that describe the input-output structure of the ECC and <code>Y_prime</code>, the new final demand matrix. <code><a href="../reference/new_Y.html">new_Y()</a></code> calculates <code>U_prime</code> and <code>V_prime</code> matrices which represent the ECC that would be required to meet the new final demand represented by <code>Y_prime</code>.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">Double_demand</span> <span class="op">&lt;-</span> <span class="va">IO_df</span> <span class="op">%&gt;%</span> 
@@ -417,8 +417,8 @@
 <div id="net-energy-analysis" class="section level2">
 <h2 class="hasAnchor">
 <a href="#net-energy-analysis" class="anchor"></a>Net energy analysis</h2>
-<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 3.1.)</p>
-<p>The energy production system itself consumes energy, and important metrics for energy conversion chain industries are energy return ratios (ERRs). <code>Recca</code> provides a function to calculate three ERRs, a gross energy ratio (GER), a net energy ratio (NER), and the ratio of NER to GER. GER is commonly called energy return on investment (EROI). (See <a href="https://doi.org/10.3390/en4081211">Brandt &amp; Dale <span class="citation">(2011)</span></a>.) These ERRs can be calculated for a variety of system boundaries. ERRs for the <span class="math inline">\(\gamma\)</span> system boundary can be calculated readily using the <code><a href="../reference/calc_ERRs_gamma.html">calc_ERRs_gamma()</a></code> function. All three ERRs are calculated at the same time. The ERRs are <code>NA</code> for industries in which inputs or outputs are unit-inhomogeneous. The ERRs are <code>Inf</code> for industries that make an energy product without consuming any energy from another processing chain (such as the Elect. grid). The results below are identical to Fig. 6 in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>.</p>
+<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. [-@Heun:2018]</a>, Section 3.1.)</p>
+<p>The energy production system itself consumes energy, and important metrics for energy conversion chain industries are energy return ratios (ERRs). <code>Recca</code> provides a function to calculate three ERRs, a gross energy ratio (GER), a net energy ratio (NER), and the ratio of NER to GER. GER is commonly called energy return on investment (EROI). (See <a href="https://doi.org/10.3390/en4081211">Brandt &amp; Dale [-@Brandt:2011]</a>.) These ERRs can be calculated for a variety of system boundaries. ERRs for the <span class="math inline">\(\gamma\)</span> system boundary can be calculated readily using the <code><a href="../reference/calc_ERRs_gamma.html">calc_ERRs_gamma()</a></code> function. All three ERRs are calculated at the same time. The ERRs are <code>NA</code> for industries in which inputs or outputs are unit-inhomogeneous. The ERRs are <code>Inf</code> for industries that make an energy product without consuming any energy from another processing chain (such as the Elect. grid). The results below are identical to Fig. 6 in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. [-@Heun:2018]</a>.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ERRs</span> <span class="op">&lt;-</span> <span class="va">IO_df</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/calc_ERRs_gamma.html">calc_ERRs_gamma</a></span><span class="op">(</span><span class="op">)</span>
@@ -471,8 +471,8 @@
 <div id="efficiencies" class="section level2">
 <h2 class="hasAnchor">
 <a href="#efficiencies" class="anchor"></a>Efficiencies</h2>
-<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 3.2.)</p>
-<p>The efficiency of every industry in the ECC can be calculated quickly with the <code><a href="../reference/calc_eta_i.html">calc_eta_i()</a></code> function, which creates a column named <code>eta_i</code> (by default) at the right of the data frame. If a particular ECC has industries whose inputs or outputs are unit inhomogeneous, the <code>eta_i</code> vector will have <code>NA</code> values in the appropriate places. The results below are identical to Fig. 9 in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>.</p>
+<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. [-@Heun:2018]</a>, Section 3.2.)</p>
+<p>The efficiency of every industry in the ECC can be calculated quickly with the <code><a href="../reference/calc_eta_i.html">calc_eta_i()</a></code> function, which creates a column named <code>eta_i</code> (by default) at the right of the data frame. If a particular ECC has industries whose inputs or outputs are unit inhomogeneous, the <code>eta_i</code> vector will have <code>NA</code> values in the appropriate places. The results below are identical to Fig. 9 in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. [-@Heun:2018]</a>.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">etas</span> <span class="op">&lt;-</span> <span class="va">IO_df</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/calc_eta_i.html">calc_eta_i</a></span><span class="op">(</span><span class="op">)</span>
@@ -527,14 +527,14 @@
 <div id="energy-footprints" class="section level2">
 <h2 class="hasAnchor">
 <a href="#energy-footprints" class="anchor"></a>Energy footprints</h2>
-<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>, Section 3.3.)</p>
+<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. [-@Heun:2018]</a>, Section 3.3.)</p>
 <p>Final demand for energy contains embodied primary energy, the sum of all primary energy consumed and wasted throughout the ECC in the process of satisfying that final demand. <code>Recca</code> provides two functions to calculate embodied primary energy and important ratios, namely <code><a href="../reference/calc_embodied_mats.html">calc_embodied_mats()</a></code> and <code><a href="../reference/calc_embodied_etas.html">calc_embodied_etas()</a></code>.</p>
 <p>The function <code><a href="../reference/calc_embodied_mats.html">calc_embodied_mats()</a></code> calculates embodied energy in final demand products (<span class="math inline">\(p\)</span>) and final demand sectors (<span class="math inline">\(s\)</span>).</p>
 <p>Outputs from <code><a href="../reference/calc_embodied_mats.html">calc_embodied_mats()</a></code> include the following matrices:</p>
 <table class="table">
 <colgroup>
-<col width="7%">
-<col width="92%">
+<col width="37%">
+<col width="62%">
 </colgroup>
 <thead><tr class="header">
 <th align="right">Matrix</th>
@@ -542,32 +542,48 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="right"><span class="math inline">\(\mathbf{G} = \underset{\mathrm{i} \times \mathrm{p}}{\mathbf{L}}\widehat{\mathbf{y}}\)</span></td>
-<td align="left">Industry output requirements for final demand (i<span class="math inline">\(\times\)</span>p)</td>
+<td align="right"><span class="math inline">\(\mathbf{G} = \mathbf{G}_V + \mathbf{G}_R\)</span></td>
+<td align="left">Industry and resource stocks output requirements for final demand (<span class="math inline">\((r + i) \times p\)</span>)</td>
 </tr>
 <tr class="even">
-<td align="right"><span class="math inline">\(\mathbf{H} = \underset{\mathrm{i} \times \mathrm{p}}{\mathbf{L}}\mathbf{Y}\)</span></td>
-<td align="left">Industry output requirements for final demand sectors (i<span class="math inline">\(\times\)</span>s)</td>
+<td align="right"><span class="math inline">\(\mathbf{G}_V = \underset{\mathrm{i} \times \mathrm{p}}{\mathbf{L}} \widehat{\mathbf{y}}\)</span></td>
+<td align="left">Industry output requirements for final demand (<span class="math inline">\(i \times p\)</span>)</td>
 </tr>
 <tr class="odd">
-<td align="right"><span class="math inline">\(\mathbf{E} = (\mathbf{W} + \mathbf{U}_{EIOU})\widehat{\mathbf{g}}^{\mathrm{-}1}\)</span></td>
-<td align="left">Energy or services produced (<span class="math inline">\(+\)</span>) or consumed (<span class="math inline">\(-\)</span>) per unit output by industries (in columns) (p<span class="math inline">\(\times\)</span>i)</td>
+<td align="right"><span class="math inline">\(\mathbf{G}_R = \mathbf{R} \widehat{\mathbf{q}}^{\mathrm{-}1} \underset{\mathrm{p} \times \mathrm{p}}{\mathbf{L}}\mathbf{Y}\)</span></td>
+<td align="left">Resource stocks output requirements for final demand (<span class="math inline">\(r \times p\)</span>)</td>
+</tr>
+<tr class="even">
+<td align="right"><span class="math inline">\(\mathbf{H} = \mathbf{H}_V + \mathbf{H}_R\)</span></td>
+<td align="left">Industry and resource stocks output requirements for final demand sectors (<span class="math inline">\((r + i) \times s\)</span>)</td>
+</tr>
+<tr class="odd">
+<td align="right"><span class="math inline">\(\mathbf{H}_V = \underset{\mathrm{i} \times \mathrm{p}}{\mathbf{L}}\mathbf{Y}\)</span></td>
+<td align="left">Industry output requirements for final demand sectors (<span class="math inline">\(i \times s\)</span>)</td>
+</tr>
+<tr class="even">
+<td align="right"><span class="math inline">\(\mathbf{H}_R = \mathbf{R} \widehat{\mathbf{q}}^{\mathrm{-}1} \underset{\mathrm{p} \times \mathrm{p}}{\mathbf{L}}\mathbf{Y}\)</span></td>
+<td align="left">Resource stocks output requirements for final demand sectors (<span class="math inline">\(r \times s\)</span>)</td>
+</tr>
+<tr class="odd">
+<td align="right"><span class="math inline">\(\mathbf{E} = [ (\mathbf{R} + \mathbf{V})^\mathrm{T} - \mathbf{U}_{feed} ] \widehat{(\mathbf{g} + \mathbf{r})}^{-1}\)</span></td>
+<td align="left">Energy or services produced (<span class="math inline">\(+\)</span>) or consumed (<span class="math inline">\(-\)</span>) per unit output by industries (in columns) (<span class="math inline">\(p \times i\)</span>)</td>
 </tr>
 <tr class="even">
 <td align="right"><span class="math inline">\(\mathbf{M}_p\)</span></td>
-<td align="left">embodied products <span class="math inline">\(\times\)</span> embodying products</td>
+<td align="left">Shows embodied energy products in each embodying energy product (embodied products <span class="math inline">\(\times\)</span> embodying products)</td>
 </tr>
 <tr class="odd">
 <td align="right"><span class="math inline">\(\mathbf{M}_s\)</span></td>
-<td align="left">embodied products <span class="math inline">\(\times\)</span> consumed by final demand sectors</td>
+<td align="left">Shows embodied energy products consumed by final demand sectors (embodied products <span class="math inline">\(\times\)</span> consuming final demand sectors</td>
 </tr>
 </tbody>
 </table>
 <p><code><a href="../reference/calc_embodied_mats.html">calc_embodied_mats()</a></code> also calculates <span class="math inline">\(\mathbf{F}_{footprint}\)</span> and <span class="math inline">\(\mathbf{F}_{effects}\)</span> matrices, which answer the questions (respectively) “What is the fractional composition of embodied energy of each final demand energy type?” and “What is the fractional destination of a given upstream energy product?” The calculations can be performed for each final demand product or each final demand sector. The following table describes these matrices.</p>
 <table class="table">
 <colgroup>
-<col width="7%">
-<col width="92%">
+<col width="30%">
+<col width="69%">
 </colgroup>
 <thead><tr class="header">
 <th align="right">Matrix</th>
@@ -579,7 +595,7 @@
 <td align="left">Each final demand product (columns) contains embodied energy. On a fractional basis, where does that embodied energy come from (rows)? Columns sum to 1.</td>
 </tr>
 <tr class="even">
-<td align="right"><span class="math inline">\(\mathbf{F}_{effects,p}\)</span></td>
+<td align="right"><span class="math inline">\(\mathbf{F}_{ef\!fects,p}\)</span></td>
 <td align="left">Each upstream energy product (rows) becomes embodied somewhere. On a fractional basis, where does that upstream energy become embodied (columns)? Rows sums to 1.</td>
 </tr>
 <tr class="odd">
@@ -587,7 +603,7 @@
 <td align="left">Each final demand sector (columns) consumes embodied energy. On a fractional basis, where does the consumed embodied energy come from (rows)? Columns sum to 1.</td>
 </tr>
 <tr class="even">
-<td align="right"><span class="math inline">\(\mathbf{F}_{effects,s}\)</span></td>
+<td align="right"><span class="math inline">\(\mathbf{F}_{ef\!fects,s}\)</span></td>
 <td align="left">Each embodied upstream energy product (rows) is consumed by a final demand sector. On a fractional basis, where is that embodied upstream energy consumed (columns)? Rows sums to 1.</td>
 </tr>
 </tbody>
@@ -595,8 +611,8 @@
 <p>Finally, embodied energy efficiencies can be calculated as final demand energy divided by embodied energy. Again, efficiencies can be calculated for each final demand product or each final demand sector. The <code><a href="../reference/calc_embodied_etas.html">calc_embodied_etas()</a></code> function does this computation.</p>
 <table class="table">
 <colgroup>
-<col width="7%">
-<col width="92%">
+<col width="14%">
+<col width="85%">
 </colgroup>
 <thead><tr class="header">
 <th align="right">Matrix</th>
@@ -636,7 +652,7 @@
 <span class="co">#&gt; [41] "H"             "E"             "M_p"           "M_s"          </span>
 <span class="co">#&gt; [45] "F_footprint_p" "F_effects_p"   "F_footprint_s" "F_effects_s"  </span>
 <span class="co">#&gt; [49] "eta_p"         "eta_s"</span></code></pre></div>
-<p>Figure 15 in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a> shows primary-to-services energetic efficiencies for the ECC in the 3rd row of <code>IO_df</code>. The following code extracts those results. Rows of the vector give final demand services and their units. The column gives efficiencies in units of service per ktoe of energy.</p>
+<p>Figure 15 in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. [-@Heun:2018]</a> shows primary-to-services energetic efficiencies for the ECC in the 3rd row of <code>IO_df</code>. The following code extracts those results. Rows of the vector give final demand services and their units. The column gives efficiencies in units of service per ktoe of energy.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">embodied_mats</span><span class="op">$</span><span class="va">eta_p</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span>
 <span class="co">#&gt;                                Industry</span>
@@ -652,19 +668,11 @@
 <div id="conclusion" class="section level2">
 <h2 class="hasAnchor">
 <a href="#conclusion" class="anchor"></a>Conclusion</h2>
-<p>This vignette demonstrated the use of the <code>Recca</code> package. <code>Recca</code> provides many useful functions for analyzing energy conversion chains within the PSUT framework first described in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>.</p>
+<p>This vignette demonstrated the use of the <code>Recca</code> package. <code>Recca</code> provides many useful functions for analyzing energy conversion chains within the PSUT framework first described in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. [-@Heun:2018]</a>.</p>
 </div>
-<div id="references" class="section level2 unnumbered">
+<div id="references" class="section level2">
 <h2 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-Brandt:2011" class="csl-entry">
-Brandt, Adam R., and Michael Dale. 2011. <span>“A General Mathematical Framework for Calculating Systems-Scale Efficiency of Energy Extraction and Conversion: Energy Return on Investment (<span>EROI</span>) and Other Energy Return Ratios.”</span> <em>Energies</em> 4: 1211–45. <a href="https://doi.org/10.3390/en4081211">https://doi.org/10.3390/en4081211</a>.
-</div>
-<div id="ref-Heun:2018" class="csl-entry">
-Heun, Matthew Kuperus, Anne Owen, and Paul E. Brockway. 2018. <span>“A Physical Supply-Use Table Framework for Energy Analysis on the Energy Conversion Chain.”</span> <em>Applied Energy</em> 226 (September): 1134–62. <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">https://doi.org/10.1016/j.apenergy.2018.05.109</a>.
-</div>
-</div>
 </div>
   </div>
 

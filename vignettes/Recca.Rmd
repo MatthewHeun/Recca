@@ -13,6 +13,8 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
   chunk_output_type: console
+  markdown: 
+    wrap: 72
 bibliography: recca.bib
 ---
 
@@ -30,6 +32,8 @@ library(tidyr)
 ```
 
 <!-- Establish some helpful LaTeX shortcuts for equations -->
+
+```{=tex}
 \newcommand{\transpose}[1]{#1^\mathrm{T}}
 \newcommand{\inverse}[1]{#1^{\mathrm{-}1}}
 \newcommand{\mat}[1]{\mathbf{#1}}
@@ -38,68 +42,66 @@ library(tidyr)
 \newcommand{\inversetranspose}[1]{\transpose{\left( \inverse{\mat{#1}} \right)}}
 \newcommand{\transposeinverse}[1]{\inverse{\left( \transpose{\mat{#1}} \right)}}
 \newcommand{\hatinv}[1]{\inverse{\widehat{#1}}}
-
+```
+```{=tex}
 \newcommand{\matwithdims}[3]{\underset{\mathrm{#2} \times \mathrm{#3}}{\mat{#1}}}
 \newcommand{\colvecwithdims}[2]{\underset{\mathrm{#2} \times 1}{\colvec{#1}}}
-
+```
+```{=tex}
 \newcommand{\Lpp}{\matwithdims{L}{p}{p}}
 \newcommand{\Lip}{\matwithdims{L}{i}{p}}
-
-
+```
 ## Introduction
 
-`Recca` (`R` Energy Conversion Chain Analysis)
-is an `R` package that enables
-energy and exergy analysis of energy conversion chains.
-`Recca` makes extensive use of a matrix-based 
-Physical Supply Use Table (PSUT) analysis technique
-that first appeared in 
-[Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
-This vignette walks through many of the calculations from [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109),
-guided by section numbers from the paper.
-We begin by discussing the design philosophy of the `Recca` package, 
-followed by a discussion of the PSUT matrices that comprise an energy conversion chain (ECC).
-Thereafter, calculation of the input-output structure of an ECC is demonstrated.
-Finally, advanced calculations are shown, 
-including
-changes in final demand, 
-net energy analysis,
-industry efficiencies, and
-energy footprints.
-
+`Recca` (`R` Energy Conversion Chain Analysis) is an `R` package that
+enables energy and exergy analysis of energy conversion chains. `Recca`
+makes extensive use of a matrix-based Physical Supply Use Table (PSUT)
+analysis technique that first appeared in [Heun et al.
+[-\@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109). This
+vignette walks through many of the calculations from [Heun et al.
+[-\@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), guided
+by section numbers from the paper. We begin by discussing the design
+philosophy of the `Recca` package, followed by a discussion of the PSUT
+matrices that comprise an energy conversion chain (ECC). Thereafter,
+calculation of the input-output structure of an ECC is demonstrated.
+Finally, advanced calculations are shown, including changes in final
+demand, net energy analysis, industry efficiencies, and energy
+footprints.
 
 ## Design philosophy
 
-The functions in `Recca` are flexibly designed and useful in many situations.
-`Recca`'s flexibility stems from its extensive use of the `matsbyname` and `matsindf` packages under the hood. 
-Inputs to most `Recca` functions can be any one of:
+The functions in `Recca` are flexibly designed and useful in many
+situations. `Recca`'s flexibility stems from its extensive use of the
+`matsbyname` and `matsindf` packages under the hood. Inputs to most
+`Recca` functions can be any one of:
 
-1. matrices (with individual matrices as arguments to `Recca` functions),
-2. a list as the first argument (with names in the list indicating argument names), or 
-3. a data frame (with names of data frame columns, as strings, as arguments to `Recca` functions).
+1.  matrices (with individual matrices as arguments to `Recca`
+    functions),
+2.  a list as the first argument (with names in the list indicating
+    argument names), or
+3.  a data frame (with names of data frame columns, as strings, as
+    arguments to `Recca` functions).
 
-Outputs are either 
-named matrices in a list (for 1 and 2 above)
-or
-named columns appended to the input data frame (for 3 above).
+Outputs are either named matrices in a list (for 1 and 2 above) or named
+columns appended to the input data frame (for 3 above).
 
-Argument names for matrices follow a standard nomenclature.
-It is recommended that the default matrix names be used whenever possible, 
+Argument names for matrices follow a standard nomenclature. It is
+recommended that the default matrix names be used whenever possible,
 thereby allowing cleaner code.
-
 
 ## PSUT matrices
 
-(Reference [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 2.2.2.)
+(Reference [Heun et al.
+[-\@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section
+2.2.2.)
 
-For the examples that follow, we'll use the `UKEnergy2000tidy` data frame.
-Each row of `UKEnergy2000tidy` data frame represents 
-another datum for a portion of the ECC for the UK in 2000.
-`UKEnergy2000tidy` is in a format similar to data from the IEA or other organizations.
+For the examples that follow, we'll use the `UKEnergy2000tidy` data
+frame. Each row of `UKEnergy2000tidy` data frame represents another
+datum for a portion of the ECC for the UK in 2000. `UKEnergy2000tidy` is
+in a format similar to data from the IEA or other organizations.
 
-For data in the format of `UKEnergy2000tidy`, 
-we can create `S_units` matrices for each grouping
-using the `S_units_from_tidy()` function.
+For data in the format of `UKEnergy2000tidy`, we can create `S_units`
+matrices for each grouping using the `S_units_from_tidy()` function.
 
 ```{r}
 library(tibble)
@@ -109,10 +111,10 @@ S_units <- UKEnergy2000tidy %>%
 tibble::glimpse(S_units)
 ```
 
-And we can identify which entries belong in the
-resource ($\mat{R}$), make ($\mat{V}$), use ($\mat{U}$), and
-final demand ($\mat{Y}$) matrices 
-with the `IEATools::add_psut_matnames()` and `IEATools::add_row_col_meta()` functions.
+And we can identify which entries belong in the resource ($\mathbf{R}$),
+make ($\mathbf{V}$), use ($\mathbf{U}$), and final demand ($\mathbf{Y}$)
+matrices with the `IEATools::add_psut_matnames()` and
+`IEATools::add_row_col_meta()` functions.
 
 ```{r}
 WithNames <- UKEnergy2000tidy %>%
@@ -129,8 +131,9 @@ WithNames <- UKEnergy2000tidy %>%
 head(WithNames)
 ```
 
-After identifying the matrices, rownames, colnames, rowtypes, and coltypes, 
-we can collapse all data to matrices and add a unit summation matrix (`S_units`).
+After identifying the matrices, rownames, colnames, rowtypes, and
+coltypes, we can collapse all data to matrices and add a unit summation
+matrix (`S_units`).
 
 ```{r}
 AsMats <- WithNames %>%
@@ -156,18 +159,20 @@ AsMats <- WithNames %>%
 tibble::glimpse(AsMats)
 ```
 
-The `AsMats` data frame is essentially the same as the `Recca::UKEnergy2000mats` data frame.
-The remainder of this vignette uses the `UKEnergy2000mats` data frame.
-
+The `AsMats` data frame is essentially the same as the
+`Recca::UKEnergy2000mats` data frame. The remainder of this vignette
+uses the `UKEnergy2000mats` data frame.
 
 ## I-O structure
 
-(Reference [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 2.2.4.)
-
+(Reference [Heun et al.
+[-\@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section
+2.2.4.)
 
 ### With individual matrices
 
-To determine the I-O structure of an ECC, use the `calc_io_mats()` function.
+To determine the I-O structure of an ECC, use the `calc_io_mats()`
+function.
 
 ```{r}
 library(tidyr)
@@ -190,8 +195,9 @@ S_units <- mats$S_units[[1]]
 IO_list <- calc_io_mats(R = R, U = U, U_feed = U_feed, V = V, Y = Y, S_units = S_units)
 ```
 
-Most `Recca` functions return a list when called with individual matrices as arguments.
-The `calc_io_mats()` function gives several I-O matrices in its returned list.
+Most `Recca` functions return a list when called with individual
+matrices as arguments. The `calc_io_mats()` function gives several I-O
+matrices in its returned list.
 
 ```{r}
 class(IO_list)
@@ -199,18 +205,17 @@ names(IO_list)
 IO_list[["y"]]
 ```
 
-The same calculations can be performed by supplying a named list to `Recca` functions.
-In this approach, all original data are returned in the list.
-So in this case, matrices $\mat{U}$, $\mat{V}$, $\mat{Y}$, and $\mat{S_{units}}$
-are also returned from the `calc_io_mats()` function.
-When a list is supplied to a `Recca` function in the `.sutmats` argument, 
-most other input arguments must be strings 
-that identify the names of appropriate entries in the `.sutmats` list containing 
-named vectors or matrices.
-Helpfully, the default values for other input arguments conform to a standard nomenclature.
-When using the standard nomenclature, 
-most `Recca` functions can use the default arguments
-for input and output items in the list.
+The same calculations can be performed by supplying a named list to
+`Recca` functions. In this approach, all original data are returned in
+the list. So in this case, matrices $\mathbf{U}$, $\mathbf{V}$,
+$\mathbf{Y}$, and $\mathbf{S_{units}}$ are also returned from the
+`calc_io_mats()` function. When a list is supplied to a `Recca` function
+in the `.sutmats` argument, most other input arguments must be strings
+that identify the names of appropriate entries in the `.sutmats` list
+containing named vectors or matrices. Helpfully, the default values for
+other input arguments conform to a standard nomenclature. When using the
+standard nomenclature, most `Recca` functions can use the default
+arguments for input and output items in the list.
 
 ```{r}
 IO_from_list <- calc_io_mats(list(R = R, U = U, U_feed = U_feed, V = V, Y = Y, S_units = S_units))
@@ -219,36 +224,33 @@ names(IO_from_list)
 IO_from_list[["y"]]
 ```
 
-
 ### From a `matsindf`-style data frame
 
-Most `Recca` functions can also operate on a `matsindf`-style data frame.
-(A `matsindf`-style data frame has matrices in cells of a data frame.
-See the `matsindf` package for additional information.)
-When a data frame is supplied to a `Recca` function in the `.sutmats` argument, 
-most other input arguments must be strings 
-that identify the names of appropriate columns in `.sutmats` containing 
-named vectors or matrices.
-Helpfully, the default values for other input arguments conform to a standard nomenclature.
-When using the standard nomenclature, 
-most `Recca` functions can use the default arguments
-for input and output columns.
-This approach yields very clean piped code, as shown below.
+Most `Recca` functions can also operate on a `matsindf`-style data
+frame. (A `matsindf`-style data frame has matrices in cells of a data
+frame. See the `matsindf` package for additional information.) When a
+data frame is supplied to a `Recca` function in the `.sutmats` argument,
+most other input arguments must be strings that identify the names of
+appropriate columns in `.sutmats` containing named vectors or matrices.
+Helpfully, the default values for other input arguments conform to a
+standard nomenclature. When using the standard nomenclature, most
+`Recca` functions can use the default arguments for input and output
+columns. This approach yields very clean piped code, as shown below.
 
-To illustrate the above features of `Recca` functions, 
-we'll apply the `calc_io_mats` function to the entire `UKEnergy2000mats` data frame, 
-calculating appropriate I-O matrices for each row.
-Used in this way, `Recca` functions act like specialized `dplyr::mutate()` functions,
-with new columns added to the right side of the data frame supplied to the `.sutmats` argument.
+To illustrate the above features of `Recca` functions, we'll apply the
+`calc_io_mats` function to the entire `UKEnergy2000mats` data frame,
+calculating appropriate I-O matrices for each row. Used in this way,
+`Recca` functions act like specialized `dplyr::mutate()` functions, with
+new columns added to the right side of the data frame supplied to the
+`.sutmats` argument.
 
 ```{r}
 IO_df <- mats %>% calc_io_mats()
 ```
 
-By inspecting `IO_df`, we can see, for example, 
-that one $\colvec{y}$ vector was calculated for 
-each of the four rows of `mats`.
-The same is true for all I-O matrices calculated by `calc_io_mats`.
+By inspecting `IO_df`, we can see, for example, that one $\mathbf{y}$
+vector was calculated for each of the four rows of `mats`. The same is
+true for all I-O matrices calculated by `calc_io_mats`.
 
 ```{r}
 class(IO_df)
@@ -258,24 +260,24 @@ IO_df[["y"]][[1]]
 IO_df[["y"]][[4]]
 ```
 
-For the remainder of this vignette, 
-operations will be performed on the entire `UKEnergy2000mats` data frame.
-But readers should remember that functions can be called on named lists or
-individual matrices, as well.
-
+For the remainder of this vignette, operations will be performed on the
+entire `UKEnergy2000mats` data frame. But readers should remember that
+functions can be called on named lists or individual matrices, as well.
 
 ## Changes in final demand
 
-(Reference [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 2.2.5.)
+(Reference [Heun et al.
+[-\@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section
+2.2.5.)
 
-One of the first applications of input-output analysis was estimating changes in industry outputs
-that would be required to meet new final demand. 
-`Recca` allows similar calculations on energy conversion chains
-with the function `new_Y()`.
-Arguments to `new_Y()` include matrices that describe the input-output structure of the ECC
-and `Y_prime`, the new final demand matrix.
-`new_Y()` calculates `U_prime` and `V_prime` matrices which represent the 
-ECC that would be required to meet the new final demand represented by `Y_prime`.
+One of the first applications of input-output analysis was estimating
+changes in industry outputs that would be required to meet new final
+demand. `Recca` allows similar calculations on energy conversion chains
+with the function `new_Y()`. Arguments to `new_Y()` include matrices
+that describe the input-output structure of the ECC and `Y_prime`, the
+new final demand matrix. `new_Y()` calculates `U_prime` and `V_prime`
+matrices which represent the ECC that would be required to meet the new
+final demand represented by `Y_prime`.
 
 ```{r}
 Double_demand <- IO_df %>% 
@@ -290,30 +292,30 @@ IO_df[["U"]][[1]][ , c("Crude dist.", "Diesel dist.")]
 Double_demand[["U_prime"]][[1]][ , c("Crude dist.", "Diesel dist.")]
 ```
 
-See the vignette for the [`new_*()` functions](new-functions.html) for more details.
-
+See the vignette for the [`new_*()` functions](new-functions.html) for
+more details.
 
 ## Net energy analysis
 
-(Reference [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 3.1.)
+(Reference [Heun et al.
+[-\@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section
+3.1.)
 
-The energy production system itself consumes energy, and 
-important metrics for energy conversion chain industries are energy return ratios (ERRs).
-`Recca` provides a function to calculate three ERRs, 
-a gross energy ratio (GER),
-a net energy ratio (NER), and
-the ratio of NER to GER.
-GER is commonly called energy return on investment (EROI).
-(See [Brandt & Dale [-@Brandt:2011]](https://doi.org/10.3390/en4081211).)
-These ERRs can be calculated for a variety of system boundaries.
-ERRs for the $\gamma$ system boundary can be calculated readily 
-using the `calc_ERRs_gamma()` function.
-All three ERRs are calculated at the same time.
-The ERRs are `NA` for industries in which inputs or outputs are unit-inhomogeneous.
-The ERRs are `Inf` for industries that make an energy product without consuming 
-any energy from another processing chain (such as the Elect. grid).
-The results below are identical to Fig. 6 in 
-[Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
+The energy production system itself consumes energy, and important
+metrics for energy conversion chain industries are energy return ratios
+(ERRs). `Recca` provides a function to calculate three ERRs, a gross
+energy ratio (GER), a net energy ratio (NER), and the ratio of NER to
+GER. GER is commonly called energy return on investment (EROI). (See
+[Brandt & Dale [-\@Brandt:2011]](https://doi.org/10.3390/en4081211).)
+These ERRs can be calculated for a variety of system boundaries. ERRs
+for the $\gamma$ system boundary can be calculated readily using the
+`calc_ERRs_gamma()` function. All three ERRs are calculated at the same
+time. The ERRs are `NA` for industries in which inputs or outputs are
+unit-inhomogeneous. The ERRs are `Inf` for industries that make an
+energy product without consuming any energy from another processing
+chain (such as the Elect. grid). The results below are identical to Fig.
+6 in [Heun et al.
+[-\@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
 
 ```{r}
 ERRs <- IO_df %>% 
@@ -323,17 +325,19 @@ ERRs$ner_gamma[[1]]
 ERRs$r_gamma[[1]]
 ```
 
-
 ## Efficiencies
 
-(Reference [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 3.2.)
+(Reference [Heun et al.
+[-\@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section
+3.2.)
 
-The efficiency of every industry in the ECC can be calculated quickly with the `calc_eta_i()` function,
-which creates a column named `eta_i` (by default) at the right of the data frame.
-If a particular ECC has industries whose inputs or outputs are unit inhomogeneous, 
-the `eta_i` vector will have `NA` values in the appropriate places.
-The results below are identical to Fig. 9 in 
-[Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
+The efficiency of every industry in the ECC can be calculated quickly
+with the `calc_eta_i()` function, which creates a column named `eta_i`
+(by default) at the right of the data frame. If a particular ECC has
+industries whose inputs or outputs are unit inhomogeneous, the `eta_i`
+vector will have `NA` values in the appropriate places. The results
+below are identical to Fig. 9 in [Heun et al.
+[-\@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
 
 ```{r}
 etas <- IO_df %>% 
@@ -343,54 +347,114 @@ etas[["eta_i"]][[1]]
 etas[["eta_i"]][[3]] # NAs indicate inhomogeneous units on inputs or outputs.
 ```
 
-
 ## Energy footprints
 
-(Reference [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section 3.3.)
+(Reference [Heun et al.
+[-\@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section
+3.3.)
 
-Final demand for energy contains embodied primary energy,
-the sum of all primary energy consumed and wasted 
-throughout the ECC in the process of satisfying that final demand.
-`Recca` provides two functions to calculate embodied primary energy and important ratios,
-namely `calc_embodied_mats()` and `calc_embodied_etas()`.
+Final demand for energy contains embodied primary energy, the sum of all
+primary energy consumed and wasted throughout the ECC in the process of
+satisfying that final demand. `Recca` provides two functions to
+calculate embodied primary energy and important ratios, namely
+`calc_embodied_mats()` and `calc_embodied_etas()`.
 
-The function `calc_embodied_mats()` calculates embodied energy in final demand products ($p$) and final demand sectors ($s$).
+The function `calc_embodied_mats()` calculates embodied energy in final
+demand products ($p$) and final demand sectors ($s$).
 
 Outputs from `calc_embodied_mats()` include the following matrices:
 
-| Matrix | Description (rows$\times$columns)|
-|---:|:---------------------------------------------------|
-| $\mat{G} = \Lip \widehat{\colvec{y}}$ | Industry output requirements for final demand (i$\times$p) |
-| $\mat{H} = \Lip \mat{Y}$ | Industry output requirements for final demand sectors (i$\times$s) |
-| $\mat{E} = (\mat{W} + \mat{U}_{EIOU})\hatinv{\colvec{g}}$ | Energy or services produced ($+$) or consumed ($-$) per unit output by industries (in columns) (p$\times$i)|
-| $\mat{M}_p$ | embodied products $\times$ embodying products |
-| $\mat{M}_s$ | embodied products $\times$ consumed by final demand sectors |
++--------------------------------------+-----------------------------------------------------------------+
+| Matrix                               | Description (rows$\times$columns)                               |
++=====================================:+:================================================================+
+| $\mathbf{G} =                        | Industry and resource stocks output requirements for final      |
+| \mathbf{G}_V + \mathbf{G}_R$         | demand ($(r + i) \times p$)                                     |
++--------------------------------------+-----------------------------------------------------------------+
+| $\mathbf{G}_V =                      | Industry output requirements for final demand ($i \times p$)    |
+| \underset{\mathrm{i} \times          |                                                                 |
+| \mathrm{p}}{\mathbf{L}}              |                                                                 |
+| \widehat{\mathbf{y}}$                |                                                                 |
++--------------------------------------+-----------------------------------------------------------------+
+| $\mathbf{G}_R =                      | Resource stocks output requirements for final demand            |
+| \mathbf{R}                           | ($r \times p$)                                                  |
+| \widehat{\mathbf{q}}^{\mathrm{-}1}   |                                                                 |
+| \underset{\mathrm{p} \times          |                                                                 |
+| \mathrm{p}}{\mathbf{L}}\mathbf{Y}$   |                                                                 |
++--------------------------------------+-----------------------------------------------------------------+
+| $\mathbf{H} =                        | Industry and resource stocks output requirements for final      |
+| \mathbf{H}_V + \mathbf{H}_R$         | demand sectors ($(r + i) \times s$)                             |
++--------------------------------------+-----------------------------------------------------------------+
+| $\mathbf{H}_V =                      | Industry output requirements for final demand sectors           |
+| \underset{\mathrm{i} \times          | ($i \times s$)                                                  |
+| \mathrm{p}}{\mathbf{L}}\mathbf{Y}$   |                                                                 |
++--------------------------------------+-----------------------------------------------------------------+
+| $\mathbf{H}_R =                      | Resource stocks output requirements for final demand sectors    |
+| \mathbf{R}                           | ($r \times s$)                                                  |
+| \widehat{\mathbf{q}}^{\mathrm{-}1}   |                                                                 |
+| \underset{\mathrm{p} \times          |                                                                 |
+| \mathrm{p}}{\mathbf{L}}\mathbf{Y}$   |                                                                 |
++--------------------------------------+-----------------------------------------------------------------+
+| $\mathbf{E} =                        | Energy or services produced ($+$) or consumed ($-$) per unit    |
+| [ (\mathbf{R} +                      | output by industries (in columns) ($p \times i$)                |
+| \mathbf{V})^\mathrm{T} -             |                                                                 |
+| \mathbf{U}_{feed} ]                  |                                                                 |
+| \widehat{(\mathbf{g} +               |                                                                 |
+| \mathbf{r})}^{-1}$                   |                                                                 |
++--------------------------------------+-----------------------------------------------------------------+
+| $\mathbf{M}_p$                       | Shows embodied energy products in each embodying energy product |
+|                                      | (embodied products $\times$ embodying products)                 |
++--------------------------------------+-----------------------------------------------------------------+
+| $\mathbf{M}_s$                       | Shows embodied energy products consumed by final demand sectors |
+|                                      | (embodied products $\times$ consuming final demand sectors      |
++--------------------------------------+-----------------------------------------------------------------+
 
-`calc_embodied_mats()` also calculates $\mat{F}_{footprint}$ and $\mat{F}_{effects}$ matrices,
-which answer the questions (respectively)
-"What is the fractional composition of embodied energy of each final demand energy type?"
-and
-"What is the fractional destination of a given upstream energy product?"
-The calculations can be performed for each final demand product or each final demand sector. 
-The following table describes these matrices.
+`calc_embodied_mats()` also calculates $\mathbf{F}_{footprint}$ and
+$\mathbf{F}_{effects}$ matrices, which answer the questions
+(respectively) "What is the fractional composition of embodied energy of
+each final demand energy type?" and "What is the fractional destination
+of a given upstream energy product?" The calculations can be performed
+for each final demand product or each final demand sector. The following
+table describes these matrices.
 
-| Matrix | Description |
-|---:|:---------------------------------------------------|
-| $\mat{F}_{footprint,p}$ | Each final demand product (columns) contains embodied energy. On a fractional basis, where does that embodied energy come from (rows)? Columns sum to 1. |
-| $\mat{F}_{effects,p}$ | Each upstream energy product (rows) becomes embodied somewhere. On a fractional basis, where does that upstream energy become embodied (columns)? Rows sums to 1. |
-| $\mat{F}_{footprint,s}$ | Each final demand sector (columns) consumes embodied energy. On a fractional basis, where does the consumed embodied energy come from (rows)? Columns sum to 1. |
-| $\mat{F}_{effects,s}$ | Each embodied upstream energy product (rows) is consumed by a final demand sector. On a fractional basis, where is that embodied upstream energy consumed (columns)? Rows sums to 1. |
++----------------------------+-----------------------------------------------------------------+
+| Matrix                     | Description                                                     |
++===========================:+:================================================================+
+| $\mathbf{F}_{footprint,p}$ | Each final demand product (columns) contains embodied energy.   |
+|                            | On a fractional basis, where does that embodied energy come     |
+|                            | from (rows)? Columns sum to 1.                                  |
++----------------------------+-----------------------------------------------------------------+
+| $\mathbf{F}_{ef\!fects,p}$ | Each upstream energy product (rows) becomes embodied somewhere. |
+|                            | On a fractional basis, where does that upstream energy become   |
+|                            | embodied (columns)? Rows sums to 1.                             |
++----------------------------+-----------------------------------------------------------------+
+| $\mathbf{F}_{footprint,s}$ | Each final demand sector (columns) consumes embodied energy. On |
+|                            | a fractional basis, where does the consumed embodied energy     |
+|                            | come from (rows)? Columns sum to 1.                             |
++----------------------------+-----------------------------------------------------------------+
+| $\mathbf{F}_{ef\!fects,s}$ | Each embodied upstream energy product (rows) is consumed by a   |
+|                            | final demand sector. On a fractional basis, where is that       |
+|                            | embodied upstream energy consumed (columns)? Rows sums to 1.    |
++----------------------------+-----------------------------------------------------------------+
 
-Finally, embodied energy efficiencies can be calculated as final demand energy divided by embodied energy. 
-Again, efficiencies can be calculated for each final demand product or each final demand sector.
-The `calc_embodied_etas()` function does this computation.
+Finally, embodied energy efficiencies can be calculated as final demand
+energy divided by embodied energy. Again, efficiencies can be calculated
+for each final demand product or each final demand sector. The
+`calc_embodied_etas()` function does this computation.
 
-| Matrix | Description |
-|---:|:---------------------------------------------------|
-| $\eta_p$ | Final demand product (rows) divided by embodied energy of that final demand product |
-| $\eta_s$ | Energy consumed by final demand sector (rows) divided by embodied energy input to the final demand sector  |
++----------+-----------------------------------------------------------------+
+| Matrix   | Description                                                     |
++=========:+:================================================================+
+| $\eta_p$ | Final demand product (rows) divided by embodied energy of that  |
+|          | final demand product                                            |
++----------+-----------------------------------------------------------------+
+| $\eta_s$ | Energy consumed by final demand sector (rows) divided by        |
+|          | embodied energy input to the final demand sector                |
++----------+-----------------------------------------------------------------+
+
 <!-- These don't work at this time. -->
+
 <!-- | $\colvec{\bm{\upeta}}_p$ | Final demand product (rows) divided by embodied energy of that final demand product | -->
+
 <!-- | $\colvec{\bm{\upeta}}_s$ | Energy consumed by final demand sector (rows) divided by embodied energy input to the final demand sector  | -->
 
 ```{r}
@@ -405,23 +469,22 @@ embodied_mats <- IO_df %>%
 names(embodied_mats)
 ```
 
-Figure 15 in [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109)
-shows primary-to-services energetic efficiencies for the ECC in the 3rd row of `IO_df`.
-The following code extracts those results. 
-Rows of the vector give final demand services and their units.
-The column gives efficiencies in units of service per ktoe of energy.
+Figure 15 in [Heun et al.
+[-\@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109) shows
+primary-to-services energetic efficiencies for the ECC in the 3rd row of
+`IO_df`. The following code extracts those results. Rows of the vector
+give final demand services and their units. The column gives
+efficiencies in units of service per ktoe of energy.
 
 ```{r}
 embodied_mats$eta_p[[3]]
 ```
 
-
 ## Conclusion
 
-This vignette demonstrated the use of the `Recca` package. 
-`Recca` provides many useful functions for analyzing energy conversion chains
-within the PSUT framework first described in 
-[Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
-
+This vignette demonstrated the use of the `Recca` package. `Recca`
+provides many useful functions for analyzing energy conversion chains
+within the PSUT framework first described in [Heun et al.
+[-\@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
 
 ## References

@@ -18,24 +18,20 @@ calc_E(
 \item{.iomats}{a data frame containing matrices that describe the Input-Output structure of an Energy Conversion Chain.
 \code{.iomats} will likely have been obtained from the \code{\link{calc_io_mats}} function.}
 
-\item{R}{The name of the \code{R} matrix column.
-Default is "R".}
+\item{R}{A resources (\strong{R}) matrix or name of column in \code{.iomats} containing same. Default is "R".}
 
-\item{V}{The name of the \code{V} matrix column.
-Default is "V".}
+\item{V}{A make (\strong{V}) matrix or name of column in \code{.iomats} containing same. Default is "V".}
 
-\item{U_feed}{The name of the \code{U_feed} matrix column.
-Default is "U_feed".}
+\item{U_feed}{A feedstock use (\strong{U_feed}) matrix or name of column in \code{.iomats} containing same. Default is "U_feed".}
 
-\item{g}{The name of the \code{g} vector in \code{.iomats}. Default is "g".}
+\item{g}{A \strong{g} vector or name of column in \code{.iomats} containing same. Default is "g".}
 
-\item{r}{The name of the \code{r} vector in the \code{iomats}. Default is "r".}
+\item{r}{An \strong{r} vector or name of column in \code{.iomats} containing same. Default is "r".}
 
-\item{E}{the name for the \code{E} matrix on output. Default is "E".
-\code{E} is calculated by \code{W * g_hat_inv}.}
+\item{E}{The name for the \strong{E} matrix on output. \strong{E} is calculated by \code{W \%*\% g_hat_inv}. Default is "E".}
 }
 \value{
-list or data frame containing \code{E} matrices
+A list or data frame containing \code{E} matrices.
 }
 \description{
 Calculate the \code{E} matrix for embodied energy calculations
