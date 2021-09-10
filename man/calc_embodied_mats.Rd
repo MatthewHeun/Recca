@@ -50,23 +50,23 @@ of an Energy Conversion Chain.
 
 \item{Y}{A final demand (\strong{Y}) matrix or name of the column in \code{.iomats} containing same. Default is "Y".}
 
-\item{G}{The name of the \strong{G} matrix on output. \strong{G} is calculated by \code{L_ixp * y_hat}. Default is "G".}
+\item{G}{The name of the \strong{G} matrix on output. \strong{G} is calculated by \code{L_ixp \%*\% y_hat}. Default is "G".}
 
-\item{H}{The name of the \strong{H} matrix on output. \strong{H} is calculated by \code{L_ixp * Y}. Default is "H".}
+\item{H}{The name of the \strong{H} matrix on output. \strong{H} is calculated by \code{L_ixp \%*\% Y}. Default is "H".}
 
-\item{E}{The name of the \strong{E} matrix on output. \strong{E} is calculated by \code{W * g_hat_inv}. Default is "E".}
+\item{E}{The name of the \strong{E} matrix on output. \strong{E} is calculated by \code{W \%*\% g_hat_inv}. Default is "E".}
 
 \item{M_p}{The name of the \strong{M_p} matrix on output. \strong{M_p} is formed from column sums of positive entries in the various \strong{Q}_x matrices. Default is "M_p".}
 
-\item{M_s}{The name of the \strong{M_s} matrix on output. \strong{M_s} is calculated by \code{M_p * q_hat_inv * Y}. Default is "M_s".}
+\item{M_s}{The name of the \strong{M_s} matrix on output. \strong{M_s} is calculated by \code{M_p \%*\% q_hat_inv \%*\% Y}. Default is "M_s".}
 
-\item{F_footprint_p}{The name of the \strong{F_footprint_p} matrix on output. \strong{F_footprint_p} is calculated by \verb{M_p * (M_p^T * i)_hat_inv}. Default is "F_footprint_p".}
+\item{F_footprint_p}{The name of the \strong{F_footprint_p} matrix on output. \strong{F_footprint_p} is calculated by \verb{M_p \%*\% (M_p^T \%*\% i)_hat_inv}. Default is "F_footprint_p".}
 
-\item{F_effects_p}{The name of the \strong{F_effects_p} matrix on output. \strong{F_effects_p} is calculated by \verb{(M_p * i)_hat_inv * M_p}. Default is "F_effects_p".}
+\item{F_effects_p}{The name of the \strong{F_effects_p} matrix on output. \strong{F_effects_p} is calculated by \verb{(M_p \%*\% i)_hat_inv \%*\% M_p}. Default is "F_effects_p".}
 
-\item{F_footprint_s}{The name of the \strong{F_footprint_s} matrix on output. \strong{F_footprint_s} is calculated by \verb{M_s * (M_s^T *i)_hat_inv}. Default is "F_footprint_s".}
+\item{F_footprint_s}{The name of the \strong{F_footprint_s} matrix on output. \strong{F_footprint_s} is calculated by \verb{M_s \%*\% (M_s^T \%*\% i)_hat_inv}. Default is "F_footprint_s".}
 
-\item{F_effects_s}{The name of the \strong{F_effects_s} matrix on output. \strong{F_effects_s} is calculated by \verb{(M_s * i)_hat_inv * M_s}. Default is "F_effects_s".}
+\item{F_effects_s}{The name of the \strong{F_effects_s} matrix on output. \strong{F_effects_s} is calculated by \verb{(M_s \%*\% i)_hat_inv \%*\% M_s}. Default is "F_effects_s".}
 }
 \value{
 A list or data frame containing embodied energy matrices.

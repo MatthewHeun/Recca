@@ -27,7 +27,7 @@ See the examples.}
 
 \item{Y}{A final demand matrix (\strong{Y}) or name of column in \code{.iomats} containing same. Default is "Y".}
 
-\item{y}{A \strong{y} vecrtor or name of column in \code{.iomats} containing same. Default is "y".}
+\item{y}{A \strong{y} vector or name of column in \code{.iomats} containing same. Default is "y".}
 
 \item{L_ixp}{An \strong{L_ixp} matrix or name of column in \code{.iomats} containing same. Default is "L_ixp".}
 

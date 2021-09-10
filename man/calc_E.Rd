@@ -28,7 +28,7 @@ calc_E(
 
 \item{r}{An \strong{r} vector or name of column in \code{.iomats} containing same. Default is "r".}
 
-\item{E}{The name for the \strong{E} matrix on output. \strong{E} is calculated by \code{W * g_hat_inv}. Default is "E".}
+\item{E}{The name for the \strong{E} matrix on output. \strong{E} is calculated by \code{W \%*\% g_hat_inv}. Default is "E".}
 }
 \value{
 A list or data frame containing \code{E} matrices.
