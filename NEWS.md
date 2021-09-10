@@ -1,6 +1,13 @@
 
+# Recca 0.1.36 (2021-09-10)
+
 * Get started file updated. Some matrices definitions (G, H, E)
   needed to be updated.
+* Removed redundant IO matrices (C_feed, D_feed, and O_feed).
+* Tests
+    * 512 tests
+    * Test coverage remains at 100 %
+
 
 # Recca 0.1.35 (2021-08-20)
 

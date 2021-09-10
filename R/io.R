@@ -76,7 +76,7 @@ calc_io_mats <- function(.sutdata = NULL,
                          # Output names
                          y = "y", q = "q", f = "f", g = "g", h = "h", r = "r", W = "W", K = "K",
                          Z = "Z", C = "C", D = "D", A = "A", L_ixp = "L_ixp", L_pxp = "L_pxp", O = "O",
-                         Z_feed = "Z_feed", K_feed = "K_feed", C_feed = "C_feed", D_feed = "D_feed", O_feed = "O_feed", A_feed = "A_feed", L_ixp_feed = "L_ixp_feed", L_pxp_feed = "L_pxp_feed"){
+                         Z_feed = "Z_feed", K_feed = "K_feed", A_feed = "A_feed", L_ixp_feed = "L_ixp_feed", L_pxp_feed = "L_pxp_feed"){
 
   method_q_calculation <- match.arg(method_q_calculation)
 

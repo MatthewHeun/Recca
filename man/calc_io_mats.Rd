@@ -30,9 +30,6 @@ calc_io_mats(
   O = "O",
   Z_feed = "Z_feed",
   K_feed = "K_feed",
-  C_feed = "C_feed",
-  D_feed = "D_feed",
-  O_feed = "O_feed",
   A_feed = "A_feed",
   L_ixp_feed = "L_ixp_feed",
   L_pxp_feed = "L_pxp_feed"
