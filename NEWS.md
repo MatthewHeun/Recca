@@ -1,3 +1,8 @@
+---
+title: "Release notes for `Recca`"
+output: html_document
+---
+
 
 # Recca 0.1.36 (2021-09-10) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5226086.svg)](https://doi.org/10.5281/zenodo.5500310)
 
