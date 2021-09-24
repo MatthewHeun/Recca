@@ -58,7 +58,7 @@
 #' @param L_pxp_feed name for `L_pxp_feed` matrix on output. Default is "L_pxp_feed".
 #'        `L_pxp_feed` is calculated by `(I - Z_feed*D)^-1`.
 #'
-#' @return a list or data frame containing input-output matrices
+#' @return A list or data frame containing input-output matrices.
 #'
 #' @export
 #'
@@ -165,7 +165,7 @@ calc_io_mats <- function(.sutdata = NULL,
 #'
 #' @export
 #'
-#' @return a list or data frame containing \code{y}, \code{q},
+#' @return A list or data frame containing \code{y}, \code{q},
 #'          \code{f}, \code{g}, and \code{W}.
 calc_yqfgW <- function(.sutdata = NULL,
                        method_q_calculation = c("sum_U_Y_rows", "sum_R_V_cols"),
@@ -252,8 +252,8 @@ calc_yqfgW <- function(.sutdata = NULL,
 #' @param O The name for `O` matrix on output. Default is "O".
 #'        `O` is calculated by `r_hat_inv * R`.
 #'
-#' @return a list or data frame containing `Z`,
-#' `K`, `C`, `D`, and `A` matrices
+#' @return A list or data frame containing `Z`,
+#'         `K`, `C`, `D`, and `A` matrices.
 #'
 #' @export
 calc_A <- function(.sutdata = NULL,
@@ -326,7 +326,7 @@ calc_A <- function(.sutdata = NULL,
 #' @param L_pxp name for `L_pxp` matrix on output. Default is "L_pxp".
 #'        `L_pxp` is calculated by `(I - Z*D)^-1`.
 #'
-#' @return a list or data frame containing `L_pxp` and `L_ixp` matrices
+#' @return A list or data frame containing `L_pxp` and `L_ixp` matrices.
 #'
 #' @export
 calc_L <- function(.sutdata = NULL,
