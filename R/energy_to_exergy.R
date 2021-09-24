@@ -13,20 +13,30 @@
 #' given the string names of columns in the `.sutmats` data frame).
 #'
 #'
-#' @param .sutmats An optional data frame of energy conversino chain matrices.
+#' @param .sutmats An optional data frame of energy conversion chain matrices.
 #' @param clean_up_df When `.sutmats` is a data frame, tells whether to `tidyr::pivot_longer()` the result,
 #'                    remove no-longer-needed input column `phi`, and
 #'                    fill the `energy_type` column with "X" for the exergy versions of the ECC matrices.
 #'                    Default is `TRUE`.
-#' @param R,U,U_feed,U_eiou,r_eiou,V,Y,phi Names of columns in `.sutmats` or single matriecs. See `Recca::psut_cols`.
-#' @param .exergy_suffix The string suffix to be appended to exergy versions of columns.
-#' @param R_name,U_name,U_feed_name,U_eiou_name,r_eiou_name,V_name,Y_name Names of output matrices
+#' @param R,U,U_feed,U_eiou,r_eiou,V,Y,phi Names of columns in `.sutmats` or single matrices. See `Recca::psut_cols`.
+#' @param .exergy_suffix The string suffix to be appended to exergy versions of ECC matrices.
+#' @param R_name,U_name,U_feed_name,U_eiou_name,r_eiou_name,V_name,Y_name,phi_name,energy_type,s_units Names of output matrices
+#' @param energy,exergy See `Recca::energy_types`.
 #'
 #' @return A data frame or list of matrices that represent the exergy version of the ECC.
 #'
 #' @export
 #'
 #' @examples
+#' sutmats <- UKEnergy2000mats %>%
+#'   # Put in wide-by-matrix format.
+#'   tidyr::spread(key = matrix.name, value = matrix) %>%
+#'   # Eliminate services ECCs.
+#'   dplyr::filter(Last.stage %in% c("Final", "Useful")) %>%
+#'   dplyr::mutate(
+#'     phi = matsbyname::make_list(Recca::phi_vec, n = nrow(.), lenx = 1)
+#'   )
+#' extend_to_exergy(sutmats)
 extend_to_exergy <- function(.sutmats = NULL,
                              clean_up_df = TRUE,
                              # Input matrices
@@ -48,10 +58,10 @@ extend_to_exergy <- function(.sutmats = NULL,
                              V_name = Recca::psut_cols$V,
                              Y_name = Recca::psut_cols$Y,
                              phi_name = Recca::psut_cols$phi,
-                             energy_type = IEATools::iea_cols$energy_type,
+                             energy_type = Recca::psut_cols$energy_type,
+                             s_units = Recca::psut_cols$s_units,
                              energy = Recca::energy_types$e,
-                             exergy = Recca::energy_types$x,
-                             s_units = Recca::psut_cols$s_units) {
+                             exergy = Recca::energy_types$x) {
 
   # Exergy names
   R_X_name <- paste0(R_name, .exergy_suffix)

@@ -24,25 +24,27 @@ extend_to_exergy(
   V_name = Recca::psut_cols$V,
   Y_name = Recca::psut_cols$Y,
   phi_name = Recca::psut_cols$phi,
-  energy_type = IEATools::iea_cols$energy_type,
+  energy_type = Recca::psut_cols$energy_type,
+  s_units = Recca::psut_cols$s_units,
   energy = Recca::energy_types$e,
-  exergy = Recca::energy_types$x,
-  s_units = Recca::psut_cols$s_units
+  exergy = Recca::energy_types$x
 )
 }
 \arguments{
-\item{.sutmats}{An optional data frame of energy conversino chain matrices.}
+\item{.sutmats}{An optional data frame of energy conversion chain matrices.}
 
 \item{clean_up_df}{When \code{.sutmats} is a data frame, tells whether to \code{tidyr::pivot_longer()} the result,
 remove no-longer-needed input column \code{phi}, and
 fill the \code{energy_type} column with "X" for the exergy versions of the ECC matrices.
 Default is \code{TRUE}.}
 
-\item{R, U, U_feed, U_eiou, r_eiou, V, Y, phi}{Names of columns in \code{.sutmats} or single matriecs. See \code{Recca::psut_cols}.}
+\item{R, U, U_feed, U_eiou, r_eiou, V, Y, phi}{Names of columns in \code{.sutmats} or single matrices. See \code{Recca::psut_cols}.}
 
-\item{.exergy_suffix}{The string suffix to be appended to exergy versions of columns.}
+\item{.exergy_suffix}{The string suffix to be appended to exergy versions of ECC matrices.}
 
-\item{R_name, U_name, U_feed_name, U_eiou_name, r_eiou_name, V_name, Y_name}{Names of output matrices}
+\item{R_name, U_name, U_feed_name, U_eiou_name, r_eiou_name, V_name, Y_name, phi_name, energy_type, s_units}{Names of output matrices}
+
+\item{energy, exergy}{See \code{Recca::energy_types}.}
 }
 \value{
 A data frame or list of matrices that represent the exergy version of the ECC.
@@ -60,4 +62,15 @@ as individual matrices
 or in a data frame
 (in which case the arguments should
 given the string names of columns in the \code{.sutmats} data frame).
+}
+\examples{
+sutmats <- UKEnergy2000mats \%>\%
+  # Put in wide-by-matrix format.
+  tidyr::spread(key = matrix.name, value = matrix) \%>\%
+  # Eliminate services ECCs.
+  dplyr::filter(Last.stage \%in\% c("Final", "Useful")) \%>\%
+  dplyr::mutate(
+    phi = matsbyname::make_list(Recca::phi_vec, n = nrow(.), lenx = 1)
+  )
+extend_to_exergy(sutmats)
 }

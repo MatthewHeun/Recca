@@ -116,7 +116,7 @@ In the case of a balanced ECC, the method does not matter.}
 \code{L_pxp_feed} is calculated by \code{(I - Z_feed*D)^-1}.}
 }
 \value{
-a list or data frame containing input-output matrices
+A list or data frame containing input-output matrices.
 }
 \description{
 Calculate several input-output matrices

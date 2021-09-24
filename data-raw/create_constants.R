@@ -24,7 +24,8 @@ psut_cols <- list(resources = "R",
                   phi = "phi",
                   s_units = "S_units",
                   matvals = "matvals",
-                  sector = "Sector")
+                  sector = "Sector",
+                  energy_type = "Energy.type")
 usethis::use_data(psut_cols, overwrite = TRUE)
 
 

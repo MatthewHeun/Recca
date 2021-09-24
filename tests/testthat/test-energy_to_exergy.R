@@ -4,8 +4,6 @@ test_that("extend_to_exergy() works as expected", {
   # Use the UKEnergy2000mats data frame for the tests.
   # Get the list of final energy carriers from the matrices in UKEnergy2000mats.
 
-
-
   sutmats <- UKEnergy2000mats %>%
     # Put in wide-by-matrix format.
     tidyr::spread(key = matrix.name, value = matrix) %>%

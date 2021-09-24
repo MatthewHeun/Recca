@@ -4,6 +4,14 @@ output: html_document
 ---
 
 
+* New function `extend_to_exergy()` that calculates
+  an exergy representation of an energy conversion chain given
+  an energy representation of an energy conversion chain.
+* Many new tests for new features.
+    * Now up to 523 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
 # Recca 0.1.36 (2021-09-10) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5226086.svg)](https://doi.org/10.5281/zenodo.5500310)
 
 * Get started file updated. Some matrices definitions (G, H, E)
@@ -28,7 +36,7 @@ output: html_document
 
 * Fix lingering problems in R-CMD-check after the move to GitHub Actions
   for continuous integration testing. 
-* New new tests.
+* No new tests.
     * Still at 435 tests, all passing.
     * Test coverage remains at 100 %.
 
@@ -36,7 +44,7 @@ output: html_document
 # Recca 0.1.33 (2021-04-11)
 
 * Move from Travis to GitHub Actions for continuous integration testing.
-* New new tests.
+* No new tests.
     * Still at 435 tests, all passing.
     * Test coverage remains at 100 %.
 
