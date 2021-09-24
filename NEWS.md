@@ -12,7 +12,7 @@ output: html_document
     * Test coverage remains at 100 %.
 
 
-# Recca 0.1.36 (2021-09-10) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5226086.svg)](https://doi.org/10.5281/zenodo.5500310)
+# Recca 0.1.36 (2021-09-10)  [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5226086.svg)](https://doi.org/10.5281/zenodo.5500310)
 
 * Get started file updated. Some matrices definitions (G, H, E)
   needed to be updated.
@@ -22,7 +22,7 @@ output: html_document
     * Test coverage remains at 100 %
 
 
-# Recca 0.1.35 (2021-08-20) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5226086.svg)](https://doi.org/10.5281/zenodo.5226086)
+# Recca 0.1.35 (2021-08-20)  [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5226086.svg)](https://doi.org/10.5281/zenodo.5226086)
 
 * R matrix formulation now adopted for input output calculations,
   for upstream and downstream swims, as well as for embodied
