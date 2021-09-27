@@ -12,7 +12,6 @@
 #' (in which case the arguments should
 #' given the string names of columns in the `.sutmats` data frame).
 #'
-#'
 #' @param .sutmats An optional data frame of energy conversion chain matrices.
 #' @param clean_up_df When `.sutmats` is a data frame, tells whether to `tidyr::pivot_longer()` the result,
 #'                    remove no-longer-needed input column `phi`, and
