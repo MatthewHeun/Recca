@@ -109,23 +109,23 @@ extend_to_exergy <- function(.sutmats = NULL,
     R_X_mat <- matsbyname::matrixproduct_byname(R_mat, phi_vec %>%
                                                   matsbyname::transpose_byname() %>%
                                                   matsbyname::trim_rows_cols(mat = R_mat, margin = 2) %>%
-                                                  matsbyname::hatize_byname())
+                                                  matsbyname::hatize_byname(keep = "colnames"))
     # U_X = phi_hat * U_E
     U_X_mat <- matsbyname::matrixproduct_byname(phi_vec %>%
                                                   matsbyname::trim_rows_cols(mat = U_mat, margin = 1) %>%
-                                                  matsbyname::hatize_byname(),
+                                                  matsbyname::hatize_byname(keep = "rownames"),
                                                 U_mat)
 
     # U_feed_X = phi_hat * U_feed_E
     U_feed_X_mat <- matsbyname::matrixproduct_byname(phi_vec %>%
                                                        matsbyname::trim_rows_cols(mat = U_feed_mat, margin = 1) %>%
-                                                       matsbyname::hatize_byname(),
+                                                       matsbyname::hatize_byname(keep = "rownames"),
                                                      U_feed_mat)
 
     # U_eiou_X = phi_hat * U_eiou_E
     U_eiou_X_mat <- matsbyname::matrixproduct_byname(phi_vec %>%
                                                        matsbyname::trim_rows_cols(mat = U_eiou_mat, margin = 1) %>%
-                                                       matsbyname::hatize_byname(),
+                                                       matsbyname::hatize_byname(keep = "rownames"),
                                                      U_eiou_mat)
 
 
@@ -133,13 +133,13 @@ extend_to_exergy <- function(.sutmats = NULL,
     V_X_mat <- matsbyname::matrixproduct_byname(V_mat, phi_vec %>%
                                                   matsbyname::transpose_byname() %>%
                                                   matsbyname::trim_rows_cols(mat = V_mat, margin = 2) %>%
-                                                  matsbyname::hatize_byname())
+                                                  matsbyname::hatize_byname(keep = "colnames"))
 
 
     # Y_X = phi_hat * Y_E
     Y_X_mat <- matsbyname::matrixproduct_byname(phi_vec %>%
                                                   matsbyname::trim_rows_cols(mat = Y_mat, margin = 1) %>%
-                                                  matsbyname::hatize_byname(),
+                                                  matsbyname::hatize_byname(keep = "rownames"),
                                                 Y_mat)
 
     # r_eiou_X = U_eiou_X / U_eiou_X
