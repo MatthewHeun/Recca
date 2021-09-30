@@ -26,7 +26,9 @@ test_that("extend_to_exergy() works as expected", {
   energy_val <- res[[Recca::psut_cols$R]][[1]]["Resources - NG", "NG"]
   exergy_val <- res[[Recca::psut_cols$R]][[3]]["Resources - NG", "NG"]
   phi <- Recca::phi_vec["NG", ]
-  expect_equal(energy_val*phi, exergy_val)
+
+  expect_true((res[[Recca::psut_cols$R]] %>% matsbyname::rowtype() == "Industry") %>% all())
+  expect_true((res[[Recca::psut_cols$R]] %>% matsbyname::coltype() == "Product") %>% all())
 
   # U matrix
   energy_val <- res[[Recca::psut_cols$U]][[1]]["Diesel - Dist.", "NG dist."]
@@ -44,6 +46,9 @@ test_that("extend_to_exergy() works as expected", {
   phi <- Recca::phi_vec["Diesel - Dist.", ]
   expect_equal(energy_val*phi, exergy_val)
 
+  expect_true((res[[Recca::psut_cols$U]] %>% matsbyname::rowtype() == "Product") %>% all())
+  expect_true((res[[Recca::psut_cols$U]] %>% matsbyname::coltype() == "Industry") %>% all())
+
   # V matrix
   energy_val <- res[[Recca::psut_cols$V]][[1]]["Power plants", "Elect"]
   exergy_val <- res[[Recca::psut_cols$V]][[3]]["Power plants", "Elect"]
@@ -55,6 +60,8 @@ test_that("extend_to_exergy() works as expected", {
   phi <- Recca::phi_vec["LTH", ]
   expect_equal(energy_val*phi, exergy_val)
 
+  expect_true((res[[Recca::psut_cols$V]] %>% matsbyname::rowtype() == "Industry") %>% all())
+  expect_true((res[[Recca::psut_cols$V]] %>% matsbyname::coltype() == "Product") %>% all())
 
   # Y matrix
   energy_val <- res[[Recca::psut_cols$Y]][[2]]["Light", "Residential"]
@@ -67,6 +74,8 @@ test_that("extend_to_exergy() works as expected", {
   phi <- Recca::phi_vec["LTH", ]
   expect_equal(energy_val*phi, exergy_val)
 
+  expect_true((res[[Recca::psut_cols$Y]] %>% matsbyname::rowtype() == "Product") %>% all())
+  expect_true((res[[Recca::psut_cols$Y]] %>% matsbyname::coltype() == "Industry") %>% all())
 
   # Try an erroneous case, when the Energy.type column has something other than E
   sutmats %>%
