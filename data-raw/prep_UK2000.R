@@ -27,6 +27,7 @@ UKEnergy2000tidy <- openxlsx::read.xlsx(system.file("extdata", "UKEnergy2000raw"
   )
 usethis::use_data(UKEnergy2000tidy, overwrite = TRUE)
 
+
 # Create S_units matrices from the UKEnergy2000tidy data frame
 S_units <- UKEnergy2000tidy %>%
   dplyr::group_by(Country, Year, Energy.type, Last.stage) %>%
@@ -66,3 +67,40 @@ UKEnergy2000mats <- UKEnergy2000tidy %>%
   tidyr::gather(key = matrix.name, value = matrix, R, U, U_EIOU, U_feed, V, Y, r_EIOU, S_units)
 
 usethis::use_data(UKEnergy2000mats, overwrite = TRUE)
+
+
+# Create a phi vector for later use in testing.
+phi_vec <- tibble::tribble(~rownames, ~matvals,
+                           "Crude", 1.06,
+                           "Crude - Dist.", 1.06,
+                           "Crude - Fields", 1.06,
+                           "Diesel", 1.06,
+                           "Diesel - Dist.", 1.06,
+                           "Petrol", 1.06,
+                           "Petrol - Dist.", 1.06,
+                           "NG", 1.04,
+                           "NG - Dist.", 1.04,
+                           "NG - Wells", 1.04,
+                           "Elect", 1.0,
+                           "Elect - Grid", 1.0,
+                           "MD - Truck engines", 1.0,
+                           "MD - Car engines", 1.0,
+                           "Light", 0.956,
+                           # Same as LTH.20.C
+                           "LTH", 0.05117) %>%
+  dplyr::mutate(
+    matnames = "phi",
+    colnames = "phi",
+    rowtypes = "Product",
+    coltypes = "phi"
+  ) %>%
+  matsindf::collapse_to_matrices() %>%
+  magrittr::extract2("matvals") %>%
+  magrittr::extract2(1)
+
+usethis::use_data(phi_vec, overwrite = TRUE)
+
+
+
+
+

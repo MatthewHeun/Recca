@@ -59,8 +59,8 @@ If all of \code{R} is added to \code{V}, this argument can be left unspecified.}
 \code{O} is calculated by \code{r_hat_inv * R}.}
 }
 \value{
-a list or data frame containing \code{Z},
-\code{K}, \code{C}, \code{D}, and \code{A} matrices
+A list or data frame containing \code{Z},
+\code{K}, \code{C}, \code{D}, and \code{A} matrices.
 }
 \description{
 Calculate \code{Z}, \code{D}, \code{C}, and \code{A} matrices

@@ -20,7 +20,7 @@ calc_L(.sutdata = NULL, D = "D", A = "A", L_pxp = "L_pxp", L_ixp = "L_ixp")
 \code{L_ixp} is calculated by \code{D * L_pxp}.}
 }
 \value{
-a list or data frame containing \code{L_pxp} and \code{L_ixp} matrices
+A list or data frame containing \code{L_pxp} and \code{L_ixp} matrices.
 }
 \description{
 Calculates total requirements matrices (\code{L_pxp} and \code{L_ixp})
