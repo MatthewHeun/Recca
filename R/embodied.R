@@ -425,8 +425,7 @@ calc_embodied_EIOU <- function(.iomats = NULL,
                                # Output names
                                #G = "G", H = "H", G_feed = "G_feed", H_feed = "H_feed",
                                Q_EIOU_s = "Q_EIOU_s", Q_EIOU_p = "Q_EIOU_p",
-                               Q_EIOU_feed_s = "Q_EIOU_feed_s", Q_EIOU_feed_p = "Q_EIOU_feed_p"
-                               ){
+                               Q_EIOU_feed_s = "Q_EIOU_feed_s", Q_EIOU_feed_p = "Q_EIOU_feed_p"){
 
   embodied_EIOU_func <- function(e_EIOU_vec, y_vec, Y_mat, L_ixp_mat, L_ixp_feed_mat){
 

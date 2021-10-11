@@ -444,7 +444,7 @@ table describes these matrices.
 +--------------------------------------------+-----------------------------------------------------------------+
 | $\mathbf{F}_{ef\!fects,p} =                | Each upstream energy product (rows) becomes embodied somewhere. |
 | (\widehat{\mathbf{M}_p} \mathbf{i})^{-1}   | On a fractional basis, where does that upstream energy become   |
-| \mathbf{M}_p$                              | embodied (columns)? Rows sums to 1.                             |
+| \mathbf{M}_p$                              | embodied (columns)? Rows sum to 1.                             |
 +--------------------------------------------+-----------------------------------------------------------------+
 | $\mathbf{F}_{footprint,s} =                | Each final demand sector (columns) consumes embodied energy. On |
 | \mathbf{M}_s                               | a fractional basis, where does the consumed embodied energy     |
@@ -452,7 +452,7 @@ table describes these matrices.
 +--------------------------------------------+-----------------------------------------------------------------+
 | $\mathbf{F}_{ef\!fects,s} =                | Each embodied upstream energy product (rows) is consumed by a   |
 | (\widehat{\mathbf{M}_s} \mathbf{i})^{-1}   | final demand sector. On a fractional basis, where is that       |
-| \mathbf{M}_s$                              | embodied upstream energy consumed (columns)? Rows sums to 1.    |
+| \mathbf{M}_s$                              | embodied upstream energy consumed (columns)? Rows sum to 1.    |
 +--------------------------------------------+-----------------------------------------------------------------+
 
 Finally, embodied energy efficiencies can be calculated as final demand
@@ -460,21 +460,16 @@ energy divided by embodied energy. Again, efficiencies can be calculated
 for each final demand product or each final demand sector. The
 `calc_embodied_etas()` function does this computation.
 
-+----------+-----------------------------------------------------------------+
-| Matrix   | Description                                                     |
-+=========:+:================================================================+
-| $\eta_p$ | Final demand product (rows) divided by embodied energy of that  |
-|          | final demand product                                            |
-+----------+-----------------------------------------------------------------+
-| $\eta_s$ | Energy consumed by final demand sector (rows) divided by        |
-|          | embodied energy input to the final demand sector                |
-+----------+-----------------------------------------------------------------+
++-----------------------------------------------------+-----------------------------------------------------------------+
+| Matrix                                              | Description                                                     |
++====================================================:+:================================================================+
+| $\eta_p = (\mathbf{Yi}) /                           | Final demand product (rows) divided by embodied primary         |
+| (\mathbf{iG}_{primary})^{\mathrm{T}}$               | energy of that final demand product                             |
++-----------------------------------------------------+-----------------------------------------------------------------+
+| $\eta_s = [\mathbf{iY} /                            | Energy consumed by final demand sector (rows) divided by        |
+| (\mathbf{iH}_{primary})^{\mathrm{T}}]^{\mathrm{T}}$ | embodied energy input to the final demand sector                |
++-----------------------------------------------------+-----------------------------------------------------------------+
 
-<!-- These don't work at this time. -->
-
-<!-- | $\colvec{\bm{\upeta}}_p$ | Final demand product (rows) divided by embodied energy of that final demand product | -->
-
-<!-- | $\colvec{\bm{\upeta}}_s$ | Energy consumed by final demand sector (rows) divided by embodied energy input to the final demand sector  | -->
 
 ```{r}
 primary_machine_names <- c("Resources - Crude", "Resources - NG")
