@@ -377,7 +377,7 @@ calc_embodied_etas <- function(.embodiedmats = NULL,
 #' Note: All matrix multiplication (`%*%`) is performed "by name" using
 #' `matsbyname::matrixproduct_byname()`.
 #'
-#'Output columns include:
+#' Output columns include:
 #' * `Q_EIOU_s`: matrix of embodied EIOU by final demand sectors, including both energy use for feedstock and EIOU production.
 #'   `Q_EIOU_s` is calculated by `e_EIOU_hat %*% L_ixp %*% Y`.
 #' * `Q_EIOU_p`: matrix of embodied EIOU by final demand products, including both energy use for feedstock and EIOU production.
