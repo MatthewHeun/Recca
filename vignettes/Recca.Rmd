@@ -368,12 +368,7 @@ Outputs from `calc_embodied_mats()` include the following matrices:
 | Matrix                               | Description (rows$\times$columns)                               |
 +=====================================:+:================================================================+
 | $\mathbf{G} =                        | Industry and resource stocks output requirements for final      |
-| \mathbf{G}_V + \mathbf{G}_R$         | demand ($(r + i) \times p$)                                     |
-+--------------------------------------+-----------------------------------------------------------------+
-| $\mathbf{G}_V =                      | Industry output requirements for final demand ($i \times p$)    |
-| \underset{\mathrm{i} \times          |                                                                 |
-| \mathrm{p}}{\mathbf{L}}              |                                                                 |
-| \widehat{\mathbf{y}}$                |                                                                 |
+| \mathbf{G}_R + \mathbf{G}_V$         | demand ($(r + i) \times p$)                                     |
 +--------------------------------------+-----------------------------------------------------------------+
 | $\mathbf{G}_R =                      | Resource stocks output requirements for final demand            |
 | \mathbf{R}                           | ($r \times p$)                                                  |
@@ -381,12 +376,13 @@ Outputs from `calc_embodied_mats()` include the following matrices:
 | \underset{\mathrm{p} \times          |                                                                 |
 | \mathrm{p}}{\mathbf{L}}\mathbf{Y}$   |                                                                 |
 +--------------------------------------+-----------------------------------------------------------------+
-| $\mathbf{H} =                        | Industry and resource stocks output requirements for final      |
-| \mathbf{H}_V + \mathbf{H}_R$         | demand sectors ($(r + i) \times s$)                             |
+| $\mathbf{G}_V =                      | Industry output requirements for final demand ($i \times p$)    |
+| \underset{\mathrm{i} \times          |                                                                 |
+| \mathrm{p}}{\mathbf{L}}              |                                                                 |
+| \widehat{\mathbf{y}}$                |                                                                 |
 +--------------------------------------+-----------------------------------------------------------------+
-| $\mathbf{H}_V =                      | Industry output requirements for final demand sectors           |
-| \underset{\mathrm{i} \times          | ($i \times s$)                                                  |
-| \mathrm{p}}{\mathbf{L}}\mathbf{Y}$   |                                                                 |
+| $\mathbf{H} =                        | Industry and resource stocks output requirements for final      |
+| \mathbf{H}_R + \mathbf{H}_V$         | demand sectors ($(r + i) \times s$)                             |
 +--------------------------------------+-----------------------------------------------------------------+
 | $\mathbf{H}_R =                      | Resource stocks output requirements for final demand sectors    |
 | \mathbf{R}                           | ($r \times s$)                                                  |
@@ -394,47 +390,70 @@ Outputs from `calc_embodied_mats()` include the following matrices:
 | \underset{\mathrm{p} \times          |                                                                 |
 | \mathrm{p}}{\mathbf{L}}\mathbf{Y}$   |                                                                 |
 +--------------------------------------+-----------------------------------------------------------------+
+| $\mathbf{H}_V =                      | Industry output requirements for final demand sectors           |
+| \underset{\mathrm{i} \times          | ($i \times s$)                                                  |
+| \mathrm{p}}{\mathbf{L}}\mathbf{Y}$   |                                                                 |
++--------------------------------------+-----------------------------------------------------------------+
 | $\mathbf{E} =                        | Energy or services produced ($+$) or consumed ($-$) per unit    |
 | [ (\mathbf{R} +                      | output by industries (in columns) ($p \times i$)                |
 | \mathbf{V})^\mathrm{T} -             |                                                                 |
 | \mathbf{U}_{feed} ]                  |                                                                 |
-| \widehat{(\mathbf{g} +               |                                                                 |
-| \mathbf{r})}^{-1}$                   |                                                                 |
+| \widehat{(\mathbf{r} +               |                                                                 |
+| \mathbf{g})}^{-1}$                   |                                                                 |
 +--------------------------------------+-----------------------------------------------------------------+
-| $\mathbf{M}_p$                       | Shows embodied energy products in each embodying energy product |
+| $\mathbf{r} =                        | Row sums of $\mathbf{R}$ matrix; works only when $\mathbf{R}$   |
+| \bar{\mathbf{R}} \mathbf{i}$         | is unit-homogeneous                                             | 
++--------------------------------------+-----------------------------------------------------------------+
+| $\mathbf{g} =                        | Row sums of $\mathbf{V}$ matrix; works only when $\mathbf{V}$   |
+| \bar{\mathbf{V}} \mathbf{i}$         | is unit-homogeneous                                             |
++--------------------------------------+-----------------------------------------------------------------+
+| $\mathbf{e}_i$                       | Rows of $\mathbf{E}$; subscript $i$ indicates energy products   |
++--------------------------------------+-----------------------------------------------------------------+
+| $\mathbf{Q}_i =                      | Sources (positive entries) and                                  |
+| \widehat{\mathbf{e}_i} \mathbf{G}$   | consumption (negative entries) by industries (in rows)          |
+|                                      | of embodied energy products (subscript $i$) in consumed         |
+|                                      | energy products (in columns)                                    |
++--------------------------------------+-----------------------------------------------------------------+
+| $\mathbf{Q}_i^+$                     | Positive entries of $\mathbf{Q}_i$                              |
++--------------------------------------+-----------------------------------------------------------------+
+| $\mathbf{i} \mathbf{Q}_i^+$          | Column sums (to form row vectors) of $\mathbf{Q}_i^+$           |
+|                                      | (embodied product $\times$ embodying products                   |
++--------------------------------------+-----------------------------------------------------------------+
+| $\mathbf{M}_p$                       | Each row is one $\mathbf{i} \mathbf{Q}_i^+$ to                  |
+|                                      | show embodied energy products in each embodying energy product  |
 |                                      | (embodied products $\times$ embodying products)                 |
 +--------------------------------------+-----------------------------------------------------------------+
-| $\mathbf{M}_s$                       | Shows embodied energy products consumed by final demand sectors |
-|                                      | (embodied products $\times$ consuming final demand sectors      |
+| $\mathbf{M}_s = \mathbf{M}_p         | Embodied energy products consumed by final demand sectors       |
+| \hat{\mathbf{q}}^{-1} \mathbf{Y}$    | (embodied products $\times$ consuming final demand sectors)     |
 +--------------------------------------+-----------------------------------------------------------------+
 
 `calc_embodied_mats()` also calculates $\mathbf{F}_{footprint}$ and
-$\mathbf{F}_{effects}$ matrices, which answer the questions
+$\mathbf{F}_{ef\!fects}$ matrices, which answer the questions
 (respectively) "What is the fractional composition of embodied energy of
 each final demand energy type?" and "What is the fractional destination
 of a given upstream energy product?" The calculations can be performed
 for each final demand product or each final demand sector. The following
 table describes these matrices.
 
-+----------------------------+-----------------------------------------------------------------+
-| Matrix                     | Description                                                     |
-+===========================:+:================================================================+
-| $\mathbf{F}_{footprint,p}$ | Each final demand product (columns) contains embodied energy.   |
-|                            | On a fractional basis, where does that embodied energy come     |
-|                            | from (rows)? Columns sum to 1.                                  |
-+----------------------------+-----------------------------------------------------------------+
-| $\mathbf{F}_{ef\!fects,p}$ | Each upstream energy product (rows) becomes embodied somewhere. |
-|                            | On a fractional basis, where does that upstream energy become   |
-|                            | embodied (columns)? Rows sums to 1.                             |
-+----------------------------+-----------------------------------------------------------------+
-| $\mathbf{F}_{footprint,s}$ | Each final demand sector (columns) consumes embodied energy. On |
-|                            | a fractional basis, where does the consumed embodied energy     |
-|                            | come from (rows)? Columns sum to 1.                             |
-+----------------------------+-----------------------------------------------------------------+
-| $\mathbf{F}_{ef\!fects,s}$ | Each embodied upstream energy product (rows) is consumed by a   |
-|                            | final demand sector. On a fractional basis, where is that       |
-|                            | embodied upstream energy consumed (columns)? Rows sums to 1.    |
-+----------------------------+-----------------------------------------------------------------+
++--------------------------------------------+-----------------------------------------------------------------+
+| Matrix                                     | Description                                                     |
++===========================================:+:================================================================+
+| $\mathbf{F}_{footprint,p} =                | Each final demand product (columns) contains embodied energy.   |
+| \mathbf{M}_p                               | On a fractional basis, where does that embodied energy come     |
+| (\widehat{\mathbf{i} \mathbf{M}_p})^{-1}$  | from (rows)? Columns sum to 1.                                  |
++--------------------------------------------+-----------------------------------------------------------------+
+| $\mathbf{F}_{ef\!fects,p} =                | Each upstream energy product (rows) becomes embodied somewhere. |
+| (\widehat{\mathbf{M}_p} \mathbf{i})^{-1}   | On a fractional basis, where does that upstream energy become   |
+| \mathbf{M}_p$                              | embodied (columns)? Rows sums to 1.                             |
++--------------------------------------------+-----------------------------------------------------------------+
+| $\mathbf{F}_{footprint,s} =                | Each final demand sector (columns) consumes embodied energy. On |
+| \mathbf{M}_s                               | a fractional basis, where does the consumed embodied energy     |
+| (\widehat{\mathbf{i} \mathbf{M}_s})^{-1}$  | come from (rows)? Columns sum to 1.                             |
++--------------------------------------------+-----------------------------------------------------------------+
+| $\mathbf{F}_{ef\!fects,s} =                | Each embodied upstream energy product (rows) is consumed by a   |
+| (\widehat{\mathbf{M}_s} \mathbf{i})^{-1}   | final demand sector. On a fractional basis, where is that       |
+| \mathbf{M}_s$                              | embodied upstream energy consumed (columns)? Rows sums to 1.    |
++--------------------------------------------+-----------------------------------------------------------------+
 
 Finally, embodied energy efficiencies can be calculated as final demand
 energy divided by embodied energy. Again, efficiencies can be calculated
