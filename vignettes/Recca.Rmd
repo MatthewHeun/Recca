@@ -414,7 +414,7 @@ Outputs from `calc_embodied_mats()` include the following matrices:
 |                                      | of embodied energy products (subscript $i$) in consumed         |
 |                                      | energy products (in columns)                                    |
 +--------------------------------------+-----------------------------------------------------------------+
-| $\mathbf{Q}_i^+$                     | Positive entries of $\mathbf{Q}_i$                              |
+| $\mathbf{Q}_i^+$                     | $\mathbf{Q}_i$ with negative entries set to zero                |
 +--------------------------------------+-----------------------------------------------------------------+
 | $\mathbf{i} \mathbf{Q}_i^+$          | Column sums (to form row vectors) of $\mathbf{Q}_i^+$           |
 |                                      | (embodied product $\times$ embodying products                   |
@@ -460,16 +460,17 @@ energy divided by embodied energy. Again, efficiencies can be calculated
 for each final demand product or each final demand sector. The
 `calc_embodied_etas()` function does this computation.
 
-+-----------------------------------------------------+-----------------------------------------------------------------+
-| Matrix                                              | Description                                                     |
-+====================================================:+:================================================================+
-| $\eta_p = (\mathbf{Yi}) /                           | Final demand product (rows) divided by embodied primary         |
-| (\mathbf{iG}_{primary})^{\mathrm{T}}$               | energy of that final demand product                             |
-+-----------------------------------------------------+-----------------------------------------------------------------+
-| $\eta_s = [\mathbf{iY} /                            | Energy consumed by final demand sector (rows) divided by        |
-| (\mathbf{iH}_{primary})^{\mathrm{T}}]^{\mathrm{T}}$ | embodied energy input to the final demand sector                |
-+-----------------------------------------------------+-----------------------------------------------------------------+
++------------------------------------------------------+-----------------------------------------------------------------+
+| Matrix                                               | Description                                                     |
++=====================================================:+:================================================================+
+| $\eta_p = (\widehat{\mathbf{G}^\mathrm{T}            | Final demand product (rows) divided by embodied primary         |
+| \mathbf{s}_r})^{-1} \mathbf{y}$                      | energy of that final demand product                             |
++------------------------------------------------------+-----------------------------------------------------------------+
+| $\eta_s = (\widehat{\mathbf{s}_r \mathbf{H}})^{-1}   | Energy consumed by final demand sector (rows) divided by        |
+| (\mathbf{iY})^{\mathrm{T}}$                          | embodied energy input to the final demand sector                |
++------------------------------------------------------+-----------------------------------------------------------------+
 
+Note: $\mathbf{s}_r$ is a selection vector for resource industries.
 
 ```{r}
 primary_machine_names <- c("Resources - Crude", "Resources - NG")
