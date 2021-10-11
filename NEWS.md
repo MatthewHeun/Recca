@@ -4,6 +4,7 @@ output: html_document
 ---
 
 
+* Added details to `Recca` vignette, including additional equations for embodied matrices. 
 * New function `extend_to_exergy()` that calculates
   an exergy representation of an energy conversion chain given
   an energy representation of an energy conversion chain.
