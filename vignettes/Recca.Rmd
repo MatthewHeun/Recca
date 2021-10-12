@@ -374,7 +374,8 @@ Outputs from `calc_embodied_mats()` include the following matrices:
 | \mathbf{R}                           | ($r \times p$)                                                  |
 | \widehat{\mathbf{q}}^{\mathrm{-}1}   |                                                                 |
 | \underset{\mathrm{p} \times          |                                                                 |
-| \mathrm{p}}{\mathbf{L}}\mathbf{Y}$   |                                                                 |
+| \mathrm{p}}{\mathbf{L}}              |                                                                 |
+| \hat{\mathbf{y}}$                    |                                                                 |
 +--------------------------------------+-----------------------------------------------------------------+
 | $\mathbf{G}_V =                      | Industry output requirements for final demand ($i \times p$)    |
 | \underset{\mathrm{i} \times          |                                                                 |
