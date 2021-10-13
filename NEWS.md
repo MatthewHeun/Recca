@@ -1,5 +1,21 @@
+---
+title: "Release notes for `Recca`"
+output: html_document
+---
 
-# Recca 0.1.36 (2021-09-10)
+
+# Recca 0.1.37 (2021-10-13)
+
+* Added details to `Recca` vignette, including additional equations for embodied matrices. 
+* New function `extend_to_exergy()` that calculates
+  an exergy representation of an energy conversion chain given
+  an energy representation of an energy conversion chain.
+* Many new tests for new features.
+    * Now up to 530 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
+# Recca 0.1.36 (2021-09-10)  [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5226086.svg)](https://doi.org/10.5281/zenodo.5500310)
 
 * Get started file updated. Some matrices definitions (G, H, E)
   needed to be updated.
@@ -9,7 +25,7 @@
     * Test coverage remains at 100 %
 
 
-# Recca 0.1.35 (2021-08-20)
+# Recca 0.1.35 (2021-08-20)  [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5226086.svg)](https://doi.org/10.5281/zenodo.5226086)
 
 * R matrix formulation now adopted for input output calculations,
   for upstream and downstream swims, as well as for embodied
@@ -23,7 +39,7 @@
 
 * Fix lingering problems in R-CMD-check after the move to GitHub Actions
   for continuous integration testing. 
-* New new tests.
+* No new tests.
     * Still at 435 tests, all passing.
     * Test coverage remains at 100 %.
 
@@ -31,7 +47,7 @@
 # Recca 0.1.33 (2021-04-11)
 
 * Move from Travis to GitHub Actions for continuous integration testing.
-* New new tests.
+* No new tests.
     * Still at 435 tests, all passing.
     * Test coverage remains at 100 %.
 

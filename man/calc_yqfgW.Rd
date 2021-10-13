@@ -61,7 +61,7 @@ In the case of a balanced ECC, the method does not matter.}
 \code{W} is calculated by \code{transpose(V) - U}.}
 }
 \value{
-a list or data frame containing \code{y}, \code{q},
+A list or data frame containing \code{y}, \code{q},
 \code{f}, \code{g}, and \code{W}.
 }
 \description{

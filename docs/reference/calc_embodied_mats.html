@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.35</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.37</span>
       </span>
     </div>
 
@@ -208,15 +208,15 @@ of an Energy Conversion Chain.
     </tr>
     <tr>
       <th>G</th>
-      <td><p>The name of the <strong>G</strong> matrix on output. <strong>G</strong> is calculated by <code>L_ixp * y_hat</code>. Default is "G".</p></td>
+      <td><p>The name of the <strong>G</strong> matrix on output. <strong>G</strong> is calculated by <code>L_ixp %*% y_hat</code>. Default is "G".</p></td>
     </tr>
     <tr>
       <th>H</th>
-      <td><p>The name of the <strong>H</strong> matrix on output. <strong>H</strong> is calculated by <code>L_ixp * Y</code>. Default is "H".</p></td>
+      <td><p>The name of the <strong>H</strong> matrix on output. <strong>H</strong> is calculated by <code>L_ixp %*% Y</code>. Default is "H".</p></td>
     </tr>
     <tr>
       <th>E</th>
-      <td><p>The name of the <strong>E</strong> matrix on output. <strong>E</strong> is calculated by <code>W * g_hat_inv</code>. Default is "E".</p></td>
+      <td><p>The name of the <strong>E</strong> matrix on output. <strong>E</strong> is calculated by <code>W %*% g_hat_inv</code>. Default is "E".</p></td>
     </tr>
     <tr>
       <th>M_p</th>
@@ -224,23 +224,23 @@ of an Energy Conversion Chain.
     </tr>
     <tr>
       <th>M_s</th>
-      <td><p>The name of the <strong>M_s</strong> matrix on output. <strong>M_s</strong> is calculated by <code>M_p * q_hat_inv * Y</code>. Default is "M_s".</p></td>
+      <td><p>The name of the <strong>M_s</strong> matrix on output. <strong>M_s</strong> is calculated by <code>M_p %*% q_hat_inv %*% Y</code>. Default is "M_s".</p></td>
     </tr>
     <tr>
       <th>F_footprint_p</th>
-      <td><p>The name of the <strong>F_footprint_p</strong> matrix on output. <strong>F_footprint_p</strong> is calculated by <code>M_p * (M_p^T * i)_hat_inv</code>. Default is "F_footprint_p".</p></td>
+      <td><p>The name of the <strong>F_footprint_p</strong> matrix on output. <strong>F_footprint_p</strong> is calculated by <code>M_p %*% (M_p^T %*% i)_hat_inv</code>. Default is "F_footprint_p".</p></td>
     </tr>
     <tr>
       <th>F_effects_p</th>
-      <td><p>The name of the <strong>F_effects_p</strong> matrix on output. <strong>F_effects_p</strong> is calculated by <code>(M_p * i)_hat_inv * M_p</code>. Default is "F_effects_p".</p></td>
+      <td><p>The name of the <strong>F_effects_p</strong> matrix on output. <strong>F_effects_p</strong> is calculated by <code>(M_p %*% i)_hat_inv %*% M_p</code>. Default is "F_effects_p".</p></td>
     </tr>
     <tr>
       <th>F_footprint_s</th>
-      <td><p>The name of the <strong>F_footprint_s</strong> matrix on output. <strong>F_footprint_s</strong> is calculated by <code>M_s * (M_s^T *i)_hat_inv</code>. Default is "F_footprint_s".</p></td>
+      <td><p>The name of the <strong>F_footprint_s</strong> matrix on output. <strong>F_footprint_s</strong> is calculated by <code>M_s %*% (M_s^T %*% i)_hat_inv</code>. Default is "F_footprint_s".</p></td>
     </tr>
     <tr>
       <th>F_effects_s</th>
-      <td><p>The name of the <strong>F_effects_s</strong> matrix on output. <strong>F_effects_s</strong> is calculated by <code>(M_s * i)_hat_inv * M_s</code>. Default is "F_effects_s".</p></td>
+      <td><p>The name of the <strong>F_effects_s</strong> matrix on output. <strong>F_effects_s</strong> is calculated by <code>(M_s %*% i)_hat_inv %*% M_s</code>. Default is "F_effects_s".</p></td>
     </tr>
     </table>
 

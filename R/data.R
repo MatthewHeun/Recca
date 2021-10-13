@@ -17,6 +17,7 @@
 #' \item{r_eiou}{The name of a column in a wide-by-matrices data frame containing the ratio of `U_eiou` and `U` matrices.}
 #' \item{make,V}{The name of a column in a wide-by-matrices data frame containing make (`V`) matrices.}
 #' \item{final_demand,Y}{The name of a column in a wide-by-matrices data frame containing final demand (`Y`) matrices.}
+#' \item{phi}{The name of a column in a wide-by-matrices data frame containing exergy-to-energy-ratio (**phi**) matrices.}
 #' \item{s_units}{The name of a column in a wide-by-matrices data frame containing unit summation (`S_units`) matrices.}
 #' \item{matvals}{The name of a column in a tidy data frame containing matrices.}
 #' }
@@ -192,3 +193,29 @@
 #'   \item{matrix}{gives use (U), make (V), final demand (Y), r_EIOU, and S_units matrices}
 #' }
 "PerfectSubmats"
+
+
+#' A vector of phi (exergy-to-energy ratios) values
+#'
+#' Converting from energy to exergy requires vectors of phi values.
+#' This object is a vector to assist that conversion process
+#' for the `UKEnergy2000mats` energy conversion chain bundled with this package.
+#'
+#' @format A matrix with energy products in rows and phi values in a single column.
+"phi_vec"
+
+
+#' A list of energy types
+#'
+#' A list of energy type options in the "Energy.type" column.
+#'
+#' @format A list with `r length(energy_types)` entries.
+#' \describe{
+#'   \item{energy_type}{The name of the energy type column, "Energy.type".}
+#'   \item{e}{energy}
+#'   \item{x}{exergy}
+#' }
+"energy_types"
+
+
+

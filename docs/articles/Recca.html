@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.35</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.37</span>
       </span>
     </div>
 
@@ -85,13 +85,13 @@
 
       
 
-      </header><script src="Recca_files/header-attrs-2.10/header-attrs.js"></script><div class="row">
+      </header><script src="Recca_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Recca</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2021-09-08</h4>
+            <h4 class="date">2021-10-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/master/vignettes/Recca.Rmd"><code>vignettes/Recca.Rmd</code></a></small>
       <div class="hidden name"><code>Recca.Rmd</code></div>
@@ -233,8 +233,7 @@
 <span class="co">#&gt;  [1] "y"          "q"          "f"          "g"          "h"         </span>
 <span class="co">#&gt;  [6] "r"          "W"          "Z"          "K"          "C"         </span>
 <span class="co">#&gt; [11] "D"          "A"          "O"          "L_pxp"      "L_ixp"     </span>
-<span class="co">#&gt; [16] "Z_feed"     "K_feed"     "C_feed"     "D_feed"     "A_feed"    </span>
-<span class="co">#&gt; [21] "O_feed"     "L_pxp_feed" "L_ixp_feed"</span>
+<span class="co">#&gt; [16] "Z_feed"     "K_feed"     "A_feed"     "L_pxp_feed" "L_ixp_feed"</span>
 <span class="va">IO_list</span><span class="op">[[</span><span class="st">"y"</span><span class="op">]</span><span class="op">]</span>
 <span class="co">#&gt;                Industry</span>
 <span class="co">#&gt; Diesel - Dist.    14750</span>
@@ -255,8 +254,8 @@
 <span class="co">#&gt;  [6] "S_units"    "y"          "q"          "f"          "g"         </span>
 <span class="co">#&gt; [11] "h"          "r"          "W"          "Z"          "K"         </span>
 <span class="co">#&gt; [16] "C"          "D"          "A"          "O"          "L_pxp"     </span>
-<span class="co">#&gt; [21] "L_ixp"      "Z_feed"     "K_feed"     "C_feed"     "D_feed"    </span>
-<span class="co">#&gt; [26] "A_feed"     "O_feed"     "L_pxp_feed" "L_ixp_feed"</span>
+<span class="co">#&gt; [21] "L_ixp"      "Z_feed"     "K_feed"     "A_feed"     "L_pxp_feed"</span>
+<span class="co">#&gt; [26] "L_ixp_feed"</span>
 <span class="va">IO_from_list</span><span class="op">[[</span><span class="st">"y"</span><span class="op">]</span><span class="op">]</span>
 <span class="co">#&gt;                Industry</span>
 <span class="co">#&gt; Diesel - Dist.    14750</span>
@@ -285,11 +284,11 @@
 <span class="co">#&gt; [11] "V"           "Y"           "y"           "q"           "f"          </span>
 <span class="co">#&gt; [16] "g"           "h"           "r"           "W"           "Z"          </span>
 <span class="co">#&gt; [21] "K"           "C"           "D"           "A"           "O"          </span>
-<span class="co">#&gt; [26] "L_pxp"       "L_ixp"       "Z_feed"      "K_feed"      "C_feed"     </span>
-<span class="co">#&gt; [31] "D_feed"      "A_feed"      "O_feed"      "L_pxp_feed"  "L_ixp_feed"</span>
+<span class="co">#&gt; [26] "L_pxp"       "L_ixp"       "Z_feed"      "K_feed"      "A_feed"     </span>
+<span class="co">#&gt; [31] "L_pxp_feed"  "L_ixp_feed"</span>
 <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">IO_df</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 4</span>
-<span class="co">#&gt; Columns: 35</span>
+<span class="co">#&gt; Columns: 32</span>
 <span class="co">#&gt; $ Country     &lt;chr&gt; "GBR", "GBR", "GBR", "GBR"</span>
 <span class="co">#&gt; $ Year        &lt;dbl&gt; 2000, 2000, 2000, 2000</span>
 <span class="co">#&gt; $ Energy.type &lt;fct&gt; E, E, E, X</span>
@@ -319,10 +318,7 @@
 <span class="co">#&gt; $ L_ixp       &lt;list&gt; &lt;&lt;matrix[9 x 12]&gt;&gt;, &lt;&lt;matrix[13 x 16]&gt;&gt;, &lt;&lt;matrix[17 x 20…</span>
 <span class="co">#&gt; $ Z_feed      &lt;list&gt; &lt;&lt;matrix[9 x 9]&gt;&gt;, &lt;&lt;matrix[12 x 13]&gt;&gt;, &lt;&lt;matrix[16 x 17]…</span>
 <span class="co">#&gt; $ K_feed      &lt;list&gt; &lt;&lt;matrix[9 x 9]&gt;&gt;, &lt;&lt;matrix[12 x 13]&gt;&gt;, NA, NA</span>
-<span class="co">#&gt; $ C_feed      &lt;list&gt; &lt;&lt;matrix[10 x 9]&gt;&gt;, &lt;&lt;matrix[14 x 13]&gt;&gt;, &lt;&lt;matrix[18 x 17…</span>
-<span class="co">#&gt; $ D_feed      &lt;list&gt; &lt;&lt;matrix[9 x 12]&gt;&gt;, &lt;&lt;matrix[13 x 16]&gt;&gt;, &lt;&lt;matrix[17 x 20…</span>
 <span class="co">#&gt; $ A_feed      &lt;list&gt; &lt;&lt;matrix[9 x 12]&gt;&gt;, &lt;&lt;matrix[12 x 16]&gt;&gt;, &lt;&lt;matrix[16 x 20…</span>
-<span class="co">#&gt; $ O_feed      &lt;list&gt; &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 2]&gt;&gt;, …</span>
 <span class="co">#&gt; $ L_pxp_feed  &lt;list&gt; &lt;&lt;matrix[12 x 12]&gt;&gt;, &lt;&lt;matrix[16 x 16]&gt;&gt;, &lt;&lt;matrix[20 x 2…</span>
 <span class="co">#&gt; $ L_ixp_feed  &lt;list&gt; &lt;&lt;matrix[9 x 12]&gt;&gt;, &lt;&lt;matrix[13 x 16]&gt;&gt;, &lt;&lt;matrix[17 x 20…</span>
 <span class="va">IO_df</span><span class="op">[[</span><span class="st">"y"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
@@ -365,9 +361,9 @@
 <span class="co">#&gt; [11] "V"           "Y"           "y"           "q"           "f"          </span>
 <span class="co">#&gt; [16] "g"           "h"           "r"           "W"           "Z"          </span>
 <span class="co">#&gt; [21] "K"           "C"           "D"           "A"           "O"          </span>
-<span class="co">#&gt; [26] "L_pxp"       "L_ixp"       "Z_feed"      "K_feed"      "C_feed"     </span>
-<span class="co">#&gt; [31] "D_feed"      "A_feed"      "O_feed"      "L_pxp_feed"  "L_ixp_feed" </span>
-<span class="co">#&gt; [36] "Y_prime"     "U_prime"     "V_prime"     "W_prime"     "R_prime"</span>
+<span class="co">#&gt; [26] "L_pxp"       "L_ixp"       "Z_feed"      "K_feed"      "A_feed"     </span>
+<span class="co">#&gt; [31] "L_pxp_feed"  "L_ixp_feed"  "Y_prime"     "U_prime"     "V_prime"    </span>
+<span class="co">#&gt; [36] "W_prime"     "R_prime"</span>
 <span class="va">IO_df</span><span class="op">[[</span><span class="st">"Y"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span> , <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">]</span>
 <span class="co">#&gt;                Residential Transport</span>
 <span class="co">#&gt; Diesel - Dist.           0     14750</span>
@@ -482,9 +478,8 @@
 <span class="co">#&gt; [11] "V"           "Y"           "y"           "q"           "f"          </span>
 <span class="co">#&gt; [16] "g"           "h"           "r"           "W"           "Z"          </span>
 <span class="co">#&gt; [21] "K"           "C"           "D"           "A"           "O"          </span>
-<span class="co">#&gt; [26] "L_pxp"       "L_ixp"       "Z_feed"      "K_feed"      "C_feed"     </span>
-<span class="co">#&gt; [31] "D_feed"      "A_feed"      "O_feed"      "L_pxp_feed"  "L_ixp_feed" </span>
-<span class="co">#&gt; [36] "eta_i"</span>
+<span class="co">#&gt; [26] "L_pxp"       "L_ixp"       "Z_feed"      "K_feed"      "A_feed"     </span>
+<span class="co">#&gt; [31] "L_pxp_feed"  "L_ixp_feed"  "eta_i"</span>
 <span class="va">etas</span><span class="op">[[</span><span class="st">"eta_i"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
 <span class="co">#&gt;                       eta_i</span>
 <span class="co">#&gt; Crude dist.       0.9885536</span>
@@ -542,48 +537,73 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="right"><span class="math inline">\(\mathbf{G} = \mathbf{G}_V + \mathbf{G}_R\)</span></td>
+<td align="right"><span class="math inline">\(\mathbf{G} = \mathbf{G}_R + \mathbf{G}_V\)</span></td>
 <td align="left">Industry and resource stocks output requirements for final demand (<span class="math inline">\((r + i) \times p\)</span>)</td>
 </tr>
 <tr class="even">
+<td align="right"><span class="math inline">\(\mathbf{G}_R = \mathbf{R} \widehat{\mathbf{q}}^{\mathrm{-}1} \underset{\mathrm{p} \times \mathrm{p}}{\mathbf{L}} \hat{\mathbf{y}}\)</span></td>
+<td align="left">Resource stocks output requirements for final demand (<span class="math inline">\(r \times p\)</span>)</td>
+</tr>
+<tr class="odd">
 <td align="right"><span class="math inline">\(\mathbf{G}_V = \underset{\mathrm{i} \times \mathrm{p}}{\mathbf{L}} \widehat{\mathbf{y}}\)</span></td>
 <td align="left">Industry output requirements for final demand (<span class="math inline">\(i \times p\)</span>)</td>
 </tr>
-<tr class="odd">
-<td align="right"><span class="math inline">\(\mathbf{G}_R = \mathbf{R} \widehat{\mathbf{q}}^{\mathrm{-}1} \underset{\mathrm{p} \times \mathrm{p}}{\mathbf{L}}\mathbf{Y}\)</span></td>
-<td align="left">Resource stocks output requirements for final demand (<span class="math inline">\(r \times p\)</span>)</td>
-</tr>
 <tr class="even">
-<td align="right"><span class="math inline">\(\mathbf{H} = \mathbf{H}_V + \mathbf{H}_R\)</span></td>
+<td align="right"><span class="math inline">\(\mathbf{H} = \mathbf{H}_R + \mathbf{H}_V\)</span></td>
 <td align="left">Industry and resource stocks output requirements for final demand sectors (<span class="math inline">\((r + i) \times s\)</span>)</td>
 </tr>
 <tr class="odd">
-<td align="right"><span class="math inline">\(\mathbf{H}_V = \underset{\mathrm{i} \times \mathrm{p}}{\mathbf{L}}\mathbf{Y}\)</span></td>
-<td align="left">Industry output requirements for final demand sectors (<span class="math inline">\(i \times s\)</span>)</td>
-</tr>
-<tr class="even">
 <td align="right"><span class="math inline">\(\mathbf{H}_R = \mathbf{R} \widehat{\mathbf{q}}^{\mathrm{-}1} \underset{\mathrm{p} \times \mathrm{p}}{\mathbf{L}}\mathbf{Y}\)</span></td>
 <td align="left">Resource stocks output requirements for final demand sectors (<span class="math inline">\(r \times s\)</span>)</td>
 </tr>
+<tr class="even">
+<td align="right"><span class="math inline">\(\mathbf{H}_V = \underset{\mathrm{i} \times \mathrm{p}}{\mathbf{L}}\mathbf{Y}\)</span></td>
+<td align="left">Industry output requirements for final demand sectors (<span class="math inline">\(i \times s\)</span>)</td>
+</tr>
 <tr class="odd">
-<td align="right"><span class="math inline">\(\mathbf{E} = [ (\mathbf{R} + \mathbf{V})^\mathrm{T} - \mathbf{U}_{feed} ] \widehat{(\mathbf{g} + \mathbf{r})}^{-1}\)</span></td>
+<td align="right"><span class="math inline">\(\mathbf{E} = [ (\mathbf{R} + \mathbf{V})^\mathrm{T} - \mathbf{U}_{feed} ] \widehat{(\mathbf{r} + \mathbf{g})}^{-1}\)</span></td>
 <td align="left">Energy or services produced (<span class="math inline">\(+\)</span>) or consumed (<span class="math inline">\(-\)</span>) per unit output by industries (in columns) (<span class="math inline">\(p \times i\)</span>)</td>
 </tr>
 <tr class="even">
-<td align="right"><span class="math inline">\(\mathbf{M}_p\)</span></td>
-<td align="left">Shows embodied energy products in each embodying energy product (embodied products <span class="math inline">\(\times\)</span> embodying products)</td>
+<td align="right"><span class="math inline">\(\mathbf{r} = \bar{\mathbf{R}} \mathbf{i}\)</span></td>
+<td align="left">Row sums of <span class="math inline">\(\mathbf{R}\)</span> matrix; works only when <span class="math inline">\(\mathbf{R}\)</span> is unit-homogeneous</td>
 </tr>
 <tr class="odd">
-<td align="right"><span class="math inline">\(\mathbf{M}_s\)</span></td>
-<td align="left">Shows embodied energy products consumed by final demand sectors (embodied products <span class="math inline">\(\times\)</span> consuming final demand sectors</td>
+<td align="right"><span class="math inline">\(\mathbf{g} = \bar{\mathbf{V}} \mathbf{i}\)</span></td>
+<td align="left">Row sums of <span class="math inline">\(\mathbf{V}\)</span> matrix; works only when <span class="math inline">\(\mathbf{V}\)</span> is unit-homogeneous</td>
+</tr>
+<tr class="even">
+<td align="right"><span class="math inline">\(\mathbf{e}_i\)</span></td>
+<td align="left">Rows of <span class="math inline">\(\mathbf{E}\)</span>; subscript <span class="math inline">\(i\)</span> indicates energy products</td>
+</tr>
+<tr class="odd">
+<td align="right"><span class="math inline">\(\mathbf{Q}_i = \widehat{\mathbf{e}_i} \mathbf{G}\)</span></td>
+<td align="left">Sources (positive entries) and consumption (negative entries) by industries (in rows) of embodied energy products (subscript <span class="math inline">\(i\)</span>) in consumed energy products (in columns)</td>
+</tr>
+<tr class="even">
+<td align="right"><span class="math inline">\(\mathbf{Q}_i^+\)</span></td>
+<td align="left">
+<span class="math inline">\(\mathbf{Q}_i\)</span> with negative entries set to zero</td>
+</tr>
+<tr class="odd">
+<td align="right"><span class="math inline">\(\mathbf{i} \mathbf{Q}_i^+\)</span></td>
+<td align="left">Column sums (to form row vectors) of <span class="math inline">\(\mathbf{Q}_i^+\)</span> (embodied product <span class="math inline">\(\times\)</span> embodying products</td>
+</tr>
+<tr class="even">
+<td align="right"><span class="math inline">\(\mathbf{M}_p\)</span></td>
+<td align="left">Each row is one <span class="math inline">\(\mathbf{i} \mathbf{Q}_i^+\)</span> to show embodied energy products in each embodying energy product (embodied products <span class="math inline">\(\times\)</span> embodying products)</td>
+</tr>
+<tr class="odd">
+<td align="right"><span class="math inline">\(\mathbf{M}_s = \mathbf{M}_p \hat{\mathbf{q}}^{-1} \mathbf{Y}\)</span></td>
+<td align="left">Embodied energy products consumed by final demand sectors (embodied products <span class="math inline">\(\times\)</span> consuming final demand sectors)</td>
 </tr>
 </tbody>
 </table>
-<p><code><a href="../reference/calc_embodied_mats.html">calc_embodied_mats()</a></code> also calculates <span class="math inline">\(\mathbf{F}_{footprint}\)</span> and <span class="math inline">\(\mathbf{F}_{effects}\)</span> matrices, which answer the questions (respectively) “What is the fractional composition of embodied energy of each final demand energy type?” and “What is the fractional destination of a given upstream energy product?” The calculations can be performed for each final demand product or each final demand sector. The following table describes these matrices.</p>
+<p><code><a href="../reference/calc_embodied_mats.html">calc_embodied_mats()</a></code> also calculates <span class="math inline">\(\mathbf{F}_{footprint}\)</span> and <span class="math inline">\(\mathbf{F}_{ef\!fects}\)</span> matrices, which answer the questions (respectively) “What is the fractional composition of embodied energy of each final demand energy type?” and “What is the fractional destination of a given upstream energy product?” The calculations can be performed for each final demand product or each final demand sector. The following table describes these matrices.</p>
 <table class="table">
 <colgroup>
-<col width="30%">
-<col width="69%">
+<col width="40%">
+<col width="59%">
 </colgroup>
 <thead><tr class="header">
 <th align="right">Matrix</th>
@@ -591,28 +611,28 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="right"><span class="math inline">\(\mathbf{F}_{footprint,p}\)</span></td>
+<td align="right"><span class="math inline">\(\mathbf{F}_{footprint,p} = \mathbf{M}_p (\widehat{\mathbf{i} \mathbf{M}_p})^{-1}\)</span></td>
 <td align="left">Each final demand product (columns) contains embodied energy. On a fractional basis, where does that embodied energy come from (rows)? Columns sum to 1.</td>
 </tr>
 <tr class="even">
-<td align="right"><span class="math inline">\(\mathbf{F}_{ef\!fects,p}\)</span></td>
-<td align="left">Each upstream energy product (rows) becomes embodied somewhere. On a fractional basis, where does that upstream energy become embodied (columns)? Rows sums to 1.</td>
+<td align="right"><span class="math inline">\(\mathbf{F}_{ef\!fects,p} = (\widehat{\mathbf{M}_p} \mathbf{i})^{-1} \mathbf{M}_p\)</span></td>
+<td align="left">Each upstream energy product (rows) becomes embodied somewhere. On a fractional basis, where does that upstream energy become embodied (columns)? Rows sum to 1.</td>
 </tr>
 <tr class="odd">
-<td align="right"><span class="math inline">\(\mathbf{F}_{footprint,s}\)</span></td>
+<td align="right"><span class="math inline">\(\mathbf{F}_{footprint,s} = \mathbf{M}_s (\widehat{\mathbf{i} \mathbf{M}_s})^{-1}\)</span></td>
 <td align="left">Each final demand sector (columns) consumes embodied energy. On a fractional basis, where does the consumed embodied energy come from (rows)? Columns sum to 1.</td>
 </tr>
 <tr class="even">
-<td align="right"><span class="math inline">\(\mathbf{F}_{ef\!fects,s}\)</span></td>
-<td align="left">Each embodied upstream energy product (rows) is consumed by a final demand sector. On a fractional basis, where is that embodied upstream energy consumed (columns)? Rows sums to 1.</td>
+<td align="right"><span class="math inline">\(\mathbf{F}_{ef\!fects,s} = (\widehat{\mathbf{M}_s} \mathbf{i})^{-1} \mathbf{M}_s\)</span></td>
+<td align="left">Each embodied upstream energy product (rows) is consumed by a final demand sector. On a fractional basis, where is that embodied upstream energy consumed (columns)? Rows sum to 1.</td>
 </tr>
 </tbody>
 </table>
 <p>Finally, embodied energy efficiencies can be calculated as final demand energy divided by embodied energy. Again, efficiencies can be calculated for each final demand product or each final demand sector. The <code><a href="../reference/calc_embodied_etas.html">calc_embodied_etas()</a></code> function does this computation.</p>
 <table class="table">
 <colgroup>
-<col width="14%">
-<col width="85%">
+<col width="45%">
+<col width="54%">
 </colgroup>
 <thead><tr class="header">
 <th align="right">Matrix</th>
@@ -620,16 +640,17 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="right"><span class="math inline">\(\eta_p\)</span></td>
-<td align="left">Final demand product (rows) divided by embodied energy of that final demand product</td>
+<td align="right"><span class="math inline">\(\eta_p = (\widehat{\mathbf{G}^\mathrm{T} \mathbf{s}_r})^{-1} \mathbf{y}\)</span></td>
+<td align="left">Final demand product (rows) divided by embodied primary energy of that final demand product</td>
 </tr>
 <tr class="even">
-<td align="right"><span class="math inline">\(\eta_s\)</span></td>
+<td align="right"><span class="math inline">\(\eta_s = (\widehat{\mathbf{s}_r \mathbf{H}})^{-1} (\mathbf{iY})^{\mathrm{T}}\)</span></td>
 <td align="left">Energy consumed by final demand sector (rows) divided by embodied energy input to the final demand sector</td>
 </tr>
 </tbody>
 </table>
-<!-- These don't work at this time. --><!-- | $\colvec{\bm{\upeta}}_p$ | Final demand product (rows) divided by embodied energy of that final demand product | --><!-- | $\colvec{\bm{\upeta}}_s$ | Energy consumed by final demand sector (rows) divided by embodied energy input to the final demand sector  | --><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<p>Note: <span class="math inline">\(\mathbf{s}_r\)</span> is a selection vector for resource industries.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">primary_machine_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Resources - Crude"</span>, <span class="st">"Resources - NG"</span><span class="op">)</span>
 
 <span class="va">embodied_mats</span> <span class="op">&lt;-</span> <span class="va">IO_df</span> <span class="op">%&gt;%</span> 
@@ -646,12 +667,11 @@
 <span class="co">#&gt; [17] "h"             "r"             "W"             "Z"            </span>
 <span class="co">#&gt; [21] "K"             "C"             "D"             "A"            </span>
 <span class="co">#&gt; [25] "O"             "L_pxp"         "L_ixp"         "Z_feed"       </span>
-<span class="co">#&gt; [29] "K_feed"        "C_feed"        "D_feed"        "A_feed"       </span>
-<span class="co">#&gt; [33] "O_feed"        "L_pxp_feed"    "L_ixp_feed"    "G_V"          </span>
-<span class="co">#&gt; [37] "G_R"           "G"             "H_V"           "H_R"          </span>
-<span class="co">#&gt; [41] "H"             "E"             "M_p"           "M_s"          </span>
-<span class="co">#&gt; [45] "F_footprint_p" "F_effects_p"   "F_footprint_s" "F_effects_s"  </span>
-<span class="co">#&gt; [49] "eta_p"         "eta_s"</span></code></pre></div>
+<span class="co">#&gt; [29] "K_feed"        "A_feed"        "L_pxp_feed"    "L_ixp_feed"   </span>
+<span class="co">#&gt; [33] "G_V"           "G_R"           "G"             "H_V"          </span>
+<span class="co">#&gt; [37] "H_R"           "H"             "E"             "M_p"          </span>
+<span class="co">#&gt; [41] "M_s"           "F_footprint_p" "F_effects_p"   "F_footprint_s"</span>
+<span class="co">#&gt; [45] "F_effects_s"   "eta_p"         "eta_s"</span></code></pre></div>
 <p>Figure 15 in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. [-@Heun:2018]</a> shows primary-to-services energetic efficiencies for the ECC in the 3rd row of <code>IO_df</code>. The following code extracts those results. Rows of the vector give final demand services and their units. The column gives efficiencies in units of service per ktoe of energy.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">embodied_mats</span><span class="op">$</span><span class="va">eta_p</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span>
