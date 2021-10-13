@@ -445,7 +445,7 @@ table describes these matrices.
 +--------------------------------------------+-----------------------------------------------------------------+
 | $\mathbf{F}_{ef\!fects,p} =                | Each upstream energy product (rows) becomes embodied somewhere. |
 | (\widehat{\mathbf{M}_p} \mathbf{i})^{-1}   | On a fractional basis, where does that upstream energy become   |
-| \mathbf{M}_p$                              | embodied (columns)? Rows sum to 1.                             |
+| \mathbf{M}_p$                              | embodied (columns)? Rows sum to 1.                              |
 +--------------------------------------------+-----------------------------------------------------------------+
 | $\mathbf{F}_{footprint,s} =                | Each final demand sector (columns) consumes embodied energy. On |
 | \mathbf{M}_s                               | a fractional basis, where does the consumed embodied energy     |
@@ -453,7 +453,7 @@ table describes these matrices.
 +--------------------------------------------+-----------------------------------------------------------------+
 | $\mathbf{F}_{ef\!fects,s} =                | Each embodied upstream energy product (rows) is consumed by a   |
 | (\widehat{\mathbf{M}_s} \mathbf{i})^{-1}   | final demand sector. On a fractional basis, where is that       |
-| \mathbf{M}_s$                              | embodied upstream energy consumed (columns)? Rows sum to 1.    |
+| \mathbf{M}_s$                              | embodied upstream energy consumed (columns)? Rows sum to 1.     |
 +--------------------------------------------+-----------------------------------------------------------------+
 
 Finally, embodied energy efficiencies can be calculated as final demand
