@@ -77,7 +77,7 @@ eta_p gives product-based embodied energy efficiency." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.35</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.37</span>
       </span>
     </div>
 
@@ -144,8 +144,8 @@ eta_p gives product-based embodied energy efficiency." />
 for a product produced by the ECC or
 for the energy consumed by a final demand sector of the ECC.
 This function calculates both.
-<code>eta_s</code> gives sector-based embodied energy efficiency, and
-<code>eta_p</code> gives product-based embodied energy efficiency.</p>
+<strong>eta_s</strong> gives sector-based embodied energy efficiency, and
+<strong>eta_p</strong> gives product-based embodied energy efficiency.</p>
     </div>
 
     <pre class="usage"><span class='fu'>calc_embodied_etas</span><span class='op'>(</span>
@@ -163,43 +163,43 @@ This function calculates both.
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.embodiedmats</th>
-      <td><p>a data frame containing columns of <code>Y</code>, <code>G</code>, and <code>H</code> matrices</p></td>
+      <td><p>A data frame containing columns of <strong>Y</strong>, <strong>G</strong>, and <strong>H</strong> matrices.</p></td>
     </tr>
     <tr>
       <th>primary_machine_names</th>
-      <td><p>a list of strings representing names of Industries whose output is counted in Total Primary Energy Supply (TPES)</p></td>
+      <td><p>A list of strings representing names of Industries whose output is counted in Total Energy Supply (TPES).</p></td>
     </tr>
     <tr>
       <th>Y</th>
-      <td><p>final demand <code>Y</code> matrix or name of a column in <code>.embodiedmats</code> containing same. Default is "<code>Y</code>".</p></td>
+      <td><p>A final demand (<strong>Y</strong>) matrix or name of a column in <code>.embodiedmats</code> containing same. Default is "Y".</p></td>
     </tr>
     <tr>
       <th>G</th>
-      <td><p><code>G</code> matrix or name of a column in <code>.embodiedmats</code> containing same. Default is "<code>G</code>".</p></td>
+      <td><p>A <strong>G</strong>  matrix or name of a column in <code>.embodiedmats</code> containing same. Default is "G".</p></td>
     </tr>
     <tr>
       <th>H</th>
-      <td><p><code>H</code> matrix or name of a column in <code>.embodiedmats</code> containing same. Default is "<code>H</code>".</p></td>
+      <td><p>An <strong>H</strong> matrix or name of a column in <code>.embodiedmats</code> containing same. Default is "H".</p></td>
     </tr>
     <tr>
       <th>eta_p</th>
-      <td><p>the name for product-based efficiencies on output. Default is "<code>eta_p</code>".</p></td>
+      <td><p>The name for product-based efficiencies on output. Default is "eta_p".</p></td>
     </tr>
     <tr>
       <th>eta_s</th>
-      <td><p>the name for final-demand-sector-based efficiencies on output. Default is "<code>eta_s</code>".</p></td>
+      <td><p>The name for final-demand-sector-based efficiencies on output. Default is "eta_s".</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a list or data frame containing embodied energy efficiencies</p>
+    <p>A list or data frame containing embodied energy efficiencies.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Note that these efficiencies (<code>eta_s</code> and <code>eta_p</code>) are different from
+    <p>Note that these efficiencies (<strong>eta_s</strong> and <strong>eta_p</strong>) are different from
 energy conversion industry efficiencies.
 To calculate energy conversion industry efficiencies, use the
-<code><a href='calc_eta_i.html'>calc_eta_i</a></code> function.</p>
+<code><a href='calc_eta_i.html'>calc_eta_i()</a></code> function.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

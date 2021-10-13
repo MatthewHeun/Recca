@@ -73,7 +73,7 @@ and final demand, using a data frame of input-output matrices in the physical su
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Recca</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.35</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.37</span>
       </span>
     </div>
 
@@ -161,32 +161,27 @@ and final demand, using a data frame of input-output matrices in the physical su
       <td><p>A wide-by-matrices data frame containing matrices that describe the Input-Output structure
 (using the supply-use table format) of an Energy Conversion Chain.
 <code>.iomats</code> will likely have been obtained combining the <code><a href='calc_io_mats.html'>calc_io_mats()</a></code> and <code><a href='calc_E_EIOU.html'>calc_E_EIOU()</a></code> functions.
-See the example.?c</p></td>
+See the examples.</p></td>
     </tr>
     <tr>
       <th>e_EIOU</th>
-      <td><p>The name of the column containing the direct energy use extension vector.
-Default is "e_EIOU".</p></td>
+      <td><p>A direct energy use extension vector or name of column in <code>.iomats</code> containing same. Default is "e_EIOU".</p></td>
     </tr>
     <tr>
       <th>Y</th>
-      <td><p>The name of the column containing final demand <code>Y</code> matrices in <code>.iomats</code>.
-Default is "Y".</p></td>
+      <td><p>A final demand matrix (<strong>Y</strong>) or name of column in <code>.iomats</code> containing same. Default is "Y".</p></td>
     </tr>
     <tr>
       <th>y</th>
-      <td><p>The name of the column containing total final demand by product <code>y</code> vectors in <code>iomats</code>.
-Default is "y".</p></td>
+      <td><p>A <strong>y</strong> vector or name of column in <code>.iomats</code> containing same. Default is "y".</p></td>
     </tr>
     <tr>
       <th>L_ixp</th>
-      <td><p>The name of the column containing <code>L_ixp</code> matrices in <code>.iomats</code>.
-Default is "L_ixp".</p></td>
+      <td><p>An <strong>L_ixp</strong> matrix or name of column in <code>.iomats</code> containing same. Default is "L_ixp".</p></td>
     </tr>
     <tr>
       <th>L_ixp_feed</th>
-      <td><p>The name of the column containing <code>L_ixp_feed</code> matrix in <code>.iomats</code>.
-Default is "L_ixp_feed".</p></td>
+      <td><p>An <strong>L_ixp_feed</strong> matrix or name of column in <code>.iomats</code> containing same. Default is "L_ixp_feed".</p></td>
     </tr>
     <tr>
       <th>Q_EIOU_s</th>
@@ -247,20 +242,19 @@ functions as described in the example.</p>
   <span class='fu'><a href='calc_io_mats.html'>calc_io_mats</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='calc_E_EIOU.html'>calc_E_EIOU</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>calc_embodied_EIOU</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 4 × 41</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 4 × 38</span>
 #&gt;   Country  Year Energy.type Last.stage R      U      U_EIOU  U_feed  V     Y    
 #&gt;   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>      <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;list&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;lis&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;lis&gt;</span>
 #&gt; <span style='color: #BCBCBC;'>1</span> GBR      <span style='text-decoration: underline;'>2</span>000 E           Final      <span style='color: #949494;'>&lt;dbl </span>… <span style='color: #949494;'>&lt;dbl </span>… <span style='color: #949494;'>&lt;dbl [</span>… <span style='color: #949494;'>&lt;dbl [</span>… <span style='color: #949494;'>&lt;dbl</span>… <span style='color: #949494;'>&lt;dbl</span>…
 #&gt; <span style='color: #BCBCBC;'>2</span> GBR      <span style='text-decoration: underline;'>2</span>000 E           Services   <span style='color: #949494;'>&lt;dbl </span>… <span style='color: #949494;'>&lt;dbl </span>… <span style='color: #949494;'>&lt;dbl [</span>… <span style='color: #949494;'>&lt;dbl [</span>… <span style='color: #949494;'>&lt;dbl</span>… <span style='color: #949494;'>&lt;dbl</span>…
 #&gt; <span style='color: #BCBCBC;'>3</span> GBR      <span style='text-decoration: underline;'>2</span>000 E           Useful     <span style='color: #949494;'>&lt;dbl </span>… <span style='color: #949494;'>&lt;dbl </span>… <span style='color: #949494;'>&lt;dbl [</span>… <span style='color: #949494;'>&lt;dbl [</span>… <span style='color: #949494;'>&lt;dbl</span>… <span style='color: #949494;'>&lt;dbl</span>…
 #&gt; <span style='color: #BCBCBC;'>4</span> GBR      <span style='text-decoration: underline;'>2</span>000 X           Services   <span style='color: #949494;'>&lt;dbl </span>… <span style='color: #949494;'>&lt;dbl </span>… <span style='color: #949494;'>&lt;dbl [</span>… <span style='color: #949494;'>&lt;dbl [</span>… <span style='color: #949494;'>&lt;dbl</span>… <span style='color: #949494;'>&lt;dbl</span>…
-#&gt; <span style='color: #949494;'># … with 31 more variables: r_EIOU &lt;list&gt;, S_units &lt;list&gt;, y &lt;list&gt;, q &lt;list&gt;,</span>
+#&gt; <span style='color: #949494;'># … with 28 more variables: r_EIOU &lt;list&gt;, S_units &lt;list&gt;, y &lt;list&gt;, q &lt;list&gt;,</span>
 #&gt; <span style='color: #949494;'>#   f &lt;list&gt;, g &lt;list&gt;, h &lt;list&gt;, r &lt;list&gt;, W &lt;list&gt;, Z &lt;list&gt;, K &lt;list&gt;,</span>
 #&gt; <span style='color: #949494;'>#   C &lt;list&gt;, D &lt;list&gt;, A &lt;list&gt;, O &lt;list&gt;, L_pxp &lt;list&gt;, L_ixp &lt;list&gt;,</span>
-#&gt; <span style='color: #949494;'>#   Z_feed &lt;list&gt;, K_feed &lt;list&gt;, C_feed &lt;list&gt;, D_feed &lt;list&gt;, A_feed &lt;list&gt;,</span>
-#&gt; <span style='color: #949494;'>#   O_feed &lt;list&gt;, L_pxp_feed &lt;list&gt;, L_ixp_feed &lt;list&gt;, E_EIOU &lt;list&gt;,</span>
-#&gt; <span style='color: #949494;'>#   e_EIOU &lt;list&gt;, Q_EIOU_p &lt;list&gt;, Q_EIOU_s &lt;list&gt;, Q_EIOU_feed_p &lt;list&gt;,</span>
-#&gt; <span style='color: #949494;'>#   Q_EIOU_feed_s &lt;list&gt;</span></div></pre>
+#&gt; <span style='color: #949494;'>#   Z_feed &lt;list&gt;, K_feed &lt;list&gt;, A_feed &lt;list&gt;, L_pxp_feed &lt;list&gt;,</span>
+#&gt; <span style='color: #949494;'>#   L_ixp_feed &lt;list&gt;, E_EIOU &lt;list&gt;, e_EIOU &lt;list&gt;, Q_EIOU_p &lt;list&gt;,</span>
+#&gt; <span style='color: #949494;'>#   Q_EIOU_s &lt;list&gt;, Q_EIOU_feed_p &lt;list&gt;, Q_EIOU_feed_s &lt;list&gt;</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
