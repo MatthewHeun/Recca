@@ -9,7 +9,7 @@ output: html_document
   an exergy representation of an energy conversion chain given
   an energy representation of an energy conversion chain.
 * Many new tests for new features.
-    * Now up to 523 tests, all passing.
+    * Now up to 530 tests, all passing.
     * Test coverage remains at 100 %.
 
 
