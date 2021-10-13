@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Calculate Z, D, C, and A matrices — calc_A • Recca</title>
+<title>A vector of phi (exergy-to-energy ratios) values — phi_vec • Recca</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,10 @@
 
 
 
-<meta property="og:title" content="Calculate Z, D, C, and A matrices — calc_A" />
-<meta property="og:description" content="Calculate Z, D, C, and A matrices" />
+<meta property="og:title" content="A vector of phi (exergy-to-energy ratios) values — phi_vec" />
+<meta property="og:description" content="Converting from energy to exergy requires vectors of phi values.
+This object is a vector to assist that conversion process
+for the UKEnergy2000mats energy conversion chain bundled with this package." />
 
 
 
@@ -129,105 +131,23 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Calculate <code>Z</code>, <code>D</code>, <code>C</code>, and <code>A</code> matrices</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MatthewHeun/Recca/blob/master/R/io.R'><code>R/io.R</code></a></small>
-    <div class="hidden name"><code>calc_A.Rd</code></div>
+    <h1>A vector of phi (exergy-to-energy ratios) values</h1>
+    <small class="dont-index">Source: <a href='https://github.com/MatthewHeun/Recca/blob/master/R/data.R'><code>R/data.R</code></a></small>
+    <div class="hidden name"><code>phi_vec.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Calculate <code>Z</code>, <code>D</code>, <code>C</code>, and <code>A</code> matrices</p>
+    <p>Converting from energy to exergy requires vectors of phi values.
+This object is a vector to assist that conversion process
+for the <code>UKEnergy2000mats</code> energy conversion chain bundled with this package.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>calc_A</span><span class='op'>(</span>
-  .sutdata <span class='op'>=</span> <span class='cn'>NULL</span>,
-  R <span class='op'>=</span> <span class='st'>"R"</span>,
-  U <span class='op'>=</span> <span class='st'>"U"</span>,
-  V <span class='op'>=</span> <span class='st'>"V"</span>,
-  q <span class='op'>=</span> <span class='st'>"q"</span>,
-  f <span class='op'>=</span> <span class='st'>"f"</span>,
-  g <span class='op'>=</span> <span class='st'>"g"</span>,
-  r <span class='op'>=</span> <span class='st'>"r"</span>,
-  Z <span class='op'>=</span> <span class='st'>"Z"</span>,
-  K <span class='op'>=</span> <span class='st'>"K"</span>,
-  C <span class='op'>=</span> <span class='st'>"C"</span>,
-  D <span class='op'>=</span> <span class='st'>"D"</span>,
-  A <span class='op'>=</span> <span class='st'>"A"</span>,
-  O <span class='op'>=</span> <span class='st'>"O"</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='va'>phi_vec</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>.sutdata</th>
-      <td><p>a data frame of supply-use table matrices with matrices arranged in columns.</p></td>
-    </tr>
-    <tr>
-      <th>R</th>
-      <td><p>resources (<code>R</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "<code>R</code>".
-<code>R</code> is an optional argument.
-If all of <code>R</code> is added to <code>V</code>, this argument can be left unspecified.</p></td>
-    </tr>
-    <tr>
-      <th>U</th>
-      <td><p>Use (<code>U</code>) matrix or name of the column in <code>.sutmats</code> that contains same. Default is "U".</p></td>
-    </tr>
-    <tr>
-      <th>V</th>
-      <td><p>Make (<code>V</code>) matrix or name of the column in <code>.sutmats</code>that contains same. Default is "V".</p></td>
-    </tr>
-    <tr>
-      <th>q</th>
-      <td><p>A <code>q</code> vector or name of the column in <code>.sutmats</code> that contains same. Default is "q".</p></td>
-    </tr>
-    <tr>
-      <th>f</th>
-      <td><p>An <code>f</code> vector or name of the column in <code>.sutmats</code> that contains same. Default is "r".</p></td>
-    </tr>
-    <tr>
-      <th>g</th>
-      <td><p>A <code>g</code> vector or name of the column in <code>.sutmats</code> that contains same. Default is "g".</p></td>
-    </tr>
-    <tr>
-      <th>r</th>
-      <td><p>A <code>r</code> vector or name of the column in <code>.sutmats</code> that contains same. Default is "r".</p></td>
-    </tr>
-    <tr>
-      <th>Z</th>
-      <td><p>The name for <code>Z</code> matrix on output. Default is "Z".
-<code>Z</code> is calculated by <code>U * g_hat_inv</code>.</p></td>
-    </tr>
-    <tr>
-      <th>K</th>
-      <td><p>The name for <code>K</code> matrix on output. Default is "K".
-<code>K</code> is calculated by <code>U * f_hat_inv</code>.</p></td>
-    </tr>
-    <tr>
-      <th>C</th>
-      <td><p>The name for <code>C</code> matrix on output. Default is "C".
-<code>C</code> is calculated by <code>transpose(V) * g_hat_inv</code>.</p></td>
-    </tr>
-    <tr>
-      <th>D</th>
-      <td><p>The name for <code>D</code> matrix on output. Default is "D".
-<code>D</code> is calculated by <code>V * q_hat_inv</code>.</p></td>
-    </tr>
-    <tr>
-      <th>A</th>
-      <td><p>The name for <code>A</code> matrix on output. Default is "A".
-<code>A</code> is calculated by <code>Z * D</code>.</p></td>
-    </tr>
-    <tr>
-      <th>O</th>
-      <td><p>The name for <code>O</code> matrix on output. Default is "O".
-<code>O</code> is calculated by <code>r_hat_inv * R</code>.</p></td>
-    </tr>
-    </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A list or data frame containing <code>Z</code>,
-<code>K</code>, <code>C</code>, <code>D</code>, and <code>A</code> matrices.</p>
+    <p>A matrix with energy products in rows and phi values in a single column.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
