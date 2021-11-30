@@ -72,13 +72,13 @@ primary_aggregates <- function(.sutdata,
     # Look for primary industries in each of R, V, and Y matrices
     RT_p <- matsbyname::transpose_byname(R_mat) %>%
       matsbyname::select_cols_byname(retain_pattern =
-                                       matsbyname::make_pattern(row_col_names = p_industries_vec, pattern_type = pattern_type))
+                                       RCLabels::make_or_pattern(strings = p_industries_vec, pattern_type = pattern_type))
     VT_p <- matsbyname::transpose_byname(V_mat) %>%
       matsbyname::select_cols_byname(retain_pattern =
-                                       matsbyname::make_pattern(row_col_names = p_industries_vec, pattern_type = pattern_type))
+                                       RCLabels::make_or_pattern(strings = p_industries_vec, pattern_type = pattern_type))
     # Get the primary industries from the Y matrix.
     Y_p <- Y_mat %>% matsbyname::select_cols_byname(retain_pattern =
-                                                      matsbyname::make_pattern(row_col_names = p_industries_vec, pattern_type = pattern_type))
+                                                      RCLabels::make_or_pattern(strings = p_industries_vec, pattern_type = pattern_type))
     # TPES in product x industry matrix format is RT_p + VT_p - Y_p.
     RVT_p_minus_Y_p <- matsbyname::sum_byname(RT_p, VT_p) %>% matsbyname::difference_byname(Y_p)
 
@@ -166,10 +166,10 @@ finaldemand_aggregates <- function(.sutdata,
 
     net_prelim <- Y_mat %>%
       matsbyname::select_cols_byname(retain_pattern =
-                                       matsbyname::make_pattern(row_col_names = fd_sectors_vec, pattern_type = pattern_type))
+                                       RCLabels::make_or_pattern(strings = fd_sectors_vec, pattern_type = pattern_type))
     gross_prelim <- U_EIOU %>%
       matsbyname::select_cols_byname(retain_pattern =
-                                       matsbyname::make_pattern(row_col_names = fd_sectors_vec, pattern_type = pattern_type))
+                                       RCLabels::make_or_pattern(strings = fd_sectors_vec, pattern_type = pattern_type))
 
     # Use the right function for the requested aggregation
     if (by == "Total") {
@@ -261,11 +261,11 @@ finaldemand_aggregates_with_units <- function(.sutdata,
     # Filter columns of interest
     U_EIOU <- U_EIOU %>%
       matsbyname::select_cols_byname(retain_pattern =
-                                       matsbyname::make_pattern(row_col_names = fd_sectors_vec,
+                                       RCLabels::make_or_pattern(strings = fd_sectors_vec,
                                                                 pattern_type = pattern_type))
     Y_mat <- Y_mat %>%
       matsbyname::select_cols_byname(retain_pattern =
-                                       matsbyname::make_pattern(row_col_names = fd_sectors_vec,
+                                       RCLabels::make_or_pattern(strings = fd_sectors_vec,
                                                                 pattern_type = pattern_type))
     if (by == "Product") {
       net <- matsbyname::rowsums_byname(Y_mat)

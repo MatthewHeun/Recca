@@ -18,11 +18,14 @@ editor_options:
 bibliography: recca.bib
 ---
 
-```{r setup, include = FALSE}
+```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+```
+
+```{r setup}
 library(dplyr)
 library(matsbyname)
 library(matsindf)

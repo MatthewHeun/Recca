@@ -194,10 +194,10 @@ separate_RV <- function(.sutmats = NULL,
       warning("No R created in separate_RV")
     }
     new_R_mat <- R_plus_V_mat %>%
-      matsbyname::select_rows_byname(retain_pattern = matsbyname::make_pattern(r_industry_names,
+      matsbyname::select_rows_byname(retain_pattern = RCLabels::make_or_pattern(strings = r_industry_names,
                                                                                pattern_type = "exact"))
     new_V_mat <- R_plus_V_mat %>%
-      matsbyname::select_rows_byname(remove_pattern = matsbyname::make_pattern(r_industry_names,
+      matsbyname::select_rows_byname(remove_pattern = RCLabels::make_or_pattern(strings = r_industry_names,
                                                                                pattern_type = "exact"))
     list(new_R_mat, new_V_mat) %>% magrittr::set_names(c(R, V))
 
@@ -681,7 +681,7 @@ find_p_industry_names <- function(.sutdata = NULL,
     full_p_industry_names <- lapply(mats, function(m) {
       m %>%
         matsbyname::select_rows_byname(retain_pattern =
-                                         matsbyname::make_pattern(row_col_names = p_industry_prefixes_vec, pattern_type = "leading")) %>%
+                                         RCLabels::make_or_pattern(strings = p_industry_prefixes_vec, pattern_type = "leading")) %>%
         matsbyname::getrownames_byname()
     }) %>%
       # flatten
