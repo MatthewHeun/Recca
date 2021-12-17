@@ -86,3 +86,60 @@ test_that("extend_to_exergy() works as expected", {
     expect_error("non-energy rows were found:")
 
 })
+
+
+test_that("extend_to_exergy() works correctly with specified products", {
+  # Make an example R matrix
+  R <- matrix(c(250.129, 0,
+                0, 2087.513), byrow = TRUE, nrow = 2, ncol = 2,
+              dimnames = list(c("Resources [of Hydro]",
+                                "Resources [of Primary solid biofuels]"),
+                              c("Hydro [from Resources]", "Primary solid biofuels [from Resources]"))) %>%
+    matsbyname::setrowtype("Industry") %>% matsbyname::setcoltype("Product")
+
+  # Create an example U matrices
+  U <- matrix(c(250.129, 0,
+                0, 2087.519), byrow = TRUE, nrow = 2, ncol = 2,
+              dimnames = list(c("Hydro [from Resources]",
+                                "Primary solid biofuels [from Resources]"),
+                              c("Manufacture [of Hydro]", "Manufacture [of Primary solid biofuels]"))) %>%
+    matsbyname::setrowtype("Product") %>% matsbyname::setcoltype("Industry")
+
+  U_feed <- U
+  U_eiou <- matsbyname::hadamardproduct_byname(U_feed, 0.1)
+  r_eiou <- matsbyname::quotient_byname(U_eiou, U) %>%
+    matsbyname::replaceNaN_byname()
+
+  # Create an example V matrix
+  V <- matrix(c(250.129, 0,
+                0, 2087.513), byrow = TRUE, nrow = 2, ncol = 2,
+              dimnames = list(c("Manufacture [of Hydro]",
+                                "Manufacture [of Primary solid biofuels]"),
+                              c("Hydro", "Primary solid biofuels"))) %>%
+    matsbyname::setrowtype("Industry") %>% matsbyname::setcoltype("Product")
+
+  # Create an example Y matrix
+  Y <- matrix(c(250.129, 0,
+                0, 2087.513), byrow = TRUE, nrow = 2, ncol = 2,
+              dimnames = list(c("Hydro", "Primary solid biofuels"),
+                              c("Exports [of Hydro]", "Exports [of Primary solid biofuels]"))) %>%
+    matsbyname::setrowtype("Product") %>% matsbyname::setcoltype("Industry")
+
+  # Create an example phi vector
+  phi <- matrix(c(42,
+                  1,
+                  1.11,
+                  43), ncol = 1,
+                dimnames = list(c("Bogus1",
+                                  "Hydro",
+                                  "Primary solid biofuels",
+                                  "Bogus2"),
+                                "phi")) %>%
+    matsbyname::setrowtype("Product") %>% matsbyname::setcoltype("phi")
+
+  # Call extend_to_exergy() with the example matrices.
+  extend_to_exergy(R = R, U = U, U_feed = U_feed, U_eiou = U_eiou,
+                   V = V, Y = Y, phi = phi)
+
+
+})
