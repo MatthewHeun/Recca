@@ -12,3 +12,4 @@ recca_workflow.aux
 recca_workflow.bbl
 recca_workflow.blg
 ^\.github$
+^_pkgdown\.yml$
