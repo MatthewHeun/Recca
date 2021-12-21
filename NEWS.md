@@ -8,7 +8,7 @@ output: html_document
   `mat_piece`, `phi_piece`, `notation`, and `prepositions`
   to enable more flexible row and column name matching 
   between the various matrices and phi vectors.
-  In addition, `extend_to_exergy()` uses `matsbyname::vec_from_store_byname()`
+  In addition, `extend_to_exergy()` now uses `matsbyname::vec_from_store_byname()`
   internally to correctly handle hatized vector multiplication.
 * Many new tests for new features.
     * Now up to 554 tests, all passing.
