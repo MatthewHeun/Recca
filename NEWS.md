@@ -9,7 +9,7 @@ output: html_document
   between the various matrices and phi vectors.
 
 
-# Recca 0.1.37 (2021-10-13)
+# Recca 0.1.37 (2021-10-13) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5566713.svg)](https://doi.org/10.5281/zenodo.5566713)
 
 * Added details to `Recca` vignette, including additional equations for embodied matrices. 
 * New function `extend_to_exergy()` that calculates
