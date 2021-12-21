@@ -11,7 +11,7 @@ output: html_document
   In addition, `extend_to_exergy()` uses `matsbyname::vec_from_store_byname()`
   internally to correctly handle hatized vector multiplication.
 * Many new tests for new features.
-    * Now up to 530 tests, all passing.
+    * Now up to 554 tests, all passing.
     * Test coverage remains at 100 %.
 
 
