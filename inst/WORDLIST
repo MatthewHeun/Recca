@@ -61,10 +61,11 @@ Qx
 quantifications
 rowtypes
 rowvec
-sankey
 Sankey
-substitutable
 SUT
+sankey
+substitutable
+suff
 sutdata
 sutmats
 TPES
