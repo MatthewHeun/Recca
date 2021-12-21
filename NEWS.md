@@ -3,6 +3,11 @@ title: "Release notes for `Recca`"
 output: html_document
 ---
 
+* `extend_to_exergy()` gains new arguments 
+  `mat_piece`, `phi_piece`, `notation`, and `prepositions`
+  to enable more flexible row and column name matching 
+  between the various matrices and phi vectors.
+
 
 # Recca 0.1.37 (2021-10-13)
 
