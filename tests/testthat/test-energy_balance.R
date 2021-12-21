@@ -22,10 +22,11 @@ test_that("SUT matrix energy balance works with energy only", {
   )
 })
 
+
 test_that("SUT matrix energy balance fails when a number has changed", {
   mats <- UKEnergy2000mats %>%
-    spread(key = matrix.name, value = matrix) %>%
-    filter(Last.stage == IEATools::last_stages$final)
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    dplyr::filter(Last.stage == IEATools::last_stages$final)
   R <- mats$R[[1]]
   U <- mats$U[[1]]
   V <- mats$V[[1]]
@@ -36,6 +37,7 @@ test_that("SUT matrix energy balance fails when a number has changed", {
   expect_warning(verify_SUT_energy_balance(R = R, U = U, V = V, Y = Y),
                  "Energy not conserved")
 })
+
 
 test_that("SUT matrix energy balance with units works as expected", {
   result <- verify_SUT_energy_balance_with_units(
@@ -58,8 +60,10 @@ test_that("SUT matrix energy balance with units works as expected", {
   expect_true(all(result_noR$.SUT_ind_energy_balance %>% as.logical()))
 })
 
+
 test_that("all SUT industries are producing energy", {
-  UKspread <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
+  UKspread <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix)
   expect_silent(verify_SUT_industry_production(UKspread))
   result <- verify_SUT_industry_production(UKspread)
   expect_true(all(result[[".industry_production_OK"]] %>% as.logical()))
@@ -87,8 +91,10 @@ test_that("all SUT industries are producing energy", {
   expect_true(all(result_noR[[".industry_production_OK"]] %>% as.logical()))
 })
 
+
 test_that("SUT energy balance works with single matrices", {
-  UKspread <- UKEnergy2000mats %>% spread(key = matrix.name, value = matrix)
+  UKspread <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix)
   R <- UKspread$R[[1]]
   U <- UKspread$U[[1]]
   V <- UKspread$V[[1]]
@@ -97,15 +103,11 @@ test_that("SUT energy balance works with single matrices", {
 })
 
 
-###########################################################
-context("IEA energy balance")
-###########################################################
-
 test_that("IEA energy balance works correctly", {
   # Make sure that it works.
   expect_silent(
     UKEnergy2000tidy %>%
-      group_by(Country, Year, Energy.type, Last.stage) %>%
+      dplyr::group_by(Country, Year, Energy.type, Last.stage) %>%
       verify_IEATable_energy_balance(energy = "E.dot")
   )
 
@@ -115,7 +117,7 @@ test_that("IEA energy balance works correctly", {
   Unbalanced$E.dot[[1]] <- 1e4
   # Now try energy balance. It should fail.
   expect_error(Unbalanced %>%
-                 group_by(Country, Year, Energy.type, Last.stage) %>%
+                 dplyr::group_by(Country, Year, Energy.type, Last.stage) %>%
                  verify_IEATable_energy_balance(energy = "E.dot"),
                  "Energy not balanced in verify_IEATable_energy_balance.")
 
