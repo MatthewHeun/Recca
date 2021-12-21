@@ -48,6 +48,10 @@ extend_to_exergy <- function(.sutmats = NULL,
                              Y = Recca::psut_cols$Y,
                              phi = Recca::psut_cols$phi,
                              .exergy_suffix = "_exergy",
+                             mat_piece = "all",
+                             phi_piece = "all",
+                             notation = RCLabels::bracket_notation,
+                             prepositions = RCLabels::prepositions,
                              # Column names
                              R_name = Recca::psut_cols$R,
                              U_name = Recca::psut_cols$U,
@@ -106,39 +110,57 @@ extend_to_exergy <- function(.sutmats = NULL,
     # thereby reducing computational complexity and memory consumption.
 
     # R_X = R_E * phi_hat
-    R_X_mat <- matsbyname::matrixproduct_byname(R_mat, phi_vec %>%
-                                                  matsbyname::transpose_byname() %>%
-                                                  matsbyname::trim_rows_cols(mat = R_mat, margin = 2) %>%
+    R_X_mat <- matsbyname::matrixproduct_byname(R_mat,
+                                                matsbyname::vec_from_store_byname(a = R_mat,
+                                                                                  v = matsbyname::transpose_byname(phi_vec),
+                                                                                  a_piece = mat_piece, v_piece = phi_piece,
+                                                                                  notation = notation, prepositions = prepositions,
+                                                                                  column = FALSE) %>%
                                                   matsbyname::hatize_byname(keep = "colnames"))
+
     # U_X = phi_hat * U_E
-    U_X_mat <- matsbyname::matrixproduct_byname(phi_vec %>%
-                                                  matsbyname::trim_rows_cols(mat = U_mat, margin = 1) %>%
+    U_X_mat <- matsbyname::matrixproduct_byname(matsbyname::vec_from_store_byname(a = U_mat,
+                                                                                  v = phi_vec,
+                                                                                  a_piece = mat_piece, v_piece = phi_piece,
+                                                                                  notation = notation, prepositions = prepositions,
+                                                                                  column = TRUE) %>%
                                                   matsbyname::hatize_byname(keep = "rownames"),
                                                 U_mat)
 
     # U_feed_X = phi_hat * U_feed_E
-    U_feed_X_mat <- matsbyname::matrixproduct_byname(phi_vec %>%
-                                                       matsbyname::trim_rows_cols(mat = U_feed_mat, margin = 1) %>%
+    U_feed_X_mat <- matsbyname::matrixproduct_byname(matsbyname::vec_from_store_byname(a = U_feed_mat,
+                                                                                       v = phi_vec,
+                                                                                       a_piece = mat_piece, v_piece = phi_piece,
+                                                                                       notation = notation, prepositions = prepositions,
+                                                                                       column = TRUE) %>%
                                                        matsbyname::hatize_byname(keep = "rownames"),
                                                      U_feed_mat)
 
     # U_eiou_X = phi_hat * U_eiou_E
-    U_eiou_X_mat <- matsbyname::matrixproduct_byname(phi_vec %>%
-                                                       matsbyname::trim_rows_cols(mat = U_eiou_mat, margin = 1) %>%
+    U_eiou_X_mat <- matsbyname::matrixproduct_byname(matsbyname::vec_from_store_byname(a = U_eiou_mat,
+                                                                                       v = phi_vec,
+                                                                                       a_piece = mat_piece, v_piece = phi_piece,
+                                                                                       notation = notation, prepositions = prepositions,
+                                                                                       column = TRUE) %>%
                                                        matsbyname::hatize_byname(keep = "rownames"),
                                                      U_eiou_mat)
 
-
     # V_X = V_E * phi_hat
-    V_X_mat <- matsbyname::matrixproduct_byname(V_mat, phi_vec %>%
-                                                  matsbyname::transpose_byname() %>%
-                                                  matsbyname::trim_rows_cols(mat = V_mat, margin = 2) %>%
+    V_X_mat <- matsbyname::matrixproduct_byname(V_mat,
+                                                matsbyname::vec_from_store_byname(a = V_mat,
+                                                                                  v = matsbyname::transpose_byname(phi_vec),
+                                                                                  a_piece = mat_piece, v_piece = phi_piece,
+                                                                                  notation = notation, prepositions = prepositions,
+                                                                                  column = FALSE) %>%
                                                   matsbyname::hatize_byname(keep = "colnames"))
 
 
     # Y_X = phi_hat * Y_E
-    Y_X_mat <- matsbyname::matrixproduct_byname(phi_vec %>%
-                                                  matsbyname::trim_rows_cols(mat = Y_mat, margin = 1) %>%
+    Y_X_mat <- matsbyname::matrixproduct_byname(matsbyname::vec_from_store_byname(a = Y_mat,
+                                                                                  v = phi_vec,
+                                                                                  a_piece = mat_piece, v_piece = phi_piece,
+                                                                                  notation = notation, prepositions = prepositions,
+                                                                                  column = TRUE) %>%
                                                   matsbyname::hatize_byname(keep = "rownames"),
                                                 Y_mat)
 

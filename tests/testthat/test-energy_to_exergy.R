@@ -138,8 +138,54 @@ test_that("extend_to_exergy() works correctly with specified products", {
     matsbyname::setrowtype("Product") %>% matsbyname::setcoltype("phi")
 
   # Call extend_to_exergy() with the example matrices.
-  extend_to_exergy(R = R, U = U, U_feed = U_feed, U_eiou = U_eiou,
-                   V = V, Y = Y, phi = phi)
+  # Expect no warning.
+  res <- extend_to_exergy(R = R, U = U, U_feed = U_feed, U_eiou = U_eiou,
+                          V = V, Y = Y, phi = phi,
+                          mat_piece = "noun")
 
+  phi_mat <- matrix(c(1, 0,
+                      0, 1.11), byrow = TRUE, nrow = 2, ncol = 2)
+
+  expected_R_X <- R %*% phi_mat
+  for (i in 1:2) {
+    for (j in 1:2) {
+      expect_equal(res$R_exergy[[i, j]], expected_R_X[[i, j]])
+    }
+  }
+
+  expected_U_X <- phi_mat %*% U
+  for (i in 1:2) {
+    for (j in 1:2) {
+      expect_equal(res$U_exergy[[i, j]], expected_U_X[[i, j]])
+    }
+  }
+
+  expected_U_feed_X <- phi_mat %*% U_feed
+  for (i in 1:2) {
+    for (j in 1:2) {
+      expect_equal(res$U_feed_exergy[[i, j]], expected_U_feed_X[[i, j]])
+    }
+  }
+
+  expected_U_EIOU_X <- phi_mat %*% U_eiou
+  for (i in 1:2) {
+    for (j in 1:2) {
+      expect_equal(res$U_EIOU_exergy[[i, j]], expected_U_EIOU_X[[i, j]])
+    }
+  }
+
+  expected_V_X <- V %*% phi_mat
+  for (i in 1:2) {
+    for (j in 1:2) {
+      expect_equal(res$V_exergy[[i, j]], expected_V_X[[i, j]])
+    }
+  }
+
+  expected_Y_X <- phi_mat %*% Y
+  for (i in 1:2) {
+    for (j in 1:2) {
+      expect_equal(res$Y_exergy[[i, j]], expected_Y_X[[i, j]])
+    }
+  }
 
 })
