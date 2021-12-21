@@ -5,12 +5,21 @@
 #' given the matrices for the energy quantification and
 #' phi (exergy-to-energy ratio) vectors.
 #'
-#' Internally, this function uses `matsindf::apply`, so
+#' Internally, this function uses `matsindf::apply()`, so
 #' the ECC matrices can be provided
-#' as individual matrices
+#' as individual matrices,
+#' in a named list, or
 #' or in a data frame
 #' (in which case the arguments should
-#' given the string names of columns in the `.sutmats` data frame).
+#' given the string names of columns in the `.sutmats` data frame, the default).
+#'
+#' The vector `phi` is considered to be a store of values
+#' to be applied to each type of energy carrier.
+#' To determine which entry in the `phi` vector  is matched against which energy carrier,
+#' `mat_piece` and `phi_piece` are consulted.
+#' `mat_piece` and `phi_piece` can be any of
+#' "all", "pref", "suff", "noun", or one of many prepositions given in `suffixes`
+#'
 #'
 #' @param .sutmats An optional data frame of energy conversion chain matrices.
 #' @param clean_up_df When `.sutmats` is a data frame, tells whether to `tidyr::pivot_longer()` the result,
@@ -19,10 +28,20 @@
 #'                    Default is `TRUE`.
 #' @param R,U,U_feed,U_eiou,r_eiou,V,Y,phi Names of columns in `.sutmats` or single matrices. See `Recca::psut_cols`.
 #' @param .exergy_suffix The string suffix to be appended to exergy versions of ECC matrices.
+#' @param mat_piece The piece of matrix row and column names for `R`, `U`, `U_feed`, `U_EIOU`, `V`, and `Y` matrices
+#'                  which are to be matched against names in the `phi` vector.
+#'                  Default is "all", meaning that entire names are to be matched.
+#' @param phi_piece The piece of names in the `phi` vector against which
+#'                  row and column names for matrices `R`, `U`, `U_feed`, `U_EIOU`, `V`, and `Y` matrices
+#'                  is to be matched.
+#'                  Default is "all", meaning that entire names are to be matched.
+#' @param notation The nomenclature for the row and column labels. Default is `RCLabels::bracket_notation`.
+#' @param prepositions The prepositions to be used row and column notation.
+#'                     Default is `RCLabels::prepositions`.
 #' @param R_name,U_name,U_feed_name,U_eiou_name,r_eiou_name,V_name,Y_name,phi_name,energy_type,s_units Names of output matrices
 #' @param energy,exergy See `Recca::energy_types`.
 #'
-#' @return A data frame or list of matrices that represent the exergy version of the ECC.
+#' @return A data frame or list of matrices that represents the exergy version of the ECC.
 #'
 #' @export
 #'
