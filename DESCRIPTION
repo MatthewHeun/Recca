@@ -36,6 +36,7 @@ Imports:
     networkD3,
     parallel,
     purrr,
+    RCLabels,
     rlang,
     tibble,
     tidyr
