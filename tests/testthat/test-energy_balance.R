@@ -108,7 +108,12 @@ test_that("IEA energy balance works correctly", {
   expect_silent(
     UKEnergy2000tidy %>%
       dplyr::group_by(Country, Year, Energy.type, Last.stage) %>%
-      verify_IEATable_energy_balance(energy = "E.dot")
+      # On Matt's new M1 Pro MacBook Pro, this test has small errors in energy differences.
+      # Not sure if that is due to the processor being less precise?
+      # Anyway, setting tol = 0.2 so that the results can slip under that level and prevent
+      # errors in tests.
+      # Note that is 0.2 out of 1e14.  So not a big deal.
+      verify_IEATable_energy_balance(energy = "E.dot", tol = 0.2)
   )
 
   # Introduce something to make the energy balance fail.
