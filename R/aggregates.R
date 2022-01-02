@@ -225,10 +225,10 @@ finaldemand_aggregates <- function(.sutdata,
 #'                     If "trailing", sectors are aggregated if any entry in `fd_sectors` matches the trailing part of a final demand sector's name.
 #'                     If "anywhere", sectors are aggregated if any entry in `fd_sectors` matches any part of a final demand sector's name.
 #'                     Default is "exact".
-#' @param U Use (\code{U}) matrix or name of the column in \code{.sutdata} containing same
-#' @param Y Final demand (\code{Y}) matrix or name of the column in \code{.sutdata} containing same
-#' @param r_EIOU Matrix of ratios of EIOU for the make (\code{U}) matrix or name of the column in \code{.sutdata} containing same
-#' @param S_units The name of the column in \code{.sutdata} containing \code{S_units} matrices.
+#' @param U Use (`U`) matrix or name of the column in `.sutdata` containing same.
+#' @param Y Final demand (`Y`) matrix or name of the column in `.sutdata` containing same.
+#' @param r_EIOU Matrix of ratios of EIOU for the make (`U`) matrix or name of the column in `.sutdata` containing same.
+#' @param S_units The name of the column in `.sutdata` containing `S_units` matrices.
 #' @param by One of "Product", "Sector", or "Total" to indicate the desired aggregation:
 #'           "Product" for aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.),
 #'           "Sector" for aggregation by final demand sector (Agriculture/forestry, Domestic navigation, etc.), or
@@ -237,7 +237,7 @@ finaldemand_aggregates <- function(.sutdata,
 #' @param gross_aggregate_demand The name of gross energy demand (which includes energy industry own use) on output.
 #'
 #' @return A list or data frame containing net aggregate energy demand
-#'         and gross aggregate energy demand
+#'         and gross aggregate energy demand.
 #'
 #' @export
 finaldemand_aggregates_with_units <- function(.sutdata,
