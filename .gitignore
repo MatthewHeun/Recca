@@ -1,7 +1,6 @@
 # History files
 .Rhistory
 .Rapp.history
-
 # Session Data files
 .RData
 # Example code in package build process
@@ -31,3 +30,4 @@ Rplots.pdf
 # Stupid ~ files from Excel
 *~*.xlsx
 inst/doc
+.drake
