@@ -3,8 +3,19 @@ title: "Release notes for `Recca`"
 output: html_document
 ---
 
+* New look for `pkgdown` website.
+* `extend_to_exergy()` gains new arguments 
+  `mat_piece`, `phi_piece`, `notation`, and `prepositions`
+  to enable more flexible row and column name matching 
+  between the various matrices and phi vectors.
+  In addition, `extend_to_exergy()` now uses `matsbyname::vec_from_store_byname()`
+  internally to correctly handle hatized vector multiplication.
+* Many new tests for new features.
+    * Now up to 554 tests, all passing.
+    * Test coverage remains at 100 %.
 
-# Recca 0.1.37 (2021-10-13)
+
+# Recca 0.1.37 (2021-10-13) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5566713.svg)](https://doi.org/10.5281/zenodo.5566713)
 
 * Added details to `Recca` vignette, including additional equations for embodied matrices. 
 * New function `extend_to_exergy()` that calculates

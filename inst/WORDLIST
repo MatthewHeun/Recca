@@ -28,6 +28,7 @@ feedstocks
 finaldemand
 github
 hatinv
+hatized
 homogeoenous
 https
 IEA
@@ -61,10 +62,11 @@ Qx
 quantifications
 rowtypes
 rowvec
-sankey
 Sankey
-substitutable
 SUT
+sankey
+substitutable
+suff
 sutdata
 sutmats
 TPES
