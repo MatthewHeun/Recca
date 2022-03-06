@@ -348,6 +348,6 @@ region_aggregates <- function(.sut_data, aggregation_map,
     setdiff(matrix_values)
   tidy_df %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(group_cols))) %>%
-    dplyr::summarise("{matrix_values}" := matsbyname::sum_byname())
+    dplyr::summarise("{matrix_values}" := matsbyname::sum_byname(.data[[matrix_values]]))
 
 }
