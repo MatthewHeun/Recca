@@ -287,3 +287,67 @@ finaldemand_aggregates_with_units <- function(.sutdata,
   matsindf::matsindf_apply(.sutdata, FUN = fd_func, fd_sectors_vec = fd_sectors, U_mat = U, Y_mat = Y, r_EIOU_mat = r_EIOU, S_units_mat = S_units)
 }
 
+
+#' Aggregate by region
+#'
+#' Aggregates a data frame according to the regions given in an aggregation map.
+#'
+#' An aggregation map is a named list of 3-letter country abbreviations.
+#' The names are the regions into which the country data is to be aggregated.
+#'
+#' @param .sut_data A wide-by-matrices `matsindf`-style data frame of PSUT matrices.
+#' @param aggregation_map The recipe for aggregating to regions.
+#' @param country The name of the country column in `.sut_data`. Default is `IEATools::iea_cols$country`.
+#' @param continent The name of the continent column in the aggregated data frame.
+#'                  Default is "Continent".
+#'
+#' @return A modified version of `.sut_data` wherein the `country` column is replaced
+#'         by region aggregates specified by `aggregation_map`.
+#'
+#' @export
+#'
+#' @examples
+region_aggregates <- function(.sut_data, aggregation_map,
+                              country = IEATools::iea_cols$country,
+                              year = IEATools::iea_cols$year,
+                              method = IEATools::iea_cols$method,
+                              energy_type = IEATools::iea_cols$energy_type,
+                              last_stage = IEATools::iea_cols$last_stage,
+                              s_units = Recca::psut_cols$s_units,
+                              U = Recca::psut_cols$U,
+                              r_EIOU = Recca::psut_cols$r_eiou,
+                              psut_colnames = Recca::psut_cols,
+                              matrix_names = Recca::psut_cols$matnames,
+                              matrix_values = Recca::psut_cols$matvals,
+                              continent = "Continent") {
+
+
+  agg_map_df <- matsbyname::aggregation_map_to_df(aggregation_map = aggregation_map,
+                                                      few_colname = continent,
+                                                      many_colname = country)
+
+  # Find the PSUT columns that we have in this data frame.
+  matrix_cols <- psut_colnames[which(psut_colnames %in% names(.sut_data))] %>%
+    unique() %>%
+    unlist() %>%
+    # Get rid of columns that we don't want to touch with the summing operation.
+    setdiff(U) %>%
+    setdiff(r_EIOU) %>%
+    setdiff(energy_type)
+  tidy_df <- .sut_data %>%
+    dplyr::mutate(
+      # We need to re-calculate U ad r_EIOU matrices after aggregation.
+      # So get rid of them here.
+      "{U}" := NULL,
+      "{r_EIOU}" := NULL,
+    ) %>%
+    tidyr::pivot_longer(cols = matrix_cols, names_to = matrix_names, values_to = matrix_values) %>%
+    dplyr::left_join(agg_map_df, by = country)
+  group_cols <- names(tidy_df) %>%
+    setdiff(country) %>%
+    setdiff(matrix_values)
+  tidy_df %>%
+    dplyr::group_by(dplyr::across(dplyr::all_of(group_cols))) %>%
+    dplyr::summarise("{matrix_values}" := matsbyname::sum_byname())
+
+}

@@ -436,3 +436,17 @@ test_that("finaldemand_aggregates works with U_EIOU", {
 
 })
 
+
+test_that("region_aggregates() works as expected", {
+  mats_GBR <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix)
+  # Add another country, by duplicating GBR
+  mats <- dplyr::bind_rows(mats_GBR,
+                           mats_GBR %>% dplyr::mutate(Country = "USA"),
+                           mats_GBR %>% dplyr::mutate(Country = "FRA"))
+  agg_map <- list(EUR = c("GBR", "FRA"), AMR = "USA")
+
+  res <- region_aggregates(mats, aggregation_map = agg_map)
+
+
+})

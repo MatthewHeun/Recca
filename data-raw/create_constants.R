@@ -23,6 +23,7 @@ psut_cols <- list(resources = "R",
                   Y = "Y",
                   phi = "phi",
                   s_units = "S_units",
+                  matnames = "matnames",
                   matvals = "matvals",
                   sector = "Sector",
                   energy_type = "Energy.type")
