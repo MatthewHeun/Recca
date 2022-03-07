@@ -217,5 +217,128 @@
 #' }
 "energy_types"
 
+#' A list of High pressure matter (HPM) useful work products
+#'
+#' A list of High pressure matter (HPM) useful work products.
+#'
+#' @format A list with `r length(hpm_eu.products)` entries.
+#' \describe{
+#'   \item{HPA}{The useful work product (Eu.product) "High pressure air"}
+#'   \item{HPL}{The useful work product (Eu.product) "High pressure liquids"}
+#'   \item{HPNG}{The useful work product (Eu.product) "High pressure natural gas"}
+#' }
+"hpm_eu.products"
+
+#' A list of High temperature heat (HTH) useful work products
+#'
+#' A list of High temperature heat (HTH) useful work products
+#'
+#' @format A list with `r length(hth_eu.products)` entries.
+#' \describe{
+#'   \item{HTH.400.C}{The useful work product (Eu.product) "HTH.400.C"}
+#'   \item{HTH.600.C}{The useful work product (Eu.product) "HTH.600.C"}
+#'   \item{HTH.850.C}{The useful work product (Eu.product) "HTH.850.C"}
+#'   \item{HTH.960.C}{The useful work product (Eu.product) "HTH.960.C"}
+#'   \item{HTH.1000.C}{The useful work product (Eu.product) "HTH.1000.C"}
+#'   \item{HTH.1300.C}{The useful work product (Eu.product) "HTH.1300.C"}
+#'   \item{HTH.1600.C}{The useful work product (Eu.product) "HTH.1600.C"}
+#' }
+"hth_eu.products"
+
+#' A list of Medium temperature heat (MTH) useful work products
+#'
+#' A list of Medium temperature heat (MTH) useful work products
+#'
+#' @format A list with `r length(mth_eu.products)` entries.
+#' \describe{
+#'   \item{MTH.100.C}{The useful work product (Eu.product) "MTH.100.C"}
+#'   \item{MTH.200.C}{The useful work product (Eu.product) "MTH.200.C"}
+#' }
+"mth_eu.products"
+
+#' A list of Low temperature heat (LTH) useful work products
+#'
+#' A list of Low temperature heat (LTH) useful work products
+#'
+#' @format A list with `r length(lth_eu.products)` entries.
+#' \describe{
+#'   \item{LTH.20.C}{The useful work product (Eu.product) "LTH.20.C"}
+#'   \item{LTH.60.C}{The useful work product (Eu.product) "LTH.60.C"}
+#' }
+"lth_eu.products"
+
+#' A list of Cooling useful work products
+#'
+#' A list of Cooling useful work products
+#'
+#' @format A list with `r length(cooling_eu.products)` entries.
+#' \describe{
+#'   \item{LTC.-10.C}{The useful work product (Eu.product) "LTC.-10.C"}
+#'   \item{LTC.20.C}{The useful work product (Eu.product) "LTC.20.C"}
+#' }
+"cooling_eu.products"
+
+#' A list of Propulsion useful work products
+#'
+#' A list of Propulsion useful work products
+#'
+#' @format A list with `r length(propulsion_eu.products)` entries.
+#' \describe{
+#'   \item{MP}{The useful work product (Eu.product) Marine propulsion}
+#'   \item{RoP}{The useful work product (Eu.product) Road propulsion}
+#'   \item{RaP}{The useful work product (Eu.product) Rail propulsion}
+#' }
+"propulsion_eu.products"
+
+#' A list of Mechanical useful work products
+#'
+#' A list of Mechanical useful work products
+#'
+#' @format A list with `r length(mechanical_eu.products)` entries.
+#' \describe{
+#'   \item{MD}{The useful work product (Eu.product) Mechanical drive}
+#'   \item{KE}{The useful work product (Eu.product) Kinetic energy}
+#'   \item{MW}{The useful work product (Eu.product) Mechanical work}
+#'   \item{MF}{The useful work product (Eu.product) Material fracture}
+#' }
+"mechanical_eu.products"
+
+#' A list of Information processing useful work products
+#'
+#' A list of Information processing useful work products
+#'
+#' @format A list with `r length(ip_eu.products)` entries.
+#' \describe{
+#'   \item{IP}{The useful work product (Eu.product) Information processing}
+#' }
+"ip_eu.products"
+
+#' A list of Light useful work products
+#'
+#' A list of Light useful work products
+#'
+#' @format A list with `r length(l_eu.products)` entries.
+#' \describe{
+#'   \item{L}{The useful work product (Eu.product) Light}
+#' }
+"l_eu.products"
+
+#' A list of Non-energy use useful work products
+#'
+#' A list of Non-energy use useful work products
+#'
+#' @format A list with `r length(neu_eu.products)` entries.
+#' \describe{
+#'   \item{NEU}{The useful work product (Eu.product) Non-energy use}
+#' }
+"neu_eu.products"
+
+#' A list of Name - Eu.product list combinations
+#'
+#' A list of Name - Eu.product list combinations for use in aggregating individual
+#' useful work products in to groups
+#'
+#' @format A list with `r length(euproduct_aggregation_map)` entries.
+"euproduct_aggregation_map"
 
 
