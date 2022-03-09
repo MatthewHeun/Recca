@@ -372,7 +372,7 @@ region_aggregates <- function(.sut_data,
     # Recalculate U and r_EIOU matrices
     dplyr::mutate(
       "{matrix_cols[['U']]}" := matsbyname::sum_byname(.data[[ matrix_cols[["U_feed"]] ]],
-                                      .data[[ matrix_cols[["U_eiou"]] ]]),
+                                                       .data[[ matrix_cols[["U_eiou"]] ]]),
       "{matrix_cols[['r_eiou']]}" := matsbyname::quotient_byname(.data[[ matrix_cols[["U_eiou"]] ]], .data[[ matrix_cols[["U"]] ]]),
       # S_units will be summed to give (possibly) non-unity values.
       # Divide by itself and replace NaN by 0 to
