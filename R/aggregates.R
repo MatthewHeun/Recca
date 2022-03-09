@@ -247,7 +247,7 @@ finaldemand_aggregates_with_units <- function(.sutdata,
                                               U = Recca::psut_cols$U,
                                               Y = Recca::psut_cols$Y,
                                               r_EIOU = Recca::psut_cols$r_eiou,
-                                              S_units = Recca::psut_cols$s_units,
+                                              S_units = Recca::psut_cols$S_units,
                                               by = c("Total", "Product", "Sector"),
                                               # Output names
                                               net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
@@ -287,3 +287,98 @@ finaldemand_aggregates_with_units <- function(.sutdata,
   matsindf::matsindf_apply(.sutdata, FUN = fd_func, fd_sectors_vec = fd_sectors, U_mat = U, Y_mat = Y, r_EIOU_mat = r_EIOU, S_units_mat = S_units)
 }
 
+
+#' Aggregate by region
+#'
+#' Aggregates a data frame according to the regions given in an aggregation map.
+#' The data frame should contain metadata columns (including `country`)
+#' and be wide-by-matrices.
+#'
+#' The aggregation map should be a named list of 3-letter country abbreviations.
+#' The names are the regions into which the country data is to be aggregated.
+#' See the examples.
+#'
+#' @param .sut_data A wide-by-matrices `matsindf`-style data frame of PSUT matrices.
+#' @param aggregation_map The recipe for aggregating to regions.
+#' @param country,year,method,energy_type,last_stage See `IEATools::iea_cols`.
+#' @param matrix_cols Names of columns in .sut_data containing matrices.
+#'                    Default is a vector of names from `Recca::psut_cols`:
+#'                    R, U, U_feed, U_eiou, r_eiou, V, Y, and S_units.
+#' @param matrix_names,matrix_values Internal column names. See `Recca::psut_cols`.
+#' @param .region The of the region column used internally.
+#'                Default is ".region".
+#'
+#' @return A modified version of `.sut_data` wherein the `country` column is replaced
+#'         by region aggregates specified by `aggregation_map`.
+#'
+#' @export
+#'
+#' @examples
+#' library(tidyr)
+#' mats_GBR <- UKEnergy2000mats %>%
+#'   tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
+#' # Add other countries, by duplicating and renaming GBR
+#' mats <- dplyr::bind_rows(mats_GBR,
+#'                          mats_GBR %>% dplyr::mutate(Country = "USA"),
+#'                          mats_GBR %>% dplyr::mutate(Country = "FRA"))
+#' # Establish the aggregation map.
+#' agg_map <- list(EUR = c("GBR", "FRA"), AMR = "USA")
+#' # Aggregate into continents
+#' region_aggregates(mats, aggregation_map = agg_map)
+region_aggregates <- function(.sut_data,
+                              aggregation_map,
+                              country = IEATools::iea_cols$country,
+                              year = IEATools::iea_cols$year,
+                              method = IEATools::iea_cols$method,
+                              energy_type = IEATools::iea_cols$energy_type,
+                              last_stage = IEATools::iea_cols$last_stage,
+                              matrix_cols = c(R = Recca::psut_cols$R,
+                                              U = Recca::psut_cols$U,
+                                              U_feed = Recca::psut_cols$U_feed,
+                                              U_eiou = Recca::psut_cols$U_eiou,
+                                              r_eiou = Recca::psut_cols$r_eiou,
+                                              V = Recca::psut_cols$V,
+                                              Y = Recca::psut_cols$Y,
+                                              S_units = Recca::psut_cols$S_units),
+                              matrix_names = Recca::psut_cols$matnames,
+                              matrix_values = Recca::psut_cols$matvals,
+                              .region = ".region") {
+
+  agg_map_df <- matsbyname::aggregation_map_to_df(aggregation_map = aggregation_map,
+                                                      few_colname = .region,
+                                                      many_colname = country)
+  # Make the incoming data frame tidy.
+  tidy_df <- .sut_data %>%
+    tidyr::pivot_longer(cols = unname(matrix_cols), names_to = matrix_names, values_to = matrix_values) %>%
+    # We need to re-calculate U ad r_EIOU matrices after aggregation.
+    # So get rid of them here.
+    dplyr::filter(! .data[[matrix_names]] == matrix_cols[["U"]], ! .data[[matrix_names]] == matrix_cols[["r_eiou"]]) %>%
+    dplyr::left_join(agg_map_df, by = country)
+  group_cols <- names(tidy_df) %>%
+    setdiff(country) %>%
+    setdiff(matrix_values)
+  tidy_df %>%
+    dplyr::group_by(dplyr::across(dplyr::all_of(group_cols))) %>%
+    # Summarise using the new .summarise argument to sum_byname.
+    dplyr::summarise("{matrix_values}" := matsbyname::sum_byname(.data[[matrix_values]], .summarise = TRUE)) %>%
+    # Rename Continent to Country
+    dplyr::rename(
+      "{country}" := .data[[.region]]
+    ) %>%
+    # And pivot wider again to give wide by matrices shape.
+    tidyr::pivot_wider(names_from = matrix_names, values_from = matrix_values) %>%
+    # Remove the groupings we added.
+    dplyr::ungroup() %>%
+    # Recalculate U and r_EIOU matrices
+    dplyr::mutate(
+      "{matrix_cols[['U']]}" := matsbyname::sum_byname(.data[[ matrix_cols[["U_feed"]] ]],
+                                      .data[[ matrix_cols[["U_eiou"]] ]]),
+      "{matrix_cols[['r_eiou']]}" := matsbyname::quotient_byname(.data[[ matrix_cols[["U_eiou"]] ]], .data[[ matrix_cols[["U"]] ]]),
+      # S_units will be summed to give (possibly) non-unity values.
+      # Divide by itself and replace NaN by 0 to
+      # get back to unity values when non-zero.
+      "{matrix_cols[['S_units']]}" := matsbyname::quotient_byname(.data[[ matrix_cols[["S_units"]] ]],
+                                                                  .data[[ matrix_cols[["S_units"]] ]]) %>%
+        matsbyname::replaceNaN_byname(val = 0)
+    )
+}

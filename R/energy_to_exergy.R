@@ -38,7 +38,7 @@
 #' @param notation The nomenclature for the row and column labels. Default is `RCLabels::bracket_notation`.
 #' @param prepositions The prepositions to be used row and column notation.
 #'                     Default is `RCLabels::prepositions`.
-#' @param R_name,U_name,U_feed_name,U_eiou_name,r_eiou_name,V_name,Y_name,phi_name,energy_type,s_units Names of output matrices
+#' @param R_name,U_name,U_feed_name,U_eiou_name,r_eiou_name,V_name,Y_name,phi_name,energy_type,S_units Names of output matrices
 #' @param energy,exergy See `Recca::energy_types`.
 #'
 #' @return A data frame or list of matrices that represents the exergy version of the ECC.
@@ -81,7 +81,7 @@ extend_to_exergy <- function(.sutmats = NULL,
                              Y_name = Recca::psut_cols$Y,
                              phi_name = Recca::psut_cols$phi,
                              energy_type = Recca::psut_cols$energy_type,
-                             s_units = Recca::psut_cols$s_units,
+                             S_units = Recca::psut_cols$S_units,
                              energy = Recca::energy_types$e,
                              exergy = Recca::energy_types$x) {
 
@@ -111,7 +111,7 @@ extend_to_exergy <- function(.sutmats = NULL,
           "{V_name}" := NULL,
           "{Y_name}" := NULL,
           "{phi_name}" := NULL,
-          "{s_units}" := NULL
+          "{S_units}" := NULL
         )
       if (nrow(bad_rows) > 0) {
         err_msg <- paste0("In Recca::extend_to_exergy(), non-energy rows were found: ",

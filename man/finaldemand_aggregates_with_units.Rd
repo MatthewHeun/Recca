@@ -11,7 +11,7 @@ finaldemand_aggregates_with_units(
   U = Recca::psut_cols$U,
   Y = Recca::psut_cols$Y,
   r_EIOU = Recca::psut_cols$r_eiou,
-  S_units = Recca::psut_cols$s_units,
+  S_units = Recca::psut_cols$S_units,
   by = c("Total", "Product", "Sector"),
   net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
   gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand
@@ -32,11 +32,11 @@ If "trailing", sectors are aggregated if any entry in \code{fd_sectors} matches 
 If "anywhere", sectors are aggregated if any entry in \code{fd_sectors} matches any part of a final demand sector's name.
 Default is "exact".}
 
-\item{U}{Use (\code{U}) matrix or name of the column in \code{.sutdata} containing same}
+\item{U}{Use (\code{U}) matrix or name of the column in \code{.sutdata} containing same.}
 
-\item{Y}{Final demand (\code{Y}) matrix or name of the column in \code{.sutdata} containing same}
+\item{Y}{Final demand (\code{Y}) matrix or name of the column in \code{.sutdata} containing same.}
 
-\item{r_EIOU}{Matrix of ratios of EIOU for the make (\code{U}) matrix or name of the column in \code{.sutdata} containing same}
+\item{r_EIOU}{Matrix of ratios of EIOU for the make (\code{U}) matrix or name of the column in \code{.sutdata} containing same.}
 
 \item{S_units}{The name of the column in \code{.sutdata} containing \code{S_units} matrices.}
 
@@ -51,7 +51,7 @@ Default is "exact".}
 }
 \value{
 A list or data frame containing net aggregate energy demand
-and gross aggregate energy demand
+and gross aggregate energy demand.
 }
 \description{
 Calculates aggregate final demand energy and services from a data frame of Supply-Use matrices.
