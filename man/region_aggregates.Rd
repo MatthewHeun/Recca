@@ -12,13 +12,13 @@ region_aggregates(
   method = IEATools::iea_cols$method,
   energy_type = IEATools::iea_cols$energy_type,
   last_stage = IEATools::iea_cols$last_stage,
-  s_units = Recca::psut_cols$s_units,
-  U = Recca::psut_cols$U,
-  r_EIOU = Recca::psut_cols$r_eiou,
-  psut_colnames = Recca::psut_cols,
+  matrix_cols = c(R = Recca::psut_cols$R, U = Recca::psut_cols$U, U_feed =
+    Recca::psut_cols$U_feed, U_eiou = Recca::psut_cols$U_eiou, r_eiou =
+    Recca::psut_cols$r_eiou, V = Recca::psut_cols$V, Y = Recca::psut_cols$Y, S_units =
+    Recca::psut_cols$S_units),
   matrix_names = Recca::psut_cols$matnames,
   matrix_values = Recca::psut_cols$matvals,
-  continent = "Continent"
+  .region = ".region"
 )
 }
 \arguments{
@@ -26,10 +26,16 @@ region_aggregates(
 
 \item{aggregation_map}{The recipe for aggregating to regions.}
 
-\item{country}{The name of the country column in \code{.sut_data}. Default is \code{IEATools::iea_cols$country}.}
+\item{country, year, method, energy_type, last_stage}{See \code{IEATools::iea_cols}.}
 
-\item{continent}{The name of the continent column in the aggregated data frame.
-Default is "Continent".}
+\item{matrix_cols}{Names of columns in .sut_data containing matrices.
+Default is a vector of names from \code{Recca::psut_cols}:
+R, U, U_feed, U_eiou, r_eiou, V, Y, and S_units.}
+
+\item{matrix_names, matrix_values}{Internal column names. See \code{Recca::psut_cols}.}
+
+\item{.region}{The of the region column used internally.
+Default is ".region".}
 }
 \value{
 A modified version of \code{.sut_data} wherein the \code{country} column is replaced
@@ -37,8 +43,24 @@ by region aggregates specified by \code{aggregation_map}.
 }
 \description{
 Aggregates a data frame according to the regions given in an aggregation map.
+The data frame should contain metadata columns (including \code{country})
+and be wide-by-matrices.
 }
 \details{
-An aggregation map is a named list of 3-letter country abbreviations.
+The aggregation map should be a named list of 3-letter country abbreviations.
 The names are the regions into which the country data is to be aggregated.
+See the examples.
+}
+\examples{
+library(tidyr)
+mats_GBR <- UKEnergy2000mats \%>\%
+  tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
+# Add other countries, by duplicating and renaming GBR
+mats <- dplyr::bind_rows(mats_GBR,
+                         mats_GBR \%>\% dplyr::mutate(Country = "USA"),
+                         mats_GBR \%>\% dplyr::mutate(Country = "FRA"))
+# Establish the aggregation map.
+agg_map <- list(EUR = c("GBR", "FRA"), AMR = "USA")
+# Aggregate into continents
+region_aggregates(mats, aggregation_map = agg_map)
 }

@@ -15,8 +15,11 @@ A string list with 17 entries.
 \item{make,V}{The name of a column in a wide-by-matrices data frame containing make (\code{V}) matrices.}
 \item{final_demand,Y}{The name of a column in a wide-by-matrices data frame containing final demand (\code{Y}) matrices.}
 \item{phi}{The name of a column in a wide-by-matrices data frame containing exergy-to-energy-ratio (\strong{phi}) matrices.}
-\item{s_units}{The name of a column in a wide-by-matrices data frame containing unit summation (\code{S_units}) matrices.}
+\item{S_units}{The name of a column in a wide-by-matrices data frame containing unit summation (\code{S_units}) matrices.}
 \item{matvals}{The name of a column in a tidy data frame containing matrices.}
+\item{matnames}{The name of a column in a tidy data frame containing matrix names.}
+\item{sector}{The name of a column in a tidy data frame containing sector names.}
+\item{energy_type}{The name of a column in a tidy data frame containing names of energy types.}
 }
 }
 \usage{

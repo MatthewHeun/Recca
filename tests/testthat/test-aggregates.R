@@ -439,7 +439,7 @@ test_that("finaldemand_aggregates works with U_EIOU", {
 
 test_that("region_aggregates() works as expected", {
   mats_GBR <- UKEnergy2000mats %>%
-    tidyr::spread(key = matrix.name, value = matrix)
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
   # Add another country, by duplicating GBR
   mats <- dplyr::bind_rows(mats_GBR,
                            mats_GBR %>% dplyr::mutate(Country = "USA"),
@@ -447,6 +447,25 @@ test_that("region_aggregates() works as expected", {
   agg_map <- list(EUR = c("GBR", "FRA"), AMR = "USA")
 
   res <- region_aggregates(mats, aggregation_map = agg_map)
-
-
+  # Verify column names
+  expect_true(Recca::psut_cols$R %in% names(res))
+  expect_true(Recca::psut_cols$U_eiou %in% names(res))
+  expect_true(Recca::psut_cols$U_feed %in% names(res))
+  expect_true(Recca::psut_cols$V %in% names(res))
+  expect_true(Recca::psut_cols$Y %in% names(res))
+  expect_true(Recca::psut_cols$U %in% names(res))
+  expect_true(Recca::psut_cols$r_eiou %in% names(res))
+  expect_true(Recca::psut_cols$S_units %in% names(res))
+  # Check that the EUR rows are 2x the AMR rows
+  eur <- res %>% dplyr::filter(Country == "EUR")
+  amr <- res %>% dplyr::filter(Country == "AMR")
+  expect_equal(eur$R, matsbyname::hadamardproduct_byname(2, amr$R))
+  expect_equal(eur$U, matsbyname::hadamardproduct_byname(2, amr$U))
+  expect_equal(eur$U_EIOU, matsbyname::hadamardproduct_byname(2, amr$U_EIOU))
+  expect_equal(eur$U_feed, matsbyname::hadamardproduct_byname(2, amr$U_feed))
+  expect_equal(eur$V, matsbyname::hadamardproduct_byname(2, amr$V))
+  expect_equal(eur$Y, matsbyname::hadamardproduct_byname(2, amr$Y))
+  # But some of the matrices should be same
+  expect_equal(eur$S_units, amr$S_units)
+  expect_equal(eur$r_EIOU, amr$r_EIOU)
 })

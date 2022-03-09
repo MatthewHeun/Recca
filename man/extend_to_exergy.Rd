@@ -29,7 +29,7 @@ extend_to_exergy(
   Y_name = Recca::psut_cols$Y,
   phi_name = Recca::psut_cols$phi,
   energy_type = Recca::psut_cols$energy_type,
-  s_units = Recca::psut_cols$s_units,
+  S_units = Recca::psut_cols$S_units,
   energy = Recca::energy_types$e,
   exergy = Recca::energy_types$x
 )
@@ -60,7 +60,7 @@ Default is "all", meaning that entire names are to be matched.}
 \item{prepositions}{The prepositions to be used row and column notation.
 Default is \code{RCLabels::prepositions}.}
 
-\item{R_name, U_name, U_feed_name, U_eiou_name, r_eiou_name, V_name, Y_name, phi_name, energy_type, s_units}{Names of output matrices}
+\item{R_name, U_name, U_feed_name, U_eiou_name, r_eiou_name, V_name, Y_name, phi_name, energy_type, S_units}{Names of output matrices}
 
 \item{energy, exergy}{See \code{Recca::energy_types}.}
 }

@@ -11,7 +11,7 @@ finaldemand_aggregates_with_units(
   U = Recca::psut_cols$U,
   Y = Recca::psut_cols$Y,
   r_EIOU = Recca::psut_cols$r_eiou,
-  S_units = Recca::psut_cols$s_units,
+  S_units = Recca::psut_cols$S_units,
   by = c("Total", "Product", "Sector"),
   net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
   gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand
