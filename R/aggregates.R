@@ -330,7 +330,6 @@ finaldemand_aggregates_with_units <- function(.sutdata,
 #' region_aggregates(mats, aggregation_map = agg_map)
 region_aggregates <- function(.sut_data,
                               aggregation_map,
-                              cluster = multidplyr::new_cluster(2),
                               country = IEATools::iea_cols$country,
                               year = IEATools::iea_cols$year,
                               method = IEATools::iea_cols$method,
@@ -349,8 +348,8 @@ region_aggregates <- function(.sut_data,
                               .region = ".region") {
 
   agg_map_df <- matsbyname::aggregation_map_to_df(aggregation_map = aggregation_map,
-                                                      few_colname = .region,
-                                                      many_colname = country)
+                                                  few_colname = .region,
+                                                  many_colname = country)
   # Make the incoming data frame tidy.
   tidy_df <- .sut_data %>%
     tidyr::pivot_longer(cols = unname(matrix_cols), names_to = matrix_names, values_to = matrix_values) %>%

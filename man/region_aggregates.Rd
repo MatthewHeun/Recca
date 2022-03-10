@@ -7,7 +7,6 @@
 region_aggregates(
   .sut_data,
   aggregation_map,
-  cluster = multidplyr::new_cluster(2),
   country = IEATools::iea_cols$country,
   year = IEATools::iea_cols$year,
   method = IEATools::iea_cols$method,
@@ -27,10 +26,6 @@ region_aggregates(
 
 \item{aggregation_map}{The recipe for aggregating to regions.}
 
-\item{cluster}{The cluster to be used with \code{multidplyr} parallelization.
-Default is \code{multidplyr::new_cluster(1)}, giving single-threaded
-computation.}
-
 \item{country, year, method, energy_type, last_stage}{See \code{IEATools::iea_cols}.}
 
 \item{matrix_cols}{Names of columns in .sut_data containing matrices.
@@ -41,6 +36,10 @@ R, U, U_feed, U_eiou, r_eiou, V, Y, and S_units.}
 
 \item{.region}{The of the region column used internally.
 Default is ".region".}
+
+\item{cluster}{The cluster to be used with \code{multidplyr} parallelization.
+Default is \code{multidplyr::new_cluster(1)}, giving single-threaded
+computation.}
 }
 \value{
 A modified version of \code{.sut_data} wherein the \code{country} column is replaced
