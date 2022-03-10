@@ -300,9 +300,6 @@ finaldemand_aggregates_with_units <- function(.sutdata,
 #'
 #' @param .sut_data A wide-by-matrices `matsindf`-style data frame of PSUT matrices.
 #' @param aggregation_map The recipe for aggregating to regions.
-#' @param cluster The cluster to be used with `multidplyr` parallelization.
-#'                Default is `multidplyr::new_cluster(1)`, giving single-threaded
-#'                computation.
 #' @param country,year,method,energy_type,last_stage See `IEATools::iea_cols`.
 #' @param matrix_cols Names of columns in .sut_data containing matrices.
 #'                    Default is a vector of names from `Recca::psut_cols`:

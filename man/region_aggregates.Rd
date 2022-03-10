@@ -36,10 +36,6 @@ R, U, U_feed, U_eiou, r_eiou, V, Y, and S_units.}
 
 \item{.region}{The of the region column used internally.
 Default is ".region".}
-
-\item{cluster}{The cluster to be used with \code{multidplyr} parallelization.
-Default is \code{multidplyr::new_cluster(1)}, giving single-threaded
-computation.}
 }
 \value{
 A modified version of \code{.sut_data} wherein the \code{country} column is replaced
