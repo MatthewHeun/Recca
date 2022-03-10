@@ -33,6 +33,7 @@ Imports:
     magrittr,
     matsbyname,
     matsindf,
+    multidplyr,
     networkD3,
     parallel,
     purrr,

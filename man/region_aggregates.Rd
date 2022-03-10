@@ -7,6 +7,7 @@
 region_aggregates(
   .sut_data,
   aggregation_map,
+  cluster = multidplyr::new_cluster(2),
   country = IEATools::iea_cols$country,
   year = IEATools::iea_cols$year,
   method = IEATools::iea_cols$method,
@@ -25,6 +26,10 @@ region_aggregates(
 \item{.sut_data}{A wide-by-matrices \code{matsindf}-style data frame of PSUT matrices.}
 
 \item{aggregation_map}{The recipe for aggregating to regions.}
+
+\item{cluster}{The cluster to be used with \code{multidplyr} parallelization.
+Default is \code{multidplyr::new_cluster(1)}, giving single-threaded
+computation.}
 
 \item{country, year, method, energy_type, last_stage}{See \code{IEATools::iea_cols}.}
 
