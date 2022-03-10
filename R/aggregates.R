@@ -347,6 +347,7 @@ region_aggregates <- function(.sut_data,
                               matrix_values = Recca::psut_cols$matvals,
                               .region = ".region") {
 
+  # Convert the aggregation map to a data frame for use in the summarise function below.
   agg_map_df <- matsbyname::aggregation_map_to_df(aggregation_map = aggregation_map,
                                                   few_colname = .region,
                                                   many_colname = country)
