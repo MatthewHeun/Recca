@@ -16,7 +16,7 @@ primary_aggregates(
 )
 }
 \arguments{
-\item{.sutdata}{a data frame with columns of matrices from a supply-use analysis.}
+\item{.sutdata}{A data frame with columns of matrices from a supply-use analysis.}
 
 \item{p_industries}{a vector of names of industries to be aggregated as "primary."
 If \code{.sutdata} is a data frame, \code{p_industries} should be the name of a column in the data frame.
@@ -41,9 +41,9 @@ Default is "leading" to enable primary industries such as "Resources [of Crude o
 
 \item{by}{One of "Total", "Product", or "Flow" to indicate the desired aggregation:
 \itemize{
-\item "Total": aggregation over both Product and Flow (the default)
-\item "Product": aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.)
-\item "Flow": aggregation by type of flow (Production, Imports, Exports, etc.)
+\item "Total": aggregation over both Product and Flow (the default),
+\item "Product": aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.), or
+\item "Flow": aggregation by type of flow (Production, Imports, Exports, etc.).
 }}
 
 \item{aggregate_primary}{The name for aggregates of primary energy on output.}

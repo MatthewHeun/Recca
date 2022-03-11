@@ -8,6 +8,7 @@ region_aggregates(
   .sut_data,
   aggregation_map,
   country = IEATools::iea_cols$country,
+  .region = ".region",
   year = IEATools::iea_cols$year,
   method = IEATools::iea_cols$method,
   energy_type = IEATools::iea_cols$energy_type,
@@ -17,8 +18,7 @@ region_aggregates(
     Recca::psut_cols$r_eiou, V = Recca::psut_cols$V, Y = Recca::psut_cols$Y, S_units =
     Recca::psut_cols$S_units),
   matrix_names = Recca::psut_cols$matnames,
-  matrix_values = Recca::psut_cols$matvals,
-  .region = ".region"
+  matrix_values = Recca::psut_cols$matvals
 )
 }
 \arguments{
@@ -34,8 +34,8 @@ R, U, U_feed, U_eiou, r_eiou, V, Y, and S_units.}
 
 \item{matrix_names, matrix_values}{Internal column names. See \code{Recca::psut_cols}.}
 
-\item{.region}{The of the region column used internally.
-Default is ".region".}
+\item{region}{The of the region column used internally.
+Default is "Region".}
 }
 \value{
 A modified version of \code{.sut_data} wherein the \code{country} column is replaced

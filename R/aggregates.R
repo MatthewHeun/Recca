@@ -7,17 +7,17 @@
 #'
 #' Calculates aggregate primary energy from a data frame of Supply-Use matrices.
 #'
-#' @param .sutdata a data frame with columns of matrices from a supply-use analysis.
+#' @param .sutdata A data frame with columns of matrices from a supply-use analysis.
 #' @param p_industries a vector of names of industries to be aggregated as "primary."
-#'        If `.sutdata` is a data frame, `p_industries` should be the name of a column in the data frame.
-#'        If `.sutdata` is `NULL`, `p_industries` can be a single vector of industry names.
-#'        These industries in `p_industries` will appear in rows of the resource (`R`) and make (`V`) matrices and
-#'        columns of the final demand matrix (`Y`).
-#'        Entries in `Y_p` will be subtracted from entries in `R_p + V_p` to obtain
-#'        the total primary energy aggregate,
-#'        where `*_p` is the primary part of those matrices.
-#'        The function `find_p_industry_names()` might be helpful to find
-#'        primary industry names if they can be identified by prefixes.
+#'                     If `.sutdata` is a data frame, `p_industries` should be the name of a column in the data frame.
+#'                     If `.sutdata` is `NULL`, `p_industries` can be a single vector of industry names.
+#'                     These industries in `p_industries` will appear in rows of the resource (`R`) and make (`V`) matrices and
+#'                     columns of the final demand matrix (`Y`).
+#'                     Entries in `Y_p` will be subtracted from entries in `R_p + V_p` to obtain
+#'                     the total primary energy aggregate,
+#'                     where `*_p` is the primary part of those matrices.
+#'                     The function `find_p_industry_names()` might be helpful to find
+#'                     primary industry names if they can be identified by prefixes.
 #' @param pattern_type One of "exact", "leading", "trailing", or "anywhere" which specifies
 #'                     how matches are made for `fd_sectors`.
 #'                     If "exact", exact matches specify the sectors to be aggregated.
@@ -28,9 +28,9 @@
 #' @param R,V,Y See `Recca::psut_cols`.
 #' @param by One of "Total", "Product", or "Flow" to indicate the desired aggregation:
 #'        \itemize{
-#'          \item "Total": aggregation over both Product and Flow (the default)
-#'          \item "Product": aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.)
-#'          \item "Flow": aggregation by type of flow (Production, Imports, Exports, etc.)
+#'          \item "Total": aggregation over both Product and Flow (the default),
+#'          \item "Product": aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.), or
+#'          \item "Flow": aggregation by type of flow (Production, Imports, Exports, etc.).
 #'        }
 #' @param aggregate_primary The name for aggregates of primary energy on output.
 #'
@@ -305,8 +305,8 @@ finaldemand_aggregates_with_units <- function(.sutdata,
 #'                    Default is a vector of names from `Recca::psut_cols`:
 #'                    R, U, U_feed, U_eiou, r_eiou, V, Y, and S_units.
 #' @param matrix_names,matrix_values Internal column names. See `Recca::psut_cols`.
-#' @param .region The of the region column used internally.
-#'                Default is ".region".
+#' @param region The of the region column used internally.
+#'               Default is "Region".
 #'
 #' @return A modified version of `.sut_data` wherein the `country` column is replaced
 #'         by region aggregates specified by `aggregation_map`.
@@ -328,6 +328,7 @@ finaldemand_aggregates_with_units <- function(.sutdata,
 region_aggregates <- function(.sut_data,
                               aggregation_map,
                               country = IEATools::iea_cols$country,
+                              .region = ".region",
                               year = IEATools::iea_cols$year,
                               method = IEATools::iea_cols$method,
                               energy_type = IEATools::iea_cols$energy_type,
@@ -341,8 +342,7 @@ region_aggregates <- function(.sut_data,
                                               Y = Recca::psut_cols$Y,
                                               S_units = Recca::psut_cols$S_units),
                               matrix_names = Recca::psut_cols$matnames,
-                              matrix_values = Recca::psut_cols$matvals,
-                              .region = ".region") {
+                              matrix_values = Recca::psut_cols$matvals) {
 
   # Convert the aggregation map to a data frame for use in the summarise function below.
   agg_map_df <- matsbyname::aggregation_map_to_df(aggregation_map = aggregation_map,
@@ -374,12 +374,14 @@ region_aggregates <- function(.sut_data,
     dplyr::mutate(
       "{matrix_cols[['U']]}" := matsbyname::sum_byname(.data[[ matrix_cols[["U_feed"]] ]],
                                                        .data[[ matrix_cols[["U_eiou"]] ]]),
-      "{matrix_cols[['r_eiou']]}" := matsbyname::quotient_byname(.data[[ matrix_cols[["U_eiou"]] ]], .data[[ matrix_cols[["U"]] ]]),
+      "{matrix_cols[['r_eiou']]}" := matsbyname::quotient_byname(.data[[ matrix_cols[["U_eiou"]] ]],
+                                                                 .data[[ matrix_cols[["U"]] ]]) %>%
+        matsbyname::replaceNaN_byname(val = 0),
       # S_units will be summed to give (possibly) non-unity values.
       # Divide by itself and replace NaN by 0 to
       # get back to unity values when non-zero.
       "{matrix_cols[['S_units']]}" := matsbyname::quotient_byname(.data[[ matrix_cols[["S_units"]] ]],
-                                                                  .data[[ matrix_cols[["S_units"]] ]]) %>%
+                                                                  .data[[ matrix_cols[["S_units"]] ]])  %>%
         matsbyname::replaceNaN_byname(val = 0)
     )
 }
