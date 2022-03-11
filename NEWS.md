@@ -3,6 +3,8 @@ title: "Release notes for `Recca`"
 output: html_document
 ---
 
+* New function `region_aggregates()` calculates
+  regional aggregates according to columns in a data frame.
 * New look for `pkgdown` website.
 * `extend_to_exergy()` gains new arguments 
   `mat_piece`, `phi_piece`, `notation`, and `prepositions`

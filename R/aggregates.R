@@ -291,22 +291,17 @@ finaldemand_aggregates_with_units <- function(.sutdata,
 #' Aggregate by region
 #'
 #' Aggregates a data frame according to the regions given in an aggregation map.
-#' The data frame should contain metadata columns (including `country`)
+#' The data frame (`.sut_data`) should contain metadata columns (including `country` and `region`)
 #' and be wide-by-matrices.
 #'
-#' The aggregation map should be a named list of 3-letter country abbreviations.
-#' The names are the regions into which the country data is to be aggregated.
-#' See the examples.
-#'
 #' @param .sut_data A wide-by-matrices `matsindf`-style data frame of PSUT matrices.
-#' @param aggregation_map The recipe for aggregating to regions.
+#' @param region The of the region column in .sut_data.
+#'               Default is `Recca::aggregate_cols$region`.
 #' @param country,year,method,energy_type,last_stage See `IEATools::iea_cols`.
 #' @param matrix_cols Names of columns in .sut_data containing matrices.
 #'                    Default is a vector of names from `Recca::psut_cols`:
 #'                    R, U, U_feed, U_eiou, r_eiou, V, Y, and S_units.
 #' @param matrix_names,matrix_values Internal column names. See `Recca::psut_cols`.
-#' @param region The of the region column used internally.
-#'               Default is "Region".
 #'
 #' @return A modified version of `.sut_data` wherein the `country` column is replaced
 #'         by region aggregates specified by `aggregation_map`.
@@ -314,6 +309,8 @@ finaldemand_aggregates_with_units <- function(.sutdata,
 #' @export
 #'
 #' @examples
+#' library(dplyr)
+#' library(matsbyname)
 #' library(tidyr)
 #' mats_GBR <- UKEnergy2000mats %>%
 #'   tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
@@ -322,13 +319,14 @@ finaldemand_aggregates_with_units <- function(.sutdata,
 #'                          mats_GBR %>% dplyr::mutate(Country = "USA"),
 #'                          mats_GBR %>% dplyr::mutate(Country = "FRA"))
 #' # Establish the aggregation map.
-#' agg_map <- list(EUR = c("GBR", "FRA"), AMR = "USA")
+#' agg_df <- list(EUR = c("GBR", "FRA"), AMR = "USA") %>%
+#'   matsbyname::aggregation_map_to_df(few_colname = "Continent", many_colname = "Country")
 #' # Aggregate into continents
-#' region_aggregates(mats, aggregation_map = agg_map)
+#' dplyr::left_join(mats, agg_df, by = "Country") %>%
+#'   region_aggregates(mats, country = "Country", region = "Continent")
 region_aggregates <- function(.sut_data,
-                              aggregation_map,
                               country = IEATools::iea_cols$country,
-                              .region = ".region",
+                              region = Recca::aggregate_cols$region,
                               year = IEATools::iea_cols$year,
                               method = IEATools::iea_cols$method,
                               energy_type = IEATools::iea_cols$energy_type,
@@ -344,17 +342,12 @@ region_aggregates <- function(.sut_data,
                               matrix_names = Recca::psut_cols$matnames,
                               matrix_values = Recca::psut_cols$matvals) {
 
-  # Convert the aggregation map to a data frame for use in the summarise function below.
-  agg_map_df <- matsbyname::aggregation_map_to_df(aggregation_map = aggregation_map,
-                                                  few_colname = .region,
-                                                  many_colname = country)
   # Make the incoming data frame tidy.
   tidy_df <- .sut_data %>%
     tidyr::pivot_longer(cols = unname(matrix_cols), names_to = matrix_names, values_to = matrix_values) %>%
     # We need to re-calculate U ad r_EIOU matrices after aggregation.
     # So get rid of them here.
-    dplyr::filter(! .data[[matrix_names]] == matrix_cols[["U"]], ! .data[[matrix_names]] == matrix_cols[["r_eiou"]]) %>%
-    dplyr::left_join(agg_map_df, by = country)
+    dplyr::filter(! .data[[matrix_names]] == matrix_cols[["U"]], ! .data[[matrix_names]] == matrix_cols[["r_eiou"]])
   group_cols <- names(tidy_df) %>%
     setdiff(country) %>%
     setdiff(matrix_values)
@@ -364,7 +357,7 @@ region_aggregates <- function(.sut_data,
     dplyr::summarise("{matrix_values}" := matsbyname::sum_byname(.data[[matrix_values]], .summarise = TRUE)) %>%
     # Rename Continent to Country
     dplyr::rename(
-      "{country}" := .data[[.region]]
+      "{country}" := .data[[region]]
     ) %>%
     # And pivot wider again to give wide by matrices shape.
     tidyr::pivot_wider(names_from = matrix_names, values_from = matrix_values) %>%
