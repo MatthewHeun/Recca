@@ -6,9 +6,8 @@
 \usage{
 region_aggregates(
   .sut_data,
-  aggregation_map,
   country = IEATools::iea_cols$country,
-  .region = ".region",
+  region = Recca::aggregate_cols$region,
   year = IEATools::iea_cols$year,
   method = IEATools::iea_cols$method,
   energy_type = IEATools::iea_cols$energy_type,
@@ -24,18 +23,16 @@ region_aggregates(
 \arguments{
 \item{.sut_data}{A wide-by-matrices \code{matsindf}-style data frame of PSUT matrices.}
 
-\item{aggregation_map}{The recipe for aggregating to regions.}
-
 \item{country, year, method, energy_type, last_stage}{See \code{IEATools::iea_cols}.}
+
+\item{region}{The of the region column in .sut_data.
+Default is \code{Recca::aggregate_cols$region}.}
 
 \item{matrix_cols}{Names of columns in .sut_data containing matrices.
 Default is a vector of names from \code{Recca::psut_cols}:
 R, U, U_feed, U_eiou, r_eiou, V, Y, and S_units.}
 
 \item{matrix_names, matrix_values}{Internal column names. See \code{Recca::psut_cols}.}
-
-\item{region}{The of the region column used internally.
-Default is "Region".}
 }
 \value{
 A modified version of \code{.sut_data} wherein the \code{country} column is replaced
@@ -43,15 +40,12 @@ by region aggregates specified by \code{aggregation_map}.
 }
 \description{
 Aggregates a data frame according to the regions given in an aggregation map.
-The data frame should contain metadata columns (including \code{country})
+The data frame (\code{.sut_data}) should contain metadata columns (including \code{country} and \code{region})
 and be wide-by-matrices.
 }
-\details{
-The aggregation map should be a named list of 3-letter country abbreviations.
-The names are the regions into which the country data is to be aggregated.
-See the examples.
-}
 \examples{
+library(dplyr)
+library(matsbyname)
 library(tidyr)
 mats_GBR <- UKEnergy2000mats \%>\%
   tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
@@ -60,7 +54,9 @@ mats <- dplyr::bind_rows(mats_GBR,
                          mats_GBR \%>\% dplyr::mutate(Country = "USA"),
                          mats_GBR \%>\% dplyr::mutate(Country = "FRA"))
 # Establish the aggregation map.
-agg_map <- list(EUR = c("GBR", "FRA"), AMR = "USA")
+agg_df <- list(EUR = c("GBR", "FRA"), AMR = "USA") \%>\%
+  matsbyname::aggregation_map_to_df(few_colname = "Continent", many_colname = "Country")
 # Aggregate into continents
-region_aggregates(mats, aggregation_map = agg_map)
+dplyr::left_join(mats, agg_df, by = "Country") \%>\%
+  region_aggregates(mats, country = "Country", region = "Continent")
 }
