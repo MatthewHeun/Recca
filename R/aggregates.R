@@ -288,16 +288,20 @@ finaldemand_aggregates_with_units <- function(.sutdata,
 }
 
 
-#' Aggregate by region
+#' Aggregate into regions
 #'
-#' Aggregates a data frame according to the regions given in an aggregation map.
-#' The data frame (`.sut_data`) should contain metadata columns (including `country` and `region`)
+#' Aggregates a data frame according to the regions given in a column of the data frame.
+#' The data frame (`.sut_data`) should contain metadata columns (including `many_colname` and `few_colname`)
 #' and be wide-by-matrices.
 #'
 #' @param .sut_data A wide-by-matrices `matsindf`-style data frame of PSUT matrices.
-#' @param region The of the region column in .sut_data.
-#'               Default is `Recca::aggregate_cols$region`.
-#' @param country,year,method,energy_type,last_stage See `IEATools::iea_cols`.
+#' @param many_colname The name of the column in `.sut_data` that contains the "many" descriptions,
+#'                     for example countries that need to be aggregated to continents.
+#'                     Default is `IEATools::iea_cols$country`.
+#' @param few_colnme The of the column in `.sut_data` that contains the "few" descriptions,
+#'                   for example continents into which countries are to be aggregated.
+#'                   Default is `Recca::aggregate_cols$region`.
+#' @param year,method,energy_type,last_stage See `IEATools::iea_cols`.
 #' @param matrix_cols Names of columns in .sut_data containing matrices.
 #'                    Default is a vector of names from `Recca::psut_cols`:
 #'                    R, U, U_feed, U_eiou, r_eiou, V, Y, and S_units.
@@ -325,8 +329,8 @@ finaldemand_aggregates_with_units <- function(.sutdata,
 #' dplyr::left_join(mats, agg_df, by = "Country") %>%
 #'   region_aggregates(mats, country = "Country", region = "Continent")
 region_aggregates <- function(.sut_data,
-                              country = IEATools::iea_cols$country,
-                              region = Recca::aggregate_cols$region,
+                              many_colname = IEATools::iea_cols$country,
+                              few_colname = Recca::aggregate_cols$region,
                               year = IEATools::iea_cols$year,
                               method = IEATools::iea_cols$method,
                               energy_type = IEATools::iea_cols$energy_type,
@@ -349,15 +353,15 @@ region_aggregates <- function(.sut_data,
     # So get rid of them here.
     dplyr::filter(! .data[[matrix_names]] == matrix_cols[["U"]], ! .data[[matrix_names]] == matrix_cols[["r_eiou"]])
   group_cols <- names(tidy_df) %>%
-    setdiff(country) %>%
+    setdiff(many_colname) %>%
     setdiff(matrix_values)
   tidy_df %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(group_cols)), .add = TRUE) %>%
     # Summarise using the new .summarise argument to sum_byname.
     dplyr::summarise("{matrix_values}" := matsbyname::sum_byname(.data[[matrix_values]], .summarise = TRUE)) %>%
-    # Rename Continent to Country
+    # Rename few_colname to many_colname
     dplyr::rename(
-      "{country}" := .data[[region]]
+      "{many_colname}" := .data[[few_colname]]
     ) %>%
     # And pivot wider again to give wide by matrices shape.
     tidyr::pivot_wider(names_from = matrix_names, values_from = matrix_values) %>%

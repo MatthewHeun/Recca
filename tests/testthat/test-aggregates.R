@@ -450,7 +450,9 @@ test_that("region_aggregates() works as expected", {
                                               many_colname = IEATools::iea_cols$country)
   mats <- dplyr::left_join(mats, agg_df, by = IEATools::iea_cols$country)
 
-  res <- region_aggregates(mats, region = "Continent")
+  res <- region_aggregates(mats,
+                           many_colname = IEATools::iea_cols$country,
+                           few_colname = "Continent")
   # Verify column names
   expect_true(Recca::psut_cols$R %in% names(res))
   expect_true(Recca::psut_cols$U_eiou %in% names(res))

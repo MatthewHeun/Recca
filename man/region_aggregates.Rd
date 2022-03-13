@@ -2,12 +2,12 @@
 % Please edit documentation in R/aggregates.R
 \name{region_aggregates}
 \alias{region_aggregates}
-\title{Aggregate by region}
+\title{Aggregate into regions}
 \usage{
 region_aggregates(
   .sut_data,
-  country = IEATools::iea_cols$country,
-  region = Recca::aggregate_cols$region,
+  many_colname = IEATools::iea_cols$country,
+  few_colname = Recca::aggregate_cols$region,
   year = IEATools::iea_cols$year,
   method = IEATools::iea_cols$method,
   energy_type = IEATools::iea_cols$energy_type,
@@ -23,24 +23,29 @@ region_aggregates(
 \arguments{
 \item{.sut_data}{A wide-by-matrices \code{matsindf}-style data frame of PSUT matrices.}
 
-\item{country, year, method, energy_type, last_stage}{See \code{IEATools::iea_cols}.}
+\item{many_colname}{The name of the column in \code{.sut_data} that contains the "many" descriptions,
+for example countries that need to be aggregated to continents.
+Default is \code{IEATools::iea_cols$country}.}
 
-\item{region}{The of the region column in .sut_data.
-Default is \code{Recca::aggregate_cols$region}.}
+\item{year, method, energy_type, last_stage}{See \code{IEATools::iea_cols}.}
 
 \item{matrix_cols}{Names of columns in .sut_data containing matrices.
 Default is a vector of names from \code{Recca::psut_cols}:
 R, U, U_feed, U_eiou, r_eiou, V, Y, and S_units.}
 
 \item{matrix_names, matrix_values}{Internal column names. See \code{Recca::psut_cols}.}
+
+\item{few_colnme}{The of the column in \code{.sut_data} that contains the "few" descriptions,
+for example continents into which countries are to be aggregated.
+Default is \code{Recca::aggregate_cols$region}.}
 }
 \value{
 A modified version of \code{.sut_data} wherein the \code{country} column is replaced
 by region aggregates specified by \code{aggregation_map}.
 }
 \description{
-Aggregates a data frame according to the regions given in an aggregation map.
-The data frame (\code{.sut_data}) should contain metadata columns (including \code{country} and \code{region})
+Aggregates a data frame according to the regions given in a column of the data frame.
+The data frame (\code{.sut_data}) should contain metadata columns (including \code{many_colname} and \code{few_colname})
 and be wide-by-matrices.
 }
 \examples{
