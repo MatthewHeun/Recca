@@ -69,9 +69,9 @@ calc_eta_i <- function(.sutmats,
 }
 
 
-#' Calculate aggregate efficiencies
+#' Calculate aggregate (total) efficiencies
 #'
-#' Calculates aggregate primary-to-final demand (gross and net) efficiencies
+#' Calculates aggregate (total) primary-to-final demand (gross and net) efficiencies
 #' across the energy conversion chain.
 #'
 #' `.aggregate_df` is probably formed by joining the results from
@@ -103,6 +103,27 @@ calc_eta_i <- function(.sutmats,
 #' @export
 #'
 #' @examples
+#' wide <- primary_total_aggregates_sut <- UKEnergy2000mats %>%
+#'   tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
+#
+#
+#
+#
+#
+#
+#
+#
+# ************** Finish here ******************
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
 calc_eta_pfd <- function(.aggregate_df = NULL,
                          # Inputs
                          aggregate_primary_colname = Recca::aggregate_cols$aggregate_primary,
