@@ -38,13 +38,11 @@
 #'   spread(key = "matrix.name", value = "matrix") %>%
 #'   calc_eta_i()
 calc_eta_i <- function(.sutmats,
-                       # Input
+                       # Inputs
                        U = "U", V = "V", S_units = "S_units",
                        # Outputs
                        eta_i = "eta_i"){
   eta_func <- function(U_mat, V_mat, S_units_mat){
-
-
     f_vec <- matsbyname::colsums_byname(U_mat) %>% matsbyname::transpose_byname()
     g_vec <- matsbyname::rowsums_byname(V_mat)
     eta_vec <- matsbyname::quotient_byname(g_vec, f_vec)
@@ -71,3 +69,93 @@ calc_eta_i <- function(.sutmats,
 }
 
 
+#' Calculate aggregate (total) efficiencies
+#'
+#' Calculates aggregate (total) primary-to-final demand (gross and net) efficiencies
+#' across the energy conversion chain.
+#'
+#' `.aggregate_df` is probably formed by joining the results from
+#' `primary_aggregates()` and `finaldemand_aggregates()`.
+#' See examples.
+#'
+#' @param .aggregate_df A data frame or list containing columns
+#'                      `aggregate_primary_colname`,
+#'                      `net_aggregate_demand_colname`,
+#'                      `gross_aggregate_demand_colname`,
+#'                      probably formed by joining the results from
+#' @param aggregate_primary_colname The name of the column in `p_aggregates` that contains primary energy or exergy aggregates.
+#'                                  Default is `Recca::aggregate_cols$aggregate_primary`.
+#' @param gross_aggregate_demand_colname The name of the column in `finaldemand_aggregates`
+#'                                       that contains gross final demand aggregates.
+#'                                       Default is `Recca::aggregate_cols$gross_aggregate_demand`.
+#' @param net_aggregate_demand_colname The name of the column in `finaldemand_aggregates`
+#'                                     that contains net final demand aggregates.
+#'                                     Default is `Recca::aggregate_cols$net_aggregate_demand`.
+#' @param eta_pfd_gross The name of the output column containing efficiencies
+#'                      of converting primary energy into gross final demand energy.
+#'                      Default is `Recca::efficiency_cols$eta_pfd_gross`.
+#' @param eta_pfd_net The name of the output column containing efficiencies
+#'                    of converting primary energy into net final demand energy.
+#'                    Default is `Recca::efficiency_cols$eta_pfd_net`.
+#'
+#' @return A data frame of aggregate efficiencies.
+#'
+#' @export
+#'
+#' @examples
+#' wide <- primary_total_aggregates_sut <- UKEnergy2000mats %>%
+#'   tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
+#' # Define primary industries
+#' p_industries <- c("Resources - Crude", "Resources - NG")
+#' primary_total_aggregates <- wide %>%
+#'   dplyr::mutate(
+#'     p_industries = rep(list(p_industries), times = nrow(.))
+#'   ) %>%
+#'   Recca::primary_aggregates(p_industries = "p_industries", by = "Total") %>%
+#'   # Don't need the matrices
+#'   dplyr::select(IEATools::iea_cols$country,
+#'                 IEATools::iea_cols$year,
+#'                 IEATools::iea_cols$energy_type,
+#'                 IEATools::iea_cols$last_stage,
+#'                 Recca::aggregate_cols$aggregate_primary)
+#' # Define final demand sectors
+#' fd_sectors <- c("Residential", "Transport", "Oil fields")
+#' finaldemand_total_aggregates <- wide %>%
+#'   dplyr::mutate(
+#'     fd_sectors = rep(list(fd_sectors), times = nrow(.))
+#'   ) %>%
+#'   Recca::finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Total") %>%
+#'   # Don't need the matrices
+#'   dplyr::select(IEATools::iea_cols$country,
+#'                 IEATools::iea_cols$year,
+#'                 IEATools::iea_cols$energy_type,
+#'                 IEATools::iea_cols$last_stage,
+#'                 Recca::aggregate_cols$gross_aggregate_demand,
+#'                 Recca::aggregate_cols$net_aggregate_demand)
+#' dplyr::full_join(primary_total_aggregates,
+#'                  finaldemand_total_aggregates,
+#'                  by = c(IEATools::iea_cols$country,
+#'                         IEATools::iea_cols$year,
+#'                         IEATools::iea_cols$energy_type,
+#'                         IEATools::iea_cols$last_stage)) %>%
+#'   calc_eta_pfd()
+calc_eta_pfd <- function(.aggregate_df = NULL,
+                         # Inputs
+                         aggregate_primary_colname = Recca::aggregate_cols$aggregate_primary,
+                         gross_aggregate_demand_colname = Recca::aggregate_cols$gross_aggregate_demand,
+                         net_aggregate_demand_colname = Recca::aggregate_cols$net_aggregate_demand,
+                         # Outputs
+                         eta_pfd_gross = Recca::efficiency_cols$eta_pfd_gross,
+                         eta_pfd_net = Recca::efficiency_cols$eta_pfd_net) {
+  eta_pfd_func <- function(primary, gross_fd, net_fd) {
+    eta_pfd_gross_val <- gross_fd / primary
+    eta_pfd_net_val <- net_fd / primary
+    list(eta_pfd_gross_val, eta_pfd_net_val) %>%
+      magrittr::set_names(c(eta_pfd_gross, eta_pfd_net))
+  }
+  matsindf::matsindf_apply(.aggregate_df,
+                           FUN = eta_pfd_func,
+                           primary = aggregate_primary_colname,
+                           gross_fd = gross_aggregate_demand_colname,
+                           net_fd = net_aggregate_demand_colname)
+}

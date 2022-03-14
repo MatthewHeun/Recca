@@ -3,6 +3,9 @@ title: "Release notes for `Recca`"
 output: html_document
 ---
 
+
+* New function `calc_eta_pfd()` calculates gross and net
+  efficiencies from primary to final demand.
 * New function `region_aggregates()` calculates
   regional aggregates according to columns in a data frame.
 * New look for `pkgdown` website.

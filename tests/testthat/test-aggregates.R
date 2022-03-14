@@ -429,7 +429,7 @@ test_that("finaldemand_aggregates works with U_EIOU", {
     dplyr::filter(Last.stage %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
     Recca::finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Sector")
 
-  expect_equal(matsbyname::getrownames_byname(sut_result$EX.d_gross[[1]]),
+  expect_equal(matsbyname::getrownames_byname(sut_result[[Recca::aggregate_cols$gross_aggregate_demand]][[1]]),
                sut_result$fd_sectors[[1]] %>% sort())
 })
 

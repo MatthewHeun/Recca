@@ -1,6 +1,3 @@
-###########################################################
-context("Efficiency")
-###########################################################
 
 test_that("industry efficiencies are calculated correctly", {
   result <- UKEnergy2000mats %>%
@@ -43,4 +40,61 @@ test_that("efficiency vectors are named correctly", {
 })
 
 
+test_that("calc_eta_pfu() works correctly", {
+  wide <- primary_total_aggregates_sut <- UKEnergy2000mats %>%
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
+
+  # Define primary industries
+  p_industries <- c("Resources - Crude", "Resources - NG")
+
+  primary_total_aggregates_sut <- wide %>%
+    dplyr::mutate(
+      p_industries = rep(list(p_industries), times = nrow(.))
+    ) %>%
+    Recca::primary_aggregates(p_industries = "p_industries", by = "Total") %>%
+    # Get rid of unneeded matrix columns.
+    dplyr::mutate(
+      "{Recca::psut_cols$R}" := NULL,
+      "{Recca::psut_cols$U}" := NULL,
+      "{Recca::psut_cols$U_feed}" := NULL,
+      "{Recca::psut_cols$U_eiou}" := NULL,
+      "{Recca::psut_cols$r_eiou}" := NULL,
+      "{Recca::psut_cols$V}" := NULL,
+      "{Recca::psut_cols$Y}" := NULL,
+      "{Recca::psut_cols$S_units}" := NULL,
+      p_industries = NULL
+    )
+
+  # Define final demand sectors
+  fd_sectors <- c("Residential", "Transport", "Oil fields")
+
+  finaldemand_total_aggregates_sut <- wide %>%
+    dplyr::mutate(
+      fd_sectors = rep(list(fd_sectors), times = nrow(.))
+    ) %>%
+    Recca::finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Total") %>%
+    # Get rid of unneeded matrix columns.
+    dplyr::mutate(
+      "{Recca::psut_cols$R}" := NULL,
+      "{Recca::psut_cols$U}" := NULL,
+      "{Recca::psut_cols$U_feed}" := NULL,
+      "{Recca::psut_cols$U_eiou}" := NULL,
+      "{Recca::psut_cols$r_eiou}" := NULL,
+      "{Recca::psut_cols$V}" := NULL,
+      "{Recca::psut_cols$Y}" := NULL,
+      "{Recca::psut_cols$S_units}" := NULL,
+      fd_sectors = NULL
+    )
+
+  etas <- dplyr::full_join(primary_total_aggregates_sut,
+                           finaldemand_total_aggregates_sut,
+                           by = c(IEATools::iea_cols$country,
+                                  IEATools::iea_cols$year,
+                                  IEATools::iea_cols$energy_type,
+                                  IEATools::iea_cols$last_stage)) %>%
+    calc_eta_pfd()
+
+  expect_equal(etas$eta_pfd_gross, list(0.799193548387097, 5384063619.67424, 0.279466456989247, 5097922181.12103))
+  expect_equal(etas$eta_pfd_net, list(0.771505376344086, 5384063619.67343, 0.278660005376344, 5097922181.12023))
+})
 
