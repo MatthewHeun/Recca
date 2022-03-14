@@ -97,8 +97,7 @@ test_that("calc_eta_pfu() works correctly", {
                                   IEATools::iea_cols$last_stage)) %>%
     calc_eta_pfd()
 
-
-
-
+  expect_equal(etas$eta_pfd_gross, list(0.799193548387097, 5384063619.67424, 0.279466456989247, 5097922181.12103))
+  expect_equal(etas$eta_pfd_net, list(0.771505376344086, 5384063619.67343, 0.278660005376344, 5097922181.12023))
 })
 

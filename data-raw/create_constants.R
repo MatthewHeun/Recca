@@ -47,7 +47,7 @@ usethis::use_data(aggregate_cols, overwrite = TRUE)
 #
 
 efficiency_cols <- list(eta_i = "eta_i",
-                        eta_pfd_gross = "eta_pdf_gross",
+                        eta_pfd_gross = "eta_pfd_gross",
                         eta_pfd_net = "eta_pfd_net")
 usethis::use_data(efficiency_cols, overwrite = TRUE)
 
