@@ -43,4 +43,31 @@ test_that("efficiency vectors are named correctly", {
 })
 
 
+test_that("calc_eta_pfu() works correctly", {
+  # Define primary industries
+  p_industries <- c("Resources - Crude", "Resources - NG")
+
+  wide <- primary_total_aggregates_sut <- UKEnergy2000mats %>%
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
+
+  primary_total_aggregates_sut <- wide %>%
+    dplyr::mutate(
+      p_industries = rep(list(p_industries), times = nrow(.))
+    ) %>%
+    Recca::primary_aggregates(p_industries = "p_industries", by = "Total")
+
+  # Define final demand sectors
+  fd_sectors <- c("Residential", "Transport", "Oil fields")
+
+  final_demand_total_aggregates_sut <- wide %>%
+    dplyr::mutate(
+      fd_sectors = rep(list(fd_sectors), times = nrow(.))
+    ) %>%
+    Recca::finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Total")
+
+
+
+
+
+})
 
