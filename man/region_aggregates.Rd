@@ -27,6 +27,10 @@ region_aggregates(
 for example countries that need to be aggregated to continents.
 Default is \code{IEATools::iea_cols$country}.}
 
+\item{few_colname}{The of the column in \code{.sut_data} that contains the "few" descriptions,
+for example continents into which countries are to be aggregated.
+Default is \code{Recca::aggregate_cols$region}.}
+
 \item{year, method, energy_type, last_stage}{See \code{IEATools::iea_cols}.}
 
 \item{matrix_cols}{Names of columns in .sut_data containing matrices.
@@ -34,10 +38,6 @@ Default is a vector of names from \code{Recca::psut_cols}:
 R, U, U_feed, U_eiou, r_eiou, V, Y, and S_units.}
 
 \item{matrix_names, matrix_values}{Internal column names. See \code{Recca::psut_cols}.}
-
-\item{few_colnme}{The of the column in \code{.sut_data} that contains the "few" descriptions,
-for example continents into which countries are to be aggregated.
-Default is \code{Recca::aggregate_cols$region}.}
 }
 \value{
 A modified version of \code{.sut_data} wherein the \code{country} column is replaced
@@ -63,5 +63,5 @@ agg_df <- list(EUR = c("GBR", "FRA"), AMR = "USA") \%>\%
   matsbyname::aggregation_map_to_df(few_colname = "Continent", many_colname = "Country")
 # Aggregate into continents
 dplyr::left_join(mats, agg_df, by = "Country") \%>\%
-  region_aggregates(mats, country = "Country", region = "Continent")
+  region_aggregates(mats, many_colname = "Country", few_colname = "Continent")
 }

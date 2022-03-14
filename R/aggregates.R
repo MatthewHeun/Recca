@@ -293,9 +293,9 @@ finaldemand_aggregates_with_units <- function(.sutdata,
 #' @param many_colname The name of the column in `.sut_data` that contains the "many" descriptions,
 #'                     for example countries that need to be aggregated to continents.
 #'                     Default is `IEATools::iea_cols$country`.
-#' @param few_colnme The of the column in `.sut_data` that contains the "few" descriptions,
-#'                   for example continents into which countries are to be aggregated.
-#'                   Default is `Recca::aggregate_cols$region`.
+#' @param few_colname The of the column in `.sut_data` that contains the "few" descriptions,
+#'                    for example continents into which countries are to be aggregated.
+#'                    Default is `Recca::aggregate_cols$region`.
 #' @param year,method,energy_type,last_stage See `IEATools::iea_cols`.
 #' @param matrix_cols Names of columns in .sut_data containing matrices.
 #'                    Default is a vector of names from `Recca::psut_cols`:
@@ -322,7 +322,7 @@ finaldemand_aggregates_with_units <- function(.sutdata,
 #'   matsbyname::aggregation_map_to_df(few_colname = "Continent", many_colname = "Country")
 #' # Aggregate into continents
 #' dplyr::left_join(mats, agg_df, by = "Country") %>%
-#'   region_aggregates(mats, country = "Country", region = "Continent")
+#'   region_aggregates(mats, many_colname = "Country", few_colname = "Continent")
 region_aggregates <- function(.sut_data,
                               many_colname = IEATools::iea_cols$country,
                               few_colname = Recca::aggregate_cols$region,

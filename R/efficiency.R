@@ -112,6 +112,7 @@ calc_eta_i <- function(.sutmats,
 #'     p_industries = rep(list(p_industries), times = nrow(.))
 #'   ) %>%
 #'   Recca::primary_aggregates(p_industries = "p_industries", by = "Total") %>%
+#'   # Don't need the matrices
 #'   dplyr::select(IEATools::iea_cols$country,
 #'                 IEATools::iea_cols$year,
 #'                 IEATools::iea_cols$energy_type,
@@ -124,6 +125,7 @@ calc_eta_i <- function(.sutmats,
 #'     fd_sectors = rep(list(fd_sectors), times = nrow(.))
 #'   ) %>%
 #'   Recca::finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Total") %>%
+#'   # Don't need the matrices
 #'   dplyr::select(IEATools::iea_cols$country,
 #'                 IEATools::iea_cols$year,
 #'                 IEATools::iea_cols$energy_type,
@@ -146,9 +148,9 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
                          eta_pfd_gross = Recca::efficiency_cols$eta_pfd_gross,
                          eta_pfd_net = Recca::efficiency_cols$eta_pfd_net) {
   eta_pfd_func <- function(primary, gross_fd, net_fd) {
-    eta_p_gross_fd <- gross_fd / primary
-    eta_p_net_fd <- net_fd / primary
-    list(eta_p_gross_fd, eta_p_net_fd) %>%
+    eta_pfd_gross_val <- gross_fd / primary
+    eta_pfd_net_val <- net_fd / primary
+    list(eta_pfd_gross_val, eta_pfd_net_val) %>%
       magrittr::set_names(c(eta_pfd_gross, eta_pfd_net))
   }
   matsindf::matsindf_apply(.aggregate_df,

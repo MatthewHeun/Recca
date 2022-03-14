@@ -61,6 +61,7 @@ primary_total_aggregates <- wide \%>\%
     p_industries = rep(list(p_industries), times = nrow(.))
   ) \%>\%
   Recca::primary_aggregates(p_industries = "p_industries", by = "Total") \%>\%
+  # Don't need the matrices
   dplyr::select(IEATools::iea_cols$country,
                 IEATools::iea_cols$year,
                 IEATools::iea_cols$energy_type,
@@ -73,6 +74,7 @@ finaldemand_total_aggregates <- wide \%>\%
     fd_sectors = rep(list(fd_sectors), times = nrow(.))
   ) \%>\%
   Recca::finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Total") \%>\%
+  # Don't need the matrices
   dplyr::select(IEATools::iea_cols$country,
                 IEATools::iea_cols$year,
                 IEATools::iea_cols$energy_type,

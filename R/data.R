@@ -62,8 +62,8 @@
 #' @format A string list with `r length(efficiency_cols)` entries.
 #' \describe{
 #' \item{eta_i}{The name of a column in a wide-by-matrices data frame containing industry efficiencies.}
-#' \item{eta_pfd_gross}{The name of a column in a wide-by-matrices data frame containing  efficiencies between the primaryand gross final demand stages.}
-#' \item{eta_pfd_net}{The name of a column in a wide-by-matrices data frame containing efficiencies between the primaryand net final demand stages.}
+#' \item{eta_pfd_gross}{The name of a column in a wide-by-matrices data frame containing  efficiencies between the primary and gross final demand stages.}
+#' \item{eta_pfd_net}{The name of a column in a wide-by-matrices data frame containing efficiencies between the primary and net final demand stages.}
 #' }
 #'
 #' @examples

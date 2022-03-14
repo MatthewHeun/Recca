@@ -100,6 +100,9 @@
     <loc>/reference/calc_eta_i.html</loc>
   </url>
   <url>
+    <loc>/reference/calc_eta_pfd.html</loc>
+  </url>
+  <url>
     <loc>/reference/calc_io_mats.html</loc>
   </url>
   <url>
@@ -109,13 +112,22 @@
     <loc>/reference/combine_RV.html</loc>
   </url>
   <url>
+    <loc>/reference/cooling_eu.products.html</loc>
+  </url>
+  <url>
     <loc>/reference/data.html</loc>
   </url>
   <url>
     <loc>/reference/edge_list.html</loc>
   </url>
   <url>
+    <loc>/reference/efficiency_cols.html</loc>
+  </url>
+  <url>
     <loc>/reference/energy_types.html</loc>
+  </url>
+  <url>
+    <loc>/reference/euproduct_aggregation_map.html</loc>
   </url>
   <url>
     <loc>/reference/extend_to_exergy.html</loc>
@@ -136,6 +148,12 @@
     <loc>/reference/flows_unit_homogeneous.html</loc>
   </url>
   <url>
+    <loc>/reference/hpm_eu.products.html</loc>
+  </url>
+  <url>
+    <loc>/reference/hth_eu.products.html</loc>
+  </url>
+  <url>
     <loc>/reference/index.html</loc>
   </url>
   <url>
@@ -148,7 +166,25 @@
     <loc>/reference/inputs_unit_homogeneous.html</loc>
   </url>
   <url>
+    <loc>/reference/ip_eu.products.html</loc>
+  </url>
+  <url>
+    <loc>/reference/l_eu.products.html</loc>
+  </url>
+  <url>
+    <loc>/reference/lth_eu.products.html</loc>
+  </url>
+  <url>
     <loc>/reference/make_sankey.html</loc>
+  </url>
+  <url>
+    <loc>/reference/mechanical_eu.products.html</loc>
+  </url>
+  <url>
+    <loc>/reference/mth_eu.products.html</loc>
+  </url>
+  <url>
+    <loc>/reference/neu_eu.products.html</loc>
   </url>
   <url>
     <loc>/reference/new_R_ps.html</loc>
@@ -181,10 +217,16 @@
     <loc>/reference/products_unit_homogeneous.html</loc>
   </url>
   <url>
+    <loc>/reference/propulsion_eu.products.html</loc>
+  </url>
+  <url>
     <loc>/reference/psut_cols.html</loc>
   </url>
   <url>
     <loc>/reference/quasi-quote-assign.html</loc>
+  </url>
+  <url>
+    <loc>/reference/region_aggregates.html</loc>
   </url>
   <url>
     <loc>/reference/replace_html_codes.html</loc>
