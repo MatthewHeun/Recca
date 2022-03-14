@@ -2,7 +2,7 @@
 % Please edit documentation in R/aggregates.R
 \name{finaldemand_aggregates_with_units}
 \alias{finaldemand_aggregates_with_units}
-\title{Final demand aggregate energy with units}
+\title{Final demand energy and exergy aggregates with units}
 \usage{
 finaldemand_aggregates_with_units(
   .sutdata,

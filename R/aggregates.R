@@ -1,9 +1,4 @@
-#
-# This file contains helper functions that calculate aggregates of primary and final demand energy.
-# Data frames with both SUT-style matrices and IEA-style tables are supported.
-#
-
-#' Primary aggregate energy
+#' Primary energy and exergy aggregates
 #'
 #' Calculates aggregate primary energy from a data frame of Supply-Use matrices.
 #'
@@ -99,7 +94,7 @@ primary_aggregates <- function(.sutdata,
 }
 
 
-#' Final demand aggregate energy
+#' Final demand energy and exergy aggregates
 #'
 #' Calculates aggregate final demand energy from a data frame of Supply-Use matrices.
 #' The calculation includes non-energy uses if they are present in the final demand matrix.
@@ -206,7 +201,7 @@ finaldemand_aggregates <- function(.sutdata,
 }
 
 
-#' Final demand aggregate energy with units
+#' Final demand energy and exergy aggregates with units
 #'
 #' Calculates aggregate final demand energy and services from a data frame of Supply-Use matrices.
 #' The calculation includes non-energy uses if they are present in the final demand matrix.

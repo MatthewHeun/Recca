@@ -2,7 +2,7 @@
 context("Efficiency")
 ###########################################################
 
-test_that("efficiencies are calculated correctly", {
+test_that("industry efficiencies are calculated correctly", {
   result <- UKEnergy2000mats %>%
     tidyr::spread(key = "matrix.name", value = "matrix") %>%
     calc_eta_i() %>%
@@ -29,6 +29,7 @@ test_that("efficiencies are calculated correctly", {
   expect_equal(result %>% filter(Last.stage == IEATools::last_stages$services, Energy.type == IEATools::energy_types$x, rownames == "Oil fields") %>% extract2("eta_i"), 0.94860812)
 })
 
+
 test_that("efficiency vectors are named correctly", {
   result <- UKEnergy2000mats %>%
     tidyr::spread(key = "matrix.name", value = "matrix") %>%
@@ -40,7 +41,6 @@ test_that("efficiency vectors are named correctly", {
     expect_equal(colnames(eta_i)[1], "eta_i")
   }
 })
-
 
 
 

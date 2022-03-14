@@ -2,7 +2,7 @@
 % Please edit documentation in R/aggregates.R
 \name{primary_aggregates}
 \alias{primary_aggregates}
-\title{Primary aggregate energy}
+\title{Primary energy and exergy aggregates}
 \usage{
 primary_aggregates(
   .sutdata,

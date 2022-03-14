@@ -16,7 +16,7 @@ test_that("primary aggregates of SUT data work as expected", {
     dplyr::mutate(
       p_industries = rep(list(p_industries), times = nrow(.))
     ) %>%
-    primary_aggregates(p_industries = "p_industries", by = "Total", aggregate_primary = "EX_total_agg.ktoe")
+    Recca::primary_aggregates(p_industries = "p_industries", by = "Total", aggregate_primary = "EX_total_agg.ktoe")
   expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
                       dplyr::select("EX_total_agg.ktoe"), 93000)
   expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$useful) %>%
@@ -32,7 +32,7 @@ test_that("primary aggregates of SUT data work as expected", {
     dplyr::mutate(
       p_industries = rep(list(p_industries), times = nrow(.))
     ) %>%
-    primary_aggregates(p_industries = "p_industries", by = "Product",
+    Recca::primary_aggregates(p_industries = "p_industries", by = "Product",
                        aggregate_primary = "EX_product_agg.ktoe") %>%
     dplyr::select(Country, Year, Last.stage, Energy.type, EX_product_agg.ktoe) %>%
     tidyr::gather(key = "matnames", value = "matvals", EX_product_agg.ktoe) %>%
@@ -52,7 +52,7 @@ test_that("primary aggregates of SUT data work as expected", {
     dplyr::mutate(
       p_industries = rep(list(p_industries), times = nrow(.))
     ) %>%
-    primary_aggregates(p_industries = "p_industries", by = "Flow",
+    Recca::primary_aggregates(p_industries = "p_industries", by = "Flow",
                        aggregate_primary = "EX_flow_agg.ktoe") %>%
     dplyr::select(Country, Year, Last.stage, Energy.type, EX_flow_agg.ktoe) %>%
     tidyr::gather(key = "matnames", value = "matvals", EX_flow_agg.ktoe) %>%
@@ -78,7 +78,7 @@ test_that("primary aggregates works with leading pattern for names", {
     dplyr::mutate(
       p_industries = rep(list(p_industries), times = nrow(.))
     ) %>%
-    primary_aggregates(p_industries = "p_industries", pattern_type = "leading", by = "Total", aggregate_primary = "EX_total_agg.ktoe")
+    Recca::primary_aggregates(p_industries = "p_industries", pattern_type = "leading", by = "Total", aggregate_primary = "EX_total_agg.ktoe")
   expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
                       dplyr::select("EX_total_agg.ktoe"), 93000)
   expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$useful) %>%
@@ -87,7 +87,6 @@ test_that("primary aggregates works with leading pattern for names", {
                       dplyr::select("EX_total_agg.ktoe"), 93000)
   expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Energy.type == "X", Last.stage == IEATools::last_stages$services) %>%
                       dplyr::select("EX_total_agg.ktoe"), 98220)
-
 })
 
 
@@ -103,7 +102,7 @@ test_that("primary aggregates work when R is folded into V", {
       V = matsbyname::sum_byname(R, V),
       R = NULL
     ) %>%
-    primary_aggregates(p_industries = "p_industries", by = "Total",
+    Recca::primary_aggregates(p_industries = "p_industries", by = "Total",
                        aggregate_primary = "EX_total_agg.ktoe")
   expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
                       dplyr::select("EX_total_agg.ktoe"), 93000)
@@ -123,18 +122,18 @@ test_that("primary aggregates work when p_industries is different for each row o
     dplyr::mutate(
       p_industries = rep(list(p_industries_all), times = nrow(UKEnergy2000mats_wide))
     ) %>%
-    primary_aggregates(p_industries = "p_industries", by = "Total",
+    Recca::primary_aggregates(p_industries = "p_industries", by = "Total",
                        aggregate_primary = Recca::aggregate_cols$aggregate_primary)
   expect_equivalent(primary_total_aggregates_both %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
                       dplyr::select(Recca::aggregate_cols$aggregate_primary), 93000)
 
 
   # Primary TOTAL aggregates counting crude oil only
-  primary_total_aggregates_crude <-UKEnergy2000mats_wide %>%
+  primary_total_aggregates_crude <- UKEnergy2000mats_wide %>%
     dplyr::mutate(
       p_industries = p_industries_crude
     ) %>%
-    primary_aggregates(p_industries = "p_industries", by = "Total",
+    Recca::primary_aggregates(p_industries = "p_industries", by = "Total",
                        aggregate_primary = Recca::aggregate_cols$aggregate_primary)
   expect_equivalent(primary_total_aggregates_crude %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
                       dplyr::select(Recca::aggregate_cols$aggregate_primary), 50000)
@@ -144,7 +143,7 @@ test_that("primary aggregates work when p_industries is different for each row o
     dplyr::mutate(
       p_industries = p_industries_ng
     ) %>%
-    primary_aggregates(p_industries = "p_industries", by = "Total",
+    Recca::primary_aggregates(p_industries = "p_industries", by = "Total",
                        aggregate_primary = Recca::aggregate_cols$aggregate_primary)
   expect_equivalent(primary_total_aggregates_ng %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
                       dplyr::select(Recca::aggregate_cols$aggregate_primary), 43000)
@@ -158,7 +157,7 @@ test_that("primary aggregates work when p_industries is different for each row o
     p_industries = list(p_industries_all, p_industries_crude, p_industries_ng)
   )
   res <- UK_final_3_rows %>%
-    primary_aggregates(p_industries = "p_industries", by = "Total",
+    Recca::primary_aggregates(p_industries = "p_industries", by = "Total",
                        aggregate_primary = Recca::aggregate_cols$aggregate_primary)
   # Check first row (should have both primary industries and have 93000 for the aggregate primary energy)
   expect_equal(res[[Recca::aggregate_cols$aggregate_primary]][[1]], 93000)
@@ -288,7 +287,7 @@ test_that("finaldemand_aggregates() of SUT data work as expected without units",
     dplyr::mutate(
       fd_sectors = rep(list(fd_sectors), times = nrow(.))
     ) %>%
-    finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Total",
+    Recca::finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Total",
                            net_aggregate_demand = "EX_total_net_agg.ktoe",
                            gross_aggregate_demand = "EX_total_gross_agg.ktoe") %>%
     dplyr::select(Country, Year, Last.stage, Energy.type, fd_sectors, EX_total_net_agg.ktoe, EX_total_gross_agg.ktoe) %>%
@@ -313,7 +312,7 @@ test_that("finaldemand_aggregates() of SUT data work as expected without units",
     dplyr::mutate(
       fd_sectors = rep(list(fd_sectors), times = nrow(.))
     ) %>%
-    finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Product",
+    Recca::finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Product",
                            net_aggregate_demand = "EX_product_net_agg.ktoe",
                            gross_aggregate_demand = "EX_product_gross_agg.ktoe") %>%
     dplyr::select(Country, Year, Last.stage, Energy.type, EX_product_net_agg.ktoe, EX_product_gross_agg.ktoe) %>%
@@ -350,7 +349,7 @@ test_that("finaldemand_aggregates() of SUT data work as expected without units",
     dplyr::mutate(
       fd_sectors = rep(list(fd_sectors), times = nrow(.))
     ) %>%
-    finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Sector",
+    Recca::finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Sector",
                            net_aggregate_demand = "EX_sector_net_agg.ktoe",
                            gross_aggregate_demand = "EX_sector_gross_agg.ktoe") %>%
     dplyr::select(Country, Year, Last.stage, Energy.type, EX_sector_net_agg.ktoe, EX_sector_gross_agg.ktoe) %>%
@@ -397,7 +396,7 @@ test_that("finaldemand_aggregates works for sectors", {
       fd_sectors = rep(list(c("Residential", "Transport", "Oil fields")), times = nrow(.))
     ) %>%
     dplyr::filter(Last.stage %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
-    finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Sector")
+    Recca::finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Sector")
   expect_equal(sut_result[[Recca::aggregate_cols$net_aggregate_demand]][[1]][1,1], 31000)
   expect_equal(sut_result[[Recca::aggregate_cols$net_aggregate_demand]][[1]][2,1], 40750)
   expect_equal(sut_result[[Recca::aggregate_cols$net_aggregate_demand]][[2]][1,1], 4200.4)
@@ -418,7 +417,6 @@ test_that("finaldemand_aggregates works for sectors", {
   expect_equal(sut_result[[Recca::aggregate_cols$gross_aggregate_demand]][[2]][2,1], 4200.4)
   # Transport
   expect_equal(sut_result[[Recca::aggregate_cols$gross_aggregate_demand]][[2]][3,1], 21714.9805)
-
 })
 
 
@@ -429,11 +427,10 @@ test_that("finaldemand_aggregates works with U_EIOU", {
       fd_sectors = rep(list(c("Residential", "Transport", "Oil fields")), times = nrow(.))
     ) %>%
     dplyr::filter(Last.stage %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
-    finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Sector")
+    Recca::finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Sector")
 
   expect_equal(matsbyname::getrownames_byname(sut_result$EX.d_gross[[1]]),
                sut_result$fd_sectors[[1]] %>% sort())
-
 })
 
 

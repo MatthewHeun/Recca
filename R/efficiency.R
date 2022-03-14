@@ -69,3 +69,5 @@ calc_eta_i <- function(.sutmats,
 
   matsindf::matsindf_apply(.sutmats, FUN = eta_func, U_mat = U, V_mat = V, S_units_mat = S_units)
 }
+
+
