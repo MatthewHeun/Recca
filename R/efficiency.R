@@ -38,7 +38,7 @@
 #'   spread(key = "matrix.name", value = "matrix") %>%
 #'   calc_eta_i()
 calc_eta_i <- function(.sutmats,
-                       # Input
+                       # Inputs
                        U = "U", V = "V", S_units = "S_units",
                        # Outputs
                        eta_i = "eta_i"){
@@ -73,38 +73,53 @@ calc_eta_i <- function(.sutmats,
 #'
 #' Calculates aggregate primary-to-final demand (gross and net) efficiencies
 #' across the energy conversion chain.
-#' If final demand is at the final stage, calculates primary-to-final (gross and net) efficiencies.
-#' If final demand is at the useful stage, calculates primary-to-useful (gross and net) efficiencies.
-#' If final demand is at the services stage, calculates primary-to-services (gross and net) efficiencies.
 #'
-#' @param p_aggregates A data frame of primary aggregates, probably calculated by
-#'                     `primary_aggregates()`.
-#' @param finaldemand_aggregates A data frame of final demand aggregates, probably calculated by
-#'                      `finaldemand_aggregates()`.
+#' `.aggregate_df` is probably formed by joining the results from
+#' `primary_aggregates()` and `finaldemand_aggregates()`.
+#' See examples.
+#'
+#' @param .aggregate_df A data frame or list containing columns
+#'                      `aggregate_primary_colname`,
+#'                      `net_aggregate_demand_colname`,
+#'                      `gross_aggregate_demand_colname`,
+#'                      probably formed by joining the results from
 #' @param aggregate_primary_colname The name of the column in `p_aggregates` that contains primary energy or exergy aggregates.
 #'                                  Default is `Recca::aggregate_cols$aggregate_primary`.
-#' @param net_aggregate_demand_colname The name of the column in `finaldemand_aggregates`
-#'                                     that contains net final demand aggregates.
-#'                                     Default is `Recca::aggregate_cols$net_aggregate_demand`.
 #' @param gross_aggregate_demand_colname The name of the column in `finaldemand_aggregates`
 #'                                       that contains gross final demand aggregates.
 #'                                       Default is `Recca::aggregate_cols$gross_aggregate_demand`.
+#' @param net_aggregate_demand_colname The name of the column in `finaldemand_aggregates`
+#'                                     that contains net final demand aggregates.
+#'                                     Default is `Recca::aggregate_cols$net_aggregate_demand`.
+#' @param eta_pfd_gross The name of the output column containing efficiencies
+#'                      of converting primary energy into gross final demand energy.
+#'                      Default is `Recca::efficiency_cols$eta_pfd_gross`.
+#' @param eta_pfd_net The name of the output column containing efficiencies
+#'                    of converting primary energy into net final demand energy.
+#'                    Default is `Recca::efficiency_cols$eta_pfd_net`.
 #'
 #' @return A data frame of aggregate efficiencies.
 #'
 #' @export
 #'
 #' @examples
-calc_eta_pfu <- function(p_aggregates,
-                         finaldemand_aggregates,
+calc_eta_pfd <- function(.aggregate_df = NULL,
+                         # Inputs
                          aggregate_primary_colname = Recca::aggregate_cols$aggregate_primary,
+                         gross_aggregate_demand_colname = Recca::aggregate_cols$gross_aggregate_demand,
                          net_aggregate_demand_colname = Recca::aggregate_cols$net_aggregate_demand,
-                         gross_aggregate_demand_colname = Recca::aggregate_cols$gross_aggregate_demand) {
-  # Find metadata columns
-  # Remove matrix columns
-  # Remove p_industries and fd_sectors columns
-  # Add Primary and Last.stage suffixes to column names
-  # Join data frames
-  # Calculate efficiencies
-  # Return
+                         # Outputs
+                         eta_pfd_gross = Recca::efficiency_cols$eta_pfd_gross,
+                         eta_pfd_net = Recca::efficiency_cols$eta_pfd_net) {
+  eta_pfd_func <- function(primary, gross_fd, net_fd) {
+    eta_p_gross_fd <- gross_fd / primary
+    eta_p_net_fd <- net_fd / primary
+    list(eta_p_gross_fd, eta_p_net_fd) %>%
+      magrittr::set_names(c(eta_pfd_gross, eta_pfd_net))
+  }
+  matsindf::matsindf_apply(.aggregate_df,
+                           FUN = eta_pfd_func,
+                           primary = aggregate_primary_colname,
+                           gross_fd = gross_aggregate_demand_colname,
+                           net_fd = net_aggregate_demand_colname)
 }
