@@ -2,7 +2,7 @@
 % Please edit documentation in R/efficiency.R
 \name{calc_eta_pfd}
 \alias{calc_eta_pfd}
-\title{Calculate aggregate efficiencies}
+\title{Calculate aggregate (total) efficiencies}
 \usage{
 calc_eta_pfd(
   .aggregate_df = NULL,
@@ -43,11 +43,47 @@ Default is \code{Recca::efficiency_cols$eta_pfd_net}.}
 A data frame of aggregate efficiencies.
 }
 \description{
-Calculates aggregate primary-to-final demand (gross and net) efficiencies
+Calculates aggregate (total) primary-to-final demand (gross and net) efficiencies
 across the energy conversion chain.
 }
 \details{
 \code{.aggregate_df} is probably formed by joining the results from
 \code{primary_aggregates()} and \code{finaldemand_aggregates()}.
 See examples.
+}
+\examples{
+wide <- primary_total_aggregates_sut <- UKEnergy2000mats \%>\%
+  tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
+# Define primary industries
+p_industries <- c("Resources - Crude", "Resources - NG")
+primary_total_aggregates <- wide \%>\%
+  dplyr::mutate(
+    p_industries = rep(list(p_industries), times = nrow(.))
+  ) \%>\%
+  Recca::primary_aggregates(p_industries = "p_industries", by = "Total") \%>\%
+  dplyr::select(IEATools::iea_cols$country,
+                IEATools::iea_cols$year,
+                IEATools::iea_cols$energy_type,
+                IEATools::iea_cols$last_stage,
+                Recca::aggregate_cols$aggregate_primary)
+# Define final demand sectors
+fd_sectors <- c("Residential", "Transport", "Oil fields")
+finaldemand_total_aggregates <- wide \%>\%
+  dplyr::mutate(
+    fd_sectors = rep(list(fd_sectors), times = nrow(.))
+  ) \%>\%
+  Recca::finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Total") \%>\%
+  dplyr::select(IEATools::iea_cols$country,
+                IEATools::iea_cols$year,
+                IEATools::iea_cols$energy_type,
+                IEATools::iea_cols$last_stage,
+                Recca::aggregate_cols$gross_aggregate_demand,
+                Recca::aggregate_cols$net_aggregate_demand)
+dplyr::full_join(primary_total_aggregates,
+                 finaldemand_total_aggregates,
+                 by = c(IEATools::iea_cols$country,
+                        IEATools::iea_cols$year,
+                        IEATools::iea_cols$energy_type,
+                        IEATools::iea_cols$last_stage)) \%>\%
+  calc_eta_pfd()
 }

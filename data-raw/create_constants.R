@@ -36,8 +36,8 @@ usethis::use_data(psut_cols, overwrite = TRUE)
 #
 
 aggregate_cols <- list(aggregate_primary = "EX.p",
-                       net_aggregate_demand = "EX.d_net",
-                       gross_aggregate_demand = "EX.d_gross",
+                       net_aggregate_demand = "EX.fd_net",
+                       gross_aggregate_demand = "EX.fd_gross",
                        region = "Region")
 usethis::use_data(aggregate_cols, overwrite = TRUE)
 
