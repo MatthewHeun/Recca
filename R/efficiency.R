@@ -71,7 +71,8 @@ calc_eta_i <- function(.sutmats,
 
 #' Calculate aggregate efficiencies
 #'
-#' Calculates aggregate primary-to-final demand (gross and net) efficiencies.
+#' Calculates aggregate primary-to-final demand (gross and net) efficiencies
+#' across the energy conversion chain.
 #' If final demand is at the final stage, calculates primary-to-final (gross and net) efficiencies.
 #' If final demand is at the useful stage, calculates primary-to-useful (gross and net) efficiencies.
 #' If final demand is at the services stage, calculates primary-to-services (gross and net) efficiencies.
