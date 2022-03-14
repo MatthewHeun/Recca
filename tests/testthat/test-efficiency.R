@@ -1,6 +1,3 @@
-###########################################################
-context("Efficiency")
-###########################################################
 
 test_that("industry efficiencies are calculated correctly", {
   result <- UKEnergy2000mats %>%
