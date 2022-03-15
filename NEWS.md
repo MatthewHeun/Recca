@@ -4,6 +4,8 @@ output: html_document
 ---
 
 
+* Eliminated `finaldemand_aggregates_with_units()`, 
+  because nobody was using it.
 * New function `calc_eta_pfd()` calculates gross and net
   efficiencies from primary to final demand.
 * New function `region_aggregates()` calculates
