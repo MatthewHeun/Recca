@@ -237,7 +237,7 @@ finaldemand_aggregates <- function(.sutdata = NULL,
 #'                          mats_GBR %>% dplyr::mutate(Country = "FRA"))
 #' # Establish the aggregation map.
 #' agg_df <- list(EUR = c("GBR", "FRA"), AMR = "USA") %>%
-#'   matsbyname::aggregation_map_to_df(few_colname = "Continent", many_colname = "Country")
+#'   matsbyname::agg_map_to_agg_table(few_colname = "Continent", many_colname = "Country")
 #' # Aggregate into continents
 #' dplyr::left_join(mats, agg_df, by = "Country") %>%
 #'   region_aggregates(mats, many_colname = "Country", few_colname = "Continent")

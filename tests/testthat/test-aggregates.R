@@ -333,9 +333,9 @@ test_that("region_aggregates() works as expected", {
                            mats_GBR %>% dplyr::mutate(Country = "USA"),
                            mats_GBR %>% dplyr::mutate(Country = "FRA"))
   agg_map <- list(EUR = c("GBR", "FRA"), AMR = "USA")
-  agg_df <- matsbyname::aggregation_map_to_df(agg_map,
-                                              few_colname = "Continent",
-                                              many_colname = IEATools::iea_cols$country)
+  agg_df <- matsbyname::agg_map_to_agg_table(agg_map,
+                                             few_colname = "Continent",
+                                             many_colname = IEATools::iea_cols$country)
   mats <- dplyr::left_join(mats, agg_df, by = IEATools::iea_cols$country)
 
   res <- region_aggregates(mats,

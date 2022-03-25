@@ -4,6 +4,8 @@ output: html_document
 ---
 
 
+* Removed unnecessary assertion that `matsbyname` is available
+  in aggregation functions.
 * Eliminated `finaldemand_aggregates_with_units()`, 
   because nobody was using it.
 * New function `calc_eta_pfd()` calculates gross and net
@@ -18,7 +20,7 @@ output: html_document
   In addition, `extend_to_exergy()` now uses `matsbyname::vec_from_store_byname()`
   internally to correctly handle hatized vector multiplication.
 * Many new tests for new features.
-    * Now up to 554 tests, all passing.
+    * Now up to 556 tests, all passing.
     * Test coverage remains at 100 %.
 
 
