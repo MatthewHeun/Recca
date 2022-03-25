@@ -5,7 +5,7 @@
 \title{Final demand energy and exergy aggregates}
 \usage{
 finaldemand_aggregates(
-  .sutdata,
+  .sutdata = NULL,
   fd_sectors,
   pattern_type = c("exact", "leading", "trailing", "anywhere"),
   U = Recca::psut_cols$U,

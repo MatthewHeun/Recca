@@ -5,7 +5,7 @@
 \title{Primary energy and exergy aggregates}
 \usage{
 primary_aggregates(
-  .sutdata,
+  .sutdata = NULL,
   p_industries,
   pattern_type = c("exact", "leading", "trailing", "anywhere"),
   R = Recca::psut_cols$R,

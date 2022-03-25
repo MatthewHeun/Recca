@@ -44,7 +44,7 @@
 #'   ) %>%
 #'   primary_aggregates(p_industries = "p_industries", by = "Total")
 #' res[[Recca::aggregate_cols$aggregate_primary]]
-primary_aggregates <- function(.sutdata,
+primary_aggregates <- function(.sutdata = NULL,
                                # Vector of primary industries
                                p_industries,
                                pattern_type = c("exact", "leading", "trailing", "anywhere"),
@@ -57,8 +57,8 @@ primary_aggregates <- function(.sutdata,
                                aggregate_primary = Recca::aggregate_cols$aggregate_primary){
 
   # Ensure that the caller has matsbyname installed and on the package search path.
-  assertthat::assert_that(requireNamespace("matsbyname"),
-                          msg = "package 'matsbyname' is required but not available.")
+  # assertthat::assert_that(requireNamespace("matsbyname"),
+  #                         msg = "package 'matsbyname' is required but not available.")
 
   pattern_type <- match.arg(pattern_type)
   by <- match.arg(by)
@@ -136,7 +136,7 @@ primary_aggregates <- function(.sutdata,
 #'   dplyr::filter(Last.stage %in% c(IEATools::last_stages$final,
 #'                                   IEATools::last_stages$useful)) %>%
 #'   finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Sector")
-finaldemand_aggregates <- function(.sutdata,
+finaldemand_aggregates <- function(.sutdata = NULL,
                                    fd_sectors,
                                    pattern_type = c("exact", "leading", "trailing", "anywhere"),
                                    # Input names
@@ -150,8 +150,8 @@ finaldemand_aggregates <- function(.sutdata,
 
 
   # Ensure that the caller has matsbyname installed and on the package search path.
-  assertthat::assert_that(requireNamespace("matsbyname"),
-                          msg = "package 'matsbyname' is required but not available.")
+  # assertthat::assert_that(requireNamespace("matsbyname"),
+  #                         msg = "package 'matsbyname' is required but not available.")
 
   pattern_type <- match.arg(pattern_type)
   by <- match.arg(by)
