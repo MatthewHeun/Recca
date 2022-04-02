@@ -5,12 +5,21 @@
 #' given the matrices for the energy quantification and
 #' phi (exergy-to-energy ratio) vectors.
 #'
-#' Internally, this function uses `matsindf::apply`, so
+#' Internally, this function uses `matsindf::apply()`, so
 #' the ECC matrices can be provided
-#' as individual matrices
+#' as individual matrices,
+#' in a named list, or
 #' or in a data frame
 #' (in which case the arguments should
-#' given the string names of columns in the `.sutmats` data frame).
+#' given the string names of columns in the `.sutmats` data frame, the default).
+#'
+#' The vector `phi` is considered to be a store of values
+#' to be applied to each type of energy carrier.
+#' To determine which entry in the `phi` vector  is matched against which energy carrier,
+#' `mat_piece` and `phi_piece` are consulted.
+#' `mat_piece` and `phi_piece` can be any of
+#' "all", "pref", "suff", "noun", or one of many prepositions given in `suffixes`
+#'
 #'
 #' @param .sutmats An optional data frame of energy conversion chain matrices.
 #' @param clean_up_df When `.sutmats` is a data frame, tells whether to `tidyr::pivot_longer()` the result,
@@ -19,10 +28,20 @@
 #'                    Default is `TRUE`.
 #' @param R,U,U_feed,U_eiou,r_eiou,V,Y,phi Names of columns in `.sutmats` or single matrices. See `Recca::psut_cols`.
 #' @param .exergy_suffix The string suffix to be appended to exergy versions of ECC matrices.
-#' @param R_name,U_name,U_feed_name,U_eiou_name,r_eiou_name,V_name,Y_name,phi_name,energy_type,s_units Names of output matrices
+#' @param mat_piece The piece of matrix row and column names for `R`, `U`, `U_feed`, `U_EIOU`, `V`, and `Y` matrices
+#'                  which are to be matched against names in the `phi` vector.
+#'                  Default is "all", meaning that entire names are to be matched.
+#' @param phi_piece The piece of names in the `phi` vector against which
+#'                  row and column names for matrices `R`, `U`, `U_feed`, `U_EIOU`, `V`, and `Y` matrices
+#'                  is to be matched.
+#'                  Default is "all", meaning that entire names are to be matched.
+#' @param notation The nomenclature for the row and column labels. Default is `RCLabels::bracket_notation`.
+#' @param prepositions The prepositions to be used row and column notation.
+#'                     Default is `RCLabels::prepositions`.
+#' @param R_name,U_name,U_feed_name,U_eiou_name,r_eiou_name,V_name,Y_name,phi_name,energy_type,S_units Names of output matrices
 #' @param energy,exergy See `Recca::energy_types`.
 #'
-#' @return A data frame or list of matrices that represent the exergy version of the ECC.
+#' @return A data frame or list of matrices that represents the exergy version of the ECC.
 #'
 #' @export
 #'
@@ -48,6 +67,10 @@ extend_to_exergy <- function(.sutmats = NULL,
                              Y = Recca::psut_cols$Y,
                              phi = Recca::psut_cols$phi,
                              .exergy_suffix = "_exergy",
+                             mat_piece = "all",
+                             phi_piece = "all",
+                             notation = RCLabels::bracket_notation,
+                             prepositions = RCLabels::prepositions,
                              # Column names
                              R_name = Recca::psut_cols$R,
                              U_name = Recca::psut_cols$U,
@@ -58,7 +81,7 @@ extend_to_exergy <- function(.sutmats = NULL,
                              Y_name = Recca::psut_cols$Y,
                              phi_name = Recca::psut_cols$phi,
                              energy_type = Recca::psut_cols$energy_type,
-                             s_units = Recca::psut_cols$s_units,
+                             S_units = Recca::psut_cols$S_units,
                              energy = Recca::energy_types$e,
                              exergy = Recca::energy_types$x) {
 
@@ -88,7 +111,7 @@ extend_to_exergy <- function(.sutmats = NULL,
           "{V_name}" := NULL,
           "{Y_name}" := NULL,
           "{phi_name}" := NULL,
-          "{s_units}" := NULL
+          "{S_units}" := NULL
         )
       if (nrow(bad_rows) > 0) {
         err_msg <- paste0("In Recca::extend_to_exergy(), non-energy rows were found: ",
@@ -106,39 +129,57 @@ extend_to_exergy <- function(.sutmats = NULL,
     # thereby reducing computational complexity and memory consumption.
 
     # R_X = R_E * phi_hat
-    R_X_mat <- matsbyname::matrixproduct_byname(R_mat, phi_vec %>%
-                                                  matsbyname::transpose_byname() %>%
-                                                  matsbyname::trim_rows_cols(mat = R_mat, margin = 2) %>%
+    R_X_mat <- matsbyname::matrixproduct_byname(R_mat,
+                                                matsbyname::vec_from_store_byname(a = R_mat,
+                                                                                  v = matsbyname::transpose_byname(phi_vec),
+                                                                                  a_piece = mat_piece, v_piece = phi_piece,
+                                                                                  notation = notation, prepositions = prepositions,
+                                                                                  column = FALSE) %>%
                                                   matsbyname::hatize_byname(keep = "colnames"))
+
     # U_X = phi_hat * U_E
-    U_X_mat <- matsbyname::matrixproduct_byname(phi_vec %>%
-                                                  matsbyname::trim_rows_cols(mat = U_mat, margin = 1) %>%
+    U_X_mat <- matsbyname::matrixproduct_byname(matsbyname::vec_from_store_byname(a = U_mat,
+                                                                                  v = phi_vec,
+                                                                                  a_piece = mat_piece, v_piece = phi_piece,
+                                                                                  notation = notation, prepositions = prepositions,
+                                                                                  column = TRUE) %>%
                                                   matsbyname::hatize_byname(keep = "rownames"),
                                                 U_mat)
 
     # U_feed_X = phi_hat * U_feed_E
-    U_feed_X_mat <- matsbyname::matrixproduct_byname(phi_vec %>%
-                                                       matsbyname::trim_rows_cols(mat = U_feed_mat, margin = 1) %>%
+    U_feed_X_mat <- matsbyname::matrixproduct_byname(matsbyname::vec_from_store_byname(a = U_feed_mat,
+                                                                                       v = phi_vec,
+                                                                                       a_piece = mat_piece, v_piece = phi_piece,
+                                                                                       notation = notation, prepositions = prepositions,
+                                                                                       column = TRUE) %>%
                                                        matsbyname::hatize_byname(keep = "rownames"),
                                                      U_feed_mat)
 
     # U_eiou_X = phi_hat * U_eiou_E
-    U_eiou_X_mat <- matsbyname::matrixproduct_byname(phi_vec %>%
-                                                       matsbyname::trim_rows_cols(mat = U_eiou_mat, margin = 1) %>%
+    U_eiou_X_mat <- matsbyname::matrixproduct_byname(matsbyname::vec_from_store_byname(a = U_eiou_mat,
+                                                                                       v = phi_vec,
+                                                                                       a_piece = mat_piece, v_piece = phi_piece,
+                                                                                       notation = notation, prepositions = prepositions,
+                                                                                       column = TRUE) %>%
                                                        matsbyname::hatize_byname(keep = "rownames"),
                                                      U_eiou_mat)
 
-
     # V_X = V_E * phi_hat
-    V_X_mat <- matsbyname::matrixproduct_byname(V_mat, phi_vec %>%
-                                                  matsbyname::transpose_byname() %>%
-                                                  matsbyname::trim_rows_cols(mat = V_mat, margin = 2) %>%
+    V_X_mat <- matsbyname::matrixproduct_byname(V_mat,
+                                                matsbyname::vec_from_store_byname(a = V_mat,
+                                                                                  v = matsbyname::transpose_byname(phi_vec),
+                                                                                  a_piece = mat_piece, v_piece = phi_piece,
+                                                                                  notation = notation, prepositions = prepositions,
+                                                                                  column = FALSE) %>%
                                                   matsbyname::hatize_byname(keep = "colnames"))
 
 
     # Y_X = phi_hat * Y_E
-    Y_X_mat <- matsbyname::matrixproduct_byname(phi_vec %>%
-                                                  matsbyname::trim_rows_cols(mat = Y_mat, margin = 1) %>%
+    Y_X_mat <- matsbyname::matrixproduct_byname(matsbyname::vec_from_store_byname(a = Y_mat,
+                                                                                  v = phi_vec,
+                                                                                  a_piece = mat_piece, v_piece = phi_piece,
+                                                                                  notation = notation, prepositions = prepositions,
+                                                                                  column = TRUE) %>%
                                                   matsbyname::hatize_byname(keep = "rownames"),
                                                 Y_mat)
 

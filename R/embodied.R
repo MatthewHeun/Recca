@@ -341,14 +341,14 @@ calc_embodied_etas <- function(.embodiedmats = NULL,
     eta_p_vec <- matsbyname::quotient_byname(
       matsbyname::rowsums_byname(Y_mat) %>% matsbyname::transpose_byname(),
       G_mat %>% matsbyname::select_rows_byname(retain_pattern =
-                                                 matsbyname::make_pattern(primary_machine_names, pattern_type = "leading")) %>%
+                                                 RCLabels::make_or_pattern(strings = primary_machine_names, pattern_type = "leading")) %>%
         matsbyname::colsums_byname()
     ) %>%
       matsbyname::transpose_byname() # Make it a column vector
     eta_s_vec <- matsbyname::quotient_byname(
       matsbyname::colsums_byname(Y_mat) %>% matsbyname::setrownames_byname("row") %>% matsbyname::setrowtype("row"),
       H_mat %>% matsbyname::select_rows_byname(retain_pattern =
-                                                 matsbyname::make_pattern(primary_machine_names, pattern_type = "leading")) %>%
+                                                 RCLabels::make_or_pattern(strings = primary_machine_names, pattern_type = "leading")) %>%
         matsbyname::colsums_byname() %>% matsbyname::setrownames_byname("row") %>% matsbyname::setrowtype("row")
     ) %>%
       matsbyname::transpose_byname() # Make it a column vector

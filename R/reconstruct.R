@@ -192,8 +192,9 @@ new_Y <- function(.sutmats = NULL,
 #'   dplyr::mutate(
 #'     # Set up a new k_prime vector for Electric transport.
 #'     # That vector will be used for the infininte substitution calculation.
-#'     k_prime = matsbyname::select_cols_byname(K, retain_pattern = make_pattern("Electric transport",
-#'                                                                   pattern_type = "exact")),
+#'     k_prime = matsbyname::select_cols_byname(K,
+#'            retain_pattern = RCLabels::make_or_pattern("Electric transport",
+#'                                                       pattern_type = "exact")),
 #'     k_prime = matsbyname::make_list(k_prime_vec, n = 1)
 #'   )
 #' # Now do the calculation of U_prime and V_prime matrices.

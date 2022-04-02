@@ -4,7 +4,29 @@ output: html_document
 ---
 
 
-# Recca 0.1.37 (2021-10-13)
+# Recca 0.1.38 (2022-04-02) 
+
+* Removed unnecessary assertion that `matsbyname` is available
+  in aggregation functions.
+* Eliminated `finaldemand_aggregates_with_units()`, 
+  because nobody was using it.
+* New function `calc_eta_pfd()` calculates gross and net
+  efficiencies from primary to final demand.
+* New function `region_aggregates()` calculates
+  regional aggregates according to columns in a data frame.
+* New look for `pkgdown` website.
+* `extend_to_exergy()` gains new arguments 
+  `mat_piece`, `phi_piece`, `notation`, and `prepositions`
+  to enable more flexible row and column name matching 
+  between the various matrices and phi vectors.
+  In addition, `extend_to_exergy()` now uses `matsbyname::vec_from_store_byname()`
+  internally to correctly handle hatized vector multiplication.
+* Many new tests for new features.
+    * Now up to 556 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
+# Recca 0.1.37 (2021-10-13) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5566713.svg)](https://doi.org/10.5281/zenodo.5566713)
 
 * Added details to `Recca` vignette, including additional equations for embodied matrices. 
 * New function `extend_to_exergy()` that calculates

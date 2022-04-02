@@ -16,6 +16,10 @@ extend_to_exergy(
   Y = Recca::psut_cols$Y,
   phi = Recca::psut_cols$phi,
   .exergy_suffix = "_exergy",
+  mat_piece = "all",
+  phi_piece = "all",
+  notation = RCLabels::bracket_notation,
+  prepositions = RCLabels::prepositions,
   R_name = Recca::psut_cols$R,
   U_name = Recca::psut_cols$U,
   U_feed_name = Recca::psut_cols$U_feed,
@@ -25,7 +29,7 @@ extend_to_exergy(
   Y_name = Recca::psut_cols$Y,
   phi_name = Recca::psut_cols$phi,
   energy_type = Recca::psut_cols$energy_type,
-  s_units = Recca::psut_cols$s_units,
+  S_units = Recca::psut_cols$S_units,
   energy = Recca::energy_types$e,
   exergy = Recca::energy_types$x
 )
@@ -42,12 +46,26 @@ Default is \code{TRUE}.}
 
 \item{.exergy_suffix}{The string suffix to be appended to exergy versions of ECC matrices.}
 
-\item{R_name, U_name, U_feed_name, U_eiou_name, r_eiou_name, V_name, Y_name, phi_name, energy_type, s_units}{Names of output matrices}
+\item{mat_piece}{The piece of matrix row and column names for \code{R}, \code{U}, \code{U_feed}, \code{U_EIOU}, \code{V}, and \code{Y} matrices
+which are to be matched against names in the \code{phi} vector.
+Default is "all", meaning that entire names are to be matched.}
+
+\item{phi_piece}{The piece of names in the \code{phi} vector against which
+row and column names for matrices \code{R}, \code{U}, \code{U_feed}, \code{U_EIOU}, \code{V}, and \code{Y} matrices
+is to be matched.
+Default is "all", meaning that entire names are to be matched.}
+
+\item{notation}{The nomenclature for the row and column labels. Default is \code{RCLabels::bracket_notation}.}
+
+\item{prepositions}{The prepositions to be used row and column notation.
+Default is \code{RCLabels::prepositions}.}
+
+\item{R_name, U_name, U_feed_name, U_eiou_name, r_eiou_name, V_name, Y_name, phi_name, energy_type, S_units}{Names of output matrices}
 
 \item{energy, exergy}{See \code{Recca::energy_types}.}
 }
 \value{
-A data frame or list of matrices that represent the exergy version of the ECC.
+A data frame or list of matrices that represents the exergy version of the ECC.
 }
 \description{
 An energy conversion chain can be represented in energy or exergy quantifications of energy.
@@ -56,12 +74,20 @@ given the matrices for the energy quantification and
 phi (exergy-to-energy ratio) vectors.
 }
 \details{
-Internally, this function uses \code{matsindf::apply}, so
+Internally, this function uses \code{matsindf::apply()}, so
 the ECC matrices can be provided
-as individual matrices
+as individual matrices,
+in a named list, or
 or in a data frame
 (in which case the arguments should
-given the string names of columns in the \code{.sutmats} data frame).
+given the string names of columns in the \code{.sutmats} data frame, the default).
+
+The vector \code{phi} is considered to be a store of values
+to be applied to each type of energy carrier.
+To determine which entry in the \code{phi} vector  is matched against which energy carrier,
+\code{mat_piece} and \code{phi_piece} are consulted.
+\code{mat_piece} and \code{phi_piece} can be any of
+"all", "pref", "suff", "noun", or one of many prepositions given in \code{suffixes}
 }
 \examples{
 sutmats <- UKEnergy2000mats \%>\%

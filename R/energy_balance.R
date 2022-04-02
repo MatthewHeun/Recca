@@ -289,16 +289,16 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
   # Check that both of these are true.
 
   # Option (a)
-  EnergyCheck_err <- EnergyCheck %>% dplyr::filter(!is.na(!!as.name(err)))
+  EnergyCheck_err <- EnergyCheck %>%
+    dplyr::filter(!is.na(!!as.name(err)))
   assertthat::assert_that(all(abs(EnergyCheck_err[[err]]) < tol),
-                          msg = paste("Energy not balanced in verify_IEATable_energy_balance.",
-                                      "Check return value for non-zero", err, "column."))
+                          msg = "Energy not balanced in verify_IEATable_energy_balance.")
 
   # Option (b)
-  EnergyCheck_supply <- EnergyCheck %>% dplyr::filter(is.na(!!as.name(err)))
+  EnergyCheck_supply <- EnergyCheck %>%
+    dplyr::filter(is.na(!!as.name(err)))
   assertthat::assert_that(all(abs(EnergyCheck_supply[[esupply]]) < tol),
-                          msg = paste("Energy not balanced in verify_IEATable_energy_balance.",
-                                      "Check return value for non-zero", err, "column."))
+                          msg = paste("Energy not balanced in verify_IEATable_energy_balance."))
 
   return(EnergyCheck)
 }
