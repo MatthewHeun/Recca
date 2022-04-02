@@ -4,6 +4,8 @@ output: html_document
 ---
 
 
+# Recca 0.1.38 (2022-04-02) 
+
 * Removed unnecessary assertion that `matsbyname` is available
   in aggregation functions.
 * Eliminated `finaldemand_aggregates_with_units()`, 

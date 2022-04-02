@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.37</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.38</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,6 +54,20 @@
       <small>Source: <a href="https://github.com/MatthewHeun/Recca/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.38" id="recca-0138-2022-04-02">Recca 0.1.38 (2022-04-02)<a class="anchor" aria-label="anchor" href="#recca-0138-2022-04-02"></a></h2>
+<ul><li>Removed unnecessary assertion that <code>matsbyname</code> is available in aggregation functions.</li>
+<li>Eliminated <code>finaldemand_aggregates_with_units()</code>, because nobody was using it.</li>
+<li>New function <code><a href="../reference/calc_eta_pfd.html">calc_eta_pfd()</a></code> calculates gross and net efficiencies from primary to final demand.</li>
+<li>New function <code><a href="../reference/region_aggregates.html">region_aggregates()</a></code> calculates regional aggregates according to columns in a data frame.</li>
+<li>New look for <code>pkgdown</code> website.</li>
+<li>
+<code><a href="../reference/extend_to_exergy.html">extend_to_exergy()</a></code> gains new arguments <code>mat_piece</code>, <code>phi_piece</code>, <code>notation</code>, and <code>prepositions</code> to enable more flexible row and column name matching between the various matrices and phi vectors. In addition, <code><a href="../reference/extend_to_exergy.html">extend_to_exergy()</a></code> now uses <code><a href="https://rdrr.io/pkg/matsbyname/man/vec_from_store_byname.html" class="external-link">matsbyname::vec_from_store_byname()</a></code> internally to correctly handle hatized vector multiplication.</li>
+<li>Many new tests for new features.
+<ul><li>Now up to 556 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.37" id="recca-0137-2021-10-13-doi">Recca 0.1.37 (2021-10-13) <a href="https://doi.org/10.5281/zenodo.5566713" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.5566713.svg" alt="DOI"></a>
 <a class="anchor" aria-label="anchor" href="#recca-0137-2021-10-13-doi"></a></h2>
@@ -115,7 +129,7 @@
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.30" id="recca-0130-2021-02-22">Recca 0.1.30 (2021-02-22)<a class="anchor" aria-label="anchor" href="#recca-0130-2021-02-22"></a></h2>
-<ul><li>Fixed bugs in <code><a href="../reference/finaldemand_aggregates.html">finaldemand_aggregates()</a></code> and <code><a href="../reference/finaldemand_aggregates_with_units.html">finaldemand_aggregates_with_units()</a></code> where argument <code>fd_sectors</code> was not respected for gross energy aggregation.</li>
+<ul><li>Fixed bugs in <code><a href="../reference/finaldemand_aggregates.html">finaldemand_aggregates()</a></code> and <code>finaldemand_aggregates_with_units()</code> where argument <code>fd_sectors</code> was not respected for gross energy aggregation.</li>
 <li>New and revamped tests to guard against regression.
 <ul><li>Now 417 tests, all passing.</li>
 <li>Test coverage remains at 100 %.</li>
