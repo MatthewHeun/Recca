@@ -4,7 +4,7 @@ output: html_document
 ---
 
 
-# Recca 0.1.38 (2022-04-02) 
+# Recca 0.1.38 (2022-04-02) [![DOI](https://zenodo.org/badge/116066838.svg)](https://zenodo.org/badge/latestdoi/116066838)
 
 * Removed unnecessary assertion that `matsbyname` is available
   in aggregation functions.
@@ -37,7 +37,7 @@ output: html_document
     * Test coverage remains at 100 %.
 
 
-# Recca 0.1.36 (2021-09-10)  [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5226086.svg)](https://doi.org/10.5281/zenodo.5500310)
+# Recca 0.1.36 (2021-09-10)  [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5500310.svg)](https://doi.org/10.5281/zenodo.5500310)
 
 * Get started file updated. Some matrices definitions (G, H, E)
   needed to be updated.
