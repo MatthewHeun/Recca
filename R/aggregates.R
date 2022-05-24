@@ -220,8 +220,8 @@ finaldemand_aggregates <- function(.sutdata = NULL,
 #'                    R, U, U_feed, U_eiou, r_eiou, V, Y, and S_units.
 #' @param matrix_names,matrix_values Internal column names. See `Recca::psut_cols`.
 #'
-#' @return A modified version of `.sut_data` wherein the `country` column is replaced
-#'         by region aggregates specified by `aggregation_map`.
+#' @return An aggregated version of `.sut_data` wherein the `many_colname` column is replaced
+#'         by `few_colname` as specified by `aggregation_map`.
 #'
 #' @export
 #'
@@ -258,6 +258,12 @@ region_aggregates <- function(.sut_data,
                                               S_units = Recca::psut_cols$S_units),
                               matrix_names = Recca::psut_cols$matnames,
                               matrix_values = Recca::psut_cols$matvals) {
+
+  # Handle the case when .sut_data has no rows.
+  if (nrow(.sut_data) == 0) {
+    # Return .sut_data unmodified.
+    return(.sut_data)
+  }
 
   # Make the incoming data frame tidy.
   tidy_df <- .sut_data %>%

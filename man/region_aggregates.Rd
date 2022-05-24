@@ -40,8 +40,8 @@ R, U, U_feed, U_eiou, r_eiou, V, Y, and S_units.}
 \item{matrix_names, matrix_values}{Internal column names. See \code{Recca::psut_cols}.}
 }
 \value{
-A modified version of \code{.sut_data} wherein the \code{country} column is replaced
-by region aggregates specified by \code{aggregation_map}.
+An aggregated version of \code{.sut_data} wherein the \code{many_colname} column is replaced
+by \code{few_colname} as specified by \code{aggregation_map}.
 }
 \description{
 Aggregates a data frame according to the regions given in a column of the data frame.

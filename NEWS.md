@@ -4,6 +4,11 @@ output: html_document
 ---
 
 
+* `aggregate_regions()` now returns an empty data frame
+  with the expected columns if the input data frame 
+  is empty.
+
+
 # Recca 0.1.38 (2022-04-02) [![DOI](https://zenodo.org/badge/116066838.svg)](https://zenodo.org/badge/latestdoi/116066838)
 
 * Removed unnecessary assertion that `matsbyname` is available
