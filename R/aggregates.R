@@ -14,11 +14,11 @@
 #'                     The function `find_p_industry_names()` might be helpful to find
 #'                     primary industry names if they can be identified by prefixes.
 #' @param pattern_type One of "exact", "leading", "trailing", or "anywhere" which specifies
-#'                     how matches are made for `fd_sectors`.
+#'                     how matches are made for `p_industries`.
 #'                     If "exact", exact matches specify the sectors to be aggregated.
-#'                     If "leading", sectors are aggregated if any entry in `fd_sectors` matches the leading part of a final demand sector's name.
-#'                     If "trailing", sectors are aggregated if any entry in `fd_sectors` matches the trailing part of a final demand sector's name.
-#'                     If "anywhere", sectors are aggregated if any entry in `fd_sectors` matches any part of a final demand sector's name.
+#'                     If "leading", sectors are aggregated if any entry in `p_industries` matches the leading part of a final demand sector's name.
+#'                     If "trailing", sectors are aggregated if any entry in `p_industries` matches the trailing part of a final demand sector's name.
+#'                     If "anywhere", sectors are aggregated if any entry in `p_industries` matches any part of a final demand sector's name.
 #'                     Default is "leading" to enable primary industries such as "Resources \[of Crude oil\]".
 #' @param R,V,Y See `Recca::psut_cols`.
 #' @param by One of "Total", "Product", or "Flow" to indicate the desired aggregation:
