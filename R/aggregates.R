@@ -88,10 +88,6 @@ primary_aggregates <- function(.sutdata = NULL,
                                net_aggregate_primary = Recca::aggregate_cols$net_aggregate_primary,
                                gross_aggregate_primary = Recca:: aggregate_cols$gross_aggregate_primary){
 
-  # Ensure that the caller has matsbyname installed and on the package search path.
-  # assertthat::assert_that(requireNamespace("matsbyname"),
-  #                         msg = "package 'matsbyname' is required but not available.")
-
   pattern_type <- match.arg(pattern_type)
   by <- match.arg(by)
 
