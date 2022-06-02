@@ -80,6 +80,14 @@ res <- UKEnergy2000mats \%>\%
   dplyr::mutate(
     p_industries = rep(list(p_industries), times = nrow(.))
   ) \%>\%
-  primary_aggregates(p_industries = "p_industries", by = "Total")
+  Recca::primary_aggregates(p_industries = "p_industries", by = "Total")
+tibble::as_tibble(res)
 res[[Recca::aggregate_cols$aggregate_primary]]
+UKEnergy2000mats \%>\%
+  tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") \%>\%
+  dplyr::mutate(
+    p_industries = rep(list(p_industries), times = nrow(.))
+  ) \%>\%
+  Recca::primary_aggregates(p_industries = "p_industries", add_net_gross_cols = TRUE, by = "Total") \%>\%
+  tibble::as_tibble()
 }
