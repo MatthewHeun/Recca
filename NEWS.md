@@ -6,10 +6,10 @@ output: html_document
 
 * New argument `add_net_gross_cols` on `primary_aggregates()` that tells
   whether to add both net and gross primary energy columns.
-  (Net and gross primary energy aggregate columns will be identical, 
-  but having both gross and net may make it easier to mesh with 
+  (Net and gross primary energy aggregate columns will contain identical values, 
+  but the presence of both net and gross columns may make it easier to mesh with 
   results from the `finaldemand_aggregates()` function, 
-  which produces gross and net columns that are different.)
+  which produces net and gross columns that are different.)
 * `aggregate_regions()` now returns an empty data frame
   with the expected columns if the input data frame 
   is empty.
