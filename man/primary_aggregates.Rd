@@ -7,12 +7,15 @@
 primary_aggregates(
   .sutdata = NULL,
   p_industries,
+  add_net_gross_cols = FALSE,
   pattern_type = c("exact", "leading", "trailing", "anywhere"),
   R = Recca::psut_cols$R,
   V = Recca::psut_cols$V,
   Y = Recca::psut_cols$Y,
   by = c("Total", "Product", "Flow"),
-  aggregate_primary = Recca::aggregate_cols$aggregate_primary
+  aggregate_primary = Recca::aggregate_cols$aggregate_primary,
+  net_aggregate_primary = Recca::aggregate_cols$net_aggregate_primary,
+  gross_aggregate_primary = Recca::aggregate_cols$gross_aggregate_primary
 )
 }
 \arguments{
@@ -29,12 +32,14 @@ where \verb{*_p} is the primary part of those matrices.
 The function \code{find_p_industry_names()} might be helpful to find
 primary industry names if they can be identified by prefixes.}
 
+\item{add_net_gross_cols}{A boolean that tells whether to add net and gross columns (\code{TRUE}) or not (\code{FALSE}).}
+
 \item{pattern_type}{One of "exact", "leading", "trailing", or "anywhere" which specifies
-how matches are made for \code{fd_sectors}.
+how matches are made for \code{p_industries}.
 If "exact", exact matches specify the sectors to be aggregated.
-If "leading", sectors are aggregated if any entry in \code{fd_sectors} matches the leading part of a final demand sector's name.
-If "trailing", sectors are aggregated if any entry in \code{fd_sectors} matches the trailing part of a final demand sector's name.
-If "anywhere", sectors are aggregated if any entry in \code{fd_sectors} matches any part of a final demand sector's name.
+If "leading", sectors are aggregated if any entry in \code{p_industries} matches the leading part of a final demand sector's name.
+If "trailing", sectors are aggregated if any entry in \code{p_industries} matches the trailing part of a final demand sector's name.
+If "anywhere", sectors are aggregated if any entry in \code{p_industries} matches any part of a final demand sector's name.
 Default is "leading" to enable primary industries such as "Resources [of Crude oil]".}
 
 \item{R, V, Y}{See \code{Recca::psut_cols}.}
@@ -46,13 +51,25 @@ Default is "leading" to enable primary industries such as "Resources [of Crude o
 \item "Flow": aggregation by type of flow (Production, Imports, Exports, etc.).
 }}
 
-\item{aggregate_primary}{The name for aggregates of primary energy on output.}
+\item{aggregate_primary, net_aggregate_primary, gross_aggregate_primary}{The names for aggregates of primary energy on output.}
 }
 \value{
 A list or data frame containing aggregate primary energy.
 }
 \description{
 Calculates aggregate primary energy from a data frame of Supply-Use matrices.
+}
+\details{
+By default, this function adds a single column of primary energy aggregates
+with the name \code{aggregate_primary}.
+If \code{add_net_gross_cols} is \code{TRUE} (default is \code{FALSE}),
+two columns are created:
+\code{net_aggregate_primary} and \code{gross_aggregate_primary}.
+With net and gross output (\code{add_net_gross_cols = TRUE}),
+the columns contain identical values.
+Use \code{add_net_gross_cols = TRUE} if you later wish to combine with
+results from \code{finaldemand_aggregates()},
+which provides both net and gross outputs.
 }
 \examples{
 library(matsbyname)

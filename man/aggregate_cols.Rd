@@ -8,11 +8,11 @@
 A string list with 4 entries.
 \describe{
 \item{aggregate_primary}{The name of a column in a wide-by-matrices data frame containing aggregates of primary energy.}
+\item{net_aggregate_primary}{The name of a column in a wide-by-matrices data frame containing aggregates of net primary energy.}
+\item{gross_aggregate_primary}{The name of a column in a wide-by-matrices data frame containing aggregates of gross primary energy.}
 \item{net_aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of net final demand energy (excluding energy industry own use), regardless of whether the last stage is final energy or useful energy.}
 \item{gross_aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of gross final demand energy (including energy industry own use), regardless of whether the last stage is final energy or useful energy.}
-\item{aggregate_primary_iea}{The name of a column in an IEA-style frame containing aggregates of primary energy.}
-\item{net_aggregate_demand_iea}{The name of a column in an IEA-style frame containing aggregates of net final demand energy (excluding energy industry own use), regardless of whether the last stage is final energy or useful energy.}
-\item{gross_aggregate_demand_iea}{The name of a column in an IEA-style frame containing aggregates of gross final demand energy (including energy industry own use), regardless of whether the last stage is final energy or useful energy.}
+\item{region}{The name of a column in a wide-by-matrices data frame containing regions.}
 }
 }
 \usage{
