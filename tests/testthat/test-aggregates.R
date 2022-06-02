@@ -168,6 +168,38 @@ test_that("primary aggregates work when p_industries is different for each row o
 })
 
 
+test_that("primary_aggregates() works for net and gross", {
+  # Define primary industries
+  p_industries <- c("Resources - Crude", "Resources - NG")
+
+  # Primary TOTAL aggregates
+  primary_total_aggregates_sut <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    dplyr::mutate(
+      p_industries = rep(list(p_industries), times = nrow(.))
+    ) %>%
+    Recca::primary_aggregates(p_industries = "p_industries",
+                              add_net_gross_cols = TRUE,
+                              by = "Total")
+  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
+                      dplyr::select(Recca::aggregate_cols$net_aggregate_primary), 93000)
+  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
+                      dplyr::select(Recca::aggregate_cols$gross_aggregate_primary), 93000)
+  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$useful) %>%
+                      dplyr::select(Recca::aggregate_cols$net_aggregate_primary), 93000)
+  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$useful) %>%
+                      dplyr::select(Recca::aggregate_cols$gross_aggregate_primary), 93000)
+  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Energy.type == "E", Last.stage == IEATools::last_stages$services) %>%
+                      dplyr::select(Recca::aggregate_cols$net_aggregate_primary), 93000)
+  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Energy.type == "E", Last.stage == IEATools::last_stages$services) %>%
+                      dplyr::select(Recca::aggregate_cols$gross_aggregate_primary), 93000)
+  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Energy.type == "X", Last.stage == IEATools::last_stages$services) %>%
+                      dplyr::select(Recca::aggregate_cols$net_aggregate_primary), 98220)
+  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Energy.type == "X", Last.stage == IEATools::last_stages$services) %>%
+                      dplyr::select(Recca::aggregate_cols$gross_aggregate_primary), 98220)
+})
+
+
 test_that("finaldemand_aggregates() of SUT data work as expected without units", {
   # Define final demand sectors
   fd_sectors <- c("Residential", "Transport", "Oil fields")

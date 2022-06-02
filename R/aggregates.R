@@ -106,7 +106,7 @@ primary_aggregates <- function(.sutdata = NULL,
     # Check if gross and net columns are desired before returning.
     if (add_net_gross_cols) {
       out <- list(agg_primary, agg_primary) %>%
-        magrittr::setnames(net_aggregate_primary, gross_aggregate_primary)
+        magrittr::set_names(c(net_aggregate_primary, gross_aggregate_primary))
     } else {
       out <- list(agg_primary) %>%
         magrittr::set_names(aggregate_primary)
