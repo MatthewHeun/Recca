@@ -2,6 +2,17 @@
 #'
 #' Calculates aggregate primary energy from a data frame of Supply-Use matrices.
 #'
+#' By default, this function adds a single column of primary energy aggregates
+#' with the name `aggregate_primary`.
+#' If `add_net_gross_cols` is `TRUE` (default is `FALSE`),
+#' two columns are created:
+#' `net_aggregate_primary` and `gross_aggregate_primary`.
+#' With net and gross output (`add_net_gross_cols = TRUE`),
+#' the columns contain identical values.
+#' Use `add_net_gross_cols = TRUE` if you later wish to combine with
+#' results from `finaldemand_aggregates()`,
+#' which provides both net and gross outputs.
+#'
 #' @param .sutdata A data frame with columns of matrices from a supply-use analysis.
 #' @param p_industries a vector of names of industries to be aggregated as "primary."
 #'                     If `.sutdata` is a data frame, `p_industries` should be the name of a column in the data frame.
@@ -13,6 +24,7 @@
 #'                     where `*_p` is the primary part of those matrices.
 #'                     The function `find_p_industry_names()` might be helpful to find
 #'                     primary industry names if they can be identified by prefixes.
+#' @param add_net_gross_cols A boolean that tells whether to add net and gross columns (`TRUE`) or not (`FALSE`).
 #' @param pattern_type One of "exact", "leading", "trailing", or "anywhere" which specifies
 #'                     how matches are made for `p_industries`.
 #'                     If "exact", exact matches specify the sectors to be aggregated.
@@ -27,7 +39,7 @@
 #'          \item "Product": aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.), or
 #'          \item "Flow": aggregation by type of flow (Production, Imports, Exports, etc.).
 #'        }
-#' @param aggregate_primary The name for aggregates of primary energy on output.
+#' @param aggregate_primary,net_aggregate_primary,gross_aggregate_primary The names for aggregates of primary energy on output.
 #'
 #' @return A list or data frame containing aggregate primary energy.
 #'
@@ -42,11 +54,24 @@
 #'   dplyr::mutate(
 #'     p_industries = rep(list(p_industries), times = nrow(.))
 #'   ) %>%
-#'   primary_aggregates(p_industries = "p_industries", by = "Total")
+#'   Recca::primary_aggregates(p_industries = "p_industries", by = "Total")
+#' tibble::as_tibble(res)
 #' res[[Recca::aggregate_cols$aggregate_primary]]
+#' res2 <- UKEnergy2000mats %>%
+#'   tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") %>%
+#'   dplyr::mutate(
+#'     p_industries = rep(list(p_industries), times = nrow(.))
+#'   ) %>%
+#'   Recca::primary_aggregates(p_industries = "p_industries",
+#'                             add_net_gross_cols = TRUE,
+#'                             by = "Total")
+#' tibble::as_tibble(res2)
+#' res2[[Recca::aggregate_cols$net_aggregate_primary]]
+#' res2[[Recca::aggregate_cols$gross_aggregate_primary]]
 primary_aggregates <- function(.sutdata = NULL,
                                # Vector of primary industries
                                p_industries,
+                               add_net_gross_cols = FALSE,
                                pattern_type = c("exact", "leading", "trailing", "anywhere"),
                                # Input names
                                R = Recca::psut_cols$R,
@@ -54,7 +79,9 @@ primary_aggregates <- function(.sutdata = NULL,
                                Y = Recca::psut_cols$Y,
                                by = c("Total", "Product", "Flow"),
                                # Output names
-                               aggregate_primary = Recca::aggregate_cols$aggregate_primary){
+                               aggregate_primary = Recca::aggregate_cols$aggregate_primary,
+                               net_aggregate_primary = Recca::aggregate_cols$net_aggregate_primary,
+                               gross_aggregate_primary = Recca:: aggregate_cols$gross_aggregate_primary){
 
   # Ensure that the caller has matsbyname installed and on the package search path.
   # assertthat::assert_that(requireNamespace("matsbyname"),
@@ -88,7 +115,15 @@ primary_aggregates <- function(.sutdata = NULL,
     # No need for a last "else" clause, because match.arg ensures we have only one of
     # "Total", "Product", or "Flow".
 
-    list(agg_primary) %>% magrittr::set_names(aggregate_primary)
+    # Check if gross and net columns are desired before returning.
+    if (add_net_gross_cols) {
+      out <- list(agg_primary, agg_primary) %>%
+        magrittr::set_names(c(net_aggregate_primary, gross_aggregate_primary))
+    } else {
+      out <- list(agg_primary) %>%
+        magrittr::set_names(aggregate_primary)
+    }
+  return(out)
   }
   matsindf::matsindf_apply(.sutdata, FUN = prim_func, p_industries_vec = p_industries, R_mat = R, V_mat = V, Y_mat = Y)
 }
