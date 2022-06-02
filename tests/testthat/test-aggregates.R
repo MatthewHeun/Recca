@@ -370,6 +370,14 @@ test_that("region_aggregates() works as expected", {
                                              many_colname = IEATools::iea_cols$country)
   mats <- dplyr::left_join(mats, agg_df, by = IEATools::iea_cols$country)
 
+  # Try with an empty data frame
+  empty <- region_aggregates(mats[0, ],
+                             many_colname = IEATools::iea_cols$country,
+                             few_colname = "Continent")
+  expect_equal(nrow(empty), 0)
+  expect_equal(colnames(empty), colnames(mats))
+
+  # Now try with the data.
   res <- region_aggregates(mats,
                            many_colname = IEATools::iea_cols$country,
                            few_colname = "Continent")
