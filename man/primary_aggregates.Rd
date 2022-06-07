@@ -40,7 +40,7 @@ If "exact", exact matches specify the sectors to be aggregated.
 If "leading", sectors are aggregated if any entry in \code{p_industries} matches the leading part of a final demand sector's name.
 If "trailing", sectors are aggregated if any entry in \code{p_industries} matches the trailing part of a final demand sector's name.
 If "anywhere", sectors are aggregated if any entry in \code{p_industries} matches any part of a final demand sector's name.
-Default is "leading" to enable primary industries such as "Resources [of Crude oil]".}
+Default is "exact".}
 
 \item{R, V, Y}{See \code{Recca::psut_cols}.}
 
@@ -83,6 +83,11 @@ res <- UKEnergy2000mats \%>\%
   Recca::primary_aggregates(p_industries = "p_industries", by = "Total")
 tibble::as_tibble(res)
 res[[Recca::aggregate_cols$aggregate_primary]]
+# Above, only 1 aggregate column is created, because there is no
+# difference between net and gross aggregation for primary energy.
+# Below, both net and gross aggregation columns are created,
+# for compatibility with the `finaldemand_aggregates()` function.
+# Net and gross primary aggregates are identical.
 res2 <- UKEnergy2000mats \%>\%
   tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") \%>\%
   dplyr::mutate(

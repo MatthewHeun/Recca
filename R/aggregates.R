@@ -31,7 +31,7 @@
 #'                     If "leading", sectors are aggregated if any entry in `p_industries` matches the leading part of a final demand sector's name.
 #'                     If "trailing", sectors are aggregated if any entry in `p_industries` matches the trailing part of a final demand sector's name.
 #'                     If "anywhere", sectors are aggregated if any entry in `p_industries` matches any part of a final demand sector's name.
-#'                     Default is "leading" to enable primary industries such as "Resources \[of Crude oil\]".
+#'                     Default is "exact".
 #' @param R,V,Y See `Recca::psut_cols`.
 #' @param by One of "Total", "Product", or "Flow" to indicate the desired aggregation:
 #'        \itemize{
