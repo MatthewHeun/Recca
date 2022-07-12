@@ -6,7 +6,7 @@
 \usage{
 despecified_aggregates(
   .sut_data = NULL,
-  piece_to_keep = "noun",
+  piece_to_keep = "pref",
   R = Recca::psut_cols$R,
   U = Recca::psut_cols$U,
   V = Recca::psut_cols$V,

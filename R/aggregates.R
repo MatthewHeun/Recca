@@ -397,13 +397,8 @@ despecified_aggregates <- function(.sut_data = NULL,
                                  Y_mat,
                                  r_EIOU_mat,
                                  U_EIOU_mat,
-                                 U_feed_mat,
-                                 this_inf_notation,
-                                 this_notation,
-                                 this_margin,
-                                 this_choose_most_specific,
-                                 these_prepositions) {
-    despecified <- lapply(list(R, U, V, Y, U_feed_mat), function(m) {
+                                 U_feed_mat) {
+    despecified <- lapply(list(R_mat, U_mat, V_mat, Y_mat, U_feed_mat), function(m) {
       m %>%
         matsbyname::aggregate_pieces_byname(piece = piece_to_keep,
                                             margin = margin,
