@@ -337,3 +337,102 @@ region_aggregates <- function(.sut_data,
         matsbyname::replaceNaN_byname(val = 0)
     )
 }
+
+
+#' Despecify and aggregate PSUT matrices
+#'
+#' PSUT matrices often have row and column names that been specified to
+#' contain more information than simply the industry or product.
+#' Examples include
+#' "Resources \[of Coal\]" and
+#' "Automobiles -> RoP".
+#' It is sometimes helpful to despecify and aggregate these rows and columns
+#' so that all "Resources" are summed together,
+#' all "Automobiles" are summed together, etc.
+#' This function performs that aggregation.
+#'
+#' By default, the aggregation is made to the nouns of row and column names
+#' as defined by the `RCLabels` package.
+#'
+#' @param .sut_data A data frame of matrices to be despecified and aggregated.
+#' @param R,U,V,Y,r_EIOU Names of matrices to be despecified and aggregated. See `Recca::psut_cols`.
+#' @param piece_to_keep The piec of the label which is aggregated.
+#'                      Default is "noun".
+#'
+#' @return A modified version of `.sut_data` where rows and columns of matrices
+#'         have been aggregated to their despecified parts.
+#'
+#' @export
+#'
+#' @examples
+despecified_aggregates <- function(.sut_data = NULL,
+                                   piece_to_keep = "noun",
+                                   # Input matrix names
+                                   R = Recca::psut_cols$R,
+                                   U = Recca::psut_cols$U,
+                                   V = Recca::psut_cols$V,
+                                   Y = Recca::psut_cols$Y,
+                                   r_EIOU = Recca::psut_cols$r_eiou,
+                                   U_EIOU = Recca::psut_cols$U_eiou,
+                                   U_feed = Recca::psut_cols$U_feed,
+                                   # Notation inference
+                                   inf_notation = TRUE,
+                                   notation = list(RCLabels::notations_list),
+                                   margin = list(c(1, 2)),
+                                   choose_most_specific = TRUE,
+                                   prepositions = list(RCLabels::prepositions_list),
+                                   # Column names
+                                   R_colname = Recca::psut_cols$R,
+                                   U_colname = Recca::psut_cols$U,
+                                   V_colname = Recca::psut_cols$V,
+                                   Y_colname = Recca::psut_cols$Y,
+                                   r_EIOU_colname = Recca::psut_cols$r_eiou,
+                                   U_EIOU_colname = Recca::psut_cols$U_eiou,
+                                   U_feed_colname = Recca::psut_cols$U_feed) {
+
+  despecify_agg_func <- function(this_piece_to_keep,
+                                 R_mat,
+                                 U_mat,
+                                 V_mat,
+                                 Y_mat,
+                                 r_EIOU_mat,
+                                 U_EIOU_mat,
+                                 U_feed_mat,
+                                 this_inf_notation,
+                                 this_notation,
+                                 this_margin,
+                                 this_choose_most_specific,
+                                 these_prepositions) {
+    despecified <- lapply(list(R, U, V, Y, U_feed_mat), function(m) {
+      m %>%
+        matsbyname::aggregate_pieces_byname(piece = piece_to_keep,
+                                            margin = margin,
+                                            inf_notation = inf_notation,
+                                            notation = notation,
+                                            choose_most_specific = choose_most_specific,
+                                            prepositions = prepositions)
+    })
+    R_out <- despecified[[1]]
+    U_out <- despecified[[2]]
+    V_out <- despecified[[3]]
+    Y_out <- despecified[[4]]
+    U_feed_out <- despecified[[5]]
+    U_eiou_out <- matsbyname::difference_byname(U_out, U_feed_out)
+    r_eiou_out <- matsbyname::quotient_byname(U_feed_out, U_out)
+
+    # Make a list and return the matrices
+    list(R_out, U_out, V_out, Y_out, U_feed_out, U_eiou_out, r_eiou_out) %>%
+      magrittr::set_names(c(R_colname, U_colname, V_colname, Y_colname,
+                            U_feed_colname, U_EIOU_colname, r_EIOU_colname))
+  }
+
+  matsindf::matsindf_apply(.sut_data,
+                           FUN = despecify_agg_func,
+                           R_mat = R,
+                           U_mat = U,
+                           V_mat = V,
+                           Y_mat = Y,
+                           r_EIOU_mat = r_EIOU,
+                           U_EIOU_mat = U_EIOU,
+                           U_feed_mat = U_feed)
+}

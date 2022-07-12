@@ -403,3 +403,13 @@ test_that("region_aggregates() works as expected", {
   expect_equal(eur$S_units, amr$S_units)
   expect_equal(eur$r_EIOU, amr$r_EIOU)
 })
+
+
+test_that("despecified_aggregates() works as expected", {
+  mats_GBR <- UKEnergy2000mats %>%
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
+
+  mats_GBR %>%
+    despecified_aggregates()
+
+})
