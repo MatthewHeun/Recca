@@ -4,8 +4,10 @@ output: html_document
 ---
 
 
+* New function `group_aggregates()` that
+  aggregates PSUT matrices according to an aggregation map.
 * New function `despecified_aggregates()` that
-  aggregates to a piece of row and column labels. 
+  aggregates PSUT matrices to a piece of row and column labels. 
 * New argument `add_net_gross_cols` on `primary_aggregates()` that tells
   whether to add both net and gross primary energy columns.
   (Net and gross primary energy aggregate columns will contain identical values, 
