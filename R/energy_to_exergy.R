@@ -37,7 +37,7 @@
 #'                  Default is "all", meaning that entire names are to be matched.
 #' @param notation The nomenclature for the row and column labels. Default is `RCLabels::bracket_notation`.
 #' @param prepositions The prepositions to be used row and column notation.
-#'                     Default is `RCLabels::prepositions`.
+#'                     Default is `RCLabels::prepositions_list`.
 #' @param R_name,U_name,U_feed_name,U_eiou_name,r_eiou_name,V_name,Y_name,phi_name,energy_type,S_units Names of output matrices
 #' @param energy,exergy See `Recca::energy_types`.
 #'
@@ -52,7 +52,7 @@
 #'   # Eliminate services ECCs.
 #'   dplyr::filter(Last.stage %in% c("Final", "Useful")) %>%
 #'   dplyr::mutate(
-#'     phi = matsbyname::make_list(Recca::phi_vec, n = nrow(.), lenx = 1)
+#'     phi = RCLabels::make_list(Recca::phi_vec, n = nrow(.), lenx = 1)
 #'   )
 #' extend_to_exergy(sutmats)
 extend_to_exergy <- function(.sutmats = NULL,
@@ -70,7 +70,7 @@ extend_to_exergy <- function(.sutmats = NULL,
                              mat_piece = "all",
                              phi_piece = "all",
                              notation = RCLabels::bracket_notation,
-                             prepositions = RCLabels::prepositions,
+                             prepositions = RCLabels::prepositions_list,
                              # Column names
                              R_name = Recca::psut_cols$R,
                              U_name = Recca::psut_cols$U,

@@ -198,7 +198,7 @@ calc_M <- function(.YqGHEdata = NULL,
     # !!e_hat_colname := matsbyname::hatize_byname(!!as.name(e_colname)),
     e_hat_list <- lapply(e_vecs, FUN = matsbyname::hatize_byname, keep = "rownames")
     # Calculate Q matrices
-    G_list <- matsbyname::make_list(G_mat, n = length(e_hat_list), lenx = 1)
+    G_list <- RCLabels::make_list(G_mat, n = length(e_hat_list), lenx = 1)
     Q_list <- Map(matsbyname::matrixproduct_byname, e_hat_list, G_list)
     # We're looking for embodied energy, which are positive entries in the Q matrices.
     # Set negative entries in the Q matrices to zero

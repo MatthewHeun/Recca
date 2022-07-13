@@ -19,7 +19,7 @@ extend_to_exergy(
   mat_piece = "all",
   phi_piece = "all",
   notation = RCLabels::bracket_notation,
-  prepositions = RCLabels::prepositions,
+  prepositions = RCLabels::prepositions_list,
   R_name = Recca::psut_cols$R,
   U_name = Recca::psut_cols$U,
   U_feed_name = Recca::psut_cols$U_feed,
@@ -58,7 +58,7 @@ Default is "all", meaning that entire names are to be matched.}
 \item{notation}{The nomenclature for the row and column labels. Default is \code{RCLabels::bracket_notation}.}
 
 \item{prepositions}{The prepositions to be used row and column notation.
-Default is \code{RCLabels::prepositions}.}
+Default is \code{RCLabels::prepositions_list}.}
 
 \item{R_name, U_name, U_feed_name, U_eiou_name, r_eiou_name, V_name, Y_name, phi_name, energy_type, S_units}{Names of output matrices}
 
@@ -96,7 +96,7 @@ sutmats <- UKEnergy2000mats \%>\%
   # Eliminate services ECCs.
   dplyr::filter(Last.stage \%in\% c("Final", "Useful")) \%>\%
   dplyr::mutate(
-    phi = matsbyname::make_list(Recca::phi_vec, n = nrow(.), lenx = 1)
+    phi = RCLabels::make_list(Recca::phi_vec, n = nrow(.), lenx = 1)
   )
 extend_to_exergy(sutmats)
 }
