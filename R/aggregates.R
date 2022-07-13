@@ -353,11 +353,29 @@ region_aggregates <- function(.sut_data,
 #'
 #' By default, the aggregation is made to the nouns of row and column names
 #' as defined by the `RCLabels` package.
+#' Which piece is to be aggregated is given in the `piece_to_keep` argument.
+#' Internally, this function uses `matsbyname::aggregate_pieces_byname()`
+#' to do the heavy lifting.
 #'
 #' @param .sut_data A data frame of matrices to be despecified and aggregated.
-#' @param R,U,V,Y,r_EIOU Names of matrices to be despecified and aggregated. See `Recca::psut_cols`.
-#' @param piece_to_keep The piec of the label which is aggregated.
+#' @param piece_to_keep The piece of the label to retain before aggregation.
 #'                      Default is "noun".
+#' @param R,U,V,Y,r_EIOU,U_EIOU,U_feed Matrices or names of columns in `.sut_data` to be despecified and aggregated. See `Recca::psut_cols`.
+#' @param inf_notation A boolean that tells whether to infer the row and column label notation.
+#'                     Default is `TRUE`.
+#' @param notation The notation for row and column labels.
+#'                 Default is `list(RCLabels::notations_list)`.
+#' @param margin The margins over which aggregation is performed.
+#'               Default is `list(c(1, 2))`.
+#' @param choose_most_specific A boolean that tells whether to choose the most-specific
+#'                             notation if 2 or more notations match.
+#'                             Default is `TRUE`.
+#' @param prepositions A list of prepositions that could appear in row and column names.
+#'                     Default is `list(RCLabels::prepositions_list)`.
+#' @param R_aggregated_colname,U_aggregated_colname,V_aggregated_colname,Y_aggregated_colname,r_EIOU_aggregated_colname,U_EIOU_aggregated_colname,U_feed_aggregated_colname Names of
+#'                     aggregated matrices or columns.
+#' @param aggregated_suffix A string suffix used to form the names for aggregated matrices.
+#'                          Default is "_aggregated".
 #'
 #' @return A modified version of `.sut_data` where rows and columns of matrices
 #'         have been aggregated to their despecified parts.
@@ -365,6 +383,9 @@ region_aggregates <- function(.sut_data,
 #' @export
 #'
 #' @examples
+#' UKEnergy2000mats %>%
+#'   tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) %>%
+#'   despecified_aggregates()
 despecified_aggregates <- function(.sut_data = NULL,
                                    piece_to_keep = "noun",
                                    # Input matrix names
@@ -375,20 +396,24 @@ despecified_aggregates <- function(.sut_data = NULL,
                                    r_EIOU = Recca::psut_cols$r_eiou,
                                    U_EIOU = Recca::psut_cols$U_eiou,
                                    U_feed = Recca::psut_cols$U_feed,
+                                   S_units = Recca::psut_cols$S_units,
                                    # Notation inference
                                    inf_notation = TRUE,
                                    notation = list(RCLabels::notations_list),
                                    margin = list(c(1, 2)),
                                    choose_most_specific = TRUE,
                                    prepositions = list(RCLabels::prepositions_list),
-                                   # Column names
-                                   R_colname = Recca::psut_cols$R,
-                                   U_colname = Recca::psut_cols$U,
-                                   V_colname = Recca::psut_cols$V,
-                                   Y_colname = Recca::psut_cols$Y,
-                                   r_EIOU_colname = Recca::psut_cols$r_eiou,
-                                   U_EIOU_colname = Recca::psut_cols$U_eiou,
-                                   U_feed_colname = Recca::psut_cols$U_feed) {
+                                   # Names for the aggregated matrices
+                                   R_aggregated_colname = paste0(Recca::psut_cols$R, aggregated_suffix),
+                                   U_aggregated_colname = paste0(Recca::psut_cols$U, aggregated_suffix),
+                                   V_aggregated_colname = paste0(Recca::psut_cols$V, aggregated_suffix),
+                                   Y_aggregated_colname = paste0(Recca::psut_cols$Y, aggregated_suffix),
+                                   r_EIOU_aggregated_colname = paste0(Recca::psut_cols$r_eiou, aggregated_suffix),
+                                   U_EIOU_aggregated_colname = paste0(Recca::psut_cols$U_eiou, aggregated_suffix),
+                                   U_feed_aggregated_colname = paste0(Recca::psut_cols$U_feed, aggregated_suffix),
+                                   S_units_aggregated_colname = paste0(Recca::psut_cols$S_units, aggregated_suffix),
+                                   # Suffix for aggregated columns
+                                   aggregated_suffix = Recca::aggregate_cols$aggregated_suffix) {
 
   despecify_agg_func <- function(this_piece_to_keep,
                                  R_mat,
@@ -397,8 +422,9 @@ despecified_aggregates <- function(.sut_data = NULL,
                                  Y_mat,
                                  r_EIOU_mat,
                                  U_EIOU_mat,
-                                 U_feed_mat) {
-    despecified <- lapply(list(R_mat, U_mat, V_mat, Y_mat, U_feed_mat), function(m) {
+                                 U_feed_mat,
+                                 S_units_mat) {
+    despecified <- lapply(list(R_mat, U_mat, V_mat, Y_mat, U_feed_mat, S_units_mat), function(m) {
       m %>%
         matsbyname::aggregate_pieces_byname(piece = piece_to_keep,
                                             margin = margin,
@@ -413,12 +439,16 @@ despecified_aggregates <- function(.sut_data = NULL,
     Y_out <- despecified[[4]]
     U_feed_out <- despecified[[5]]
     U_eiou_out <- matsbyname::difference_byname(U_out, U_feed_out)
-    r_eiou_out <- matsbyname::quotient_byname(U_feed_out, U_out)
+    r_eiou_out <- matsbyname::quotient_byname(U_eiou_out, U_out) %>%
+      matsbyname::replaceNaN_byname(val = 0)
+    S_units_out <- matsbyname::quotient_byname(despecified[[6]], despecified[[6]]) %>%
+      matsbyname::replaceNaN_byname(val = 0)
 
     # Make a list and return the matrices
-    list(R_out, U_out, V_out, Y_out, U_feed_out, U_eiou_out, r_eiou_out) %>%
-      magrittr::set_names(c(R_colname, U_colname, V_colname, Y_colname,
-                            U_feed_colname, U_EIOU_colname, r_EIOU_colname))
+    list(R_out, U_out, V_out, Y_out, U_feed_out, U_eiou_out, r_eiou_out, S_units_out) %>%
+      magrittr::set_names(c(R_aggregated_colname, U_aggregated_colname, V_aggregated_colname,
+                            Y_aggregated_colname, r_EIOU_aggregated_colname, U_EIOU_aggregated_colname,
+                            U_feed_aggregated_colname, S_units_aggregated_colname))
   }
 
   matsindf::matsindf_apply(.sut_data,
@@ -429,5 +459,6 @@ despecified_aggregates <- function(.sut_data = NULL,
                            Y_mat = Y,
                            r_EIOU_mat = r_EIOU,
                            U_EIOU_mat = U_EIOU,
-                           U_feed_mat = U_feed)
+                           U_feed_mat = U_feed,
+                           S_units_mat = S_units)
 }

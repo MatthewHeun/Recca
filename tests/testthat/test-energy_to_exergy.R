@@ -10,7 +10,7 @@ test_that("extend_to_exergy() works as expected", {
     # Eliminate services ECCs.
     dplyr::filter(Last.stage %in% c("Final", "Useful")) %>%
     dplyr::mutate(
-      phi = matsbyname::make_list(Recca::phi_vec, n = nrow(.), lenx = 1)
+      phi = RCLabels::make_list(Recca::phi_vec, n = nrow(.), lenx = 1)
     )
   res <- extend_to_exergy(sutmats)
   expect_true(Recca::energy_types$x %in% res[[Recca::energy_types$energy_type]] %>% unique())

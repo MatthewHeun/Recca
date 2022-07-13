@@ -217,7 +217,7 @@ test_that("new_k_ps() works as expected", {
       # Set up a new k_prime vector for Electric transport.
       # That vector will be used for the infininte substitution calculation.
       # k_prime = select_cols_byname(K, retain_pattern = make_pattern("Electric transport", pattern_type = "exact")),
-      k_prime = matsbyname::make_list(k_prime_vec, n = 1)
+      k_prime = RCLabels::make_list(k_prime_vec, n = 1)
     )
   # Now do the calculation of U_prime and V_prime matrices.
   # First test when we don't have an R matrix.

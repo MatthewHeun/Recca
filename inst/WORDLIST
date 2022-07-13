@@ -5,10 +5,14 @@ biofuels
 Brockway
 CMD
 ces
+colname
 coltypes
 colvec
 colvecwithdims
 csv
+Despecify
+despecify
+despecified
 doi
 ecc
 ef
@@ -66,6 +70,7 @@ PSUT
 pxp
 Qx
 quantifications
+RoP
 rowtypes
 rowvec
 Sankey

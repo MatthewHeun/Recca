@@ -6,7 +6,7 @@
 \usage{
 despecified_aggregates(
   .sut_data = NULL,
-  piece_to_keep = "pref",
+  piece_to_keep = "noun",
   R = Recca::psut_cols$R,
   U = Recca::psut_cols$U,
   V = Recca::psut_cols$V,
@@ -14,27 +14,52 @@ despecified_aggregates(
   r_EIOU = Recca::psut_cols$r_eiou,
   U_EIOU = Recca::psut_cols$U_eiou,
   U_feed = Recca::psut_cols$U_feed,
+  S_units = Recca::psut_cols$S_units,
   inf_notation = TRUE,
   notation = list(RCLabels::notations_list),
   margin = list(c(1, 2)),
   choose_most_specific = TRUE,
   prepositions = list(RCLabels::prepositions_list),
-  R_colname = Recca::psut_cols$R,
-  U_colname = Recca::psut_cols$U,
-  V_colname = Recca::psut_cols$V,
-  Y_colname = Recca::psut_cols$Y,
-  r_EIOU_colname = Recca::psut_cols$r_eiou,
-  U_EIOU_colname = Recca::psut_cols$U_eiou,
-  U_feed_colname = Recca::psut_cols$U_feed
+  R_aggregated_colname = paste0(Recca::psut_cols$R, aggregated_suffix),
+  U_aggregated_colname = paste0(Recca::psut_cols$U, aggregated_suffix),
+  V_aggregated_colname = paste0(Recca::psut_cols$V, aggregated_suffix),
+  Y_aggregated_colname = paste0(Recca::psut_cols$Y, aggregated_suffix),
+  r_EIOU_aggregated_colname = paste0(Recca::psut_cols$r_eiou, aggregated_suffix),
+  U_EIOU_aggregated_colname = paste0(Recca::psut_cols$U_eiou, aggregated_suffix),
+  U_feed_aggregated_colname = paste0(Recca::psut_cols$U_feed, aggregated_suffix),
+  S_units_aggregated_colname = paste0(Recca::psut_cols$S_units, aggregated_suffix),
+  aggregated_suffix = Recca::aggregate_cols$aggregated_suffix
 )
 }
 \arguments{
 \item{.sut_data}{A data frame of matrices to be despecified and aggregated.}
 
-\item{piece_to_keep}{The piec of the label which is aggregated.
+\item{piece_to_keep}{The piece of the label to retain before aggregation.
 Default is "noun".}
 
-\item{R, U, V, Y, r_EIOU}{Names of matrices to be despecified and aggregated. See \code{Recca::psut_cols}.}
+\item{R, U, V, Y, r_EIOU, U_EIOU, U_feed}{Matrices or names of columns in \code{.sut_data} to be despecified and aggregated. See \code{Recca::psut_cols}.}
+
+\item{inf_notation}{A boolean that tells whether to infer the row and column label notation.
+Default is \code{TRUE}.}
+
+\item{notation}{The notation for row and column labels.
+Default is \code{list(RCLabels::notations_list)}.}
+
+\item{margin}{The margins over which aggregation is performed.
+Default is \code{list(c(1, 2))}.}
+
+\item{choose_most_specific}{A boolean that tells whether to choose the most-specific
+notation if 2 or more notations match.
+Default is \code{TRUE}.}
+
+\item{prepositions}{A list of prepositions that could appear in row and column names.
+Default is \code{list(RCLabels::prepositions_list)}.}
+
+\item{R_aggregated_colname, U_aggregated_colname, V_aggregated_colname, Y_aggregated_colname, r_EIOU_aggregated_colname, U_EIOU_aggregated_colname, U_feed_aggregated_colname}{Names of
+aggregated matrices or columns.}
+
+\item{aggregated_suffix}{A string suffix used to form the names for aggregated matrices.
+Default is "_aggregated".}
 }
 \value{
 A modified version of \code{.sut_data} where rows and columns of matrices
@@ -54,4 +79,12 @@ This function performs that aggregation.
 \details{
 By default, the aggregation is made to the nouns of row and column names
 as defined by the \code{RCLabels} package.
+Which piece is to be aggregated is given in the \code{piece_to_keep} argument.
+Internally, this function uses \code{matsbyname::aggregate_pieces_byname()}
+to do the heavy lifting.
+}
+\examples{
+UKEnergy2000mats \%>\%
+  tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) \%>\%
+  despecified_aggregates()
 }

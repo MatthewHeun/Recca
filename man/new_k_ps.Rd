@@ -113,7 +113,7 @@ io_mats <- io_mats \%>\%
     k_prime = matsbyname::select_cols_byname(K,
            retain_pattern = RCLabels::make_or_pattern("Electric transport",
                                                       pattern_type = "exact")),
-    k_prime = matsbyname::make_list(k_prime_vec, n = 1)
+    k_prime = RCLabels::make_list(k_prime_vec, n = 1)
   )
 # Now do the calculation of U_prime and V_prime matrices.
 new_UV <- new_k_ps(io_mats)

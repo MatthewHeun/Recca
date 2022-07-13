@@ -409,7 +409,17 @@ test_that("despecified_aggregates() works as expected", {
   mats_GBR <- UKEnergy2000mats %>%
     tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
 
-  mats_GBR %>%
+  res <- mats_GBR %>%
     despecified_aggregates()
 
+  # Check that S_units was aggregated
+  expect_true(all(res$S_units_aggregated[[1]] == 1))
+
+  # Check a few numbers
+  # Aggregated Crude
+  expect_equal(res$U_aggregated[[1]][1, 1], 48000)
+  # Aggregated Petrol
+  expect_equal(res$U_aggregated[[1]][5, 8], 27000)
+  # Aggregated Diesel
+  expect_equal(res$U_aggregated[[1]][2, 2], 15850)
 })
