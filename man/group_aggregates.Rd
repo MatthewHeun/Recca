@@ -62,3 +62,11 @@ performs such aggregations for a set of PSUT matrices.
 Internally, this function uses \code{matsbyname::aggregate_byname()}.
 See its documentation for details on the format for the \code{aggregation_map}.
 }
+\examples{
+UKEnergy2000mats \%>\%
+  tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) \%>\%
+  group_aggregates(aggregation_map = list(`Oil and oil products` =
+                                            c("Crude", "Diesel", "Petrol")),
+                   pattern_type = "leading",
+                   margin = "Product")
+}

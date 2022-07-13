@@ -492,6 +492,12 @@ despecified_aggregates <- function(.sut_data = NULL,
 #' @export
 #'
 #' @examples
+#' UKEnergy2000mats %>%
+#'   tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) %>%
+#'   group_aggregates(aggregation_map = list(`Oil and oil products` =
+#'                                             c("Crude", "Diesel", "Petrol")),
+#'                    pattern_type = "leading",
+#'                    margin = "Product")
 group_aggregates <- function(.sut_data = NULL,
                              aggregation_map,
                              margin = c(1, 2),
@@ -560,3 +566,8 @@ group_aggregates <- function(.sut_data = NULL,
                            U_feed_mat = U_feed,
                            S_units_mat = S_units)
 }
+
+
+
+
+
