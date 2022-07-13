@@ -360,7 +360,7 @@ region_aggregates <- function(.sut_data,
 #' @param .sut_data A data frame of matrices to be despecified and aggregated.
 #' @param piece_to_keep The piece of the label to retain before aggregation.
 #'                      Default is "noun".
-#' @param R,U,V,Y,r_EIOU,U_EIOU,U_feed Matrices or names of columns in `.sut_data` to be despecified and aggregated. See `Recca::psut_cols`.
+#' @param R,U,V,Y,r_EIOU,U_EIOU,U_feed,S_units Matrices or names of columns in `.sut_data` to be despecified and aggregated. See `Recca::psut_cols`.
 #' @param inf_notation A boolean that tells whether to infer the row and column label notation.
 #'                     Default is `TRUE`.
 #' @param notation The notation for row and column labels.
@@ -372,7 +372,7 @@ region_aggregates <- function(.sut_data,
 #'                             Default is `TRUE`.
 #' @param prepositions A list of prepositions that could appear in row and column names.
 #'                     Default is `list(RCLabels::prepositions_list)`.
-#' @param R_aggregated_colname,U_aggregated_colname,V_aggregated_colname,Y_aggregated_colname,r_EIOU_aggregated_colname,U_EIOU_aggregated_colname,U_feed_aggregated_colname Names of
+#' @param R_aggregated_colname,U_aggregated_colname,V_aggregated_colname,Y_aggregated_colname,r_EIOU_aggregated_colname,U_EIOU_aggregated_colname,U_feed_aggregated_colname,S_units_aggregated_colname Names of
 #'                     aggregated matrices or columns.
 #' @param aggregated_suffix A string suffix used to form the names for aggregated matrices.
 #'                          Default is "_aggregated".
@@ -462,3 +462,6 @@ despecified_aggregates <- function(.sut_data = NULL,
                            U_feed_mat = U_feed,
                            S_units_mat = S_units)
 }
+
+
+
