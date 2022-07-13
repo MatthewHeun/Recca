@@ -37,7 +37,7 @@ despecified_aggregates(
 \item{piece_to_keep}{The piece of the label to retain before aggregation.
 Default is "noun".}
 
-\item{R, U, V, Y, r_EIOU, U_EIOU, U_feed}{Matrices or names of columns in \code{.sut_data} to be despecified and aggregated. See \code{Recca::psut_cols}.}
+\item{R, U, V, Y, r_EIOU, U_EIOU, U_feed, S_units}{Matrices or names of columns in \code{.sut_data} to be despecified and aggregated. See \code{Recca::psut_cols}.}
 
 \item{inf_notation}{A boolean that tells whether to infer the row and column label notation.
 Default is \code{TRUE}.}
@@ -55,7 +55,7 @@ Default is \code{TRUE}.}
 \item{prepositions}{A list of prepositions that could appear in row and column names.
 Default is \code{list(RCLabels::prepositions_list)}.}
 
-\item{R_aggregated_colname, U_aggregated_colname, V_aggregated_colname, Y_aggregated_colname, r_EIOU_aggregated_colname, U_EIOU_aggregated_colname, U_feed_aggregated_colname}{Names of
+\item{R_aggregated_colname, U_aggregated_colname, V_aggregated_colname, Y_aggregated_colname, r_EIOU_aggregated_colname, U_EIOU_aggregated_colname, U_feed_aggregated_colname, S_units_aggregated_colname}{Names of
 aggregated matrices or columns.}
 
 \item{aggregated_suffix}{A string suffix used to form the names for aggregated matrices.
