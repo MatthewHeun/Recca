@@ -431,13 +431,13 @@ test_that("despecified_aggregates() works as expected", {
 })
 
 
-test_that("group_aggregates() works as expected", {
+test_that("grouped_aggregates() works as expected", {
   mats_GBR <- UKEnergy2000mats %>%
     tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
 
   res <- mats_GBR %>%
-    group_aggregates(aggregation_map = list(`Oil and oil products` = c("Crude", "Diesel", "Petrol")),
-                     pattern_type = "leading", margin = "Product")
+    grouped_aggregates(aggregation_map = list(`Oil and oil products` = c("Crude", "Diesel", "Petrol")),
+                       pattern_type = "leading", margin = "Product")
 
   expect_equal(colnames(res$R_aggregated[[1]]), c("NG", "Oil and oil products"))
   expect_equal(rownames(res$U_aggregated[[1]]), c("Elect", "Elect - Grid", "NG", "NG - Dist.", "NG - Wells", "Oil and oil products"))
