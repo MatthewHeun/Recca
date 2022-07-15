@@ -422,4 +422,32 @@ test_that("despecified_aggregates() works as expected", {
   expect_equal(res$U_aggregated[[1]][5, 8], 27000)
   # Aggregated Diesel
   expect_equal(res$U_aggregated[[1]][2, 2], 15850)
+
+  expect_equal(rownames(mats_GBR$U[[1]]),
+               c("Crude", "Crude - Dist.", "Crude - Fields", "Diesel", "Diesel - Dist.",
+                 "Elect", "Elect - Grid", "NG", "NG - Dist.", "NG - Wells",
+                 "Petrol", "Petrol - Dist."))
+  expect_equal(rownames(res$U_aggregated[[1]]), c("Crude", "Diesel", "Elect", "NG", "Petrol"))
+})
+
+
+test_that("grouped_aggregates() works as expected", {
+  mats_GBR <- UKEnergy2000mats %>%
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
+
+  res <- mats_GBR %>%
+    grouped_aggregates(aggregation_map = list(`Oil and oil products` = c("Crude", "Diesel", "Petrol")),
+                       pattern_type = "leading", margin = "Product")
+
+  expect_equal(colnames(res$R_aggregated[[1]]), c("NG", "Oil and oil products"))
+  expect_equal(rownames(res$U_aggregated[[1]]), c("Elect", "Elect - Grid", "NG", "NG - Dist.", "NG - Wells", "Oil and oil products"))
+  expect_equal(colnames(res$V_aggregated[[1]]), c("Elect", "Elect - Grid", "NG - Dist.", "NG - Wells", "Oil and oil products"))
+  expect_equal(rownames(res$Y_aggregated[[1]]), c("Elect - Grid", "NG - Dist.", "Oil and oil products"))
+
+  # Check some values
+
+  # Oil and oil products for Crude dist.
+  expect_equal(res$U_aggregated[[1]][6, 1], 48025)
+  # Oil and oil products for Transport
+  expect_equal(res$Y_aggregated[[1]][3, 2], 40750)
 })
