@@ -649,8 +649,50 @@ footprint_aggregates <- function(.sut_data = NULL,
                                  gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand) {
 
   footprint_func <- function(R_mat, U_mat, U_feed_mat, V_mat, Y_mat, S_units_mat) {
+    # Calculate the IO matrices
+    with_io <- list(R = R_mat, U = U_mat, U_feed = U_feed_mat, V = V_mat, Y = Y_mat, S_units = S_units_mat) %>%
+      calc_io_mats()
 
-    with_io <- calc_io_mats(R = R_mat, U = U_mat, U_feed = U_feed_mat, V = V_mat, Y = Y_mat, S_units = S_units_mat)
+    # Get the row names in Y. Those are the Products we want to evaluate.
+    new_Y_products <- matsbyname::getrownames_byname(Y_mat) %>%
+      sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_product) {
+        # For each product (in each row), make a new Y matrix to be used for the calculation.
+        Y_mat %>%
+          matsbyname::select_rows_byname(Hmisc::escapeRegex(this_product))
+      })
+
+    # Get the column names in Y. Those are the Sectors we want to evaluate.
+    new_Y_sectors <- matsbyname::getcolnames_byname(Y_mat) %>%
+      sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_sector) {
+        # For each sector (in each column), make a new Y matrix to be used for the calculation.
+        Y_mat %>%
+          matsbyname::select_cols_byname(Hmisc::escapeRegex(this_sector))
+      })
+
+    # Create a list with new Y matrices for all products and sectors
+    new_Y_list <- c(new_Y_products, new_Y_sectors)
+
+    # For each item in this list, make a new set of matrices
+    ecc_prime <- new_Y_list %>%
+      sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_new_Y) {
+        with_io %>%
+          append(list(this_new_Y)) %>%
+          magrittr::set_names(c(names(with_io), "Y_prime")) %>%
+          new_Y()
+
+    })
+
+    # Now that we have the new ECCs, calculate primary and final demand aggregates
+    p_aggregates <- ecc_prime %>%
+      sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_new_ecc) {
+        this_new_ecc %>%
+          primary_aggregates(p_industries = list(p_industries),
+                             R = "R_prime", V = "V_prime", Y = "Y_prime",
+                             pattern_type = pattern_type,
+                             by = "Total",
+                             aggregate_primary = aggregate_primary)
+      })
+
   }
 
   matsindf::matsindf_apply(.sut_data,

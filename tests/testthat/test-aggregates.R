@@ -6,7 +6,7 @@ library(matsindf)
 library(tidyr)
 
 
-test_that("primary aggregates of SUT data work as expected", {
+test_that("primary_aggregates() works as expected", {
   # Define primary industries
   p_industries <- c("Resources - Crude", "Resources - NG")
 
@@ -68,7 +68,7 @@ test_that("primary aggregates of SUT data work as expected", {
 })
 
 
-test_that("primary aggregates works with leading pattern for names", {
+test_that("primary_aggregates() works with leading pattern for names", {
   # Define primary industries
   p_industries <- c("Resources", "Resources")
 
@@ -90,7 +90,7 @@ test_that("primary aggregates works with leading pattern for names", {
 })
 
 
-test_that("primary aggregates work when R is folded into V", {
+test_that("primary_aggregates() works when R is folded into V", {
   p_industries <- c("Resources - Crude", "Resources - NG")
 
   # Primary TOTAL aggregates
@@ -109,7 +109,7 @@ test_that("primary aggregates work when R is folded into V", {
 })
 
 
-test_that("primary aggregates work when p_industries is different for each row of a data frame", {
+test_that("primary_aggregates() works when p_industries is different for each row of a data frame", {
   p_industries_all <- c("Resources - Crude", "Resources - NG")
   p_industries_crude <- "Resources - Crude"
   p_industries_ng <- "Resources - NG"
@@ -197,6 +197,34 @@ test_that("primary_aggregates() works for net and gross", {
                       dplyr::select(Recca::aggregate_cols$net_aggregate_primary), 98220)
   expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Energy.type == "X", Last.stage == IEATools::last_stages$services) %>%
                       dplyr::select(Recca::aggregate_cols$gross_aggregate_primary), 98220)
+})
+
+
+test_that("primary_aggregates() works with lists", {
+  # Define primary industries
+  p_industries <- c("Resources - Crude", "Resources - NG")
+
+  # Primary TOTAL aggregates
+  psut <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    dplyr::mutate(
+      p_industries = rep(list(p_industries), times = nrow(.))
+    )
+  # Make a list
+  arg_list <- list(R = psut$R[[1]], V = psut$V[[1]], Y = psut$Y[[1]], p_industries = psut$p_industries[[1]])
+  # Calculate primary aggregates
+  p_aggs <- Recca::primary_aggregates(.sutdata = arg_list)
+
+
+  # Take slices to test the list approach
+  aggregated <- 1:nrow(psut) %>%
+    lapply(FUN = function(rownum) {
+      psut %>%
+        dplyr::slice(rownum) %>%
+        as.list(.sutdata) %>%
+        unlist(recursive = FALSE) %>%
+        Recca::primary_aggregates()
+    })
 })
 
 
@@ -457,7 +485,7 @@ test_that("footprint_aggregates() works as expected", {
   p_industries <- c("Resources - Crude", "Resources - NG")
   fd_sectors <- c("Residential", "Transport", "Oil fields")
 
-  # Final demand TOTAL aggregates
+  # Final demand aggregates
   footprint_aggs <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
     dplyr::mutate(
