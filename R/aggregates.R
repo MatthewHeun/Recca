@@ -25,6 +25,7 @@
 #'                     The function `find_p_industry_names()` might be helpful to find
 #'                     primary industry names if they can be identified by prefixes.
 #' @param add_net_gross_cols A boolean that tells whether to add net and gross columns (`TRUE`) or not (`FALSE`).
+#'                           Default is `FALSE`.
 #' @param pattern_type One of "exact", "leading", "trailing", or "anywhere" which specifies
 #'                     how matches are made for `p_industries`.
 #'                     If "exact", exact matches specify the sectors to be aggregated.
@@ -586,10 +587,12 @@ grouped_aggregates <- function(.sut_data = NULL,
 #'    to obtain the ECC requirements to supply that product or sector.
 #' 4. Calculate primary and final demand aggregates using `primary_aggregates()` and
 #'    `finaldemand_aggregates()`.
+#'    Both functions are called with `by = "Total"`,
+#'    yielding total primary and final demand aggregates.
 #' 5. Add the primary and final demand aggregates as columns at the right side of `.sut_data`.
 #'
 #' @param .sut_data
-#' @param p_industries a vector of names of industries to be aggregated as "primary."
+#' @param p_industries A vector of names of industries to be aggregated as "primary."
 #'                     If `.sut_data` is a data frame, `p_industries` should be the name of a column in the data frame.
 #'                     If `.sut_data` is `NULL`, `p_industries` can be a single vector of industry names.
 #'                     These industries in `p_industries` will appear in rows of the resource (`R`) and make (`V`) matrices and
@@ -599,36 +602,43 @@ grouped_aggregates <- function(.sut_data = NULL,
 #'                     where `*_p` is the primary part of those matrices.
 #'                     The function `find_p_industry_names()` might be helpful to find
 #'                     primary industry names if they can be identified by prefixes.
+#'                     This argument is passed to `primary_aggregates()`.
 #' @param fd_sectors A vector of names of sectors in final demand.
 #'                   Names should include columns in the `Y` and `U_EIOU` matrices
 #'                   to cover both net (in `Y`) and gross (in `Y` and `U_EIOU`) final demand.
-#' @param pattern_type
-#' @param R
-#' @param U
-#' @param V
-#' @param Y
-#' @param r_EIOU
-#' @param by
-#' @param add_primary_net_gross_cols
-#' @param aggregate_primary
-#' @param net_aggregate_primary
-#' @param gross_aggregate_primary
-#' @param net_aggregate_demand
-#' @param gross_aggregate_demand
+#'                   This argument is passed to `finaldemand_aggregates()`.
+#' @param pattern_type One of "exact", "leading", "trailing", or "anywhere" which specifies
+#'                     how matches are made for `p_industries`.
+#'                     If "exact", exact matches specify the sectors to be aggregated.
+#'                     If "leading", sectors are aggregated if any entry in `p_industries` matches the leading part of a final demand sector's name.
+#'                     If "trailing", sectors are aggregated if any entry in `p_industries` matches the trailing part of a final demand sector's name.
+#'                     If "anywhere", sectors are aggregated if any entry in `p_industries` matches any part of a final demand sector's name.
+#'                     Default is "exact".
+#'                     This argument is passed to both `primary_aggregates()` and `finaldemand_aggregates()`.
+#' @param R,U,U_feed,V,Y,S_units Matrices that describe the energy conversion chain (ECC).
+#'                       See `Recca::psut_cols` for default values.
+#' @param add_primary_net_gross_cols A boolean that tells whether to add primary net and gross columns (`TRUE`) or not (`FALSE`).
+#'                                   Default is `FALSE`.
+#' @param aggregate_primary,net_aggregate_primary,gross_aggregate_primary,net_aggregate_demand,gross_aggregate_demand Names of
+#'                                   output columns.
+#'                                   See `Recca::aggregate_cols`.
 #'
 #' @return
+#'
 #' @export
 #'
 #' @examples
 footprint_aggregates <- function(.sut_data = NULL,
+                                 p_industries,
                                  fd_sectors,
                                  pattern_type = c("exact", "leading", "trailing", "anywhere"),
                                  # Input names
                                  R = Recca::psut_cols$R,
                                  U = Recca::psut_cols$U,
+                                 U_feed = Recca::psut_cols$U_feed,
                                  V = Recca::psut_cols$V,
                                  Y = Recca::psut_cols$Y,
-                                 r_EIOU = Recca::psut_cols$r_eiou,
+                                 S_units = Recca::psut_cols$S_units,
                                  by = c("Total", "Product", "Sector"),
                                  add_primary_net_gross_cols = FALSE,
                                  # Output names
@@ -638,16 +648,19 @@ footprint_aggregates <- function(.sut_data = NULL,
                                  net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
                                  gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand) {
 
-  footprint_func <- function(R_mat, U_mat, V_mat, Y_mat) {
+  footprint_func <- function(R_mat, U_mat, U_feed_mat, V_mat, Y_mat, S_units_mat) {
 
+    with_io <- calc_io_mats(R = R_mat, U = U_mat, U_feed = U_feed_mat, V = V_mat, Y = Y_mat, S_units = S_units_mat)
   }
 
   matsindf::matsindf_apply(.sut_data,
-                           FUN = group_agg_func,
+                           FUN = footprint_func,
                            R_mat = R,
                            U_mat = U,
+                           U_feed_mat = U_feed,
                            V_mat = V,
-                           Y_mat = Y)
+                           Y_mat = Y,
+                           S_units_mat = S_units)
 
   # If .sut_data is a data frame, expand if desired.
 

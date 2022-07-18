@@ -32,7 +32,8 @@ where \verb{*_p} is the primary part of those matrices.
 The function \code{find_p_industry_names()} might be helpful to find
 primary industry names if they can be identified by prefixes.}
 
-\item{add_net_gross_cols}{A boolean that tells whether to add net and gross columns (\code{TRUE}) or not (\code{FALSE}).}
+\item{add_net_gross_cols}{A boolean that tells whether to add net and gross columns (\code{TRUE}) or not (\code{FALSE}).
+Default is \code{FALSE}.}
 
 \item{pattern_type}{One of "exact", "leading", "trailing", or "anywhere" which specifies
 how matches are made for \code{p_industries}.

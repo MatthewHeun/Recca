@@ -6,13 +6,15 @@
 \usage{
 footprint_aggregates(
   .sut_data = NULL,
+  p_industries,
   fd_sectors,
   pattern_type = c("exact", "leading", "trailing", "anywhere"),
   R = Recca::psut_cols$R,
   U = Recca::psut_cols$U,
+  U_feed = Recca::psut_cols$U_feed,
   V = Recca::psut_cols$V,
   Y = Recca::psut_cols$Y,
-  r_EIOU = Recca::psut_cols$r_eiou,
+  S_units = Recca::psut_cols$S_units,
   by = c("Total", "Product", "Sector"),
   add_primary_net_gross_cols = FALSE,
   aggregate_primary = Recca::aggregate_cols$aggregate_primary,
@@ -23,13 +25,7 @@ footprint_aggregates(
 )
 }
 \arguments{
-\item{fd_sectors}{A vector of names of sectors in final demand.
-Names should include columns in the \code{Y} and \code{U_EIOU} matrices
-to cover both net (in \code{Y}) and gross (in \code{Y} and \code{U_EIOU}) final demand.}
-
-\item{gross_aggregate_demand}{}
-
-\item{p_industries}{a vector of names of industries to be aggregated as "primary."
+\item{p_industries}{A vector of names of industries to be aggregated as "primary."
 If \code{.sut_data} is a data frame, \code{p_industries} should be the name of a column in the data frame.
 If \code{.sut_data} is \code{NULL}, \code{p_industries} can be a single vector of industry names.
 These industries in \code{p_industries} will appear in rows of the resource (\code{R}) and make (\code{V}) matrices and
@@ -38,7 +34,32 @@ Entries in \code{Y_p} will be subtracted from entries in \code{R_p + V_p} to obt
 the total primary energy aggregate,
 where \verb{*_p} is the primary part of those matrices.
 The function \code{find_p_industry_names()} might be helpful to find
-primary industry names if they can be identified by prefixes.}
+primary industry names if they can be identified by prefixes.
+This argument is passed to \code{primary_aggregates()}.}
+
+\item{fd_sectors}{A vector of names of sectors in final demand.
+Names should include columns in the \code{Y} and \code{U_EIOU} matrices
+to cover both net (in \code{Y}) and gross (in \code{Y} and \code{U_EIOU}) final demand.
+This argument is passed to \code{finaldemand_aggregates()}.}
+
+\item{pattern_type}{One of "exact", "leading", "trailing", or "anywhere" which specifies
+how matches are made for \code{p_industries}.
+If "exact", exact matches specify the sectors to be aggregated.
+If "leading", sectors are aggregated if any entry in \code{p_industries} matches the leading part of a final demand sector's name.
+If "trailing", sectors are aggregated if any entry in \code{p_industries} matches the trailing part of a final demand sector's name.
+If "anywhere", sectors are aggregated if any entry in \code{p_industries} matches any part of a final demand sector's name.
+Default is "exact".
+This argument is passed to both \code{primary_aggregates()} and \code{finaldemand_aggregates()}.}
+
+\item{R, U, U_feed, V, Y, S_units}{Matrices that describe the energy conversion chain (ECC).
+See \code{Recca::psut_cols} for default values.}
+
+\item{add_primary_net_gross_cols}{A boolean that tells whether to add primary net and gross columns (\code{TRUE}) or not (\code{FALSE}).
+Default is \code{FALSE}.}
+
+\item{aggregate_primary, net_aggregate_primary, gross_aggregate_primary, net_aggregate_demand, gross_aggregate_demand}{Names of
+output columns.
+See \code{Recca::aggregate_cols}.}
 }
 \description{
 A footprint aggregate are isolated measures of primary and final demand energy
@@ -58,6 +79,8 @@ perform an upstream swim with \code{new_Y()}
 to obtain the ECC requirements to supply that product or sector.
 \item Calculate primary and final demand aggregates using \code{primary_aggregates()} and
 \code{finaldemand_aggregates()}.
+Both functions are called with \code{by = "Total"},
+yielding total primary and final demand aggregates.
 \item Add the primary and final demand aggregates as columns at the right side of \code{.sut_data}.
 }
 }
