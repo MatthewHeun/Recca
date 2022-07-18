@@ -14,7 +14,7 @@
 #' which provides both net and gross outputs.
 #'
 #' @param .sutdata A data frame with columns of matrices from a supply-use analysis.
-#' @param p_industries a vector of names of industries to be aggregated as "primary."
+#' @param p_industries A vector of names of industries to be aggregated as "primary."
 #'                     If `.sutdata` is a data frame, `p_industries` should be the name of a column in the data frame.
 #'                     If `.sutdata` is `NULL`, `p_industries` can be a single vector of industry names.
 #'                     These industries in `p_industries` will appear in rows of the resource (`R`) and make (`V`) matrices and
@@ -566,8 +566,3 @@ grouped_aggregates <- function(.sut_data = NULL,
                            U_feed_mat = U_feed,
                            S_units_mat = S_units)
 }
-
-
-
-
-
