@@ -21,7 +21,7 @@ primary_aggregates(
 \arguments{
 \item{.sutdata}{A data frame with columns of matrices from a supply-use analysis.}
 
-\item{p_industries}{a vector of names of industries to be aggregated as "primary."
+\item{p_industries}{A vector of names of industries to be aggregated as "primary."
 If \code{.sutdata} is a data frame, \code{p_industries} should be the name of a column in the data frame.
 If \code{.sutdata} is \code{NULL}, \code{p_industries} can be a single vector of industry names.
 These industries in \code{p_industries} will appear in rows of the resource (\code{R}) and make (\code{V}) matrices and

@@ -566,3 +566,91 @@ grouped_aggregates <- function(.sut_data = NULL,
                            U_feed_mat = U_feed,
                            S_units_mat = S_units)
 }
+
+
+#' Calculate footprint aggregates
+#'
+#' A footprint aggregate are isolated measures of primary and final demand energy
+#' required to supply a specific amount of final demand energy.
+#' This function calculates footprint aggregates for several categories of final demand.
+#'
+#' By default, footprint aggregates are calculated for each individual
+#' product and sector of final demand in the `Y` matrix.
+#' This calculation is accomplished for each description of an energy conversion chain (ECC)
+#' by the following algorithm:
+#'
+#' 1. Calculate io matrices with `calc_io_mats()`.
+#' 2. Identify each product and sector from rows and columns of the `Y` matrix.
+#' 3. For each product and sector independently,
+#'    perform an upstream swim with `new_Y()`
+#'    to obtain the ECC requirements to supply that product or sector.
+#' 4. Calculate primary and final demand aggregates using `primary_aggregates()` and
+#'    `finaldemand_aggregates()`.
+#' 5. Add the primary and final demand aggregates as columns at the right side of `.sut_data`.
+#'
+#' @param .sut_data
+#' @param p_industries a vector of names of industries to be aggregated as "primary."
+#'                     If `.sut_data` is a data frame, `p_industries` should be the name of a column in the data frame.
+#'                     If `.sut_data` is `NULL`, `p_industries` can be a single vector of industry names.
+#'                     These industries in `p_industries` will appear in rows of the resource (`R`) and make (`V`) matrices and
+#'                     columns of the final demand matrix (`Y`).
+#'                     Entries in `Y_p` will be subtracted from entries in `R_p + V_p` to obtain
+#'                     the total primary energy aggregate,
+#'                     where `*_p` is the primary part of those matrices.
+#'                     The function `find_p_industry_names()` might be helpful to find
+#'                     primary industry names if they can be identified by prefixes.
+#' @param fd_sectors A vector of names of sectors in final demand.
+#'                   Names should include columns in the `Y` and `U_EIOU` matrices
+#'                   to cover both net (in `Y`) and gross (in `Y` and `U_EIOU`) final demand.
+#' @param pattern_type
+#' @param R
+#' @param U
+#' @param V
+#' @param Y
+#' @param r_EIOU
+#' @param by
+#' @param add_primary_net_gross_cols
+#' @param aggregate_primary
+#' @param net_aggregate_primary
+#' @param gross_aggregate_primary
+#' @param net_aggregate_demand
+#' @param gross_aggregate_demand
+#'
+#' @return
+#' @export
+#'
+#' @examples
+footprint_aggregates <- function(.sut_data = NULL,
+                                 fd_sectors,
+                                 pattern_type = c("exact", "leading", "trailing", "anywhere"),
+                                 # Input names
+                                 R = Recca::psut_cols$R,
+                                 U = Recca::psut_cols$U,
+                                 V = Recca::psut_cols$V,
+                                 Y = Recca::psut_cols$Y,
+                                 r_EIOU = Recca::psut_cols$r_eiou,
+                                 by = c("Total", "Product", "Sector"),
+                                 add_primary_net_gross_cols = FALSE,
+                                 # Output names
+                                 aggregate_primary = Recca::aggregate_cols$aggregate_primary,
+                                 net_aggregate_primary = Recca::aggregate_cols$net_aggregate_primary,
+                                 gross_aggregate_primary = Recca:: aggregate_cols$gross_aggregate_primary,
+                                 net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
+                                 gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand) {
+
+  footprint_func <- function(R_mat, U_mat, V_mat, Y_mat) {
+
+  }
+
+  matsindf::matsindf_apply(.sut_data,
+                           FUN = group_agg_func,
+                           R_mat = R,
+                           U_mat = U,
+                           V_mat = V,
+                           Y_mat = Y)
+
+  # If .sut_data is a data frame, expand if desired.
+
+}
+
+

@@ -451,3 +451,16 @@ test_that("grouped_aggregates() works as expected", {
   # Oil and oil products for Transport
   expect_equal(res$Y_aggregated[[1]][3, 2], 40750)
 })
+
+
+test_that("footprint_finaldemand_aggregates() works as expected", {
+  fd_sectors <- c("Residential", "Transport", "Oil fields")
+
+  # Final demand TOTAL aggregates
+  final_demand_total_aggregates_sut <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    dplyr::mutate(
+      fd_sectors = rep(list(fd_sectors), times = nrow(.))
+    ) %>%
+    Recca::footprint_finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Total")
+})
