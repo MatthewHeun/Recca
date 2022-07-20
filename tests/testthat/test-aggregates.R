@@ -385,9 +385,5 @@ test_that("footprint_aggregates() works as expected", {
   # Final demand aggregates
   footprint_aggs <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
-    dplyr::mutate(
-      p_industries = rep(list(p_industries), times = nrow(.)),
-      fd_sectors = rep(list(fd_sectors), times = nrow(.))
-    ) %>%
-    Recca::footprint_aggregates(p_industries = p_industries, fd_sectors = "fd_sectors")
+    Recca::footprint_aggregates(p_industries = p_industries, fd_sectors = fd_sectors)
 })

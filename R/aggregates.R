@@ -681,7 +681,7 @@ footprint_aggregates <- function(.sut_data = NULL,
     p_aggregates <- ecc_prime %>%
       sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_new_ecc) {
         this_new_ecc %>%
-          primary_aggregates(p_industries = list(p_industries),
+          primary_aggregates(p_industries = p_industries,
                              R = "R_prime", V = "V_prime", Y = "Y_prime",
                              pattern_type = pattern_type,
                              by = "Total",
