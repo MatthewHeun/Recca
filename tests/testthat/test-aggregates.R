@@ -13,10 +13,7 @@ test_that("primary_aggregates() works as expected", {
   # Primary TOTAL aggregates
   primary_total_aggregates_sut <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
-    dplyr::mutate(
-      p_industries = rep(list(p_industries), times = nrow(.))
-    ) %>%
-    Recca::primary_aggregates(p_industries = "p_industries", by = "Total", aggregate_primary = "EX_total_agg.ktoe")
+    Recca::primary_aggregates(p_industries = p_industries, by = "Total", aggregate_primary = "EX_total_agg.ktoe")
   expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
                       dplyr::select("EX_total_agg.ktoe"), 93000)
   expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$useful) %>%
@@ -29,10 +26,7 @@ test_that("primary_aggregates() works as expected", {
   # Primary PRODUCT aggregates
   primary_product_aggregates_sut <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
-    dplyr::mutate(
-      p_industries = rep(list(p_industries), times = nrow(.))
-    ) %>%
-    Recca::primary_aggregates(p_industries = "p_industries", by = "Product",
+    Recca::primary_aggregates(p_industries = p_industries, by = "Product",
                        aggregate_primary = "EX_product_agg.ktoe") %>%
     dplyr::select(Country, Year, Last.stage, Energy.type, EX_product_agg.ktoe) %>%
     tidyr::gather(key = "matnames", value = "matvals", EX_product_agg.ktoe) %>%
@@ -49,10 +43,7 @@ test_that("primary_aggregates() works as expected", {
   # Primary FLOW aggregates
   primary_flow_aggregates_sut <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
-    dplyr::mutate(
-      p_industries = rep(list(p_industries), times = nrow(.))
-    ) %>%
-    Recca::primary_aggregates(p_industries = "p_industries", by = "Flow",
+    Recca::primary_aggregates(p_industries = p_industries, by = "Flow",
                        aggregate_primary = "EX_flow_agg.ktoe") %>%
     dplyr::select(Country, Year, Last.stage, Energy.type, EX_flow_agg.ktoe) %>%
     tidyr::gather(key = "matnames", value = "matvals", EX_flow_agg.ktoe) %>%
@@ -75,10 +66,7 @@ test_that("primary_aggregates() works with leading pattern for names", {
   # Primary TOTAL aggregates
   primary_total_aggregates_sut <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
-    dplyr::mutate(
-      p_industries = rep(list(p_industries), times = nrow(.))
-    ) %>%
-    Recca::primary_aggregates(p_industries = "p_industries", pattern_type = "leading", by = "Total", aggregate_primary = "EX_total_agg.ktoe")
+    Recca::primary_aggregates(p_industries = p_industries, pattern_type = "leading", by = "Total", aggregate_primary = "EX_total_agg.ktoe")
   expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
                       dplyr::select("EX_total_agg.ktoe"), 93000)
   expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$useful) %>%
@@ -98,73 +86,13 @@ test_that("primary_aggregates() works when R is folded into V", {
     # Make it wide-by-matrices
     tidyr::spread(key = matrix.name, value = matrix) %>%
     dplyr::mutate(
-      p_industries = rep(list(p_industries), times = nrow(.)),
       V = matsbyname::sum_byname(R, V),
       R = NULL
     ) %>%
-    Recca::primary_aggregates(p_industries = "p_industries", by = "Total",
+    Recca::primary_aggregates(p_industries = p_industries, by = "Total",
                        aggregate_primary = "EX_total_agg.ktoe")
   expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
                       dplyr::select("EX_total_agg.ktoe"), 93000)
-})
-
-
-test_that("primary_aggregates() works when p_industries is different for each row of a data frame", {
-  p_industries_all <- c("Resources - Crude", "Resources - NG")
-  p_industries_crude <- "Resources - Crude"
-  p_industries_ng <- "Resources - NG"
-
-  UKEnergy2000mats_wide <- UKEnergy2000mats %>%
-    # Make it wide-by-matrices
-    tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix")
-  # Primary TOTAL aggregates for both primary industries
-  primary_total_aggregates_both <- UKEnergy2000mats_wide %>%
-    dplyr::mutate(
-      p_industries = rep(list(p_industries_all), times = nrow(UKEnergy2000mats_wide))
-    ) %>%
-    Recca::primary_aggregates(p_industries = "p_industries", by = "Total",
-                       aggregate_primary = Recca::aggregate_cols$aggregate_primary)
-  expect_equivalent(primary_total_aggregates_both %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
-                      dplyr::select(Recca::aggregate_cols$aggregate_primary), 93000)
-
-
-  # Primary TOTAL aggregates counting crude oil only
-  primary_total_aggregates_crude <- UKEnergy2000mats_wide %>%
-    dplyr::mutate(
-      p_industries = p_industries_crude
-    ) %>%
-    Recca::primary_aggregates(p_industries = "p_industries", by = "Total",
-                       aggregate_primary = Recca::aggregate_cols$aggregate_primary)
-  expect_equivalent(primary_total_aggregates_crude %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
-                      dplyr::select(Recca::aggregate_cols$aggregate_primary), 50000)
-
-  # Primary TOTAL aggregates counting NG only
-  primary_total_aggregates_ng <- UKEnergy2000mats_wide %>%
-    dplyr::mutate(
-      p_industries = p_industries_ng
-    ) %>%
-    Recca::primary_aggregates(p_industries = "p_industries", by = "Total",
-                       aggregate_primary = Recca::aggregate_cols$aggregate_primary)
-  expect_equivalent(primary_total_aggregates_ng %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
-                      dplyr::select(Recca::aggregate_cols$aggregate_primary), 43000)
-
-  # Try when the vectors of primary industries are different down the column in the data frame
-  UK_final_only <- UKEnergy2000mats_wide %>%
-    dplyr::filter(.data[[IEATools::iea_cols$last_stage]] == IEATools::last_stages$final)
-  UK_final_3_rows <- dplyr::bind_rows(UK_final_only, UK_final_only, UK_final_only) %>%
-  # Add a column containing various options for primary industries to be aggregated.
-  dplyr::mutate(
-    p_industries = list(p_industries_all, p_industries_crude, p_industries_ng)
-  )
-  res <- UK_final_3_rows %>%
-    Recca::primary_aggregates(p_industries = "p_industries", by = "Total",
-                       aggregate_primary = Recca::aggregate_cols$aggregate_primary)
-  # Check first row (should have both primary industries and have 93000 for the aggregate primary energy)
-  expect_equal(res[[Recca::aggregate_cols$aggregate_primary]][[1]], 93000)
-  # Check second row (should have only crude and have 50000 for the aggregate primary energy)
-  expect_equal(res[[Recca::aggregate_cols$aggregate_primary]][[2]], 50000)
-  # Check third row (should have only NG and have 43000 for the aggregate primary energy)
-  expect_equal(res[[Recca::aggregate_cols$aggregate_primary]][[3]], 43000)
 })
 
 
@@ -175,10 +103,7 @@ test_that("primary_aggregates() works for net and gross", {
   # Primary TOTAL aggregates
   primary_total_aggregates_sut <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
-    dplyr::mutate(
-      p_industries = rep(list(p_industries), times = nrow(.))
-    ) %>%
-    Recca::primary_aggregates(p_industries = "p_industries",
+    Recca::primary_aggregates(p_industries = p_industries,
                               add_net_gross_cols = TRUE,
                               by = "Total")
   expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
@@ -206,25 +131,12 @@ test_that("primary_aggregates() works with lists", {
 
   # Primary TOTAL aggregates
   psut <- UKEnergy2000mats %>%
-    tidyr::spread(key = matrix.name, value = matrix) %>%
-    dplyr::mutate(
-      p_industries = rep(list(p_industries), times = nrow(.))
-    )
+    tidyr::spread(key = matrix.name, value = matrix)
   # Make a list
-  arg_list <- list(R = psut$R[[1]], V = psut$V[[1]], Y = psut$Y[[1]], p_industries = psut$p_industries[[1]])
+  arg_list <- list(R = psut$R[[1]], V = psut$V[[1]], Y = psut$Y[[1]])
   # Calculate primary aggregates
-  p_aggs <- Recca::primary_aggregates(.sutdata = arg_list, p_industries = "p_industries")
-
-
-  # Take slices to test the list approach
-  aggregated <- 1:nrow(psut) %>%
-    lapply(FUN = function(rownum) {
-      psut %>%
-        dplyr::slice(rownum) %>%
-        as.list(.sutdata) %>%
-        unlist(recursive = FALSE) %>%
-        Recca::primary_aggregates()
-    })
+  p_aggs <- Recca::primary_aggregates(.sutdata = arg_list, p_industries = p_industries)
+  expect_equal(p_aggs$EX.p, 93000)
 })
 
 
@@ -235,35 +147,27 @@ test_that("finaldemand_aggregates() of SUT data work as expected without units",
   # Final demand TOTAL aggregates
   final_demand_total_aggregates_sut <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
-    dplyr::mutate(
-      fd_sectors = rep(list(fd_sectors), times = nrow(.))
-    ) %>%
-    Recca::finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Total",
+    Recca::finaldemand_aggregates(fd_sectors = fd_sectors, by = "Total",
                            net_aggregate_demand = "EX_total_net_agg.ktoe",
                            gross_aggregate_demand = "EX_total_gross_agg.ktoe") %>%
-    dplyr::select(Country, Year, Last.stage, Energy.type, fd_sectors, EX_total_net_agg.ktoe, EX_total_gross_agg.ktoe) %>%
-    tidyr::gather(key = "matnames", value = "matvals", EX_total_net_agg.ktoe, EX_total_gross_agg.ktoe) %>%
-    matsindf::expand_to_tidy(drop = 0)
+    dplyr::select(Country, Year, Last.stage, Energy.type, EX_total_net_agg.ktoe, EX_total_gross_agg.ktoe)
   expect_equivalent(final_demand_total_aggregates_sut %>%
-                      dplyr::filter(Last.stage == "Final", Energy.type == "E", matnames == "EX_total_gross_agg.ktoe") %>%
-                      dplyr::select(matvals) %>% unlist(),
+                      dplyr::filter(Last.stage == "Final", Energy.type == "E") %>%
+                      dplyr::select("EX_total_gross_agg.ktoe") %>% unlist(),
                     74325)
   expect_equivalent(final_demand_total_aggregates_sut %>%
-                      dplyr::filter(Last.stage == "Useful", Energy.type == "E", matnames == "EX_total_net_agg.ktoe") %>%
-                      dplyr::select(matvals) %>% unlist(),
+                      dplyr::filter(Last.stage == "Useful", Energy.type == "E") %>%
+                      dplyr::select("EX_total_net_agg.ktoe") %>% unlist(),
                     25915.380499999999)
   expect_equivalent(final_demand_total_aggregates_sut %>%
-                      dplyr::filter(Last.stage == "Services", Energy.type == "E", matnames == "EX_total_net_agg.ktoe") %>%
-                      dplyr::select(matvals) %>% unlist(),
+                      dplyr::filter(Last.stage == "Services", Energy.type == "E") %>%
+                      dplyr::select("EX_total_net_agg.ktoe") %>% unlist(),
                     5.007179166e+14)
 
   # Final demand PRODUCT aggregates
   final_demand_product_aggregates_sut <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
-    dplyr::mutate(
-      fd_sectors = rep(list(fd_sectors), times = nrow(.))
-    ) %>%
-    Recca::finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Product",
+    Recca::finaldemand_aggregates(fd_sectors = fd_sectors, by = "Product",
                            net_aggregate_demand = "EX_product_net_agg.ktoe",
                            gross_aggregate_demand = "EX_product_gross_agg.ktoe") %>%
     dplyr::select(Country, Year, Last.stage, Energy.type, EX_product_net_agg.ktoe, EX_product_gross_agg.ktoe) %>%
@@ -297,10 +201,7 @@ test_that("finaldemand_aggregates() of SUT data work as expected without units",
   # Final demand SECTOR aggregates
   final_demand_sector_aggregates_sut <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
-    dplyr::mutate(
-      fd_sectors = rep(list(fd_sectors), times = nrow(.))
-    ) %>%
-    Recca::finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Sector",
+    Recca::finaldemand_aggregates(fd_sectors = fd_sectors, by = "Sector",
                            net_aggregate_demand = "EX_sector_net_agg.ktoe",
                            gross_aggregate_demand = "EX_sector_gross_agg.ktoe") %>%
     dplyr::select(Country, Year, Last.stage, Energy.type, EX_sector_net_agg.ktoe, EX_sector_gross_agg.ktoe) %>%
@@ -340,14 +241,12 @@ test_that("IEATools::primary_aggregates_IEA() works as expected on the UKEnergy2
 })
 
 
-test_that("finaldemand_aggregates works for sectors", {
+test_that("finaldemand_aggregates() works for sectors", {
+  fd_sectors <- c("Residential", "Transport", "Oil fields")
   sut_result <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
-    dplyr::mutate(
-      fd_sectors = rep(list(c("Residential", "Transport", "Oil fields")), times = nrow(.))
-    ) %>%
     dplyr::filter(Last.stage %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
-    Recca::finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Sector")
+    Recca::finaldemand_aggregates(fd_sectors = fd_sectors, by = "Sector")
   expect_equal(sut_result[[Recca::aggregate_cols$net_aggregate_demand]][[1]][1,1], 31000)
   expect_equal(sut_result[[Recca::aggregate_cols$net_aggregate_demand]][[1]][2,1], 40750)
   expect_equal(sut_result[[Recca::aggregate_cols$net_aggregate_demand]][[2]][1,1], 4200.4)
@@ -371,17 +270,15 @@ test_that("finaldemand_aggregates works for sectors", {
 })
 
 
-test_that("finaldemand_aggregates works with U_EIOU", {
+test_that("finaldemand_aggregates() works with U_EIOU", {
+  fd_sectors <- c("Residential", "Transport", "Oil fields")
   sut_result <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
-    dplyr::mutate(
-      fd_sectors = rep(list(c("Residential", "Transport", "Oil fields")), times = nrow(.))
-    ) %>%
     dplyr::filter(Last.stage %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
-    Recca::finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Sector")
+    Recca::finaldemand_aggregates(fd_sectors = fd_sectors, by = "Sector")
 
   expect_equal(matsbyname::getrownames_byname(sut_result[[Recca::aggregate_cols$gross_aggregate_demand]][[1]]),
-               sut_result$fd_sectors[[1]] %>% sort())
+               fd_sectors %>% sort())
 })
 
 

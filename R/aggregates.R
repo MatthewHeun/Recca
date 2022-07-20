@@ -92,17 +92,17 @@ primary_aggregates <- function(.sutdata = NULL,
   pattern_type <- match.arg(pattern_type)
   by <- match.arg(by)
 
-  prim_func <- function(p_industries_vec, R_mat = NULL, V_mat, Y_mat){
+  prim_func <- function(R_mat = NULL, V_mat, Y_mat){
     # Look for primary industries in each of R, V, and Y matrices
     RT_p <- matsbyname::transpose_byname(R_mat) %>%
       matsbyname::select_cols_byname(retain_pattern =
-                                       RCLabels::make_or_pattern(strings = p_industries_vec, pattern_type = pattern_type))
+                                       RCLabels::make_or_pattern(strings = p_industries, pattern_type = pattern_type))
     VT_p <- matsbyname::transpose_byname(V_mat) %>%
       matsbyname::select_cols_byname(retain_pattern =
-                                       RCLabels::make_or_pattern(strings = p_industries_vec, pattern_type = pattern_type))
+                                       RCLabels::make_or_pattern(strings = p_industries, pattern_type = pattern_type))
     # Get the primary industries from the Y matrix.
     Y_p <- Y_mat %>% matsbyname::select_cols_byname(retain_pattern =
-                                                      RCLabels::make_or_pattern(strings = p_industries_vec, pattern_type = pattern_type))
+                                                      RCLabels::make_or_pattern(strings = p_industries, pattern_type = pattern_type))
     # TPES in product x industry matrix format is RT_p + VT_p - Y_p.
     RVT_p_minus_Y_p <- matsbyname::sum_byname(RT_p, VT_p) %>% matsbyname::difference_byname(Y_p)
 
@@ -127,7 +127,7 @@ primary_aggregates <- function(.sutdata = NULL,
     }
   return(out)
   }
-  matsindf::matsindf_apply(.sutdata, FUN = prim_func, p_industries_vec = p_industries, R_mat = R, V_mat = V, Y_mat = Y)
+  matsindf::matsindf_apply(.sutdata, FUN = prim_func, R_mat = R, V_mat = V, Y_mat = Y)
 }
 
 
@@ -185,23 +185,18 @@ finaldemand_aggregates <- function(.sutdata = NULL,
                                    net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
                                    gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand){
 
-
-  # Ensure that the caller has matsbyname installed and on the package search path.
-  # assertthat::assert_that(requireNamespace("matsbyname"),
-  #                         msg = "package 'matsbyname' is required but not available.")
-
   pattern_type <- match.arg(pattern_type)
   by <- match.arg(by)
 
-  fd_func <- function(fd_sectors_vec, U_mat, Y_mat, r_EIOU_mat){
+  fd_func <- function(U_mat, Y_mat, r_EIOU_mat){
     U_EIOU <- matsbyname::hadamardproduct_byname(r_EIOU_mat, U_mat)
 
     net_prelim <- Y_mat %>%
       matsbyname::select_cols_byname(retain_pattern =
-                                       RCLabels::make_or_pattern(strings = fd_sectors_vec, pattern_type = pattern_type))
+                                       RCLabels::make_or_pattern(strings = fd_sectors, pattern_type = pattern_type))
     gross_prelim <- U_EIOU %>%
       matsbyname::select_cols_byname(retain_pattern =
-                                       RCLabels::make_or_pattern(strings = fd_sectors_vec, pattern_type = pattern_type))
+                                       RCLabels::make_or_pattern(strings = fd_sectors, pattern_type = pattern_type))
 
     # Use the right function for the requested aggregation
     if (by == "Total") {
@@ -234,7 +229,7 @@ finaldemand_aggregates <- function(.sutdata = NULL,
     }
     list(net, gross) %>% magrittr::set_names(c(net_aggregate_demand, gross_aggregate_demand))
   }
-  matsindf::matsindf_apply(.sutdata, FUN = fd_func, fd_sectors_vec = fd_sectors, U_mat = U, Y_mat = Y, r_EIOU_mat = r_EIOU)
+  matsindf::matsindf_apply(.sutdata, FUN = fd_func, U_mat = U, Y_mat = Y, r_EIOU_mat = r_EIOU)
 }
 
 
