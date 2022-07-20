@@ -35,11 +35,11 @@
 #'                     Default is "exact".
 #' @param R,V,Y See `Recca::psut_cols`.
 #' @param by One of "Total", "Product", or "Flow" to indicate the desired aggregation:
-#'        \itemize{
-#'          \item "Total": aggregation over both Product and Flow (the default),
-#'          \item "Product": aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.), or
-#'          \item "Flow": aggregation by type of flow (Production, Imports, Exports, etc.).
-#'        }
+#'           \itemize{
+#'             \item "Total": aggregation over both Product and Flow (the default),
+#'             \item "Product": aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.), or
+#'             \item "Flow": aggregation by type of flow (Production, Imports, Exports, etc.).
+#'           }
 #' @param aggregate_primary,net_aggregate_primary,gross_aggregate_primary The names for aggregates of primary energy on output.
 #'
 #' @return A list or data frame containing aggregate primary energy.
