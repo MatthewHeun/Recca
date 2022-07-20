@@ -213,7 +213,7 @@ test_that("primary_aggregates() works with lists", {
   # Make a list
   arg_list <- list(R = psut$R[[1]], V = psut$V[[1]], Y = psut$Y[[1]], p_industries = psut$p_industries[[1]])
   # Calculate primary aggregates
-  p_aggs <- Recca::primary_aggregates(.sutdata = arg_list)
+  p_aggs <- Recca::primary_aggregates(.sutdata = arg_list, p_industries = "p_industries")
 
 
   # Take slices to test the list approach
