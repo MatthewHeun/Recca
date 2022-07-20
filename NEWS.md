@@ -4,6 +4,14 @@ output: html_document
 ---
 
 
+* `primary_aggregates()` and `finaldemand_aggregates()`
+  no longer require `p_industries` and `fd_sectors`
+  to be present in the incoming list or data frame.
+  Rather, `p_industries` and `fd_sectors` are treated 
+  as parameters that apply to all items in the incoming list
+  or rows in the incoming data frame.
+  This change brings consistency with other functions that
+  use `matsindf::matsindf_apply()` internally.
 * New function `group_aggregates()` that
   aggregates PSUT matrices according to an aggregation map.
 * New function `despecified_aggregates()` that
