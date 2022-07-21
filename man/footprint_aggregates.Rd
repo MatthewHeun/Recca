@@ -18,10 +18,23 @@ footprint_aggregates(
   by = c("Total", "Product", "Sector"),
   add_primary_net_gross_cols = FALSE,
   aggregate_primary = Recca::aggregate_cols$aggregate_primary,
-  net_aggregate_primary = Recca::aggregate_cols$net_aggregate_primary,
-  gross_aggregate_primary = Recca::aggregate_cols$gross_aggregate_primary,
   net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
-  gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand
+  gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand,
+  .prime = "_prime",
+  R_colname = Recca::psut_cols$R,
+  U_colname = Recca::psut_cols$U,
+  V_colname = Recca::psut_cols$V,
+  Y_colname = Recca::psut_cols$Y,
+  U_feed_colname = Recca::psut_cols$U_feed,
+  U_eiou_colname = Recca::psut_cols$U_eiou,
+  r_eiou_colname = Recca::psut_cols$r_eiou,
+  R_prime_colname = paste0(R_colname, .prime),
+  U_prime_colname = paste0(U_colname, .prime),
+  V_prime_colname = paste0(V_colname, .prime),
+  Y_prime_colname = paste0(Y_colname, .prime),
+  U_feed_prime_colname = paste0(U_feed_colname, .prime),
+  U_eiou_prime_colname = paste0(U_eiou_colname, .prime),
+  r_eiou_prime_colname = paste0(r_eiou_colname, .prime)
 )
 }
 \arguments{

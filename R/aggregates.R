@@ -627,7 +627,7 @@ footprint_aggregates <- function(.sut_data = NULL,
                                  p_industries,
                                  fd_sectors,
                                  pattern_type = c("exact", "leading", "trailing", "anywhere"),
-                                 # Input names
+                                 # Input names or matrices
                                  R = Recca::psut_cols$R,
                                  U = Recca::psut_cols$U,
                                  U_feed = Recca::psut_cols$U_feed,
@@ -638,14 +638,33 @@ footprint_aggregates <- function(.sut_data = NULL,
                                  add_primary_net_gross_cols = FALSE,
                                  # Output names
                                  aggregate_primary = Recca::aggregate_cols$aggregate_primary,
-                                 net_aggregate_primary = Recca::aggregate_cols$net_aggregate_primary,
-                                 gross_aggregate_primary = Recca:: aggregate_cols$gross_aggregate_primary,
                                  net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
-                                 gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand) {
+                                 gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand,
+                                 # Other internal names
+                                 .prime = "_prime",
+                                 R_colname = Recca::psut_cols$R,
+                                 U_colname = Recca::psut_cols$U,
+                                 V_colname = Recca::psut_cols$V,
+                                 Y_colname = Recca::psut_cols$Y,
+                                 U_feed_colname = Recca::psut_cols$U_feed,
+                                 U_eiou_colname = Recca::psut_cols$U_eiou,
+                                 r_eiou_colname = Recca::psut_cols$r_eiou,
+                                 R_prime_colname = paste0(R_colname, .prime),
+                                 U_prime_colname = paste0(U_colname, .prime),
+                                 V_prime_colname = paste0(V_colname, .prime),
+                                 Y_prime_colname = paste0(Y_colname, .prime),
+                                 U_feed_prime_colname = paste0(U_feed_colname, .prime),
+                                 U_eiou_prime_colname = paste0(U_eiou_colname, .prime),
+                                 r_eiou_prime_colname = paste0(r_eiou_colname, .prime)) {
+
+  pattern_type <- match.arg(pattern_type)
+  by <- match.arg(by)
 
   footprint_func <- function(R_mat, U_mat, U_feed_mat, V_mat, Y_mat, S_units_mat) {
+    # At this point, we have single matrices for each of the above variables.
     # Calculate the IO matrices
     with_io <- list(R = R_mat, U = U_mat, U_feed = U_feed_mat, V = V_mat, Y = Y_mat, S_units = S_units_mat) %>%
+      # We accept the default vector and matrix names.
       calc_io_mats()
 
     # Get the row names in Y. Those are the Products we want to evaluate.
@@ -667,25 +686,45 @@ footprint_aggregates <- function(.sut_data = NULL,
     # Create a list with new Y matrices for all products and sectors
     new_Y_list <- c(new_Y_products, new_Y_sectors)
 
-    # For each item in this list, make a new set of matrices
+    # For each item in this list, make a new set of ECC matrices
     ecc_prime <- new_Y_list %>%
       sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_new_Y) {
         with_io %>%
           append(list(this_new_Y)) %>%
-          magrittr::set_names(c(names(with_io), "Y_prime")) %>%
-          new_Y()
+          magrittr::set_names(c(names(with_io), Y_prime_colname)) %>%
+          # Calculate all the new ECC matrices,
+          # accepting the default names for intermediate
+          # vectors and matrices.
+          # This gives the new (prime) description of the ECC.
+          new_Y(Y_prime = Y_prime_colname,
+                R_prime = R_prime_colname,
+                U_prime = U_prime_colname,
+                V_prime = V_prime_colname)
 
     })
 
-    # Now that we have the new ECCs, calculate primary and final demand aggregates
+    # Now that we have the new (prime) ECCs, calculate primary and final demand aggregates
     p_aggregates <- ecc_prime %>%
       sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_new_ecc) {
         this_new_ecc %>%
           primary_aggregates(p_industries = p_industries,
-                             R = "R_prime", V = "V_prime", Y = "Y_prime",
+                             R = R_prime_colname,
+                             V = V_prime_colname,
+                             Y = Y_prime_colname,
                              pattern_type = pattern_type,
-                             by = "Total",
+                             by = by,
                              aggregate_primary = aggregate_primary)
+      })
+    fd_aggregates <- ecc_prime %>%
+      sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_new_ecc) {
+        finaldemand_aggregates(fd_sectors = fd_sectors,
+                               U = U_prime_colname,
+                               Y = Y_prime_colname,
+                               r_EIOU = r_EIOU_prime_colname,
+                               pattern_type = pattern_type,
+                               by = by,
+                               net_aggregate_demand = net_aggregate_demand,
+                               gross_aggregate_demand = gross_aggregate_demand)
       })
 
   }
