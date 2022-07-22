@@ -725,8 +725,14 @@ find_p_industry_names <- function(.sutdata = NULL,
 #' @param .wrote_mats_colname The name of the outgoing column
 #'                            that tells whether a worksheet was written successfully.
 #'                            Default is "Wrote mats".
-#' @param matrix_bg_color The color of cells containing matrix numbers.
-#'                        Default is a creamy yellow.
+#' @param UV_bg_color The color of cells containing U and V matrices.
+#'                    Default is a creamy yellow.
+#' @param RY_bg_color The color of cells containing R and Y matrices.
+#'                    Default is a rust color.
+#' @param calculated_bg_color The color of cells containing calculated matrices.
+#'                            Default is gray.
+#' @param col_widths The widths of columns of mattrices.
+#'                   Default is `7` to save space.
 #'
 #' @return An unmodified version of `.psut_data` (if not `NULL`) or a list of
 #'         the incoming matrices.
@@ -753,7 +759,10 @@ write_ecc_to_excel <- function(.psut_data = NULL,
                                U_feed = Recca::psut_cols$U_feed,
                                S_units = Recca::psut_cols$S_units,
                                .wrote_mats_colname = "Wrote mats",
-                               matrix_bg_color = "#FDF2D0") {
+                               UV_bg_color = "#FDF2D0",
+                               RY_bg_color = "#D3712D",
+                               calculated_bg_color = "#D9D9D9",
+                               col_widths = 7) {
 
   # Check if path exists. If so, throw an error.
   if (file.exists(path) & !overwrite_file) {
@@ -797,68 +806,86 @@ write_ecc_to_excel <- function(.psut_data = NULL,
     # Write each matrix to the worksheet
     Map(list("R", "U", "V", "Y"),
         list(R_mat, U_mat, V_mat, Y_mat),
-        locations, f = function(this_mat_name, this_mat, this_loc) {
-      openxlsx::writeData(wb = ecc_wb,
-                          sheet = sheet_name,
-                          x = this_mat,
-                          xy = this_loc[["origin"]],
-                          array = TRUE, colNames = TRUE, rowNames = TRUE)
-      # Set the background color to matrix_bg_color for the numbers in the matrix
-      # Define the matrix numbers style
-      mat_num_style <- openxlsx::createStyle(fgFill = matrix_bg_color,
-                                             halign = "center",
-                                             valign = "center")
-      mat_origin <- this_loc[["origin"]] + c(x = 1, y = 1)  # Offset for the row and column names
-      mat_extent <- this_loc[["extent"]] + c(x = 0, y = -1) # Offset for the matrix label
-      openxlsx::addStyle(wb = ecc_wb,
-                         sheet = sheet_name,
-                         style = mat_num_style,
-                         rows = mat_origin[["y"]]:mat_extent[["y"]],
-                         cols = mat_origin[["x"]]:mat_extent[["x"]],
-                         gridExpand = TRUE,
-                         stack = TRUE)
-      # Rotate and center column labels
-      col_label_style <- openxlsx::createStyle(textRotation = 90,
-                                               halign = "center",
-                                               valign = "bottom")
-      openxlsx::addStyle(wb = ecc_wb,
-                         sheet = sheet_name,
-                         style = col_label_style,
-                         rows = this_loc[["origin"]][["y"]],
-                         cols = this_loc[["origin"]][["x"]]:this_loc[["extent"]][["x"]],
-                         gridExpand = TRUE,
-                         stack = TRUE)
-      # Right align row labels
-      row_label_style <- openxlsx::createStyle(halign = "right",
-                                               valign = "center")
-      openxlsx::addStyle(wb = ecc_wb,
-                         sheet = sheet_name,
-                         style = row_label_style,
-                         rows = this_loc[["origin"]][["y"]]:this_loc[["extent"]][["y"]],
-                         cols = this_loc[["origin"]][["x"]],
-                         gridExpand = TRUE,
-                         stack = TRUE)
-      # Add matrix label
-      openxlsx::writeData(wb = ecc_wb,
-                          sheet = sheet_name,
-                          x = this_mat_name,
-                          startRow = this_loc[["extent"]][["y"]],
-                          startCol = mat_origin[["x"]])
-      # Format matrix label
-      mat_name_style <- openxlsx::createStyle(halign = "center",
-                                              textDecoration = "Bold")
-      openxlsx::addStyle(wb = ecc_wb,
-                         sheet = sheet_name,
-                         style = mat_name_style,
-                         rows = this_loc[["extent"]][["y"]],
-                         cols = mat_origin[["x"]],
-                         gridExpand = TRUE,
-                         stack = TRUE)
-      openxlsx::mergeCells(wb = ecc_wb,
-                           sheet = sheet_name,
-                           rows = this_loc[["extent"]][["y"]],
-                           cols = mat_origin[["x"]]:mat_extent[["x"]])
-    })
+        locations,
+        f = function(this_mat_name, this_mat, this_loc) {
+          # Find the locations of the matrix origin and matrix extent
+          # from this_loc.
+          # We'll use this in many places below.
+          mat_origin <- this_loc[["origin"]] + c(x = 1, y = 1)  # Offset for the row and column names
+          mat_extent <- this_loc[["extent"]] + c(x = 0, y = -1) # Offset for the matrix label
+          # Write the data
+          openxlsx::writeData(wb = ecc_wb,
+                              sheet = sheet_name,
+                              x = this_mat,
+                              xy = this_loc[["origin"]],
+                              array = TRUE, colNames = TRUE, rowNames = TRUE)
+          # Set the background color to matrix_bg_color for the numbers in the matrix
+          # Define the matrix numbers style
+          if (this_mat_name %in% c("R", "Y")) {
+            this_bg_color <- RY_bg_color
+          } else if (this_mat_name %in% c("U", "V")) {
+            this_bg_color <- UV_bg_color
+          } else {
+            this_bg_color <- calculated_bg_color
+          }
+          mat_num_style <- openxlsx::createStyle(fgFill = this_bg_color,
+                                                 halign = "center",
+                                                 valign = "center")
+          openxlsx::addStyle(wb = ecc_wb,
+                             sheet = sheet_name,
+                             style = mat_num_style,
+                             rows = mat_origin[["y"]]:mat_extent[["y"]],
+                             cols = mat_origin[["x"]]:mat_extent[["x"]],
+                             gridExpand = TRUE,
+                             stack = TRUE)
+          # Rotate and center column labels
+          col_label_style <- openxlsx::createStyle(textRotation = 90,
+                                                   halign = "center",
+                                                   valign = "bottom")
+          openxlsx::addStyle(wb = ecc_wb,
+                             sheet = sheet_name,
+                             style = col_label_style,
+                             rows = this_loc[["origin"]][["y"]],
+                             cols = this_loc[["origin"]][["x"]]:this_loc[["extent"]][["x"]],
+                             gridExpand = TRUE,
+                             stack = TRUE)
+          # Right align row labels
+          row_label_style <- openxlsx::createStyle(halign = "right",
+                                                   valign = "center")
+          openxlsx::addStyle(wb = ecc_wb,
+                             sheet = sheet_name,
+                             style = row_label_style,
+                             rows = this_loc[["origin"]][["y"]]:this_loc[["extent"]][["y"]],
+                             cols = this_loc[["origin"]][["x"]],
+                             gridExpand = TRUE,
+                             stack = TRUE)
+          # Add matrix label
+          openxlsx::writeData(wb = ecc_wb,
+                              sheet = sheet_name,
+                              x = this_mat_name,
+                              startRow = this_loc[["extent"]][["y"]],
+                              startCol = mat_origin[["x"]])
+          # Format matrix label
+          mat_name_style <- openxlsx::createStyle(halign = "center",
+                                                  textDecoration = "Bold")
+          openxlsx::addStyle(wb = ecc_wb,
+                             sheet = sheet_name,
+                             style = mat_name_style,
+                             rows = this_loc[["extent"]][["y"]],
+                             cols = mat_origin[["x"]],
+                             gridExpand = TRUE,
+                             stack = TRUE)
+          openxlsx::mergeCells(wb = ecc_wb,
+                               sheet = sheet_name,
+                               rows = this_loc[["extent"]][["y"]],
+                               cols = mat_origin[["x"]]:mat_extent[["x"]])
+          # Set column widths to "auto" to save space.
+          openxlsx::setColWidths(wb = ecc_wb,
+                                 sheet = sheet_name,
+                                 cols = mat_origin[["x"]]:mat_extent[["x"]],
+                                 widths = col_widths,
+                                 ignoreMergedCells = TRUE)
+        })
     list(TRUE) %>%
       magrittr::set_names(.wrote_mats_colname)
   }

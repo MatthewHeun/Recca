@@ -18,7 +18,10 @@ write_ecc_to_excel(
   U_feed = Recca::psut_cols$U_feed,
   S_units = Recca::psut_cols$S_units,
   .wrote_mats_colname = "Wrote mats",
-  matrix_bg_color = "#FDF2D0"
+  UV_bg_color = "#FDF2D0",
+  RY_bg_color = "#D3712D",
+  calculated_bg_color = "#D9D9D9",
+  col_widths = 7
 )
 }
 \arguments{
@@ -39,8 +42,17 @@ See \code{Recca::psut_cols}.}
 that tells whether a worksheet was written successfully.
 Default is "Wrote mats".}
 
-\item{matrix_bg_color}{The color of cells containing matrix numbers.
+\item{UV_bg_color}{The color of cells containing U and V matrices.
 Default is a creamy yellow.}
+
+\item{RY_bg_color}{The color of cells containing R and Y matrices.
+Default is a rust color.}
+
+\item{calculated_bg_color}{The color of cells containing calculated matrices.
+Default is gray.}
+
+\item{col_widths}{The widths of columns of mattrices.
+Default is \code{7} to save space.}
 }
 \value{
 An unmodified version of \code{.psut_data} (if not \code{NULL}) or a list of
