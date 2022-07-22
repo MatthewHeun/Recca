@@ -795,7 +795,9 @@ write_ecc_to_excel <- function(.psut_data = NULL,
                                            S_units = S_units_mat,
                                            pad = pad)
     # Write each matrix to the worksheet
-    Map(list(R_mat, U_mat, V_mat, Y_mat), locations, f = function(this_mat, this_loc) {
+    Map(list("R", "U", "V", "Y"),
+        list(R_mat, U_mat, V_mat, Y_mat),
+        locations, f = function(this_mat_name, this_mat, this_loc) {
       openxlsx::writeData(wb = ecc_wb,
                           sheet = sheet_name,
                           x = this_mat,
@@ -807,12 +809,55 @@ write_ecc_to_excel <- function(.psut_data = NULL,
                                              halign = "center",
                                              valign = "center")
       mat_origin <- this_loc[["origin"]] + c(x = 1, y = 1)  # Offset for the row and column names
-      mat_extent <- this_loc[["extent"]] + c(x = 0, y = -2) # Offset for the matrix label
+      mat_extent <- this_loc[["extent"]] + c(x = 0, y = -1) # Offset for the matrix label
       openxlsx::addStyle(wb = ecc_wb,
-                         sheet = sheet_name, style = mat_num_style,
-                         cols = mat_origin[["x"]]:mat_extent[["x"]],
+                         sheet = sheet_name,
+                         style = mat_num_style,
                          rows = mat_origin[["y"]]:mat_extent[["y"]],
-                         gridExpand = TRUE)
+                         cols = mat_origin[["x"]]:mat_extent[["x"]],
+                         gridExpand = TRUE,
+                         stack = TRUE)
+      # Rotate and center column labels
+      col_label_style <- openxlsx::createStyle(textRotation = 90,
+                                               halign = "center",
+                                               valign = "bottom")
+      openxlsx::addStyle(wb = ecc_wb,
+                         sheet = sheet_name,
+                         style = col_label_style,
+                         rows = this_loc[["origin"]][["y"]],
+                         cols = this_loc[["origin"]][["x"]]:this_loc[["extent"]][["x"]],
+                         gridExpand = TRUE,
+                         stack = TRUE)
+      # Right align row labels
+      row_label_style <- openxlsx::createStyle(halign = "right",
+                                               valign = "center")
+      openxlsx::addStyle(wb = ecc_wb,
+                         sheet = sheet_name,
+                         style = row_label_style,
+                         rows = this_loc[["origin"]][["y"]]:this_loc[["extent"]][["y"]],
+                         cols = this_loc[["origin"]][["x"]],
+                         gridExpand = TRUE,
+                         stack = TRUE)
+      # Add matrix label
+      openxlsx::writeData(wb = ecc_wb,
+                          sheet = sheet_name,
+                          x = this_mat_name,
+                          startRow = this_loc[["extent"]][["y"]],
+                          startCol = mat_origin[["x"]])
+      # Format matrix label
+      mat_name_style <- openxlsx::createStyle(halign = "center",
+                                              textDecoration = "Bold")
+      openxlsx::addStyle(wb = ecc_wb,
+                         sheet = sheet_name,
+                         style = mat_name_style,
+                         rows = this_loc[["extent"]][["y"]],
+                         cols = mat_origin[["x"]],
+                         gridExpand = TRUE,
+                         stack = TRUE)
+      openxlsx::mergeCells(wb = ecc_wb,
+                           sheet = sheet_name,
+                           rows = this_loc[["extent"]][["y"]],
+                           cols = mat_origin[["x"]]:mat_extent[["x"]])
     })
     list(TRUE) %>%
       magrittr::set_names(.wrote_mats_colname)
@@ -863,9 +908,9 @@ calc_mats_locations_excel <- function(R, U, V, Y, r_eiou, U_eiou, U_feed, S_unit
 
   # Calculate vertical sizes for matrices.
   # Each as a +2 due to the row of column names and the label beneath the matrix.
-  vsizeUY <- nrow(U) + 2
-  vsizeR <- nrow(R) + 2
-  vsizeV <- nrow(V) + 2
+  vsizeUY <- nrow(U) + 1
+  vsizeR <- nrow(R) + 1
+  vsizeV <- nrow(V) + 1
 
   # Calculate origin and extent locations for each matrix.
   # The origin is the top left cell of the matrix, including all labels.
@@ -875,13 +920,13 @@ calc_mats_locations_excel <- function(R, U, V, Y, r_eiou, U_eiou, U_feed, S_unit
   originU <- c(x = hsizeVR + pad + 1, y = 1)
   extentU <- originU + c(x = hsizeU - 1, y = vsizeUY)
 
-  originY <- c(x = extentU[["x"]] + pad, y = 1)
+  originY <- c(x = extentU[["x"]] + pad + 1, y = 1)
   extentY <- originY + c(x = hsizeY - 1, y = vsizeUY)
 
-  originV <- c(x = 1, y = extentU[["y"]] + pad)
+  originV <- c(x = 1, y = extentU[["y"]] + pad + 1)
   extentV <- originV + c(x = hsizeVR - 1, y = vsizeV)
 
-  originR <- c(x = 1, y = extentV[["y"]] + pad)
+  originR <- c(x = 1, y = extentV[["y"]] + pad + 1)
   extentR <- originR + c(x = hsizeVR - 1, y = vsizeR)
 
   list(R = list(origin = originR, extent = extentR),
