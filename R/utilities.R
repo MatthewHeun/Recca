@@ -205,6 +205,7 @@ separate_RV <- function(.sutmats = NULL,
   matsindf::matsindf_apply(.sutmats, FUN = separate_RV_func, U_mat = U, R_plus_V_mat = R_plus_V)
 }
 
+
 #' Combine resource (\code{R}) and make (\code{V}) matrices into a make plus resource (\code{R_plus_V}) matrix
 #'
 #' \code{\link{combine_RV}} is the inverse of \code{\link{separate_RV}}.
@@ -380,6 +381,7 @@ outputs_unit_homogeneous <- function(.sutmats = NULL,
   }
   matsindf::matsindf_apply(.sutmats, FUN = outputs_unit_homogeneous_func, V_mat = V, S_units_mat = S_units)
 }
+
 
 #' Tell whether industry inputs are unit-homogeneous and industry outputs are unit-homogeneous
 #'
@@ -701,3 +703,172 @@ find_p_industry_names <- function(.sutdata = NULL,
                            V_mat = V,
                            Y_mat = Y)
 }
+
+
+#' Write energy conversion chain matrices in an Excel format
+#'
+#' It is often helpful to see energy conversion chain (ECC) matrices in Excel format,
+#' arranged spatially.
+#' This function takes ECC matrices and writes them to an Excel file.
+#'
+#' If `.psut_data` is a PSUT data frame,
+#' each row is written to a different tab in the output file at `path`.
+#'
+#' @param .psut_data A list or data frame of energy conversion chains.
+#' @param path The path of the Excel file to be created.
+#' @param overwrite_file A boolean that tells whether you want to overwrite
+#'                       the file at `path`, if it already exists.
+#' @param pad The number of rows and columns between adjacent matrices in the Excel sheet.
+#'            Default is `2`.
+#' @param R,U,V,Y,r_eiou,U_eiou,U_feed Names of ECC matrices or actual matrices.
+#'                                     See `Recca::psut_cols`.
+#' @param worksheets_colname The name of the outgoing column that contains worksheets.
+#'                           Default is "ECCWorksheets".
+#'
+#' @return An unmodified version of `.psut_data` (if not `NULL`) or a list of
+#'         the incoming matrices.
+#'
+#' @export
+#'
+#' @examples
+write_excel_ecc <- function(.psut_data = NULL,
+                            path,
+                            overwrite_file = FALSE,
+                            pad = 2,
+                            R = Recca::psut_cols$R,
+                            U = Recca::psut_cols$U,
+                            V = Recca::psut_cols$V,
+                            Y = Recca::psut_cols$Y,
+                            r_eiou = Recca::psut_cols$r_eiou,
+                            U_eiou = Recca::psut_cols$U_eiou,
+                            U_feed = Recca::psut_cols$U_feed,
+                            S_units = Recca::psut_cols$S_units,
+                            worksheets_colname = "ECCWorksheets") {
+
+  # Check if path exists. If so, throw an error.
+  if (file.exists(path) & !overwrite_file) {
+    stop(paste("File", path, "already exists. Call write_excel_ECC(overwrite = TRUE) to overwrite."))
+  }
+  # Create the workbook
+  ecc_wb <- openxlsx::createWorkbook()
+
+
+  create_one_tab <- function(R_mat, U_mat, V_mat, Y_mat, U_eiou_mat, U_feed_mat, r_eiou_mat, S_units_mat) {
+
+    # Get existing sheet names
+    existing_sheets <- openxlsx::sheets(ecc_wb)
+    if (length(existing_sheets) == 0) {
+      sheet_name <- "1"
+    } else {
+      sheet_name <- (as.integer(existing_sheets) %>% max()) + 1
+    }
+    # Add the worksheet to the workbook
+    openxlsx::addWorksheet(ecc_wb, sheet_name)
+
+    # Complete matrices relative to one another to make sure we have same number
+    # of rows or columns, as appropriate
+    completedRV <- matsbyname::complete_and_sort(R_mat, V_mat, margin = 2)
+    R_mat <- completedRV[[1]]
+    V_mat <- completedRV[[2]]
+    completedUY <- matsbyname::complete_and_sort(U_mat, Y_mat, margin = 1)
+    U_mat <- completedUY[[1]]
+    Y_mat <- completedUY[[2]]
+
+    # Calculate starting locations for each matrix.
+    locations <- calc_mats_start_positions_excel(R = R_mat,
+                                                 U = U_mat,
+                                                 V = V_mat,
+                                                 Y = Y_mat,
+                                                 r_eiou = r_eiou_mat,
+                                                 U_eiou = U_eiou_mat,
+                                                 U_feed = U_feed_mat,
+                                                 S_units = S_units_mat,
+                                                 pad = pad)
+    # Write each matrix to the worksheet
+    Map(list(R_mat, U_mat, V_mat, Y_mat), locations, f = function(this_mat, this_loc) {
+      openxlsx::writeData(wb = ecc_wb,
+                          sheet = sheet_name,
+                          x = this_mat,
+                          xy = this_loc[["origin"]],
+                          array = TRUE, colNames = TRUE, rowNames = TRUE)
+    })
+    list(wrote_mats = TRUE)
+  }
+
+
+  out <- matsindf::matsindf_apply(.psut_data,
+                                  FUN = create_one_tab,
+                                  R_mat = R,
+                                  U_mat = U,
+                                  V_mat = V,
+                                  Y_mat = Y,
+                                  r_eiou_mat = r_eiou,
+                                  U_eiou_mat = U_eiou,
+                                  U_feed_mat = U_feed,
+                                  S_units_mat = S_units)
+  # Make sure the directory exists
+  dir.create(dirname(path), showWarnings = FALSE, recursive = TRUE)
+
+  # Write the workbook
+  openxlsx::saveWorkbook(ecc_wb, file = path, overwrite = overwrite_file)
+  return(out)
+}
+
+
+#' Calculate the origin and extent for each matrix
+#'
+#' The origin is defined as the upper-left corner of the matrix on the worksheet.
+#' The extent is defined as the lower-right corner of the matrix on the worksheet.
+#'
+#' The outer structure of the return value is matrices,
+#' in the order provided in the argument list.
+#' The inner structure of the return value is a list of "origin" and "extent,"
+#' in that order.
+#'
+#' This is a helper function, so it is not public.
+#'
+#' @param R,U,V,Y,r_eiou,U_eiou,U_feed,S_units Matrices to be arranged on an Excel worksheet.
+#' @param pad The number of blank rows or columns between matrices.
+#'
+#' @return A nested list of origins and extents.
+calc_mats_start_positions_excel <- function(R, U, V, Y, r_eiou, U_eiou, U_feed, S_units, pad = 2) {
+  # At this point, each argument should be a single matrix.
+  # pad <- pad + 1
+
+  # Add 1 to pad so that pad becomes the number of blank rows or cols between matrices
+  # Calculate horizontal sizes for matrices.
+  # Each has a +1 due to the column of rownames
+  hsizeVR <- ncol(V) + 1
+  hsizeU <- ncol(U) + 1
+  hsizeY <- ncol(Y) + 1
+
+  # Calculate vertical sizes for matrices.
+  # Each as a +2 due to the row of column names and the label beneath the matrix.
+  vsizeUY <- nrow(U) + 2
+  vsizeR <- nrow(R) + 2
+  vsizeV <- nrow(V) + 2
+
+  # Calculate origin and extent locations for each matrix.
+  # The origin is the top left cell of the matrix, including all labels.
+  # The extent is the bottom right cell of the matrix, including all labels.
+  # x and y are row number (with 1 at the top) and column number (with 1 at the left),
+  # respectively.
+  originU <- c(x = hsizeVR + pad + 1, y = 1)
+  extentU <- originU + c(x = hsizeU, y = vsizeUY)
+
+  originY <- c(x = extentU[["x"]] + pad, 1)
+  extentY <- originY + c(x = hsizeY, y = vsizeUY)
+
+  originV <- c(x = 1, y = extentU[["y"]] + pad)
+  extentV <- originV + c(x = hsizeVR, y = vsizeV)
+
+  originR <- c(x = 1, y = extentV[["y"]] + pad)
+  extentR <- originR + c(x = hsizeVR, y = vsizeR)
+
+  list(R = list(origin = originR, extent = extentR),
+       U = list(origin = originU, extent = extentU),
+       V = list(origin = originV, extent = extentV),
+       Y = list(origin = originY, extent = extentY))
+}
+
+

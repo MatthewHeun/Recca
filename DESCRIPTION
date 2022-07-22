@@ -31,10 +31,12 @@ Imports:
     matsbyname,
     matsindf,
     networkD3,
+    openxlsx,
     RCLabels,
     rlang,
     tibble,
-    tidyr
+    tidyr, 
+    writexl
 URL: https://github.com/MatthewHeun/Recca
 BugReports: https://github.com/MatthewHeun/Recca/issues
 Suggests: 

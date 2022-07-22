@@ -381,7 +381,14 @@ test_that("find_p_industry_names() works as expected", {
 })
 
 
+test_that("write_excel_ECC() works as expected", {
+  ecc <- UKEnergy2000mats %>%
+    tidyr::spread(key = "matrix.name", value = "matrix")
+  ecc_temp_path <- tempfile(pattern = "write_excel_ecc_test_file", fileext = ".xlsx")
 
+  res <- write_excel_ecc(ecc, path = ecc_temp_path, overwrite = TRUE)
+
+})
 
 
 
