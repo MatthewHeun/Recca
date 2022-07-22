@@ -4,6 +4,8 @@ output: html_document
 ---
 
 
+* New function `write_ecc_to_excel()`
+  stores ECCs in spatial format in Excel.
 * `primary_aggregates()` and `finaldemand_aggregates()`
   no longer require `p_industries` and `fd_sectors`
   to be present in the incoming list or data frame.

@@ -722,8 +722,11 @@ find_p_industry_names <- function(.sutdata = NULL,
 #'            Default is `2`.
 #' @param R,U,V,Y,r_eiou,U_eiou,U_feed Names of ECC matrices or actual matrices.
 #'                                     See `Recca::psut_cols`.
-#' @param worksheets_colname The name of the outgoing column that contains worksheets.
-#'                           Default is "ECCWorksheets".
+#' @param .wrote_mats_colname The name of the outgoing column
+#'                            that tells whether a worksheet was written successfully.
+#'                            Default is "Wrote mats".
+#' @param matrix_bg_color The color of cells containing matrix numbers.
+#'                        Default is a creamy yellow.
 #'
 #' @return An unmodified version of `.psut_data` (if not `NULL`) or a list of
 #'         the incoming matrices.
@@ -731,19 +734,26 @@ find_p_industry_names <- function(.sutdata = NULL,
 #' @export
 #'
 #' @examples
-write_excel_ecc <- function(.psut_data = NULL,
-                            path,
-                            overwrite_file = FALSE,
-                            pad = 2,
-                            R = Recca::psut_cols$R,
-                            U = Recca::psut_cols$U,
-                            V = Recca::psut_cols$V,
-                            Y = Recca::psut_cols$Y,
-                            r_eiou = Recca::psut_cols$r_eiou,
-                            U_eiou = Recca::psut_cols$U_eiou,
-                            U_feed = Recca::psut_cols$U_feed,
-                            S_units = Recca::psut_cols$S_units,
-                            worksheets_colname = "ECCWorksheets") {
+#' \dontrun{
+#' ecc <- UKEnergy2000mats %>%
+#'   tidyr::spread(key = "matrix.name", value = "matrix")
+#' ecc_temp_path <- tempfile(pattern = "write_excel_ecc_test_file", fileext = ".xlsx")
+#' write_ecc_to_excel(ecc, path = ecc_temp_path, overwrite = TRUE)
+#' }
+write_ecc_to_excel <- function(.psut_data = NULL,
+                               path,
+                               overwrite_file = FALSE,
+                               pad = 2,
+                               R = Recca::psut_cols$R,
+                               U = Recca::psut_cols$U,
+                               V = Recca::psut_cols$V,
+                               Y = Recca::psut_cols$Y,
+                               r_eiou = Recca::psut_cols$r_eiou,
+                               U_eiou = Recca::psut_cols$U_eiou,
+                               U_feed = Recca::psut_cols$U_feed,
+                               S_units = Recca::psut_cols$S_units,
+                               .wrote_mats_colname = "Wrote mats",
+                               matrix_bg_color = "#FDF2D0") {
 
   # Check if path exists. If so, throw an error.
   if (file.exists(path) & !overwrite_file) {
@@ -775,15 +785,15 @@ write_excel_ecc <- function(.psut_data = NULL,
     Y_mat <- completedUY[[2]]
 
     # Calculate starting locations for each matrix.
-    locations <- calc_mats_start_positions_excel(R = R_mat,
-                                                 U = U_mat,
-                                                 V = V_mat,
-                                                 Y = Y_mat,
-                                                 r_eiou = r_eiou_mat,
-                                                 U_eiou = U_eiou_mat,
-                                                 U_feed = U_feed_mat,
-                                                 S_units = S_units_mat,
-                                                 pad = pad)
+    locations <- calc_mats_locations_excel(R = R_mat,
+                                           U = U_mat,
+                                           V = V_mat,
+                                           Y = Y_mat,
+                                           r_eiou = r_eiou_mat,
+                                           U_eiou = U_eiou_mat,
+                                           U_feed = U_feed_mat,
+                                           S_units = S_units_mat,
+                                           pad = pad)
     # Write each matrix to the worksheet
     Map(list(R_mat, U_mat, V_mat, Y_mat), locations, f = function(this_mat, this_loc) {
       openxlsx::writeData(wb = ecc_wb,
@@ -791,8 +801,21 @@ write_excel_ecc <- function(.psut_data = NULL,
                           x = this_mat,
                           xy = this_loc[["origin"]],
                           array = TRUE, colNames = TRUE, rowNames = TRUE)
+      # Set the background color to matrix_bg_color for the numbers in the matrix
+      # Define the matrix numbers style
+      mat_num_style <- openxlsx::createStyle(fgFill = matrix_bg_color,
+                                             halign = "center",
+                                             valign = "center")
+      mat_origin <- this_loc[["origin"]] + c(x = 1, y = 1)  # Offset for the row and column names
+      mat_extent <- this_loc[["extent"]] + c(x = 0, y = -2) # Offset for the matrix label
+      openxlsx::addStyle(wb = ecc_wb,
+                         sheet = sheet_name, style = mat_num_style,
+                         cols = mat_origin[["x"]]:mat_extent[["x"]],
+                         rows = mat_origin[["y"]]:mat_extent[["y"]],
+                         gridExpand = TRUE)
     })
-    list(wrote_mats = TRUE)
+    list(TRUE) %>%
+      magrittr::set_names(.wrote_mats_colname)
   }
 
 
@@ -808,7 +831,6 @@ write_excel_ecc <- function(.psut_data = NULL,
                                   S_units_mat = S_units)
   # Make sure the directory exists
   dir.create(dirname(path), showWarnings = FALSE, recursive = TRUE)
-
   # Write the workbook
   openxlsx::saveWorkbook(ecc_wb, file = path, overwrite = overwrite_file)
   return(out)
@@ -831,11 +853,8 @@ write_excel_ecc <- function(.psut_data = NULL,
 #' @param pad The number of blank rows or columns between matrices.
 #'
 #' @return A nested list of origins and extents.
-calc_mats_start_positions_excel <- function(R, U, V, Y, r_eiou, U_eiou, U_feed, S_units, pad = 2) {
+calc_mats_locations_excel <- function(R, U, V, Y, r_eiou, U_eiou, U_feed, S_units, pad = 2) {
   # At this point, each argument should be a single matrix.
-  # pad <- pad + 1
-
-  # Add 1 to pad so that pad becomes the number of blank rows or cols between matrices
   # Calculate horizontal sizes for matrices.
   # Each has a +1 due to the column of rownames
   hsizeVR <- ncol(V) + 1
@@ -854,16 +873,16 @@ calc_mats_start_positions_excel <- function(R, U, V, Y, r_eiou, U_eiou, U_feed, 
   # x and y are row number (with 1 at the top) and column number (with 1 at the left),
   # respectively.
   originU <- c(x = hsizeVR + pad + 1, y = 1)
-  extentU <- originU + c(x = hsizeU, y = vsizeUY)
+  extentU <- originU + c(x = hsizeU - 1, y = vsizeUY)
 
-  originY <- c(x = extentU[["x"]] + pad, 1)
-  extentY <- originY + c(x = hsizeY, y = vsizeUY)
+  originY <- c(x = extentU[["x"]] + pad, y = 1)
+  extentY <- originY + c(x = hsizeY - 1, y = vsizeUY)
 
   originV <- c(x = 1, y = extentU[["y"]] + pad)
-  extentV <- originV + c(x = hsizeVR, y = vsizeV)
+  extentV <- originV + c(x = hsizeVR - 1, y = vsizeV)
 
   originR <- c(x = 1, y = extentV[["y"]] + pad)
-  extentR <- originR + c(x = hsizeVR, y = vsizeR)
+  extentR <- originR + c(x = hsizeVR - 1, y = vsizeR)
 
   list(R = list(origin = originR, extent = extentR),
        U = list(origin = originU, extent = extentU),
