@@ -792,6 +792,14 @@ write_ecc_to_excel <- function(.psut_data = NULL,
     completedUY <- matsbyname::complete_and_sort(U_mat, Y_mat, margin = 1)
     U_mat <- completedUY[[1]]
     Y_mat <- completedUY[[2]]
+    completedU_eroi <- matsbyname::complete_and_sort(U_eiou_mat, U_mat, margin = c(1, 2))
+    U_eroi_mat <- completedU_eroi[[1]]
+    completedU_feed <- matsbyname::complete_and_sort(U_feed_mat, U_mat, margin = c(1, 2))
+    U_feed_mat <- completedU_feed[[1]]
+    completedr_eiou <- matsbyname::complete_and_sort(r_eiou_mat, U_mat, margin = c(1, 2))
+    r_eiou_mat <- completedr_eiou[[1]]
+    completedS_units <- matsbyname::complete_and_sort(S_units_mat, U_mat, margin = 1)
+    S_units_mat <- completedS_units[[1]]
 
     # Calculate starting locations for each matrix.
     locations <- calc_mats_locations_excel(R = R_mat,
