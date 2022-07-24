@@ -388,6 +388,7 @@ test_that("write_excel_ECC() works as expected", {
 
   res <- write_ecc_to_excel(ecc, path = ecc_temp_path, overwrite = TRUE)
 
+  expect_true(all(res$`Wrote mats` == TRUE))
 })
 
 
