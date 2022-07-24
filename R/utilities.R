@@ -792,8 +792,8 @@ write_ecc_to_excel <- function(.psut_data = NULL,
     completedUY <- matsbyname::complete_and_sort(U_mat, Y_mat, margin = 1)
     U_mat <- completedUY[[1]]
     Y_mat <- completedUY[[2]]
-    completedU_eroi <- matsbyname::complete_and_sort(U_eiou_mat, U_mat, margin = c(1, 2))
-    U_eroi_mat <- completedU_eroi[[1]]
+    completedU_eiou <- matsbyname::complete_and_sort(U_eiou_mat, U_mat, margin = c(1, 2))
+    U_eiou_mat <- completedU_eiou[[1]]
     completedU_feed <- matsbyname::complete_and_sort(U_feed_mat, U_mat, margin = c(1, 2))
     U_feed_mat <- completedU_feed[[1]]
     completedr_eiou <- matsbyname::complete_and_sort(r_eiou_mat, U_mat, margin = c(1, 2))
@@ -812,8 +812,8 @@ write_ecc_to_excel <- function(.psut_data = NULL,
                                            S_units = S_units_mat,
                                            pad = pad)
     # Write each matrix to the worksheet
-    Map(list("R", "U", "V", "Y"),
-        list(R_mat, U_mat, V_mat, Y_mat),
+    Map(list("R", "U", "V", "Y", "r_eiou", "U_eiou", "U_feed", "S_units"),
+        list(R_mat, U_mat, V_mat, Y_mat, r_eiou_mat, U_eiou_mat, U_feed_mat, S_units_mat),
         locations,
         f = function(this_mat_name, this_mat, this_loc) {
           # Find the locations of the matrix origin and matrix extent
@@ -937,37 +937,69 @@ calc_mats_locations_excel <- function(R, U, V, Y, r_eiou, U_eiou, U_feed, S_unit
   # At this point, each argument should be a single matrix.
   # Calculate horizontal sizes for matrices.
   # Each has a +1 due to the column of rownames
-  hsizeVR <- ncol(V) + 1
+  hsizeS_units <- ncol(S_units) + 1
+  if (ncol(R) != ncol(V)) {
+    stop("R and V should have same number of columns in calc_mats_locations_excel().")
+  }
+  hsizeVR <- ncol(R) + 1
   hsizeU <- ncol(U) + 1
   hsizeY <- ncol(Y) + 1
 
   # Calculate vertical sizes for matrices.
   # Each as a +2 due to the row of column names and the label beneath the matrix.
-  vsizeUY <- nrow(U) + 1
-  vsizeR <- nrow(R) + 1
-  vsizeV <- nrow(V) + 1
+  vsizeS_units <- nrow(S_units) + 2
+  if (nrow(U) != nrow(Y)) {
+    stop("U and Y should have same number of rows in calc_mats_locations_excel().")
+  }
+  vsizeUY <- nrow(U) + 2
+  vsizeR <- nrow(R) + 2
+  vsizeV <- nrow(V) + 2
 
   # Calculate origin and extent locations for each matrix.
   # The origin is the top left cell of the matrix, including all labels.
   # The extent is the bottom right cell of the matrix, including all labels.
-  # x and y are row number (with 1 at the top) and column number (with 1 at the left),
+  # x and y are
+  # row number (with 1 at the top of the worksheet) and
+  # column number (with 1 at the left of the worksheet),
   # respectively.
-  originU <- c(x = hsizeVR + pad + 1, y = 1)
-  extentU <- originU + c(x = hsizeU - 1, y = vsizeUY)
+  originS_units <- c(x = 1, y = 1)
+  extentS_units <- originS_units + c(x = hsizeS_units - 1, y = vsizeS_units - 1)
 
-  originY <- c(x = extentU[["x"]] + pad + 1, y = 1)
-  extentY <- originY + c(x = hsizeY - 1, y = vsizeUY)
+  left_side_U <- hsizeVR + pad + 1
+
+  originU_eiou <- c(x = left_side_U, y = 1)
+  extentU_eiou <- originU_eiou + c(x = hsizeU - 1, y = vsizeUY - 1)
+
+  left_side_Y <- extentU_eiou[["x"]] + pad + 1
+
+  originr_eiou <- c(x = left_side_Y, y = 1)
+  extentr_eiou <- originr_eiou + c(x = hsizeU - 1, y = vsizeUY - 1)
+
+  originU_feed <- c(x = left_side_U, y = extentU_eiou[["y"]] + pad + 1)
+  extentU_feed <- originU_feed + c(x = hsizeU - 1, y = vsizeUY - 1)
+
+  top_row_UY <- extentU_feed[["y"]] + pad + 1
+
+  originU <- c(x = left_side_U, y = top_row_UY)
+  extentU <- originU + c(x = hsizeU - 1, y = vsizeUY - 1)
+
+  originY <- c(x = left_side_Y, y = top_row_UY)
+  extentY <- originY + c(x = hsizeY - 1, y = vsizeUY - 1)
 
   originV <- c(x = 1, y = extentU[["y"]] + pad + 1)
-  extentV <- originV + c(x = hsizeVR - 1, y = vsizeV)
+  extentV <- originV + c(x = hsizeVR - 1, y = vsizeV - 1)
 
   originR <- c(x = 1, y = extentV[["y"]] + pad + 1)
-  extentR <- originR + c(x = hsizeVR - 1, y = vsizeR)
+  extentR <- originR + c(x = hsizeVR - 1, y = vsizeR - 1)
 
   list(R = list(origin = originR, extent = extentR),
        U = list(origin = originU, extent = extentU),
        V = list(origin = originV, extent = extentV),
-       Y = list(origin = originY, extent = extentY))
+       Y = list(origin = originY, extent = extentY),
+       r_eiou = list(origin = originr_eiou, extent = extentr_eiou),
+       U_eiou = list(origin = originU_eiou, extent = extentU_eiou),
+       U_feed = list(origin = originU_feed, extent = extentU_feed),
+       S_units = list(origin = originS_units, extent = extentS_units))
 }
 
 
