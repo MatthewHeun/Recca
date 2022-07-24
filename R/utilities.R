@@ -720,6 +720,10 @@ find_p_industry_names <- function(.sutdata = NULL,
 #'                       the file at `path`, if it already exists.
 #' @param pad The number of rows and columns between adjacent matrices in the Excel sheet.
 #'            Default is `2`.
+#' @param include_io_mats A boolean that tells whether to include input-output matrices
+#'                        in the worksheets written by this function.
+#'                        Input-output matrices are obtained from `calc_io_mats()`.
+#'                        Default is `FALSE`.
 #' @param R,U,V,Y,r_eiou,U_eiou,U_feed Names of ECC matrices or actual matrices.
 #'                                     See `Recca::psut_cols`.
 #' @param .wrote_mats_colname The name of the outgoing column
@@ -750,6 +754,7 @@ write_ecc_to_excel <- function(.psut_data = NULL,
                                path,
                                overwrite_file = FALSE,
                                pad = 2,
+                               include_io_mats = FALSE,
                                R = Recca::psut_cols$R,
                                U = Recca::psut_cols$U,
                                V = Recca::psut_cols$V,
@@ -770,7 +775,6 @@ write_ecc_to_excel <- function(.psut_data = NULL,
   }
   # Create the workbook
   ecc_wb <- openxlsx::createWorkbook()
-
 
   create_one_tab <- function(R_mat, U_mat, V_mat, Y_mat, U_eiou_mat, U_feed_mat, r_eiou_mat, S_units_mat) {
 
