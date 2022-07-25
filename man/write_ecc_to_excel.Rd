@@ -9,6 +9,7 @@ write_ecc_to_excel(
   path,
   overwrite_file = FALSE,
   pad = 2,
+  include_io_mats = FALSE,
   R = Recca::psut_cols$R,
   U = Recca::psut_cols$U,
   V = Recca::psut_cols$V,
@@ -34,6 +35,11 @@ the file at \code{path}, if it already exists.}
 
 \item{pad}{The number of rows and columns between adjacent matrices in the Excel sheet.
 Default is \code{2}.}
+
+\item{include_io_mats}{A boolean that tells whether to include input-output matrices
+in the worksheets written by this function.
+Input-output matrices are obtained from \code{calc_io_mats()}.
+Default is \code{FALSE}.}
 
 \item{R, U, V, Y, r_eiou, U_eiou, U_feed}{Names of ECC matrices or actual matrices.
 See \code{Recca::psut_cols}.}
