@@ -168,7 +168,7 @@ test_that("reconstructing R, U, and V from a new Y matrix works as expected", {
   # Test to define a NULL new Y matrix
   Reconstructed_NULL <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, U, U_feed, V, Y, r_EIOU, S_units, R) %>%
+    dplyr::select(Country, Year, Energy.type, Last.stage, R, U, U_feed, U_EIOU, r_EIOU, V, Y, S_units) %>%
     calc_io_mats() %>%
     dplyr::mutate(
       Y_prime = matsbyname::select_cols_byname(
