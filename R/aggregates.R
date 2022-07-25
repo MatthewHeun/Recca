@@ -586,7 +586,8 @@ grouped_aggregates <- function(.sut_data = NULL,
 #'    yielding total primary and final demand aggregates.
 #' 5. Add the primary and final demand aggregates as columns at the right side of `.sut_data`.
 #'
-#' @param .sut_data
+#' @param .sut_data A data frame or list of physical supply-use table matrices.
+#'                  Default is `NULL`.
 #' @param p_industries A vector of names of industries to be aggregated as "primary."
 #'                     If `.sut_data` is a data frame, `p_industries` should be the name of a column in the data frame.
 #'                     If `.sut_data` is `NULL`, `p_industries` can be a single vector of industry names.
@@ -610,23 +611,32 @@ grouped_aggregates <- function(.sut_data = NULL,
 #'                     If "anywhere", sectors are aggregated if any entry in `p_industries` matches any part of a final demand sector's name.
 #'                     Default is "exact".
 #'                     This argument is passed to both `primary_aggregates()` and `finaldemand_aggregates()`.
+#' @param unnest A boolean that tells whether to unnest the outgoing data.
+#'               When `TRUE`, creates a new column called `product_sector`.
+#'               Default is `TRUE`.
+#' @param product_sector The name of the output column that contains the product, industry, or sector
+#'                       for which footprint aggregates are given.
+#'                       Default is `Recca::aggregate_cols$product_sector`.
 #' @param R,U,U_feed,V,Y,S_units Matrices that describe the energy conversion chain (ECC).
-#'                       See `Recca::psut_cols` for default values.
-#' @param add_primary_net_gross_cols A boolean that tells whether to add primary net and gross columns (`TRUE`) or not (`FALSE`).
-#'                                   Default is `FALSE`.
-#' @param aggregate_primary,net_aggregate_primary,gross_aggregate_primary,net_aggregate_demand,gross_aggregate_demand Names of
-#'                                   output columns.
-#'                                   See `Recca::aggregate_cols`.
+#'                               See `Recca::psut_cols` for default values.
+#' @param aggregate_primary,net_aggregate_demand,gross_aggregate_demand Names of output columns.
+#'                                                                      See `Recca::aggregate_cols`.
 #'
-#' @return
+#' @return Primary and final demand (both gross and net) aggregates.
 #'
 #' @export
 #'
 #' @examples
+#' p_industries <- c("Resources - Crude", "Resources - NG")
+#' fd_sectors <- c("Residential", "Transport", "Oil fields")
+#' UKEnergy2000mats %>%
+#'   tidyr::spread(key = matrix.name, value = matrix) %>%
+#'   Recca::footprint_aggregates(p_industries = p_industries, fd_sectors = fd_sectors)
 footprint_aggregates <- function(.sut_data = NULL,
                                  p_industries,
                                  fd_sectors,
                                  pattern_type = c("exact", "leading", "trailing", "anywhere"),
+                                 unnest = TRUE,
                                  # Input names or matrices
                                  R = Recca::psut_cols$R,
                                  U = Recca::psut_cols$U,
@@ -635,8 +645,8 @@ footprint_aggregates <- function(.sut_data = NULL,
                                  Y = Recca::psut_cols$Y,
                                  S_units = Recca::psut_cols$S_units,
                                  by = c("Total", "Product", "Sector"),
-                                 add_primary_net_gross_cols = FALSE,
                                  # Output names
+                                 product_sector = Recca::aggregate_cols$product_sector,
                                  aggregate_primary = Recca::aggregate_cols$aggregate_primary,
                                  net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
                                  gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand,
@@ -719,7 +729,9 @@ footprint_aggregates <- function(.sut_data = NULL,
                              pattern_type = pattern_type,
                              by = by,
                              aggregate_primary = aggregate_primary)
-      })
+      }) %>%
+      # Transpose to pull EX.p to the top level with products and sectors beneath.
+      purrr::transpose()
     fd_aggregates <- ecc_prime %>%
       sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_new_ecc) {
         this_new_ecc %>%
@@ -731,11 +743,16 @@ footprint_aggregates <- function(.sut_data = NULL,
                                  by = by,
                                  net_aggregate_demand = net_aggregate_demand,
                                  gross_aggregate_demand = gross_aggregate_demand)
-      })
+      }) %>%
+      # Transpose to pull EX.fd_net and EX.fd_gross to the top level with products and sectors beneath.
+      purrr::transpose()
 
     # Combine the primary and final demand aggregates into a list and return
-
-
+    list(p_aggregates[aggregate_primary],
+         fd_aggregates[net_aggregate_demand],
+         fd_aggregates[gross_aggregate_demand]) %>%
+      # Unlist one level to get the correct names before returning.
+      unlist(recursive = FALSE)
   }
 
   matsindf::matsindf_apply(.sut_data,

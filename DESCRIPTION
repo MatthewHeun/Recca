@@ -32,6 +32,7 @@ Imports:
     matsindf,
     networkD3,
     openxlsx,
+    purrr,
     RCLabels,
     rlang,
     tibble,
