@@ -65,7 +65,7 @@ new_Y <- function(.sutmats = NULL,
                   # Output names
                   R_prime = "R_prime",
                   U_prime = "U_prime", U_feed_prime = "U_feed_prime",
-                  U_eiou_prime = "U_eiou_prime", r_eiou_prime = "r_eiou_prime",
+                  U_eiou_prime = "U_EIOU_prime", r_eiou_prime = "r_EIOU_prime",
                   V_prime = "V_prime"){
 
   new_Y_func <- function(Y_prime_mat, L_ixp_mat, L_pxp_mat, Z_mat, Z_feed_mat, D_mat, O_mat){

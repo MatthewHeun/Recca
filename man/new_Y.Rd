@@ -16,8 +16,8 @@ new_Y(
   R_prime = "R_prime",
   U_prime = "U_prime",
   U_feed_prime = "U_feed_prime",
-  U_eiou_prime = "U_eiou_prime",
-  r_eiou_prime = "r_eiou_prime",
+  U_eiou_prime = "U_EIOU_prime",
+  r_eiou_prime = "r_EIOU_prime",
   V_prime = "V_prime"
 )
 }

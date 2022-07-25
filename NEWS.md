@@ -4,6 +4,9 @@ output: html_document
 ---
 
 
+* `new_Y()` now also produced matrices
+  **U_feed**, **U_eiou**, and **r_eiou**
+  in its output.
 * **W** matrix no longer included in the output of `new_Y()`.
   **W** can always be calculated from **V**^T - **U**.
 * New function `write_ecc_to_excel()`

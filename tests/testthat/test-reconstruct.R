@@ -16,6 +16,9 @@ test_that("reconstructing R, U, and V, from single matrices works as expected", 
                 O = alliomats$O[[i]])
     expect_equal(UV$R_prime, allUV$R_prime[[i]])
     expect_equal(UV$U_prime, allUV$U_prime[[i]])
+    expect_equal(UV$U_feed_prime, allUV$U_feed_prime[[i]])
+    expect_equal(UV$U_eiou_prime, allUV$U_eiou_prime[[i]])
+    expect_equal(UV$r_eiou_prime, allUV$r_eiou_prime[[i]])
     expect_equal(UV$V_prime, allUV$V_prime[[i]])
   }
 })
@@ -25,7 +28,7 @@ test_that("reconstructing R, U, and V from a new Y matrix works as expected", {
   # Try with Y_prime <- Y, thereby simply trying to duplicate the original U and V matrices
   Reconstructed <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, U, U_feed, V, Y, r_EIOU, S_units, R) %>%
+    dplyr::select(Country, Year, Energy.type, Last.stage, R, U, U_feed, U_EIOU, r_EIOU, V, Y, S_units) %>%
     calc_io_mats() %>%
     dplyr::mutate(
       Y_prime = Y
@@ -35,14 +38,23 @@ test_that("reconstructing R, U, and V from a new Y matrix works as expected", {
       # Take the difference between U_prime and U and V_prime and V
       R_diff = matsbyname::difference_byname(R_prime, R),
       U_diff = matsbyname::difference_byname(U_prime, U),
+      U_feed_diff = matsbyname::difference_byname(U_feed_prime, U_feed),
+      U_eiou_diff = matsbyname::difference_byname(U_EIOU_prime, U_EIOU),
+      r_eiou_diff = matsbyname::difference_byname(r_EIOU_prime, r_EIOU),
       V_diff = matsbyname::difference_byname(V_prime, V),
       # The differences should be the 0 matrix, within tolerance
       ROK = matsbyname::iszero_byname(R_diff, tol = 5e-5),
       UOK = matsbyname::iszero_byname(U_diff, tol = 5e-5),
+      U_feedOK = matsbyname::iszero_byname(U_feed_diff, tol = 5e-5),
+      U_eiouOK = matsbyname::iszero_byname(U_eiou_diff, tol = 5e-5),
+      r_eiouOK = matsbyname::iszero_byname(r_eiou_diff, tol = 5e-5),
       VOK = matsbyname::iszero_byname(V_diff, tol = 5e-5)
     )
   expect_true(all(as.logical(Reconstructed$ROK)))
   expect_true(all(as.logical(Reconstructed$UOK)))
+  expect_true(all(as.logical(Reconstructed$U_feedOK)))
+  expect_true(all(as.logical(Reconstructed$U_eiouOK)))
+  expect_true(all(as.logical(Reconstructed$r_eiouOK)))
   expect_true(all(as.logical(Reconstructed$VOK)))
 
   # Try a list of new Y matrices, each of which contains only final demand for residential lighting.
@@ -56,7 +68,7 @@ test_that("reconstructing R, U, and V from a new Y matrix works as expected", {
     matsbyname::setrowtype("Product") %>% matsbyname::setcoltype("Industry")
 
   Reconstructed_Residential <- Reconstructed %>%
-    dplyr::select(-Y_prime, -R_prime, -U_prime, -U_feed_prime, -U_eiou_prime, -r_eiou_prime, -V_prime, -R_diff, -U_diff, -V_diff, -ROK, -UOK, -VOK) %>%
+    dplyr::select(-Y_prime, -R_prime, -U_prime, -U_feed_prime, -U_EIOU_prime, -r_EIOU_prime, -V_prime, -R_diff, -U_diff, -V_diff, -ROK, -UOK, -VOK) %>%
     dplyr::mutate(
       Y_prime = list(Y_prime_finalE, Y_prime_servicesE, Y_prime_usefulE, Y_prime_servicesX)
     ) %>%
