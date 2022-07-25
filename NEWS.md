@@ -4,6 +4,8 @@ output: html_document
 ---
 
 
+* **W** matrix no longer included in the output of `new_Y()`.
+  **W** can always be calculated from **V**^T - **U**.
 * New function `write_ecc_to_excel()`
   stores ECCs in spatial format in Excel.
   All ECC matrices are written to the Excel file:
