@@ -6,40 +6,50 @@
 
 #' Reconstruct an economy given a new final demand matrix
 #'
-#' When the final demand matrix changes from \code{Y} to \code{Y_prime},
-#' this function calculates new use (\code{U_prime}) and make (\code{V_prime}) matrices
-#' that would be required to meet the new final demand (\code{Y_prime}).
+#' When the final demand matrix changes from **Y** to **Y_prime**,
+#' this function calculates new
+#' resource (**R_prime**),
+#' use (**U_prime**),
+#' feed (**U_feed**),
+#' energy industry own use (**U_eiou**),
+#' ratio (**r_eiou**),
+#' and make (**V_prime**) matrices
+#' that would be required to meet the new final demand (**Y_prime**).
 #'
-#' Note that inputs \code{L_ixp}, \code{L_pxp},
-#' \code{Z}, and \code{D} can be
-#' conveniently calculated by the function \code{\link{calc_io_mats}}.
+#' Note that inputs **L_ixp**, **L_pxp**,
+#' **Z**, and **D** can be
+#' conveniently calculated by the function `calc_io_mats()`.
 #'
-#' Internally, this function uses \code{\link[matsindf]{matsindf_apply}},
+#' Internally, this function uses `matsindf::matsindf_apply()`,
 #' and documentation assumes that
-#' \code{.sutmats} is not \code{NULL} and is a data frame.
-#' If \code{.sutmats} is present, output is a data frame with columns named by string values of output arguments, and
-#' input arguments should be character strings that name columns in \code{.sutmats}.
-#' If \code{.sutmats} is \code{NULL} (the default), output is a list with items named by output strings,
+#' `.sutmats` is not `NULL` and is a data frame.
+#' But `.sutmats` can also be a named list of matrices.
+#' Or matrices can be supplied individually to the `Y_prime`, `L_ixp`,
+#' `L_pxp`, `Z`, `D`, `h`, and `O` arguments.
+#' If `.sutmats` is present, output is a data frame with columns named by string values of output arguments, and
+#' input arguments should be character strings that name columns in `.sutmats`.
+#' If `.sutmats` is `NULL` (the default), output is a list with items named by output strings,
 #' and input arguments should be single matrices or vectors.
 #'
-#' @param .sutmats a data frame of supply-use table matrices with matrices arranged in columns.
-#' @param R a \code{R} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{R}".
-#' @param Y_prime a new final demand matrix or name of a column in \code{.sutmats} containing same. Default is "\code{Y_prime}".
-#' @param L_ixp an \code{L_ixp} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{L_ixp}".
-#' @param L_pxp an \code{L_pxp} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{L_pxp}".
-#' @param Z a \code{Z} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{Z}".
-#' @param D a \code{D} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{D}".
-#' @param O a \code{O} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{O}".
+#' @param .sutmats A data frame of supply-use table matrices with matrices arranged in columns.
+#' @param suffix The suffix for new matrices. Default is "_prime".
+#' @param R A \code{R} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{R}".
+#' @param Y_prime A new final demand matrix or name of a column in \code{.sutmats} containing same. Default is "\code{Y_prime}".
+#' @param L_ixp An \code{L_ixp} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{L_ixp}".
+#' @param L_pxp An \code{L_pxp} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{L_pxp}".
+#' @param Z A \code{Z} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{Z}".
+#' @param D A \code{D} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{D}".
+#' @param O A \code{O} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{O}".
 #' @param r The name of the `r` vector.
 #'          Default is "r".
 #' @param h The name of the `h` vector.
 #'          Default is "h".
-#' @param U_prime the name for new \code{U} matrices. Default is "\code{U_prime}".
-#' @param V_prime the name for new \code{V} matrices. Default is "\code{V_prime}".
-#' @param W_prime the name for new \code{W} matrices. Default is "\code{W_prime}".
-#' @param R_prime the name for new \code{R} matrices. Default is "\code{R_prime}".
+#' @param U_prime The name for new `U` matrices. Default is "U_prime".
+#' @param V_prime The name for new `V` matrices. Default is "V_prime".
+#' @param W_prime The name for new `W` matrices. Default is "W_prime".
+#' @param R_prime The name for new `R` matrices. Default is "R_prime".
 #'
-#' @return a list or data frame with \code{U_prime} and \code{V_prime} matrices
+#' @return A list or data frame with `R_prime`, `U_prime`, and `V_prime` matrices.
 #'
 #' @export
 #'
@@ -58,6 +68,7 @@
 #'   # Should give U_prime and V_prime matrices that are double the existing U and V matrices
 #'   new_Y()
 new_Y <- function(.sutmats = NULL,
+                  suffix = "_prime",
                   # Input names
                   Y_prime = "Y_prime", L_ixp = "L_ixp", L_pxp = "L_pxp",
                   Z = "Z", D = "D", R = "R", r = "r", h = "h", O = "O",
