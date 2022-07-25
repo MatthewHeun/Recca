@@ -117,5 +117,7 @@ p_industries <- c("Resources - Crude", "Resources - NG")
 fd_sectors <- c("Residential", "Transport", "Oil fields")
 UKEnergy2000mats \%>\%
   tidyr::spread(key = matrix.name, value = matrix) \%>\%
-  Recca::footprint_aggregates(p_industries = p_industries, fd_sectors = fd_sectors)
+  Recca::footprint_aggregates(p_industries = p_industries,
+                              fd_sectors = fd_sectors,
+                              unnest = FALSE)
 }

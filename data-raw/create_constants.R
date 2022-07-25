@@ -28,8 +28,7 @@ psut_cols <- list(resources = "R",
                   sector = "Sector",
                   energy_type = "Energy.type")
 usethis::use_data(psut_cols, overwrite = TRUE)
-
-
+ag
 
 #
 # Default names for columns in aggregate data frames

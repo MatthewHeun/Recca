@@ -633,7 +633,9 @@ grouped_aggregates <- function(.sut_data = NULL,
 #' fd_sectors <- c("Residential", "Transport", "Oil fields")
 #' UKEnergy2000mats %>%
 #'   tidyr::spread(key = matrix.name, value = matrix) %>%
-#'   Recca::footprint_aggregates(p_industries = p_industries, fd_sectors = fd_sectors)
+#'   Recca::footprint_aggregates(p_industries = p_industries,
+#'                               fd_sectors = fd_sectors,
+#'                               unnest = FALSE)
 footprint_aggregates <- function(.sut_data = NULL,
                                  p_industries,
                                  fd_sectors,
@@ -750,13 +752,6 @@ footprint_aggregates <- function(.sut_data = NULL,
       # Transpose to pull EX.fd_net and EX.fd_gross to the top level with products and sectors beneath.
       purrr::transpose()
 
-    # # Combine the primary and final demand aggregates into a list and return
-    # list(p_aggregates[aggregate_primary],
-    #      fd_aggregates[net_aggregate_demand],
-    #      fd_aggregates[gross_aggregate_demand]) %>%
-    #   # Unlist one level to get the correct names before returning.
-    #   unlist(recursive = FALSE)
-
     # Create data frames that can be later unnested if needed.
     p_aggregates_df <- tibble::tibble(
       "{product_sector}" := p_aggregates[[aggregate_primary]] %>% names(),
@@ -771,12 +766,13 @@ footprint_aggregates <- function(.sut_data = NULL,
       "{gross_aggregate_demand}" := fd_aggregates[[gross_aggregate_demand]] %>% unname() %>% unlist()
     )
 
-    # Join the data frames
+    # Join the data frames by the product_sector column.
     primary_net_gross <- p_aggregates_df %>%
       dplyr::full_join(gross_fd_aggregates_df, by = product_sector) %>%
       dplyr::full_join(net_fd_aggregates_df, by = product_sector)
 
-    # Make a list and return it
+    # Make a list and return it so that the data frame is nested
+    # inside the column of the data frame.
     list(primary_net_gross) %>%
       magrittr::set_names(aggregates)
   }
@@ -790,11 +786,12 @@ footprint_aggregates <- function(.sut_data = NULL,
                                   Y_mat = Y,
                                   S_units_mat = S_units)
 
-  # If .sut_data is a data frame, expand if desired.
+  # If .sut_data is a data frame, unnest if desired.
   if (is.data.frame(.sut_data) & unnest) {
     out <- out %>%
       tidyr::unnest(cols = aggregates)
   }
+  return(out)
 }
 
 
