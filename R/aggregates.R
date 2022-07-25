@@ -614,6 +614,8 @@ grouped_aggregates <- function(.sut_data = NULL,
 #' @param unnest A boolean that tells whether to unnest the outgoing data.
 #'               When `TRUE`, creates a new column called `product_sector`.
 #'               Default is `TRUE`.
+#' @param aggregates The name of the output column that contains data frames of aggregates.
+#'                   Default is `Recca::psut_cols$aggregates`.
 #' @param product_sector The name of the output column that contains the product, industry, or sector
 #'                       for which footprint aggregates are given.
 #'                       Default is `Recca::aggregate_cols$product_sector`.
@@ -646,6 +648,7 @@ footprint_aggregates <- function(.sut_data = NULL,
                                  S_units = Recca::psut_cols$S_units,
                                  by = c("Total", "Product", "Sector"),
                                  # Output names
+                                 aggregates = Recca::aggregate_cols$aggregates,
                                  product_sector = Recca::aggregate_cols$product_sector,
                                  aggregate_primary = Recca::aggregate_cols$aggregate_primary,
                                  net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
@@ -747,25 +750,51 @@ footprint_aggregates <- function(.sut_data = NULL,
       # Transpose to pull EX.fd_net and EX.fd_gross to the top level with products and sectors beneath.
       purrr::transpose()
 
-    # Combine the primary and final demand aggregates into a list and return
-    list(p_aggregates[aggregate_primary],
-         fd_aggregates[net_aggregate_demand],
-         fd_aggregates[gross_aggregate_demand]) %>%
-      # Unlist one level to get the correct names before returning.
-      unlist(recursive = FALSE)
+    # # Combine the primary and final demand aggregates into a list and return
+    # list(p_aggregates[aggregate_primary],
+    #      fd_aggregates[net_aggregate_demand],
+    #      fd_aggregates[gross_aggregate_demand]) %>%
+    #   # Unlist one level to get the correct names before returning.
+    #   unlist(recursive = FALSE)
+
+    # Create data frames that can be later unnested if needed.
+    p_aggregates_df <- tibble::tibble(
+      "{product_sector}" := p_aggregates[[aggregate_primary]] %>% names(),
+      "{aggregate_primary}" := p_aggregates[[aggregate_primary]] %>% unname() %>% unlist()
+    )
+    net_fd_aggregates_df <- tibble::tibble(
+      "{product_sector}" := fd_aggregates[[net_aggregate_demand]] %>% names(),
+      "{net_aggregate_demand}" := fd_aggregates[[net_aggregate_demand]] %>% unname() %>% unlist()
+    )
+    gross_fd_aggregates_df <- tibble::tibble(
+      "{product_sector}" := fd_aggregates[[gross_aggregate_demand]] %>% names(),
+      "{gross_aggregate_demand}" := fd_aggregates[[gross_aggregate_demand]] %>% unname() %>% unlist()
+    )
+
+    # Join the data frames
+    primary_net_gross <- p_aggregates_df %>%
+      dplyr::full_join(gross_fd_aggregates_df, by = product_sector) %>%
+      dplyr::full_join(net_fd_aggregates_df, by = product_sector)
+
+    # Make a list and return it
+    list(primary_net_gross) %>%
+      magrittr::set_names(aggregates)
   }
 
-  matsindf::matsindf_apply(.sut_data,
-                           FUN = footprint_func,
-                           R_mat = R,
-                           U_mat = U,
-                           U_feed_mat = U_feed,
-                           V_mat = V,
-                           Y_mat = Y,
-                           S_units_mat = S_units)
+  out <- matsindf::matsindf_apply(.sut_data,
+                                  FUN = footprint_func,
+                                  R_mat = R,
+                                  U_mat = U,
+                                  U_feed_mat = U_feed,
+                                  V_mat = V,
+                                  Y_mat = Y,
+                                  S_units_mat = S_units)
 
   # If .sut_data is a data frame, expand if desired.
-
+  if (is.data.frame(.sut_data) & unnest) {
+    out <- out %>%
+      tidyr::unnest(cols = aggregates)
+  }
 }
 
 

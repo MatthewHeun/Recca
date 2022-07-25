@@ -42,7 +42,8 @@ aggregate_cols <- list(aggregate_primary = "EX.p",
                        gross_aggregate_demand = "EX.fd_gross",
                        region = "Region",
                        aggregated_suffix = "_aggregated",
-                       product_sector = "Product.Industry.Sector")
+                       product_sector = "Product.Industry.Sector",
+                       aggregates = "Aggregates")
 usethis::use_data(aggregate_cols, overwrite = TRUE)
 
 

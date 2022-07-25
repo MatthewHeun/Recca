@@ -5,7 +5,7 @@
 \alias{aggregate_cols}
 \title{Aggregate data frame column names}
 \format{
-A string list with 8 entries.
+A string list with 9 entries.
 \describe{
 \item{aggregate_primary}{The name of a column in a wide-by-matrices data frame containing aggregates of primary energy.}
 \item{net_aggregate_primary}{The name of a column in a wide-by-matrices data frame containing aggregates of net primary energy.}
@@ -14,6 +14,8 @@ A string list with 8 entries.
 \item{gross_aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of gross final demand energy (including energy industry own use), regardless of whether the last stage is final energy or useful energy.}
 \item{region}{The name of a column in a wide-by-matrices data frame containing regions.}
 \item{aggregated_suffix}{The suffix for column names containing aggregated matrices.}
+\item{product_sector}{The name of a column containing names of products, industries, or sectors. Default is "Product.Industry.Sector".}
+\item{aggregates}{The name of a column containing aggregates. Default is "Aggregates".}
 }
 }
 \usage{
