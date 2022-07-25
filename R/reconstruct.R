@@ -87,7 +87,7 @@ new_Y <- function(.sutmats = NULL,
         U_prime_mat
       )
 
-      y_prime_minus_W_i <- y_prime_vec %>%
+      y_prime_minus_W_prime_i <- y_prime_vec %>%
         matsbyname::difference_byname(
           matsbyname::rowsums_byname(W_prime_mat)
         )
@@ -95,7 +95,7 @@ new_Y <- function(.sutmats = NULL,
       R_prime_mat <- matsbyname::matrixproduct_byname(
         O_mat,
         matsbyname::transpose_byname(
-          matsbyname::hatize_byname(y_prime_minus_W_i, keep = "rownames")
+          matsbyname::hatize_byname(y_prime_minus_W_prime_i, keep = "rownames")
         )
       )
     }
