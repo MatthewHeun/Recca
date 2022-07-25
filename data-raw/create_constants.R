@@ -28,7 +28,7 @@ psut_cols <- list(resources = "R",
                   sector = "Sector",
                   energy_type = "Energy.type")
 usethis::use_data(psut_cols, overwrite = TRUE)
-ag
+
 
 #
 # Default names for columns in aggregate data frames
@@ -42,7 +42,7 @@ aggregate_cols <- list(aggregate_primary = "EX.p",
                        region = "Region",
                        aggregated_suffix = "_aggregated",
                        product_sector = "Product.Industry.Sector",
-                       aggregates = "Aggregates")
+                       footprint_aggregates = "Footprint.Aggregates")
 usethis::use_data(aggregate_cols, overwrite = TRUE)
 
 

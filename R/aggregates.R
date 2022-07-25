@@ -614,8 +614,8 @@ grouped_aggregates <- function(.sut_data = NULL,
 #' @param unnest A boolean that tells whether to unnest the outgoing data.
 #'               When `TRUE`, creates a new column called `product_sector`.
 #'               Default is `TRUE`.
-#' @param aggregates The name of the output column that contains data frames of aggregates.
-#'                   Default is `Recca::psut_cols$aggregates`.
+#' @param footprint_aggregates The name of the output column that contains data frames of footprintaggregates.
+#'                             Default is `Recca::psut_cols$footprint_aggregates`.
 #' @param product_sector The name of the output column that contains the product, industry, or sector
 #'                       for which footprint aggregates are given.
 #'                       Default is `Recca::aggregate_cols$product_sector`.
@@ -650,7 +650,7 @@ footprint_aggregates <- function(.sut_data = NULL,
                                  S_units = Recca::psut_cols$S_units,
                                  by = c("Total", "Product", "Sector"),
                                  # Output names
-                                 aggregates = Recca::aggregate_cols$aggregates,
+                                 footprint_aggregates = Recca::aggregate_cols$aggregates,
                                  product_sector = Recca::aggregate_cols$product_sector,
                                  aggregate_primary = Recca::aggregate_cols$aggregate_primary,
                                  net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
@@ -774,7 +774,7 @@ footprint_aggregates <- function(.sut_data = NULL,
     # Make a list and return it so that the data frame is nested
     # inside the column of the data frame.
     list(primary_net_gross) %>%
-      magrittr::set_names(aggregates)
+      magrittr::set_names(footprint_aggregates)
   }
 
   out <- matsindf::matsindf_apply(.sut_data,
@@ -789,7 +789,7 @@ footprint_aggregates <- function(.sut_data = NULL,
   # If .sut_data is a data frame, unnest if desired.
   if (is.data.frame(.sut_data) & unnest) {
     out <- out %>%
-      tidyr::unnest(cols = aggregates)
+      tidyr::unnest(cols = footprint_aggregates)
   }
   return(out)
 }

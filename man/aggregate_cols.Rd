@@ -15,7 +15,7 @@ A string list with 9 entries.
 \item{region}{The name of a column in a wide-by-matrices data frame containing regions.}
 \item{aggregated_suffix}{The suffix for column names containing aggregated matrices.}
 \item{product_sector}{The name of a column containing names of products, industries, or sectors. Default is "Product.Industry.Sector".}
-\item{aggregates}{The name of a column containing aggregates. Default is "Aggregates".}
+\item{footprint_aggregates}{The name of a column containing footprint aggregates. Default is "Footprint.Aggregates".}
 }
 }
 \usage{
