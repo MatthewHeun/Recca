@@ -1,5 +1,5 @@
 
-test_that("reconstructing U, V, W, and R from single matrices works as expected", {
+test_that("reconstructing R, U, and V, from single matrices works as expected", {
 
   alliomats <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
@@ -13,18 +13,14 @@ test_that("reconstructing U, V, W, and R from single matrices works as expected"
                 L_pxp = alliomats$L_pxp[[i]],
                 Z = alliomats$Z[[i]],
                 D = alliomats$D[[i]],
-                R = alliomats$R[[i]],
-                r = alliomats$r[[i]],
-                O = alliomats$O[[i]],
-                h = alliomats$h[[i]])
+                O = alliomats$O[[i]])
+    expect_equal(UV$R_prime, allUV$R_prime[[i]])
     expect_equal(UV$U_prime, allUV$U_prime[[i]])
     expect_equal(UV$V_prime, allUV$V_prime[[i]])
-    expect_equal(UV$W_prime, allUV$W_prime[[i]])
-    expect_equal(UV$R_prime, allUV$R_prime[[i]])
   }
 })
 
-test_that("reconstructing U, V, W, and R from a new Y matrix works as expected", {
+test_that("reconstructing R, U, and V from a new Y matrix works as expected", {
   # Try with Y_prime <- Y, thereby simply trying to duplicate the original U and V matrices
   Reconstructed <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
@@ -36,20 +32,17 @@ test_that("reconstructing U, V, W, and R from a new Y matrix works as expected",
     Recca::new_Y() %>%
     dplyr::mutate(
       # Take the difference between U_prime and U and V_prime and V
+      R_diff = matsbyname::difference_byname(R_prime, R),
       U_diff = matsbyname::difference_byname(U_prime, U),
       V_diff = matsbyname::difference_byname(V_prime, V),
-      W_diff = matsbyname::difference_byname(W_prime, W),
-      R_diff = matsbyname::difference_byname(R_prime, R),
       # The differences should be the 0 matrix, within tolerance
+      ROK = matsbyname::iszero_byname(R_diff, tol = 5e-5),
       UOK = matsbyname::iszero_byname(U_diff, tol = 5e-5),
-      VOK = matsbyname::iszero_byname(V_diff, tol = 5e-5),
-      WOK = matsbyname::iszero_byname(W_diff, tol = 5e-5),
-      ROK = matsbyname::iszero_byname(R_diff, tol = 5e-5)
+      VOK = matsbyname::iszero_byname(V_diff, tol = 5e-5)
     )
+  expect_true(all(as.logical(Reconstructed$ROK)))
   expect_true(all(as.logical(Reconstructed$UOK)))
   expect_true(all(as.logical(Reconstructed$VOK)))
-  expect_true(all(as.logical(Reconstructed$WOK)))
-  expect_true(all(as.logical(Reconstructed$ROK)))
 
   # Try a list of new Y matrices, each of which contains only the final demand for residential lighting.
   Y_prime_finalE <- matrix(6000, nrow = 1, ncol = 1, dimnames = list("Elect - Grid", "Residential")) %>%
@@ -62,13 +55,13 @@ test_that("reconstructing U, V, W, and R from a new Y matrix works as expected",
     matsbyname::setrowtype("Product") %>% matsbyname::setcoltype("Industry")
 
   Reconstructed_Residential <- Reconstructed %>%
-    dplyr::select(-Y_prime, -U_prime, -V_prime, -W_prime, -R_prime, -U_diff, -V_diff, -W_diff, -R_diff, -UOK, -VOK, -WOK, -ROK) %>%
+    dplyr::select(-Y_prime, -R_prime, -U_prime, -V_prime, -R_diff, -U_diff, -V_diff, -ROK, -UOK, -VOK) %>%
     dplyr::mutate(
       Y_prime = list(Y_prime_finalE, Y_prime_servicesE, Y_prime_usefulE, Y_prime_servicesX)
     ) %>%
     new_Y() %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, U_prime, V_prime, R_prime) %>%
-    tidyr::gather(key = "matnames", value = "matvals", U_prime, V_prime, R_prime) %>%
+    dplyr::select(Country, Year, Energy.type, Last.stage, R_prime, U_prime, V_prime) %>%
+    tidyr::gather(key = "matnames", value = "matvals", R_prime, U_prime, V_prime) %>%
     matsindf::expand_to_tidy(drop = 0)
 
   expect_equivalent(Reconstructed_Residential %>%
@@ -106,7 +99,7 @@ test_that("reconstructing U, V, W, and R from a new Y matrix works as expected",
   # Double Y matrix
   Reconstructed_Double_Y <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, U, U_feed, V, Y, r_EIOU, S_units, R) %>%
+    dplyr::select(Country, Year, Energy.type, Last.stage, R, U, U_feed, V, Y, r_EIOU, S_units) %>%
     calc_io_mats() %>%
     dplyr::mutate(
       Y_prime = matsbyname::hadamardproduct_byname(Y, 2)
@@ -141,26 +134,22 @@ test_that("reconstructing U, V, W, and R from a new Y matrix works as expected",
   # Test all matrices:
   res <- Reconstructed_Double_Y %>%
     dplyr::mutate(
+      R_double = matsbyname::hadamardproduct_byname(R, 2),
       U_double = matsbyname::hadamardproduct_byname(U, 2),
       V_double = matsbyname::hadamardproduct_byname(V, 2),
-      W_double = matsbyname::hadamardproduct_byname(W, 2),
-      R_double = matsbyname::hadamardproduct_byname(R, 2),
       # Take the difference between primes and doubles
+      R_diff = matsbyname::difference_byname(R_double, R_prime),
       U_diff = matsbyname::difference_byname(U_double, U_prime),
       V_diff = matsbyname::difference_byname(V_double, V_prime),
-      W_diff = matsbyname::difference_byname(W_double, W_prime),
-      R_diff = matsbyname::difference_byname(R_double, R_prime),
       # Check if it is the 0 matrix
+      ROK = matsbyname::iszero_byname(R_diff, tol = 1e-3),
       UOK = matsbyname::iszero_byname(U_diff, tol = 1e-3),
-      VOK = matsbyname::iszero_byname(V_diff, tol = 1e-3),
-      WOK = matsbyname::iszero_byname(W_diff, tol = 1e-3),
-      ROK = matsbyname::iszero_byname(W_diff, tol = 1e-3),
+      VOK = matsbyname::iszero_byname(V_diff, tol = 1e-3)
     )
 
+  expect_true(all(as.logical(res$ROK)))
   expect_true(all(as.logical(res$UOK)))
   expect_true(all(as.logical(res$VOK)))
-  expect_true(all(as.logical(res$WOK)))
-  expect_true(all(as.logical(res$ROK)))
 
 
   # Test to define a NULL new Y matrix
@@ -171,7 +160,7 @@ test_that("reconstructing U, V, W, and R from a new Y matrix works as expected",
     dplyr::mutate(
       Y_prime = matsbyname::select_cols_byname(
         Y,
-        "a_pattern_that_does_not_exist_anywgere"
+        "a_pattern_that_does_not_exist_anywhere"
       )
     ) %>%
     Recca::new_Y(
@@ -182,12 +171,10 @@ test_that("reconstructing U, V, W, and R from a new Y matrix works as expected",
     dplyr::filter(! is.null(R_prime))
 
   expect_equal(Reconstructed_NULL$Y_prime[[1]], NULL)
+  expect_equal(Reconstructed_NULL$R_prime[[1]], NULL)
   expect_equal(Reconstructed_NULL$U_prime[[1]], NULL)
   expect_equal(Reconstructed_NULL$V_prime[[1]], NULL)
-  expect_equal(Reconstructed_NULL$W_prime[[1]], NULL)
-  expect_equal(Reconstructed_NULL$R_prime[[1]], NULL)
   expect_equal(Reconstructed_NULL$V_prime[[2]], NULL)
-  expect_equal(Reconstructed_NULL$W_prime[[3]], NULL)
   expect_equal(Reconstructed_NULL$R_prime[[4]], NULL)
 })
 

@@ -6,57 +6,35 @@
 \usage{
 new_Y(
   .sutmats = NULL,
-  suffix = "_prime",
   Y_prime = "Y_prime",
   L_ixp = "L_ixp",
   L_pxp = "L_pxp",
   Z = "Z",
   D = "D",
-  R = "R",
-  r = "r",
-  h = "h",
   O = "O",
+  R_prime = "R_prime",
   U_prime = "U_prime",
-  V_prime = "V_prime",
-  W_prime = "W_prime",
-  R_prime = "R_prime"
+  U_feed_prime = "U_feed_prime",
+  U_eiou_prime = "U_eiou_prime",
+  r_eiou_prime = "r_eiou_prime",
+  V_prime = "V_prime"
 )
 }
 \arguments{
 \item{.sutmats}{A data frame of supply-use table matrices with matrices arranged in columns.}
 
-\item{suffix}{The suffix for new matrices. Default is "_prime".}
+\item{Y_prime}{A new final demand matrix or name of a column in \code{.sutmats} containing same.
+Default is "Y_prime".}
 
-\item{Y_prime}{A new final demand matrix or name of a column in \code{.sutmats} containing same. Default is "\code{Y_prime}".}
+\item{L_ixp, L_pxp, Z, D, O}{Input matrices that describe the structure of the energy conversion chain.
+Values can be string names (the default) for columns in a data frame \code{.sutmats}
+or names of items in a list \code{.sutmats}}
 
-\item{L_ixp}{An \code{L_ixp} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{L_ixp}".}
-
-\item{L_pxp}{An \code{L_pxp} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{L_pxp}".}
-
-\item{Z}{A \code{Z} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{Z}".}
-
-\item{D}{A \code{D} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{D}".}
-
-\item{R}{A \code{R} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{R}".}
-
-\item{r}{The name of the \code{r} vector.
-Default is "r".}
-
-\item{h}{The name of the \code{h} vector.
-Default is "h".}
-
-\item{O}{A \code{O} matrix or name of a column in \code{.sutmats} containing same. Default is "\code{O}".}
-
-\item{U_prime}{The name for new \code{U} matrices. Default is "U_prime".}
-
-\item{V_prime}{The name for new \code{V} matrices. Default is "V_prime".}
-
-\item{W_prime}{The name for new \code{W} matrices. Default is "W_prime".}
-
-\item{R_prime}{The name for new \code{R} matrices. Default is "R_prime".}
+\item{R_prime.U_prime, U_feed_prime, U_eiou_prime, r_eiou_prime, V_prime}{The new names for new matrices.
+Defaults are each argument name as a string.}
 }
 \value{
-A list or data frame with \code{R_prime}, \code{U_prime}, and \code{V_prime} matrices.
+A list or data frame containing \strong{R_prime}, \strong{U_prime}, \strong{U_feed}, \strong{U_eiou}, \strong{r_eiou}, and \strong{V_prime} matrices.
 }
 \description{
 When the final demand matrix changes from \strong{Y} to \strong{Y_prime},
@@ -78,8 +56,8 @@ Internally, this function uses \code{matsindf::matsindf_apply()},
 and documentation assumes that
 \code{.sutmats} is not \code{NULL} and is a data frame.
 But \code{.sutmats} can also be a named list of matrices.
-Or matrices can be supplied individually to the \code{Y_prime}, \code{L_ixp},
-\code{L_pxp}, \code{Z}, \code{D}, \code{h}, and \code{O} arguments.
+Or matrices can be supplied individually to the
+\code{Y_prime}, \code{L_ixp}, \code{L_pxp}, \code{Z}, \code{D}, and \code{O} arguments.
 If \code{.sutmats} is present, output is a data frame with columns named by string values of output arguments, and
 input arguments should be character strings that name columns in \code{.sutmats}.
 If \code{.sutmats} is \code{NULL} (the default), output is a list with items named by output strings,
