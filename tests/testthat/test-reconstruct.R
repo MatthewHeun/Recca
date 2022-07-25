@@ -45,7 +45,7 @@ test_that("reconstructing R, U, and V from a new Y matrix works as expected", {
   expect_true(all(as.logical(Reconstructed$UOK)))
   expect_true(all(as.logical(Reconstructed$VOK)))
 
-  # Try a list of new Y matrices, each of which contains only the final demand for residential lighting.
+  # Try a list of new Y matrices, each of which contains only final demand for residential lighting.
   Y_prime_finalE <- matrix(6000, nrow = 1, ncol = 1, dimnames = list("Elect - Grid", "Residential")) %>%
     matsbyname::setrowtype("Product") %>% matsbyname::setcoltype("Industry")
   Y_prime_usefulE <- matrix(1200, nrow = 1, ncol = 1, dimnames = list("Light", "Residential")) %>%
@@ -56,7 +56,7 @@ test_that("reconstructing R, U, and V from a new Y matrix works as expected", {
     matsbyname::setrowtype("Product") %>% matsbyname::setcoltype("Industry")
 
   Reconstructed_Residential <- Reconstructed %>%
-    dplyr::select(-Y_prime, -R_prime, -U_prime, -V_prime, -R_diff, -U_diff, -V_diff, -ROK, -UOK, -VOK) %>%
+    dplyr::select(-Y_prime, -R_prime, -U_prime, -U_feed_prime, -U_eiou_prime, -r_eiou_prime, -V_prime, -R_diff, -U_diff, -V_diff, -ROK, -UOK, -VOK) %>%
     dplyr::mutate(
       Y_prime = list(Y_prime_finalE, Y_prime_servicesE, Y_prime_usefulE, Y_prime_servicesX)
     ) %>%

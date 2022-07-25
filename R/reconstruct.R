@@ -115,13 +115,17 @@ new_Y <- function(.sutmats = NULL,
       )
     }
 
-    list(R_prime_mat, U_prime_mat, V_prime_mat) %>%
-      magrittr::set_names(c(R_prime, U_prime, V_prime))
+    list(R_prime_mat,
+         U_prime_mat, U_feed_prime_mat, U_eiou_prime_mat, r_eiou_prime_mat,
+         V_prime_mat) %>%
+      magrittr::set_names(c(R_prime,
+                            U_prime, U_feed_prime, U_eiou_prime, r_eiou_prime,
+                            V_prime))
   }
 
   matsindf::matsindf_apply(.sutmats, FUN = new_Y_func,
-                 Y_prime_mat = Y_prime, L_ixp_mat = L_ixp, L_pxp_mat = L_pxp,
-                 Z_mat = Z, Z_feed_mat = Z_feed, D_mat = D, O_mat = O)
+                           Y_prime_mat = Y_prime, L_ixp_mat = L_ixp, L_pxp_mat = L_pxp,
+                           Z_mat = Z, Z_feed_mat = Z_feed, D_mat = D, O_mat = O)
 }
 
 
