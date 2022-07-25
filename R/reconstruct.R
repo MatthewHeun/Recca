@@ -25,7 +25,7 @@
 #' `.sutmats` is not `NULL` and is a data frame.
 #' But `.sutmats` can also be a named list of matrices.
 #' Or matrices can be supplied individually to the
-#' `Y_prime`, `L_ixp`, `L_pxp`, `Z`, `D`, and `O` arguments.
+#' `Y_prime`, `L_ixp`, `L_pxp`, `Z`, `Z_feed`, `D`, and `O` arguments.
 #' If `.sutmats` is present, output is a data frame with columns named by string values of output arguments, and
 #' input arguments should be character strings that name columns in `.sutmats`.
 #' If `.sutmats` is `NULL` (the default), output is a list with items named by output strings,
@@ -34,9 +34,9 @@
 #' @param .sutmats A data frame of supply-use table matrices with matrices arranged in columns.
 #' @param Y_prime A new final demand matrix or name of a column in `.sutmats` containing same.
 #'                Default is "Y_prime".
-#' @param L_ixp,L_pxp,Z,D,O Input matrices that describe the structure of the energy conversion chain.
-#'                          Values can be string names (the default) for columns in a data frame `.sutmats`
-#'                          or names of items in a list `.sutmats`
+#' @param L_ixp,L_pxp,Z,Z_feed,D,O Input matrices that describe the structure of the energy conversion chain.
+#'                                 Values can be string names (the default) for columns in a data frame `.sutmats`
+#'                                 or names of items in a list `.sutmats`
 #' @param R_prime.U_prime,U_feed_prime,U_eiou_prime,r_eiou_prime,V_prime The new names for new matrices.
 #'                                                                       Defaults are each argument name as a string.
 #'
@@ -61,20 +61,22 @@
 new_Y <- function(.sutmats = NULL,
                   # Input names
                   Y_prime = "Y_prime", L_ixp = "L_ixp", L_pxp = "L_pxp",
-                  Z = "Z", D = "D", O = "O",
+                  Z = "Z", Z_feed = "Z_feed", D = "D", O = "O",
                   # Output names
                   R_prime = "R_prime",
                   U_prime = "U_prime", U_feed_prime = "U_feed_prime",
                   U_eiou_prime = "U_eiou_prime", r_eiou_prime = "r_eiou_prime",
                   V_prime = "V_prime"){
 
-  new_Y_func <- function(Y_prime_mat, L_ixp_mat, L_pxp_mat, Z_mat, D_mat, O_mat){
+  new_Y_func <- function(Y_prime_mat, L_ixp_mat, L_pxp_mat, Z_mat, Z_feed_mat, D_mat, O_mat){
 
     if (is.null(Y_prime_mat)){
-      U_prime_mat <- NULL
-      V_prime_mat <- NULL
-      W_prime_mat <- NULL
       R_prime_mat <- NULL
+      U_prime_mat <- NULL
+      U_feed_prime_mat <- NULL
+      U_eiou_prime_mat <- NULL
+      r_eiou_prime_mat <- NULL
+      V_prime_mat <- NULL
     } else {
       y_prime_vec <- matsbyname::rowsums_byname(Y_prime_mat)
 
@@ -82,7 +84,16 @@ new_Y <- function(.sutmats = NULL,
 
       q_prime_vec <- matsbyname::matrixproduct_byname(L_pxp_mat, y_prime_vec)
 
-      U_prime_mat <- matsbyname::matrixproduct_byname(Z_mat, matsbyname::hatize_byname(g_prime_vec, keep = "rownames"))
+      g_prime_hat_vec <- matsbyname::hatize_byname(g_prime_vec, keep = "rownames")
+
+      U_prime_mat <- matsbyname::matrixproduct_byname(Z_mat, g_prime_hat_vec)
+
+      U_feed_prime_mat <- matsbyname::matrixproduct_byname(Z_feed_mat, g_prime_hat_vec)
+
+      U_eiou_prime_mat <- matsbyname::difference_byname(U_prime_mat, U_feed_prime_mat)
+
+      r_eiou_prime_mat <- matsbyname::quotient_byname(U_eiou_prime_mat, U_prime_mat) %>%
+        matsbyname::replaceNaN_byname(val = 0)
 
       V_prime_mat <- matsbyname::matrixproduct_byname(D_mat, matsbyname::hatize_byname(q_prime_vec, keep = "rownames"))
 
@@ -110,7 +121,7 @@ new_Y <- function(.sutmats = NULL,
 
   matsindf::matsindf_apply(.sutmats, FUN = new_Y_func,
                  Y_prime_mat = Y_prime, L_ixp_mat = L_ixp, L_pxp_mat = L_pxp,
-                 Z_mat = Z, D_mat = D, O_mat = O)
+                 Z_mat = Z, Z_feed_mat = Z_feed, D_mat = D, O_mat = O)
 }
 
 

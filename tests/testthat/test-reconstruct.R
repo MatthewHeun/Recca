@@ -1,4 +1,3 @@
-
 test_that("reconstructing R, U, and V, from single matrices works as expected", {
 
   alliomats <- UKEnergy2000mats %>%
@@ -12,6 +11,7 @@ test_that("reconstructing R, U, and V, from single matrices works as expected", 
                 L_ixp = alliomats$L_ixp[[i]],
                 L_pxp = alliomats$L_pxp[[i]],
                 Z = alliomats$Z[[i]],
+                Z_feed = alliomats$Z_feed[[i]],
                 D = alliomats$D[[i]],
                 O = alliomats$O[[i]])
     expect_equal(UV$R_prime, allUV$R_prime[[i]])
@@ -19,6 +19,7 @@ test_that("reconstructing R, U, and V, from single matrices works as expected", 
     expect_equal(UV$V_prime, allUV$V_prime[[i]])
   }
 })
+
 
 test_that("reconstructing R, U, and V from a new Y matrix works as expected", {
   # Try with Y_prime <- Y, thereby simply trying to duplicate the original U and V matrices
@@ -179,8 +180,6 @@ test_that("reconstructing R, U, and V from a new Y matrix works as expected", {
 })
 
 
-
-
 test_that("new_k_ps() works as expected", {
   perfectsub_mats <- PerfectSubmats %>%
     tidyr::spread(key = "matrix.name", value = "matrix")
@@ -330,7 +329,6 @@ test_that("1-industry ECC works with new_k_ps()", {
   expect_equal(prime1$V_prime["R1", "R1p"], 20)
   expect_equal(prime1$V_prime["R2", "R2p"], 0)
 })
-
 
 
 test_that("new_R_ps() works as expected", {

@@ -10,6 +10,7 @@ new_Y(
   L_ixp = "L_ixp",
   L_pxp = "L_pxp",
   Z = "Z",
+  Z_feed = "Z_feed",
   D = "D",
   O = "O",
   R_prime = "R_prime",
@@ -26,7 +27,7 @@ new_Y(
 \item{Y_prime}{A new final demand matrix or name of a column in \code{.sutmats} containing same.
 Default is "Y_prime".}
 
-\item{L_ixp, L_pxp, Z, D, O}{Input matrices that describe the structure of the energy conversion chain.
+\item{L_ixp, L_pxp, Z, Z_feed, D, O}{Input matrices that describe the structure of the energy conversion chain.
 Values can be string names (the default) for columns in a data frame \code{.sutmats}
 or names of items in a list \code{.sutmats}}
 
@@ -57,7 +58,7 @@ and documentation assumes that
 \code{.sutmats} is not \code{NULL} and is a data frame.
 But \code{.sutmats} can also be a named list of matrices.
 Or matrices can be supplied individually to the
-\code{Y_prime}, \code{L_ixp}, \code{L_pxp}, \code{Z}, \code{D}, and \code{O} arguments.
+\code{Y_prime}, \code{L_ixp}, \code{L_pxp}, \code{Z}, \code{Z_feed}, \code{D}, and \code{O} arguments.
 If \code{.sutmats} is present, output is a data frame with columns named by string values of output arguments, and
 input arguments should be character strings that name columns in \code{.sutmats}.
 If \code{.sutmats} is \code{NULL} (the default), output is a list with items named by output strings,
