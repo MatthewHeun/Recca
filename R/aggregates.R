@@ -150,7 +150,7 @@ primary_aggregates <- function(.sutdata = NULL,
 #'                     If "trailing", sectors are aggregated if any entry in `fd_sectors` matches the trailing part of a final demand sector's name.
 #'                     If "anywhere", sectors are aggregated if any entry in `fd_sectors` matches any part of a final demand sector's name.
 #'                     Default is "exact".
-#' @param U,Y,r_EIOU See `Recca::psut_cols`.
+#' @param U,U_feed,Y Input matrices. See `Recca::psut_cols`.
 #' @param by One of "Product", "Sector", or "Total" to indicate the desired aggregation:
 #'           "Product" for aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.),
 #'           "Sector" for aggregation by final demand sector (Agriculture/forestry, Domestic navigation, etc.), or
@@ -178,8 +178,8 @@ finaldemand_aggregates <- function(.sutdata = NULL,
                                    pattern_type = c("exact", "leading", "trailing", "anywhere"),
                                    # Input names
                                    U = Recca::psut_cols$U,
+                                   U_feed = Recca::psut_cols$U_feed,
                                    Y = Recca::psut_cols$Y,
-                                   r_EIOU = Recca::psut_cols$r_eiou,
                                    by = c("Total", "Product", "Sector"),
                                    # Output names
                                    net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
@@ -188,13 +188,13 @@ finaldemand_aggregates <- function(.sutdata = NULL,
   pattern_type <- match.arg(pattern_type)
   by <- match.arg(by)
 
-  fd_func <- function(U_mat, Y_mat, r_EIOU_mat){
-    U_EIOU <- matsbyname::hadamardproduct_byname(r_EIOU_mat, U_mat)
+  fd_func <- function(U_mat, U_feed_mat, Y_mat){
+    U_eiou <- matsbyname::difference_byname(U_mat, U_feed_mat)
 
     net_prelim <- Y_mat %>%
       matsbyname::select_cols_byname(retain_pattern =
                                        RCLabels::make_or_pattern(strings = fd_sectors, pattern_type = pattern_type))
-    gross_prelim <- U_EIOU %>%
+    gross_prelim <- U_eiou %>%
       matsbyname::select_cols_byname(retain_pattern =
                                        RCLabels::make_or_pattern(strings = fd_sectors, pattern_type = pattern_type))
 
@@ -229,7 +229,7 @@ finaldemand_aggregates <- function(.sutdata = NULL,
     }
     list(net, gross) %>% magrittr::set_names(c(net_aggregate_demand, gross_aggregate_demand))
   }
-  matsindf::matsindf_apply(.sutdata, FUN = fd_func, U_mat = U, Y_mat = Y, r_EIOU_mat = r_EIOU)
+  matsindf::matsindf_apply(.sutdata, FUN = fd_func, U_mat = U, U_feed_mat = U_feed, Y_mat = Y)
 }
 
 
@@ -644,18 +644,18 @@ footprint_aggregates <- function(.sut_data = NULL,
                                  .prime = "_prime",
                                  R_colname = Recca::psut_cols$R,
                                  U_colname = Recca::psut_cols$U,
-                                 V_colname = Recca::psut_cols$V,
-                                 Y_colname = Recca::psut_cols$Y,
                                  U_feed_colname = Recca::psut_cols$U_feed,
                                  U_eiou_colname = Recca::psut_cols$U_eiou,
                                  r_eiou_colname = Recca::psut_cols$r_eiou,
+                                 V_colname = Recca::psut_cols$V,
+                                 Y_colname = Recca::psut_cols$Y,
                                  R_prime_colname = paste0(R_colname, .prime),
                                  U_prime_colname = paste0(U_colname, .prime),
-                                 V_prime_colname = paste0(V_colname, .prime),
-                                 Y_prime_colname = paste0(Y_colname, .prime),
                                  U_feed_prime_colname = paste0(U_feed_colname, .prime),
                                  U_eiou_prime_colname = paste0(U_eiou_colname, .prime),
-                                 r_eiou_prime_colname = paste0(r_eiou_colname, .prime)) {
+                                 r_eiou_prime_colname = paste0(r_eiou_colname, .prime),
+                                 V_prime_colname = paste0(V_colname, .prime),
+                                 Y_prime_colname = paste0(Y_colname, .prime)) {
 
   pattern_type <- match.arg(pattern_type)
   by <- match.arg(by)
@@ -695,10 +695,15 @@ footprint_aggregates <- function(.sut_data = NULL,
           # Calculate all the new ECC matrices,
           # accepting the default names for intermediate
           # vectors and matrices.
+          # We can accept default names for L_ixp, L_pxp, Z, Z_feed, D, and O,
+          # because we didn't change those names in the call to calc_io_mates().
           # This gives the new (prime) description of the ECC.
           new_Y(Y_prime = Y_prime_colname,
                 R_prime = R_prime_colname,
                 U_prime = U_prime_colname,
+                U_feed_prime = U_feed_prime_colname,
+                U_eiou_prime = U_eiou_prime_colname,
+                r_eiou_prime = r_eiou_prime_colname,
                 V_prime = V_prime_colname)
 
     })
@@ -717,15 +722,19 @@ footprint_aggregates <- function(.sut_data = NULL,
       })
     fd_aggregates <- ecc_prime %>%
       sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_new_ecc) {
-        finaldemand_aggregates(fd_sectors = fd_sectors,
-                               U = U_prime_colname,
-                               Y = Y_prime_colname,
-                               r_EIOU = r_EIOU_prime_colname,
-                               pattern_type = pattern_type,
-                               by = by,
-                               net_aggregate_demand = net_aggregate_demand,
-                               gross_aggregate_demand = gross_aggregate_demand)
+        this_new_ecc %>%
+          finaldemand_aggregates(fd_sectors = fd_sectors,
+                                 U = U_prime_colname,
+                                 U_feed = U_feed_prime_colname,
+                                 Y = Y_prime_colname,
+                                 pattern_type = pattern_type,
+                                 by = by,
+                                 net_aggregate_demand = net_aggregate_demand,
+                                 gross_aggregate_demand = gross_aggregate_demand)
       })
+
+    # Combine the primary and final demand aggregates into a list and return
+
 
   }
 
