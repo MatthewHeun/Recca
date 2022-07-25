@@ -650,7 +650,7 @@ footprint_aggregates <- function(.sut_data = NULL,
                                  S_units = Recca::psut_cols$S_units,
                                  by = c("Total", "Product", "Sector"),
                                  # Output names
-                                 footprint_aggregates = Recca::aggregate_cols$aggregates,
+                                 footprint_aggregates = Recca::aggregate_cols$footprint_aggregates,
                                  product_sector = Recca::aggregate_cols$product_sector,
                                  aggregate_primary = Recca::aggregate_cols$aggregate_primary,
                                  net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
