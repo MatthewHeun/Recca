@@ -32,8 +32,8 @@ output: html_document
   aggregates PSUT matrices to a piece of row and column labels. 
 * New argument `add_net_gross_cols` on `primary_aggregates()` that tells
   whether to add both net and gross primary energy columns.
-  (Net and gross primary energy aggregate columns will contain identical values, 
-  but the presence of both net and gross columns may make it easier to mesh with 
+  (Net and gross primary energy aggregate columns will contain identical values,
+  but the presence of both net and gross columns may make it easier to mesh with
   results from the `finaldemand_aggregates()` function, 
   which produces net and gross columns that are different.)
 * `aggregate_regions()` now returns an empty data frame
