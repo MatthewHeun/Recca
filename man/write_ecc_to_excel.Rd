@@ -2,7 +2,7 @@
 % Please edit documentation in R/utilities.R
 \name{write_ecc_to_excel}
 \alias{write_ecc_to_excel}
-\title{Write energy conversion chain matrices in an Excel format}
+\title{Write energy conversion chain matrices in an Excel file}
 \usage{
 write_ecc_to_excel(
   .psut_data = NULL,
@@ -41,7 +41,7 @@ in the worksheets written by this function.
 Input-output matrices are obtained from \code{calc_io_mats()}.
 Default is \code{FALSE}.}
 
-\item{R, U, V, Y, r_eiou, U_eiou, U_feed}{Names of ECC matrices or actual matrices.
+\item{R, U, U_feed, U_eiou, r_eiou, V, Y, S_units}{Names of ECC matrices or actual matrices.
 See \code{Recca::psut_cols}.}
 
 \item{.wrote_mats_colname}{The name of the outgoing column
@@ -57,7 +57,7 @@ Default is a rust color.}
 \item{calculated_bg_color}{The color of cells containing calculated matrices.
 Default is gray.}
 
-\item{col_widths}{The widths of columns of mattrices.
+\item{col_widths}{The widths of columns of matrices.
 Default is \code{7} to save space.}
 }
 \value{

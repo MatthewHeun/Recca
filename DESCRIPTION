@@ -36,8 +36,7 @@ Imports:
     RCLabels,
     rlang,
     tibble,
-    tidyr, 
-    writexl
+    tidyr
 URL: https://github.com/MatthewHeun/Recca
 BugReports: https://github.com/MatthewHeun/Recca/issues
 Suggests: 

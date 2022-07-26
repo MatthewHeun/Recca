@@ -705,7 +705,7 @@ find_p_industry_names <- function(.sutdata = NULL,
 }
 
 
-#' Write energy conversion chain matrices in an Excel format
+#' Write energy conversion chain matrices in an Excel file
 #'
 #' It is often helpful to see energy conversion chain (ECC) matrices in Excel format,
 #' arranged spatially.
@@ -724,8 +724,8 @@ find_p_industry_names <- function(.sutdata = NULL,
 #'                        in the worksheets written by this function.
 #'                        Input-output matrices are obtained from `calc_io_mats()`.
 #'                        Default is `FALSE`.
-#' @param R,U,V,Y,r_eiou,U_eiou,U_feed Names of ECC matrices or actual matrices.
-#'                                     See `Recca::psut_cols`.
+#' @param R,U,U_feed,U_eiou,r_eiou,V,Y,S_units Names of ECC matrices or actual matrices.
+#'                                             See `Recca::psut_cols`.
 #' @param .wrote_mats_colname The name of the outgoing column
 #'                            that tells whether a worksheet was written successfully.
 #'                            Default is "Wrote mats".
@@ -735,7 +735,7 @@ find_p_industry_names <- function(.sutdata = NULL,
 #'                    Default is a rust color.
 #' @param calculated_bg_color The color of cells containing calculated matrices.
 #'                            Default is gray.
-#' @param col_widths The widths of columns of mattrices.
+#' @param col_widths The widths of columns of matrices.
 #'                   Default is `7` to save space.
 #'
 #' @return An unmodified version of `.psut_data` (if not `NULL`) or a list of

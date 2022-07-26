@@ -37,7 +37,7 @@
 #' @param L_ixp,L_pxp,Z,Z_feed,D,O Input matrices that describe the structure of the energy conversion chain.
 #'                                 Values can be string names (the default) for columns in a data frame `.sutmats`
 #'                                 or names of items in a list `.sutmats`
-#' @param R_prime.U_prime,U_feed_prime,U_eiou_prime,r_eiou_prime,V_prime The new names for new matrices.
+#' @param R_prime,U_prime,U_feed_prime,U_eiou_prime,r_eiou_prime,V_prime The new names for new matrices.
 #'                                                                       Defaults are each argument name as a string.
 #'
 #' @return A list or data frame containing **R_prime**, **U_prime**, **U_feed**, **U_eiou**, **r_eiou**, and **V_prime** matrices.

@@ -31,7 +31,7 @@ Default is "Y_prime".}
 Values can be string names (the default) for columns in a data frame \code{.sutmats}
 or names of items in a list \code{.sutmats}}
 
-\item{R_prime.U_prime, U_feed_prime, U_eiou_prime, r_eiou_prime, V_prime}{The new names for new matrices.
+\item{R_prime, U_prime, U_feed_prime, U_eiou_prime, r_eiou_prime, V_prime}{The new names for new matrices.
 Defaults are each argument name as a string.}
 }
 \value{

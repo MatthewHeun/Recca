@@ -9,11 +9,11 @@ despecified_aggregates(
   piece_to_keep = "noun",
   R = Recca::psut_cols$R,
   U = Recca::psut_cols$U,
+  U_feed = Recca::psut_cols$U_feed,
+  U_eiou = Recca::psut_cols$U_eiou,
+  r_eiou = Recca::psut_cols$r_eiou,
   V = Recca::psut_cols$V,
   Y = Recca::psut_cols$Y,
-  r_eiou = Recca::psut_cols$r_eiou,
-  U_eiou = Recca::psut_cols$U_eiou,
-  U_feed = Recca::psut_cols$U_feed,
   S_units = Recca::psut_cols$S_units,
   inf_notation = TRUE,
   notation = list(RCLabels::notations_list),
@@ -22,11 +22,11 @@ despecified_aggregates(
   prepositions = list(RCLabels::prepositions_list),
   R_aggregated_colname = paste0(Recca::psut_cols$R, aggregated_suffix),
   U_aggregated_colname = paste0(Recca::psut_cols$U, aggregated_suffix),
+  U_feed_aggregated_colname = paste0(Recca::psut_cols$U_feed, aggregated_suffix),
+  U_eiou_aggregated_colname = paste0(Recca::psut_cols$U_eiou, aggregated_suffix),
+  r_eiou_aggregated_colname = paste0(Recca::psut_cols$r_eiou, aggregated_suffix),
   V_aggregated_colname = paste0(Recca::psut_cols$V, aggregated_suffix),
   Y_aggregated_colname = paste0(Recca::psut_cols$Y, aggregated_suffix),
-  r_eiou_aggregated_colname = paste0(Recca::psut_cols$r_eiou, aggregated_suffix),
-  U_eiou_aggregated_colname = paste0(Recca::psut_cols$U_eiou, aggregated_suffix),
-  U_feed_aggregated_colname = paste0(Recca::psut_cols$U_feed, aggregated_suffix),
   S_units_aggregated_colname = paste0(Recca::psut_cols$S_units, aggregated_suffix),
   aggregated_suffix = Recca::aggregate_cols$aggregated_suffix
 )
@@ -37,7 +37,7 @@ despecified_aggregates(
 \item{piece_to_keep}{The piece of the label to retain before aggregation.
 Default is "noun".}
 
-\item{R, U, V, Y, r_EIOU, U_EIOU, U_feed, S_units}{Matrices or names of columns in \code{.sut_data} to be despecified and aggregated. See \code{Recca::psut_cols}.}
+\item{R, U, U_feed, U_eiou, r_eiou, V, Y, S_units}{Matrices or names of columns in \code{.sut_data} to be despecified and aggregated. See \code{Recca::psut_cols}.}
 
 \item{inf_notation}{A boolean that tells whether to infer the row and column label notation.
 Default is \code{TRUE}.}
@@ -55,7 +55,7 @@ Default is \code{TRUE}.}
 \item{prepositions}{A list of prepositions that could appear in row and column names.
 Default is \code{list(RCLabels::prepositions_list)}.}
 
-\item{R_aggregated_colname, U_aggregated_colname, V_aggregated_colname, Y_aggregated_colname, r_EIOU_aggregated_colname, U_EIOU_aggregated_colname, U_feed_aggregated_colname, S_units_aggregated_colname}{Names of
+\item{R_aggregated_colname, U_aggregated_colname, U_feed_aggregated_colname, U_eiou_aggregated_colname, r_eiou_aggregated_colname, V_aggregated_colname, Y_aggregated_colname, S_units_aggregated_colname}{Names of
 aggregated matrices or columns.}
 
 \item{aggregated_suffix}{A string suffix used to form the names for aggregated matrices.

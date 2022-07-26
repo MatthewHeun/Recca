@@ -4,6 +4,10 @@ output: html_document
 ---
 
 
+* New function `footprint_aggregates()` calculates 
+  primary and final demand aggregates
+  for each isolated row and column in the **Y**
+  matrix.
 * `new_Y()` now also produced matrices
   **U_feed**, **U_eiou**, and **r_eiou**
   in its output.
