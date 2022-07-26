@@ -74,3 +74,15 @@ in energy conversion chains: Primary, Final, Useful, Services, and Well-being.
 The cleaning step eliminates all columns that contain exclusively matrices.
 \code{matsindf::matrix_cols()} identifies the matrix columns.
 }
+\examples{
+psut_mats <- UKEnergy2000mats \%>\%
+  tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
+p_industries <- c("Resources - Crude", "Resources - NG")
+fd_sectors <- c("Residential", "Transport", "Oil fields")
+footprint_aggs <- psut_mats \%>\%
+  Recca::footprint_aggregates(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
+etas <- footprint_aggs \%>\%
+  calc_eta_pfd()
+etas \%>\%
+  pivot_clean_complete_eta_pfd()
+}

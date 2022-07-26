@@ -209,6 +209,16 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 #' @export
 #'
 #' @examples
+#' psut_mats <- UKEnergy2000mats %>%
+#'   tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
+#' p_industries <- c("Resources - Crude", "Resources - NG")
+#' fd_sectors <- c("Residential", "Transport", "Oil fields")
+#' footprint_aggs <- psut_mats %>%
+#'   Recca::footprint_aggregates(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
+#' etas <- footprint_aggs %>%
+#'   calc_eta_pfd()
+#' etas %>%
+#'   pivot_clean_complete_eta_pfd()
 pivot_clean_complete_eta_pfd <- function(.eta_df,
                                          abbreviate_stage_names = TRUE,
                                          efficiency_name_suffix = Recca::efficiency_cols$efficiency_name_suffix,
@@ -260,16 +270,17 @@ pivot_clean_complete_eta_pfd <- function(.eta_df,
     dplyr::select(-dplyr::any_of(matcols))
 
   # Pivot
-  wider <- cleaned %>%
-    tidyr::pivot_longer(cols = c(eta_pfd_gross, eta_pfd_net), names_to = .eta_type, values_to = .eta) %>%
+  temp <- cleaned %>%
+    tidyr::pivot_longer(cols = c(eta_pfd_gross, eta_pfd_net), names_to = .eta_type, values_to = .eta)
+  nrow_temp <- nrow(temp)
+  wider <- temp %>%
     dplyr::mutate(
       "{gross_net}" := dplyr::case_when(
         .data[[.eta_type]] == eta_pfd_gross ~ gross,
         .data[[.eta_type]] == eta_pfd_net ~ net,
         TRUE ~ NA_character_
       ),
-      "{.eta_stages}" := ifelse(rep(abbreviate_stage_names, times = nrow(.)),
-                                # TRUE
+      "{.eta_stages}" := ifelse(rep(abbreviate_stage_names, times = nrow_temp),
                                 paste0("p", tolower(substr(.data[[last_stage]], 1, 1))),
                                 # FALSE
                                 paste0("Primary->", .data[[last_stage]])),
