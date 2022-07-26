@@ -4,6 +4,28 @@ output: html_document
 ---
 
 
+* New function `footprint_aggregates()` calculates 
+  primary and final demand aggregates
+  for each isolated row and column in the **Y**
+  matrix.
+* `new_Y()` now also produced matrices
+  **U_feed**, **U_eiou**, and **r_eiou**
+  in its output.
+* **W** matrix no longer included in the output of `new_Y()`.
+  **W** can always be calculated from **V**^T - **U**.
+* New function `write_ecc_to_excel()`
+  stores ECCs in spatial format in Excel.
+  All ECC matrices are written to the Excel file:
+  **R**, **U**, **V**, **Y**, 
+  **U_eiou**, **U_feed**, **r_eiou**, **S_units**.
+* `primary_aggregates()` and `finaldemand_aggregates()`
+  no longer require `p_industries` and `fd_sectors`
+  to be present in the incoming list or data frame.
+  Rather, `p_industries` and `fd_sectors` are treated 
+  as parameters that apply to all items in the incoming list
+  or rows in the incoming data frame.
+  This change brings consistency with other functions that
+  use `matsindf::matsindf_apply()` internally.
 * New function `group_aggregates()` that
   aggregates PSUT matrices according to an aggregation map.
 * New function `despecified_aggregates()` that

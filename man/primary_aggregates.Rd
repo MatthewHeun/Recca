@@ -21,7 +21,7 @@ primary_aggregates(
 \arguments{
 \item{.sutdata}{A data frame with columns of matrices from a supply-use analysis.}
 
-\item{p_industries}{a vector of names of industries to be aggregated as "primary."
+\item{p_industries}{A vector of names of industries to be aggregated as "primary."
 If \code{.sutdata} is a data frame, \code{p_industries} should be the name of a column in the data frame.
 If \code{.sutdata} is \code{NULL}, \code{p_industries} can be a single vector of industry names.
 These industries in \code{p_industries} will appear in rows of the resource (\code{R}) and make (\code{V}) matrices and
@@ -32,7 +32,8 @@ where \verb{*_p} is the primary part of those matrices.
 The function \code{find_p_industry_names()} might be helpful to find
 primary industry names if they can be identified by prefixes.}
 
-\item{add_net_gross_cols}{A boolean that tells whether to add net and gross columns (\code{TRUE}) or not (\code{FALSE}).}
+\item{add_net_gross_cols}{A boolean that tells whether to add net and gross columns (\code{TRUE}) or not (\code{FALSE}).
+Default is \code{FALSE}.}
 
 \item{pattern_type}{One of "exact", "leading", "trailing", or "anywhere" which specifies
 how matches are made for \code{p_industries}.
@@ -77,10 +78,7 @@ p_industries <- c("Resources - Crude", "Resources - NG")
 # Calculate primary total aggregates
 res <- UKEnergy2000mats \%>\%
   tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") \%>\%
-  dplyr::mutate(
-    p_industries = rep(list(p_industries), times = nrow(.))
-  ) \%>\%
-  Recca::primary_aggregates(p_industries = "p_industries", by = "Total")
+  Recca::primary_aggregates(p_industries = p_industries, by = "Total")
 tibble::as_tibble(res)
 res[[Recca::aggregate_cols$aggregate_primary]]
 # Above, only 1 aggregate column is created, because there is no
@@ -90,10 +88,7 @@ res[[Recca::aggregate_cols$aggregate_primary]]
 # Net and gross primary aggregates are identical.
 res2 <- UKEnergy2000mats \%>\%
   tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") \%>\%
-  dplyr::mutate(
-    p_industries = rep(list(p_industries), times = nrow(.))
-  ) \%>\%
-  Recca::primary_aggregates(p_industries = "p_industries",
+  Recca::primary_aggregates(p_industries = p_industries,
                             add_net_gross_cols = TRUE,
                             by = "Total")
 tibble::as_tibble(res2)

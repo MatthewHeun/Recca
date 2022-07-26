@@ -9,8 +9,8 @@ finaldemand_aggregates(
   fd_sectors,
   pattern_type = c("exact", "leading", "trailing", "anywhere"),
   U = Recca::psut_cols$U,
+  U_feed = Recca::psut_cols$U_feed,
   Y = Recca::psut_cols$Y,
-  r_EIOU = Recca::psut_cols$r_eiou,
   by = c("Total", "Product", "Sector"),
   net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
   gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand
@@ -31,7 +31,7 @@ If "trailing", sectors are aggregated if any entry in \code{fd_sectors} matches 
 If "anywhere", sectors are aggregated if any entry in \code{fd_sectors} matches any part of a final demand sector's name.
 Default is "exact".}
 
-\item{U, Y, r_EIOU}{See \code{Recca::psut_cols}.}
+\item{U, U_feed, Y}{Input matrices. See \code{Recca::psut_cols}.}
 
 \item{by}{One of "Product", "Sector", or "Total" to indicate the desired aggregation:
 "Product" for aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.),

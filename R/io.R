@@ -105,14 +105,14 @@ calc_io_mats <- function(.sutdata = NULL,
     # Work on the "_feed" matrices.
 
     ZKCDA_all_feed <- calc_A(R = R_mat, U = U_feed_mat, V = V_mat, q = q_vec, f = f_vec, g = g_vec, r = r_vec,
-                    Z = Z_feed, K = K_feed, C = C, D = D, A = A_feed, O = O)
+                             Z = Z_feed, K = K_feed, C = C, D = D, A = A_feed, O = O)
     ZKCDA_feed <- list(Z_feed = ZKCDA_all_feed[[Z_feed]],
                        K_feed = ZKCDA_all_feed[[K_feed]],
                        A_feed = ZKCDA_all_feed[[A_feed]])
 
     A_feed_mat <- ZKCDA_feed[[A_feed]]
     L_feed_mats <- calc_L(D = D_mat, A = A_feed_mat,
-                     L_ixp = L_ixp_feed, L_pxp = L_pxp_feed)
+                          L_ixp = L_ixp_feed, L_pxp = L_pxp_feed)
 
     # Set names
     # c(yqfgW, ZKCDA, ZKCDA_feed, L_mats, L_feed_mats) %>%
@@ -165,8 +165,8 @@ calc_io_mats <- function(.sutdata = NULL,
 #'
 #' @export
 #'
-#' @return A list or data frame containing \code{y}, \code{q},
-#'          \code{f}, \code{g}, and \code{W}.
+#' @return A list or data frame containing `y`, `q`,
+#'          `f`, `g`, and `W`.
 calc_yqfgW <- function(.sutdata = NULL,
                        method_q_calculation = c("sum_U_Y_rows", "sum_R_V_cols"),
                        # Input names
