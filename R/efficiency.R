@@ -1,6 +1,3 @@
-# This file contains functions that calculate direct efficiencies for an ECC.
-
-
 #' Calculate industry efficiencies
 #'
 #' Calculates industry efficiencies for all energy conversion industries in the ECC.
@@ -10,25 +7,25 @@
 #' Applied Energy, vol 226, pp. 1134-1162.
 #'
 #' The efficiency for a given industry is calculated iff the units for inputs and outputs for that industry are unit-homogeneous.
-#' If units for inputs and outputs are heterogeneous for an industry, \code{NA} is the result.
+#' If units for inputs and outputs are heterogeneous for an industry, `NA` is the result.
 #'
-#' Note that these efficiencies (\code{eta}) are different from
-#' final demand sector and product efficiencies (\code{eta_s} and \code{eta_p}, respectively).
+#' Note that these efficiencies (`eta`) are different from
+#' final demand sector and product efficiencies (`eta_s` and `eta_p`, respectively).
 #' Both final demand sector and product efficiencies
-#' (\code{eta_s} and \code{eta_p}) are based on embodied energy, whereas
-#' industry efficiencies (\code{eta}) is based on direct inputs consumed and outputs produced
+#' (`eta_s` and `eta_p`) are based on embodied energy, whereas
+#' industry efficiencies (`eta`) is based on direct inputs consumed and outputs produced
 #' by the energy conversion industry.
 #'
 #' To calculate energy conversion final demand sector and product efficiencies, use the
-#' \code{\link{calc_embodied_etas}} function.
+#' `calc_embodied_etas()` function.
 #'
-#' @param .sutmats a data frame containing columns for \code{U}, \code{V}, and \code{S_units} matrices
-#' @param U a string for the name of a column of \code{U} matrices in \code{.sutmats}. (Default is "\code{U}".)
-#' @param V a string for the name of a column of \code{V} matrices in \code{.sutmats}. (Default is "\code{V}".)
-#' @param S_units a string for the name of a column of \code{S_units} matrices in \code{.sutmats}. (Default is "\code{S_units}".)
-#' @param eta_i the name of the industry efficiency column in output. Default is "\code{eta_i}".
+#' @param .sutmats A data frame containing columns for **U**, **V**, and **S_units** matrices.
+#' @param U A string for the name of a column of **U** matrices in `.sutmats`. (Default is "U".)
+#' @param V A string for the name of a column of **V** matrices in `.sutmats`. (Default is "V".)
+#' @param S_units A string for the name of a column of **S_units** matrices in `.sutmats`. (Default is "S_units".)
+#' @param eta_i The name of the industry efficiency column in output. Default is "eta_i".
 #'
-#' @return \code{.sutmats} with an additional column "\code{eta_i}"
+#' @return `.sutmats` with an additional column `eta_i`
 #'
 #' @export
 #'

@@ -7,18 +7,18 @@
 calc_eta_i(.sutmats, U = "U", V = "V", S_units = "S_units", eta_i = "eta_i")
 }
 \arguments{
-\item{.sutmats}{a data frame containing columns for \code{U}, \code{V}, and \code{S_units} matrices}
+\item{.sutmats}{A data frame containing columns for \strong{U}, \strong{V}, and \strong{S_units} matrices.}
 
-\item{U}{a string for the name of a column of \code{U} matrices in \code{.sutmats}. (Default is "\code{U}".)}
+\item{U}{A string for the name of a column of \strong{U} matrices in \code{.sutmats}. (Default is "U".)}
 
-\item{V}{a string for the name of a column of \code{V} matrices in \code{.sutmats}. (Default is "\code{V}".)}
+\item{V}{A string for the name of a column of \strong{V} matrices in \code{.sutmats}. (Default is "V".)}
 
-\item{S_units}{a string for the name of a column of \code{S_units} matrices in \code{.sutmats}. (Default is "\code{S_units}".)}
+\item{S_units}{A string for the name of a column of \strong{S_units} matrices in \code{.sutmats}. (Default is "S_units".)}
 
-\item{eta_i}{the name of the industry efficiency column in output. Default is "\code{eta_i}".}
+\item{eta_i}{The name of the industry efficiency column in output. Default is "eta_i".}
 }
 \value{
-\code{.sutmats} with an additional column "\code{eta_i}"
+\code{.sutmats} with an additional column \code{eta_i}
 }
 \description{
 Calculates industry efficiencies for all energy conversion industries in the ECC.
@@ -39,7 +39,7 @@ industry efficiencies (\code{eta}) is based on direct inputs consumed and output
 by the energy conversion industry.
 
 To calculate energy conversion final demand sector and product efficiencies, use the
-\code{\link{calc_embodied_etas}} function.
+\code{calc_embodied_etas()} function.
 }
 \examples{
 library(tidyr)
