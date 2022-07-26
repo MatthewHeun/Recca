@@ -57,10 +57,7 @@ wide <- primary_total_aggregates_sut <- UKEnergy2000mats \%>\%
 # Define primary industries
 p_industries <- c("Resources - Crude", "Resources - NG")
 primary_total_aggregates <- wide \%>\%
-  dplyr::mutate(
-    p_industries = rep(list(p_industries), times = nrow(.))
-  ) \%>\%
-  Recca::primary_aggregates(p_industries = "p_industries", by = "Total") \%>\%
+  Recca::primary_aggregates(p_industries = p_industries, by = "Total") \%>\%
   # Don't need the matrices
   dplyr::select(IEATools::iea_cols$country,
                 IEATools::iea_cols$year,
@@ -70,10 +67,7 @@ primary_total_aggregates <- wide \%>\%
 # Define final demand sectors
 fd_sectors <- c("Residential", "Transport", "Oil fields")
 finaldemand_total_aggregates <- wide \%>\%
-  dplyr::mutate(
-    fd_sectors = rep(list(fd_sectors), times = nrow(.))
-  ) \%>\%
-  Recca::finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Total") \%>\%
+  Recca::finaldemand_aggregates(fd_sectors = fd_sectors, by = "Total") \%>\%
   # Don't need the matrices
   dplyr::select(IEATools::iea_cols$country,
                 IEATools::iea_cols$year,

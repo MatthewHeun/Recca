@@ -48,10 +48,7 @@ test_that("calc_eta_pfu() works correctly", {
   p_industries <- c("Resources - Crude", "Resources - NG")
 
   primary_total_aggregates_sut <- wide %>%
-    dplyr::mutate(
-      p_industries = rep(list(p_industries), times = nrow(.))
-    ) %>%
-    Recca::primary_aggregates(p_industries = "p_industries", by = "Total") %>%
+    Recca::primary_aggregates(p_industries = p_industries, by = "Total") %>%
     # Get rid of unneeded matrix columns.
     dplyr::mutate(
       "{Recca::psut_cols$R}" := NULL,
@@ -69,10 +66,7 @@ test_that("calc_eta_pfu() works correctly", {
   fd_sectors <- c("Residential", "Transport", "Oil fields")
 
   finaldemand_total_aggregates_sut <- wide %>%
-    dplyr::mutate(
-      fd_sectors = rep(list(fd_sectors), times = nrow(.))
-    ) %>%
-    Recca::finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Total") %>%
+    Recca::finaldemand_aggregates(fd_sectors = fd_sectors, by = "Total") %>%
     # Get rid of unneeded matrix columns.
     dplyr::mutate(
       "{Recca::psut_cols$R}" := NULL,

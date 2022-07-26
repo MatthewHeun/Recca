@@ -78,10 +78,7 @@ p_industries <- c("Resources - Crude", "Resources - NG")
 # Calculate primary total aggregates
 res <- UKEnergy2000mats \%>\%
   tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") \%>\%
-  dplyr::mutate(
-    p_industries = rep(list(p_industries), times = nrow(.))
-  ) \%>\%
-  Recca::primary_aggregates(p_industries = "p_industries", by = "Total")
+  Recca::primary_aggregates(p_industries = p_industries, by = "Total")
 tibble::as_tibble(res)
 res[[Recca::aggregate_cols$aggregate_primary]]
 # Above, only 1 aggregate column is created, because there is no
@@ -91,10 +88,7 @@ res[[Recca::aggregate_cols$aggregate_primary]]
 # Net and gross primary aggregates are identical.
 res2 <- UKEnergy2000mats \%>\%
   tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") \%>\%
-  dplyr::mutate(
-    p_industries = rep(list(p_industries), times = nrow(.))
-  ) \%>\%
-  Recca::primary_aggregates(p_industries = "p_industries",
+  Recca::primary_aggregates(p_industries = p_industries,
                             add_net_gross_cols = TRUE,
                             by = "Total")
 tibble::as_tibble(res2)

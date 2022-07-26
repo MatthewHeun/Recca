@@ -9,22 +9,39 @@ footprint_aggregates(
   p_industries,
   fd_sectors,
   pattern_type = c("exact", "leading", "trailing", "anywhere"),
+  unnest = TRUE,
   R = Recca::psut_cols$R,
   U = Recca::psut_cols$U,
   U_feed = Recca::psut_cols$U_feed,
   V = Recca::psut_cols$V,
   Y = Recca::psut_cols$Y,
   S_units = Recca::psut_cols$S_units,
-  by = c("Total", "Product", "Sector"),
-  add_primary_net_gross_cols = FALSE,
+  footprint_aggregates = Recca::aggregate_cols$footprint_aggregates,
+  product_sector = Recca::aggregate_cols$product_sector,
   aggregate_primary = Recca::aggregate_cols$aggregate_primary,
-  net_aggregate_primary = Recca::aggregate_cols$net_aggregate_primary,
-  gross_aggregate_primary = Recca::aggregate_cols$gross_aggregate_primary,
   net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
-  gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand
+  gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand,
+  .prime = "_prime",
+  R_colname = Recca::psut_cols$R,
+  U_colname = Recca::psut_cols$U,
+  U_feed_colname = Recca::psut_cols$U_feed,
+  U_eiou_colname = Recca::psut_cols$U_eiou,
+  r_eiou_colname = Recca::psut_cols$r_eiou,
+  V_colname = Recca::psut_cols$V,
+  Y_colname = Recca::psut_cols$Y,
+  R_prime_colname = paste0(R_colname, .prime),
+  U_prime_colname = paste0(U_colname, .prime),
+  U_feed_prime_colname = paste0(U_feed_colname, .prime),
+  U_eiou_prime_colname = paste0(U_eiou_colname, .prime),
+  r_eiou_prime_colname = paste0(r_eiou_colname, .prime),
+  V_prime_colname = paste0(V_colname, .prime),
+  Y_prime_colname = paste0(Y_colname, .prime)
 )
 }
 \arguments{
+\item{.sut_data}{A data frame or list of physical supply-use table matrices.
+Default is \code{NULL}.}
+
 \item{p_industries}{A vector of names of industries to be aggregated as "primary."
 If \code{.sut_data} is a data frame, \code{p_industries} should be the name of a column in the data frame.
 If \code{.sut_data} is \code{NULL}, \code{p_industries} can be a single vector of industry names.
@@ -51,18 +68,40 @@ If "anywhere", sectors are aggregated if any entry in \code{p_industries} matche
 Default is "exact".
 This argument is passed to both \code{primary_aggregates()} and \code{finaldemand_aggregates()}.}
 
+\item{unnest}{A boolean that tells whether to unnest the outgoing data.
+When \code{TRUE}, creates a new column called \code{product_sector} and columns of primary and final demand aggregates.
+Default is \code{TRUE}.}
+
 \item{R, U, U_feed, V, Y, S_units}{Matrices that describe the energy conversion chain (ECC).
 See \code{Recca::psut_cols} for default values.}
 
-\item{add_primary_net_gross_cols}{A boolean that tells whether to add primary net and gross columns (\code{TRUE}) or not (\code{FALSE}).
-Default is \code{FALSE}.}
+\item{footprint_aggregates}{The name of the output column that contains data frames of footprint aggregates.
+Default is \code{Recca::psut_cols$footprint_aggregates}.}
 
-\item{aggregate_primary, net_aggregate_primary, gross_aggregate_primary, net_aggregate_demand, gross_aggregate_demand}{Names of
-output columns.
+\item{product_sector}{The name of the output column that contains the product, industry, or sector
+for which footprint aggregates are given.
+Default is \code{Recca::aggregate_cols$product_sector}.}
+
+\item{aggregate_primary, net_aggregate_demand, gross_aggregate_demand}{Names of output columns.
 See \code{Recca::aggregate_cols}.}
+
+\item{.prime}{A string that denotes new matrices.
+This string is used as a suffix that is appended to
+many variable names.
+Default is "_prime".}
+
+\item{R_colname, U_colname, U_feed_colname, U_eiou_colname, r_eiou_colname, V_colname, Y_colname}{Names of input matrices in \code{.sut_data}. See \code{Recca::psut_cols} for default values.}
+
+\item{R_prime_colname, U_prime_colname, U_feed_prime_colname, U_eiou_prime_colname, r_eiou_prime_colname, V_prime_colname, Y_prime_colname}{Names of output matrices in the return value.
+Default values are constructed from
+\code{Recca::psut_cols} values suffixed with
+the value of the \code{.prime} argument.}
+}
+\value{
+Primary and final demand (both gross and net) aggregates.
 }
 \description{
-A footprint aggregate are isolated measures of primary and final demand energy
+Footprint aggregates are isolated measures of primary and final demand energy
 required to supply a specific amount of final demand energy.
 This function calculates footprint aggregates for several categories of final demand.
 }
@@ -83,4 +122,15 @@ Both functions are called with \code{by = "Total"},
 yielding total primary and final demand aggregates.
 \item Add the primary and final demand aggregates as columns at the right side of \code{.sut_data}.
 }
+
+Use \code{unnest} to define how the aggregate data are added to the right side of \code{.sut_data}.
+}
+\examples{
+p_industries <- c("Resources - Crude", "Resources - NG")
+fd_sectors <- c("Residential", "Transport", "Oil fields")
+UKEnergy2000mats \%>\%
+  tidyr::spread(key = matrix.name, value = matrix) \%>\%
+  Recca::footprint_aggregates(p_industries = p_industries,
+                              fd_sectors = fd_sectors,
+                              unnest = FALSE)
 }

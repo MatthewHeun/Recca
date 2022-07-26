@@ -30,7 +30,6 @@ psut_cols <- list(resources = "R",
 usethis::use_data(psut_cols, overwrite = TRUE)
 
 
-
 #
 # Default names for columns in aggregate data frames
 #
@@ -41,7 +40,9 @@ aggregate_cols <- list(aggregate_primary = "EX.p",
                        net_aggregate_demand = "EX.fd_net",
                        gross_aggregate_demand = "EX.fd_gross",
                        region = "Region",
-                       aggregated_suffix = "_aggregated")
+                       aggregated_suffix = "_aggregated",
+                       product_sector = "Product.Industry.Sector",
+                       footprint_aggregates = "Footprint.Aggregates")
 usethis::use_data(aggregate_cols, overwrite = TRUE)
 
 

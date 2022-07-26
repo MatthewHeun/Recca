@@ -52,10 +52,7 @@
 #' # Calculate primary total aggregates
 #' res <- UKEnergy2000mats %>%
 #'   tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") %>%
-#'   dplyr::mutate(
-#'     p_industries = rep(list(p_industries), times = nrow(.))
-#'   ) %>%
-#'   Recca::primary_aggregates(p_industries = "p_industries", by = "Total")
+#'   Recca::primary_aggregates(p_industries = p_industries, by = "Total")
 #' tibble::as_tibble(res)
 #' res[[Recca::aggregate_cols$aggregate_primary]]
 #' # Above, only 1 aggregate column is created, because there is no
@@ -65,10 +62,7 @@
 #' # Net and gross primary aggregates are identical.
 #' res2 <- UKEnergy2000mats %>%
 #'   tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") %>%
-#'   dplyr::mutate(
-#'     p_industries = rep(list(p_industries), times = nrow(.))
-#'   ) %>%
-#'   Recca::primary_aggregates(p_industries = "p_industries",
+#'   Recca::primary_aggregates(p_industries = p_industries,
 #'                             add_net_gross_cols = TRUE,
 #'                             by = "Total")
 #' tibble::as_tibble(res2)
@@ -92,17 +86,17 @@ primary_aggregates <- function(.sutdata = NULL,
   pattern_type <- match.arg(pattern_type)
   by <- match.arg(by)
 
-  prim_func <- function(p_industries_vec, R_mat = NULL, V_mat, Y_mat){
+  prim_func <- function(R_mat = NULL, V_mat, Y_mat){
     # Look for primary industries in each of R, V, and Y matrices
     RT_p <- matsbyname::transpose_byname(R_mat) %>%
       matsbyname::select_cols_byname(retain_pattern =
-                                       RCLabels::make_or_pattern(strings = p_industries_vec, pattern_type = pattern_type))
+                                       RCLabels::make_or_pattern(strings = p_industries, pattern_type = pattern_type))
     VT_p <- matsbyname::transpose_byname(V_mat) %>%
       matsbyname::select_cols_byname(retain_pattern =
-                                       RCLabels::make_or_pattern(strings = p_industries_vec, pattern_type = pattern_type))
+                                       RCLabels::make_or_pattern(strings = p_industries, pattern_type = pattern_type))
     # Get the primary industries from the Y matrix.
     Y_p <- Y_mat %>% matsbyname::select_cols_byname(retain_pattern =
-                                                      RCLabels::make_or_pattern(strings = p_industries_vec, pattern_type = pattern_type))
+                                                      RCLabels::make_or_pattern(strings = p_industries, pattern_type = pattern_type))
     # TPES in product x industry matrix format is RT_p + VT_p - Y_p.
     RVT_p_minus_Y_p <- matsbyname::sum_byname(RT_p, VT_p) %>% matsbyname::difference_byname(Y_p)
 
@@ -127,7 +121,7 @@ primary_aggregates <- function(.sutdata = NULL,
     }
   return(out)
   }
-  matsindf::matsindf_apply(.sutdata, FUN = prim_func, p_industries_vec = p_industries, R_mat = R, V_mat = V, Y_mat = Y)
+  matsindf::matsindf_apply(.sutdata, FUN = prim_func, R_mat = R, V_mat = V, Y_mat = Y)
 }
 
 
@@ -150,7 +144,7 @@ primary_aggregates <- function(.sutdata = NULL,
 #'                     If "trailing", sectors are aggregated if any entry in `fd_sectors` matches the trailing part of a final demand sector's name.
 #'                     If "anywhere", sectors are aggregated if any entry in `fd_sectors` matches any part of a final demand sector's name.
 #'                     Default is "exact".
-#' @param U,Y,r_EIOU See `Recca::psut_cols`.
+#' @param U,U_feed,Y Input matrices. See `Recca::psut_cols`.
 #' @param by One of "Product", "Sector", or "Total" to indicate the desired aggregation:
 #'           "Product" for aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.),
 #'           "Sector" for aggregation by final demand sector (Agriculture/forestry, Domestic navigation, etc.), or
@@ -178,30 +172,25 @@ finaldemand_aggregates <- function(.sutdata = NULL,
                                    pattern_type = c("exact", "leading", "trailing", "anywhere"),
                                    # Input names
                                    U = Recca::psut_cols$U,
+                                   U_feed = Recca::psut_cols$U_feed,
                                    Y = Recca::psut_cols$Y,
-                                   r_EIOU = Recca::psut_cols$r_eiou,
                                    by = c("Total", "Product", "Sector"),
                                    # Output names
                                    net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
                                    gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand){
 
-
-  # Ensure that the caller has matsbyname installed and on the package search path.
-  # assertthat::assert_that(requireNamespace("matsbyname"),
-  #                         msg = "package 'matsbyname' is required but not available.")
-
   pattern_type <- match.arg(pattern_type)
   by <- match.arg(by)
 
-  fd_func <- function(fd_sectors_vec, U_mat, Y_mat, r_EIOU_mat){
-    U_EIOU <- matsbyname::hadamardproduct_byname(r_EIOU_mat, U_mat)
+  fd_func <- function(U_mat, U_feed_mat, Y_mat){
+    U_eiou <- matsbyname::difference_byname(U_mat, U_feed_mat)
 
     net_prelim <- Y_mat %>%
       matsbyname::select_cols_byname(retain_pattern =
-                                       RCLabels::make_or_pattern(strings = fd_sectors_vec, pattern_type = pattern_type))
-    gross_prelim <- U_EIOU %>%
+                                       RCLabels::make_or_pattern(strings = fd_sectors, pattern_type = pattern_type))
+    gross_prelim <- U_eiou %>%
       matsbyname::select_cols_byname(retain_pattern =
-                                       RCLabels::make_or_pattern(strings = fd_sectors_vec, pattern_type = pattern_type))
+                                       RCLabels::make_or_pattern(strings = fd_sectors, pattern_type = pattern_type))
 
     # Use the right function for the requested aggregation
     if (by == "Total") {
@@ -234,7 +223,7 @@ finaldemand_aggregates <- function(.sutdata = NULL,
     }
     list(net, gross) %>% magrittr::set_names(c(net_aggregate_demand, gross_aggregate_demand))
   }
-  matsindf::matsindf_apply(.sutdata, FUN = fd_func, fd_sectors_vec = fd_sectors, U_mat = U, Y_mat = Y, r_EIOU_mat = r_EIOU)
+  matsindf::matsindf_apply(.sutdata, FUN = fd_func, U_mat = U, U_feed_mat = U_feed, Y_mat = Y)
 }
 
 
@@ -361,7 +350,7 @@ region_aggregates <- function(.sut_data,
 #' @param .sut_data A data frame of matrices to be despecified and aggregated.
 #' @param piece_to_keep The piece of the label to retain before aggregation.
 #'                      Default is "noun".
-#' @param R,U,V,Y,r_EIOU,U_EIOU,U_feed,S_units Matrices or names of columns in `.sut_data` to be despecified and aggregated. See `Recca::psut_cols`.
+#' @param R,U,U_feed,U_eiou,r_eiou,V,Y,S_units Matrices or names of columns in `.sut_data` to be despecified and aggregated. See `Recca::psut_cols`.
 #' @param inf_notation A boolean that tells whether to infer the row and column label notation.
 #'                     Default is `TRUE`.
 #' @param notation The notation for row and column labels.
@@ -373,7 +362,7 @@ region_aggregates <- function(.sut_data,
 #'                             Default is `TRUE`.
 #' @param prepositions A list of prepositions that could appear in row and column names.
 #'                     Default is `list(RCLabels::prepositions_list)`.
-#' @param R_aggregated_colname,U_aggregated_colname,V_aggregated_colname,Y_aggregated_colname,r_EIOU_aggregated_colname,U_EIOU_aggregated_colname,U_feed_aggregated_colname,S_units_aggregated_colname Names of
+#' @param R_aggregated_colname,U_aggregated_colname,U_feed_aggregated_colname,U_eiou_aggregated_colname,r_eiou_aggregated_colname,V_aggregated_colname,Y_aggregated_colname,S_units_aggregated_colname Names of
 #'                     aggregated matrices or columns.
 #' @param aggregated_suffix A string suffix used to form the names for aggregated matrices.
 #'                          Default is "_aggregated".
@@ -392,11 +381,11 @@ despecified_aggregates <- function(.sut_data = NULL,
                                    # Input matrix names
                                    R = Recca::psut_cols$R,
                                    U = Recca::psut_cols$U,
+                                   U_feed = Recca::psut_cols$U_feed,
+                                   U_eiou = Recca::psut_cols$U_eiou,
+                                   r_eiou = Recca::psut_cols$r_eiou,
                                    V = Recca::psut_cols$V,
                                    Y = Recca::psut_cols$Y,
-                                   r_eiou = Recca::psut_cols$r_eiou,
-                                   U_eiou = Recca::psut_cols$U_eiou,
-                                   U_feed = Recca::psut_cols$U_feed,
                                    S_units = Recca::psut_cols$S_units,
                                    # Notation inference
                                    inf_notation = TRUE,
@@ -407,24 +396,24 @@ despecified_aggregates <- function(.sut_data = NULL,
                                    # Names for the aggregated matrices
                                    R_aggregated_colname = paste0(Recca::psut_cols$R, aggregated_suffix),
                                    U_aggregated_colname = paste0(Recca::psut_cols$U, aggregated_suffix),
+                                   U_feed_aggregated_colname = paste0(Recca::psut_cols$U_feed, aggregated_suffix),
+                                   U_eiou_aggregated_colname = paste0(Recca::psut_cols$U_eiou, aggregated_suffix),
+                                   r_eiou_aggregated_colname = paste0(Recca::psut_cols$r_eiou, aggregated_suffix),
                                    V_aggregated_colname = paste0(Recca::psut_cols$V, aggregated_suffix),
                                    Y_aggregated_colname = paste0(Recca::psut_cols$Y, aggregated_suffix),
-                                   r_eiou_aggregated_colname = paste0(Recca::psut_cols$r_eiou, aggregated_suffix),
-                                   U_eiou_aggregated_colname = paste0(Recca::psut_cols$U_eiou, aggregated_suffix),
-                                   U_feed_aggregated_colname = paste0(Recca::psut_cols$U_feed, aggregated_suffix),
                                    S_units_aggregated_colname = paste0(Recca::psut_cols$S_units, aggregated_suffix),
                                    # Suffix for aggregated columns
                                    aggregated_suffix = Recca::aggregate_cols$aggregated_suffix) {
 
   despecify_agg_func <- function(R_mat,
                                  U_mat,
+                                 U_feed_mat,
+                                 r_eiou_mat,
                                  V_mat,
                                  Y_mat,
-                                 r_eiou_mat,
                                  U_eiou_mat,
-                                 U_feed_mat,
                                  S_units_mat) {
-    despecified <- lapply(list(R_mat, U_mat, V_mat, Y_mat, U_feed_mat, S_units_mat), function(m) {
+    despecified <- lapply(list(R_mat, U_mat, U_feed_mat, V_mat, Y_mat, S_units_mat), function(m) {
       m %>%
         matsbyname::aggregate_pieces_byname(piece = piece_to_keep,
                                             margin = margin,
@@ -435,31 +424,36 @@ despecified_aggregates <- function(.sut_data = NULL,
     })
     R_out <- despecified[[1]]
     U_out <- despecified[[2]]
-    V_out <- despecified[[3]]
-    Y_out <- despecified[[4]]
-    U_feed_out <- despecified[[5]]
+    U_feed_out <- despecified[[3]]
     U_eiou_out <- matsbyname::difference_byname(U_out, U_feed_out)
     r_eiou_out <- matsbyname::quotient_byname(U_eiou_out, U_out) %>%
       matsbyname::replaceNaN_byname(val = 0)
+    V_out <- despecified[[4]]
+    Y_out <- despecified[[5]]
     S_units_out <- matsbyname::quotient_byname(despecified[[6]], despecified[[6]]) %>%
       matsbyname::replaceNaN_byname(val = 0)
 
     # Make a list and return the matrices
-    list(R_out, U_out, V_out, Y_out, U_feed_out, U_eiou_out, r_eiou_out, S_units_out) %>%
-      magrittr::set_names(c(R_aggregated_colname, U_aggregated_colname, V_aggregated_colname,
-                            Y_aggregated_colname, r_eiou_aggregated_colname, U_eiou_aggregated_colname,
-                            U_feed_aggregated_colname, S_units_aggregated_colname))
+    list(R_out, U_out, U_feed_out, U_eiou_out, r_eiou_out, V_out, Y_out, S_units_out) %>%
+      magrittr::set_names(c(R_aggregated_colname,
+                            U_aggregated_colname,
+                            U_feed_aggregated_colname,
+                            U_eiou_aggregated_colname,
+                            r_eiou_aggregated_colname,
+                            V_aggregated_colname,
+                            Y_aggregated_colname,
+                            S_units_aggregated_colname))
   }
 
   matsindf::matsindf_apply(.sut_data,
                            FUN = despecify_agg_func,
                            R_mat = R,
                            U_mat = U,
+                           U_feed_mat = U_feed,
+                           U_eiou_mat = U_eiou,
+                           r_eiou_mat = r_eiou,
                            V_mat = V,
                            Y_mat = Y,
-                           r_eiou_mat = r_eiou,
-                           U_eiou_mat = U_eiou,
-                           U_feed_mat = U_feed,
                            S_units_mat = S_units)
 }
 
@@ -482,8 +476,8 @@ despecified_aggregates <- function(.sut_data = NULL,
 #'               Default is `c(1, 2)`.
 #' @param pattern_type See `RCLabels::make_or_pattern()`.
 #'                     Default is "exact".
-#' @param R,U,V,Y,r_EIOU,U_EIOU,U_feed,S_units Matrices or names of columns in `.sut_data` to be despecified and aggregated. See `Recca::psut_cols`.
-#' @param R_aggregated_colname,U_aggregated_colname,V_aggregated_colname,Y_aggregated_colname,r_EIOU_aggregated_colname,U_EIOU_aggregated_colname,U_feed_aggregated_colname,S_units_aggregated_colname Names of
+#' @param R,U,U_feed,U_eiou,r_eiou,V,Y,S_units Matrices or names of columns in `.sut_data` to be despecified and aggregated. See `Recca::psut_cols`.
+#' @param R_aggregated_colname,U_aggregated_colname,U_feed_aggregated_colname,U_eiou_aggregated_colname,r_eiou_aggregated_colname,V_aggregated_colname,Y_aggregated_colname,S_units_aggregated_colname Names of
 #'                     aggregated matrices or columns.
 #' @param aggregated_suffix A string suffix used to form the names for aggregated matrices.
 #'                          Default is "_aggregated".
@@ -506,33 +500,33 @@ grouped_aggregates <- function(.sut_data = NULL,
                                # Input matrix names
                                R = Recca::psut_cols$R,
                                U = Recca::psut_cols$U,
+                               U_feed = Recca::psut_cols$U_feed,
+                               U_eiou = Recca::psut_cols$U_eiou,
+                               r_eiou = Recca::psut_cols$r_eiou,
                                V = Recca::psut_cols$V,
                                Y = Recca::psut_cols$Y,
-                               r_eiou = Recca::psut_cols$r_eiou,
-                               U_eiou = Recca::psut_cols$U_eiou,
-                               U_feed = Recca::psut_cols$U_feed,
                                S_units = Recca::psut_cols$S_units,
                                # Names for the aggregated matrices
                                R_aggregated_colname = paste0(Recca::psut_cols$R, aggregated_suffix),
                                U_aggregated_colname = paste0(Recca::psut_cols$U, aggregated_suffix),
+                               U_feed_aggregated_colname = paste0(Recca::psut_cols$U_feed, aggregated_suffix),
+                               U_eiou_aggregated_colname = paste0(Recca::psut_cols$U_eiou, aggregated_suffix),
+                               r_eiou_aggregated_colname = paste0(Recca::psut_cols$r_eiou, aggregated_suffix),
                                V_aggregated_colname = paste0(Recca::psut_cols$V, aggregated_suffix),
                                Y_aggregated_colname = paste0(Recca::psut_cols$Y, aggregated_suffix),
-                               r_eiou_aggregated_colname = paste0(Recca::psut_cols$r_eiou, aggregated_suffix),
-                               U_eiou_aggregated_colname = paste0(Recca::psut_cols$U_eiou, aggregated_suffix),
-                               U_feed_aggregated_colname = paste0(Recca::psut_cols$U_feed, aggregated_suffix),
                                S_units_aggregated_colname = paste0(Recca::psut_cols$S_units, aggregated_suffix),
                                # Suffix for aggregated columns
                                aggregated_suffix = Recca::aggregate_cols$aggregated_suffix) {
 
   group_agg_func <- function(R_mat,
                              U_mat,
+                             U_feed_mat,
+                             U_eiou_mat,
+                             r_eiou_mat,
                              V_mat,
                              Y_mat,
-                             r_eiou_mat,
-                             U_eiou_mat,
-                             U_feed_mat,
                              S_units_mat) {
-    grouped <- lapply(list(R_mat, U_mat, V_mat, Y_mat, U_feed_mat, S_units_mat), function(m) {
+    grouped <- lapply(list(R_mat, U_mat, U_feed_mat, V_mat, Y_mat, S_units_mat), function(m) {
       m %>%
         matsbyname::aggregate_byname(aggregation_map = aggregation_map,
                                      margin = margin,
@@ -540,9 +534,9 @@ grouped_aggregates <- function(.sut_data = NULL,
     })
     R_out <- grouped[[1]]
     U_out <- grouped[[2]]
-    V_out <- grouped[[3]]
-    Y_out <- grouped[[4]]
-    U_feed_out <- grouped[[5]]
+    U_feed_out <- grouped[[3]]
+    V_out <- grouped[[4]]
+    Y_out <- grouped[[5]]
     U_eiou_out <- matsbyname::difference_byname(U_out, U_feed_out)
     r_eiou_out <- matsbyname::quotient_byname(U_eiou_out, U_out) %>%
       matsbyname::replaceNaN_byname(val = 0)
@@ -550,28 +544,33 @@ grouped_aggregates <- function(.sut_data = NULL,
       matsbyname::replaceNaN_byname(val = 0)
 
     # Make a list and return the matrices
-    list(R_out, U_out, V_out, Y_out, U_feed_out, U_eiou_out, r_eiou_out, S_units_out) %>%
-      magrittr::set_names(c(R_aggregated_colname, U_aggregated_colname, V_aggregated_colname,
-                            Y_aggregated_colname, r_eiou_aggregated_colname, U_eiou_aggregated_colname,
-                            U_feed_aggregated_colname, S_units_aggregated_colname))
+    list(R_out, U_out, U_feed_out, U_eiou_out, r_eiou_out, V_out, Y_out, S_units_out) %>%
+      magrittr::set_names(c(R_aggregated_colname,
+                            U_aggregated_colname,
+                            U_feed_aggregated_colname,
+                            U_eiou_aggregated_colname,
+                            r_eiou_aggregated_colname,
+                            V_aggregated_colname,
+                            Y_aggregated_colname,
+                            S_units_aggregated_colname))
   }
 
   matsindf::matsindf_apply(.sut_data,
                            FUN = group_agg_func,
                            R_mat = R,
                            U_mat = U,
+                           U_feed_mat = U_feed,
+                           U_eiou_mat = U_eiou,
+                           r_eiou_mat = r_eiou,
                            V_mat = V,
                            Y_mat = Y,
-                           r_eiou_mat = r_eiou,
-                           U_eiou_mat = U_eiou,
-                           U_feed_mat = U_feed,
                            S_units_mat = S_units)
 }
 
 
 #' Calculate footprint aggregates
 #'
-#' A footprint aggregate are isolated measures of primary and final demand energy
+#' Footprint aggregates are isolated measures of primary and final demand energy
 #' required to supply a specific amount of final demand energy.
 #' This function calculates footprint aggregates for several categories of final demand.
 #'
@@ -591,7 +590,10 @@ grouped_aggregates <- function(.sut_data = NULL,
 #'    yielding total primary and final demand aggregates.
 #' 5. Add the primary and final demand aggregates as columns at the right side of `.sut_data`.
 #'
-#' @param .sut_data
+#' Use `unnest` to define how the aggregate data are added to the right side of `.sut_data`.
+#'
+#' @param .sut_data A data frame or list of physical supply-use table matrices.
+#'                  Default is `NULL`.
 #' @param p_industries A vector of names of industries to be aggregated as "primary."
 #'                     If `.sut_data` is a data frame, `p_industries` should be the name of a column in the data frame.
 #'                     If `.sut_data` is `NULL`, `p_industries` can be a single vector of industry names.
@@ -615,42 +617,82 @@ grouped_aggregates <- function(.sut_data = NULL,
 #'                     If "anywhere", sectors are aggregated if any entry in `p_industries` matches any part of a final demand sector's name.
 #'                     Default is "exact".
 #'                     This argument is passed to both `primary_aggregates()` and `finaldemand_aggregates()`.
+#' @param unnest A boolean that tells whether to unnest the outgoing data.
+#'               When `TRUE`, creates a new column called `product_sector` and columns of primary and final demand aggregates.
+#'               Default is `TRUE`.
 #' @param R,U,U_feed,V,Y,S_units Matrices that describe the energy conversion chain (ECC).
-#'                       See `Recca::psut_cols` for default values.
-#' @param add_primary_net_gross_cols A boolean that tells whether to add primary net and gross columns (`TRUE`) or not (`FALSE`).
-#'                                   Default is `FALSE`.
-#' @param aggregate_primary,net_aggregate_primary,gross_aggregate_primary,net_aggregate_demand,gross_aggregate_demand Names of
-#'                                   output columns.
-#'                                   See `Recca::aggregate_cols`.
+#'                               See `Recca::psut_cols` for default values.
+#' @param footprint_aggregates The name of the output column that contains data frames of footprint aggregates.
+#'                             Default is `Recca::psut_cols$footprint_aggregates`.
+#' @param product_sector The name of the output column that contains the product, industry, or sector
+#'                       for which footprint aggregates are given.
+#'                       Default is `Recca::aggregate_cols$product_sector`.
+#' @param aggregate_primary,net_aggregate_demand,gross_aggregate_demand Names of output columns.
+#'                                                                      See `Recca::aggregate_cols`.
+#' @param .prime A string that denotes new matrices.
+#'               This string is used as a suffix that is appended to
+#'               many variable names.
+#'               Default is "_prime".
+#' @param R_colname,U_colname,U_feed_colname,U_eiou_colname,r_eiou_colname,V_colname,Y_colname Names of input matrices in `.sut_data`. See `Recca::psut_cols` for default values.
+#' @param R_prime_colname,U_prime_colname,U_feed_prime_colname,U_eiou_prime_colname,r_eiou_prime_colname,V_prime_colname,Y_prime_colname Names of output matrices in the return value.
+#'                                                                                                                                       Default values are constructed from
+#'                                                                                                                                       `Recca::psut_cols` values suffixed with
+#'                                                                                                                                       the value of the `.prime` argument.
 #'
-#' @return
+#' @return Primary and final demand (both gross and net) aggregates.
 #'
 #' @export
 #'
 #' @examples
+#' p_industries <- c("Resources - Crude", "Resources - NG")
+#' fd_sectors <- c("Residential", "Transport", "Oil fields")
+#' UKEnergy2000mats %>%
+#'   tidyr::spread(key = matrix.name, value = matrix) %>%
+#'   Recca::footprint_aggregates(p_industries = p_industries,
+#'                               fd_sectors = fd_sectors,
+#'                               unnest = FALSE)
 footprint_aggregates <- function(.sut_data = NULL,
                                  p_industries,
                                  fd_sectors,
                                  pattern_type = c("exact", "leading", "trailing", "anywhere"),
-                                 # Input names
+                                 unnest = TRUE,
+                                 # Input names or matrices
                                  R = Recca::psut_cols$R,
                                  U = Recca::psut_cols$U,
                                  U_feed = Recca::psut_cols$U_feed,
                                  V = Recca::psut_cols$V,
                                  Y = Recca::psut_cols$Y,
                                  S_units = Recca::psut_cols$S_units,
-                                 by = c("Total", "Product", "Sector"),
-                                 add_primary_net_gross_cols = FALSE,
                                  # Output names
+                                 footprint_aggregates = Recca::aggregate_cols$footprint_aggregates,
+                                 product_sector = Recca::aggregate_cols$product_sector,
                                  aggregate_primary = Recca::aggregate_cols$aggregate_primary,
-                                 net_aggregate_primary = Recca::aggregate_cols$net_aggregate_primary,
-                                 gross_aggregate_primary = Recca:: aggregate_cols$gross_aggregate_primary,
                                  net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
-                                 gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand) {
+                                 gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand,
+                                 # Other internal names
+                                 .prime = "_prime",
+                                 R_colname = Recca::psut_cols$R,
+                                 U_colname = Recca::psut_cols$U,
+                                 U_feed_colname = Recca::psut_cols$U_feed,
+                                 U_eiou_colname = Recca::psut_cols$U_eiou,
+                                 r_eiou_colname = Recca::psut_cols$r_eiou,
+                                 V_colname = Recca::psut_cols$V,
+                                 Y_colname = Recca::psut_cols$Y,
+                                 R_prime_colname = paste0(R_colname, .prime),
+                                 U_prime_colname = paste0(U_colname, .prime),
+                                 U_feed_prime_colname = paste0(U_feed_colname, .prime),
+                                 U_eiou_prime_colname = paste0(U_eiou_colname, .prime),
+                                 r_eiou_prime_colname = paste0(r_eiou_colname, .prime),
+                                 V_prime_colname = paste0(V_colname, .prime),
+                                 Y_prime_colname = paste0(Y_colname, .prime)) {
+
+  pattern_type <- match.arg(pattern_type)
 
   footprint_func <- function(R_mat, U_mat, U_feed_mat, V_mat, Y_mat, S_units_mat) {
+    # At this point, we have single matrices for each of the above variables.
     # Calculate the IO matrices
     with_io <- list(R = R_mat, U = U_mat, U_feed = U_feed_mat, V = V_mat, Y = Y_mat, S_units = S_units_mat) %>%
+      # We accept the default vector and matrix names.
       calc_io_mats()
 
     # Get the row names in Y. Those are the Products we want to evaluate.
@@ -672,40 +714,97 @@ footprint_aggregates <- function(.sut_data = NULL,
     # Create a list with new Y matrices for all products and sectors
     new_Y_list <- c(new_Y_products, new_Y_sectors)
 
-    # For each item in this list, make a new set of matrices
+    # For each item in this list, make a new set of ECC matrices
     ecc_prime <- new_Y_list %>%
       sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_new_Y) {
         with_io %>%
           append(list(this_new_Y)) %>%
-          magrittr::set_names(c(names(with_io), "Y_prime")) %>%
-          new_Y()
+          magrittr::set_names(c(names(with_io), Y_prime_colname)) %>%
+          # Calculate all the new ECC matrices,
+          # accepting the default names for intermediate
+          # vectors and matrices.
+          # We can accept default names for L_ixp, L_pxp, Z, Z_feed, D, and O,
+          # because we didn't change those names in the call to calc_io_mates().
+          # This gives the new (prime) description of the ECC.
+          new_Y(Y_prime = Y_prime_colname,
+                R_prime = R_prime_colname,
+                U_prime = U_prime_colname,
+                U_feed_prime = U_feed_prime_colname,
+                U_eiou_prime = U_eiou_prime_colname,
+                r_eiou_prime = r_eiou_prime_colname,
+                V_prime = V_prime_colname)
 
     })
 
-    # Now that we have the new ECCs, calculate primary and final demand aggregates
+    # Now that we have the new (prime) ECCs, calculate primary and final demand aggregates
     p_aggregates <- ecc_prime %>%
       sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_new_ecc) {
         this_new_ecc %>%
-          primary_aggregates(p_industries = list(p_industries),
-                             R = "R_prime", V = "V_prime", Y = "Y_prime",
+          primary_aggregates(p_industries = p_industries,
+                             R = R_prime_colname,
+                             V = V_prime_colname,
+                             Y = Y_prime_colname,
                              pattern_type = pattern_type,
                              by = "Total",
                              aggregate_primary = aggregate_primary)
-      })
+      }) %>%
+      # Transpose to pull EX.p to the top level with products and sectors beneath.
+      purrr::transpose()
+    fd_aggregates <- ecc_prime %>%
+      sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_new_ecc) {
+        this_new_ecc %>%
+          finaldemand_aggregates(fd_sectors = fd_sectors,
+                                 U = U_prime_colname,
+                                 U_feed = U_feed_prime_colname,
+                                 Y = Y_prime_colname,
+                                 pattern_type = pattern_type,
+                                 by = "Total",
+                                 net_aggregate_demand = net_aggregate_demand,
+                                 gross_aggregate_demand = gross_aggregate_demand)
+      }) %>%
+      # Transpose to pull EX.fd_net and EX.fd_gross to the top level with products and sectors beneath.
+      purrr::transpose()
 
+    # Create data frames that can be later unnested if needed.
+    p_aggregates_df <- tibble::tibble(
+      "{product_sector}" := p_aggregates[[aggregate_primary]] %>% names(),
+      "{aggregate_primary}" := p_aggregates[[aggregate_primary]] %>% unname() %>% unlist()
+    )
+    net_fd_aggregates_df <- tibble::tibble(
+      "{product_sector}" := fd_aggregates[[net_aggregate_demand]] %>% names(),
+      "{net_aggregate_demand}" := fd_aggregates[[net_aggregate_demand]] %>% unname() %>% unlist()
+    )
+    gross_fd_aggregates_df <- tibble::tibble(
+      "{product_sector}" := fd_aggregates[[gross_aggregate_demand]] %>% names(),
+      "{gross_aggregate_demand}" := fd_aggregates[[gross_aggregate_demand]] %>% unname() %>% unlist()
+    )
+
+    # Join the data frames by the product_sector column.
+    primary_net_gross <- p_aggregates_df %>%
+      dplyr::full_join(gross_fd_aggregates_df, by = product_sector) %>%
+      dplyr::full_join(net_fd_aggregates_df, by = product_sector)
+
+    # Make a list and return it so that the data frame is nested
+    # inside the column of the data frame.
+    list(primary_net_gross) %>%
+      magrittr::set_names(footprint_aggregates)
   }
 
-  matsindf::matsindf_apply(.sut_data,
-                           FUN = footprint_func,
-                           R_mat = R,
-                           U_mat = U,
-                           U_feed_mat = U_feed,
-                           V_mat = V,
-                           Y_mat = Y,
-                           S_units_mat = S_units)
+  out <- matsindf::matsindf_apply(.sut_data,
+                                  FUN = footprint_func,
+                                  R_mat = R,
+                                  U_mat = U,
+                                  U_feed_mat = U_feed,
+                                  V_mat = V,
+                                  Y_mat = Y,
+                                  S_units_mat = S_units)
 
-  # If .sut_data is a data frame, expand if desired.
-
+  # If .sut_data is a data frame, unnest if desired.
+  if (is.data.frame(.sut_data) & unnest) {
+    out <- out %>%
+      tidyr::unnest(cols = footprint_aggregates)
+  }
+  return(out)
 }
 
 
