@@ -6,8 +6,6 @@
 \usage{
 calc_eta_pfd(
   .aggregate_df = NULL,
-  add_eta_names = TRUE,
-  abbreviate_stage_names = TRUE,
   efficiency_name_suffix = Recca::efficiency_cols$efficiency_name_suffix,
   aggregate_primary_colname = Recca::aggregate_cols$aggregate_primary,
   gross_aggregate_demand_colname = Recca::aggregate_cols$gross_aggregate_demand,
@@ -26,15 +24,6 @@ calc_eta_pfd(
 \code{net_aggregate_demand_colname},
 \code{gross_aggregate_demand_colname},
 probably the result of calling \code{footprint_aggregates()}.}
-
-\item{add_eta_names}{A boolean that tells whether to add columns for the names of
-the calculated efficiencies.
-Default is \code{TRUE}.}
-
-\item{abbreviate_stage_names}{A boolean that tells whether stage names
-are abbreviated to first letter.
-E.g., "Primary" --> "p", "Final" --> "f", "Useful" --> "u", "Services" --> "s".
-Default is \code{TRUE}.}
 
 \item{efficiency_name_suffix}{The suffix for efficiency names.
 Default is \code{Recca::efficiency_cols$efficiency_name_suffix}.}
@@ -68,13 +57,6 @@ across the energy conversion chain.
 \code{primary_aggregates()} and \code{finaldemand_aggregates()}
 or by calling \code{footprint_aggregates()}.
 See examples.
-}
-\details{
-The argument \code{add_eta_names} controls whether,
-in addition to calculating the efficiencies,
-names for the efficiencies are provided in columns.
-\code{add_eta_names = TRUE} (the default) makes it easier to \code{tidyr::pivot_wider()}
-on the efficiencies later.
 }
 \examples{
 wide <- primary_total_aggregates_sut <- UKEnergy2000mats \%>\%
