@@ -45,9 +45,9 @@ Default is \code{NULL}.}
 \item{p_industries}{A vector of names of industries to be aggregated as "primary."
 If \code{.sut_data} is a data frame, \code{p_industries} should be the name of a column in the data frame.
 If \code{.sut_data} is \code{NULL}, \code{p_industries} can be a single vector of industry names.
-These industries in \code{p_industries} will appear in rows of the resource (\code{R}) and make (\code{V}) matrices and
-columns of the final demand matrix (\code{Y}).
-Entries in \code{Y_p} will be subtracted from entries in \code{R_p + V_p} to obtain
+These industries in \code{p_industries} will appear in rows of the resource (\strong{R}) and make (\strong{V}) matrices and
+columns of the final demand matrix (\strong{Y}).
+Entries in \strong{Y_p} will be subtracted from entries in \strong{R_p} \code{+} \strong{V_p} to obtain
 the total primary energy aggregate,
 where \verb{*_p} is the primary part of those matrices.
 The function \code{find_p_industry_names()} might be helpful to find
@@ -55,8 +55,8 @@ primary industry names if they can be identified by prefixes.
 This argument is passed to \code{primary_aggregates()}.}
 
 \item{fd_sectors}{A vector of names of sectors in final demand.
-Names should include columns in the \code{Y} and \code{U_EIOU} matrices
-to cover both net (in \code{Y}) and gross (in \code{Y} and \code{U_EIOU}) final demand.
+Names should include columns in the \strong{Y} and \strong{U_EIOU} matrices
+to cover both net (in \strong{Y}) and gross (in \strong{Y} and \strong{U_EIOU}) final demand.
 This argument is passed to \code{finaldemand_aggregates()}.}
 
 \item{pattern_type}{One of "exact", "leading", "trailing", or "anywhere" which specifies

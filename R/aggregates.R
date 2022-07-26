@@ -597,17 +597,17 @@ grouped_aggregates <- function(.sut_data = NULL,
 #' @param p_industries A vector of names of industries to be aggregated as "primary."
 #'                     If `.sut_data` is a data frame, `p_industries` should be the name of a column in the data frame.
 #'                     If `.sut_data` is `NULL`, `p_industries` can be a single vector of industry names.
-#'                     These industries in `p_industries` will appear in rows of the resource (`R`) and make (`V`) matrices and
-#'                     columns of the final demand matrix (`Y`).
-#'                     Entries in `Y_p` will be subtracted from entries in `R_p + V_p` to obtain
+#'                     These industries in `p_industries` will appear in rows of the resource (**R**) and make (**V**) matrices and
+#'                     columns of the final demand matrix (**Y**).
+#'                     Entries in **Y_p** will be subtracted from entries in **R_p** `+` **V_p** to obtain
 #'                     the total primary energy aggregate,
 #'                     where `*_p` is the primary part of those matrices.
 #'                     The function `find_p_industry_names()` might be helpful to find
 #'                     primary industry names if they can be identified by prefixes.
 #'                     This argument is passed to `primary_aggregates()`.
 #' @param fd_sectors A vector of names of sectors in final demand.
-#'                   Names should include columns in the `Y` and `U_EIOU` matrices
-#'                   to cover both net (in `Y`) and gross (in `Y` and `U_EIOU`) final demand.
+#'                   Names should include columns in the **Y** and **U_EIOU** matrices
+#'                   to cover both net (in **Y**) and gross (in **Y** and **U_EIOU**) final demand.
 #'                   This argument is passed to `finaldemand_aggregates()`.
 #' @param pattern_type One of "exact", "leading", "trailing", or "anywhere" which specifies
 #'                     how matches are made for `p_industries`.
