@@ -383,13 +383,13 @@ test_that("footprint_aggregates() works as expected", {
   fd_sectors <- c("Residential", "Transport", "Oil fields")
 
   psut_mats <- UKEnergy2000mats %>%
-    tidyr::spread(key = matrix.name, value = matrix)
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
   # Calculate aggregates
   footprint_aggs_nested <- psut_mats %>%
-    Recca::footprint_aggregates(p_industries = p_industries, fd_sectors = fd_sectors, unnest = FALSE)
+    Recca::footprint_aggregates(p_industries = p_industries, fd_sectors = fd_sectors)
   expect_true(Recca::aggregate_cols$footprint_aggregates %in% names(footprint_aggs_nested))
   footprint_aggs_unnested <- psut_mats %>%
-    Recca::footprint_aggregates(p_industries = p_industries, fd_sectors = fd_sectors)
+    Recca::footprint_aggregates(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
   expect_true(Recca::aggregate_cols$product_sector %in% names(footprint_aggs_unnested))
   expect_true(Recca::aggregate_cols$aggregate_primary %in% names(footprint_aggs_unnested))
   expect_true(Recca::aggregate_cols$net_aggregate_demand %in% names(footprint_aggs_unnested))

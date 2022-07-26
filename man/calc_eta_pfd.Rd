@@ -6,11 +6,18 @@
 \usage{
 calc_eta_pfd(
   .aggregate_df = NULL,
+  add_eta_names = TRUE,
+  abbreviate_stage_name = TRUE,
+  efficiency_name_suffix = Recca::efficiency_cols$efficiency_name_suffix,
   aggregate_primary_colname = Recca::aggregate_cols$aggregate_primary,
   gross_aggregate_demand_colname = Recca::aggregate_cols$gross_aggregate_demand,
   net_aggregate_demand_colname = Recca::aggregate_cols$net_aggregate_demand,
+  energy_type = Recca::psut_cols$energy_type,
+  last_stage = Recca::psut_cols$last_stage,
   eta_pfd_gross = Recca::efficiency_cols$eta_pfd_gross,
-  eta_pfd_net = Recca::efficiency_cols$eta_pfd_net
+  eta_pfd_net = Recca::efficiency_cols$eta_pfd_net,
+  eta_pfd_gross_colname = paste0(eta_pfd_gross, efficiency_name_suffix),
+  eta_pfd_net_colname = paste0(eta_pfd_net, efficiency_name_suffix)
 )
 }
 \arguments{
@@ -18,7 +25,19 @@ calc_eta_pfd(
 \code{aggregate_primary_colname},
 \code{net_aggregate_demand_colname},
 \code{gross_aggregate_demand_colname},
-probably formed by joining the results from}
+probably the result of calling \code{footprint_aggregates()}.}
+
+\item{add_eta_names}{A boolean that tells whether to add columns for the names of
+the calculated efficiencies.
+Default is \code{TRUE}.}
+
+\item{abbreviate_stage_name}{A boolean that tells whether stage names
+are abbreviated to first letter.
+E.g., "Primary" --> "p", "Final" --> "f", "Useful" --> "u", "Services" --> "s".
+Default is \code{TRUE}.}
+
+\item{efficiency_name_suffix}{The suffix for efficiency names.
+Default is \code{Recca::efficiency_cols$efficiency_name_suffix}.}
 
 \item{aggregate_primary_colname}{The name of the column in \code{p_aggregates} that contains primary energy or exergy aggregates.
 Default is \code{Recca::aggregate_cols$aggregate_primary}.}
@@ -45,11 +64,17 @@ A data frame of aggregate efficiencies.
 \description{
 Calculates aggregate (total) primary-to-final demand (gross and net) efficiencies
 across the energy conversion chain.
+\code{.aggregate_df} is probably formed by joining the results from
+\code{primary_aggregates()} and \code{finaldemand_aggregates()}
+or by calling \code{footprint_aggregates()}.
+See examples.
 }
 \details{
-\code{.aggregate_df} is probably formed by joining the results from
-\code{primary_aggregates()} and \code{finaldemand_aggregates()}.
-See examples.
+The argument \code{add_eta_names} controls whether,
+in addition to calculating the efficiencies,
+names for the efficiencies are provided in columns.
+\code{add_eta_names = TRUE} (the default) makes it easier to \code{tidyr::pivot_wider()}
+on the efficiencies later.
 }
 \examples{
 wide <- primary_total_aggregates_sut <- UKEnergy2000mats \%>\%

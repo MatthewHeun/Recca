@@ -5,11 +5,12 @@
 \alias{efficiency_cols}
 \title{Efficiency data frame column names}
 \format{
-A string list with 3 entries.
+A string list with 4 entries.
 \describe{
 \item{eta_i}{The name of a column in a wide-by-matrices data frame containing industry efficiencies.}
 \item{eta_pfd_gross}{The name of a column in a wide-by-matrices data frame containing  efficiencies between the primary and gross final demand stages.}
 \item{eta_pfd_net}{The name of a column in a wide-by-matrices data frame containing efficiencies between the primary and net final demand stages.}
+\item{efficiency_name_suffix}{The suffix for names of columns containing efficiency names.}
 }
 }
 \usage{

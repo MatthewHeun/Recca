@@ -619,7 +619,7 @@ grouped_aggregates <- function(.sut_data = NULL,
 #'                     This argument is passed to both `primary_aggregates()` and `finaldemand_aggregates()`.
 #' @param unnest A boolean that tells whether to unnest the outgoing data.
 #'               When `TRUE`, creates a new column called `product_sector` and columns of primary and final demand aggregates.
-#'               Default is `TRUE`.
+#'               Default is `FALSE`.
 #' @param R,U,U_feed,V,Y,S_units Matrices that describe the energy conversion chain (ECC).
 #'                               See `Recca::psut_cols` for default values.
 #' @param footprint_aggregates The name of the output column that contains data frames of footprint aggregates.
@@ -646,16 +646,20 @@ grouped_aggregates <- function(.sut_data = NULL,
 #' @examples
 #' p_industries <- c("Resources - Crude", "Resources - NG")
 #' fd_sectors <- c("Residential", "Transport", "Oil fields")
-#' UKEnergy2000mats %>%
-#'   tidyr::spread(key = matrix.name, value = matrix) %>%
+#' psut_mats <- UKEnergy2000mats %>%
+#'   tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
+#' psut_mats %>%
+#'   Recca::footprint_aggregates(p_industries = p_industries,
+#'                               fd_sectors = fd_sectors)
+#' psut_mats %>%
 #'   Recca::footprint_aggregates(p_industries = p_industries,
 #'                               fd_sectors = fd_sectors,
-#'                               unnest = FALSE)
+#'                               unnest = TRUE)
 footprint_aggregates <- function(.sut_data = NULL,
                                  p_industries,
                                  fd_sectors,
                                  pattern_type = c("exact", "leading", "trailing", "anywhere"),
-                                 unnest = TRUE,
+                                 unnest = FALSE,
                                  # Input names or matrices
                                  R = Recca::psut_cols$R,
                                  U = Recca::psut_cols$U,

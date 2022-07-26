@@ -26,7 +26,8 @@ psut_cols <- list(resources = "R",
                   matnames = "matnames",
                   matvals = "matvals",
                   sector = "Sector",
-                  energy_type = "Energy.type")
+                  energy_type = "Energy.type",
+                  last_stage = "Last.stage")
 usethis::use_data(psut_cols, overwrite = TRUE)
 
 
@@ -52,7 +53,8 @@ usethis::use_data(aggregate_cols, overwrite = TRUE)
 
 efficiency_cols <- list(eta_i = "eta_i",
                         eta_pfd_gross = "eta_pfd_gross",
-                        eta_pfd_net = "eta_pfd_net")
+                        eta_pfd_net = "eta_pfd_net",
+                        efficiency_name_suffix = "_name")
 usethis::use_data(efficiency_cols, overwrite = TRUE)
 
 

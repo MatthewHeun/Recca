@@ -70,16 +70,31 @@ calc_eta_i <- function(.sutmats,
 #'
 #' Calculates aggregate (total) primary-to-final demand (gross and net) efficiencies
 #' across the energy conversion chain.
-#'
 #' `.aggregate_df` is probably formed by joining the results from
-#' `primary_aggregates()` and `finaldemand_aggregates()`.
+#' `primary_aggregates()` and `finaldemand_aggregates()`
+#' or by calling `footprint_aggregates()`.
 #' See examples.
+#'
+#' The argument `add_eta_names` controls whether,
+#' in addition to calculating the efficiencies,
+#' names for the efficiencies are provided in columns.
+#' `add_eta_names = TRUE` (the default) makes it easier to `tidyr::pivot_wider()`
+#' on the efficiencies later.
 #'
 #' @param .aggregate_df A data frame or list containing columns
 #'                      `aggregate_primary_colname`,
 #'                      `net_aggregate_demand_colname`,
 #'                      `gross_aggregate_demand_colname`,
-#'                      probably formed by joining the results from
+#'                      probably the result of calling `footprint_aggregates()`.
+#' @param add_eta_names A boolean that tells whether to add columns for the names of
+#'                      the calculated efficiencies.
+#'                      Default is `TRUE`.
+#' @param abbreviate_stage_name A boolean that tells whether stage names
+#'                              are abbreviated to first letter.
+#'                              E.g., "Primary" --> "p", "Final" --> "f", "Useful" --> "u", "Services" --> "s".
+#'                              Default is `TRUE`.
+#' @param efficiency_name_suffix The suffix for efficiency names.
+#'                               Default is `Recca::efficiency_cols$efficiency_name_suffix`.
 #' @param aggregate_primary_colname The name of the column in `p_aggregates` that contains primary energy or exergy aggregates.
 #'                                  Default is `Recca::aggregate_cols$aggregate_primary`.
 #' @param gross_aggregate_demand_colname The name of the column in `finaldemand_aggregates`
@@ -131,22 +146,52 @@ calc_eta_i <- function(.sutmats,
 #'                         IEATools::iea_cols$last_stage)) %>%
 #'   calc_eta_pfd()
 calc_eta_pfd <- function(.aggregate_df = NULL,
+                         add_eta_names = TRUE,
+                         abbreviate_stage_name = TRUE,
+                         efficiency_name_suffix = Recca::efficiency_cols$efficiency_name_suffix,
                          # Inputs
                          aggregate_primary_colname = Recca::aggregate_cols$aggregate_primary,
                          gross_aggregate_demand_colname = Recca::aggregate_cols$gross_aggregate_demand,
                          net_aggregate_demand_colname = Recca::aggregate_cols$net_aggregate_demand,
+                         energy_type = Recca::psut_cols$energy_type,
+                         last_stage = Recca::psut_cols$last_stage,
                          # Outputs
                          eta_pfd_gross = Recca::efficiency_cols$eta_pfd_gross,
-                         eta_pfd_net = Recca::efficiency_cols$eta_pfd_net) {
-  eta_pfd_func <- function(primary, gross_fd, net_fd) {
-    eta_pfd_gross_val <- gross_fd / primary
-    eta_pfd_net_val <- net_fd / primary
-    list(eta_pfd_gross_val, eta_pfd_net_val) %>%
-      magrittr::set_names(c(eta_pfd_gross, eta_pfd_net))
+                         eta_pfd_net = Recca::efficiency_cols$eta_pfd_net,
+                         eta_pfd_gross_colname = paste0(eta_pfd_gross, efficiency_name_suffix),
+                         eta_pfd_net_colname = paste0(eta_pfd_net, efficiency_name_suffix)) {
+
+  eta_pfd_func <- function(primary_val, gross_fd_val, net_fd_val, energy_type_val, last_stage_val) {
+    eta_pfd_gross_val <- gross_fd_val / primary_val
+    eta_pfd_net_val <- net_fd_val / primary_val
+    out <- list(eta_pfd_gross_val, eta_pfd_net_val)
+    out_names <- c(eta_pfd_gross, eta_pfd_net)
+    if (add_eta_names) {
+      if (abbreviate_stage_name) {
+        primary_val <- "_p"
+        last_stage_val <- substr(last_stage_val, 1, 1) %>% tolower()
+      } else {
+        primary_val <- "_Primary->"
+      }
+      eta_pfd_gross_name <- paste0("eta_", energy_type_val, primary_val, last_stage_val, "_gross")
+      eta_pfd_net_name <- paste0("eta_", energy_type_val, primary_val, last_stage_val, "_net")
+      out <- append(out, list(eta_pfd_gross_name, eta_pfd_net_name))
+      out_names <- c(out_names, eta_pfd_gross_colname, eta_pfd_net_colname)
+    }
+    out %>%
+      magrittr::set_names(out_names)
   }
   matsindf::matsindf_apply(.aggregate_df,
                            FUN = eta_pfd_func,
-                           primary = aggregate_primary_colname,
-                           gross_fd = gross_aggregate_demand_colname,
-                           net_fd = net_aggregate_demand_colname)
+                           primary_val = aggregate_primary_colname,
+                           gross_fd_val = gross_aggregate_demand_colname,
+                           net_fd_val = net_aggregate_demand_colname,
+                           energy_type_val = energy_type,
+                           last_stage_val = last_stage)
+
 }
+
+
+
+
+

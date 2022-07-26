@@ -23,6 +23,7 @@
 #' \item{matnames}{The name of a column in a tidy data frame containing matrix names.}
 #' \item{sector}{The name of a column in a tidy data frame containing sector names.}
 #' \item{energy_type}{The name of a column in a tidy data frame containing names of energy types.}
+#' \item{last_stage}{The name of a column in a tidy data frame last stages of the energy conversion chain.}
 #' }
 #'
 #' @examples
@@ -67,6 +68,7 @@
 #' \item{eta_i}{The name of a column in a wide-by-matrices data frame containing industry efficiencies.}
 #' \item{eta_pfd_gross}{The name of a column in a wide-by-matrices data frame containing  efficiencies between the primary and gross final demand stages.}
 #' \item{eta_pfd_net}{The name of a column in a wide-by-matrices data frame containing efficiencies between the primary and net final demand stages.}
+#' \item{efficiency_name_suffix}{The suffix for names of columns containing efficiency names.}
 #' }
 #'
 #' @examples
