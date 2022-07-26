@@ -188,7 +188,6 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
                            net_fd_val = net_aggregate_demand_colname,
                            energy_type_val = energy_type,
                            last_stage_val = last_stage)
-
 }
 
 

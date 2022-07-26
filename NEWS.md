@@ -4,6 +4,9 @@ output: html_document
 ---
 
 
+* `calc_eta_pfd()` now has the option (on by default)
+  to add columns of names of efficiencies to its output.
+  This feature will assist pivoting on efficiencies later.
 * New function `footprint_aggregates()` calculates 
   primary and final demand aggregates
   for each isolated row and column in the **Y**
