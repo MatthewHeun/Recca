@@ -128,3 +128,22 @@ test_that("calc_eta_pfd() works with the output from footprint_aggregates()", {
                                       Recca::efficiency_cols$efficiency_name_suffix)]] %>% unique(),
                list("eta_E_Primary->Final_net", "eta_E_Primary->Services_net", "eta_E_Primary->Useful_net", "eta_X_Primary->Services_net"))
 })
+
+
+test_that("pivot_clean_complete_eta_pfd() works as expected", {
+  psut_mats <- UKEnergy2000mats %>%
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
+  p_industries <- c("Resources - Crude", "Resources - NG")
+  fd_sectors <- c("Residential", "Transport", "Oil fields")
+  footprint_aggs <- psut_mats %>%
+    Recca::footprint_aggregates(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
+  etas <- footprint_aggs %>%
+    calc_eta_pfd()
+  cleaned <- etas %>%
+    pivot_clean_complete_eta_pfd()
+})
+
+
+
+
+

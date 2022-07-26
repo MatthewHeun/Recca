@@ -7,7 +7,7 @@
 calc_eta_pfd(
   .aggregate_df = NULL,
   add_eta_names = TRUE,
-  abbreviate_stage_name = TRUE,
+  abbreviate_stage_names = TRUE,
   efficiency_name_suffix = Recca::efficiency_cols$efficiency_name_suffix,
   aggregate_primary_colname = Recca::aggregate_cols$aggregate_primary,
   gross_aggregate_demand_colname = Recca::aggregate_cols$gross_aggregate_demand,
@@ -31,7 +31,7 @@ probably the result of calling \code{footprint_aggregates()}.}
 the calculated efficiencies.
 Default is \code{TRUE}.}
 
-\item{abbreviate_stage_name}{A boolean that tells whether stage names
+\item{abbreviate_stage_names}{A boolean that tells whether stage names
 are abbreviated to first letter.
 E.g., "Primary" --> "p", "Final" --> "f", "Useful" --> "u", "Services" --> "s".
 Default is \code{TRUE}.}
