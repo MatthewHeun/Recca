@@ -39,6 +39,10 @@ Default is \code{Recca::aggregate_cols$gross_aggregate_demand}.}
 that contains net final demand aggregates.
 Default is \code{Recca::aggregate_cols$net_aggregate_demand}.}
 
+\item{energy_type}{The name of the energy type column. Default is \code{Recca::psut_cols$energy_type}.}
+
+\item{last_stage}{The name of the last stage column. Default is \code{Recca::psut_cols$last_stage}.}
+
 \item{eta_pfd_gross}{The name of the output column containing efficiencies
 of converting primary energy into gross final demand energy.
 Default is \code{Recca::efficiency_cols$eta_pfd_gross}.}
@@ -46,6 +50,12 @@ Default is \code{Recca::efficiency_cols$eta_pfd_gross}.}
 \item{eta_pfd_net}{The name of the output column containing efficiencies
 of converting primary energy into net final demand energy.
 Default is \code{Recca::efficiency_cols$eta_pfd_net}.}
+
+\item{eta_pfd_gross_colname}{The name of the output column containing names of gross efficiency parameters.
+Default is \code{paste0(eta_pfd_gross, efficiency_name_suffix)}.}
+
+\item{eta_pfd_net_colname}{The name of the output column containing names of net efficiency parameters.
+Default is \code{paste0(eta_pfd_net, efficiency_name_suffix)}.}
 }
 \value{
 A data frame of aggregate efficiencies.

@@ -6,7 +6,6 @@
 \usage{
 pivot_clean_complete_eta_pfd(
   .eta_df,
-  abbreviate_stage_names = TRUE,
   efficiency_name_suffix = Recca::efficiency_cols$efficiency_name_suffix,
   primary = "Primary",
   final = "Final",
@@ -34,8 +33,7 @@ pivot_clean_complete_eta_pfd(
   net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
   .eta = ".eta",
   .eta_type = ".eta_type",
-  .eta_name = ".eta_name",
-  .eta_stages = ".eta_stages"
+  .eta_name = ".eta_name"
 )
 }
 \arguments{

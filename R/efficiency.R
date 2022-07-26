@@ -90,12 +90,18 @@ calc_eta_i <- function(.sutmats,
 #' @param net_aggregate_demand_colname The name of the column in `finaldemand_aggregates`
 #'                                     that contains net final demand aggregates.
 #'                                     Default is `Recca::aggregate_cols$net_aggregate_demand`.
+#' @param energy_type The name of the energy type column. Default is `Recca::psut_cols$energy_type`.
+#' @param last_stage The name of the last stage column. Default is `Recca::psut_cols$last_stage`.
 #' @param eta_pfd_gross The name of the output column containing efficiencies
 #'                      of converting primary energy into gross final demand energy.
 #'                      Default is `Recca::efficiency_cols$eta_pfd_gross`.
 #' @param eta_pfd_net The name of the output column containing efficiencies
 #'                    of converting primary energy into net final demand energy.
 #'                    Default is `Recca::efficiency_cols$eta_pfd_net`.
+#' @param eta_pfd_gross_colname The name of the output column containing names of gross efficiency parameters.
+#'                              Default is `paste0(eta_pfd_gross, efficiency_name_suffix)`.
+#' @param eta_pfd_net_colname The name of the output column containing names of net efficiency parameters.
+#'                            Default is `paste0(eta_pfd_net, efficiency_name_suffix)`.
 #'
 #' @return A data frame of aggregate efficiencies.
 #'
@@ -220,7 +226,7 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 #' etas %>%
 #'   pivot_clean_complete_eta_pfd()
 pivot_clean_complete_eta_pfd <- function(.eta_df,
-                                         abbreviate_stage_names = TRUE,
+                                         # abbreviate_stage_names = TRUE,
                                          efficiency_name_suffix = Recca::efficiency_cols$efficiency_name_suffix,
                                          primary = "Primary",
                                          final = "Final",
@@ -228,12 +234,8 @@ pivot_clean_complete_eta_pfd <- function(.eta_df,
                                          services = "Services",
                                          wellbeing = "Wellbeing",
                                          # Columns in .eta_df
-                                         # country = Recca::psut_cols$country,
-                                         # year = Recca::psut_cols$year,
-                                         # method = Recca::psut_cols$method,
                                          energy_type = Recca::psut_cols$energy_type,
                                          last_stage = Recca::psut_cols$last_stage,
-                                         # product_sector = Recca::aggregate_cols$product_sector,
                                          eta_pfd_gross = Recca::efficiency_cols$eta_pfd_gross,
                                          eta_pfd_net = Recca::efficiency_cols$eta_pfd_net,
                                          eta_pfd_gross_colname = paste0(eta_pfd_gross, efficiency_name_suffix),
@@ -254,15 +256,12 @@ pivot_clean_complete_eta_pfd <- function(.eta_df,
                                          # Internal columns
                                          .eta = ".eta",
                                          .eta_type = ".eta_type",
-                                         .eta_name = ".eta_name",
-                                         .eta_stages = ".eta_stages") {
-  if (abbreviate_stage_names) {
-    primary <- "p"
-    final <- "f"
-    useful <- "u"
-    services <- "s"
-    wellbeing <- "w"
-  }
+                                         .eta_name = ".eta_name") {
+  # primary <- "p"
+  # final <- "f"
+  # useful <- "u"
+  # services <- "s"
+  # wellbeing <- "w"
 
   # Clean
   matcols <- matsindf::matrix_cols(.eta_df)
@@ -280,11 +279,7 @@ pivot_clean_complete_eta_pfd <- function(.eta_df,
         .data[[.eta_type]] == eta_pfd_net ~ net,
         TRUE ~ NA_character_
       ),
-      "{.eta_stages}" := ifelse(rep(abbreviate_stage_names, times = nrow_temp),
-                                paste0("p", tolower(substr(.data[[last_stage]], 1, 1))),
-                                # FALSE
-                                paste0("Primary->", .data[[last_stage]])),
-      "{.eta_name}" := paste0("eta_", .data[[.eta_stages]]),
+      "{.eta_name}" := paste0("eta_p", tolower(substr(.data[[last_stage]], 1, 1))),
       # Delete several columns we no longer need.
       "{last_stage}" := NULL,
       "{aggregate_primary}" := NULL,
@@ -292,8 +287,7 @@ pivot_clean_complete_eta_pfd <- function(.eta_df,
       "{net_aggregate_demand}" := NULL,
       "{eta_pfd_gross_colname}" := NULL,
       "{eta_pfd_net_colname}" := NULL,
-      "{.eta_type}" := NULL,
-      "{.eta_stages}" := NULL,
+      "{.eta_type}" := NULL
     ) %>%
     tidyr::pivot_wider(names_from = .eta_name, values_from = .eta, values_fill = NA_real_)
 
