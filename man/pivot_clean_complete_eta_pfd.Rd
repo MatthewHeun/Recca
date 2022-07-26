@@ -7,12 +7,6 @@
 pivot_clean_complete_eta_pfd(
   .eta_df,
   efficiency_name_suffix = Recca::efficiency_cols$efficiency_name_suffix,
-  primary = "Primary",
-  final = "Final",
-  useful = "Useful",
-  services = "Services",
-  wellbeing = "Wellbeing",
-  energy_type = Recca::psut_cols$energy_type,
   last_stage = Recca::psut_cols$last_stage,
   eta_pfd_gross = Recca::efficiency_cols$eta_pfd_gross,
   eta_pfd_net = Recca::efficiency_cols$eta_pfd_net,
@@ -39,10 +33,7 @@ pivot_clean_complete_eta_pfd(
 \arguments{
 \item{.eta_df}{A data frame of efficiencies, likely created by \code{calc_eta_pfd()}.}
 
-\item{abbreviate_stage_names}{A boolean that tells whether stage names
-are abbreviated to first letter.
-E.g., "Primary" --> "p", "Final" --> "f", "Useful" --> "u", "Services" --> "s".
-Default is \code{TRUE}.}
+\item{efficiency_name_suffix}{}
 }
 \value{
 A cleaned version of \code{.eta_df}.

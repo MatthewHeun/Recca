@@ -205,10 +205,6 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 #' `matsindf::matrix_cols()` identifies the matrix columns.
 #'
 #' @param .eta_df A data frame of efficiencies, likely created by `calc_eta_pfd()`.
-#' @param abbreviate_stage_names A boolean that tells whether stage names
-#'                               are abbreviated to first letter.
-#'                               E.g., "Primary" --> "p", "Final" --> "f", "Useful" --> "u", "Services" --> "s".
-#'                               Default is `TRUE`.
 #'
 #' @return A cleaned version of `.eta_df`.
 #'
@@ -228,13 +224,7 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 pivot_clean_complete_eta_pfd <- function(.eta_df,
                                          # abbreviate_stage_names = TRUE,
                                          efficiency_name_suffix = Recca::efficiency_cols$efficiency_name_suffix,
-                                         primary = "Primary",
-                                         final = "Final",
-                                         useful = "Useful",
-                                         services = "Services",
-                                         wellbeing = "Wellbeing",
                                          # Columns in .eta_df
-                                         energy_type = Recca::psut_cols$energy_type,
                                          last_stage = Recca::psut_cols$last_stage,
                                          eta_pfd_gross = Recca::efficiency_cols$eta_pfd_gross,
                                          eta_pfd_net = Recca::efficiency_cols$eta_pfd_net,
@@ -257,11 +247,6 @@ pivot_clean_complete_eta_pfd <- function(.eta_df,
                                          .eta = ".eta",
                                          .eta_type = ".eta_type",
                                          .eta_name = ".eta_name") {
-  # primary <- "p"
-  # final <- "f"
-  # useful <- "u"
-  # services <- "s"
-  # wellbeing <- "w"
 
   # Clean
   matcols <- matsindf::matrix_cols(.eta_df)
