@@ -244,12 +244,12 @@ pivot_clean_complete_eta_pfd <- function(.eta_df,
                                          services = "Services",
                                          wellbeing = "Wellbeing",
                                          # Columns in .eta_df
-                                         country = Recca::psut_cols$country,
-                                         year = Recca::psut_cols$year,
-                                         method = Recca::psut_cols$method,
+                                         # country = Recca::psut_cols$country,
+                                         # year = Recca::psut_cols$year,
+                                         # method = Recca::psut_cols$method,
                                          energy_type = Recca::psut_cols$energy_type,
                                          last_stage = Recca::psut_cols$last_stage,
-                                         product_sector = Recca::aggregate_cols$product_sector,
+                                         # product_sector = Recca::aggregate_cols$product_sector,
                                          eta_pfd_gross = Recca::efficiency_cols$eta_pfd_gross,
                                          eta_pfd_net = Recca::efficiency_cols$eta_pfd_net,
                                          eta_pfd_gross_colname = paste0(eta_pfd_gross, efficiency_name_suffix),
@@ -257,6 +257,13 @@ pivot_clean_complete_eta_pfd <- function(.eta_df,
                                          gross_net = Recca::efficiency_cols$gross_net,
                                          gross = Recca::efficiency_cols$gross,
                                          net = Recca::efficiency_cols$net,
+                                         eta_pf = Recca::efficiency_cols$eta_pf,
+                                         eta_fu = Recca::efficiency_cols$eta_fu,
+                                         eta_pu = Recca::efficiency_cols$eta_pu,
+                                         eta_ps = Recca::efficiency_cols$eta_ps,
+                                         eta_us = Recca::efficiency_cols$eta_us,
+                                         eta_pw = Recca::efficiency_cols$eta_pw,
+                                         eta_sw = Recca::efficiency_cols$eta_sw,
                                          aggregate_primary = Recca::aggregate_cols$aggregate_primary,
                                          gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand,
                                          net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
@@ -306,16 +313,42 @@ pivot_clean_complete_eta_pfd <- function(.eta_df,
     tidyr::pivot_wider(names_from = .eta_name, values_from = .eta, values_fill = NA_real_)
 
   # Complete
+  completed <- wider
   # Check for existence of columns before calculating.
   # Need to set the names of the efficiencies somewhere, probably as constants.
-  completed <- wider %>%
-    dplyr::mutate(
-      eta_fu = eta_pu / eta_pf,
-      eta_us = eta_ps / eta_pu,
-      eta_sw = eta_pw / eta_ps
-    )
+  if ((eta_pf %in% names(wider)) & (eta_pu %in% names(wider))) {
+    # Calculate eta_fu
+    completed <- completed %>%
+      dplyr::mutate(
+        "{eta_fu}" := .data[[eta_pu]] / .data[[eta_pf]]
+      ) %>%
+      dplyr::relocate(.data[[eta_fu]], .after = .data[[eta_pf]]) %>%
+      dplyr::relocate(.data[[eta_pu]], .after = .data[[eta_fu]])
+  }
+  if (eta_ps %in% names(wider)) {
+    # Calculate eta_us
+    completed <- completed %>%
+      dplyr::mutate(
+        "{eta_us}" := .data[[eta_ps]] / .data[[eta_pu]]
+      ) %>%
+      dplyr::relocate(.data[[eta_us]], .after = .data[[eta_fu]]) %>%
+      dplyr::relocate(.data[[eta_pu]], .after = .data[[eta_us]]) %>%
+      dplyr::relocate(.data[[eta_ps]], .after = .data[[eta_pu]])
+  }
+  if (eta_pw %in% names(wider)) {
+    # Calculate eta_sw
+    completed <- completed %>%
+      dplyr::mutate(
+        "{eta_sw}" := .data[[eta_pw]] / .data[[eta_ps]]
+      ) %>%
+      dplyr::relocate(.data[[eta_sw]], .after = .data[[eta_us]]) %>%
+      dplyr::relocate(.data[[eta_pu]], .after = .data[[eta_sw]]) %>%
+      dplyr::relocate(.data[[eta_ps]], .after = .data[[eta_pu]]) %>%
+      dplyr::relocate(.data[[eta_pw]], .after = .data[[eta_ps]])
 
+  }
 
+  return(completed)
 }
 
 
