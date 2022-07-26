@@ -141,7 +141,10 @@ test_that("pivot_clean_complete_eta_pfd() works as expected", {
     calc_eta_pfd()
   cleaned <- etas %>%
     pivot_clean_complete_eta_pfd()
-  expect_equal(Recca::efficiency_cols$eta_pf %in% colnames(cleaned))
+  expect_true(Recca::efficiency_cols$eta_pf %in% colnames(cleaned))
+  expect_true(Recca::efficiency_cols$eta_fu %in% colnames(cleaned))
+  expect_true(Recca::efficiency_cols$eta_us %in% colnames(cleaned))
+  expect_true(Recca::efficiency_cols$eta_ps %in% colnames(cleaned))
 })
 
 
