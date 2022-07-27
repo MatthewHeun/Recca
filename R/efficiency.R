@@ -328,7 +328,6 @@ pivot_clean_complete_eta_pfd <- function(.eta_df,
       dplyr::relocate(.data[[eta_pu]], .after = .data[[eta_sw]]) %>%
       dplyr::relocate(.data[[eta_ps]], .after = .data[[eta_pu]]) %>%
       dplyr::relocate(.data[[eta_pw]], .after = .data[[eta_ps]])
-
   }
 
   return(completed)
