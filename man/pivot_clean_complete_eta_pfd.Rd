@@ -33,7 +33,33 @@ pivot_clean_complete_eta_pfd(
 \arguments{
 \item{.eta_df}{A data frame of efficiencies, likely created by \code{calc_eta_pfd()}.}
 
-\item{efficiency_name_suffix}{}
+\item{efficiency_name_suffix}{A string identifying the suffix for names of efficiency variables.
+Default is \code{Recca::efficiency_cols$efficiency_name_suffix}.}
+
+\item{last_stage}{The name of the last stage column.
+Default is \code{Recca::psut_cols$last_stage}.}
+
+\item{eta_pfd_gross, eta_pfd_net}{Names of columns containing gross and net primary-to-final-demand efficiencies.
+Default values from \code{Recca::efficiency_cols}.}
+
+\item{eta_pfd_gross_colname, eta_pfd_net_colname}{Names of columns containing names of gross and net primary-to-final-demand efficiencies.
+Defaults values are \code{paste0(eta_pfd_gross, efficiency_name_suffix)} and
+\code{paste0(eta_pfd_net, efficiency_name_suffix)}.}
+
+\item{gross_net, gross, net}{The name (\code{gross_net}) and values for \code{gross} and \code{net} efficiencies.
+Default values from \code{Recca::efficiency_cols}.}
+
+\item{eta_pf, eta_fu, eta_pu, eta_ps, eta_us, eta_pw, eta_sw}{Names of columns for various efficiencies between energy conversion chain stages..
+"p" means primary stage,
+"f" means final stage,
+"u" means useful stage,
+"s" means services stage, and
+"w" means well-being stage.}
+
+\item{aggregate_primary, gross_aggregate_demand, net_aggregate_demand}{Names of columns for net and gross aggregate energy consumption.
+See \code{Recca::aggregate_cols} for default values.}
+
+\item{.eta, .eta_type, .eta_name}{Names of internally-generated columns used for intermediate calculations.}
 }
 \value{
 A cleaned version of \code{.eta_df}.

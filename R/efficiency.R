@@ -205,6 +205,26 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 #' `matsindf::matrix_cols()` identifies the matrix columns.
 #'
 #' @param .eta_df A data frame of efficiencies, likely created by `calc_eta_pfd()`.
+#' @param efficiency_name_suffix A string identifying the suffix for names of efficiency variables.
+#'                               Default is `Recca::efficiency_cols$efficiency_name_suffix`.
+#' @param last_stage The name of the last stage column.
+#'                   Default is `Recca::psut_cols$last_stage`.
+#' @param eta_pfd_gross,eta_pfd_net Names of columns containing gross and net primary-to-final-demand efficiencies.
+#'                                  Default values from `Recca::efficiency_cols`.
+#' @param eta_pfd_gross_colname,eta_pfd_net_colname Names of columns containing names of gross and net primary-to-final-demand efficiencies.
+#'                                                  Defaults values are `paste0(eta_pfd_gross, efficiency_name_suffix)` and
+#'                                                  `paste0(eta_pfd_net, efficiency_name_suffix)`.
+#' @param gross_net,gross,net The name (`gross_net`) and values for `gross` and `net` efficiencies.
+#'                            Default values from `Recca::efficiency_cols`.
+#' @param eta_pf,eta_fu,eta_pu,eta_ps,eta_us,eta_pw,eta_sw Names of columns for various efficiencies between energy conversion chain stages..
+#'                                                         "p" means primary stage,
+#'                                                         "f" means final stage,
+#'                                                         "u" means useful stage,
+#'                                                         "s" means services stage, and
+#'                                                         "w" means well-being stage.
+#' @param aggregate_primary,gross_aggregate_demand,net_aggregate_demand Names of columns for net and gross aggregate energy consumption.
+#'                                                                      See `Recca::aggregate_cols` for default values.
+#' @param .eta,.eta_type,.eta_name Names of internally-generated columns used for intermediate calculations.
 #'
 #' @return A cleaned version of `.eta_df`.
 #'
@@ -222,7 +242,6 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 #' etas %>%
 #'   pivot_clean_complete_eta_pfd()
 pivot_clean_complete_eta_pfd <- function(.eta_df,
-                                         # abbreviate_stage_names = TRUE,
                                          efficiency_name_suffix = Recca::efficiency_cols$efficiency_name_suffix,
                                          # Columns in .eta_df
                                          last_stage = Recca::psut_cols$last_stage,

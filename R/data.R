@@ -76,8 +76,8 @@
 #' \item{eta_pu}{The string name for primary-to-useful efficiency.}
 #' \item{eta_ps}{The string name for primary-to-services efficiency.}
 #' \item{eta_us}{The string name for useful-to-services efficiency.}
-#' \item{eta_pw}{The string name for primary-to-wellbeing efficiency.}
-#' \item{eta_sw}{The string name for services-to-wellbeing efficiency.}
+#' \item{eta_pw}{The string name for primary-to-well-being efficiency.}
+#' \item{eta_sw}{The string name for services-to-well-being efficiency.}
 #' \item{efficiency_name_suffix}{The suffix for names of columns containing efficiency names.}
 #' \item{gross_net}{The name of a column that contains "Gross" or "Net" for the type of efficiency.}
 #' \item{gross}{The entry in the `gross_net` column that identifies a gross efficiency.}
