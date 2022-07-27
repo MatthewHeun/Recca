@@ -216,15 +216,16 @@ finaldemand_aggregates <- function(.sutdata = NULL,
     # "Total", "Product", or "Flow".
 
     # When Y_mat_cols and U_mat_cols are NULL (i.e., no columns selected),
-    # Those matrices are NULL and give NULL results here.
+    # we get NULL results above for net.
     # That results should really be 0.
     # So check for that condition.
     if (is.null(net)) {
       net <- 0
     }
-    if (is.null(gross)) {
-      gross <- 0
-    }
+    # We don't ever get null for gross, because sum_byname(NULL, NULL) is 0.
+    # if (is.null(gross)) {
+    #   gross <- 0
+    # }
 
     if (by == "Sector") {
       # If "Sector" aggregation is requested, the results will be row vectors.
