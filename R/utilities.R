@@ -771,7 +771,7 @@ write_ecc_to_excel <- function(.psut_data = NULL,
 
   # Check if path exists. If so, throw an error.
   if (file.exists(path) & !overwrite_file) {
-    stop(paste("File", path, "already exists. Call write_excel_ECC(overwrite = TRUE) to overwrite."))
+    stop(paste("File", path, "already exists. Call write_ecc_to_excel(overwrite = TRUE) to overwrite."))
   }
   # Create the workbook
   ecc_wb <- openxlsx::createWorkbook()
@@ -1005,5 +1005,6 @@ calc_mats_locations_excel <- function(R, U, V, Y, r_eiou, U_eiou, U_feed, S_unit
        U_feed = list(origin = originU_feed, extent = extentU_feed),
        S_units = list(origin = originS_units, extent = extentS_units))
 }
+
 
 

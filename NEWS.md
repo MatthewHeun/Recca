@@ -4,6 +4,9 @@ output: html_document
 ---
 
 
+* `calc_eta_pfd()` now includes 
+  columns of names of efficiencies to its output.
+  This feature will assist pivoting on efficiencies later.
 * New function `footprint_aggregates()` calculates 
   primary and final demand aggregates
   for each isolated row and column in the **Y**
@@ -32,13 +35,16 @@ output: html_document
   aggregates PSUT matrices to a piece of row and column labels. 
 * New argument `add_net_gross_cols` on `primary_aggregates()` that tells
   whether to add both net and gross primary energy columns.
-  (Net and gross primary energy aggregate columns will contain identical values, 
-  but the presence of both net and gross columns may make it easier to mesh with 
+  (Net and gross primary energy aggregate columns will contain identical values,
+  but the presence of both net and gross columns may make it easier to mesh with
   results from the `finaldemand_aggregates()` function, 
   which produces net and gross columns that are different.)
 * `aggregate_regions()` now returns an empty data frame
   with the expected columns if the input data frame 
   is empty.
+* Many new tests for new features.
+    * Now up to 603 tests, all passing.
+    * Test coverage remains at 100 %.
 
 
 # Recca 0.1.38 (2022-04-02) [![DOI](https://zenodo.org/badge/116066838.svg)](https://zenodo.org/badge/latestdoi/116066838)

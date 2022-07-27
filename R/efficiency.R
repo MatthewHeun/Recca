@@ -70,16 +70,18 @@ calc_eta_i <- function(.sutmats,
 #'
 #' Calculates aggregate (total) primary-to-final demand (gross and net) efficiencies
 #' across the energy conversion chain.
-#'
 #' `.aggregate_df` is probably formed by joining the results from
-#' `primary_aggregates()` and `finaldemand_aggregates()`.
+#' `primary_aggregates()` and `finaldemand_aggregates()`
+#' or by calling `footprint_aggregates()`.
 #' See examples.
 #'
 #' @param .aggregate_df A data frame or list containing columns
 #'                      `aggregate_primary_colname`,
 #'                      `net_aggregate_demand_colname`,
 #'                      `gross_aggregate_demand_colname`,
-#'                      probably formed by joining the results from
+#'                      probably the result of calling `footprint_aggregates()`.
+#' @param efficiency_name_suffix The suffix for efficiency names.
+#'                               Default is `Recca::efficiency_cols$efficiency_name_suffix`.
 #' @param aggregate_primary_colname The name of the column in `p_aggregates` that contains primary energy or exergy aggregates.
 #'                                  Default is `Recca::aggregate_cols$aggregate_primary`.
 #' @param gross_aggregate_demand_colname The name of the column in `finaldemand_aggregates`
@@ -88,12 +90,18 @@ calc_eta_i <- function(.sutmats,
 #' @param net_aggregate_demand_colname The name of the column in `finaldemand_aggregates`
 #'                                     that contains net final demand aggregates.
 #'                                     Default is `Recca::aggregate_cols$net_aggregate_demand`.
+#' @param energy_type The name of the energy type column. Default is `Recca::psut_cols$energy_type`.
+#' @param last_stage The name of the last stage column. Default is `Recca::psut_cols$last_stage`.
 #' @param eta_pfd_gross The name of the output column containing efficiencies
 #'                      of converting primary energy into gross final demand energy.
 #'                      Default is `Recca::efficiency_cols$eta_pfd_gross`.
 #' @param eta_pfd_net The name of the output column containing efficiencies
 #'                    of converting primary energy into net final demand energy.
 #'                    Default is `Recca::efficiency_cols$eta_pfd_net`.
+#' @param eta_pfd_gross_colname The name of the output column containing names of gross efficiency parameters.
+#'                              Default is `paste0(eta_pfd_gross, efficiency_name_suffix)`.
+#' @param eta_pfd_net_colname The name of the output column containing names of net efficiency parameters.
+#'                            Default is `paste0(eta_pfd_net, efficiency_name_suffix)`.
 #'
 #' @return A data frame of aggregate efficiencies.
 #'
@@ -131,22 +139,201 @@ calc_eta_i <- function(.sutmats,
 #'                         IEATools::iea_cols$last_stage)) %>%
 #'   calc_eta_pfd()
 calc_eta_pfd <- function(.aggregate_df = NULL,
+                         efficiency_name_suffix = Recca::efficiency_cols$efficiency_name_suffix,
                          # Inputs
                          aggregate_primary_colname = Recca::aggregate_cols$aggregate_primary,
                          gross_aggregate_demand_colname = Recca::aggregate_cols$gross_aggregate_demand,
                          net_aggregate_demand_colname = Recca::aggregate_cols$net_aggregate_demand,
+                         energy_type = Recca::psut_cols$energy_type,
+                         last_stage = Recca::psut_cols$last_stage,
                          # Outputs
                          eta_pfd_gross = Recca::efficiency_cols$eta_pfd_gross,
-                         eta_pfd_net = Recca::efficiency_cols$eta_pfd_net) {
-  eta_pfd_func <- function(primary, gross_fd, net_fd) {
-    eta_pfd_gross_val <- gross_fd / primary
-    eta_pfd_net_val <- net_fd / primary
-    list(eta_pfd_gross_val, eta_pfd_net_val) %>%
-      magrittr::set_names(c(eta_pfd_gross, eta_pfd_net))
+                         eta_pfd_net = Recca::efficiency_cols$eta_pfd_net,
+                         eta_pfd_gross_colname = paste0(eta_pfd_gross, efficiency_name_suffix),
+                         eta_pfd_net_colname = paste0(eta_pfd_net, efficiency_name_suffix)) {
+
+  eta_pfd_func <- function(primary_val, gross_fd_val, net_fd_val, energy_type_val, last_stage_val) {
+    eta_pfd_gross_val <- gross_fd_val / primary_val
+    eta_pfd_net_val <- net_fd_val / primary_val
+    eta_pfd_gross_name <- paste0("eta_", energy_type_val, "_p", substr(last_stage_val, 1, 1) %>% tolower(), "_gross")
+    eta_pfd_net_name <- gsub(pattern = "_gross", replacement = "_net", x = eta_pfd_gross_name)
+
+    c(eta_pfd_gross_val, eta_pfd_net_val, eta_pfd_gross_name, eta_pfd_net_name) %>%
+      magrittr::set_names(c(eta_pfd_gross, eta_pfd_net, eta_pfd_gross_colname, eta_pfd_net_colname))
   }
-  matsindf::matsindf_apply(.aggregate_df,
-                           FUN = eta_pfd_func,
-                           primary = aggregate_primary_colname,
-                           gross_fd = gross_aggregate_demand_colname,
-                           net_fd = net_aggregate_demand_colname)
+  out <- matsindf::matsindf_apply(.aggregate_df,
+                                  FUN = eta_pfd_func,
+                                  primary_val = aggregate_primary_colname,
+                                  gross_fd_val = gross_aggregate_demand_colname,
+                                  net_fd_val = net_aggregate_demand_colname,
+                                  energy_type_val = energy_type,
+                                  last_stage_val = last_stage)
+  if (is.data.frame(out)) {
+    out <- out %>%
+      dplyr::mutate(
+        "{eta_pfd_gross}" := as.numeric(unlist(.data[[eta_pfd_gross]])),
+        "{eta_pfd_net}" := as.numeric(unlist(.data[[eta_pfd_net]]))
+      )
+  }
+  return(out)
 }
+
+
+#' Pivot, clean, and complete an efficiency data frame
+#'
+#' Efficiency data frames (created by `calc_eta_pfd()`)
+#' include (by default) columns of both
+#' primary->final demand efficiencies and efficiency names.
+#' The efficiency names are preferred to be columns to themselves.
+#' The efficiency data frames can contain residual PSUT matrices,
+#' which are cumbersome to carry around.
+#' Furthermore, the efficiency data frames
+#' contain only primary-to-final demand efficiencies,
+#' not any intermediate efficiencies.
+#' E.g., the data frame would contain
+#' primary-to-final and primary-to-useful efficiencies
+#' but not final-to-useful efficiencies.
+#' This function cleans up these problems by
+#' deleting columns of PSUT matrices (thereby cleaning the data frame),
+#' pivoting to put all efficiencies in columns (thereby pivoting the data frame), and
+#' calculating missing efficiencies (thereby completing the data frame).
+#'
+#' This function knows about the following stages
+#' in energy conversion chains: Primary, Final, Useful, Services, and Well-being.
+#'
+#' The cleaning step eliminates all columns that contain exclusively matrices.
+#' `matsindf::matrix_cols()` identifies the matrix columns.
+#'
+#' @param .eta_df A data frame of efficiencies, likely created by `calc_eta_pfd()`.
+#' @param efficiency_name_suffix A string identifying the suffix for names of efficiency variables.
+#'                               Default is `Recca::efficiency_cols$efficiency_name_suffix`.
+#' @param last_stage The name of the last stage column.
+#'                   Default is `Recca::psut_cols$last_stage`.
+#' @param eta_pfd_gross,eta_pfd_net Names of columns containing gross and net primary-to-final-demand efficiencies.
+#'                                  Default values from `Recca::efficiency_cols`.
+#' @param eta_pfd_gross_colname,eta_pfd_net_colname Names of columns containing names of gross and net primary-to-final-demand efficiencies.
+#'                                                  Defaults values are `paste0(eta_pfd_gross, efficiency_name_suffix)` and
+#'                                                  `paste0(eta_pfd_net, efficiency_name_suffix)`.
+#' @param gross_net,gross,net The name (`gross_net`) and values for `gross` and `net` efficiencies.
+#'                            Default values from `Recca::efficiency_cols`.
+#' @param eta_pf,eta_fu,eta_pu,eta_ps,eta_us,eta_pw,eta_sw Names of columns for various efficiencies between energy conversion chain stages..
+#'                                                         "p" means primary stage,
+#'                                                         "f" means final stage,
+#'                                                         "u" means useful stage,
+#'                                                         "s" means services stage, and
+#'                                                         "w" means well-being stage.
+#' @param aggregate_primary,gross_aggregate_demand,net_aggregate_demand Names of columns for net and gross aggregate energy consumption.
+#'                                                                      See `Recca::aggregate_cols` for default values.
+#' @param .eta,.eta_type,.eta_name Names of internally-generated columns used for intermediate calculations.
+#'
+#' @return A cleaned version of `.eta_df`.
+#'
+#' @export
+#'
+#' @examples
+#' psut_mats <- UKEnergy2000mats %>%
+#'   tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
+#' p_industries <- c("Resources - Crude", "Resources - NG")
+#' fd_sectors <- c("Residential", "Transport", "Oil fields")
+#' footprint_aggs <- psut_mats %>%
+#'   Recca::footprint_aggregates(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
+#' etas <- footprint_aggs %>%
+#'   calc_eta_pfd()
+#' etas %>%
+#'   pivot_clean_complete_eta_pfd()
+pivot_clean_complete_eta_pfd <- function(.eta_df,
+                                         efficiency_name_suffix = Recca::efficiency_cols$efficiency_name_suffix,
+                                         # Columns in .eta_df
+                                         last_stage = Recca::psut_cols$last_stage,
+                                         eta_pfd_gross = Recca::efficiency_cols$eta_pfd_gross,
+                                         eta_pfd_net = Recca::efficiency_cols$eta_pfd_net,
+                                         eta_pfd_gross_colname = paste0(eta_pfd_gross, efficiency_name_suffix),
+                                         eta_pfd_net_colname = paste0(eta_pfd_net, efficiency_name_suffix),
+                                         gross_net = Recca::efficiency_cols$gross_net,
+                                         gross = Recca::efficiency_cols$gross,
+                                         net = Recca::efficiency_cols$net,
+                                         eta_pf = Recca::efficiency_cols$eta_pf,
+                                         eta_fu = Recca::efficiency_cols$eta_fu,
+                                         eta_pu = Recca::efficiency_cols$eta_pu,
+                                         eta_ps = Recca::efficiency_cols$eta_ps,
+                                         eta_us = Recca::efficiency_cols$eta_us,
+                                         eta_pw = Recca::efficiency_cols$eta_pw,
+                                         eta_sw = Recca::efficiency_cols$eta_sw,
+                                         aggregate_primary = Recca::aggregate_cols$aggregate_primary,
+                                         gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand,
+                                         net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
+                                         # Internal columns
+                                         .eta = ".eta",
+                                         .eta_type = ".eta_type",
+                                         .eta_name = ".eta_name") {
+
+  # Clean
+  matcols <- matsindf::matrix_cols(.eta_df)
+  cleaned <- .eta_df %>%
+    dplyr::select(-dplyr::any_of(matcols))
+
+  # Pivot
+  temp <- cleaned %>%
+    tidyr::pivot_longer(cols = c(eta_pfd_gross, eta_pfd_net), names_to = .eta_type, values_to = .eta)
+  nrow_temp <- nrow(temp)
+  wider <- temp %>%
+    dplyr::mutate(
+      "{gross_net}" := dplyr::case_when(
+        .data[[.eta_type]] == eta_pfd_gross ~ gross,
+        .data[[.eta_type]] == eta_pfd_net ~ net,
+        TRUE ~ NA_character_
+      ),
+      "{.eta_name}" := paste0("eta_p", tolower(substr(.data[[last_stage]], 1, 1))),
+      # Delete several columns we no longer need.
+      "{last_stage}" := NULL,
+      "{aggregate_primary}" := NULL,
+      "{gross_aggregate_demand}" := NULL,
+      "{net_aggregate_demand}" := NULL,
+      "{eta_pfd_gross_colname}" := NULL,
+      "{eta_pfd_net_colname}" := NULL,
+      "{.eta_type}" := NULL
+    ) %>%
+    tidyr::pivot_wider(names_from = .eta_name, values_from = .eta, values_fill = NA_real_)
+
+  # Complete
+  completed <- wider
+  # Check for existence of columns before calculating.
+  # Need to set the names of the efficiencies somewhere, probably as constants.
+  if ((eta_pf %in% names(wider)) & (eta_pu %in% names(wider))) {
+    # Calculate eta_fu
+    completed <- completed %>%
+      dplyr::mutate(
+        "{eta_fu}" := .data[[eta_pu]] / .data[[eta_pf]]
+      ) %>%
+      dplyr::relocate(.data[[eta_fu]], .after = .data[[eta_pf]]) %>%
+      dplyr::relocate(.data[[eta_pu]], .after = .data[[eta_fu]])
+  }
+  if (eta_ps %in% names(wider)) {
+    # Calculate eta_us
+    completed <- completed %>%
+      dplyr::mutate(
+        "{eta_us}" := .data[[eta_ps]] / .data[[eta_pu]]
+      ) %>%
+      dplyr::relocate(.data[[eta_us]], .after = .data[[eta_fu]]) %>%
+      dplyr::relocate(.data[[eta_pu]], .after = .data[[eta_us]]) %>%
+      dplyr::relocate(.data[[eta_ps]], .after = .data[[eta_pu]])
+  }
+  if (eta_pw %in% names(wider)) {
+    # Calculate eta_sw
+    completed <- completed %>%
+      dplyr::mutate(
+        "{eta_sw}" := .data[[eta_pw]] / .data[[eta_ps]]
+      ) %>%
+      dplyr::relocate(.data[[eta_sw]], .after = .data[[eta_us]]) %>%
+      dplyr::relocate(.data[[eta_pu]], .after = .data[[eta_sw]]) %>%
+      dplyr::relocate(.data[[eta_ps]], .after = .data[[eta_pu]]) %>%
+      dplyr::relocate(.data[[eta_pw]], .after = .data[[eta_ps]])
+  }
+
+  return(completed)
+}
+
+
+
+
+

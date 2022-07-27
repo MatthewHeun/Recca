@@ -88,7 +88,82 @@ test_that("calc_eta_pfu() works correctly", {
                                   IEATools::iea_cols$last_stage)) %>%
     calc_eta_pfd()
 
-  expect_equal(etas$eta_pfd_gross, list(0.799193548387097, 5384063619.67424, 0.279466456989247, 5097922181.12103))
-  expect_equal(etas$eta_pfd_net, list(0.771505376344086, 5384063619.67343, 0.278660005376344, 5097922181.12023))
+  expect_equal(etas$eta_pfd_gross, c(0.799193548387097, 5384063619.67424, 0.279466456989247, 5097922181.12103))
+  expect_equal(etas$eta_pfd_net, c(0.771505376344086, 5384063619.67343, 0.278660005376344, 5097922181.12023))
 })
+
+
+test_that("calc_eta_pfd() works with the output from footprint_aggregates()", {
+  psut_mats <- UKEnergy2000mats %>%
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
+  p_industries <- c("Resources - Crude", "Resources - NG")
+  fd_sectors <- c("Residential", "Transport", "Oil fields")
+  footprint_aggs <- psut_mats %>%
+    Recca::footprint_aggregates(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
+  etas <- footprint_aggs %>%
+    calc_eta_pfd()
+  # Make sure expected column names are present
+  expect_true(Recca::efficiency_cols$eta_pfd_gross %in% names(etas))
+  expect_true(Recca::efficiency_cols$eta_pfd_net %in% names(etas))
+  expect_true(paste0(Recca::efficiency_cols$eta_pfd_gross,
+                     Recca::efficiency_cols$efficiency_name_suffix) %in% names(etas))
+  expect_true(paste0(Recca::efficiency_cols$eta_pfd_net,
+                     Recca::efficiency_cols$efficiency_name_suffix) %in% names(etas))
+
+  # Check content of name columns.
+  expect_equal(etas[[paste0(Recca::efficiency_cols$eta_pfd_gross,
+                            Recca::efficiency_cols$efficiency_name_suffix)]] %>% unique(),
+               list("eta_E_pf_gross", "eta_E_ps_gross", "eta_E_pu_gross", "eta_X_ps_gross"))
+  expect_equal(etas[[paste0(Recca::efficiency_cols$eta_pfd_net,
+                            Recca::efficiency_cols$efficiency_name_suffix)]] %>% unique(),
+               list("eta_E_pf_net", "eta_E_ps_net", "eta_E_pu_net", "eta_X_ps_net"))
+
+  # Now try when abbreviations are not used.
+  etas_no_abbrev <- footprint_aggs %>%
+    calc_eta_pfd()
+  expect_equal(etas_no_abbrev[[paste0(Recca::efficiency_cols$eta_pfd_gross,
+                                      Recca::efficiency_cols$efficiency_name_suffix)]] %>% unique(),
+               list("eta_E_pf_gross", "eta_E_ps_gross", "eta_E_pu_gross", "eta_X_ps_gross"))
+  expect_equal(etas_no_abbrev[[paste0(Recca::efficiency_cols$eta_pfd_net,
+                                      Recca::efficiency_cols$efficiency_name_suffix)]] %>% unique(),
+               list("eta_E_pf_net", "eta_E_ps_net", "eta_E_pu_net", "eta_X_ps_net"))
+})
+
+
+test_that("pivot_clean_complete_eta_pfd() works as expected", {
+  psut_mats <- UKEnergy2000mats %>%
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
+  p_industries <- c("Resources - Crude", "Resources - NG")
+  fd_sectors <- c("Residential", "Transport", "Oil fields")
+  footprint_aggs <- psut_mats %>%
+    Recca::footprint_aggregates(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
+  etas <- footprint_aggs %>%
+    calc_eta_pfd()
+  cleaned <- etas %>%
+    pivot_clean_complete_eta_pfd()
+  expect_true(Recca::efficiency_cols$eta_pf %in% colnames(cleaned))
+  expect_true(Recca::efficiency_cols$eta_fu %in% colnames(cleaned))
+  expect_true(Recca::efficiency_cols$eta_us %in% colnames(cleaned))
+  expect_true(Recca::efficiency_cols$eta_ps %in% colnames(cleaned))
+})
+
+
+test_that("pivot_clean_complete_eta_pfd() works with wellbeing as last stage", {
+  psut_mats <- UKEnergy2000mats %>%
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
+  # Say the bottom row has last stage wellbeing.
+  psut_mats[[Recca::psut_cols$last_stage]][[4]] <- "Well-being"
+  p_industries <- c("Resources - Crude", "Resources - NG")
+  fd_sectors <- c("Residential", "Transport", "Oil fields")
+  footprint_aggs <- psut_mats %>%
+    Recca::footprint_aggregates(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
+  etas <- footprint_aggs %>%
+    calc_eta_pfd()
+  cleaned <- etas %>%
+    pivot_clean_complete_eta_pfd()
+  expect_true(Recca::efficiency_cols$eta_sw %in% colnames(cleaned))
+  expect_true(Recca::efficiency_cols$eta_pw %in% colnames(cleaned))
+})
+
+
 

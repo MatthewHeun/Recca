@@ -9,7 +9,7 @@ footprint_aggregates(
   p_industries,
   fd_sectors,
   pattern_type = c("exact", "leading", "trailing", "anywhere"),
-  unnest = TRUE,
+  unnest = FALSE,
   R = Recca::psut_cols$R,
   U = Recca::psut_cols$U,
   U_feed = Recca::psut_cols$U_feed,
@@ -70,7 +70,7 @@ This argument is passed to both \code{primary_aggregates()} and \code{finaldeman
 
 \item{unnest}{A boolean that tells whether to unnest the outgoing data.
 When \code{TRUE}, creates a new column called \code{product_sector} and columns of primary and final demand aggregates.
-Default is \code{TRUE}.}
+Default is \code{FALSE}.}
 
 \item{R, U, U_feed, V, Y, S_units}{Matrices that describe the energy conversion chain (ECC).
 See \code{Recca::psut_cols} for default values.}
@@ -128,9 +128,13 @@ Use \code{unnest} to define how the aggregate data are added to the right side o
 \examples{
 p_industries <- c("Resources - Crude", "Resources - NG")
 fd_sectors <- c("Residential", "Transport", "Oil fields")
-UKEnergy2000mats \%>\%
-  tidyr::spread(key = matrix.name, value = matrix) \%>\%
+psut_mats <- UKEnergy2000mats \%>\%
+  tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
+psut_mats \%>\%
+  Recca::footprint_aggregates(p_industries = p_industries,
+                              fd_sectors = fd_sectors)
+psut_mats \%>\%
   Recca::footprint_aggregates(p_industries = p_industries,
                               fd_sectors = fd_sectors,
-                              unnest = FALSE)
+                              unnest = TRUE)
 }
