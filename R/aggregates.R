@@ -183,37 +183,49 @@ finaldemand_aggregates <- function(.sutdata = NULL,
   by <- match.arg(by)
 
   fd_func <- function(U_mat, U_feed_mat, Y_mat){
-    U_eiou <- matsbyname::difference_byname(U_mat, U_feed_mat)
+    U_eiou_mat <- matsbyname::difference_byname(U_mat, U_feed_mat)
 
-    net_prelim <- Y_mat %>%
+    Y_mat_cols <- Y_mat %>%
       matsbyname::select_cols_byname(retain_pattern =
                                        RCLabels::make_or_pattern(strings = fd_sectors, pattern_type = pattern_type))
-    gross_prelim <- U_eiou %>%
+    U_eiou_mat_cols <- U_eiou_mat %>%
       matsbyname::select_cols_byname(retain_pattern =
                                        RCLabels::make_or_pattern(strings = fd_sectors, pattern_type = pattern_type))
 
     # Use the right function for the requested aggregation
     if (by == "Total") {
-      net <- net_prelim %>%
+      net <- Y_mat_cols %>%
         matsbyname::sumall_byname()
-      gross <- gross_prelim %>%
+      gross <- U_eiou_mat_cols %>%
         matsbyname::sumall_byname() %>%
         matsbyname::sum_byname(net)
     } else if (by == "Product") {
-      net <- net_prelim %>%
+      net <- Y_mat_cols %>%
         matsbyname::rowsums_byname()
-      gross <- gross_prelim %>%
+      gross <- U_eiou_mat_cols %>%
         matsbyname::rowsums_byname() %>%
         matsbyname::sum_byname(net)
     } else if (by == "Sector") {
-      net <- net_prelim %>%
+      net <- Y_mat_cols %>%
         matsbyname::colsums_byname()
-      gross <- gross_prelim %>%
+      gross <- U_eiou_mat_cols %>%
         matsbyname::colsums_byname() %>%
         matsbyname::sum_byname(net)
     }
     # No need for a last "else" clause, because match.arg ensures we have only one of
     # "Total", "Product", or "Flow".
+
+    # When Y_mat_cols and U_mat_cols are NULL (i.e., no columns selected),
+    # we get NULL results above for net.
+    # That results should really be 0.
+    # So check for that condition.
+    if (is.null(net)) {
+      net <- 0
+    }
+    # We don't ever get null for gross, because sum_byname(NULL, NULL) is 0.
+    # if (is.null(gross)) {
+    #   gross <- 0
+    # }
 
     if (by == "Sector") {
       # If "Sector" aggregation is requested, the results will be row vectors.

@@ -395,3 +395,34 @@ test_that("footprint_aggregates() works as expected", {
   expect_true(Recca::aggregate_cols$net_aggregate_demand %in% names(footprint_aggs_unnested))
   expect_true(Recca::aggregate_cols$gross_aggregate_demand %in% names(footprint_aggs_unnested))
 })
+
+
+test_that("footprint_aggregates() works with Losses", {
+  # At one point (27 July 2022) there was a problem with footprint_aggregates()
+  # where it provided a NULL value for industries that were in Y but not in fd_sectors.
+  # This test triggered that bug.
+  p_industries <- c("Resources - Crude", "Resources - NG")
+  fd_sectors <- c("Residential", "Transport")
+  footprint_aggs <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    dplyr::filter(Last.stage %in% c(IEATools::last_stages$final)) %>%
+    # Rename Residential to "Losses" to trigger the error
+    dplyr::mutate(
+      Y = matsbyname::setcolnames_byname(Y, c("Losses", "Transport"))
+    ) %>%
+    Recca::footprint_aggregates(p_industries = p_industries,
+                                fd_sectors = fd_sectors,
+                                unnest = TRUE)
+  # Check if any net are NULL.  None should be.
+  netfd <- footprint_aggs[[Recca::aggregate_cols$net_aggregate_demand]]
+  which_null_net <- sapply(netfd, FUN = function(this_entry) {
+    is.null(this_entry)
+  })
+  expect_true(!any(which_null_net))
+  # Also check gross
+  grossfd <- footprint_aggs[[Recca::aggregate_cols$gross_aggregate_demand]]
+  which_null_gross <- sapply(grossfd, FUN = function(this_entry) {
+    is.null(this_entry)
+  })
+  expect_true(!any(which_null_gross))
+})
