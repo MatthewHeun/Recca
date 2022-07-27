@@ -43,8 +43,8 @@ output: html_document
   with the expected columns if the input data frame 
   is empty.
 * Many new tests for new features.
-    * Now up to 598 tests, all passing. ********
-    * Test coverage remains at 100 %. ********
+    * Now up to 603 tests, all passing.
+    * Test coverage remains at 100 %.
 
 
 # Recca 0.1.38 (2022-04-02) [![DOI](https://zenodo.org/badge/116066838.svg)](https://zenodo.org/badge/latestdoi/116066838)
