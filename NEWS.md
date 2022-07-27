@@ -9,8 +9,7 @@ output: html_document
   This feature will assist pivoting on efficiencies later.
 * New function `footprint_aggregates()` calculates 
   primary and final demand aggregates
-  for each isolated row and column in the **Y**
-  matrix.
+  for each isolated row and column in **Y**.
 * `new_Y()` now also produced matrices
   **U_feed**, **U_eiou**, and **r_eiou**
   in its output.
@@ -20,7 +19,7 @@ output: html_document
   stores ECCs in spatial format in Excel.
   All ECC matrices are written to the Excel file:
   **R**, **U**, **V**, **Y**, 
-  **U_eiou**, **U_feed**, **r_eiou**, **S_units**.
+  **U_feed**, **U_eiou**, **r_eiou**, and **S_units**.
 * `primary_aggregates()` and `finaldemand_aggregates()`
   no longer require `p_industries` and `fd_sectors`
   to be present in the incoming list or data frame.
