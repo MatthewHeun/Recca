@@ -6,6 +6,8 @@
 \usage{
 calc_io_mats(
   .sutdata = NULL,
+  method = c("solve", "QR", "SVD"),
+  tol = .Machine$double.eps,
   method_q_calculation = c("sum_U_Y_rows", "sum_R_V_cols"),
   R = "R",
   U = "U",
@@ -38,81 +40,86 @@ calc_io_mats(
 \arguments{
 \item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
 
+\item{method}{One of "solve", "QR", or "SVD". Default is "solve". See details.}
+
+\item{tol}{The tolerance for detecting linear dependencies during matrix inversion.
+Default is \code{.Machine$double.eps}.}
+
 \item{method_q_calculation}{Specifies the method which with the q vector should be calculated.
 Default is \code{sum_U_Y_rows}.
 Alternatively, an analyst can choose to use the \code{sum_R_V_cols} method.
 In the case of a balanced ECC, the method does not matter.}
 
-\item{R}{resources (\code{R}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{R}".}
+\item{R}{The resources (\code{R}) matrix or name of the column in \code{.sutmats} that contains same. Default is "R".}
 
-\item{U}{use (\code{U}) matrix or name of the column in `.sutmats`` that contains same. Default is "U".}
+\item{U}{The use (\code{U}) matrix or name of the column in `.sutmats`` that contains same. Default is "U".}
 
 \item{U_feed}{use matrix or name of the column in \code{.sutmats} that contains same. Default is "U_feed".}
 
-\item{V}{make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "V".}
+\item{V}{The make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "V".}
 
-\item{Y}{final demand (\code{Y}) matrix or name of the column in \code{.sutmats} that contains same. Default is "Y".}
+\item{Y}{The final demand (\code{Y}) matrix or name of the column in \code{.sutmats} that contains same. Default is "Y".}
 
-\item{S_units}{(\code{S_units}) matrix or name of the column in \code{.sutmats} that contains same. Default is "S_units".}
+\item{S_units}{The unit summation matrix (\code{S_units}) or name of the column in \code{.sutmats} that contains same. Default is "S_units".}
 
-\item{y}{name for \code{y} vector on output. Default is "y".
+\item{y}{The name for the \code{y} vector on output. Default is "y".
 \code{y} is calculated by \code{rowsums(Y)}.}
 
-\item{q}{name for \code{q} vector on output. Default is "q".
+\item{q}{The name for the \code{q} vector on output. Default is "q".
 \code{q} is calculated by \code{rowsums(U) + y}.}
 
-\item{f}{name for \code{f} vector on output. Default is "f".
+\item{f}{The name for the \code{f} vector on output. Default is "f".
 \code{f} is calculated by \code{colsums(U)}.}
 
-\item{g}{name for \code{g} vector on output. Default is "g".
+\item{g}{The name for the \code{g} vector on output. Default is "g".
 \code{g} is calculated by \code{rowsums(V)}.}
 
-\item{h}{name for \code{h} vector on output. Default is "h".
+\item{h}{The name for the \code{h} vector on output. Default is "h".
 \code{h} is calculated by \code{colsums(transpose(R))}.}
 
-\item{r}{name for \code{r} vector on output. Default is "r".
+\item{r}{The name for the \code{r} vector on output. Default is "r".
 \code{r} is calculated by \code{rowsums(R)}.}
 
-\item{W}{name for \code{W} matrix on output. Default is "W".
+\item{W}{The name for the \code{W} matrix on output. Default is "W".
 \code{W} is calculated by \code{transpose(V) - U}.}
 
-\item{K}{name for \code{K} matrix on output. Default is "K".
+\item{K}{The name for the \code{K} matrix on output. Default is "K".
 \code{K} is calculated by \code{U * f_hat_inv}.}
 
-\item{Z}{name for \code{Z} matrix on output. Default is "Z".
+\item{Z}{The name fort the \code{Z} matrix on output. Default is "Z".
 \code{Z} is calculated by \code{U * g_hat_inv}.}
 
-\item{C}{name for \code{C} matrix on output. Default is "C".
+\item{C}{The name for the \code{C} matrix on output. Default is "C".
 \code{C} is calculated by \code{transpose(V) * g_hat_inv}.}
 
-\item{D}{name for \code{D} matrix on output. Default is "D".
+\item{D}{The name for the \code{D} matrix on output. Default is "D".
 \code{D} is calculated by \code{V * q_hat_inv}.}
 
-\item{A}{name for \code{A} matrix on output. Default is "A".
+\item{A}{The name for the \code{A} matrix on output. Default is "A".
 \code{A} is calculated by \code{Z * D}.}
 
-\item{L_ixp}{name for \code{L_ixp} matrix on output. Default is "L_ixp".
+\item{L_ixp}{The name for the \code{L_ixp} matrix on output. Default is "L_ixp".
 \code{L_ixp} is calculated by \code{D * L_pxp}.}
 
-\item{L_pxp}{name for \code{L_pxp_feed} matrix on output. Default is "L_pxp_feed".
+\item{L_pxp}{The name for the \code{L_pxp_feed} matrix on output. Default is "L_pxp_feed".
 \code{L_pxp} is calculated by \code{(I - Z*D)^-1}.}
 
-\item{O}{name for \code{O} matrix on output. Default is "O".
+\item{O}{name for the \code{O} matrix on output. Default is "O".
 \code{O} is calculated by \code{r_hat_inv * R}.}
 
-\item{Z_feed}{name for \code{Z_feed} matrix on output. Default is "Z_feed".
+\item{Z_feed}{The name for the \code{Z_feed} matrix on output. Default is "Z_feed".
 \code{Z_feed} is calculated by \code{U_feed * g_hat_inv}.}
 
-\item{K_feed}{name for \code{K_feed} matrix on output. Default is "K_feed".
+\item{K_feed}{The name for the \code{K_feed} matrix on output. Default is "K_feed".
 \code{K_feed} is calculated by \code{U_feed * f_hat_inv}.}
 
-\item{A_feed}{name for \code{A_feed} matrix on output. Default is "A_feed".
+\item{A_feed}{The name for the \code{A_feed} matrix on output. Default is "A_feed".
 \code{A_feed} is calculated by \code{Z_feed * D_feed}.}
 
-\item{L_ixp_feed}{name for \code{L_ixp_feed} matrix on output. Default is "L_ixp_feed".
+\item{L_ixp_feed}{The name for the \code{L_ixp_feed} matrix on output. Default is "L_ixp_feed".
 \code{L_ixp_feed} is calculated by \code{D_feed * L_pxp_feed}.}
 
-\item{L_pxp_feed}{name for \code{L_pxp_feed} matrix on output. Default is "L_pxp_feed".
+\item{L_pxp_feed}{The name for the \code{L_pxp_feed} matrix on output. Default is "L_pxp_feed".
 \code{L_pxp_feed} is calculated by \code{(I - Z_feed*D)^-1}.}
 }
 \value{

@@ -4,24 +4,51 @@
 \alias{calc_L}
 \title{Calculates total requirements matrices (\code{L_pxp} and \code{L_ixp})}
 \usage{
-calc_L(.sutdata = NULL, D = "D", A = "A", L_pxp = "L_pxp", L_ixp = "L_ixp")
+calc_L(
+  .sutdata = NULL,
+  method = c("solve", "QR", "SVD"),
+  tol = .Machine$double.eps,
+  D = "D",
+  A = "A",
+  L_pxp = "L_pxp",
+  L_ixp = "L_ixp"
+)
 }
 \arguments{
-\item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
+\item{.sutdata}{A data frame of supply-use table matrices with matrices arranged in columns.
+Default is \code{NULL}, meaning that matrices will be taken from the \code{D} and \code{A} arguments.
+Set to a list or data frame to pull matrices from its store.}
 
-\item{D}{\code{D} matrix or name of the column in \code{.sutmats} that contains same. Default is "D".}
+\item{method}{One of "solve", "QR", or "SVD". Default is "solve". See details.}
 
-\item{A}{\code{A} matrix or name of the column in \code{.sutmats} that contains same. Default is "A".}
+\item{tol}{The tolerance for detecting linear dependencies during matrix inversion.
+Default is \code{.Machine$double.eps}.}
 
-\item{L_pxp}{name for \code{L_pxp} matrix on output. Default is "L_pxp".
+\item{D}{The \code{D} matrix or name of the column in \code{.sutmats} that contains same. Default is "D".}
+
+\item{A}{The \code{A} matrix or name of the column in \code{.sutmats} that contains same. Default is "A".}
+
+\item{L_pxp}{The name for \code{L_pxp} matrix on output. Default is "L_pxp".
 \code{L_pxp} is calculated by \code{(I - Z*D)^-1}.}
 
-\item{L_ixp}{name for \code{L_ixp} matrix on output. Default is "L_ixp".
+\item{L_ixp}{The name for \code{L_ixp} matrix on output. Default is "L_ixp".
 \code{L_ixp} is calculated by \code{D * L_pxp}.}
 }
 \value{
 A list or data frame containing \code{L_pxp} and \code{L_ixp} matrices.
 }
 \description{
-Calculates total requirements matrices (\code{L_pxp} and \code{L_ixp})
+\code{L_pxp} tells how much of a product (in a row) is required to make another product (in a column).
+\code{L_ixp} tells how much of an industry's output (in a row) is required to make another product (in a column).
+}
+\details{
+Calculating the \code{L_pxp} and \code{L_ixp} matrices requires
+a matrix inversion operation.
+The \code{method} argument specifies which method should be used for
+calculating the inverse.
+"solve" uses \code{base::solve()} and the value of \code{tol}.
+"QR" uses \code{base::solve.qr()} and the value of \code{tol}.
+"SVD" uses \code{matrixcalc::svd.inverse()}, ignoring the \code{tol} argument.
+
+Both \code{tol} and \code{method} should be a single values and apply to all matrices in \code{a}.
 }

@@ -7,55 +7,58 @@
 #' Calculate several input-output matrices
 #'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
+#' @param method One of "solve", "QR", or "SVD". Default is "solve". See details.
+#' @param tol The tolerance for detecting linear dependencies during matrix inversion.
+#'            Default is `.Machine$double.eps`.
 #' @param method_q_calculation Specifies the method which with the q vector should be calculated.
 #'                             Default is `sum_U_Y_rows`.
 #'                             Alternatively, an analyst can choose to use the `sum_R_V_cols` method.
 #'                             In the case of a balanced ECC, the method does not matter.
-#' @param R resources (`R`) matrix or name of the column in `.sutmats` that contains same. Default is "`R`".
-#' @param U use (`U`) matrix or name of the column in `.sutmats`` that contains same. Default is "U".
+#' @param R The resources (`R`) matrix or name of the column in `.sutmats` that contains same. Default is "R".
+#' @param U The use (`U`) matrix or name of the column in `.sutmats`` that contains same. Default is "U".
 #' @param U_feed use matrix or name of the column in `.sutmats` that contains same. Default is "U_feed".
-#' @param V make (`V`) matrix or name of the column in `.sutmats`that contains same. Default is "V".
-#' @param Y final demand (`Y`) matrix or name of the column in `.sutmats` that contains same. Default is "Y".
-#' @param S_units (`S_units`) matrix or name of the column in `.sutmats` that contains same. Default is "S_units".
-#' @param y name for `y` vector on output. Default is "y".
+#' @param V The make (`V`) matrix or name of the column in `.sutmats`that contains same. Default is "V".
+#' @param Y The final demand (`Y`) matrix or name of the column in `.sutmats` that contains same. Default is "Y".
+#' @param S_units The unit summation matrix (`S_units`) or name of the column in `.sutmats` that contains same. Default is "S_units".
+#' @param y The name for the `y` vector on output. Default is "y".
 #'        `y` is calculated by `rowsums(Y)`.
-#' @param q name for `q` vector on output. Default is "q".
+#' @param q The name for the `q` vector on output. Default is "q".
 #'        `q` is calculated by `rowsums(U) + y`.
-#' @param f name for `f` vector on output. Default is "f".
+#' @param f The name for the `f` vector on output. Default is "f".
 #'        `f` is calculated by `colsums(U)`.
-#' @param h name for `h` vector on output. Default is "h".
+#' @param h The name for the `h` vector on output. Default is "h".
 #'        `h` is calculated by `colsums(transpose(R))`.
-#' @param g name for `g` vector on output. Default is "g".
+#' @param g The name for the `g` vector on output. Default is "g".
 #'        `g` is calculated by `rowsums(V)`.
-#' @param r name for `r` vector on output. Default is "r".
+#' @param r The name for the `r` vector on output. Default is "r".
 #'        `r` is calculated by `rowsums(R)`.
-#' @param W name for `W` matrix on output. Default is "W".
+#' @param W The name for the `W` matrix on output. Default is "W".
 #'        `W` is calculated by `transpose(V) - U`.
-#' @param K name for `K` matrix on output. Default is "K".
+#' @param K The name for the `K` matrix on output. Default is "K".
 #'        `K` is calculated by `U * f_hat_inv`.
-#' @param Z name for `Z` matrix on output. Default is "Z".
+#' @param Z The name fort the `Z` matrix on output. Default is "Z".
 #'        `Z` is calculated by `U * g_hat_inv`.
-#' @param C name for `C` matrix on output. Default is "C".
+#' @param C The name for the `C` matrix on output. Default is "C".
 #'        `C` is calculated by `transpose(V) * g_hat_inv`.
-#' @param D name for `D` matrix on output. Default is "D".
+#' @param D The name for the `D` matrix on output. Default is "D".
 #'        `D` is calculated by `V * q_hat_inv`.
-#' @param O name for `O` matrix on output. Default is "O".
+#' @param O name for the `O` matrix on output. Default is "O".
 #'        `O` is calculated by `r_hat_inv * R`.
-#' @param A name for `A` matrix on output. Default is "A".
+#' @param A The name for the `A` matrix on output. Default is "A".
 #'        `A` is calculated by `Z * D`.
-#' @param L_ixp name for `L_ixp` matrix on output. Default is "L_ixp".
+#' @param L_ixp The name for the `L_ixp` matrix on output. Default is "L_ixp".
 #'        `L_ixp` is calculated by `D * L_pxp`.
-#' @param L_pxp name for `L_pxp_feed` matrix on output. Default is "L_pxp_feed".
+#' @param L_pxp The name for the `L_pxp_feed` matrix on output. Default is "L_pxp_feed".
 #'        `L_pxp` is calculated by `(I - Z*D)^-1`.
-#' @param K_feed name for `K_feed` matrix on output. Default is "K_feed".
+#' @param K_feed The name for the `K_feed` matrix on output. Default is "K_feed".
 #'        `K_feed` is calculated by `U_feed * f_hat_inv`.
-#' @param Z_feed name for `Z_feed` matrix on output. Default is "Z_feed".
+#' @param Z_feed The name for the `Z_feed` matrix on output. Default is "Z_feed".
 #'        `Z_feed` is calculated by `U_feed * g_hat_inv`.
-#' @param A_feed name for `A_feed` matrix on output. Default is "A_feed".
+#' @param A_feed The name for the `A_feed` matrix on output. Default is "A_feed".
 #'        `A_feed` is calculated by `Z_feed * D_feed`.
-#' @param L_ixp_feed name for `L_ixp_feed` matrix on output. Default is "L_ixp_feed".
+#' @param L_ixp_feed The name for the `L_ixp_feed` matrix on output. Default is "L_ixp_feed".
 #'        `L_ixp_feed` is calculated by `D_feed * L_pxp_feed`.
-#' @param L_pxp_feed name for `L_pxp_feed` matrix on output. Default is "L_pxp_feed".
+#' @param L_pxp_feed The name for the `L_pxp_feed` matrix on output. Default is "L_pxp_feed".
 #'        `L_pxp_feed` is calculated by `(I - Z_feed*D)^-1`.
 #'
 #' @return A list or data frame containing input-output matrices.
@@ -70,6 +73,8 @@
 #'   select(Country, Year, Energy.type, Last.stage, U, U_feed, V, Y, r_EIOU, S_units) %>%
 #'   calc_io_mats()
 calc_io_mats <- function(.sutdata = NULL,
+                         method = c("solve", "QR", "SVD"),
+                         tol = .Machine$double.eps,
                          method_q_calculation = c("sum_U_Y_rows", "sum_R_V_cols"),
                          # Input names
                          R = "R", U = "U", U_feed = "U_feed", V = "V", Y = "Y", S_units = "S_units",
@@ -78,6 +83,7 @@ calc_io_mats <- function(.sutdata = NULL,
                          Z = "Z", C = "C", D = "D", A = "A", L_ixp = "L_ixp", L_pxp = "L_pxp", O = "O",
                          Z_feed = "Z_feed", K_feed = "K_feed", A_feed = "A_feed", L_ixp_feed = "L_ixp_feed", L_pxp_feed = "L_pxp_feed"){
 
+  method <- match.arg(method)
   method_q_calculation <- match.arg(method_q_calculation)
 
   io_func <- function(R_mat = NULL, U_mat, U_feed_mat, V_mat, Y_mat, S_units_mat = NULL){
@@ -97,7 +103,8 @@ calc_io_mats <- function(.sutdata = NULL,
     D_mat <- ZKCDA[[D]]
     A_mat <- ZKCDA[[A]]
 
-    L_mats <- calc_L(D = D_mat, A = A_mat,
+    L_mats <- calc_L(method = method, tol = tol,
+                     D = D_mat, A = A_mat,
                      L_ixp = L_ixp, L_pxp = L_pxp)
     # Set names
     # c(yqfgW, ZKCDA, L_mats) %>% magrittr::set_names(c(names(yqfgW), names(ZKCDA), names(L_mats)))
@@ -111,7 +118,8 @@ calc_io_mats <- function(.sutdata = NULL,
                        A_feed = ZKCDA_all_feed[[A_feed]])
 
     A_feed_mat <- ZKCDA_feed[[A_feed]]
-    L_feed_mats <- calc_L(D = D_mat, A = A_feed_mat,
+    L_feed_mats <- calc_L(method = method, tol = tol,
+                          D = D_mat, A = A_feed_mat,
                           L_ixp = L_ixp_feed, L_pxp = L_pxp_feed)
 
     # Set names
@@ -318,24 +326,46 @@ calc_A <- function(.sutdata = NULL,
 
 #' Calculates total requirements matrices (`L_pxp` and `L_ixp`)
 #'
-#' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
-#' @param D `D` matrix or name of the column in `.sutmats` that contains same. Default is "D".
-#' @param A `A` matrix or name of the column in `.sutmats` that contains same. Default is "A".
-#' @param L_ixp name for `L_ixp` matrix on output. Default is "L_ixp".
+#' `L_pxp` tells how much of a product (in a row) is required to make another product (in a column).
+#' `L_ixp` tells how much of an industry's output (in a row) is required to make another product (in a column).
+#'
+#' Calculating the `L_pxp` and `L_ixp` matrices requires
+#' a matrix inversion operation.
+#' The `method` argument specifies which method should be used for
+#' calculating the inverse.
+#' "solve" uses `base::solve()` and the value of `tol`.
+#' "QR" uses `base::solve.qr()` and the value of `tol`.
+#' "SVD" uses `matrixcalc::svd.inverse()`, ignoring the `tol` argument.
+#'
+#' Both `tol` and `method` should be a single values and apply to all matrices in `a`.
+#'
+#' @param .sutdata A data frame of supply-use table matrices with matrices arranged in columns.
+#'                 Default is `NULL`, meaning that matrices will be taken from the `D` and `A` arguments.
+#'                 Set to a list or data frame to pull matrices from its store.
+#' @param method One of "solve", "QR", or "SVD". Default is "solve". See details.
+#' @param tol The tolerance for detecting linear dependencies during matrix inversion.
+#'            Default is `.Machine$double.eps`.
+#' @param D The `D` matrix or name of the column in `.sutmats` that contains same. Default is "D".
+#' @param A The `A` matrix or name of the column in `.sutmats` that contains same. Default is "A".
+#' @param L_ixp The name for `L_ixp` matrix on output. Default is "L_ixp".
 #'        `L_ixp` is calculated by `D * L_pxp`.
-#' @param L_pxp name for `L_pxp` matrix on output. Default is "L_pxp".
+#' @param L_pxp The name for `L_pxp` matrix on output. Default is "L_pxp".
 #'        `L_pxp` is calculated by `(I - Z*D)^-1`.
 #'
 #' @return A list or data frame containing `L_pxp` and `L_ixp` matrices.
 #'
 #' @export
 calc_L <- function(.sutdata = NULL,
+                   method = c("solve", "QR", "SVD"),
+                   tol = .Machine$double.eps,
                    # Input names
                    D = "D", A = "A",
                    # Output names
                    L_pxp = "L_pxp", L_ixp = "L_ixp"){
+  method <- match.arg(method)
   L_func <- function(D_mat, A_mat){
-    L_pxp_mat <- matsbyname::Iminus_byname(A_mat) %>% matsbyname::invert_byname()
+    L_pxp_mat <- matsbyname::Iminus_byname(A_mat) %>%
+      matsbyname::invert_byname(method = method, tol = tol)
     L_ixp_mat <- matsbyname::matrixproduct_byname(D_mat, L_pxp_mat)
     list(L_pxp_mat, L_ixp_mat) %>%
       magrittr::set_names(c(L_pxp, L_ixp))
