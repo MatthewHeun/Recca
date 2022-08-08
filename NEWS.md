@@ -4,6 +4,9 @@ output: html_document
 ---
 
 
+* `calc_io_mats()` and `calc_L()`
+  gain `method` and `tol` arguments
+  to control matrix inversion.
 * `calc_eta_pfd()` now includes 
   columns of names of efficiencies to its output.
   This feature will assist pivoting on efficiencies later.
