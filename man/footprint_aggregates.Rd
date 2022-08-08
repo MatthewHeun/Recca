@@ -10,6 +10,8 @@ footprint_aggregates(
   fd_sectors,
   pattern_type = c("exact", "leading", "trailing", "anywhere"),
   unnest = FALSE,
+  method = c("solve", "QR", "SVD"),
+  tol = .Machine$double.eps,
   R = Recca::psut_cols$R,
   U = Recca::psut_cols$U,
   U_feed = Recca::psut_cols$U_feed,

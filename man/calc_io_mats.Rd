@@ -126,7 +126,13 @@ In the case of a balanced ECC, the method does not matter.}
 A list or data frame containing input-output matrices.
 }
 \description{
-Calculate several input-output matrices
+This function bundles several others.
+}
+\details{
+Some calculations involve a matrix inversion step.
+The \code{method} argument specifies which method should be used for
+calculating the inverse.
+See \code{matsbyname::invert_byname()}.
 }
 \examples{
 library(dplyr)

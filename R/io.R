@@ -6,6 +6,13 @@
 
 #' Calculate several input-output matrices
 #'
+#' This function bundles several others.
+#'
+#' Some calculations involve a matrix inversion step.
+#' The `method` argument specifies which method should be used for
+#' calculating the inverse.
+#' See `matsbyname::invert_byname()`.
+#'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
 #' @param method One of "solve", "QR", or "SVD". Default is "solve". See details.
 #' @param tol The tolerance for detecting linear dependencies during matrix inversion.
@@ -329,15 +336,13 @@ calc_A <- function(.sutdata = NULL,
 #' `L_pxp` tells how much of a product (in a row) is required to make another product (in a column).
 #' `L_ixp` tells how much of an industry's output (in a row) is required to make another product (in a column).
 #'
-#' Calculating the `L_pxp` and `L_ixp` matrices requires
+#' Calculating some matrices requires
 #' a matrix inversion operation.
 #' The `method` argument specifies which method should be used for
 #' calculating the inverse.
-#' "solve" uses `base::solve()` and the value of `tol`.
-#' "QR" uses `base::solve.qr()` and the value of `tol`.
-#' "SVD" uses `matrixcalc::svd.inverse()`, ignoring the `tol` argument.
+#' See `matsbyname::invert_byname()`.
 #'
-#' Both `tol` and `method` should be a single values and apply to all matrices in `a`.
+#' Both `tol` and `method` should be a single values and apply to all matrices being inverted.
 #'
 #' @param .sutdata A data frame of supply-use table matrices with matrices arranged in columns.
 #'                 Default is `NULL`, meaning that matrices will be taken from the `D` and `A` arguments.

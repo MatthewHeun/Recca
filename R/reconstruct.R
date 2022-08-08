@@ -308,16 +308,29 @@ new_k_ps <- function(.sutmats = NULL,
 #' Calculates downstream effects of a new level of extracted resources
 #'
 #' This function calculates the effect of changing the resources available to an ECC,
-#' i.e. of a new resources matrix `R` on the rest of the ECC matrices (`U`, `V`, `W`, and `Ý`).
-#' New versions of the `U`, `V`, `W`, and `Ý` matrices are returned,
-#' and respectively called `U_prime`, `V_prime`, `W_prime`, and `Ý_prime`.
+#' i.e. of a new resources matrix **R_prime** on the rest of the ECC matrices (**U**, **V**, **W**, and **Y**).
+#' New versions of the **U**, **V**, **W**, and **Y** matrices are returned,
+#' and respectively called `U_prime`, `V_prime`, `W_prime`, and `Y_prime`.
 #' This function assumes that each industry's inputs are perfectly substitutable (ps).
 #'
 #' Each industry must be unit-homogeneous on its inputs.
-#' If not, a matrix populated with \code{NA} is returned as the result for
-#' \code{U_prime}, \code{V_prime}, and \code{Y_prime}.
+#' If not, a matrix populated with `NA` is returned as the result for
+#' **U_prime**, **V_prime**, and **Y_prime**.
+#'
+#' Calculating the new matrices requires
+#' a matrix inversion operation.
+#' The `method` argument specifies which method should be used for
+#' calculating the inverse.
+#' "solve" uses `base::solve()` and the value of `tol`.
+#' "QR" uses `base::solve.qr()` and the value of `tol`.
+#' "SVD" uses `matrixcalc::svd.inverse()`, ignoring the `tol` argument.
+#'
+#' Both `tol` and `method` should be a single values and apply to all matrices in `a`.
 #'
 #' @param .sutmats a data frame of supply-use table matrices with matrices arranged in columns.
+#' @param method One of "solve", "QR", or "SVD". Default is "solve". See details.
+#' @param tol The tolerance for detecting linear dependencies during matrix inversion.
+#'            Default is `.Machine$double.eps`.
 #' @param R_prime The name of the new R matrix column in the input data frame, for which the new ECC must be assessed.
 #'                Default is "R_prime".
 #' @param U The name of the U matrix column in the input data frame.
@@ -358,12 +371,16 @@ new_k_ps <- function(.sutmats = NULL,
 #' # because R_prime is 2x relative to R.
 #'  new_R_ps()
 new_R_ps <- function(.sutmats = NULL,
-                          # Input names
-                          R_prime = "R_prime",
-                          U = "U", V = "V", Y = "Y",
-                          q = "q", f = "f",
-                          # Output names
-                          U_prime = "U_prime", V_prime = "V_prime", W_prime = "W_prime", Y_prime = "Y_prime"){
+                     method = c("solve", "QR", "SVD"),
+                     tol = .Machine$double.eps,
+                     # Input names
+                     R_prime = "R_prime",
+                     U = "U", V = "V", Y = "Y",
+                     q = "q", f = "f",
+                     # Output names
+                     U_prime = "U_prime", V_prime = "V_prime", W_prime = "W_prime", Y_prime = "Y_prime"){
+
+  method <- match.arg(method)
 
   new_R_func <- function(R_prime_mat, U_mat, V_mat, Y_mat, q_vec, f_vec){
 
@@ -393,7 +410,7 @@ new_R_ps <- function(.sutmats = NULL,
       D_sym_mat
     )
 
-    L_pxp_sym_mat <- matsbyname::Iminus_byname(A_sym_mat) %>% matsbyname::invert_byname()
+    L_pxp_sym_mat <- matsbyname::Iminus_byname(A_sym_mat) %>% matsbyname::invert_byname(method = method, tol = tol)
 
     L_ixp_sym_mat <- matsbyname::matrixproduct_byname(
       D_sym_mat,

@@ -672,6 +672,8 @@ footprint_aggregates <- function(.sut_data = NULL,
                                  fd_sectors,
                                  pattern_type = c("exact", "leading", "trailing", "anywhere"),
                                  unnest = FALSE,
+                                 method = c("solve", "QR", "SVD"),
+                                 tol = .Machine$double.eps,
                                  # Input names or matrices
                                  R = Recca::psut_cols$R,
                                  U = Recca::psut_cols$U,
@@ -703,13 +705,14 @@ footprint_aggregates <- function(.sut_data = NULL,
                                  Y_prime_colname = paste0(Y_colname, .prime)) {
 
   pattern_type <- match.arg(pattern_type)
+  method <- match.arg(method)
 
   footprint_func <- function(R_mat, U_mat, U_feed_mat, V_mat, Y_mat, S_units_mat) {
     # At this point, we have single matrices for each of the above variables.
     # Calculate the IO matrices
     with_io <- list(R = R_mat, U = U_mat, U_feed = U_feed_mat, V = V_mat, Y = Y_mat, S_units = S_units_mat) %>%
       # We accept the default vector and matrix names.
-      calc_io_mats()
+      calc_io_mats(method = method, tol = tol)
 
     # Get the row names in Y. Those are the Products we want to evaluate.
     new_Y_products <- matsbyname::getrownames_byname(Y_mat) %>%
@@ -749,7 +752,6 @@ footprint_aggregates <- function(.sut_data = NULL,
                 U_eiou_prime = U_eiou_prime_colname,
                 r_eiou_prime = r_eiou_prime_colname,
                 V_prime = V_prime_colname)
-
     })
 
     # Now that we have the new (prime) ECCs, calculate primary and final demand aggregates

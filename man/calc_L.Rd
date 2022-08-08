@@ -42,13 +42,11 @@ A list or data frame containing \code{L_pxp} and \code{L_ixp} matrices.
 \code{L_ixp} tells how much of an industry's output (in a row) is required to make another product (in a column).
 }
 \details{
-Calculating the \code{L_pxp} and \code{L_ixp} matrices requires
+Calculating some matrices requires
 a matrix inversion operation.
 The \code{method} argument specifies which method should be used for
 calculating the inverse.
-"solve" uses \code{base::solve()} and the value of \code{tol}.
-"QR" uses \code{base::solve.qr()} and the value of \code{tol}.
-"SVD" uses \code{matrixcalc::svd.inverse()}, ignoring the \code{tol} argument.
+See \code{matsbyname::invert_byname()}.
 
-Both \code{tol} and \code{method} should be a single values and apply to all matrices in \code{a}.
+Both \code{tol} and \code{method} should be a single values and apply to all matrices being inverted.
 }

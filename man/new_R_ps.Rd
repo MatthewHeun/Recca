@@ -6,6 +6,8 @@
 \usage{
 new_R_ps(
   .sutmats = NULL,
+  method = c("solve", "QR", "SVD"),
+  tol = .Machine$double.eps,
   R_prime = "R_prime",
   U = "U",
   V = "V",
@@ -20,6 +22,11 @@ new_R_ps(
 }
 \arguments{
 \item{.sutmats}{a data frame of supply-use table matrices with matrices arranged in columns.}
+
+\item{method}{One of "solve", "QR", or "SVD". Default is "solve". See details.}
+
+\item{tol}{The tolerance for detecting linear dependencies during matrix inversion.
+Default is \code{.Machine$double.eps}.}
 
 \item{R_prime}{The name of the new R matrix column in the input data frame, for which the new ECC must be assessed.
 Default is "R_prime".}
@@ -56,15 +63,25 @@ A data frame with added columns representing each of the new \code{U_prime}, \co
 }
 \description{
 This function calculates the effect of changing the resources available to an ECC,
-i.e. of a new resources matrix \code{R} on the rest of the ECC matrices (\code{U}, \code{V}, \code{W}, and \code{Ý}).
-New versions of the \code{U}, \code{V}, \code{W}, and \code{Ý} matrices are returned,
-and respectively called \code{U_prime}, \code{V_prime}, \code{W_prime}, and \code{Ý_prime}.
+i.e. of a new resources matrix \strong{R_prime} on the rest of the ECC matrices (\strong{U}, \strong{V}, \strong{W}, and \strong{Y}).
+New versions of the \strong{U}, \strong{V}, \strong{W}, and \strong{Y} matrices are returned,
+and respectively called \code{U_prime}, \code{V_prime}, \code{W_prime}, and \code{Y_prime}.
 This function assumes that each industry's inputs are perfectly substitutable (ps).
 }
 \details{
 Each industry must be unit-homogeneous on its inputs.
 If not, a matrix populated with \code{NA} is returned as the result for
-\code{U_prime}, \code{V_prime}, and \code{Y_prime}.
+\strong{U_prime}, \strong{V_prime}, and \strong{Y_prime}.
+
+Calculating the new matrices requires
+a matrix inversion operation.
+The \code{method} argument specifies which method should be used for
+calculating the inverse.
+"solve" uses \code{base::solve()} and the value of \code{tol}.
+"QR" uses \code{base::solve.qr()} and the value of \code{tol}.
+"SVD" uses \code{matrixcalc::svd.inverse()}, ignoring the \code{tol} argument.
+
+Both \code{tol} and \code{method} should be a single values and apply to all matrices in \code{a}.
 }
 \examples{
 UKEnergy2000mats \%>\%
