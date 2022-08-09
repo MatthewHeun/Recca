@@ -730,7 +730,8 @@ footprint_aggregates <- function(.sut_data = NULL,
       calc_io_mats(method = method, tol = tol)
 
     # Get the row names in Y. Those are the Products we want to evaluate.
-    new_Y_products <- matsbyname::getrownames_byname(Y_mat) %>%
+    product_names <- matsbyname::getrownames_byname(Y_mat)
+    new_Y_products <- product_names %>%
       sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_product) {
         # For each product (in each row), make a new Y matrix to be used for the calculation.
         Y_mat %>%
@@ -738,7 +739,8 @@ footprint_aggregates <- function(.sut_data = NULL,
       })
 
     # Get the column names in Y. Those are the Sectors we want to evaluate.
-    new_Y_sectors <- matsbyname::getcolnames_byname(Y_mat) %>%
+    sector_names <- matsbyname::getcolnames_byname(Y_mat)
+    new_Y_sectors <- sector_names %>%
       sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_sector) {
         # For each sector (in each column), make a new Y matrix to be used for the calculation.
         Y_mat %>%
