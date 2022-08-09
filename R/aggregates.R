@@ -309,7 +309,7 @@ region_aggregates <- function(.sut_data,
       dplyr::rename(
         "{many_colname}" := .data[[few_colname]]
       ) %>%
-      dplyr::relocate(.data[[many_colname]])
+      dplyr::relocate(.data[[many_colname]]) # Relocates to left, where it belongs.
     return(out)
   }
 
