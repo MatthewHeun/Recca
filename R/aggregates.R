@@ -299,8 +299,20 @@ region_aggregates <- function(.sut_data,
 
   # Handle the case when .sut_data has no rows.
   if (nrow(.sut_data) == 0) {
-    # Return .sut_data unmodified.
-    return(.sut_data)
+    # Return .sut_data unmodified,
+    # except to eliminate the few_colname and ensure that the many_colname is present
+    out <- .sut_data %>%
+      dplyr::mutate(
+        "{few_colname}" := NULL
+      )
+    if (!(many_colname %in% colnames(out))) {
+      # Add the many_colname
+      out <- out %>%
+        dplyr::mutate(
+          "{many_colname}" := .data[[year]]
+        )
+    }
+    return(out)
   }
 
   # Make the incoming data frame tidy.
