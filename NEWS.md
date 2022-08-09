@@ -4,7 +4,10 @@ output: html_document
 ---
 
 
-* `footporint_aggregates()` now also includes the
+* `region_aggregates()` now correctly
+  eliminates the `few_colname` when
+  the incoming data frame has no rows.
+* `footprint_aggregates()` now also includes the
   `*_prime_colname` matrices in the nested data frame.
 * `calc_io_mats()` and `calc_L()`
   gain `method` and `tol` arguments
