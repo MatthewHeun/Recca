@@ -771,6 +771,25 @@ footprint_aggregates <- function(.sut_data = NULL,
                 V_prime = V_prime_colname)
     })
 
+    # Verify that energy is balanced.
+    # The sum of the ECCs associated with new_Y_products should be equal to the original ECC.
+    product_prime_mats <- ecc_prime[product_names] %>%
+      purrr::transpose()
+    product_prime_balanced <- verify_footprint_aggregate_energy_balance(R_mat = R_mat,
+                                                                        U_mat = U_mat,
+                                                                        U_feed_mat = U_feed_mat,
+                                                                        V_mat = V_mat,
+                                                                        Y_mat = Y_mat,
+                                                                        R_chop_list = product_prime_mats[[R_colname]],
+                                                                        U_chop_list = product_prime_mats[[U_colname]],
+                                                                        U_feed_chop_list = product_prime_mats[[U_feed_colname]],
+                                                                        V_chop_list = product_prime_mats[[V_colname]],
+                                                                        Y_chop_list = product_prime_mats[[Y_colname]])
+    assertthat::assert_that(product_prime_balanced, msg = "Products not balanced in footprint_aggregations()")
+
+    # The sum of the ECCs associated with new_Y_sectors should be equal to the original ECC.
+    ecc_prime[sector_names]
+
     # Now that we have the new (prime) ECCs, calculate primary and final demand aggregates
     p_aggregates <- ecc_prime %>%
       sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_new_ecc) {
@@ -857,4 +876,48 @@ footprint_aggregates <- function(.sut_data = NULL,
   return(out)
 }
 
+
+#' Verify energy balance after footprint calculations
+#'
+#' Footprint calculations involve isolating rows or columns of the **Y** matrix,
+#' performing upstream swims (with `new_Y()`), and creating the ECC
+#' portions that support the creation of the row or column of **Y**.
+#' After performing that upstream swim, the sum of the
+#' isolated ECCs should equal the original ECC.
+#' This function performs that energy balance verification.
+#'
+#' The various `*_chop_list` arguments should be lists of matrices
+#' formed by isolating (chopping) different parts of **Y**.
+#' The matrices in `R_chop_list`, `U_chop_list`, `U_feed_chop_list`
+#' `U_eiou_chop_list`, `V_chop_list`, and `Y_chop_list` should sum to
+#' `R`, `U`, `U_feed`, `U_eiou`, `V`, and `Y`, respectively.
+#' Alternatively, the various `*_chop_list` arguments
+#' can be names of list columns in `.sut_data`.
+#'
+#' This is not a public function.
+#' It is an internal helper function
+#' for `footprint_aggregates()`.
+#'
+#' @param .sut_data An optional data frame of energy conversion chain matrices.
+#' @param tol The tolerance within which energy balance is assumed to be OK. Default is `1e-6`.
+#' @param R,U,U_feed,V,Y The matrices for the original ECC or names of columns in `.sut_data` containing those matrices. See `Recca::psut_cols` for default values.
+#' @param R_chop_list,U_chop_list,U_feed_chop_list,V_chop_list,Y_chop_list Lists of matrices from different upstream swims corresponding to different rows or columns of **Y**. Defaults are strings with "_chop_list" appended.
+#'
+#' @return `TRUE` if energy balance is observed. `FALSE` if not.
+verify_footprint_aggregate_energy_balance <- function(.sut_data = NULL,
+                                                      tol = 1e-6,
+                                                      R_mat, U_mat, U_feed_mat, V_mat, Y_mat,
+                                                      R_chop_list, U_chop_list, U_feed_chop_list, V_chop_list, Y_chop_list) {
+
+  R_sum <- matsbyname::sum_byname(R_chop_list, .summarise = TRUE)
+  # This should be all zeros.
+  R_err <- matsbyname::difference_byname(R_sum, R_mat)
+  # Accumulate logic in the out variable.
+  out <- matsbyname::iszero_byname(R_err, tol = tol)
+
+  U_sum <- matsbyname::sum_byname(U_chop_list)
+  U_err <- matsbyname::difference_byname(U_sum, U_mat)
+  out <- out & matsbyname::iszero_byname(U_err, tol = tol)
+
+}
 
