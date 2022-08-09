@@ -300,7 +300,24 @@ test_that("region_aggregates() works as expected", {
                              many_colname = IEATools::iea_cols$country,
                              few_colname = "Continent")
   expect_equal(nrow(empty), 0)
-  expect_equal(colnames(empty), colnames(mats))
+  # It is important that the result NOT have the Continent column.
+  # If Continent is present, it will be NA when joined with other
+  # data frames that have successfully aggregated by region.
+  expect_equal(colnames(empty), setdiff(colnames(mats), "Continent"))
+
+  # Try when there is no Country column.
+  empty_no_country <- mats[0, ] %>%
+    dplyr::mutate(
+      "{Recca::psut_cols$country}" := NULL
+    )
+  expect_false(Recca::psut_cols$country %in% names(empty_no_country))
+  expect_true("Continent" %in% names(empty_no_country))
+  empty_after_region_agg <- empty_no_country %>%
+    region_aggregates(empty_no_country,
+                      many_colname = IEATools::iea_cols$country,
+                      few_colname = "Continent")
+  expect_false("Continent" %in% names(empty_after_region_agg))
+  expect_true(Recca::psut_cols$country %in% names(empty_after_region_agg))
 
   # Now try with the data.
   res <- region_aggregates(mats,

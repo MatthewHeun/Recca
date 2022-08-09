@@ -301,17 +301,15 @@ region_aggregates <- function(.sut_data,
   if (nrow(.sut_data) == 0) {
     # Return .sut_data unmodified,
     # except to eliminate the few_colname and ensure that the many_colname is present
+    # Eliminate many_colname.
     out <- .sut_data %>%
       dplyr::mutate(
-        "{few_colname}" := NULL
-      )
-    if (!(many_colname %in% colnames(out))) {
-      # Add the many_colname
-      out <- out %>%
-        dplyr::mutate(
-          "{many_colname}" := .data[[year]]
-        )
-    }
+        "{many_colname}" := NULL
+      ) %>%
+      dplyr::rename(
+        "{many_colname}" := .data[[few_colname]]
+      ) %>%
+      dplyr::relocate(.data[[many_colname]])
     return(out)
   }
 
