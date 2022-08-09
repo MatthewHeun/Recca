@@ -394,6 +394,13 @@ test_that("footprint_aggregates() works as expected", {
   expect_true(Recca::aggregate_cols$aggregate_primary %in% names(footprint_aggs_unnested))
   expect_true(Recca::aggregate_cols$net_aggregate_demand %in% names(footprint_aggs_unnested))
   expect_true(Recca::aggregate_cols$gross_aggregate_demand %in% names(footprint_aggs_unnested))
+  expect_true(paste0(Recca::psut_cols$R, "_prime") %in% names(footprint_aggs_unnested))
+  expect_true(paste0(Recca::psut_cols$U, "_prime") %in% names(footprint_aggs_unnested))
+  expect_true(paste0(Recca::psut_cols$U_feed, "_prime") %in% names(footprint_aggs_unnested))
+  expect_true(paste0(Recca::psut_cols$U_eiou, "_prime") %in% names(footprint_aggs_unnested))
+  expect_true(paste0(Recca::psut_cols$r_eiou, "_prime") %in% names(footprint_aggs_unnested))
+  expect_true(paste0(Recca::psut_cols$V, "_prime") %in% names(footprint_aggs_unnested))
+  expect_true(paste0(Recca::psut_cols$Y, "_prime") %in% names(footprint_aggs_unnested))
 })
 
 

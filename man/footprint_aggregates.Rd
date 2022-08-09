@@ -117,15 +117,20 @@ by the following algorithm:
 \item Identify each product and sector from rows and columns of the \code{Y} matrix.
 \item For each product and sector independently,
 perform an upstream swim with \code{new_Y()}
-to obtain the ECC requirements to supply that product or sector.
+to obtain the ECC requirements to supply that product or sector only.
 \item Calculate primary and final demand aggregates using \code{primary_aggregates()} and
 \code{finaldemand_aggregates()}.
 Both functions are called with \code{by = "Total"},
 yielding total primary and final demand aggregates.
-\item Add the primary and final demand aggregates as columns at the right side of \code{.sut_data}.
+\item Add the primary and final demand aggregates as columns at the right side of \code{.sut_data}
+as a nested data frame.
 }
 
 Use \code{unnest} to define how the aggregate data are added to the right side of \code{.sut_data}.
+
+Note that the nested data frame also includes columns for the ECC matrices
+for each isolated product or sector.
+The names of the columns in the data frame are taken from the \verb{*_prime_colname} arguments.
 }
 \examples{
 p_industries <- c("Resources - Crude", "Resources - NG")

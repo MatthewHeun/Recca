@@ -595,14 +595,19 @@ grouped_aggregates <- function(.sut_data = NULL,
 #' 2. Identify each product and sector from rows and columns of the `Y` matrix.
 #' 3. For each product and sector independently,
 #'    perform an upstream swim with `new_Y()`
-#'    to obtain the ECC requirements to supply that product or sector.
+#'    to obtain the ECC requirements to supply that product or sector only.
 #' 4. Calculate primary and final demand aggregates using `primary_aggregates()` and
 #'    `finaldemand_aggregates()`.
 #'    Both functions are called with `by = "Total"`,
 #'    yielding total primary and final demand aggregates.
-#' 5. Add the primary and final demand aggregates as columns at the right side of `.sut_data`.
+#' 5. Add the primary and final demand aggregates as columns at the right side of `.sut_data`
+#'    as a nested data frame.
 #'
 #' Use `unnest` to define how the aggregate data are added to the right side of `.sut_data`.
+#'
+#' Note that the nested data frame also includes columns for the ECC matrices
+#' for each isolated product or sector.
+#' The names of the columns in the data frame are taken from the `*_prime_colname` arguments.
 #'
 #' @param .sut_data A data frame or list of physical supply-use table matrices.
 #'                  Default is `NULL`.
@@ -801,6 +806,21 @@ footprint_aggregates <- function(.sut_data = NULL,
     primary_net_gross <- p_aggregates_df %>%
       dplyr::full_join(gross_fd_aggregates_df, by = product_sector) %>%
       dplyr::full_join(net_fd_aggregates_df, by = product_sector)
+
+    # Add the "prime" ECC matrices to the nested data frame
+    ecc_prime_transpose <- purrr::transpose(ecc_prime)
+    ecc_primes <- primary_net_gross[product_sector] %>%
+      dplyr::mutate(
+        "{R_prime_colname}" := ecc_prime_transpose[[R_prime_colname]],
+        "{U_prime_colname}" := ecc_prime_transpose[[U_prime_colname]],
+        "{U_feed_prime_colname}" := ecc_prime_transpose[[U_feed_prime_colname]],
+        "{U_eiou_prime_colname}" := ecc_prime_transpose[[U_eiou_prime_colname]],
+        "{r_eiou_prime_colname}" := ecc_prime_transpose[[r_eiou_prime_colname]],
+        "{V_prime_colname}" := ecc_prime_transpose[[V_prime_colname]],
+        "{Y_prime_colname}" := ecc_prime_transpose[[Y_prime_colname]]
+      )
+
+    primary_net_gross <- dplyr::full_join(ecc_primes, primary_net_gross, by = product_sector)
 
     # Make a list and return it so that the data frame is nested
     # inside the column of the data frame.
