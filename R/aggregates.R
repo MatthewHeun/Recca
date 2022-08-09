@@ -780,11 +780,11 @@ footprint_aggregates <- function(.sut_data = NULL,
                                                                         U_feed_mat = U_feed_mat,
                                                                         V_mat = V_mat,
                                                                         Y_mat = Y_mat,
-                                                                        R_chop_list = product_prime_mats[[R_colname]],
-                                                                        U_chop_list = product_prime_mats[[U_colname]],
-                                                                        U_feed_chop_list = product_prime_mats[[U_feed_colname]],
-                                                                        V_chop_list = product_prime_mats[[V_colname]],
-                                                                        Y_chop_list = product_prime_mats[[Y_colname]])
+                                                                        R_chop_list = product_prime_mats[[R_prime_colname]],
+                                                                        U_chop_list = product_prime_mats[[U_prime_colname]],
+                                                                        U_feed_chop_list = product_prime_mats[[U_feed_prime_colname]],
+                                                                        V_chop_list = product_prime_mats[[V_prime_colname]],
+                                                                        Y_chop_list = product_prime_mats[[Y_prime_colname]])
     assertthat::assert_that(product_prime_balanced, msg = "Products not balanced in footprint_aggregations()")
 
     # The sum of the ECCs associated with new_Y_sectors should be equal to the original ECC.
@@ -905,19 +905,17 @@ footprint_aggregates <- function(.sut_data = NULL,
 #'
 #' @return `TRUE` if energy balance is observed. `FALSE` if not.
 verify_footprint_aggregate_energy_balance <- function(.sut_data = NULL,
-                                                      tol = 1e-6,
+                                                      tol = 1e-4,
                                                       R_mat, U_mat, U_feed_mat, V_mat, Y_mat,
                                                       R_chop_list, U_chop_list, U_feed_chop_list, V_chop_list, Y_chop_list) {
 
-  R_sum <- matsbyname::sum_byname(R_chop_list, .summarise = TRUE)
-  # This should be all zeros.
-  R_err <- matsbyname::difference_byname(R_sum, R_mat)
-  # Accumulate logic in the out variable.
-  out <- matsbyname::iszero_byname(R_err, tol = tol)
-
-  U_sum <- matsbyname::sum_byname(U_chop_list)
-  U_err <- matsbyname::difference_byname(U_sum, U_mat)
-  out <- out & matsbyname::iszero_byname(U_err, tol = tol)
-
+  verify_func <- function(chop_list, mat) {
+    mat_sum <- matsbyname::sum_byname(chop_list, .summarise = TRUE)[[1]]
+    err <- matsbyname::difference_byname(mat_sum, mat)
+    matsbyname::iszero_byname(err, tol = tol)
+  }
+  Map(f = verify_func, list(R_chop_list, U_chop_list, U_feed_chop_list, V_chop_list, Y_chop_list), list(R_mat, U_mat, U_feed_mat, V_mat, Y_mat)) %>%
+    unlist() %>%
+    all()
 }
 

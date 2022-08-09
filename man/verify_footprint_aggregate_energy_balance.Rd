@@ -6,7 +6,7 @@
 \usage{
 verify_footprint_aggregate_energy_balance(
   .sut_data = NULL,
-  tol = 1e-06,
+  tol = 1e-04,
   R_mat,
   U_mat,
   U_feed_mat,
