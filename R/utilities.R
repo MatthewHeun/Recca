@@ -934,7 +934,6 @@ write_ecc_to_excel <- function(.psut_data = NULL,
   dir.create(dirname(path), showWarnings = FALSE, recursive = TRUE)
   # Write the workbook
   openxlsx::saveWorkbook(ecc_wb, file = path, overwrite = overwrite_file)
-  return(out)
 }
 
 
