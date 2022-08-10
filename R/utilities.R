@@ -544,9 +544,6 @@ flows_unit_homogeneous <- function(.sutmats = NULL,
 #'   reverse()
 #' mats$R_rev[[1]]
 #' mats$U_rev[[1]]
-#' mats$U_feed_rev[[1]]
-#' mats$U_eiou_rev[[1]]
-#' mats$r_eiou_rev[[1]]
 #' mats$V_rev[[1]]
 #' mats$Y_rev[[1]]
 reverse <- function(.sutmats = NULL,
