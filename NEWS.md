@@ -4,6 +4,9 @@ output: html_document
 ---
 
 
+* `footprint_aggregates()` now checks that
+  the chopped ECCs sum to the original ECC
+  on every calculation.
 * `region_aggregates()` now correctly
   eliminates the `few_colname` when
   the incoming data frame has no rows.
