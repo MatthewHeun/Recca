@@ -910,6 +910,74 @@ footprint_aggregates <- function(.sut_data = NULL,
 }
 
 
+effects_aggregates <- function(.sut_data = NULL,
+                               p_industries,
+                               fd_sectors,
+                               pattern_type = c("exact", "leading", "trailing", "anywhere"),
+                               unnest = FALSE,
+                               method = c("solve", "QR", "SVD"),
+                               tol_invert = .Machine$double.eps,
+                               tol_chop_sum = 1e-4,
+                               # Input names or matrices
+                               R = Recca::psut_cols$R,
+                               U = Recca::psut_cols$U,
+                               U_feed = Recca::psut_cols$U_feed,
+                               V = Recca::psut_cols$V,
+                               Y = Recca::psut_cols$Y,
+                               S_units = Recca::psut_cols$S_units,
+                               # Output names
+                               footprint_aggregates = Recca::aggregate_cols$footprint_aggregates,
+                               product_sector = Recca::aggregate_cols$product_sector,
+                               aggregate_primary = Recca::aggregate_cols$aggregate_primary,
+                               net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
+                               gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand,
+                               # Other internal names
+                               .prime = "_prime",
+                               R_colname = Recca::psut_cols$R,
+                               U_colname = Recca::psut_cols$U,
+                               U_feed_colname = Recca::psut_cols$U_feed,
+                               U_eiou_colname = Recca::psut_cols$U_eiou,
+                               r_eiou_colname = Recca::psut_cols$r_eiou,
+                               V_colname = Recca::psut_cols$V,
+                               Y_colname = Recca::psut_cols$Y,
+                               R_prime_colname = paste0(R_colname, .prime),
+                               U_prime_colname = paste0(U_colname, .prime),
+                               U_feed_prime_colname = paste0(U_feed_colname, .prime),
+                               U_eiou_prime_colname = paste0(U_eiou_colname, .prime),
+                               r_eiou_prime_colname = paste0(r_eiou_colname, .prime),
+                               V_prime_colname = paste0(V_colname, .prime),
+                               Y_prime_colname = paste0(Y_colname, .prime)) {
+
+  effects_func <- function(R_mat, U_mat, U_feed_mat, V_mat, Y_mat, S_units_mat) {
+    # Pick up the columns of Y_mat that will count as primary energy industries in the reversed ECC.
+    p_industries <- matsbyname::getcolnames_byname(Y_mat)
+
+    # Pick up the columns of R_mat that will count as products of Y in the reversed ECC.
+    # We need these for footprints.
+    fd_sectors <- matsbyname::getcolnames_byname(R_mat)
+
+    # Reverse the ECC
+    reversed_ecc <- reverse(R = R_mat, U = U_mat, V = V_mat, Y = Y_mat)
+
+    # Call footprint_aggregates()
+
+
+    # Reverse the sense of the ECC
+  }
+
+
+  out <- matsindf::matsindf_apply(.sut_data,
+                                  FUN = effects_func,
+                                  R_mat = R,
+                                  U_mat = U,
+                                  U_feed_mat = U_feed,
+                                  V_mat = V,
+                                  Y_mat = Y,
+                                  S_units_mat = S_units)
+
+}
+
+
 #' Verify energy balance after footprint calculations
 #'
 #' Footprint calculations involve

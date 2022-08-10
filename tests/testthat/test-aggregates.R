@@ -450,3 +450,8 @@ test_that("footprint_aggregates() works with Losses", {
   })
   expect_true(!any(which_null_gross))
 })
+
+
+test_that("effects_aggregates() works as expected", {
+
+})

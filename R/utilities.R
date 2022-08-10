@@ -507,24 +507,37 @@ flows_unit_homogeneous <- function(.sutmats = NULL,
 #' That is, the analysis is the same if you're dealing with a reversed energy conversion chain (ECC).
 #' This function performs that reversal.
 #'
-#' To reverse an ECC, the \code{R}, \code{V}, \code{U}, and \code{Y} matrices
+#' To reverse an ECC, the **R**, **U**, **V**, and **Y** matrices
 #' need to be transposed and swapped:
-#' \code{R} with \code{Y} and
-#' \code{V} with \code{U}.
+#' **R** with **Y** and
+#' **U** with **V**.
 #' This function performs those operations.
 #'
 #' @param .sutmats the input ECC
-#' @param R the \code{R} matrix in the ECC to be reversed. (Default is "\code{R}".)
-#' @param V the \code{V} matrix in the ECC to be reversed. (Default is "\code{V}".)
-#' @param U the \code{U} matrix in the ECC to be reversed. (Default is "\code{U}".)
-#' @param Y the \code{Y} matrix in the ECC to be reversed. (Default is "\code{Y}".)
-#' @param suffix the suffix to be added to matrix names. (Default is "_rev".)
-#' @param R_rev the name of the \code{R} matrix in the reversed ECC. (Default is "\code{R_rev}".)
-#' @param V_rev the name of the \code{V} matrix in the reversed ECC. (Default is "\code{V_rev}".)
-#' @param U_rev the name of the \code{U} matrix in the reversed ECC. (Default is "\code{U_rev}".)
-#' @param Y_rev the name of the \code{Y} matrix in the reversed ECC. (Default is "\code{Y_rev}".)
+#' @param R The **R** matrix in the ECC to be reversed. (Default is "R".)
+#' @param U The **U** matrix in the ECC to be reversed. (Default is "U".)
+#' @param U_feed The **U_feed** matrix in the ECC to be reversed. (Default is "U_feed".)
+#' @param U_eiou The **U_eiou** matrix in the ECC to be reversed. (Default is "U_EIOU".)
+#' @param r_eiou The **r_eiou** matrix in the ECC to be reversed. (Default is "r_EIOU".)
+#' @param V The **V** matrix in the ECC to be reversed. (Default is "V".)
+#' @param Y The **Y** matrix in the ECC to be reversed. (Default is "Y".)
+#' @param suffix The suffix to be added to matrix names. (Default is "_rev".)
+#' @param R_colname The name of the **R** matrix. (Default is "R".)
+#' @param U_colname The name of the **U** matrix.  (Default is "U".)
+#' @param U_feed_colname The name of the **U_feed** matrix.  (Default is "U_feed".)
+#' @param U_eiou_colname The name of the **U_eiou** matrix.  (Default is "U_eiou".)
+#' @param r_eiou_colname The name of the **r_eiou** matrix.  (Default is "r_eiou".)
+#' @param V_colname The name of the **V** matrix. (Default is "V".)
+#' @param Y_colname The name of the **Y** matrix. (Default is "Y".)
+#' @param R_rev The name of the **R** matrix in the reversed ECC. (Default is "R_rev".)
+#' @param U_rev The name of the **U** matrix in the reversed ECC. (Default is "U_rev".)
+#' @param V_rev The name of the **V** matrix in the reversed ECC. (Default is "V_rev".)
+#' @param V_feed_rev The name of the **V_feed** matrix in the reversed ECC. (Default is "V_feed_rev".)
+#' @param V_eiou_rev The name of the **V_eiou** matrix in the reversed ECC. (Default is "V_eiou_rev".)
+#' @param r_eiou_rev The name of the **r_eiou** matrix in the reversed ECC. (Default is "r_eiou_rev".)
+#' @param Y_rev The name of the **Y** matrix in the reversed ECC. (Default is "Y_rev".)
 #'
-#' @return a reversed version of the ECC described by \code{R}, \code{V}, \code{U}, and \code{Y}.
+#' @return A reversed version of the ECC described by **R**, **U**, **U_feed**, **U_eiou**, **r_eiou**, **V**, and **Y**.
 #'
 #' @export
 #'
@@ -537,24 +550,49 @@ flows_unit_homogeneous <- function(.sutmats = NULL,
 #'   reverse()
 #' mats$R_rev[[1]]
 #' mats$U_rev[[1]]
+#' mats$U_feed_rev[[1]]
+#' mats$U_eiou_rev[[1]]
+#' mats$r_eiou_rev[[1]]
 #' mats$V_rev[[1]]
 #' mats$Y_rev[[1]]
 reverse <- function(.sutmats = NULL,
-                    # Input names
-                    R = "R", V = "V", U = "U", Y = "Y",
+                    # Input names or matrices
+                    R = Recca::psut_cols$R,
+                    U = Recca::psut_cols$U,
+                    U_feed = Recca::psut_cols$U_feed,
+                    U_eiou = Recca::psut_cols$U_eiou,
+                    r_eiou = Recca::psut_cols$r_eiou,
+                    V = Recca::psut_cols$V,
+                    Y = Recca::psut_cols$Y,
                     # Output names
-                    suffix = "_rev",
-                    R_rev = paste0(R, suffix), V_rev = paste0(V, suffix), U_rev = paste0(U, suffix), Y_rev = paste0(Y, suffix)){
-  reverse_func <- function(R_mat, V_mat, U_mat, Y_mat){
+                    R_rev = paste0(Recca::psut_cols$R, "_rev"),
+                    U_rev = paste0(Recca::psut_cols$U, "_rev"),
+                    V_rev = paste0(Recca::psut_cols$V, "_rev"),
+                    V_feed_rev = paste0(Recca::psut_cols$V_feed, "_rev"),
+                    V_eiou_rev = paste0(Recca::psut_cols$V_eiou, "_rev"),
+                    r_eiou_rev = paste0(Recca::psut_cols$r_eiou, "_rev"),
+                    Y_rev = paste0(Recca::psut_cols$Y, "_rev")){
+  reverse_func <- function(R_mat, U_mat, U_feed_mat, U_eiou_mat, r_eiou_mat, V_mat, Y_mat){
     R_rev_mat <- matsbyname::transpose_byname(Y_mat)
-    V_rev_mat <- matsbyname::transpose_byname(U_mat)
     U_rev_mat <- matsbyname::transpose_byname(V_mat)
+    V_rev_mat <- matsbyname::transpose_byname(U_mat)
+    V_feed_rev_mat <- matsbyname::transpose_byname(U_feed_mat)
+    V_eiou_rev_mat <- matsbyname::transpose_byname(U_eiou_mat)
+    r_eiou_rev_mat <- matsbyname::transpose_byname(r_eiou_mat)
     Y_rev_mat <- matsbyname::transpose_byname(R_mat)
-    list(R_rev_mat, V_rev_mat, U_rev_mat, Y_rev_mat) %>%
-      magrittr::set_names(c(R_rev, V_rev, U_rev, Y_rev))
+    list(R_rev_mat, U_rev_mat, V_rev_mat, V_feed_rev_mat, V_eiou_rev_mat, r_eiou_rev_mat, Y_rev_mat) %>%
+      magrittr::set_names(c(R_rev, U_rev, V_rev, V_feed_rev, V_eiou_rev, r_eiou_rev, Y_rev))
   }
 
-  matsindf::matsindf_apply(.sutmats, FUN = reverse_func, R_mat = R, V_mat = V, U_mat = U, Y_mat = Y)
+  matsindf::matsindf_apply(.sutmats,
+                           FUN = reverse_func,
+                           R_mat = R,
+                           U_mat = U,
+                           U_feed_mat = U_feed,
+                           U_eiou_mat = U_eiou,
+                           r_eiou_mat = r_eiou,
+                           V_mat = V,
+                           Y_mat = Y)
 }
 
 

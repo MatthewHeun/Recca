@@ -6,40 +6,71 @@
 \usage{
 reverse(
   .sutmats = NULL,
-  R = "R",
-  V = "V",
-  U = "U",
-  Y = "Y",
-  suffix = "_rev",
-  R_rev = paste0(R, suffix),
-  V_rev = paste0(V, suffix),
-  U_rev = paste0(U, suffix),
-  Y_rev = paste0(Y, suffix)
+  R = Recca::psut_cols$R,
+  U = Recca::psut_cols$U,
+  U_feed = Recca::psut_cols$U_feed,
+  U_eiou = Recca::psut_cols$U_eiou,
+  r_eiou = Recca::psut_cols$r_eiou,
+  V = Recca::psut_cols$V,
+  Y = Recca::psut_cols$Y,
+  R_rev = paste0(Recca::psut_cols$R, "_rev"),
+  U_rev = paste0(Recca::psut_cols$U, "_rev"),
+  V_rev = paste0(Recca::psut_cols$V, "_rev"),
+  V_feed_rev = paste0(Recca::psut_cols$V_feed, "_rev"),
+  V_eiou_rev = paste0(Recca::psut_cols$V_eiou, "_rev"),
+  r_eiou_rev = paste0(Recca::psut_cols$r_eiou, "_rev"),
+  Y_rev = paste0(Recca::psut_cols$Y, "_rev")
 )
 }
 \arguments{
 \item{.sutmats}{the input ECC}
 
-\item{R}{the \code{R} matrix in the ECC to be reversed. (Default is "\code{R}".)}
+\item{R}{The \strong{R} matrix in the ECC to be reversed. (Default is "R".)}
 
-\item{V}{the \code{V} matrix in the ECC to be reversed. (Default is "\code{V}".)}
+\item{U}{The \strong{U} matrix in the ECC to be reversed. (Default is "U".)}
 
-\item{U}{the \code{U} matrix in the ECC to be reversed. (Default is "\code{U}".)}
+\item{U_feed}{The \strong{U_feed} matrix in the ECC to be reversed. (Default is "U_feed".)}
 
-\item{Y}{the \code{Y} matrix in the ECC to be reversed. (Default is "\code{Y}".)}
+\item{U_eiou}{The \strong{U_eiou} matrix in the ECC to be reversed. (Default is "U_EIOU".)}
 
-\item{suffix}{the suffix to be added to matrix names. (Default is "_rev".)}
+\item{r_eiou}{The \strong{r_eiou} matrix in the ECC to be reversed. (Default is "r_EIOU".)}
 
-\item{R_rev}{the name of the \code{R} matrix in the reversed ECC. (Default is "\code{R_rev}".)}
+\item{V}{The \strong{V} matrix in the ECC to be reversed. (Default is "V".)}
 
-\item{V_rev}{the name of the \code{V} matrix in the reversed ECC. (Default is "\code{V_rev}".)}
+\item{Y}{The \strong{Y} matrix in the ECC to be reversed. (Default is "Y".)}
 
-\item{U_rev}{the name of the \code{U} matrix in the reversed ECC. (Default is "\code{U_rev}".)}
+\item{R_rev}{The name of the \strong{R} matrix in the reversed ECC. (Default is "R_rev".)}
 
-\item{Y_rev}{the name of the \code{Y} matrix in the reversed ECC. (Default is "\code{Y_rev}".)}
+\item{U_rev}{The name of the \strong{U} matrix in the reversed ECC. (Default is "U_rev".)}
+
+\item{V_rev}{The name of the \strong{V} matrix in the reversed ECC. (Default is "V_rev".)}
+
+\item{V_feed_rev}{The name of the \strong{V_feed} matrix in the reversed ECC. (Default is "V_feed_rev".)}
+
+\item{V_eiou_rev}{The name of the \strong{V_eiou} matrix in the reversed ECC. (Default is "V_eiou_rev".)}
+
+\item{r_eiou_rev}{The name of the \strong{r_eiou} matrix in the reversed ECC. (Default is "r_eiou_rev".)}
+
+\item{Y_rev}{The name of the \strong{Y} matrix in the reversed ECC. (Default is "Y_rev".)}
+
+\item{suffix}{The suffix to be added to matrix names. (Default is "_rev".)}
+
+\item{R_colname}{The name of the \strong{R} matrix. (Default is "R".)}
+
+\item{U_colname}{The name of the \strong{U} matrix.  (Default is "U".)}
+
+\item{U_feed_colname}{The name of the \strong{U_feed} matrix.  (Default is "U_feed".)}
+
+\item{U_eiou_colname}{The name of the \strong{U_eiou} matrix.  (Default is "U_eiou".)}
+
+\item{r_eiou_colname}{The name of the \strong{r_eiou} matrix.  (Default is "r_eiou".)}
+
+\item{V_colname}{The name of the \strong{V} matrix. (Default is "V".)}
+
+\item{Y_colname}{The name of the \strong{Y} matrix. (Default is "Y".)}
 }
 \value{
-a reversed version of the ECC described by \code{R}, \code{V}, \code{U}, and \code{Y}.
+A reversed version of the ECC described by \strong{R}, \strong{U}, \strong{U_feed}, \strong{U_eiou}, \strong{r_eiou}, \strong{V}, and \strong{Y}.
 }
 \description{
 Leontief's original input-output analysis involved swimming
@@ -51,10 +82,10 @@ That is, the analysis is the same if you're dealing with a reversed energy conve
 This function performs that reversal.
 }
 \details{
-To reverse an ECC, the \code{R}, \code{V}, \code{U}, and \code{Y} matrices
+To reverse an ECC, the \strong{R}, \strong{U}, \strong{V}, and \strong{Y} matrices
 need to be transposed and swapped:
-\code{R} with \code{Y} and
-\code{V} with \code{U}.
+\strong{R} with \strong{Y} and
+\strong{U} with \strong{V}.
 This function performs those operations.
 }
 \examples{
@@ -66,6 +97,9 @@ mats <- UKEnergy2000mats \%>\%
   reverse()
 mats$R_rev[[1]]
 mats$U_rev[[1]]
+mats$U_feed_rev[[1]]
+mats$U_eiou_rev[[1]]
+mats$r_eiou_rev[[1]]
 mats$V_rev[[1]]
 mats$Y_rev[[1]]
 }

@@ -256,7 +256,7 @@ test_that("inputs_outputs_unit_homogeneous works as expected", {
 })
 
 
-test_that("flows_unit_homogeneous works as expected", {
+test_that("flows_unit_homogeneous() works as expected", {
   result <- UKEnergy2000mats %>%
     spread(key = "matrix.name", value = "matrix") %>%
     flows_unit_homogeneous() %>%
@@ -296,21 +296,26 @@ test_that("flows_unit_homogeneous works as expected", {
 })
 
 
-test_that("reverse works as expected", {
+test_that("reverse() works as expected", {
   result <- UKEnergy2000mats %>%
     tidyr::spread(key = "matrix.name", value = "matrix") %>%
     reverse()
   for (i in 1:4) {
     R_rev_expected <- matsbyname::transpose_byname(result$Y[[i]])
-    V_rev_expected <- matsbyname::transpose_byname(result$U[[i]])
     U_rev_expected <- matsbyname::transpose_byname(result$V[[i]])
+    V_rev_expected <- matsbyname::transpose_byname(result$U[[i]])
+    V_feed_rev_expected <- matsbyname::transpose_byname(result$U_feed[[i]])
+    V_eiou_rev_expected <- matsbyname::transpose_byname(result$U_EIOU[[i]])
+    r_eiou_rev_expected <- matsbyname::transpose_byname(result$r_EIOU[[i]])
     Y_rev_expected <- matsbyname::transpose_byname(result$R[[i]])
     expect_equal(result$R_rev[[i]], R_rev_expected)
-    expect_equal(result$V_rev[[i]], V_rev_expected)
     expect_equal(result$U_rev[[i]], U_rev_expected)
+    expect_equal(result$V_rev[[i]], V_rev_expected)
+    expect_equal(result$V_feed_rev[[i]], V_feed_rev_expected)
+    expect_equal(result$V_EIOU_rev[[i]], V_eiou_rev_expected)
+    expect_equal(result$r_EIOU_rev[[i]], r_eiou_rev_expected)
     expect_equal(result$Y_rev[[i]], Y_rev_expected)
   }
-
 })
 
 
