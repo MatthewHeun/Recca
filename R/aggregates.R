@@ -597,12 +597,12 @@ grouped_aggregates <- function(.sut_data = NULL,
 #' This function calculates footprint aggregates for several categories of final demand.
 #'
 #' By default, footprint aggregates are calculated for each individual
-#' product and sector of final demand in the `Y` matrix.
+#' product and sector of final demand in the **Y** matrix.
 #' This calculation is accomplished for each description of an energy conversion chain (ECC)
 #' by the following algorithm:
 #'
 #' 1. Calculate io matrices with `calc_io_mats()`.
-#' 2. Identify each product and sector from rows and columns of the `Y` matrix.
+#' 2. Identify each product and sector from rows and columns of the **Y** matrix.
 #' 3. For each product and sector independently,
 #'    perform an upstream swim with `new_Y()`
 #'    to obtain the ECC requirements to supply that product or sector only.
@@ -626,6 +626,10 @@ grouped_aggregates <- function(.sut_data = NULL,
 #' See the documentation at `matsbyname::invert_byname()` for details.
 #'
 #' Both `tol` and `method` should be a single values and apply to all rows of `.sut_data`.
+#'
+#' When the **Y** matrix is chopped by rows or columns, the sum of the ECCs
+#' created from the chopped rows or columns should equal the original ECC.
+#' Internally, this function This function checks internally
 #'
 #' @param .sut_data A data frame or list of physical supply-use table matrices.
 #'                  Default is `NULL`.
@@ -656,8 +660,11 @@ grouped_aggregates <- function(.sut_data = NULL,
 #'               When `TRUE`, creates a new column called `product_sector` and columns of primary and final demand aggregates.
 #'               Default is `FALSE`.
 #' @param method One of "solve", "QR", or "SVD". Default is "solve". See details.
-#' @param tol The tolerance for detecting linear dependencies in the columns of `a`.
-#'            Default is `.Machine$double.eps`.
+#' @param tol_invert The tolerance for detecting linear dependencies in the columns of `a`.
+#'                   Default is `.Machine$double.eps`.
+#' @param tol_chop_sum The allowable deviation from `0` for the difference between
+#'                     the sum of the chopped ECCs and the original ECC.
+#'                     Default is 1e-4.
 #' @param R,U,U_feed,V,Y,S_units Matrices that describe the energy conversion chain (ECC).
 #'                               See `Recca::psut_cols` for default values.
 #' @param footprint_aggregates The name of the output column that contains data frames of footprint aggregates.
@@ -699,7 +706,8 @@ footprint_aggregates <- function(.sut_data = NULL,
                                  pattern_type = c("exact", "leading", "trailing", "anywhere"),
                                  unnest = FALSE,
                                  method = c("solve", "QR", "SVD"),
-                                 tol = .Machine$double.eps,
+                                 tol_invert = .Machine$double.eps,
+                                 tol_chop_sum = 1e-4,
                                  # Input names or matrices
                                  R = Recca::psut_cols$R,
                                  U = Recca::psut_cols$U,
@@ -738,7 +746,7 @@ footprint_aggregates <- function(.sut_data = NULL,
     # Calculate the IO matrices
     with_io <- list(R = R_mat, U = U_mat, U_feed = U_feed_mat, V = V_mat, Y = Y_mat, S_units = S_units_mat) %>%
       # We accept the default vector and matrix names.
-      calc_io_mats(method = method, tol = tol)
+      calc_io_mats(method = method, tol = tol_invert)
 
     # Get the row names in Y. Those are the Products we want to evaluate.
     product_names <- matsbyname::getrownames_byname(Y_mat)
@@ -786,7 +794,8 @@ footprint_aggregates <- function(.sut_data = NULL,
     # The sum of the ECCs associated with new_Y_products should be equal to the original ECC.
     product_prime_mats <- ecc_prime[product_names] %>%
       purrr::transpose()
-    product_prime_balanced <- verify_footprint_aggregate_energy_balance(R_mat = R_mat,
+    product_prime_balanced <- verify_footprint_aggregate_energy_balance(tol = tol_chop_sum,
+                                                                        R_mat = R_mat,
                                                                         U_mat = U_mat,
                                                                         U_feed_mat = U_feed_mat,
                                                                         V_mat = V_mat,
@@ -801,7 +810,8 @@ footprint_aggregates <- function(.sut_data = NULL,
     # The sum of the ECCs associated with new_Y_sectors should be equal to the original ECC.
     sector_prime_mats <- ecc_prime[sector_names] %>%
       purrr::transpose()
-    sector_prime_balanced <- verify_footprint_aggregate_energy_balance(R_mat = R_mat,
+    sector_prime_balanced <- verify_footprint_aggregate_energy_balance(tol = tol_chop_sum,
+                                                                       R_mat = R_mat,
                                                                        U_mat = U_mat,
                                                                        U_feed_mat = U_feed_mat,
                                                                        V_mat = V_mat,

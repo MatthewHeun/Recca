@@ -11,7 +11,8 @@ footprint_aggregates(
   pattern_type = c("exact", "leading", "trailing", "anywhere"),
   unnest = FALSE,
   method = c("solve", "QR", "SVD"),
-  tol = .Machine$double.eps,
+  tol_invert = .Machine$double.eps,
+  tol_chop_sum = 1e-04,
   R = Recca::psut_cols$R,
   U = Recca::psut_cols$U,
   U_feed = Recca::psut_cols$U_feed,
@@ -76,8 +77,12 @@ Default is \code{FALSE}.}
 
 \item{method}{One of "solve", "QR", or "SVD". Default is "solve". See details.}
 
-\item{tol}{The tolerance for detecting linear dependencies in the columns of \code{a}.
+\item{tol_invert}{The tolerance for detecting linear dependencies in the columns of \code{a}.
 Default is \code{.Machine$double.eps}.}
+
+\item{tol_chop_sum}{The allowable deviation from \code{0} for the difference between
+the sum of the chopped ECCs and the original ECC.
+Default is 1e-4.}
 
 \item{R, U, U_feed, V, Y, S_units}{Matrices that describe the energy conversion chain (ECC).
 See \code{Recca::psut_cols} for default values.}
@@ -114,12 +119,12 @@ This function calculates footprint aggregates for several categories of final de
 }
 \details{
 By default, footprint aggregates are calculated for each individual
-product and sector of final demand in the \code{Y} matrix.
+product and sector of final demand in the \strong{Y} matrix.
 This calculation is accomplished for each description of an energy conversion chain (ECC)
 by the following algorithm:
 \enumerate{
 \item Calculate io matrices with \code{calc_io_mats()}.
-\item Identify each product and sector from rows and columns of the \code{Y} matrix.
+\item Identify each product and sector from rows and columns of the \strong{Y} matrix.
 \item For each product and sector independently,
 perform an upstream swim with \code{new_Y()}
 to obtain the ECC requirements to supply that product or sector only.
@@ -144,6 +149,10 @@ The \code{tol} argument specifies the tolerance for detecting linearities in the
 See the documentation at \code{matsbyname::invert_byname()} for details.
 
 Both \code{tol} and \code{method} should be a single values and apply to all rows of \code{.sut_data}.
+
+When the \strong{Y} matrix is chopped by rows or columns, the sum of the ECCs
+created from the chopped rows or columns should equal the original ECC.
+Internally, this function This function checks internally
 }
 \examples{
 p_industries <- c("Resources - Crude", "Resources - NG")

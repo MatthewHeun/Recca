@@ -29,14 +29,15 @@ verify_footprint_aggregate_energy_balance(
 \item{R_chop_list, U_chop_list, U_feed_chop_list, V_chop_list, Y_chop_list}{Lists of matrices from different upstream swims corresponding to different rows or columns of \strong{Y}.}
 }
 \value{
-\code{TRUE} if energy balance is observed. \code{FALSE} if not.
+\code{TRUE} if energy balance is observed, \code{FALSE} otherwise.
 }
 \description{
-Footprint calculations involve isolating rows or columns of the \strong{Y} matrix,
-performing upstream swims (with \code{new_Y()}), and creating the ECC
-portions that support the creation of the row or column of \strong{Y}.
+Footprint calculations involve
+isolating rows or columns of the \strong{Y} matrix (chopping),
+performing upstream swims (with \code{new_Y()}), and
+creating the ECC portions that support the creation of the row or column of \strong{Y}.
 After performing that upstream swim, the sum of the
-isolated ECCs should equal the original ECC.
+isolated (chopped) ECCs should equal the original ECC.
 This function performs that energy balance verification.
 }
 \details{
