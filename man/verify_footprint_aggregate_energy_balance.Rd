@@ -24,9 +24,9 @@ verify_footprint_aggregate_energy_balance(
 
 \item{tol}{The tolerance within which energy balance is assumed to be OK. Default is \code{1e-4}.}
 
-\item{R_chop_list, U_chop_list, U_feed_chop_list, V_chop_list, Y_chop_list}{Lists of matrices from different upstream swims corresponding to different rows or columns of \strong{Y}. Defaults are strings with "_chop_list" appended.}
+\item{R_mat, U_mat, U_feed_mat, V_mat, Y_mat}{The matrices of the original ECC.}
 
-\item{R, U, U_feed, V, Y}{The matrices for the original ECC or names of columns in \code{.sut_data} containing those matrices. See \code{Recca::psut_cols} for default values.}
+\item{R_chop_list, U_chop_list, U_feed_chop_list, V_chop_list, Y_chop_list}{Lists of matrices from different upstream swims corresponding to different rows or columns of \strong{Y}.}
 }
 \value{
 \code{TRUE} if energy balance is observed. \code{FALSE} if not.
@@ -45,8 +45,6 @@ formed by isolating (chopping) different parts of \strong{Y}.
 The matrices in \code{R_chop_list}, \code{U_chop_list}, \code{U_feed_chop_list}
 \code{U_eiou_chop_list}, \code{V_chop_list}, and \code{Y_chop_list} should sum to
 \code{R}, \code{U}, \code{U_feed}, \code{U_eiou}, \code{V}, and \code{Y}, respectively.
-Alternatively, the various \verb{*_chop_list} arguments
-can be names of list columns in \code{.sut_data}.
 
 This is not a public function.
 It is an internal helper function

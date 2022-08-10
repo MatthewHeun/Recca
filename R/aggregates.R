@@ -619,6 +619,14 @@ grouped_aggregates <- function(.sut_data = NULL,
 #' for each isolated product or sector.
 #' The names of the columns in the data frame are taken from the `*_prime_colname` arguments.
 #'
+#' Footprint aggregation involves "upstream swim" with `new_Y()`.
+#' `new_Y()` requires matrix inverse calculations.
+#' The `method` argument specifies the method for calculating matrix inverses.
+#' The `tol` argument specifies the tolerance for detecting linearities in the matrix.
+#' See the documentation at `matsbyname::invert_byname()` for details.
+#'
+#' Both `tol` and `method` should be a single values and apply to all rows of `.sut_data`.
+#'
 #' @param .sut_data A data frame or list of physical supply-use table matrices.
 #'                  Default is `NULL`.
 #' @param p_industries A vector of names of industries to be aggregated as "primary."
@@ -647,6 +655,9 @@ grouped_aggregates <- function(.sut_data = NULL,
 #' @param unnest A boolean that tells whether to unnest the outgoing data.
 #'               When `TRUE`, creates a new column called `product_sector` and columns of primary and final demand aggregates.
 #'               Default is `FALSE`.
+#' @param method One of "solve", "QR", or "SVD". Default is "solve". See details.
+#' @param tol The tolerance for detecting linear dependencies in the columns of `a`.
+#'            Default is `.Machine$double.eps`.
 #' @param R,U,U_feed,V,Y,S_units Matrices that describe the energy conversion chain (ECC).
 #'                               See `Recca::psut_cols` for default values.
 #' @param footprint_aggregates The name of the output column that contains data frames of footprint aggregates.
@@ -891,11 +902,12 @@ footprint_aggregates <- function(.sut_data = NULL,
 
 #' Verify energy balance after footprint calculations
 #'
-#' Footprint calculations involve isolating rows or columns of the **Y** matrix,
-#' performing upstream swims (with `new_Y()`), and creating the ECC
-#' portions that support the creation of the row or column of **Y**.
+#' Footprint calculations involve
+#' isolating rows or columns of the **Y** matrix (chopping),
+#' performing upstream swims (with `new_Y()`), and
+#' creating the ECC portions that support the creation of the row or column of **Y**.
 #' After performing that upstream swim, the sum of the
-#' isolated ECCs should equal the original ECC.
+#' isolated (chopped) ECCs should equal the original ECC.
 #' This function performs that energy balance verification.
 #'
 #' The various `*_chop_list` arguments should be lists of matrices
@@ -903,8 +915,6 @@ footprint_aggregates <- function(.sut_data = NULL,
 #' The matrices in `R_chop_list`, `U_chop_list`, `U_feed_chop_list`
 #' `U_eiou_chop_list`, `V_chop_list`, and `Y_chop_list` should sum to
 #' `R`, `U`, `U_feed`, `U_eiou`, `V`, and `Y`, respectively.
-#' Alternatively, the various `*_chop_list` arguments
-#' can be names of list columns in `.sut_data`.
 #'
 #' This is not a public function.
 #' It is an internal helper function
@@ -912,10 +922,10 @@ footprint_aggregates <- function(.sut_data = NULL,
 #'
 #' @param .sut_data An optional data frame of energy conversion chain matrices.
 #' @param tol The tolerance within which energy balance is assumed to be OK. Default is `1e-4`.
-#' @param R,U,U_feed,V,Y The matrices for the original ECC or names of columns in `.sut_data` containing those matrices. See `Recca::psut_cols` for default values.
-#' @param R_chop_list,U_chop_list,U_feed_chop_list,V_chop_list,Y_chop_list Lists of matrices from different upstream swims corresponding to different rows or columns of **Y**. Defaults are strings with "_chop_list" appended.
+#' @param R_mat,U_mat,U_feed_mat,V_mat,Y_mat The matrices of the original ECC.
+#' @param R_chop_list,U_chop_list,U_feed_chop_list,V_chop_list,Y_chop_list Lists of matrices from different upstream swims corresponding to different rows or columns of **Y**.
 #'
-#' @return `TRUE` if energy balance is observed. `FALSE` if not.
+#' @return `TRUE` if energy balance is observed, `FALSE` otherwise.
 verify_footprint_aggregate_energy_balance <- function(.sut_data = NULL,
                                                       tol = 1e-4,
                                                       R_mat, U_mat, U_feed_mat, V_mat, Y_mat,

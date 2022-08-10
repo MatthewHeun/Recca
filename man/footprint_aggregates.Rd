@@ -74,6 +74,11 @@ This argument is passed to both \code{primary_aggregates()} and \code{finaldeman
 When \code{TRUE}, creates a new column called \code{product_sector} and columns of primary and final demand aggregates.
 Default is \code{FALSE}.}
 
+\item{method}{One of "solve", "QR", or "SVD". Default is "solve". See details.}
+
+\item{tol}{The tolerance for detecting linear dependencies in the columns of \code{a}.
+Default is \code{.Machine$double.eps}.}
+
 \item{R, U, U_feed, V, Y, S_units}{Matrices that describe the energy conversion chain (ECC).
 See \code{Recca::psut_cols} for default values.}
 
@@ -131,6 +136,14 @@ Use \code{unnest} to define how the aggregate data are added to the right side o
 Note that the nested data frame also includes columns for the ECC matrices
 for each isolated product or sector.
 The names of the columns in the data frame are taken from the \verb{*_prime_colname} arguments.
+
+Footprint aggregation involves "upstream swim" with \code{new_Y()}.
+\code{new_Y()} requires matrix inverse calculations.
+The \code{method} argument specifies the method for calculating matrix inverses.
+The \code{tol} argument specifies the tolerance for detecting linearities in the matrix.
+See the documentation at \code{matsbyname::invert_byname()} for details.
+
+Both \code{tol} and \code{method} should be a single values and apply to all rows of \code{.sut_data}.
 }
 \examples{
 p_industries <- c("Resources - Crude", "Resources - NG")
