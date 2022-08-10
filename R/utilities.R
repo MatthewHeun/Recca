@@ -524,20 +524,14 @@ flows_unit_homogeneous <- function(.sutmats = NULL,
 #' @param suffix The suffix to be added to matrix names. (Default is "_rev".)
 #' @param R_colname The name of the **R** matrix. (Default is "R".)
 #' @param U_colname The name of the **U** matrix.  (Default is "U".)
-#' @param U_feed_colname The name of the **U_feed** matrix.  (Default is "U_feed".)
-#' @param U_eiou_colname The name of the **U_eiou** matrix.  (Default is "U_eiou".)
-#' @param r_eiou_colname The name of the **r_eiou** matrix.  (Default is "r_eiou".)
 #' @param V_colname The name of the **V** matrix. (Default is "V".)
 #' @param Y_colname The name of the **Y** matrix. (Default is "Y".)
 #' @param R_rev The name of the **R** matrix in the reversed ECC. (Default is "R_rev".)
 #' @param U_rev The name of the **U** matrix in the reversed ECC. (Default is "U_rev".)
 #' @param V_rev The name of the **V** matrix in the reversed ECC. (Default is "V_rev".)
-#' @param V_feed_rev The name of the **V_feed** matrix in the reversed ECC. (Default is "V_feed_rev".)
-#' @param V_eiou_rev The name of the **V_eiou** matrix in the reversed ECC. (Default is "V_eiou_rev".)
-#' @param r_eiou_rev The name of the **r_eiou** matrix in the reversed ECC. (Default is "r_eiou_rev".)
 #' @param Y_rev The name of the **Y** matrix in the reversed ECC. (Default is "Y_rev".)
 #'
-#' @return A reversed version of the ECC described by **R**, **U**, **U_feed**, **U_eiou**, **r_eiou**, **V**, and **Y**.
+#' @return A reversed version of the ECC described by **R**, **U**, **V**, and **Y**.
 #'
 #' @export
 #'
@@ -559,38 +553,26 @@ reverse <- function(.sutmats = NULL,
                     # Input names or matrices
                     R = Recca::psut_cols$R,
                     U = Recca::psut_cols$U,
-                    U_feed = Recca::psut_cols$U_feed,
-                    U_eiou = Recca::psut_cols$U_eiou,
-                    r_eiou = Recca::psut_cols$r_eiou,
                     V = Recca::psut_cols$V,
                     Y = Recca::psut_cols$Y,
                     # Output names
                     R_rev = paste0(Recca::psut_cols$R, "_rev"),
                     U_rev = paste0(Recca::psut_cols$U, "_rev"),
                     V_rev = paste0(Recca::psut_cols$V, "_rev"),
-                    V_feed_rev = paste0(Recca::psut_cols$V_feed, "_rev"),
-                    V_eiou_rev = paste0(Recca::psut_cols$V_eiou, "_rev"),
-                    r_eiou_rev = paste0(Recca::psut_cols$r_eiou, "_rev"),
                     Y_rev = paste0(Recca::psut_cols$Y, "_rev")){
-  reverse_func <- function(R_mat, U_mat, U_feed_mat, U_eiou_mat, r_eiou_mat, V_mat, Y_mat){
+  reverse_func <- function(R_mat, U_mat, V_mat, Y_mat){
     R_rev_mat <- matsbyname::transpose_byname(Y_mat)
     U_rev_mat <- matsbyname::transpose_byname(V_mat)
     V_rev_mat <- matsbyname::transpose_byname(U_mat)
-    V_feed_rev_mat <- matsbyname::transpose_byname(U_feed_mat)
-    V_eiou_rev_mat <- matsbyname::transpose_byname(U_eiou_mat)
-    r_eiou_rev_mat <- matsbyname::transpose_byname(r_eiou_mat)
     Y_rev_mat <- matsbyname::transpose_byname(R_mat)
-    list(R_rev_mat, U_rev_mat, V_rev_mat, V_feed_rev_mat, V_eiou_rev_mat, r_eiou_rev_mat, Y_rev_mat) %>%
-      magrittr::set_names(c(R_rev, U_rev, V_rev, V_feed_rev, V_eiou_rev, r_eiou_rev, Y_rev))
+    list(R_rev_mat, U_rev_mat, V_rev_mat, Y_rev_mat) %>%
+      magrittr::set_names(c(R_rev, U_rev, V_rev, Y_rev))
   }
 
   matsindf::matsindf_apply(.sutmats,
                            FUN = reverse_func,
                            R_mat = R,
                            U_mat = U,
-                           U_feed_mat = U_feed,
-                           U_eiou_mat = U_eiou,
-                           r_eiou_mat = r_eiou,
                            V_mat = V,
                            Y_mat = Y)
 }

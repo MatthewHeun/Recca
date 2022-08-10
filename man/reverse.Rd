@@ -8,17 +8,11 @@ reverse(
   .sutmats = NULL,
   R = Recca::psut_cols$R,
   U = Recca::psut_cols$U,
-  U_feed = Recca::psut_cols$U_feed,
-  U_eiou = Recca::psut_cols$U_eiou,
-  r_eiou = Recca::psut_cols$r_eiou,
   V = Recca::psut_cols$V,
   Y = Recca::psut_cols$Y,
   R_rev = paste0(Recca::psut_cols$R, "_rev"),
   U_rev = paste0(Recca::psut_cols$U, "_rev"),
   V_rev = paste0(Recca::psut_cols$V, "_rev"),
-  V_feed_rev = paste0(Recca::psut_cols$V_feed, "_rev"),
-  V_eiou_rev = paste0(Recca::psut_cols$V_eiou, "_rev"),
-  r_eiou_rev = paste0(Recca::psut_cols$r_eiou, "_rev"),
   Y_rev = paste0(Recca::psut_cols$Y, "_rev")
 )
 }
@@ -28,12 +22,6 @@ reverse(
 \item{R}{The \strong{R} matrix in the ECC to be reversed. (Default is "R".)}
 
 \item{U}{The \strong{U} matrix in the ECC to be reversed. (Default is "U".)}
-
-\item{U_feed}{The \strong{U_feed} matrix in the ECC to be reversed. (Default is "U_feed".)}
-
-\item{U_eiou}{The \strong{U_eiou} matrix in the ECC to be reversed. (Default is "U_EIOU".)}
-
-\item{r_eiou}{The \strong{r_eiou} matrix in the ECC to be reversed. (Default is "r_EIOU".)}
 
 \item{V}{The \strong{V} matrix in the ECC to be reversed. (Default is "V".)}
 
@@ -45,13 +33,13 @@ reverse(
 
 \item{V_rev}{The name of the \strong{V} matrix in the reversed ECC. (Default is "V_rev".)}
 
-\item{V_feed_rev}{The name of the \strong{V_feed} matrix in the reversed ECC. (Default is "V_feed_rev".)}
-
-\item{V_eiou_rev}{The name of the \strong{V_eiou} matrix in the reversed ECC. (Default is "V_eiou_rev".)}
-
-\item{r_eiou_rev}{The name of the \strong{r_eiou} matrix in the reversed ECC. (Default is "r_eiou_rev".)}
-
 \item{Y_rev}{The name of the \strong{Y} matrix in the reversed ECC. (Default is "Y_rev".)}
+
+\item{U_feed}{The \strong{U_feed} matrix in the ECC to be reversed. (Default is "U_feed".)}
+
+\item{U_eiou}{The \strong{U_eiou} matrix in the ECC to be reversed. (Default is "U_EIOU".)}
+
+\item{r_eiou}{The \strong{r_eiou} matrix in the ECC to be reversed. (Default is "r_EIOU".)}
 
 \item{suffix}{The suffix to be added to matrix names. (Default is "_rev".)}
 
@@ -59,18 +47,12 @@ reverse(
 
 \item{U_colname}{The name of the \strong{U} matrix.  (Default is "U".)}
 
-\item{U_feed_colname}{The name of the \strong{U_feed} matrix.  (Default is "U_feed".)}
-
-\item{U_eiou_colname}{The name of the \strong{U_eiou} matrix.  (Default is "U_eiou".)}
-
-\item{r_eiou_colname}{The name of the \strong{r_eiou} matrix.  (Default is "r_eiou".)}
-
 \item{V_colname}{The name of the \strong{V} matrix. (Default is "V".)}
 
 \item{Y_colname}{The name of the \strong{Y} matrix. (Default is "Y".)}
 }
 \value{
-A reversed version of the ECC described by \strong{R}, \strong{U}, \strong{U_feed}, \strong{U_eiou}, \strong{r_eiou}, \strong{V}, and \strong{Y}.
+A reversed version of the ECC described by \strong{R}, \strong{U}, \strong{V}, and \strong{Y}.
 }
 \description{
 Leontief's original input-output analysis involved swimming
