@@ -22,7 +22,7 @@ verify_footprint_aggregate_energy_balance(
 \arguments{
 \item{.sut_data}{An optional data frame of energy conversion chain matrices.}
 
-\item{tol}{The tolerance within which energy balance is assumed to be OK. Default is \code{1e-6}.}
+\item{tol}{The tolerance within which energy balance is assumed to be OK. Default is \code{1e-4}.}
 
 \item{R_chop_list, U_chop_list, U_feed_chop_list, V_chop_list, Y_chop_list}{Lists of matrices from different upstream swims corresponding to different rows or columns of \strong{Y}. Defaults are strings with "_chop_list" appended.}
 

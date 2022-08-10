@@ -788,7 +788,19 @@ footprint_aggregates <- function(.sut_data = NULL,
     assertthat::assert_that(product_prime_balanced, msg = "Products not balanced in footprint_aggregations()")
 
     # The sum of the ECCs associated with new_Y_sectors should be equal to the original ECC.
-    ecc_prime[sector_names]
+    sector_prime_mats <- ecc_prime[sector_names] %>%
+      purrr::transpose()
+    sector_prime_balanced <- verify_footprint_aggregate_energy_balance(R_mat = R_mat,
+                                                                       U_mat = U_mat,
+                                                                       U_feed_mat = U_feed_mat,
+                                                                       V_mat = V_mat,
+                                                                       Y_mat = Y_mat,
+                                                                       R_chop_list = sector_prime_mats[[R_prime_colname]],
+                                                                       U_chop_list = sector_prime_mats[[U_prime_colname]],
+                                                                       U_feed_chop_list = sector_prime_mats[[U_feed_prime_colname]],
+                                                                       V_chop_list = sector_prime_mats[[V_prime_colname]],
+                                                                       Y_chop_list = sector_prime_mats[[Y_prime_colname]])
+    assertthat::assert_that(sector_prime_balanced, msg = "Sectors not balanced in footprint_aggregations()")
 
     # Now that we have the new (prime) ECCs, calculate primary and final demand aggregates
     p_aggregates <- ecc_prime %>%
@@ -899,7 +911,7 @@ footprint_aggregates <- function(.sut_data = NULL,
 #' for `footprint_aggregates()`.
 #'
 #' @param .sut_data An optional data frame of energy conversion chain matrices.
-#' @param tol The tolerance within which energy balance is assumed to be OK. Default is `1e-6`.
+#' @param tol The tolerance within which energy balance is assumed to be OK. Default is `1e-4`.
 #' @param R,U,U_feed,V,Y The matrices for the original ECC or names of columns in `.sut_data` containing those matrices. See `Recca::psut_cols` for default values.
 #' @param R_chop_list,U_chop_list,U_feed_chop_list,V_chop_list,Y_chop_list Lists of matrices from different upstream swims corresponding to different rows or columns of **Y**. Defaults are strings with "_chop_list" appended.
 #'
@@ -914,7 +926,12 @@ verify_footprint_aggregate_energy_balance <- function(.sut_data = NULL,
     err <- matsbyname::difference_byname(mat_sum, mat)
     matsbyname::iszero_byname(err, tol = tol)
   }
-  Map(f = verify_func, list(R_chop_list, U_chop_list, U_feed_chop_list, V_chop_list, Y_chop_list), list(R_mat, U_mat, U_feed_mat, V_mat, Y_mat)) %>%
+
+  # Build lists of matrices
+  chop_list <- list(R_chop_list, U_chop_list, U_feed_chop_list, V_chop_list, Y_chop_list)
+  mat_list <- list(R_mat, U_mat, U_feed_mat, V_mat, Y_mat)
+  # Map across each list to ensure the chop_list sums to the matrix.
+  Map(f = verify_func, chop_list, mat_list) %>%
     unlist() %>%
     all()
 }
