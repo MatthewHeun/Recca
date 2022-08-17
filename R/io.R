@@ -50,7 +50,7 @@
 #' @param D The name for the `D` matrix on output. Default is "D".
 #'        `D` is calculated by `V * q_hat_inv`.
 #' @param O name for the `O` matrix on output. Default is "O".
-#'        `O` is calculated by `r_hat_inv * R`.
+#'        `O` is calculated by `R * h_hat_inv`.
 #' @param A The name for the `A` matrix on output. Default is "A".
 #'        `A` is calculated by `Z * D`.
 #' @param L_ixp The name for the `L_ixp` matrix on output. Default is "L_ixp".
@@ -103,8 +103,9 @@ calc_io_mats <- function(.sutdata = NULL,
     f_vec <- yqfgW[[f]]
     g_vec <- yqfgW[[g]]
     r_vec <- yqfgW[[r]]
+    h_vec <- yqfgW[[y]]
 
-    ZKCDA <- calc_A(R = R_mat, U = U_mat, V = V_mat, q = q_vec, f = f_vec, g = g_vec, r = r_vec,
+    ZKCDA <- calc_A(R = R_mat, U = U_mat, V = V_mat, q = q_vec, f = f_vec, g = g_vec, r = r_vec, h = h_vec,
                     Z = Z, K = K, C = C, D = D, A = A, O = O)
 
     D_mat <- ZKCDA[[D]]
@@ -118,7 +119,7 @@ calc_io_mats <- function(.sutdata = NULL,
 
     # Work on the "_feed" matrices.
 
-    ZKCDA_all_feed <- calc_A(R = R_mat, U = U_feed_mat, V = V_mat, q = q_vec, f = f_vec, g = g_vec, r = r_vec,
+    ZKCDA_all_feed <- calc_A(R = R_mat, U = U_feed_mat, V = V_mat, q = q_vec, f = f_vec, g = g_vec, r = r_vec, h = h_vec,
                              Z = Z_feed, K = K_feed, C = C, D = D, A = A_feed, O = O)
     ZKCDA_feed <- list(Z_feed = ZKCDA_all_feed[[Z_feed]],
                        K_feed = ZKCDA_all_feed[[K_feed]],
@@ -213,7 +214,7 @@ calc_yqfgW <- function(.sutdata = NULL,
     }
     g_vec <- matsbyname::rowsums_byname(V_mat)
     r_vec <- matsbyname::rowsums_byname(R_mat)
-    h_vec <- matsbyname::colsums_byname(R_mat)
+    h_vec <- matsbyname::colsums_byname(R_mat) %>% matsbyname::transpose_byname()
     W_mat <- matsbyname::difference_byname(matsbyname::transpose_byname(V_mat), U_mat)
     # Deal with any unit homogeneity issues for f and g.
     if (!is.null(S_units_mat)) {
@@ -273,10 +274,10 @@ calc_yqfgW <- function(.sutdata = NULL,
 #' @export
 calc_A <- function(.sutdata = NULL,
                    # Input names
-                   R = "R", U = "U", V = "V", q = "q", f = "f", g = "g", r = "r",
+                   R = "R", U = "U", V = "V", q = "q", f = "f", g = "g", r = "r", h = "h",
                    # Output names
                    Z = "Z", K = "K", C = "C", D = "D", A = "A", O = "O"){
-  A_func <- function(R_mat, U_mat, V_mat, q_vec, f_vec, g_vec, r_vec){
+  A_func <- function(R_mat, U_mat, V_mat, q_vec, f_vec, g_vec, r_vec, h_vec){
     if (is.null(R_mat)) {
       # No R matrix, just use the V matrix, assuming that resources are included there.
       R_plus_V_mat <- V_mat
@@ -321,13 +322,13 @@ calc_A <- function(.sutdata = NULL,
 
     D_mat <- matsbyname::matrixproduct_byname(V_mat, matsbyname::hatinv_byname(q_vec, keep = "rownames"))
     A_mat <- matsbyname::matrixproduct_byname(Z_mat, D_mat)
-    O_mat <- matsbyname::matrixproduct_byname(matsbyname::hatinv_byname(r_vec, keep = "rownames"), R_mat)
+    O_mat <- matsbyname::matrixproduct_byname(R_mat, matsbyname::hatinv_byname(h_vec, keep = "rownames"))
 
     # Put all output matrices in a list and return it.
     list(Z_mat, K_mat, C_mat, D_mat, A_mat, O_mat) %>%
       magrittr::set_names(c(Z, K, C, D, A, O))
   }
-  matsindf::matsindf_apply(.sutdata, FUN = A_func, R_mat = R, U_mat = U, V_mat = V, q_vec = q, f_vec = f, g_vec = g, r_vec = r)
+  matsindf::matsindf_apply(.sutdata, FUN = A_func, R_mat = R, U_mat = U, V_mat = V, q_vec = q, f_vec = f, g_vec = g, r_vec = r, h_vec = h)
 }
 
 

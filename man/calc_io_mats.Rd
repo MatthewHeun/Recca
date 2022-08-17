@@ -105,7 +105,7 @@ In the case of a balanced ECC, the method does not matter.}
 \code{L_pxp} is calculated by \code{(I - Z*D)^-1}.}
 
 \item{O}{name for the \code{O} matrix on output. Default is "O".
-\code{O} is calculated by \code{r_hat_inv * R}.}
+\code{O} is calculated by \code{R * h_hat_inv}.}
 
 \item{Z_feed}{The name for the \code{Z_feed} matrix on output. Default is "Z_feed".
 \code{Z_feed} is calculated by \code{U_feed * g_hat_inv}.}
