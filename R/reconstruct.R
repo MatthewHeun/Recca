@@ -84,11 +84,11 @@ new_Y <- function(.sutmats = NULL,
 
       q_prime_vec <- matsbyname::matrixproduct_byname(L_pxp_mat, y_prime_vec)
 
-      g_prime_hat_vec <- matsbyname::hatize_byname(g_prime_vec, keep = "rownames")
+      g_prime_hat_mat <- matsbyname::hatize_byname(g_prime_vec, keep = "rownames")
 
-      U_prime_mat <- matsbyname::matrixproduct_byname(Z_mat, g_prime_hat_vec)
+      U_prime_mat <- matsbyname::matrixproduct_byname(Z_mat, g_prime_hat_mat)
 
-      U_feed_prime_mat <- matsbyname::matrixproduct_byname(Z_feed_mat, g_prime_hat_vec)
+      U_feed_prime_mat <- matsbyname::matrixproduct_byname(Z_feed_mat, g_prime_hat_mat)
 
       U_eiou_prime_mat <- matsbyname::difference_byname(U_prime_mat, U_feed_prime_mat)
 
@@ -97,22 +97,13 @@ new_Y <- function(.sutmats = NULL,
 
       V_prime_mat <- matsbyname::matrixproduct_byname(D_mat, matsbyname::hatize_byname(q_prime_vec, keep = "rownames"))
 
-      W_prime_mat <- matsbyname::difference_byname(
-        matsbyname::transpose_byname(V_prime_mat),
-        U_prime_mat
-      )
+      W_prime_mat <- matsbyname::difference_byname(matsbyname::transpose_byname(V_prime_mat), U_prime_mat)
 
-      y_prime_minus_W_prime_i <- y_prime_vec %>%
-        matsbyname::difference_byname(
-          matsbyname::rowsums_byname(W_prime_mat)
-        )
+      w_prime_vec <- matsbyname::rowsums_byname(W_prime_mat)
 
-      R_prime_mat <- matsbyname::matrixproduct_byname(
-        O_mat,
-        matsbyname::transpose_byname(
-          matsbyname::hatize_byname(y_prime_minus_W_prime_i, keep = "rownames")
-        )
-      )
+      h_prime_vec <- matsbyname::difference_byname(y_prime_vec, w_prime_vec)
+
+      R_prime_mat <- matsbyname::matrixproduct_byname(O_mat, matsbyname::hatize_byname(h_prime_vec, keep = "rownames"))
     }
 
     list(R_prime_mat,
@@ -331,45 +322,46 @@ new_k_ps <- function(.sutmats = NULL,
 #' @param method One of "solve", "QR", or "SVD". Default is "solve". See details.
 #' @param tol The tolerance for detecting linear dependencies during matrix inversion.
 #'            Default is `.Machine$double.eps`.
-#' @param R_prime The name of the new R matrix column in the input data frame, for which the new ECC must be assessed.
+#' @param R_prime The name of the new **R** matrix column in the input data frame, for which the new ECC must be assessed.
 #'                Default is "R_prime".
-#' @param U The name of the U matrix column in the input data frame.
+#' @param U The name of the **U** matrix column in the input data frame.
 #'          Default is "U".
-#' @param V The name of the V matrix column in the input data frame.
+#' @param V The name of the **V** matrix column in the input data frame.
 #'          Default is "V".
-#' @param Y The name of the Y matrix column in the input data frame.
+#' @param Y The name of the **Y** matrix column in the input data frame.
 #'          Default is "Y".
-#' @param q The name of the q vector column in the input data frame.
+#' @param q The name of the **q** vector column in the input data frame.
 #'          Default is "q".
-#' @param f The name of the f vector column in the input data frame.
+#' @param f The name of the **f** vector column in the input data frame.
 #'          Default is "f".
-#' @param U_prime The name of the output column containing the new U matrices.
+#' @param U_prime The name of the output column containing the new **U** matrices.
 #'                Default is "U_prime".
-#' @param V_prime The name of the output column containing the new V matrices.
+#' @param V_prime The name of the output column containing the new **V** matrices.
 #'                Default is "V_prime".
-#' @param W_prime The name of the output column containing the new W matrices.
+#' @param W_prime The name of the output column containing the new **W** matrices.
 #'                Default is "W_prime".
-#' @param Y_prime The name of the output column containing the new Y matrices.
+#' @param Y_prime The name of the output column containing the new **Y** matrices.
 #'                Default is "Y_prime".
 #'
-#' @return A data frame with added columns representing each of the new `U_prime`, `V_prime`, `W_prime`, and `Ý_prime` matrices.
+#' @return A data frame with added columns representing each of the new
+#'         **U_prime**, **V_prime**, **W_prime**, and **Y_prime** matrices.
 #' @export
 #'
 #' @examples
 #' UKEnergy2000mats %>%
-#' tidyr::spread(key = "matrix.name", value = "matrix") %>%
-#' # Calculate the input-output matrices which are inputs to the new_R function.
-#'  calc_io_mats() %>%
-#' # Make an R_prime matrix that gives twice the resource inputs to the economy.
-#'  dplyr::mutate(
-#'    R_prime = matsbyname::hadamardproduct_byname(2, R)
-#'  ) %>%
-#' # Now call the new_R function which will calculate
-#' # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
-#' # given R_prime.
-#' # Each of the *_prime matrices should be 2x their originals,
-#' # because R_prime is 2x relative to R.
-#'  new_R_ps()
+#'   tidyr::spread(key = "matrix.name", value = "matrix") %>%
+#'   # Calculate the input-output matrices which are inputs to the new_R function.
+#'   calc_io_mats() %>%
+#'   # Make an R_prime matrix that gives twice the resource inputs to the economy.
+#'   dplyr::mutate(
+#'     R_prime = matsbyname::hadamardproduct_byname(2, R)
+#'   ) %>%
+#'   # Now call the new_R function which will calculate
+#'   # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
+#'   # given R_prime.
+#'   # Each of the *_prime matrices should be 2x their originals,
+#'   # because R_prime is 2x relative to R.
+#'   new_R_ps()
 new_R_ps <- function(.sutmats = NULL,
                      method = c("solve", "QR", "SVD"),
                      tol = .Machine$double.eps,
