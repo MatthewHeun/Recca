@@ -24,7 +24,7 @@ test_that("reconstructing R, U, and V, from single matrices works as expected", 
 })
 
 
-test_that("reconstructing R, U, and V from a new Y matrix works as expected", {
+test_that("new_Y() works as expected", {
   # Try with Y_prime <- Y, thereby simply trying to duplicate the original U and V matrices
   Reconstructed <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%

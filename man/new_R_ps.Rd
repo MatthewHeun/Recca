@@ -28,38 +28,39 @@ new_R_ps(
 \item{tol}{The tolerance for detecting linear dependencies during matrix inversion.
 Default is \code{.Machine$double.eps}.}
 
-\item{R_prime}{The name of the new R matrix column in the input data frame, for which the new ECC must be assessed.
+\item{R_prime}{The name of the new \strong{R} matrix column in the input data frame, for which the new ECC must be assessed.
 Default is "R_prime".}
 
-\item{U}{The name of the U matrix column in the input data frame.
+\item{U}{The name of the \strong{U} matrix column in the input data frame.
 Default is "U".}
 
-\item{V}{The name of the V matrix column in the input data frame.
+\item{V}{The name of the \strong{V} matrix column in the input data frame.
 Default is "V".}
 
-\item{Y}{The name of the Y matrix column in the input data frame.
+\item{Y}{The name of the \strong{Y} matrix column in the input data frame.
 Default is "Y".}
 
-\item{q}{The name of the q vector column in the input data frame.
+\item{q}{The name of the \strong{q} vector column in the input data frame.
 Default is "q".}
 
-\item{f}{The name of the f vector column in the input data frame.
+\item{f}{The name of the \strong{f} vector column in the input data frame.
 Default is "f".}
 
-\item{U_prime}{The name of the output column containing the new U matrices.
+\item{U_prime}{The name of the output column containing the new \strong{U} matrices.
 Default is "U_prime".}
 
-\item{V_prime}{The name of the output column containing the new V matrices.
+\item{V_prime}{The name of the output column containing the new \strong{V} matrices.
 Default is "V_prime".}
 
-\item{W_prime}{The name of the output column containing the new W matrices.
+\item{W_prime}{The name of the output column containing the new \strong{W} matrices.
 Default is "W_prime".}
 
-\item{Y_prime}{The name of the output column containing the new Y matrices.
+\item{Y_prime}{The name of the output column containing the new \strong{Y} matrices.
 Default is "Y_prime".}
 }
 \value{
-A data frame with added columns representing each of the new \code{U_prime}, \code{V_prime}, \code{W_prime}, and \code{Ý_prime} matrices.
+A data frame with added columns representing each of the new
+\strong{U_prime}, \strong{V_prime}, \strong{W_prime}, and \strong{Y_prime} matrices.
 }
 \description{
 This function calculates the effect of changing the resources available to an ECC,
@@ -85,17 +86,17 @@ Both \code{tol} and \code{method} should be a single values and apply to all mat
 }
 \examples{
 UKEnergy2000mats \%>\%
-tidyr::spread(key = "matrix.name", value = "matrix") \%>\%
-# Calculate the input-output matrices which are inputs to the new_R function.
- calc_io_mats() \%>\%
-# Make an R_prime matrix that gives twice the resource inputs to the economy.
- dplyr::mutate(
-   R_prime = matsbyname::hadamardproduct_byname(2, R)
- ) \%>\%
-# Now call the new_R function which will calculate
-# updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
-# given R_prime.
-# Each of the *_prime matrices should be 2x their originals,
-# because R_prime is 2x relative to R.
- new_R_ps()
+  tidyr::spread(key = "matrix.name", value = "matrix") \%>\%
+  # Calculate the input-output matrices which are inputs to the new_R function.
+  calc_io_mats() \%>\%
+  # Make an R_prime matrix that gives twice the resource inputs to the economy.
+  dplyr::mutate(
+    R_prime = matsbyname::hadamardproduct_byname(2, R)
+  ) \%>\%
+  # Now call the new_R function which will calculate
+  # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
+  # given R_prime.
+  # Each of the *_prime matrices should be 2x their originals,
+  # because R_prime is 2x relative to R.
+  new_R_ps()
 }

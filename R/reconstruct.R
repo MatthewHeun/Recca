@@ -101,9 +101,9 @@ new_Y <- function(.sutmats = NULL,
 
       w_prime_vec <- matsbyname::rowsums_byname(W_prime_mat)
 
-      h_prime_vec <- matsbyname::difference_byname(y_prime_vec, w_prime_vec)
+      r_prime_vec <- matsbyname::difference_byname(y_prime_vec, w_prime_vec)
 
-      R_prime_mat <- matsbyname::matrixproduct_byname(O_mat, matsbyname::hatize_byname(h_prime_vec, keep = "rownames"))
+      R_prime_mat <- matsbyname::matrixproduct_byname(O_mat, matsbyname::hatize_byname(r_prime_vec, keep = "rownames"))
     }
 
     list(R_prime_mat,

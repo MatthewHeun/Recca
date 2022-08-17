@@ -322,7 +322,7 @@ calc_A <- function(.sutdata = NULL,
 
     D_mat <- matsbyname::matrixproduct_byname(V_mat, matsbyname::hatinv_byname(q_vec, keep = "rownames"))
     A_mat <- matsbyname::matrixproduct_byname(Z_mat, D_mat)
-    O_mat <- matsbyname::matrixproduct_byname(R_mat, matsbyname::hatinv_byname(h_vec, keep = "rownames"))
+    O_mat <- matsbyname::matrixproduct_byname(matsbyname::hatinv_byname(r_vec, keep = "rownames"), R_mat)
 
     # Put all output matrices in a list and return it.
     list(Z_mat, K_mat, C_mat, D_mat, A_mat, O_mat) %>%
