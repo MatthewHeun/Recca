@@ -9,7 +9,6 @@ calc_aggregates_from_ecc_prime(
   p_industries,
   fd_sectors,
   pattern_type,
-  by,
   product_sector,
   aggregates_df,
   aggregate_primary,
@@ -26,6 +25,27 @@ calc_aggregates_from_ecc_prime(
 }
 \arguments{
 \item{ecc_prime}{A list of reconstructed energy conversion chains.}
+
+\item{p_industries}{A vector of names of industries to be aggregated as "primary."
+See \code{footprint_aggregates()} for details.}
+
+\item{fd_sectors}{A vector of names of sectors in final demand.
+See \code{footprint_aggregates()} for details.}
+
+\item{pattern_type}{One of "exact", "leading", "trailing", or "anywhere" which specifies
+how matches are made for \code{p_industries}.
+See \code{footprint_aggregates()} for details.}
+
+\item{product_sector}{The name of the output column that contains the product, industry, or sector
+for which footprint aggregates are given.}
+
+\item{aggregates_df, aggregate_primary, net_aggregate_demand, gross_aggregate_demand}{Names of output columns.
+See \code{Recca::aggregate_cols}.}
+
+\item{R_prime_colname, U_prime_colname, U_feed_prime_colname, U_eiou_prime_colname, r_eiou_prime_colname, V_prime_colname, Y_prime_colname}{Names of output matrices in the return value.
+Default values are constructed from
+\code{Recca::psut_cols} values suffixed with
+the value of the \code{.prime} argument.}
 }
 \value{
 A data frame containing reconstructed (prime) matrices and

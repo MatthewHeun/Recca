@@ -34,22 +34,6 @@ reverse(
 \item{V_rev}{The name of the \strong{V} matrix in the reversed ECC. (Default is "V_rev".)}
 
 \item{Y_rev}{The name of the \strong{Y} matrix in the reversed ECC. (Default is "Y_rev".)}
-
-\item{U_feed}{The \strong{U_feed} matrix in the ECC to be reversed. (Default is "U_feed".)}
-
-\item{U_eiou}{The \strong{U_eiou} matrix in the ECC to be reversed. (Default is "U_EIOU".)}
-
-\item{r_eiou}{The \strong{r_eiou} matrix in the ECC to be reversed. (Default is "r_EIOU".)}
-
-\item{suffix}{The suffix to be added to matrix names. (Default is "_rev".)}
-
-\item{R_colname}{The name of the \strong{R} matrix. (Default is "R".)}
-
-\item{U_colname}{The name of the \strong{U} matrix.  (Default is "U".)}
-
-\item{V_colname}{The name of the \strong{V} matrix. (Default is "V".)}
-
-\item{Y_colname}{The name of the \strong{Y} matrix. (Default is "Y".)}
 }
 \value{
 A reversed version of the ECC described by \strong{R}, \strong{U}, \strong{V}, and \strong{Y}.

@@ -672,8 +672,8 @@ grouped_aggregates <- function(.sut_data = NULL,
 #' @param product_sector The name of the output column that contains the product, industry, or sector
 #'                       for which footprint aggregates are given.
 #'                       Default is `Recca::aggregate_cols$product_sector`.
-#' @param aggregate_primary,net_aggregate_demand,gross_aggregate_demand Names of output columns.
-#'                                                                      See `Recca::aggregate_cols`.
+#' @param aggregates_df,aggregate_primary,net_aggregate_demand,gross_aggregate_demand Names of output columns.
+#'                                                                                    See `Recca::aggregate_cols`.
 #' @param .prime A string that denotes new matrices.
 #'               This string is used as a suffix that is appended to
 #'               many variable names.
@@ -828,7 +828,6 @@ footprint_aggregates <- function(.sut_data = NULL,
                                    p_industries = p_industries,
                                    fd_sectors = fd_sectors,
                                    pattern_type = pattern_type,
-                                   by = "Total",
                                    aggregate_primary = aggregate_primary,
                                    gross_aggregate_demand = gross_aggregate_demand,
                                    net_aggregate_demand = net_aggregate_demand,
@@ -1137,6 +1136,21 @@ effects_aggregates <- function(.sut_data = NULL,
 #' reconstructed energy conversion chains (ECCs) in `ecc_prime`.
 #'
 #' @param ecc_prime A list of reconstructed energy conversion chains.
+#' @param p_industries A vector of names of industries to be aggregated as "primary."
+#'                     See `footprint_aggregates()` for details.
+#' @param fd_sectors A vector of names of sectors in final demand.
+#'                   See `footprint_aggregates()` for details.
+#' @param pattern_type One of "exact", "leading", "trailing", or "anywhere" which specifies
+#'                     how matches are made for `p_industries`.
+#'                     See `footprint_aggregates()` for details.
+#' @param product_sector The name of the output column that contains the product, industry, or sector
+#'                       for which footprint aggregates are given.
+#' @param aggregates_df,aggregate_primary,net_aggregate_demand,gross_aggregate_demand Names of output columns.
+#'                                                                                    See `Recca::aggregate_cols`.
+#' @param R_prime_colname,U_prime_colname,U_feed_prime_colname,U_eiou_prime_colname,r_eiou_prime_colname,V_prime_colname,Y_prime_colname Names of output matrices in the return value.
+#'                                                                                                                                       Default values are constructed from
+#'                                                                                                                                       `Recca::psut_cols` values suffixed with
+#'                                                                                                                                       the value of the `.prime` argument.
 #'
 #' @return A data frame containing reconstructed (prime) matrices and
 #'         primary and final demand aggregates in a list suitable for use in `matsindf::matsindf_apply()`.
@@ -1144,7 +1158,6 @@ calc_aggregates_from_ecc_prime <- function(ecc_prime,
                                            p_industries,
                                            fd_sectors,
                                            pattern_type,
-                                           by,
                                            product_sector,
                                            aggregates_df,
                                            aggregate_primary,

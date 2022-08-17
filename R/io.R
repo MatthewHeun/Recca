@@ -257,7 +257,8 @@ calc_yqfgW <- function(.sutdata = NULL,
 #' @param q A `q` vector or name of the column in `.sutmats` that contains same. Default is "q".
 #' @param f An `f` vector or name of the column in `.sutmats` that contains same. Default is "r".
 #' @param g A `g` vector or name of the column in `.sutmats` that contains same. Default is "g".
-#' @param r A `r` vector or name of the column in `.sutmats` that contains same. Default is "r".
+#' @param r An `r` vector or name of the column in `.sutmats` that contains same. Default is "r".
+#' @param h An `h` vector or name of the column in `.sutmats` that contains same. Default is "h".
 #' @param Z The name for `Z` matrix on output. Default is "Z".
 #'        `Z` is calculated by `U * g_hat_inv`.
 #' @param K The name for `K` matrix on output. Default is "K".

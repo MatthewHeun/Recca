@@ -87,12 +87,12 @@ Default is 1e-4.}
 \item{R, U, U_feed, V, Y, S_units}{Matrices that describe the energy conversion chain (ECC).
 See \code{Recca::psut_cols} for default values.}
 
+\item{aggregates_df, aggregate_primary, net_aggregate_demand, gross_aggregate_demand}{Names of output columns.
+See \code{Recca::aggregate_cols}.}
+
 \item{product_sector}{The name of the output column that contains the product, industry, or sector
 for which footprint aggregates are given.
 Default is \code{Recca::aggregate_cols$product_sector}.}
-
-\item{aggregate_primary, net_aggregate_demand, gross_aggregate_demand}{Names of output columns.
-See \code{Recca::aggregate_cols}.}
 
 \item{.prime}{A string that denotes new matrices.
 This string is used as a suffix that is appended to
