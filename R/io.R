@@ -141,29 +141,32 @@ calc_io_mats <- function(.sutdata = NULL,
 }
 
 
-#' Calculate `y`, `f`, `g`, and `q` vectors and the `W` matrix
+#' Calculate **y**, **f**, **g**, **q**, **h**, and **r** vectors and the **W** matrix
 #'
-#' Note that a necessary condition for calculating the `f` and `g` vectors is that
-#' the U_bar and V_bar matrices should have only one entry per column and row, respectively,
+#' Note that a necessary condition for calculating the **f**, **g**, and **r** vectors is that
+#' the **R_bar**, **U_bar**, and **V_bar** matrices
+#' should have only one entry per column and row, respectively,
 #' meaning that all products entering a given industry need to be unit homogeneous
-#' before we can calculate the `f` vector and
+#' before we can calculate the **f** vector and
 #' all products of a given industry are measured in the same units
-#' before we can calculate the `g` vector.
+#' before we can calculate the **g** vector.
 #' If the unit homogeneity assumptions above are violated, we will return NA
-#' for violating industries in the `f` and `g` vectors.
-#' The checks for unit homogeneity are performed only when an `S_units` matrix is present.
+#' for violating industries in the **f** and **g** vectors.
+#' The checks for unit homogeneity are performed only when an **S_units** matrix is present.
+#'
+#' `method_q_calculation` Specifies the method with which the q vector should be calculated.
+#' Default is "sum_U_Y_rows".
+#' Alternatively, an analyst can choose to use the "sum_R_V_cols" method.
+#' In the case of a balanced ECC, the method does not matter.
 #'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
-#' @param method_q_calculation Specifies the method which with the q vector should be calculated.
-#'                             Default is `sum_U_Y_rows`.
-#'                             Alternatively, an analyst can choose to use the `sum_R_V_cols` method.
-#'                             In the case of a balanced ECC, the method does not matter.
-#' @param R The resources (`R`) matrix or name of the column in `.sutmats` that contains same. Default is "R".
-#' @param Y The final demand matrix (`Y`) or name of the column in `.sutmats` that contains same. Default is "Y".
-#' @param U The use (`U`) matrix or name of the column in `.sutmats` that contains same. Default is "U".
-#' @param V The make (`V`) matrix or name of the column in `.sutmats` that contains same. Default is "V".
-#' @param Y The final demand (`Y`) matrix or name of the column in `.sutmats`` that contains same. Default is "Y".
-#' @param S_units The `S_units` matrix or name of the column in `.sutmats` that contains same. Default is "S_units".
+#' @param method_q_calculation Specifies the method with which the q vector should be calculated. See details.
+#' @param R The resources (**R**) matrix or name of the column in `.sutmats` that contains same. Default is "R".
+#' @param Y The final demand matrix (**Y**) or name of the column in `.sutmats` that contains same. Default is "Y".
+#' @param U The use (**U**) matrix or name of the column in `.sutmats` that contains same. Default is "U".
+#' @param V The make (**V**) matrix or name of the column in `.sutmats` that contains same. Default is "V".
+#' @param Y The final demand (**Y**) matrix or name of the column in `.sutmats`` that contains same. Default is "Y".
+#' @param S_units The **S_units** matrix or name of the column in `.sutmats` that contains same. Default is "S_units".
 #' @param y The name for the `y` vector on output. Default is "y".
 #'        `y` is calculated by `rowsums(Y)`.
 #' @param q The name for the `q` vector on output. Default is "q".
@@ -181,8 +184,8 @@ calc_io_mats <- function(.sutdata = NULL,
 #'
 #' @export
 #'
-#' @return A list or data frame containing `y`, `q`,
-#'          `f`, `g`, and `W`.
+#' @return A list or data frame containing **y**, **q**,
+#'         **f**, **g**, **h**, and **r** vectors and the **W** matrix.
 calc_yqfgW <- function(.sutdata = NULL,
                        method_q_calculation = c("sum_U_Y_rows", "sum_R_V_cols"),
                        # Input names
