@@ -19,7 +19,7 @@ footprint_aggregates(
   V = Recca::psut_cols$V,
   Y = Recca::psut_cols$Y,
   S_units = Recca::psut_cols$S_units,
-  footprint_aggregates = Recca::aggregate_cols$footprint_aggregates,
+  aggregates_df = Recca::aggregate_cols$aggregates_df,
   product_sector = Recca::aggregate_cols$product_sector,
   aggregate_primary = Recca::aggregate_cols$aggregate_primary,
   net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
@@ -87,9 +87,6 @@ Default is 1e-4.}
 \item{R, U, U_feed, V, Y, S_units}{Matrices that describe the energy conversion chain (ECC).
 See \code{Recca::psut_cols} for default values.}
 
-\item{footprint_aggregates}{The name of the output column that contains data frames of footprint aggregates.
-Default is \code{Recca::psut_cols$footprint_aggregates}.}
-
 \item{product_sector}{The name of the output column that contains the product, industry, or sector
 for which footprint aggregates are given.
 Default is \code{Recca::aggregate_cols$product_sector}.}
@@ -108,6 +105,9 @@ Default is "_prime".}
 Default values are constructed from
 \code{Recca::psut_cols} values suffixed with
 the value of the \code{.prime} argument.}
+
+\item{footprint_aggregates}{The name of the output column that contains data frames of footprint aggregates.
+Default is \code{Recca::psut_cols$footprint_aggregates}.}
 }
 \value{
 Primary and final demand (both gross and net) aggregates.

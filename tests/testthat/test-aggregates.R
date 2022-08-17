@@ -404,7 +404,7 @@ test_that("footprint_aggregates() works as expected", {
   # Calculate aggregates
   footprint_aggs_nested <- psut_mats %>%
     Recca::footprint_aggregates(p_industries = p_industries, fd_sectors = fd_sectors)
-  expect_true(Recca::aggregate_cols$footprint_aggregates %in% names(footprint_aggs_nested))
+  expect_true(Recca::aggregate_cols$aggregates_df %in% names(footprint_aggs_nested))
   footprint_aggs_unnested <- psut_mats %>%
     Recca::footprint_aggregates(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
   expect_true(Recca::aggregate_cols$product_sector %in% names(footprint_aggs_unnested))
