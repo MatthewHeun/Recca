@@ -2,7 +2,7 @@
 % Please edit documentation in R/aggregates.R
 \name{effects_aggregates}
 \alias{effects_aggregates}
-\title{Title}
+\title{Calculate effects aggregates}
 \usage{
 effects_aggregates(
   .sut_data = NULL,
@@ -42,6 +42,9 @@ effects_aggregates(
 )
 }
 \arguments{
+\item{.sut_data}{A data frame or list of physical supply-use table matrices.
+Default is \code{NULL}.}
+
 \item{p_industries}{A vector of names of industries to be aggregated as "primary."
 If \code{.sut_data} is a data frame, \code{p_industries} should be the name of a column in the data frame.
 If \code{.sut_data} is \code{NULL}, \code{p_industries} can be a single vector of industry names.
@@ -72,8 +75,94 @@ This argument is passed to both \code{primary_aggregates()} and \code{finaldeman
 When \code{TRUE}, creates a new column called \code{product_sector} and columns of primary and final demand aggregates.
 Default is \code{FALSE}.}
 
-\item{Y_prime_colname}{}
+\item{method}{One of "solve", "QR", or "SVD". Default is "solve". See details.}
+
+\item{tol_invert}{The tolerance for detecting linear dependencies in the columns inverted matrices.
+Default is \code{.Machine$double.eps}.}
+
+\item{tol_chop_sum}{The allowable deviation from \code{0} for the difference between
+the sum of the chopped ECCs and the original ECC.
+Default is \code{1e-4}.}
+
+\item{R, U, U_feed, V, Y, S_units}{Matrices that describe the energy conversion chain (ECC).
+See \code{Recca::psut_cols} for default values.}
+
+\item{aggregates_df, aggregate_primary, net_aggregate_demand, gross_aggregate_demand}{Names of output columns.
+See \code{Recca::aggregate_cols}.}
+
+\item{product_sector}{The name of the output column that contains the product, industry, or sector
+for which footprint aggregates are given.
+Default is \code{Recca::aggregate_cols$product_sector}.}
+
+\item{.prime}{A string that denotes new matrices.
+This string is used as a suffix that is appended to
+many variable names.
+Default is "_prime".}
+
+\item{R_colname, U_colname, U_feed_colname, U_eiou_colname, r_eiou_colname, V_colname, Y_colname}{Names of input matrices in \code{.sut_data}. See \code{Recca::psut_cols} for default values.}
+
+\item{R_prime_colname, U_prime_colname, U_feed_prime_colname, U_eiou_prime_colname, r_eiou_prime_colname, V_prime_colname, Y_prime_colname}{Names of output matrices in the return value.
+Default values are constructed from
+\code{Recca::psut_cols} values suffixed with
+the value of the \code{.prime} argument.}
+}
+\value{
+Primary and final demand (both gross and net) aggregates for downstream swims
+from each resource matrix product.
 }
 \description{
-Title
+Effects aggregates are isolated measures of primary and last stage demand energy
+induced by a specific amount of primary energy.
+This function calculates effects aggregates for all energy carriers in the resources (\strong{R}) matrix.
+}
+\details{
+By default, effects aggregates are calculated for each individual
+product primary energy supply in the \strong{R} matrix.
+This calculation is accomplished for each description of an energy conversion chain (ECC)
+by the following algorithm:
+\enumerate{
+\item Calculate io matrices with \code{calc_io_mats()}.
+\item Identify each product from columns of the \strong{R} matrix.
+\item For each product independently,
+perform an downstream swim with \code{new_R_ps()}
+to obtain the ECC induced by that product only.
+\item Calculate primary and final demand aggregates using \code{primary_aggregates()} and
+\code{finaldemand_aggregates()}.
+Both functions are called with \code{by = "Total"},
+yielding total primary and final demand aggregates.
+\item Add the primary and final demand aggregates as columns at the right side of \code{.sut_data}
+as a nested data frame.
+}
+
+Use \code{unnest} to define how the aggregate data are added to the right side of \code{.sut_data}
+when \code{.sut_data} is a \code{matsindf} data frame.
+
+Note that the nested data frame also includes columns for the ECC matrices
+for each isolated product or sector.
+The names of the columns in the data frame are taken from the \verb{*_prime_colname} arguments.
+
+Footprint aggregation involves "upstream swim" with \code{new_R_ps()}.
+\code{new_R_ps()} requires matrix inverse calculations.
+The \code{method} argument specifies the method for calculating matrix inverses.
+The \code{tol} argument specifies the tolerance for detecting linearities in the matrix.
+See the documentation at \code{matsbyname::invert_byname()} for details.
+
+Both \code{tol} and \code{method} should be a single values and apply to all rows of \code{.sut_data}.
+
+When the \strong{R} matrix is chopped by columns, the sum of the ECCs
+created from the chopped rows or columns should equal the original ECC.
+Internally, this function checks for sum consistency and errors if not.
+}
+\examples{
+p_industries <- c("Resources - Crude", "Resources - NG")
+fd_sectors <- c("Residential", "Transport", "Oil fields")
+psut_mats <- UKEnergy2000mats \%>\%
+  tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) \%>\%
+  # Slice to avoid the services rows on which NA values are obtained due to unit homogeneity.
+  dplyr::slice(1, 3)
+# Calculate aggregates
+psut_mats \%>\%
+  Recca::effects_aggregates(p_industries = p_industries, fd_sectors = fd_sectors)
+psut_mats \%>\%
+  Recca::effects_aggregates(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
 }

@@ -592,7 +592,7 @@ grouped_aggregates <- function(.sut_data = NULL,
 
 #' Calculate footprint aggregates
 #'
-#' Footprint aggregates are isolated measures of primary and final demand energy
+#' Footprint aggregates are isolated measures of primary and last stage demand energy
 #' required to supply a specific amount of final demand energy.
 #' This function calculates footprint aggregates for several categories of final demand.
 #'
@@ -613,7 +613,8 @@ grouped_aggregates <- function(.sut_data = NULL,
 #' 5. Add the primary and final demand aggregates as columns at the right side of `.sut_data`
 #'    as a nested data frame.
 #'
-#' Use `unnest` to define how the aggregate data are added to the right side of `.sut_data`.
+#' Use `unnest` to define how the aggregate data are added to the right side of `.sut_data`
+#' when `.sut_data` is a `matsindf` data frame.
 #'
 #' Note that the nested data frame also includes columns for the ECC matrices
 #' for each isolated product or sector.
@@ -629,7 +630,7 @@ grouped_aggregates <- function(.sut_data = NULL,
 #'
 #' When the **Y** matrix is chopped by rows or columns, the sum of the ECCs
 #' created from the chopped rows or columns should equal the original ECC.
-#' Internally, this function This function checks internally
+#' Internally, this function checks for sum consistency and errors if not.
 #'
 #' @param .sut_data A data frame or list of physical supply-use table matrices.
 #'                  Default is `NULL`.
@@ -660,15 +661,13 @@ grouped_aggregates <- function(.sut_data = NULL,
 #'               When `TRUE`, creates a new column called `product_sector` and columns of primary and final demand aggregates.
 #'               Default is `FALSE`.
 #' @param method One of "solve", "QR", or "SVD". Default is "solve". See details.
-#' @param tol_invert The tolerance for detecting linear dependencies in the columns of `a`.
+#' @param tol_invert The tolerance for detecting linear dependencies in the columns inverted matrices.
 #'                   Default is `.Machine$double.eps`.
 #' @param tol_chop_sum The allowable deviation from `0` for the difference between
 #'                     the sum of the chopped ECCs and the original ECC.
 #'                     Default is `1e-4`.
 #' @param R,U,U_feed,V,Y,S_units Matrices that describe the energy conversion chain (ECC).
 #'                               See `Recca::psut_cols` for default values.
-#' @param footprint_aggregates The name of the output column that contains data frames of footprint aggregates.
-#'                             Default is `Recca::psut_cols$footprint_aggregates`.
 #' @param product_sector The name of the output column that contains the product, industry, or sector
 #'                       for which footprint aggregates are given.
 #'                       Default is `Recca::aggregate_cols$product_sector`.
@@ -859,9 +858,50 @@ footprint_aggregates <- function(.sut_data = NULL,
 }
 
 
-#' Title
+#' Calculate effects aggregates
 #'
-#' @param .sut_data
+#' Effects aggregates are isolated measures of primary and last stage demand energy
+#' induced by a specific amount of primary energy.
+#' This function calculates effects aggregates for all energy carriers in the resources (**R**) matrix.
+#'
+#' By default, effects aggregates are calculated for each individual
+#' product primary energy supply in the **R** matrix.
+#' This calculation is accomplished for each description of an energy conversion chain (ECC)
+#' by the following algorithm:
+#'
+#' 1. Calculate io matrices with `calc_io_mats()`.
+#' 2. Identify each product from columns of the **R** matrix.
+#' 3. For each product independently,
+#'    perform an downstream swim with `new_R_ps()`
+#'    to obtain the ECC induced by that product only.
+#' 4. Calculate primary and final demand aggregates using `primary_aggregates()` and
+#'    `finaldemand_aggregates()`.
+#'    Both functions are called with `by = "Total"`,
+#'    yielding total primary and final demand aggregates.
+#' 5. Add the primary and final demand aggregates as columns at the right side of `.sut_data`
+#'    as a nested data frame.
+#'
+#' Use `unnest` to define how the aggregate data are added to the right side of `.sut_data`
+#' when `.sut_data` is a `matsindf` data frame.
+#'
+#' Note that the nested data frame also includes columns for the ECC matrices
+#' for each isolated product or sector.
+#' The names of the columns in the data frame are taken from the `*_prime_colname` arguments.
+#'
+#' Footprint aggregation involves "upstream swim" with `new_R_ps()`.
+#' `new_R_ps()` requires matrix inverse calculations.
+#' The `method` argument specifies the method for calculating matrix inverses.
+#' The `tol` argument specifies the tolerance for detecting linearities in the matrix.
+#' See the documentation at `matsbyname::invert_byname()` for details.
+#'
+#' Both `tol` and `method` should be a single values and apply to all rows of `.sut_data`.
+#'
+#' When the **R** matrix is chopped by columns, the sum of the ECCs
+#' created from the chopped rows or columns should equal the original ECC.
+#' Internally, this function checks for sum consistency and errors if not.
+#'
+#' @param .sut_data A data frame or list of physical supply-use table matrices.
+#'                  Default is `NULL`.
 #' @param p_industries A vector of names of industries to be aggregated as "primary."
 #'                     If `.sut_data` is a data frame, `p_industries` should be the name of a column in the data frame.
 #'                     If `.sut_data` is `NULL`, `p_industries` can be a single vector of industry names.
@@ -888,40 +928,46 @@ footprint_aggregates <- function(.sut_data = NULL,
 #' @param unnest A boolean that tells whether to unnest the outgoing data.
 #'               When `TRUE`, creates a new column called `product_sector` and columns of primary and final demand aggregates.
 #'               Default is `FALSE`.
-#' @param method
-#' @param tol_invert
-#' @param tol_chop_sum
-#' @param R
-#' @param U
-#' @param U_feed
-#' @param V
-#' @param Y
-#' @param S_units
-#' @param footprint_aggregates
-#' @param product_sector
-#' @param aggregate_primary
-#' @param net_aggregate_demand
-#' @param gross_aggregate_demand
-#' @param .prime
-#' @param R_colname
-#' @param U_colname
-#' @param U_feed_colname
-#' @param U_eiou_colname
-#' @param r_eiou_colname
-#' @param V_colname
-#' @param Y_colname
-#' @param R_prime_colname
-#' @param U_prime_colname
-#' @param U_feed_prime_colname
-#' @param U_eiou_prime_colname
-#' @param r_eiou_prime_colname
-#' @param V_prime_colname
-#' @param Y_prime_colname
+#' @param method One of "solve", "QR", or "SVD". Default is "solve". See details.
+#' @param tol_invert The tolerance for detecting linear dependencies in the columns inverted matrices.
+#'                   Default is `.Machine$double.eps`.
+#' @param tol_chop_sum The allowable deviation from `0` for the difference between
+#'                     the sum of the chopped ECCs and the original ECC.
+#'                     Default is `1e-4`.
+#' @param R,U,U_feed,V,Y,S_units Matrices that describe the energy conversion chain (ECC).
+#'                               See `Recca::psut_cols` for default values.
+#' @param product_sector The name of the output column that contains the product, industry, or sector
+#'                       for which footprint aggregates are given.
+#'                       Default is `Recca::aggregate_cols$product_sector`.
+#' @param aggregates_df,aggregate_primary,net_aggregate_demand,gross_aggregate_demand Names of output columns.
+#'                                                                                    See `Recca::aggregate_cols`.
+#' @param .prime A string that denotes new matrices.
+#'               This string is used as a suffix that is appended to
+#'               many variable names.
+#'               Default is "_prime".
+#' @param R_colname,U_colname,U_feed_colname,U_eiou_colname,r_eiou_colname,V_colname,Y_colname Names of input matrices in `.sut_data`. See `Recca::psut_cols` for default values.
+#' @param R_prime_colname,U_prime_colname,U_feed_prime_colname,U_eiou_prime_colname,r_eiou_prime_colname,V_prime_colname,Y_prime_colname Names of output matrices in the return value.
+#'                                        Default values are constructed from
+#'                                        `Recca::psut_cols` values suffixed with
+#'                                        the value of the `.prime` argument.
 #'
-#' @return
+#' @return Primary and final demand (both gross and net) aggregates for downstream swims
+#'         from each resource matrix product.
+#'
 #' @export
 #'
 #' @examples
+#' p_industries <- c("Resources - Crude", "Resources - NG")
+#' fd_sectors <- c("Residential", "Transport", "Oil fields")
+#' psut_mats <- UKEnergy2000mats %>%
+#'   tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) %>%
+#'   # Slice to avoid the services rows on which NA values are obtained due to unit homogeneity.
+#'   dplyr::slice(1, 3)
+#' # Calculate aggregates
+#' psut_mats %>%
+#'   Recca::effects_aggregates(p_industries = p_industries, fd_sectors = fd_sectors)
+#' psut_mats %>%
+#'   Recca::effects_aggregates(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
 effects_aggregates <- function(.sut_data = NULL,
                                p_industries,
                                fd_sectors,

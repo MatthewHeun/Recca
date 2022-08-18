@@ -326,6 +326,8 @@ new_k_ps <- function(.sutmats = NULL,
 #'                Default is "R_prime".
 #' @param U The name of the **U** matrix column in the input data frame.
 #'          Default is "U".
+#' @param U_feed The name of the **U_feed** matrix column in the input data frame.
+#'               Default is "U_feed".
 #' @param V The name of the **V** matrix column in the input data frame.
 #'          Default is "V".
 #' @param Y The name of the **Y** matrix column in the input data frame.

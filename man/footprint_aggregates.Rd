@@ -77,7 +77,7 @@ Default is \code{FALSE}.}
 
 \item{method}{One of "solve", "QR", or "SVD". Default is "solve". See details.}
 
-\item{tol_invert}{The tolerance for detecting linear dependencies in the columns of \code{a}.
+\item{tol_invert}{The tolerance for detecting linear dependencies in the columns inverted matrices.
 Default is \code{.Machine$double.eps}.}
 
 \item{tol_chop_sum}{The allowable deviation from \code{0} for the difference between
@@ -105,15 +105,12 @@ Default is "_prime".}
 Default values are constructed from
 \code{Recca::psut_cols} values suffixed with
 the value of the \code{.prime} argument.}
-
-\item{footprint_aggregates}{The name of the output column that contains data frames of footprint aggregates.
-Default is \code{Recca::psut_cols$footprint_aggregates}.}
 }
 \value{
 Primary and final demand (both gross and net) aggregates.
 }
 \description{
-Footprint aggregates are isolated measures of primary and final demand energy
+Footprint aggregates are isolated measures of primary and last stage demand energy
 required to supply a specific amount of final demand energy.
 This function calculates footprint aggregates for several categories of final demand.
 }
@@ -136,7 +133,8 @@ yielding total primary and final demand aggregates.
 as a nested data frame.
 }
 
-Use \code{unnest} to define how the aggregate data are added to the right side of \code{.sut_data}.
+Use \code{unnest} to define how the aggregate data are added to the right side of \code{.sut_data}
+when \code{.sut_data} is a \code{matsindf} data frame.
 
 Note that the nested data frame also includes columns for the ECC matrices
 for each isolated product or sector.
@@ -152,7 +150,7 @@ Both \code{tol} and \code{method} should be a single values and apply to all row
 
 When the \strong{Y} matrix is chopped by rows or columns, the sum of the ECCs
 created from the chopped rows or columns should equal the original ECC.
-Internally, this function This function checks internally
+Internally, this function checks for sum consistency and errors if not.
 }
 \examples{
 p_industries <- c("Resources - Crude", "Resources - NG")

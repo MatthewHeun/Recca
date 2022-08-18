@@ -37,6 +37,9 @@ Default is "R_prime".}
 \item{U}{The name of the \strong{U} matrix column in the input data frame.
 Default is "U".}
 
+\item{U_feed}{The name of the \strong{U_feed} matrix column in the input data frame.
+Default is "U_feed".}
+
 \item{V}{The name of the \strong{V} matrix column in the input data frame.
 Default is "V".}
 
