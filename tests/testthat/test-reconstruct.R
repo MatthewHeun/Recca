@@ -356,7 +356,7 @@ test_that("new_R_ps() works as expected", {
     dplyr::mutate(
       R_prime = R
     )
-  # Now call the new_R_ps function which will calculate
+  # Now call new_R_ps() which will calculate
   # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
   # given R_prime.
   # Each of the *_prime matrices should be same as their originals,
@@ -365,6 +365,7 @@ test_that("new_R_ps() works as expected", {
     new_R_ps() %>%
     # Clean the rows of U_prime and Y_prime, because they contain Products that are not present in U.
     dplyr::mutate(
+      W_prime = matsbyname::difference_byname(matsbyname::transpose_byname(V_prime), U_prime),
       U_prime = matsbyname::clean_byname(U_prime, margin = 1),
       Y_prime = matsbyname::clean_byname(Y_prime, margin = 1),
       W_prime = matsbyname::clean_byname(W_prime, margin = 1)
@@ -407,6 +408,7 @@ test_that("new_R_ps() works as expected", {
     # Clean the rows of U_prime, because they contain Products that are not present in U.
     dplyr::mutate(
       # Eliminate zero rows or cols that appear after the new_R_ps() call.
+      W_prime = matsbyname::difference_byname(matsbyname::transpose_byname(V_prime), U_prime),
       U_prime = matsbyname::clean_byname(U_prime, margin = 1),
       V_prime = matsbyname::clean_byname(V_prime, margin = 2),
       Y_prime = matsbyname::clean_byname(Y_prime, margin = 1),

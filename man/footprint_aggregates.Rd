@@ -82,7 +82,7 @@ Default is \code{.Machine$double.eps}.}
 
 \item{tol_chop_sum}{The allowable deviation from \code{0} for the difference between
 the sum of the chopped ECCs and the original ECC.
-Default is 1e-4.}
+Default is \code{1e-4}.}
 
 \item{R, U, U_feed, V, Y, S_units}{Matrices that describe the energy conversion chain (ECC).
 See \code{Recca::psut_cols} for default values.}

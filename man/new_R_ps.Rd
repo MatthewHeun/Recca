@@ -10,13 +10,16 @@ new_R_ps(
   tol = .Machine$double.eps,
   R_prime = "R_prime",
   U = "U",
+  U_feed = "U_feed",
   V = "V",
   Y = "Y",
   q = "q",
   f = "f",
   U_prime = "U_prime",
+  U_feed_prime = "U_feed_prime",
+  U_eiou_prime = "U_EIOU_prime",
+  r_eiou_prime = "r_EIOU_prime",
   V_prime = "V_prime",
-  W_prime = "W_prime",
   Y_prime = "Y_prime"
 )
 }
@@ -49,11 +52,17 @@ Default is "f".}
 \item{U_prime}{The name of the output column containing the new \strong{U} matrices.
 Default is "U_prime".}
 
+\item{U_feed_prime}{The name of the output column containing the new \strong{U_feed} matrices.
+Default is "U_feed_prime".}
+
+\item{U_eiou_prime}{The name of the output column containing the new \strong{U_EIOU} matrices.
+Default is "U_EIOU_prime".}
+
+\item{r_eiou_prime}{The name of the output column containing the new \strong{r_EIOU} matrices.
+Default is "r_EIOU_prime".}
+
 \item{V_prime}{The name of the output column containing the new \strong{V} matrices.
 Default is "V_prime".}
-
-\item{W_prime}{The name of the output column containing the new \strong{W} matrices.
-Default is "W_prime".}
 
 \item{Y_prime}{The name of the output column containing the new \strong{Y} matrices.
 Default is "Y_prime".}

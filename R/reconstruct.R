@@ -336,10 +336,14 @@ new_k_ps <- function(.sutmats = NULL,
 #'          Default is "f".
 #' @param U_prime The name of the output column containing the new **U** matrices.
 #'                Default is "U_prime".
+#' @param U_feed_prime The name of the output column containing the new **U_feed** matrices.
+#'                     Default is "U_feed_prime".
+#' @param U_eiou_prime The name of the output column containing the new **U_EIOU** matrices.
+#'                     Default is "U_EIOU_prime".
+#' @param r_eiou_prime The name of the output column containing the new **r_EIOU** matrices.
+#'                     Default is "r_EIOU_prime".
 #' @param V_prime The name of the output column containing the new **V** matrices.
 #'                Default is "V_prime".
-#' @param W_prime The name of the output column containing the new **W** matrices.
-#'                Default is "W_prime".
 #' @param Y_prime The name of the output column containing the new **Y** matrices.
 #'                Default is "Y_prime".
 #'
@@ -367,14 +371,15 @@ new_R_ps <- function(.sutmats = NULL,
                      tol = .Machine$double.eps,
                      # Input names
                      R_prime = "R_prime",
-                     U = "U", V = "V", Y = "Y",
+                     U = "U", U_feed = "U_feed", V = "V", Y = "Y",
                      q = "q", f = "f",
                      # Output names
-                     U_prime = "U_prime", V_prime = "V_prime", W_prime = "W_prime", Y_prime = "Y_prime"){
+                     U_prime = "U_prime", U_feed_prime = "U_feed_prime", U_eiou_prime = "U_EIOU_prime", r_eiou_prime = "r_EIOU_prime",
+                     V_prime = "V_prime", Y_prime = "Y_prime"){
 
   method <- match.arg(method)
 
-  new_R_func <- function(R_prime_mat, U_mat, V_mat, Y_mat, q_vec, f_vec){
+  new_R_func <- function(R_prime_mat, U_mat, U_feed_mat, V_mat, Y_mat, q_vec, f_vec){
 
     # Calculating all symmetric IO matrices:
     Z_sym_mat <- matsbyname::matrixproduct_byname(
@@ -389,6 +394,11 @@ new_R_ps <- function(.sutmats = NULL,
 
     D_sym_mat <- matsbyname::matrixproduct_byname(
       matsbyname::transpose_byname(U_mat),
+      matsbyname::hatinv_byname(q_vec, keep = "rownames")
+    )
+
+    D_feed_sym_mat <- matsbyname::matrixproduct_byname(
+      matsbyname::transpose_byname(U_feed_mat),
       matsbyname::hatinv_byname(q_vec, keep = "rownames")
     )
 
@@ -426,6 +436,16 @@ new_R_ps <- function(.sutmats = NULL,
       matsbyname::transpose_byname(D_sym_mat)
     )
 
+    U_feed_prime_mat <- matsbyname::matrixproduct_byname(
+      matsbyname::hatize_byname(q_prime_vec, keep = "rownames"),
+      matsbyname::transpose_byname(D_feed_sym_mat)
+    )
+
+    U_eiou_prime_mat <- matsbyname::difference_byname(U_prime_mat, U_feed_prime_mat)
+
+    r_eiou_prime_mat <- matsbyname::quotient_byname(U_eiou_prime_mat, U_prime_mat) %>%
+      matsbyname::replaceNaN_byname(val = 0)
+
     # Issue here.
     V_prime_mat <- matsbyname::matrixproduct_byname(
       matsbyname::matrixproduct_byname(
@@ -436,19 +456,18 @@ new_R_ps <- function(.sutmats = NULL,
       matsbyname::transpose_byname(Z_sym_mat)
     )
 
-    W_prime_mat <- matsbyname::difference_byname(
-      matsbyname::transpose_byname(V_prime_mat),
-      U_prime_mat
-    )
-
-
     # Return the new U, V, and Y matrices.
-    list(U_prime_mat, V_prime_mat, W_prime_mat, Y_prime_mat) %>% magrittr::set_names(c(U_prime, V_prime, W_prime, Y_prime))
+    list(U_prime_mat, U_feed_prime_mat, U_eiou_prime_mat, r_eiou_prime_mat,
+         V_prime_mat, Y_prime_mat) %>%
+      magrittr::set_names(c(U_prime, U_feed_prime, U_eiou_prime, r_eiou_prime,
+                            V_prime, Y_prime))
 
 
   }
 
-  matsindf::matsindf_apply(.sutmats, FUN = new_R_func, R_prime_mat = R_prime, U_mat = U, V_mat = V, Y_mat = Y,
+  matsindf::matsindf_apply(.sutmats, FUN = new_R_func, R_prime_mat = R_prime,
+                           U_mat = U, U_feed_mat = U_feed,
+                           V_mat = V, Y_mat = Y,
                            q_vec = q, f_vec = f)
 }
 
