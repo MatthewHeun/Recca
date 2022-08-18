@@ -346,7 +346,7 @@ calc_A <- function(.sutdata = NULL,
 #' calculating the inverse.
 #' See `matsbyname::invert_byname()`.
 #'
-#' Both `tol` and `method` should be a single values and apply to all matrices being inverted.
+#' Both `tol` and `method` should be single values and apply to all matrices being inverted.
 #'
 #' @param .sutdata A data frame of supply-use table matrices with matrices arranged in columns.
 #'                 Default is `NULL`, meaning that matrices will be taken from the `D` and `A` arguments.
@@ -357,7 +357,7 @@ calc_A <- function(.sutdata = NULL,
 #' @param D The **D** matrix or name of the column in `.sutmats` that contains same. Default is "D".
 #' @param A The **A** matrix or name of the column in `.sutmats` that contains same. Default is "A".
 #' @param L_pxp The name for the **L_pxp** matrix on output. Default is "L_pxp".
-#'              `L_pxp` is calculated by `(I - Z*D)^-1`.
+#'              `L_pxp` is calculated by `inverse(I - A)`.
 #' @param L_ixp The name for the **L_ixp** matrix on output. Default is "L_ixp".
 #'              **L_ixp** is calculated by `D * L_pxp`.
 #'

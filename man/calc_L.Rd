@@ -29,7 +29,7 @@ Default is \code{.Machine$double.eps}.}
 \item{A}{The \strong{A} matrix or name of the column in \code{.sutmats} that contains same. Default is "A".}
 
 \item{L_pxp}{The name for the \strong{L_pxp} matrix on output. Default is "L_pxp".
-\code{L_pxp} is calculated by \code{(I - Z*D)^-1}.}
+\code{L_pxp} is calculated by \code{inverse(I - A)}.}
 
 \item{L_ixp}{The name for the \strong{L_ixp} matrix on output. Default is "L_ixp".
 \strong{L_ixp} is calculated by \code{D * L_pxp}.}
@@ -48,5 +48,5 @@ The \code{method} argument specifies which method should be used for
 calculating the inverse.
 See \code{matsbyname::invert_byname()}.
 
-Both \code{tol} and \code{method} should be a single values and apply to all matrices being inverted.
+Both \code{tol} and \code{method} should be single values and apply to all matrices being inverted.
 }
