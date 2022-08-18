@@ -245,7 +245,7 @@ calc_yqfgW <- function(.sutdata = NULL,
 }
 
 
-#' Calculate **Z**, **D**, **C**, and **A** matrices
+#' Calculate **Z**, **K**, **D**, **C**, **A**, and **O** matrices
 #'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
 #' @param R resources (**R**) matrix or name of the column in `.sutmats` that contains same. Default is "R".
