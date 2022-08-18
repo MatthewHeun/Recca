@@ -664,7 +664,7 @@ grouped_aggregates <- function(.sut_data = NULL,
 #'                   Default is `.Machine$double.eps`.
 #' @param tol_chop_sum The allowable deviation from `0` for the difference between
 #'                     the sum of the chopped ECCs and the original ECC.
-#'                     Default is 1e-4.
+#'                     Default is `1e-4`.
 #' @param R,U,U_feed,V,Y,S_units Matrices that describe the energy conversion chain (ECC).
 #'                               See `Recca::psut_cols` for default values.
 #' @param footprint_aggregates The name of the output column that contains data frames of footprint aggregates.
@@ -823,7 +823,6 @@ footprint_aggregates <- function(.sut_data = NULL,
                                                                        Y_chop_list = sector_prime_mats[[Y_prime_colname]])
     assertthat::assert_that(sector_prime_balanced, msg = "Sectors not balanced in footprint_aggregations()")
 
-
     calc_aggregates_from_ecc_prime(ecc_prime,
                                    p_industries = p_industries,
                                    fd_sectors = fd_sectors,
@@ -840,86 +839,6 @@ footprint_aggregates <- function(.sut_data = NULL,
                                    r_eiou_prime_colname = r_eiou_prime_colname,
                                    V_prime_colname = V_prime_colname,
                                    Y_prime_colname = Y_prime_colname)
-
-
-    ##############################
-    # Everything from here down could be refactored into another function
-    # that is used by footprint_aggregates() and effects_aggregates().
-    ##############################
-
-
-
-
-
-
-
-    # # Now that we have the new (prime) ECCs, calculate primary and final demand aggregates
-    # p_aggregates <- ecc_prime %>%
-    #   sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_new_ecc) {
-    #     this_new_ecc %>%
-    #       primary_aggregates(p_industries = p_industries,
-    #                          R = R_prime_colname,
-    #                          V = V_prime_colname,
-    #                          Y = Y_prime_colname,
-    #                          pattern_type = pattern_type,
-    #                          by = "Total",
-    #                          aggregate_primary = aggregate_primary)
-    #   }) %>%
-    #   # Transpose to pull EX.p to the top level with products and sectors beneath.
-    #   purrr::transpose()
-    # fd_aggregates <- ecc_prime %>%
-    #   sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_new_ecc) {
-    #     this_new_ecc %>%
-    #       finaldemand_aggregates(fd_sectors = fd_sectors,
-    #                              U = U_prime_colname,
-    #                              U_feed = U_feed_prime_colname,
-    #                              Y = Y_prime_colname,
-    #                              pattern_type = pattern_type,
-    #                              by = "Total",
-    #                              net_aggregate_demand = net_aggregate_demand,
-    #                              gross_aggregate_demand = gross_aggregate_demand)
-    #   }) %>%
-    #   # Transpose to pull EX.fd_net and EX.fd_gross to the top level with products and sectors beneath.
-    #   purrr::transpose()
-    #
-    # # Create data frames that can be later unnested if needed.
-    # p_aggregates_df <- tibble::tibble(
-    #   "{product_sector}" := p_aggregates[[aggregate_primary]] %>% names(),
-    #   "{aggregate_primary}" := p_aggregates[[aggregate_primary]] %>% unname() %>% unlist()
-    # )
-    # net_fd_aggregates_df <- tibble::tibble(
-    #   "{product_sector}" := fd_aggregates[[net_aggregate_demand]] %>% names(),
-    #   "{net_aggregate_demand}" := fd_aggregates[[net_aggregate_demand]] %>% unname() %>% unlist()
-    # )
-    # gross_fd_aggregates_df <- tibble::tibble(
-    #   "{product_sector}" := fd_aggregates[[gross_aggregate_demand]] %>% names(),
-    #   "{gross_aggregate_demand}" := fd_aggregates[[gross_aggregate_demand]] %>% unname() %>% unlist()
-    # )
-    #
-    # # Join the data frames by the product_sector column.
-    # primary_net_gross <- p_aggregates_df %>%
-    #   dplyr::full_join(gross_fd_aggregates_df, by = product_sector) %>%
-    #   dplyr::full_join(net_fd_aggregates_df, by = product_sector)
-    #
-    # # Add the "prime" ECC matrices to the nested data frame
-    # ecc_prime_transpose <- purrr::transpose(ecc_prime)
-    # ecc_primes <- primary_net_gross[product_sector] %>%
-    #   dplyr::mutate(
-    #     "{R_prime_colname}" := ecc_prime_transpose[[R_prime_colname]],
-    #     "{U_prime_colname}" := ecc_prime_transpose[[U_prime_colname]],
-    #     "{U_feed_prime_colname}" := ecc_prime_transpose[[U_feed_prime_colname]],
-    #     "{U_eiou_prime_colname}" := ecc_prime_transpose[[U_eiou_prime_colname]],
-    #     "{r_eiou_prime_colname}" := ecc_prime_transpose[[r_eiou_prime_colname]],
-    #     "{V_prime_colname}" := ecc_prime_transpose[[V_prime_colname]],
-    #     "{Y_prime_colname}" := ecc_prime_transpose[[Y_prime_colname]]
-    #   )
-    #
-    # primary_net_gross <- dplyr::full_join(ecc_primes, primary_net_gross, by = product_sector)
-    #
-    # # Make a list and return it so that the data frame is nested
-    # # inside the column of the data frame.
-    # list(primary_net_gross) %>%
-    #   magrittr::set_names(footprint_aggregates)
   }
 
   out <- matsindf::matsindf_apply(.sut_data,
