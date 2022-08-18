@@ -2,7 +2,7 @@
 % Please edit documentation in R/io.R
 \name{calc_A}
 \alias{calc_A}
-\title{Calculate \strong{Z}, \strong{K}, \strong{D}, \strong{C}, \strong{A}, and \strong{O} matrices}
+\title{Calculate \strong{Z}, \strong{K}, \strong{C}, \strong{D}, \strong{A}, and \strong{O} matrices}
 \usage{
 calc_A(
   .sutdata = NULL,
@@ -66,5 +66,5 @@ A list or data frame containing \strong{Z},
 \strong{K}, \strong{C}, \strong{D}, and \strong{A} matrices.
 }
 \description{
-Calculate \strong{Z}, \strong{K}, \strong{D}, \strong{C}, \strong{A}, and \strong{O} matrices
+Calculate \strong{Z}, \strong{K}, \strong{C}, \strong{D}, \strong{A}, and \strong{O} matrices
 }
