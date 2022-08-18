@@ -387,7 +387,7 @@ test_that("write_ecc_to_excel() works as expected", {
 
   res <- write_ecc_to_excel(ecc, path = ecc_temp_path, overwrite = TRUE)
 
-  expect_true(all(res$`Wrote mats` == TRUE))
+  expect_true(file.exists(ecc_temp_path))
   file.remove(ecc_temp_path)
 })
 

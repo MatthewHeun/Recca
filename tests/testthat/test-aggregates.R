@@ -404,7 +404,7 @@ test_that("footprint_aggregates() works as expected", {
   # Calculate aggregates
   footprint_aggs_nested <- psut_mats %>%
     Recca::footprint_aggregates(p_industries = p_industries, fd_sectors = fd_sectors)
-  expect_true(Recca::aggregate_cols$footprint_aggregates %in% names(footprint_aggs_nested))
+  expect_true(Recca::aggregate_cols$aggregates_df %in% names(footprint_aggs_nested))
   footprint_aggs_unnested <- psut_mats %>%
     Recca::footprint_aggregates(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
   expect_true(Recca::aggregate_cols$product_sector %in% names(footprint_aggs_unnested))
@@ -453,5 +453,28 @@ test_that("footprint_aggregates() works with Losses", {
 
 
 test_that("effects_aggregates() works as expected", {
+  p_industries <- c("Resources - Crude", "Resources - NG")
+  fd_sectors <- c("Residential", "Transport", "Oil fields")
 
+  psut_mats <- UKEnergy2000mats %>%
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) %>%
+    # To avoid the services rows on which NA values are obtained.
+    dplyr::slice(1, 3)
+  # Calculate aggregates
+  effects_aggs_nested <- psut_mats %>%
+    Recca::effects_aggregates(p_industries = p_industries, fd_sectors = fd_sectors)
+  expect_true(Recca::aggregate_cols$aggregates_df %in% names(effects_aggs_nested))
+  effects_aggs_unnested <- psut_mats %>%
+    Recca::effects_aggregates(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
+  expect_true(Recca::aggregate_cols$product_sector %in% names(effects_aggs_unnested))
+  expect_true(Recca::aggregate_cols$aggregate_primary %in% names(effects_aggs_unnested))
+  expect_true(Recca::aggregate_cols$net_aggregate_demand %in% names(effects_aggs_unnested))
+  expect_true(Recca::aggregate_cols$gross_aggregate_demand %in% names(effects_aggs_unnested))
+  expect_true(paste0(Recca::psut_cols$R, "_prime") %in% names(effects_aggs_unnested))
+  expect_true(paste0(Recca::psut_cols$U, "_prime") %in% names(effects_aggs_unnested))
+  expect_true(paste0(Recca::psut_cols$U_feed, "_prime") %in% names(effects_aggs_unnested))
+  expect_true(paste0(Recca::psut_cols$U_eiou, "_prime") %in% names(effects_aggs_unnested))
+  expect_true(paste0(Recca::psut_cols$r_eiou, "_prime") %in% names(effects_aggs_unnested))
+  expect_true(paste0(Recca::psut_cols$V, "_prime") %in% names(effects_aggs_unnested))
+  expect_true(paste0(Recca::psut_cols$Y, "_prime") %in% names(effects_aggs_unnested))
 })

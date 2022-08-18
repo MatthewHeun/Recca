@@ -4,6 +4,10 @@ output: html_document
 ---
 
 
+* New function `effects_aggregates()`
+  swims downstream from the **R** matrix to 
+  final demand for each column (energy carrier)
+  in the **R** matrix and calculates primary and final demand aggregates.
 * `footprint_aggregates()` now checks that
   the chopped ECCs sum to the original ECC
   on every calculation.

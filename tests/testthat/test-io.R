@@ -50,12 +50,12 @@ test_that("calculating y, q, f, g, h, W, A, and L works as expected", {
                       unlist(),
                     43000)
   expect_equivalent(yqfgW %>%
-                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "h", rownames == "Industry", colnames == "Crude") %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "h", rownames == "Crude", colnames == "Industry") %>%
                       dplyr::select(matvals) %>%
                       unlist(),
                     50000)
   expect_equivalent(yqfgW %>%
-                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "h", rownames == "Industry", colnames == "NG") %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "h", rownames == "NG", colnames == "Industry") %>%
                       dplyr::select(matvals) %>%
                       unlist(),
                     43000)

@@ -13,6 +13,7 @@ calc_A(
   f = "f",
   g = "g",
   r = "r",
+  h = "h",
   Z = "Z",
   K = "K",
   C = "C",
@@ -38,7 +39,9 @@ If all of \code{R} is added to \code{V}, this argument can be left unspecified.}
 
 \item{g}{A \code{g} vector or name of the column in \code{.sutmats} that contains same. Default is "g".}
 
-\item{r}{A \code{r} vector or name of the column in \code{.sutmats} that contains same. Default is "r".}
+\item{r}{An \code{r} vector or name of the column in \code{.sutmats} that contains same. Default is "r".}
+
+\item{h}{An \code{h} vector or name of the column in \code{.sutmats} that contains same. Default is "h".}
 
 \item{Z}{The name for \code{Z} matrix on output. Default is "Z".
 \code{Z} is calculated by \code{U * g_hat_inv}.}

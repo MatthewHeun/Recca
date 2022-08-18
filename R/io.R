@@ -50,7 +50,7 @@
 #' @param D The name for the `D` matrix on output. Default is "D".
 #'        `D` is calculated by `V * q_hat_inv`.
 #' @param O name for the `O` matrix on output. Default is "O".
-#'        `O` is calculated by `r_hat_inv * R`.
+#'        `O` is calculated by `R * h_hat_inv`.
 #' @param A The name for the `A` matrix on output. Default is "A".
 #'        `A` is calculated by `Z * D`.
 #' @param L_ixp The name for the `L_ixp` matrix on output. Default is "L_ixp".
@@ -103,8 +103,9 @@ calc_io_mats <- function(.sutdata = NULL,
     f_vec <- yqfgW[[f]]
     g_vec <- yqfgW[[g]]
     r_vec <- yqfgW[[r]]
+    h_vec <- yqfgW[[y]]
 
-    ZKCDA <- calc_A(R = R_mat, U = U_mat, V = V_mat, q = q_vec, f = f_vec, g = g_vec, r = r_vec,
+    ZKCDA <- calc_A(R = R_mat, U = U_mat, V = V_mat, q = q_vec, f = f_vec, g = g_vec, r = r_vec, h = h_vec,
                     Z = Z, K = K, C = C, D = D, A = A, O = O)
 
     D_mat <- ZKCDA[[D]]
@@ -118,7 +119,7 @@ calc_io_mats <- function(.sutdata = NULL,
 
     # Work on the "_feed" matrices.
 
-    ZKCDA_all_feed <- calc_A(R = R_mat, U = U_feed_mat, V = V_mat, q = q_vec, f = f_vec, g = g_vec, r = r_vec,
+    ZKCDA_all_feed <- calc_A(R = R_mat, U = U_feed_mat, V = V_mat, q = q_vec, f = f_vec, g = g_vec, r = r_vec, h = h_vec,
                              Z = Z_feed, K = K_feed, C = C, D = D, A = A_feed, O = O)
     ZKCDA_feed <- list(Z_feed = ZKCDA_all_feed[[Z_feed]],
                        K_feed = ZKCDA_all_feed[[K_feed]],
@@ -140,29 +141,32 @@ calc_io_mats <- function(.sutdata = NULL,
 }
 
 
-#' Calculate `y`, `f`, `g`, and `q` vectors and the `W` matrix
+#' Calculate **y**, **f**, **g**, **q**, **h**, and **r** vectors and the **W** matrix
 #'
-#' Note that a necessary condition for calculating the `f` and `g` vectors is that
-#' the U_bar and V_bar matrices should have only one entry per column and row, respectively,
+#' Note that a necessary condition for calculating the **f**, **g**, and **r** vectors is that
+#' the **R_bar**, **U_bar**, and **V_bar** matrices
+#' should have only one entry per column and row, respectively,
 #' meaning that all products entering a given industry need to be unit homogeneous
-#' before we can calculate the `f` vector and
+#' before we can calculate the **f** vector and
 #' all products of a given industry are measured in the same units
-#' before we can calculate the `g` vector.
+#' before we can calculate the **g** vector.
 #' If the unit homogeneity assumptions above are violated, we will return NA
-#' for violating industries in the `f` and `g` vectors.
-#' The checks for unit homogeneity are performed only when an `S_units` matrix is present.
+#' for violating industries in the **f** and **g** vectors.
+#' The checks for unit homogeneity are performed only when an **S_units** matrix is present.
+#'
+#' `method_q_calculation` Specifies the method with which the q vector should be calculated.
+#' Default is "sum_U_Y_rows".
+#' Alternatively, an analyst can choose to use the "sum_R_V_cols" method.
+#' In the case of a balanced ECC, the method does not matter.
 #'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
-#' @param method_q_calculation Specifies the method which with the q vector should be calculated.
-#'                             Default is `sum_U_Y_rows`.
-#'                             Alternatively, an analyst can choose to use the `sum_R_V_cols` method.
-#'                             In the case of a balanced ECC, the method does not matter.
-#' @param R The resources (`R`) matrix or name of the column in `.sutmats` that contains same. Default is "R".
-#' @param Y The final demand matrix (`Y`) or name of the column in `.sutmats` that contains same. Default is "Y".
-#' @param U The use (`U`) matrix or name of the column in `.sutmats` that contains same. Default is "U".
-#' @param V The make (`V`) matrix or name of the column in `.sutmats` that contains same. Default is "V".
-#' @param Y The final demand (`Y`) matrix or name of the column in `.sutmats`` that contains same. Default is "Y".
-#' @param S_units The `S_units` matrix or name of the column in `.sutmats` that contains same. Default is "S_units".
+#' @param method_q_calculation Specifies the method with which the q vector should be calculated. See details.
+#' @param R The resources (**R**) matrix or name of the column in `.sutmats` that contains same. Default is "R".
+#' @param Y The final demand matrix (**Y**) or name of the column in `.sutmats` that contains same. Default is "Y".
+#' @param U The use (**U**) matrix or name of the column in `.sutmats` that contains same. Default is "U".
+#' @param V The make (**V**) matrix or name of the column in `.sutmats` that contains same. Default is "V".
+#' @param Y The final demand (**Y**) matrix or name of the column in `.sutmats`` that contains same. Default is "Y".
+#' @param S_units The **S_units** matrix or name of the column in `.sutmats` that contains same. Default is "S_units".
 #' @param y The name for the `y` vector on output. Default is "y".
 #'        `y` is calculated by `rowsums(Y)`.
 #' @param q The name for the `q` vector on output. Default is "q".
@@ -180,8 +184,8 @@ calc_io_mats <- function(.sutdata = NULL,
 #'
 #' @export
 #'
-#' @return A list or data frame containing `y`, `q`,
-#'          `f`, `g`, and `W`.
+#' @return A list or data frame containing **y**, **q**,
+#'         **f**, **g**, **h**, and **r** vectors and the **W** matrix.
 calc_yqfgW <- function(.sutdata = NULL,
                        method_q_calculation = c("sum_U_Y_rows", "sum_R_V_cols"),
                        # Input names
@@ -213,7 +217,7 @@ calc_yqfgW <- function(.sutdata = NULL,
     }
     g_vec <- matsbyname::rowsums_byname(V_mat)
     r_vec <- matsbyname::rowsums_byname(R_mat)
-    h_vec <- matsbyname::colsums_byname(R_mat)
+    h_vec <- matsbyname::colsums_byname(R_mat) %>% matsbyname::transpose_byname()
     W_mat <- matsbyname::difference_byname(matsbyname::transpose_byname(V_mat), U_mat)
     # Deal with any unit homogeneity issues for f and g.
     if (!is.null(S_units_mat)) {
@@ -253,7 +257,8 @@ calc_yqfgW <- function(.sutdata = NULL,
 #' @param q A `q` vector or name of the column in `.sutmats` that contains same. Default is "q".
 #' @param f An `f` vector or name of the column in `.sutmats` that contains same. Default is "r".
 #' @param g A `g` vector or name of the column in `.sutmats` that contains same. Default is "g".
-#' @param r A `r` vector or name of the column in `.sutmats` that contains same. Default is "r".
+#' @param r An `r` vector or name of the column in `.sutmats` that contains same. Default is "r".
+#' @param h An `h` vector or name of the column in `.sutmats` that contains same. Default is "h".
 #' @param Z The name for `Z` matrix on output. Default is "Z".
 #'        `Z` is calculated by `U * g_hat_inv`.
 #' @param K The name for `K` matrix on output. Default is "K".
@@ -273,10 +278,10 @@ calc_yqfgW <- function(.sutdata = NULL,
 #' @export
 calc_A <- function(.sutdata = NULL,
                    # Input names
-                   R = "R", U = "U", V = "V", q = "q", f = "f", g = "g", r = "r",
+                   R = "R", U = "U", V = "V", q = "q", f = "f", g = "g", r = "r", h = "h",
                    # Output names
                    Z = "Z", K = "K", C = "C", D = "D", A = "A", O = "O"){
-  A_func <- function(R_mat, U_mat, V_mat, q_vec, f_vec, g_vec, r_vec){
+  A_func <- function(R_mat, U_mat, V_mat, q_vec, f_vec, g_vec, r_vec, h_vec){
     if (is.null(R_mat)) {
       # No R matrix, just use the V matrix, assuming that resources are included there.
       R_plus_V_mat <- V_mat
@@ -327,7 +332,7 @@ calc_A <- function(.sutdata = NULL,
     list(Z_mat, K_mat, C_mat, D_mat, A_mat, O_mat) %>%
       magrittr::set_names(c(Z, K, C, D, A, O))
   }
-  matsindf::matsindf_apply(.sutdata, FUN = A_func, R_mat = R, U_mat = U, V_mat = V, q_vec = q, f_vec = f, g_vec = g, r_vec = r)
+  matsindf::matsindf_apply(.sutdata, FUN = A_func, R_mat = R, U_mat = U, V_mat = V, q_vec = q, f_vec = f, g_vec = g, r_vec = r, h_vec = h)
 }
 
 
