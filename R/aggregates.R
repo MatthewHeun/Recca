@@ -803,7 +803,7 @@ footprint_aggregates <- function(.sut_data = NULL,
                                                                                 U_feed_chop_list = product_prime_mats[[U_feed_prime_colname]],
                                                                                 V_chop_list = product_prime_mats[[V_prime_colname]],
                                                                                 Y_chop_list = product_prime_mats[[Y_prime_colname]])
-    assertthat::assert_that(product_prime_balanced, msg = "Products not balanced in footprint_aggregations()")
+    assertthat::assert_that(product_prime_balanced, msg = "Products not balanced in footprint_aggregates()")
 
     # The sum of the ECCs associated with new_Y_sectors should be equal to the original ECC.
     sector_prime_mats <- ecc_prime[sector_names] %>%
@@ -819,7 +819,7 @@ footprint_aggregates <- function(.sut_data = NULL,
                                                                                U_feed_chop_list = sector_prime_mats[[U_feed_prime_colname]],
                                                                                V_chop_list = sector_prime_mats[[V_prime_colname]],
                                                                                Y_chop_list = sector_prime_mats[[Y_prime_colname]])
-    assertthat::assert_that(sector_prime_balanced, msg = "Sectors not balanced in footprint_aggregations()")
+    assertthat::assert_that(sector_prime_balanced, msg = "Sectors not balanced in footprint_aggregates()")
 
     # Calculate primary and final demand aggregates for each of the new ECCs.
     calc_aggregates_from_ecc_prime(ecc_prime,
@@ -1048,7 +1048,7 @@ effects_aggregates <- function(.sut_data = NULL,
                                                                                 U_feed_chop_list = product_prime_mats[[U_feed_prime_colname]],
                                                                                 V_chop_list = product_prime_mats[[V_prime_colname]],
                                                                                 Y_chop_list = product_prime_mats[[Y_prime_colname]])
-    assertthat::assert_that(product_prime_balanced, msg = "Products not balanced in footprint_aggregations()")
+    assertthat::assert_that(product_prime_balanced, msg = "Products not balanced in effects_aggregates()")
 
     # Calculate primary and final demand aggregates for each of the new ECCs.
     calc_aggregates_from_ecc_prime(ecc_prime,
@@ -1087,13 +1087,72 @@ effects_aggregates <- function(.sut_data = NULL,
 }
 
 
+#' Verify energy balance after footprint calculations
+#'
+#' Footprint calculations involve
+#' isolating rows or columns of the **Y** matrix (chopping),
+#' performing upstream swims (with `new_Y()`), and
+#' creating the ECC portions that support the creation of the row or column of **Y**.
+#' After performing that upstream swim, the sum of the
+#' isolated (chopped) ECCs should equal the original ECC.
+#' This function performs that energy balance verification.
+#'
+#' The various `*_chop_list` arguments should be lists of matrices
+#' formed by isolating (chopping) different parts of **Y**.
+#' The matrices in `R_chop_list`, `U_chop_list`, `U_feed_chop_list`
+#' `U_eiou_chop_list`, `V_chop_list`, and `Y_chop_list` should sum to
+#' `R`, `U`, `U_feed`, `U_eiou`, `V`, and `Y`, respectively.
+#'
+#' This is not a public function.
+#' It is an internal helper function
+#' for `footprint_aggregates()` and `effects_aggregates()`..
+#'
+#' @param .sut_data An optional data frame of energy conversion chain matrices.
+#' @param tol The tolerance within which energy balance is assumed to be OK. Default is `1e-4`.
+#' @param R_mat,U_mat,U_feed_mat,V_mat,Y_mat The matrices of the original ECC.
+#' @param R_chop_list,U_chop_list,U_feed_chop_list,V_chop_list,Y_chop_list Lists of matrices from different upstream swims corresponding to different rows or columns of **Y**.
+#'
+#' @return `TRUE` if energy balance is observed, `FALSE` otherwise.
+verify_footprint_effects_aggregate_energy_balance <- function(.sut_data = NULL,
+                                                              tol = 1e-4,
+                                                              R_mat, U_mat, U_feed_mat, V_mat, Y_mat,
+                                                              R_chop_list, U_chop_list, U_feed_chop_list, V_chop_list, Y_chop_list) {
+
+  verify_func <- function(chop_list, mat) {
+    mat_sum <- matsbyname::sum_byname(chop_list, .summarise = TRUE)[[1]]
+    err <- matsbyname::difference_byname(mat_sum, mat)
+    OK <- matsbyname::iszero_byname(err, tol = tol)
+    if (!OK) {
+      warning("energy balance not observed in verify_footprint_effects_aggregate_energy_balance()")
+    }
+    return(OK)
+  }
+
+  # Build lists of matrices
+  chop_list <- list(R_chop_list, U_chop_list, U_feed_chop_list, V_chop_list, Y_chop_list)
+  mat_list <- list(R_mat, U_mat, U_feed_mat, V_mat, Y_mat)
+  # Map across each list to ensure the chop_list sums to the matrix.
+  Map(f = verify_func, chop_list, mat_list) %>%
+    unlist() %>%
+    all()
+}
+
+
 #' Calculate aggregates from list of reconstructed ECCs
 #'
 #' This is a helper function for `footprint_aggregates()` and `effects_aggregates()`.
 #' It calculates the primary and final demand aggregates for a list of
 #' reconstructed energy conversion chains (ECCs) in `ecc_prime`.
 #'
+#' This is not a public function.
+#' It is an internal helper function
+#' for `footprint_aggregates()` and `effects_aggregates()`.
+#'
 #' @param ecc_prime A list of reconstructed energy conversion chains.
+#' @param include_aggregates A boolean that tells whether to return the aggregate sums
+#'                           or only the new ECCs.
+#'                           When `TRUE`, aggregate sums are returned along with the new ECCs.
+#'                           When `FALSE`, only the new ECCs are returned.
 #' @param p_industries A vector of names of industries to be aggregated as "primary."
 #'                     See `footprint_aggregates()` for details.
 #' @param fd_sectors A vector of names of sectors in final demand.
@@ -1107,9 +1166,6 @@ effects_aggregates <- function(.sut_data = NULL,
 #'                                                                                    See `Recca::aggregate_cols`.
 #' @param R_prime_colname,U_prime_colname,U_feed_prime_colname,U_eiou_prime_colname,r_eiou_prime_colname,V_prime_colname,Y_prime_colname Names of output matrices in the return value.
 #'                                                                                                                                       Default values are constructed from
-#'                                                                                                                                       `Recca::psut_cols` values suffixed with
-#'                                                                                                                                       the value of the `.prime` argument.
-#'
 #' @return A data frame containing reconstructed (prime) matrices and
 #'         primary and final demand aggregates in a list suitable for use in `matsindf::matsindf_apply()`.
 calc_aggregates_from_ecc_prime <- function(ecc_prime,
@@ -1128,6 +1184,11 @@ calc_aggregates_from_ecc_prime <- function(ecc_prime,
                                            r_eiou_prime_colname,
                                            V_prime_colname,
                                            Y_prime_colname) {
+
+  # Callers can opt to not include the aggregates on output,
+  # but calculate them here anyway.
+  # It is not an expensive operation and it sets up the structure
+  # for adding the matrices to the output.
 
   # Now that we have the new (prime) ECCs, calculate primary and final demand aggregates
   p_aggregates <- ecc_prime %>%
@@ -1171,13 +1232,12 @@ calc_aggregates_from_ecc_prime <- function(ecc_prime,
     "{product_sector}" := fd_aggregates[[gross_aggregate_demand]] %>% names(),
     "{gross_aggregate_demand}" := fd_aggregates[[gross_aggregate_demand]] %>% unname() %>% unlist()
   )
-
   # Join the data frames by the product_sector column.
   primary_net_gross <- p_aggregates_df %>%
     dplyr::full_join(gross_fd_aggregates_df, by = product_sector) %>%
     dplyr::full_join(net_fd_aggregates_df, by = product_sector)
 
-  # Add the "prime" ECC matrices to the nested data frame
+  # Add the "prime" ECC matrices to a nested data frame
   ecc_prime_transpose <- purrr::transpose(ecc_prime)
   ecc_primes <- primary_net_gross[product_sector] %>%
     dplyr::mutate(
@@ -1199,48 +1259,3 @@ calc_aggregates_from_ecc_prime <- function(ecc_prime,
 }
 
 
-#' Verify energy balance after footprint calculations
-#'
-#' Footprint calculations involve
-#' isolating rows or columns of the **Y** matrix (chopping),
-#' performing upstream swims (with `new_Y()`), and
-#' creating the ECC portions that support the creation of the row or column of **Y**.
-#' After performing that upstream swim, the sum of the
-#' isolated (chopped) ECCs should equal the original ECC.
-#' This function performs that energy balance verification.
-#'
-#' The various `*_chop_list` arguments should be lists of matrices
-#' formed by isolating (chopping) different parts of **Y**.
-#' The matrices in `R_chop_list`, `U_chop_list`, `U_feed_chop_list`
-#' `U_eiou_chop_list`, `V_chop_list`, and `Y_chop_list` should sum to
-#' `R`, `U`, `U_feed`, `U_eiou`, `V`, and `Y`, respectively.
-#'
-#' This is not a public function.
-#' It is an internal helper function
-#' for `footprint_aggregates()`.
-#'
-#' @param .sut_data An optional data frame of energy conversion chain matrices.
-#' @param tol The tolerance within which energy balance is assumed to be OK. Default is `1e-4`.
-#' @param R_mat,U_mat,U_feed_mat,V_mat,Y_mat The matrices of the original ECC.
-#' @param R_chop_list,U_chop_list,U_feed_chop_list,V_chop_list,Y_chop_list Lists of matrices from different upstream swims corresponding to different rows or columns of **Y**.
-#'
-#' @return `TRUE` if energy balance is observed, `FALSE` otherwise.
-verify_footprint_effects_aggregate_energy_balance <- function(.sut_data = NULL,
-                                                              tol = 1e-4,
-                                                              R_mat, U_mat, U_feed_mat, V_mat, Y_mat,
-                                                              R_chop_list, U_chop_list, U_feed_chop_list, V_chop_list, Y_chop_list) {
-
-  verify_func <- function(chop_list, mat) {
-    mat_sum <- matsbyname::sum_byname(chop_list, .summarise = TRUE)[[1]]
-    err <- matsbyname::difference_byname(mat_sum, mat)
-    matsbyname::iszero_byname(err, tol = tol)
-  }
-
-  # Build lists of matrices
-  chop_list <- list(R_chop_list, U_chop_list, U_feed_chop_list, V_chop_list, Y_chop_list)
-  mat_list <- list(R_mat, U_mat, U_feed_mat, V_mat, Y_mat)
-  # Map across each list to ensure the chop_list sums to the matrix.
-  Map(f = verify_func, chop_list, mat_list) %>%
-    unlist() %>%
-    all()
-}

@@ -43,9 +43,12 @@ for which footprint aggregates are given.}
 See \code{Recca::aggregate_cols}.}
 
 \item{R_prime_colname, U_prime_colname, U_feed_prime_colname, U_eiou_prime_colname, r_eiou_prime_colname, V_prime_colname, Y_prime_colname}{Names of output matrices in the return value.
-Default values are constructed from
-\code{Recca::psut_cols} values suffixed with
-the value of the \code{.prime} argument.}
+Default values are constructed from}
+
+\item{include_aggregates}{A boolean that tells whether to return the aggregate sums
+or only the new ECCs.
+When \code{TRUE}, aggregate sums are returned along with the new ECCs.
+When \code{FALSE}, only the new ECCs are returned.}
 }
 \value{
 A data frame containing reconstructed (prime) matrices and
@@ -55,4 +58,9 @@ primary and final demand aggregates in a list suitable for use in \code{matsindf
 This is a helper function for \code{footprint_aggregates()} and \code{effects_aggregates()}.
 It calculates the primary and final demand aggregates for a list of
 reconstructed energy conversion chains (ECCs) in \code{ecc_prime}.
+}
+\details{
+This is not a public function.
+It is an internal helper function
+for \code{footprint_aggregates()} and \code{effects_aggregates()}.
 }

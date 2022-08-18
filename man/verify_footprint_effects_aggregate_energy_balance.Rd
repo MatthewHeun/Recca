@@ -49,5 +49,5 @@ The matrices in \code{R_chop_list}, \code{U_chop_list}, \code{U_feed_chop_list}
 
 This is not a public function.
 It is an internal helper function
-for \code{footprint_aggregates()}.
+for \code{footprint_aggregates()} and \code{effects_aggregates()}..
 }

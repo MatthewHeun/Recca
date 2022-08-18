@@ -57,7 +57,7 @@ output: html_document
   with the expected columns if the input data frame 
   is empty.
 * Many new tests for new features.
-    * Now up to 616 tests, all passing.
+    * Now up to 628 tests, all passing.
     * Test coverage remains at 100 %.
 
 
