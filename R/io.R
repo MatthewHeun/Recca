@@ -112,8 +112,6 @@ calc_io_mats <- function(.sutdata = NULL,
     L_mats <- calc_L(method = method, tol = tol,
                      D = D_mat, A = A_mat,
                      L_ixp = L_ixp, L_pxp = L_pxp)
-    # Set names
-    # c(yqfgW, ZKCDA, L_mats) %>% magrittr::set_names(c(names(yqfgW), names(ZKCDA), names(L_mats)))
 
     # Work on the "_feed" matrices.
 
@@ -127,10 +125,6 @@ calc_io_mats <- function(.sutdata = NULL,
     L_feed_mats <- calc_L(method = method, tol = tol,
                           D = D_mat, A = A_feed_mat,
                           L_ixp = L_ixp_feed, L_pxp = L_pxp_feed)
-
-    # Set names
-    # c(yqfgW, ZKCDA, ZKCDA_feed, L_mats, L_feed_mats) %>%
-    #   magrittr::set_names(c(names(yqfgW), names(ZKCDA), names(ZKCDA_feed), names(L_mats), names(L_feed_mats)))
 
     # Return a list
     c(yqfgW, ZKCDA, L_mats, ZKCDA_feed, L_feed_mats)
