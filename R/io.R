@@ -1,72 +1,70 @@
-#
-# This file contains functions that calculate matrices
-# relevant to input-ouput (PSUT) analyses
-#
-
-
 #' Calculate several input-output matrices
 #'
-#' This function bundles several others.
+#' This function bundles several others and calculates
+#' matrices that describe the structure of an energy conversion chain.
 #'
 #' Some calculations involve a matrix inversion step.
 #' The `method` argument specifies which method should be used for
 #' calculating the inverse.
 #' See `matsbyname::invert_byname()`.
 #'
+#' `method_q_calculation` specifies the method with which the q vector should be calculated.
+#' Default is "sum_U_Y_rows", corresponding to a demand-sided view of **q**.
+#' Alternatively, an analyst can choose to use the "sum_R_V_cols" method,
+#' corresponding to a supply-sided view of **q**.
+#' In the case of a balanced ECC, the method does not matter.
+#'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
 #' @param method One of "solve", "QR", or "SVD". Default is "solve". See details.
 #' @param tol The tolerance for detecting linear dependencies during matrix inversion.
 #'            Default is `.Machine$double.eps`.
-#' @param method_q_calculation Specifies the method which with the q vector should be calculated.
-#'                             Default is `sum_U_Y_rows`.
-#'                             Alternatively, an analyst can choose to use the `sum_R_V_cols` method.
-#'                             In the case of a balanced ECC, the method does not matter.
-#' @param R The resources (`R`) matrix or name of the column in `.sutmats` that contains same. Default is "R".
-#' @param U The use (`U`) matrix or name of the column in `.sutmats`` that contains same. Default is "U".
-#' @param U_feed use matrix or name of the column in `.sutmats` that contains same. Default is "U_feed".
-#' @param V The make (`V`) matrix or name of the column in `.sutmats`that contains same. Default is "V".
-#' @param Y The final demand (`Y`) matrix or name of the column in `.sutmats` that contains same. Default is "Y".
-#' @param S_units The unit summation matrix (`S_units`) or name of the column in `.sutmats` that contains same. Default is "S_units".
-#' @param y The name for the `y` vector on output. Default is "y".
-#'        `y` is calculated by `rowsums(Y)`.
-#' @param q The name for the `q` vector on output. Default is "q".
-#'        `q` is calculated by `rowsums(U) + y`.
-#' @param f The name for the `f` vector on output. Default is "f".
-#'        `f` is calculated by `colsums(U)`.
-#' @param h The name for the `h` vector on output. Default is "h".
-#'        `h` is calculated by `colsums(transpose(R))`.
-#' @param g The name for the `g` vector on output. Default is "g".
-#'        `g` is calculated by `rowsums(V)`.
-#' @param r The name for the `r` vector on output. Default is "r".
-#'        `r` is calculated by `rowsums(R)`.
-#' @param W The name for the `W` matrix on output. Default is "W".
-#'        `W` is calculated by `transpose(V) - U`.
-#' @param K The name for the `K` matrix on output. Default is "K".
-#'        `K` is calculated by `U * f_hat_inv`.
-#' @param Z The name fort the `Z` matrix on output. Default is "Z".
-#'        `Z` is calculated by `U * g_hat_inv`.
-#' @param C The name for the `C` matrix on output. Default is "C".
-#'        `C` is calculated by `transpose(V) * g_hat_inv`.
-#' @param D The name for the `D` matrix on output. Default is "D".
-#'        `D` is calculated by `V * q_hat_inv`.
-#' @param O name for the `O` matrix on output. Default is "O".
-#'        `O` is calculated by `R * h_hat_inv`.
-#' @param A The name for the `A` matrix on output. Default is "A".
-#'        `A` is calculated by `Z * D`.
-#' @param L_ixp The name for the `L_ixp` matrix on output. Default is "L_ixp".
-#'        `L_ixp` is calculated by `D * L_pxp`.
-#' @param L_pxp The name for the `L_pxp_feed` matrix on output. Default is "L_pxp_feed".
-#'        `L_pxp` is calculated by `(I - Z*D)^-1`.
-#' @param K_feed The name for the `K_feed` matrix on output. Default is "K_feed".
-#'        `K_feed` is calculated by `U_feed * f_hat_inv`.
-#' @param Z_feed The name for the `Z_feed` matrix on output. Default is "Z_feed".
-#'        `Z_feed` is calculated by `U_feed * g_hat_inv`.
-#' @param A_feed The name for the `A_feed` matrix on output. Default is "A_feed".
-#'        `A_feed` is calculated by `Z_feed * D_feed`.
-#' @param L_ixp_feed The name for the `L_ixp_feed` matrix on output. Default is "L_ixp_feed".
-#'        `L_ixp_feed` is calculated by `D_feed * L_pxp_feed`.
-#' @param L_pxp_feed The name for the `L_pxp_feed` matrix on output. Default is "L_pxp_feed".
-#'        `L_pxp_feed` is calculated by `(I - Z_feed*D)^-1`.
+#' @param method_q_calculation Specifies the method with which the q vector should be calculated. See details.
+#' @param R The resources (**R**) matrix or name of the column in `.sutmats` that contains same. Default is "R".
+#' @param U The use (**U**) matrix or name of the column in `.sutmats` that contains same. Default is "U".
+#' @param U_feed The feed portion of the use matrix (**U_feed**) or name of the column in `.sutmats` that contains same. Default is "U_feed".
+#' @param V The make (**V**) matrix or name of the column in `.sutmats`that contains same. Default is "V".
+#' @param Y The final demand (**Y**) matrix or name of the column in `.sutmats` that contains same. Default is "Y".
+#' @param S_units The unit summation matrix (**S_units**) or name of the column in `.sutmats` that contains same. Default is "S_units".
+#' @param y The name for the **y** vector on output. Default is "y".
+#'        **y** is calculated by `rowsums(Y)`.
+#' @param q The name for the **q** vector on output. Default is "q".
+#'        **q** is calculated by `rowsums(U) + y`.
+#' @param f The name for the **f** vector on output. Default is "f".
+#'        **f** is calculated by `colsums(U)`.
+#' @param h The name for the **h** vector on output. Default is "h".
+#'        **h** is calculated by `colsums(transpose(R))`.
+#' @param g The name for the **g** vector on output. Default is "g".
+#'        **g** is calculated by `rowsums(V)`.
+#' @param r The name for the **r** vector on output. Default is "r".
+#'        **r** is calculated by `rowsums(R)`.
+#' @param W The name for the **W** matrix on output. Default is "W".
+#'        **W** is calculated by `transpose(V) - U`.
+#' @param K The name for the **K** matrix on output. Default is "K".
+#'        **K** is calculated by `U * f_hat_inv`.
+#' @param Z The name fort the **Z** matrix on output. Default is "Z".
+#'        **Z** is calculated by `U * g_hat_inv`.
+#' @param C The name for the **C** matrix on output. Default is "C".
+#'        **C** is calculated by `transpose(V) * g_hat_inv`.
+#' @param D The name for the **D** matrix on output. Default is "D".
+#'        **D** is calculated by `V * q_hat_inv`.
+#' @param O name for the **O** matrix on output. Default is "O".
+#'        **O** is calculated by `R * h_hat_inv`.
+#' @param A The name for the **A** matrix on output. Default is "A".
+#'        **A** is calculated by `Z * D`.
+#' @param L_ixp The name for the **L_ixp** matrix on output. Default is "L_ixp".
+#'        **L_ixp** is calculated by `D * L_pxp`.
+#' @param L_pxp The name for the **L_pxp_feed** matrix on output. Default is "L_pxp_feed".
+#'        **L_pxp** is calculated by `(I - Z*D)^-1`.
+#' @param K_feed The name for the **K_feed** matrix on output. Default is "K_feed".
+#'        **K_feed** is calculated by `U_feed * f_hat_inv`.
+#' @param Z_feed The name for the **Z_feed** matrix on output. Default is "Z_feed".
+#'        **Z_feed** is calculated by `U_feed * g_hat_inv`.
+#' @param A_feed The name for the **A_feed** matrix on output. Default is "A_feed".
+#'        **A_feed** is calculated by `Z_feed * D_feed`.
+#' @param L_ixp_feed The name for the **L_ixp_feed** matrix on output. Default is "L_ixp_feed".
+#'        **L_ixp_feed** is calculated by `D_feed * L_pxp_feed`.
+#' @param L_pxp_feed The name for the **L_pxp_feed** matrix on output. Default is "L_pxp_feed".
+#'        **L_pxp_feed** is calculated by `(I - Z_feed*D)^-1`.
 #'
 #' @return A list or data frame containing input-output matrices.
 #'
@@ -150,13 +148,14 @@ calc_io_mats <- function(.sutdata = NULL,
 #' before we can calculate the **f** vector and
 #' all products of a given industry are measured in the same units
 #' before we can calculate the **g** vector.
-#' If the unit homogeneity assumptions above are violated, we will return NA
+#' If the unit homogeneity assumptions above are violated, we will return `NA`
 #' for violating industries in the **f** and **g** vectors.
 #' The checks for unit homogeneity are performed only when an **S_units** matrix is present.
 #'
-#' `method_q_calculation` Specifies the method with which the q vector should be calculated.
-#' Default is "sum_U_Y_rows".
-#' Alternatively, an analyst can choose to use the "sum_R_V_cols" method.
+#' `method_q_calculation` specifies the method with which the q vector should be calculated.
+#' Default is "sum_U_Y_rows", corresponding to a demand-sided view of **q**.
+#' Alternatively, an analyst can choose to use the "sum_R_V_cols" method,
+#' corresponding to a supply-sided view of **q**.
 #' In the case of a balanced ECC, the method does not matter.
 #'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
@@ -167,20 +166,20 @@ calc_io_mats <- function(.sutdata = NULL,
 #' @param V The make (**V**) matrix or name of the column in `.sutmats` that contains same. Default is "V".
 #' @param Y The final demand (**Y**) matrix or name of the column in `.sutmats`` that contains same. Default is "Y".
 #' @param S_units The **S_units** matrix or name of the column in `.sutmats` that contains same. Default is "S_units".
-#' @param y The name for the `y` vector on output. Default is "y".
-#'        `y` is calculated by `rowsums(Y)`.
-#' @param q The name for the `q` vector on output. Default is "q".
-#'        `q` is calculated by `rowsums(U) + y`.
-#' @param f The name for the `f` vector on output. Default is "f".
-#'        `f` is calculated by `colsums(U)`.
-#' @param g The name for the `g` vector on output. Default is "g".
-#'        `g` is calculated by `rowsums(V)`.
-#' @param h The name for the `h` vector on output. Default is "h".
-#'        `h` is calculated by `colsums(transpose(R))`.
-#' @param r The name for the `r` vector on output. Default is "r".
-#'        `r` is calculated by `rowsums(R)`.
-#' @param W The name for the `W` matrix on output. Default is "W".
-#'        `W` is calculated by `transpose(V) - U`.
+#' @param y The name for the **y** vector on output. Default is "y".
+#'        **y** is calculated by `rowsums(Y)`.
+#' @param q The name for the **q** vector on output. Default is "q".
+#'        **q** is calculated by `rowsums(U) + y`.
+#' @param f The name for the **f** vector on output. Default is "f".
+#'        **f** is calculated by `colsums(U)`.
+#' @param g The name for the **g** vector on output. Default is "g".
+#'        **g** is calculated by `rowsums(V)`.
+#' @param h The name for the **h** vector on output. Default is "h".
+#'        **h** is calculated by `colsums(transpose(R))`.
+#' @param r The name for the **r** vector on output. Default is "r".
+#'        **r** is calculated by `rowsums(R)`.
+#' @param W The name for the **W** matrix on output. Default is "W".
+#'        **W** is calculated by `transpose(V) - U`.
 #'
 #' @export
 #'
@@ -246,34 +245,34 @@ calc_yqfgW <- function(.sutdata = NULL,
 }
 
 
-#' Calculate `Z`, `D`, `C`, and `A` matrices
+#' Calculate **Z**, **D**, **C**, and **A** matrices
 #'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
-#' @param R resources (`R`) matrix or name of the column in `.sutmats` that contains same. Default is "`R`".
+#' @param R resources (**R**) matrix or name of the column in `.sutmats` that contains same. Default is "R".
 #'          `R` is an optional argument.
-#'          If all of `R` is added to `V`, this argument can be left unspecified.
-#' @param U Use (`U`) matrix or name of the column in `.sutmats` that contains same. Default is "U".
-#' @param V Make (`V`) matrix or name of the column in `.sutmats`that contains same. Default is "V".
-#' @param q A `q` vector or name of the column in `.sutmats` that contains same. Default is "q".
-#' @param f An `f` vector or name of the column in `.sutmats` that contains same. Default is "r".
-#' @param g A `g` vector or name of the column in `.sutmats` that contains same. Default is "g".
-#' @param r An `r` vector or name of the column in `.sutmats` that contains same. Default is "r".
-#' @param h An `h` vector or name of the column in `.sutmats` that contains same. Default is "h".
-#' @param Z The name for `Z` matrix on output. Default is "Z".
-#'        `Z` is calculated by `U * g_hat_inv`.
-#' @param K The name for `K` matrix on output. Default is "K".
-#'        `K` is calculated by `U * f_hat_inv`.
-#' @param C The name for `C` matrix on output. Default is "C".
-#'        `C` is calculated by `transpose(V) * g_hat_inv`.
-#' @param D The name for `D` matrix on output. Default is "D".
-#'        `D` is calculated by `V * q_hat_inv`.
-#' @param A The name for `A` matrix on output. Default is "A".
-#'        `A` is calculated by `Z * D`.
-#' @param O The name for `O` matrix on output. Default is "O".
-#'        `O` is calculated by `r_hat_inv * R`.
+#'          If all of **R** is added to **V**, this argument can be left unspecified.
+#' @param U Use (**U**) matrix or name of the column in `.sutmats` that contains same. Default is "U".
+#' @param V Make (**V**) matrix or name of the column in `.sutmats`that contains same. Default is "V".
+#' @param q A **q** vector or name of the column in `.sutmats` that contains same. Default is "q".
+#' @param f An **f** vector or name of the column in `.sutmats` that contains same. Default is "r".
+#' @param g A **g** vector or name of the column in `.sutmats` that contains same. Default is "g".
+#' @param r An **r** vector or name of the column in `.sutmats` that contains same. Default is "r".
+#' @param h An **h** vector or name of the column in `.sutmats` that contains same. Default is "h".
+#' @param Z The name for the **Z** matrix on output. Default is "Z".
+#'        **Z** is calculated by `U * g_hat_inv`.
+#' @param K The name for the **K** matrix on output. Default is "K".
+#'        **K** is calculated by `U * f_hat_inv`.
+#' @param C The name for the **C** matrix on output. Default is "C".
+#'        **C** is calculated by `transpose(V) * g_hat_inv`.
+#' @param D The name for the **D** matrix on output. Default is "D".
+#'        **D** is calculated by `V * q_hat_inv`.
+#' @param A The name for the **A** matrix on output. Default is "A".
+#'        **A** is calculated by Z * D`.
+#' @param O The name for the **O** matrix on output. Default is "O".
+#'        **O** is calculated by `r_hat_inv * R`.
 #'
-#' @return A list or data frame containing `Z`,
-#'         `K`, `C`, `D`, and `A` matrices.
+#' @return A list or data frame containing **Z**,
+#'         **K**, **C**, **D**, and **A** matrices.
 #'
 #' @export
 calc_A <- function(.sutdata = NULL,
@@ -336,10 +335,10 @@ calc_A <- function(.sutdata = NULL,
 }
 
 
-#' Calculates total requirements matrices (`L_pxp` and `L_ixp`)
+#' Calculates total requirements matrices (**L_pxp** and **L_ixp**)
 #'
-#' `L_pxp` tells how much of a product (in a row) is required to make another product (in a column).
-#' `L_ixp` tells how much of an industry's output (in a row) is required to make another product (in a column).
+#' **L_pxp** tells how much of a product (in a row) is required to make another product (in a column).
+#' **L_ixp** tells how much of an industry's output (in a row) is required to make another product (in a column).
 #'
 #' Calculating some matrices requires
 #' a matrix inversion operation.
@@ -355,14 +354,14 @@ calc_A <- function(.sutdata = NULL,
 #' @param method One of "solve", "QR", or "SVD". Default is "solve". See details.
 #' @param tol The tolerance for detecting linear dependencies during matrix inversion.
 #'            Default is `.Machine$double.eps`.
-#' @param D The `D` matrix or name of the column in `.sutmats` that contains same. Default is "D".
-#' @param A The `A` matrix or name of the column in `.sutmats` that contains same. Default is "A".
-#' @param L_ixp The name for `L_ixp` matrix on output. Default is "L_ixp".
-#'        `L_ixp` is calculated by `D * L_pxp`.
-#' @param L_pxp The name for `L_pxp` matrix on output. Default is "L_pxp".
-#'        `L_pxp` is calculated by `(I - Z*D)^-1`.
+#' @param D The **D** matrix or name of the column in `.sutmats` that contains same. Default is "D".
+#' @param A The **A** matrix or name of the column in `.sutmats` that contains same. Default is "A".
+#' @param L_pxp The name for the **L_pxp** matrix on output. Default is "L_pxp".
+#'              `L_pxp` is calculated by `(I - Z*D)^-1`.
+#' @param L_ixp The name for the **L_ixp** matrix on output. Default is "L_ixp".
+#'              **L_ixp** is calculated by `D * L_pxp`.
 #'
-#' @return A list or data frame containing `L_pxp` and `L_ixp` matrices.
+#' @return A list or data frame containing **L_pxp** and **L_ixp** matrices.
 #'
 #' @export
 calc_L <- function(.sutdata = NULL,

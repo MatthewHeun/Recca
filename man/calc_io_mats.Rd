@@ -45,94 +45,98 @@ calc_io_mats(
 \item{tol}{The tolerance for detecting linear dependencies during matrix inversion.
 Default is \code{.Machine$double.eps}.}
 
-\item{method_q_calculation}{Specifies the method which with the q vector should be calculated.
-Default is \code{sum_U_Y_rows}.
-Alternatively, an analyst can choose to use the \code{sum_R_V_cols} method.
-In the case of a balanced ECC, the method does not matter.}
+\item{method_q_calculation}{Specifies the method with which the q vector should be calculated. See details.}
 
-\item{R}{The resources (\code{R}) matrix or name of the column in \code{.sutmats} that contains same. Default is "R".}
+\item{R}{The resources (\strong{R}) matrix or name of the column in \code{.sutmats} that contains same. Default is "R".}
 
-\item{U}{The use (\code{U}) matrix or name of the column in `.sutmats`` that contains same. Default is "U".}
+\item{U}{The use (\strong{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "U".}
 
-\item{U_feed}{use matrix or name of the column in \code{.sutmats} that contains same. Default is "U_feed".}
+\item{U_feed}{The feed portion of the use matrix (\strong{U_feed}) or name of the column in \code{.sutmats} that contains same. Default is "U_feed".}
 
-\item{V}{The make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "V".}
+\item{V}{The make (\strong{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "V".}
 
-\item{Y}{The final demand (\code{Y}) matrix or name of the column in \code{.sutmats} that contains same. Default is "Y".}
+\item{Y}{The final demand (\strong{Y}) matrix or name of the column in \code{.sutmats} that contains same. Default is "Y".}
 
-\item{S_units}{The unit summation matrix (\code{S_units}) or name of the column in \code{.sutmats} that contains same. Default is "S_units".}
+\item{S_units}{The unit summation matrix (\strong{S_units}) or name of the column in \code{.sutmats} that contains same. Default is "S_units".}
 
-\item{y}{The name for the \code{y} vector on output. Default is "y".
-\code{y} is calculated by \code{rowsums(Y)}.}
+\item{y}{The name for the \strong{y} vector on output. Default is "y".
+\strong{y} is calculated by \code{rowsums(Y)}.}
 
-\item{q}{The name for the \code{q} vector on output. Default is "q".
-\code{q} is calculated by \code{rowsums(U) + y}.}
+\item{q}{The name for the \strong{q} vector on output. Default is "q".
+\strong{q} is calculated by \code{rowsums(U) + y}.}
 
-\item{f}{The name for the \code{f} vector on output. Default is "f".
-\code{f} is calculated by \code{colsums(U)}.}
+\item{f}{The name for the \strong{f} vector on output. Default is "f".
+\strong{f} is calculated by \code{colsums(U)}.}
 
-\item{g}{The name for the \code{g} vector on output. Default is "g".
-\code{g} is calculated by \code{rowsums(V)}.}
+\item{g}{The name for the \strong{g} vector on output. Default is "g".
+\strong{g} is calculated by \code{rowsums(V)}.}
 
-\item{h}{The name for the \code{h} vector on output. Default is "h".
-\code{h} is calculated by \code{colsums(transpose(R))}.}
+\item{h}{The name for the \strong{h} vector on output. Default is "h".
+\strong{h} is calculated by \code{colsums(transpose(R))}.}
 
-\item{r}{The name for the \code{r} vector on output. Default is "r".
-\code{r} is calculated by \code{rowsums(R)}.}
+\item{r}{The name for the \strong{r} vector on output. Default is "r".
+\strong{r} is calculated by \code{rowsums(R)}.}
 
-\item{W}{The name for the \code{W} matrix on output. Default is "W".
-\code{W} is calculated by \code{transpose(V) - U}.}
+\item{W}{The name for the \strong{W} matrix on output. Default is "W".
+\strong{W} is calculated by \code{transpose(V) - U}.}
 
-\item{K}{The name for the \code{K} matrix on output. Default is "K".
-\code{K} is calculated by \code{U * f_hat_inv}.}
+\item{K}{The name for the \strong{K} matrix on output. Default is "K".
+\strong{K} is calculated by \code{U * f_hat_inv}.}
 
-\item{Z}{The name fort the \code{Z} matrix on output. Default is "Z".
-\code{Z} is calculated by \code{U * g_hat_inv}.}
+\item{Z}{The name fort the \strong{Z} matrix on output. Default is "Z".
+\strong{Z} is calculated by \code{U * g_hat_inv}.}
 
-\item{C}{The name for the \code{C} matrix on output. Default is "C".
-\code{C} is calculated by \code{transpose(V) * g_hat_inv}.}
+\item{C}{The name for the \strong{C} matrix on output. Default is "C".
+\strong{C} is calculated by \code{transpose(V) * g_hat_inv}.}
 
-\item{D}{The name for the \code{D} matrix on output. Default is "D".
-\code{D} is calculated by \code{V * q_hat_inv}.}
+\item{D}{The name for the \strong{D} matrix on output. Default is "D".
+\strong{D} is calculated by \code{V * q_hat_inv}.}
 
-\item{A}{The name for the \code{A} matrix on output. Default is "A".
-\code{A} is calculated by \code{Z * D}.}
+\item{A}{The name for the \strong{A} matrix on output. Default is "A".
+\strong{A} is calculated by \code{Z * D}.}
 
-\item{L_ixp}{The name for the \code{L_ixp} matrix on output. Default is "L_ixp".
-\code{L_ixp} is calculated by \code{D * L_pxp}.}
+\item{L_ixp}{The name for the \strong{L_ixp} matrix on output. Default is "L_ixp".
+\strong{L_ixp} is calculated by \code{D * L_pxp}.}
 
-\item{L_pxp}{The name for the \code{L_pxp_feed} matrix on output. Default is "L_pxp_feed".
-\code{L_pxp} is calculated by \code{(I - Z*D)^-1}.}
+\item{L_pxp}{The name for the \strong{L_pxp_feed} matrix on output. Default is "L_pxp_feed".
+\strong{L_pxp} is calculated by \code{(I - Z*D)^-1}.}
 
-\item{O}{name for the \code{O} matrix on output. Default is "O".
-\code{O} is calculated by \code{R * h_hat_inv}.}
+\item{O}{name for the \strong{O} matrix on output. Default is "O".
+\strong{O} is calculated by \code{R * h_hat_inv}.}
 
-\item{Z_feed}{The name for the \code{Z_feed} matrix on output. Default is "Z_feed".
-\code{Z_feed} is calculated by \code{U_feed * g_hat_inv}.}
+\item{Z_feed}{The name for the \strong{Z_feed} matrix on output. Default is "Z_feed".
+\strong{Z_feed} is calculated by \code{U_feed * g_hat_inv}.}
 
-\item{K_feed}{The name for the \code{K_feed} matrix on output. Default is "K_feed".
-\code{K_feed} is calculated by \code{U_feed * f_hat_inv}.}
+\item{K_feed}{The name for the \strong{K_feed} matrix on output. Default is "K_feed".
+\strong{K_feed} is calculated by \code{U_feed * f_hat_inv}.}
 
-\item{A_feed}{The name for the \code{A_feed} matrix on output. Default is "A_feed".
-\code{A_feed} is calculated by \code{Z_feed * D_feed}.}
+\item{A_feed}{The name for the \strong{A_feed} matrix on output. Default is "A_feed".
+\strong{A_feed} is calculated by \code{Z_feed * D_feed}.}
 
-\item{L_ixp_feed}{The name for the \code{L_ixp_feed} matrix on output. Default is "L_ixp_feed".
-\code{L_ixp_feed} is calculated by \code{D_feed * L_pxp_feed}.}
+\item{L_ixp_feed}{The name for the \strong{L_ixp_feed} matrix on output. Default is "L_ixp_feed".
+\strong{L_ixp_feed} is calculated by \code{D_feed * L_pxp_feed}.}
 
-\item{L_pxp_feed}{The name for the \code{L_pxp_feed} matrix on output. Default is "L_pxp_feed".
-\code{L_pxp_feed} is calculated by \code{(I - Z_feed*D)^-1}.}
+\item{L_pxp_feed}{The name for the \strong{L_pxp_feed} matrix on output. Default is "L_pxp_feed".
+\strong{L_pxp_feed} is calculated by \code{(I - Z_feed*D)^-1}.}
 }
 \value{
 A list or data frame containing input-output matrices.
 }
 \description{
-This function bundles several others.
+This function bundles several others and calculates
+matrices that describe the structure of an energy conversion chain.
 }
 \details{
 Some calculations involve a matrix inversion step.
 The \code{method} argument specifies which method should be used for
 calculating the inverse.
 See \code{matsbyname::invert_byname()}.
+
+\code{method_q_calculation} specifies the method with which the q vector should be calculated.
+Default is "sum_U_Y_rows", corresponding to a demand-sided view of \strong{q}.
+Alternatively, an analyst can choose to use the "sum_R_V_cols" method,
+corresponding to a supply-sided view of \strong{q}.
+In the case of a balanced ECC, the method does not matter.
 }
 \examples{
 library(dplyr)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/io.R
 \name{calc_L}
 \alias{calc_L}
-\title{Calculates total requirements matrices (\code{L_pxp} and \code{L_ixp})}
+\title{Calculates total requirements matrices (\strong{L_pxp} and \strong{L_ixp})}
 \usage{
 calc_L(
   .sutdata = NULL,
@@ -24,22 +24,22 @@ Set to a list or data frame to pull matrices from its store.}
 \item{tol}{The tolerance for detecting linear dependencies during matrix inversion.
 Default is \code{.Machine$double.eps}.}
 
-\item{D}{The \code{D} matrix or name of the column in \code{.sutmats} that contains same. Default is "D".}
+\item{D}{The \strong{D} matrix or name of the column in \code{.sutmats} that contains same. Default is "D".}
 
-\item{A}{The \code{A} matrix or name of the column in \code{.sutmats} that contains same. Default is "A".}
+\item{A}{The \strong{A} matrix or name of the column in \code{.sutmats} that contains same. Default is "A".}
 
-\item{L_pxp}{The name for \code{L_pxp} matrix on output. Default is "L_pxp".
+\item{L_pxp}{The name for the \strong{L_pxp} matrix on output. Default is "L_pxp".
 \code{L_pxp} is calculated by \code{(I - Z*D)^-1}.}
 
-\item{L_ixp}{The name for \code{L_ixp} matrix on output. Default is "L_ixp".
-\code{L_ixp} is calculated by \code{D * L_pxp}.}
+\item{L_ixp}{The name for the \strong{L_ixp} matrix on output. Default is "L_ixp".
+\strong{L_ixp} is calculated by \code{D * L_pxp}.}
 }
 \value{
-A list or data frame containing \code{L_pxp} and \code{L_ixp} matrices.
+A list or data frame containing \strong{L_pxp} and \strong{L_ixp} matrices.
 }
 \description{
-\code{L_pxp} tells how much of a product (in a row) is required to make another product (in a column).
-\code{L_ixp} tells how much of an industry's output (in a row) is required to make another product (in a column).
+\strong{L_pxp} tells how much of a product (in a row) is required to make another product (in a column).
+\strong{L_ixp} tells how much of an industry's output (in a row) is required to make another product (in a column).
 }
 \details{
 Calculating some matrices requires

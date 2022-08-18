@@ -1149,10 +1149,6 @@ verify_footprint_effects_aggregate_energy_balance <- function(.sut_data = NULL,
 #' for `footprint_aggregates()` and `effects_aggregates()`.
 #'
 #' @param ecc_prime A list of reconstructed energy conversion chains.
-#' @param include_aggregates A boolean that tells whether to return the aggregate sums
-#'                           or only the new ECCs.
-#'                           When `TRUE`, aggregate sums are returned along with the new ECCs.
-#'                           When `FALSE`, only the new ECCs are returned.
 #' @param p_industries A vector of names of industries to be aggregated as "primary."
 #'                     See `footprint_aggregates()` for details.
 #' @param fd_sectors A vector of names of sectors in final demand.

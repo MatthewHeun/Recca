@@ -2,7 +2,7 @@
 % Please edit documentation in R/io.R
 \name{calc_A}
 \alias{calc_A}
-\title{Calculate \code{Z}, \code{D}, \code{C}, and \code{A} matrices}
+\title{Calculate \strong{Z}, \strong{D}, \strong{C}, and \strong{A} matrices}
 \usage{
 calc_A(
   .sutdata = NULL,
@@ -25,46 +25,46 @@ calc_A(
 \arguments{
 \item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
 
-\item{R}{resources (\code{R}) matrix or name of the column in \code{.sutmats} that contains same. Default is "\code{R}".
+\item{R}{resources (\strong{R}) matrix or name of the column in \code{.sutmats} that contains same. Default is "R".
 \code{R} is an optional argument.
-If all of \code{R} is added to \code{V}, this argument can be left unspecified.}
+If all of \strong{R} is added to \strong{V}, this argument can be left unspecified.}
 
-\item{U}{Use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "U".}
+\item{U}{Use (\strong{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "U".}
 
-\item{V}{Make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "V".}
+\item{V}{Make (\strong{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "V".}
 
-\item{q}{A \code{q} vector or name of the column in \code{.sutmats} that contains same. Default is "q".}
+\item{q}{A \strong{q} vector or name of the column in \code{.sutmats} that contains same. Default is "q".}
 
-\item{f}{An \code{f} vector or name of the column in \code{.sutmats} that contains same. Default is "r".}
+\item{f}{An \strong{f} vector or name of the column in \code{.sutmats} that contains same. Default is "r".}
 
-\item{g}{A \code{g} vector or name of the column in \code{.sutmats} that contains same. Default is "g".}
+\item{g}{A \strong{g} vector or name of the column in \code{.sutmats} that contains same. Default is "g".}
 
-\item{r}{An \code{r} vector or name of the column in \code{.sutmats} that contains same. Default is "r".}
+\item{r}{An \strong{r} vector or name of the column in \code{.sutmats} that contains same. Default is "r".}
 
-\item{h}{An \code{h} vector or name of the column in \code{.sutmats} that contains same. Default is "h".}
+\item{h}{An \strong{h} vector or name of the column in \code{.sutmats} that contains same. Default is "h".}
 
-\item{Z}{The name for \code{Z} matrix on output. Default is "Z".
-\code{Z} is calculated by \code{U * g_hat_inv}.}
+\item{Z}{The name for the \strong{Z} matrix on output. Default is "Z".
+\strong{Z} is calculated by \code{U * g_hat_inv}.}
 
-\item{K}{The name for \code{K} matrix on output. Default is "K".
-\code{K} is calculated by \code{U * f_hat_inv}.}
+\item{K}{The name for the \strong{K} matrix on output. Default is "K".
+\strong{K} is calculated by \code{U * f_hat_inv}.}
 
-\item{C}{The name for \code{C} matrix on output. Default is "C".
-\code{C} is calculated by \code{transpose(V) * g_hat_inv}.}
+\item{C}{The name for the \strong{C} matrix on output. Default is "C".
+\strong{C} is calculated by \code{transpose(V) * g_hat_inv}.}
 
-\item{D}{The name for \code{D} matrix on output. Default is "D".
-\code{D} is calculated by \code{V * q_hat_inv}.}
+\item{D}{The name for the \strong{D} matrix on output. Default is "D".
+\strong{D} is calculated by \code{V * q_hat_inv}.}
 
-\item{A}{The name for \code{A} matrix on output. Default is "A".
-\code{A} is calculated by \code{Z * D}.}
+\item{A}{The name for the \strong{A} matrix on output. Default is "A".
+\strong{A} is calculated by Z * D`.}
 
-\item{O}{The name for \code{O} matrix on output. Default is "O".
-\code{O} is calculated by \code{r_hat_inv * R}.}
+\item{O}{The name for the \strong{O} matrix on output. Default is "O".
+\strong{O} is calculated by \code{r_hat_inv * R}.}
 }
 \value{
-A list or data frame containing \code{Z},
-\code{K}, \code{C}, \code{D}, and \code{A} matrices.
+A list or data frame containing \strong{Z},
+\strong{K}, \strong{C}, \strong{D}, and \strong{A} matrices.
 }
 \description{
-Calculate \code{Z}, \code{D}, \code{C}, and \code{A} matrices
+Calculate \strong{Z}, \strong{D}, \strong{C}, and \strong{A} matrices
 }

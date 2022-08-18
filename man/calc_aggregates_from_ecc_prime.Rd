@@ -44,11 +44,6 @@ See \code{Recca::aggregate_cols}.}
 
 \item{R_prime_colname, U_prime_colname, U_feed_prime_colname, U_eiou_prime_colname, r_eiou_prime_colname, V_prime_colname, Y_prime_colname}{Names of output matrices in the return value.
 Default values are constructed from}
-
-\item{include_aggregates}{A boolean that tells whether to return the aggregate sums
-or only the new ECCs.
-When \code{TRUE}, aggregate sums are returned along with the new ECCs.
-When \code{FALSE}, only the new ECCs are returned.}
 }
 \value{
 A data frame containing reconstructed (prime) matrices and
