@@ -22,7 +22,7 @@ chop_Y(
   V = Recca::psut_cols$V,
   Y = Recca::psut_cols$Y,
   S_units = Recca::psut_cols$S_units,
-  aggregates_df = Recca::aggregate_cols$aggregates_df,
+  chop_df = Recca::aggregate_cols$chop_df,
   product_sector = Recca::aggregate_cols$product_sector,
   aggregate_primary = Recca::aggregate_cols$aggregate_primary,
   net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
@@ -60,7 +60,7 @@ chop_R(
   V = Recca::psut_cols$V,
   Y = Recca::psut_cols$Y,
   S_units = Recca::psut_cols$S_units,
-  aggregates_df = Recca::aggregate_cols$aggregates_df,
+  chop_df = Recca::aggregate_cols$chop_df,
   product_sector = Recca::aggregate_cols$product_sector,
   aggregate_primary = Recca::aggregate_cols$aggregate_primary,
   net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
@@ -136,7 +136,7 @@ Default is \code{1e-4}.}
 \item{R, U, U_feed, V, Y, S_units}{Matrices that describe the energy conversion chain (ECC).
 See \code{Recca::psut_cols} for default values.}
 
-\item{aggregates_df, aggregate_primary, net_aggregate_demand, gross_aggregate_demand}{Names of output columns.
+\item{chop_df, aggregate_primary, net_aggregate_demand, gross_aggregate_demand}{Names of output columns.
 See \code{Recca::aggregate_cols}.}
 
 \item{product_sector}{The name of the output column that contains the product, industry, or sector

@@ -51,7 +51,7 @@
 #' \item{region}{The name of a column in a wide-by-matrices data frame containing regions.}
 #' \item{aggregated_suffix}{The suffix for column names containing aggregated matrices.}
 #' \item{product_sector}{The name of a column containing names of products, industries, or sectors. Default is "Product.Industry.Sector".}
-#' \item{aggregates_df}{The name of a column containing a nested data frame of aggregates. Default is "Aggregates".}
+#' \item{chop_df}{The name of a column containing a nested data frame of chopped energy conversion chains. Default is "Chopped.ECCs".}
 #' }
 #'
 #' @examples

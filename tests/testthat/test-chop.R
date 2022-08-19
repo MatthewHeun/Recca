@@ -7,7 +7,7 @@ test_that("chop_Y() works as expected", {
   # Calculate aggregates
   chopped_Y <- psut_mats %>%
     Recca::chop_Y(p_industries = p_industries, fd_sectors = fd_sectors)
-  expect_true(Recca::aggregate_cols$aggregates_df %in% names(chopped_Y))
+  expect_true(Recca::aggregate_cols$chop_df %in% names(chopped_Y))
   chopped_Y_unnested <- psut_mats %>%
     Recca::chop_Y(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
   expect_true(Recca::aggregate_cols$product_sector %in% names(chopped_Y_unnested))
@@ -89,7 +89,7 @@ test_that("chop_R() works as expected", {
   # Calculate aggregates
   chop_R_aggs <- psut_mats %>%
     Recca::chop_R(p_industries = p_industries, fd_sectors = fd_sectors)
-  expect_true(Recca::aggregate_cols$aggregates_df %in% names(chop_R_aggs))
+  expect_true(Recca::aggregate_cols$chop_df %in% names(chop_R_aggs))
   chop_R_aggs_unnested <- psut_mats %>%
     Recca::chop_R(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
   expect_true(Recca::aggregate_cols$product_sector %in% names(chop_R_aggs_unnested))

@@ -114,7 +114,7 @@
 #' @param product_sector The name of the output column that contains the product, industry, or sector
 #'                       for which footprint aggregates are given.
 #'                       Default is `Recca::aggregate_cols$product_sector`.
-#' @param aggregates_df,aggregate_primary,net_aggregate_demand,gross_aggregate_demand Names of output columns.
+#' @param chop_df,aggregate_primary,net_aggregate_demand,gross_aggregate_demand Names of output columns.
 #'                                                                                    See `Recca::aggregate_cols`.
 #' @param .prime A string that denotes new matrices.
 #'               This string is used as a suffix that is appended to
@@ -170,7 +170,7 @@ chop_Y <- function(.sut_data = NULL,
                    Y = Recca::psut_cols$Y,
                    S_units = Recca::psut_cols$S_units,
                    # Output names
-                   aggregates_df = Recca::aggregate_cols$aggregates_df,
+                   chop_df = Recca::aggregate_cols$chop_df,
                    product_sector = Recca::aggregate_cols$product_sector,
                    aggregate_primary = Recca::aggregate_cols$aggregate_primary,
                    net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
@@ -285,7 +285,7 @@ chop_Y <- function(.sut_data = NULL,
                                    aggregate_primary = aggregate_primary,
                                    gross_aggregate_demand = gross_aggregate_demand,
                                    net_aggregate_demand = net_aggregate_demand,
-                                   aggregates_df = aggregates_df,
+                                   chop_df = chop_df,
                                    product_sector = product_sector,
                                    R_prime_colname = R_prime_colname,
                                    U_prime_colname = U_prime_colname,
@@ -308,7 +308,7 @@ chop_Y <- function(.sut_data = NULL,
   # If .sut_data is a data frame, unnest if desired.
   if (is.data.frame(.sut_data) & unnest) {
     out <- out %>%
-      tidyr::unnest(cols = aggregates_df)
+      tidyr::unnest(cols = chop_df)
   }
   return(out)
 }
@@ -333,7 +333,7 @@ chop_R <- function(.sut_data = NULL,
                    Y = Recca::psut_cols$Y,
                    S_units = Recca::psut_cols$S_units,
                    # Output names
-                   aggregates_df = Recca::aggregate_cols$aggregates_df,
+                   chop_df = Recca::aggregate_cols$chop_df,
                    product_sector = Recca::aggregate_cols$product_sector,
                    aggregate_primary = Recca::aggregate_cols$aggregate_primary,
                    net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
@@ -408,7 +408,7 @@ chop_R <- function(.sut_data = NULL,
                                    aggregate_primary = aggregate_primary,
                                    gross_aggregate_demand = gross_aggregate_demand,
                                    net_aggregate_demand = net_aggregate_demand,
-                                   aggregates_df = aggregates_df,
+                                   chop_df = chop_df,
                                    product_sector = product_sector,
                                    R_prime_colname = R_prime_colname,
                                    U_prime_colname = U_prime_colname,
@@ -431,7 +431,7 @@ chop_R <- function(.sut_data = NULL,
   # If .sut_data is a data frame, unnest if desired.
   if (is.data.frame(.sut_data) & unnest) {
     out <- out %>%
-      tidyr::unnest(cols = aggregates_df)
+      tidyr::unnest(cols = chop_df)
   }
   return(out)
 }
@@ -511,7 +511,7 @@ verify_footprint_effects_aggregate_energy_balance <- function(.sut_data = NULL,
 #'                     See `footprint_aggregates()` for details.
 #' @param product_sector The name of the output column that contains the product, industry, or sector
 #'                       for which footprint aggregates are given.
-#' @param aggregates_df,aggregate_primary,net_aggregate_demand,gross_aggregate_demand Names of output columns.
+#' @param chop_df,aggregate_primary,net_aggregate_demand,gross_aggregate_demand Names of output columns.
 #'                                                                                    See `Recca::aggregate_cols`.
 #' @param R_prime_colname,U_prime_colname,U_feed_prime_colname,U_eiou_prime_colname,r_eiou_prime_colname,V_prime_colname,Y_prime_colname Names of output matrices in the return value.
 #'                                                                                                                                       Default values are constructed from
@@ -523,7 +523,7 @@ calc_aggregates_from_ecc_prime <- function(ecc_prime,
                                            fd_sectors,
                                            pattern_type,
                                            product_sector,
-                                           aggregates_df,
+                                           chop_df,
                                            aggregate_primary,
                                            gross_aggregate_demand,
                                            net_aggregate_demand,
@@ -587,22 +587,22 @@ calc_aggregates_from_ecc_prime <- function(ecc_prime,
       purrr::transpose()
 
     # Create data frames that can be later unnested if needed.
-    p_aggregates_df <- tibble::tibble(
+    p_chop_df <- tibble::tibble(
       "{product_sector}" := p_aggregates[[aggregate_primary]] %>% names(),
       "{aggregate_primary}" := p_aggregates[[aggregate_primary]] %>% unname() %>% unlist()
     )
-    net_fd_aggregates_df <- tibble::tibble(
+    net_fd_chop_df <- tibble::tibble(
       "{product_sector}" := fd_aggregates[[net_aggregate_demand]] %>% names(),
       "{net_aggregate_demand}" := fd_aggregates[[net_aggregate_demand]] %>% unname() %>% unlist()
     )
-    gross_fd_aggregates_df <- tibble::tibble(
+    gross_fd_chop_df <- tibble::tibble(
       "{product_sector}" := fd_aggregates[[gross_aggregate_demand]] %>% names(),
       "{gross_aggregate_demand}" := fd_aggregates[[gross_aggregate_demand]] %>% unname() %>% unlist()
     )
     # Join the data frames by the product_sector column.
-    primary_net_gross <- p_aggregates_df %>%
-      dplyr::full_join(gross_fd_aggregates_df, by = product_sector) %>%
-      dplyr::full_join(net_fd_aggregates_df, by = product_sector)
+    primary_net_gross <- p_chop_df %>%
+      dplyr::full_join(gross_fd_chop_df, by = product_sector) %>%
+      dplyr::full_join(net_fd_chop_df, by = product_sector)
   }
 
   if (calc_pfd_aggs) {
@@ -614,5 +614,5 @@ calc_aggregates_from_ecc_prime <- function(ecc_prime,
   # Make a list and return it so that the data frame is nested
   # inside the column of the data frame.
   list(out) %>%
-    magrittr::set_names(aggregates_df)
+    magrittr::set_names(chop_df)
 }

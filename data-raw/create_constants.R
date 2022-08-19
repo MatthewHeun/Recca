@@ -48,7 +48,7 @@ aggregate_cols <- list(aggregate_primary = "EX.p",
                        region = "Region",
                        aggregated_suffix = "_aggregated",
                        product_sector = "Product.Industry.Sector",
-                       aggregates_df = "Aggregates")
+                       chop_df = "Chopped.ECCs")
 usethis::use_data(aggregate_cols, overwrite = TRUE)
 
 

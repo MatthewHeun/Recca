@@ -11,7 +11,7 @@ calc_aggregates_from_ecc_prime(
   fd_sectors,
   pattern_type,
   product_sector,
-  aggregates_df,
+  chop_df,
   aggregate_primary,
   gross_aggregate_demand,
   net_aggregate_demand,
@@ -43,7 +43,7 @@ See \code{footprint_aggregates()} for details.}
 \item{product_sector}{The name of the output column that contains the product, industry, or sector
 for which footprint aggregates are given.}
 
-\item{aggregates_df, aggregate_primary, net_aggregate_demand, gross_aggregate_demand}{Names of output columns.
+\item{chop_df, aggregate_primary, net_aggregate_demand, gross_aggregate_demand}{Names of output columns.
 See \code{Recca::aggregate_cols}.}
 
 \item{R_prime_colname, U_prime_colname, U_feed_prime_colname, U_eiou_prime_colname, r_eiou_prime_colname, V_prime_colname, Y_prime_colname}{Names of output matrices in the return value.
