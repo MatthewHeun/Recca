@@ -42,11 +42,17 @@ This vignette describes those functions and demonstrates their use.
 
 ## `primary_aggregates()`
 
-`primary_aggregates()` creates a column of primary energy sums coming from the industries specified in the `p_industries` argument.
-In the example below, primary aggregates are calculated for the four rows of the `UKEnergy2000mats` data frame.
+`primary_aggregates()` creates a column of primary energy sums coming from the industries 
+specified in the `p_industries` argument.
+These industries are often found in the **R**, **V**, and **Y** matrices 
+of the PSUT framework.
+Typical `p_industries` are Resources, Imports, and Exports.
+In the example below, 
+primary aggregates are calculated 
+for the four rows of the `UKEnergy2000mats` data frame.
 
 In the first example,
-only 1 aggregate column is created, because there is no
+only 1 aggregate column is created ("EX.p"), because there is no
 difference between net and gross aggregation for primary energy.
 Net and gross primary aggregates are identical.
 
@@ -54,21 +60,23 @@ Net and gross primary aggregates are identical.
 library(matsbyname)
 p_industries <- c("Resources - Crude", "Resources - NG")
 # Calculate primary total aggregates
-eccs <- UKEnergy2000mats %>%
+ECCs <- UKEnergy2000mats %>%
   tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix")
-eccs
-res <- eccs %>%
+ECCs
+res <- ECCs %>%
   Recca::primary_aggregates(p_industries = p_industries, by = "Total")
 tibble::as_tibble(res)
 res[[Recca::aggregate_cols$aggregate_primary]]
 ```
 
 In the next example,
-both net and gross aggregation columns are created,
-for compatibility with the `finaldemand_aggregates()` function.
+both net and gross aggregation columns are created
+("EX.p_net" and "EX.p_gross"),
+for compatibility with the `finaldemand_aggregates()` function
+discussed below.
 
 ```{r}
-res2 <- eccs %>%
+res2 <- ECCs %>%
   Recca::primary_aggregates(p_industries = p_industries,
                             add_net_gross_cols = TRUE,
                             by = "Total")
@@ -80,6 +88,17 @@ res2[[Recca::aggregate_cols$gross_aggregate_primary]]
 
 ## `finaldemand_aggregates()`
 
+`finaldemand_aggregates()` is similar to `primary_aggregates()`, 
+except that it aggregates energy at the final demand stage in the **Y** matrix.
+
+```{r}
+fd_sectors <- c("Residential", "Transport")
+res <- ECCs %>%
+  Recca::finaldemand_aggregates(fd_sectors = fd_sectors, by = "Sector")
+tibble::as_tibble(res)
+res[[Recca::aggregate_cols$net_aggregate_demand]]
+res[[Recca::aggregate_cols$gross_aggregate_demand]]
+```
 
 
 ## `region_aggregates()`
