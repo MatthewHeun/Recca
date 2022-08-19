@@ -1119,7 +1119,8 @@ verify_footprint_effects_aggregate_energy_balance <- function(.sut_data = NULL,
                                                               R_chop_list, U_chop_list, U_feed_chop_list, V_chop_list, Y_chop_list) {
 
   verify_func <- function(chop_list, mat) {
-    mat_sum <- matsbyname::sum_byname(chop_list, .summarise = TRUE)[[1]]
+    mat_sum <- matsbyname::sum_byname(chop_list, .summarise = TRUE)[[1]] %>%
+      matsbyname::clean_byname()
     err <- matsbyname::difference_byname(mat_sum, mat)
     OK <- matsbyname::iszero_byname(err, tol = tol)
     if (!OK) {
