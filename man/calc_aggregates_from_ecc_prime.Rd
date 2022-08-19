@@ -6,6 +6,7 @@
 \usage{
 calc_aggregates_from_ecc_prime(
   ecc_prime,
+  calc_pfd_aggs,
   p_industries,
   fd_sectors,
   pattern_type,
@@ -25,6 +26,9 @@ calc_aggregates_from_ecc_prime(
 }
 \arguments{
 \item{ecc_prime}{A list of reconstructed energy conversion chains.}
+
+\item{calc_pfd_aggs}{Tells whether to calculate and add primary and final demand aggregates
+to the nested data frame.}
 
 \item{p_industries}{A vector of names of industries to be aggregated as "primary."
 See \code{footprint_aggregates()} for details.}
