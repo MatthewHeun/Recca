@@ -9,8 +9,8 @@
 chop_Y(
   .sut_data = NULL,
   calc_pfd_aggs = TRUE,
-  p_industries,
-  fd_sectors,
+  p_industries = NULL,
+  fd_sectors = NULL,
   pattern_type = c("exact", "leading", "trailing", "anywhere"),
   unnest = FALSE,
   method = c("solve", "QR", "SVD"),
@@ -47,8 +47,8 @@ chop_Y(
 chop_R(
   .sut_data = NULL,
   calc_pfd_aggs = TRUE,
-  p_industries,
-  fd_sectors,
+  p_industries = NULL,
+  fd_sectors = NULL,
   pattern_type = c("exact", "leading", "trailing", "anywhere"),
   unnest = FALSE,
   method = c("solve", "QR", "SVD"),
@@ -101,13 +101,15 @@ the total primary energy aggregate,
 where \verb{*_p} is the primary part of those matrices.
 The function \code{find_p_industry_names()} might be helpful to find
 primary industry names if they can be identified by prefixes.
-This argument is passed to \code{primary_aggregates()}.}
+This argument is passed to \code{primary_aggregates()}.
+Default is \code{NULL}.}
 
 \item{fd_sectors}{A vector of names of sectors in final demand
 and used if aggregations are requested.
 Names should include columns in the \strong{Y} and \strong{U_EIOU} matrices
 to cover both net (in \strong{Y}) and gross (in \strong{Y} and \strong{U_EIOU}) final demand.
-This argument is passed to \code{finaldemand_aggregates()}.}
+This argument is passed to \code{finaldemand_aggregates()}.
+Default is \code{NULL}.}
 
 \item{pattern_type}{One of "exact", "leading", "trailing", or "anywhere" which specifies
 how matches are made for \code{p_industries}.

@@ -85,11 +85,13 @@
 #'                     The function `find_p_industry_names()` might be helpful to find
 #'                     primary industry names if they can be identified by prefixes.
 #'                     This argument is passed to `primary_aggregates()`.
+#'                     Default is `NULL`.
 #' @param fd_sectors A vector of names of sectors in final demand
 #'                   and used if aggregations are requested.
 #'                   Names should include columns in the **Y** and **U_EIOU** matrices
 #'                   to cover both net (in **Y**) and gross (in **Y** and **U_EIOU**) final demand.
 #'                   This argument is passed to `finaldemand_aggregates()`.
+#'                   Default is `NULL`.
 #' @param pattern_type One of "exact", "leading", "trailing", or "anywhere" which specifies
 #'                     how matches are made for `p_industries`.
 #'                     If "exact", exact matches specify the sectors to be aggregated.
@@ -153,8 +155,8 @@ NULL
 #' @rdname chop-doc
 chop_Y <- function(.sut_data = NULL,
                    calc_pfd_aggs = TRUE,
-                   p_industries,
-                   fd_sectors,
+                   p_industries = NULL,
+                   fd_sectors = NULL,
                    pattern_type = c("exact", "leading", "trailing", "anywhere"),
                    unnest = FALSE,
                    method = c("solve", "QR", "SVD"),
@@ -316,8 +318,8 @@ chop_Y <- function(.sut_data = NULL,
 #' @rdname chop-doc
 chop_R <- function(.sut_data = NULL,
                    calc_pfd_aggs = TRUE,
-                   p_industries,
-                   fd_sectors,
+                   p_industries = NULL,
+                   fd_sectors = NULL,
                    pattern_type = c("exact", "leading", "trailing", "anywhere"),
                    unnest = FALSE,
                    method = c("solve", "QR", "SVD"),
