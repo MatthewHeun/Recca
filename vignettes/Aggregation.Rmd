@@ -39,3 +39,74 @@ The types of aggregation are shown in the following table.
 
 This vignette describes those functions and demonstrates their use.
 
+
+## `primary_aggregates()`
+
+`primary_aggregates()` creates a column of primary energy sums coming from the industries specified in the `p_industries` argument.
+In the example below, primary aggregates are calculated for the four rows of the `UKEnergy2000mats` data frame.
+
+In the first example,
+only 1 aggregate column is created, because there is no
+difference between net and gross aggregation for primary energy.
+Net and gross primary aggregates are identical.
+
+```{r}
+library(matsbyname)
+p_industries <- c("Resources - Crude", "Resources - NG")
+# Calculate primary total aggregates
+eccs <- UKEnergy2000mats %>%
+  tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix")
+eccs
+res <- eccs %>%
+  Recca::primary_aggregates(p_industries = p_industries, by = "Total")
+tibble::as_tibble(res)
+res[[Recca::aggregate_cols$aggregate_primary]]
+```
+
+In the next example,
+both net and gross aggregation columns are created,
+for compatibility with the `finaldemand_aggregates()` function.
+
+```{r}
+res2 <- eccs %>%
+  Recca::primary_aggregates(p_industries = p_industries,
+                            add_net_gross_cols = TRUE,
+                            by = "Total")
+tibble::as_tibble(res2)
+res2[[Recca::aggregate_cols$net_aggregate_primary]]
+res2[[Recca::aggregate_cols$gross_aggregate_primary]]
+```
+
+
+## `finaldemand_aggregates()`
+
+
+
+## `region_aggregates()`
+
+
+
+## `despecified_aggregates()`
+
+
+
+## `grouped_aggregates()`
+
+
+
+## `footprint_aggregates()`
+
+
+
+## `effects_aggregages()`
+
+
+
+
+
+## Conclusion
+
+
+
+
+
