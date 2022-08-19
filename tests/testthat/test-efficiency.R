@@ -98,9 +98,9 @@ test_that("calc_eta_pfd() works with the output from footprint_aggregates()", {
     tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
   p_industries <- c("Resources - Crude", "Resources - NG")
   fd_sectors <- c("Residential", "Transport", "Oil fields")
-  footprint_aggs <- psut_mats %>%
-    Recca::footprint_aggregates(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
-  etas <- footprint_aggs %>%
+  chop_Y_aggs <- psut_mats %>%
+    Recca::chop_Y(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
+  etas <- chop_Y_aggs %>%
     calc_eta_pfd()
   # Make sure expected column names are present
   expect_true(Recca::efficiency_cols$eta_pfd_gross %in% names(etas))
@@ -119,7 +119,7 @@ test_that("calc_eta_pfd() works with the output from footprint_aggregates()", {
                list("eta_E_pf_net", "eta_E_ps_net", "eta_E_pu_net", "eta_X_ps_net"))
 
   # Now try when abbreviations are not used.
-  etas_no_abbrev <- footprint_aggs %>%
+  etas_no_abbrev <- chop_Y_aggs %>%
     calc_eta_pfd()
   expect_equal(etas_no_abbrev[[paste0(Recca::efficiency_cols$eta_pfd_gross,
                                       Recca::efficiency_cols$efficiency_name_suffix)]] %>% unique(),
@@ -135,9 +135,9 @@ test_that("pivot_clean_complete_eta_pfd() works as expected", {
     tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
   p_industries <- c("Resources - Crude", "Resources - NG")
   fd_sectors <- c("Residential", "Transport", "Oil fields")
-  footprint_aggs <- psut_mats %>%
-    Recca::footprint_aggregates(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
-  etas <- footprint_aggs %>%
+  chop_Y_aggs <- psut_mats %>%
+    Recca::chop_Y(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
+  etas <- chop_Y_aggs %>%
     calc_eta_pfd()
   cleaned <- etas %>%
     pivot_clean_complete_eta_pfd()
@@ -155,9 +155,9 @@ test_that("pivot_clean_complete_eta_pfd() works with wellbeing as last stage", {
   psut_mats[[Recca::psut_cols$last_stage]][[4]] <- "Well-being"
   p_industries <- c("Resources - Crude", "Resources - NG")
   fd_sectors <- c("Residential", "Transport", "Oil fields")
-  footprint_aggs <- psut_mats %>%
-    Recca::footprint_aggregates(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
-  etas <- footprint_aggs %>%
+  chop_Y_aggs <- psut_mats %>%
+    Recca::chop_Y(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
+  etas <- chop_Y_aggs %>%
     calc_eta_pfd()
   cleaned <- etas %>%
     pivot_clean_complete_eta_pfd()

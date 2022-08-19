@@ -235,9 +235,9 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 #'   tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
 #' p_industries <- c("Resources - Crude", "Resources - NG")
 #' fd_sectors <- c("Residential", "Transport", "Oil fields")
-#' footprint_aggs <- psut_mats %>%
-#'   Recca::footprint_aggregates(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
-#' etas <- footprint_aggs %>%
+#' chop_Y_aggs <- psut_mats %>%
+#'   Recca::chop_Y(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
+#' etas <- chop_Y_aggs %>%
 #'   calc_eta_pfd()
 #' etas %>%
 #'   pivot_clean_complete_eta_pfd()

@@ -4,6 +4,10 @@ output: html_document
 ---
 
 
+* Aggregations are now optional (on by default)
+  in `chop_R()` and `chop_Y()`.
+* Renamed `effects_aggregates()` and `footprint_aggregates()`
+  to `chop_R()` and `chop_Y()`.
 * New function `effects_aggregates()`
   swims downstream from the **R** matrix to 
   final demand for each column (energy carrier)
