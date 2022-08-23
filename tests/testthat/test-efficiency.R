@@ -93,7 +93,7 @@ test_that("calc_eta_pfu() works correctly", {
 })
 
 
-test_that("calc_eta_pfd() works with the output from footprint_aggregates()", {
+test_that("calc_eta_pfd() works with the output from chop_Y()", {
   psut_mats <- UKEnergy2000mats %>%
     tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
   p_industries <- c("Resources - Crude", "Resources - NG")
@@ -102,31 +102,9 @@ test_that("calc_eta_pfd() works with the output from footprint_aggregates()", {
     Recca::chop_Y(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
   etas <- chop_Y_aggs %>%
     calc_eta_pfd()
-  # Make sure expected column names are present
+  # Make sure expected efficiency columns are present
   expect_true(Recca::efficiency_cols$eta_pfd_gross %in% names(etas))
   expect_true(Recca::efficiency_cols$eta_pfd_net %in% names(etas))
-  expect_true(paste0(Recca::efficiency_cols$eta_pfd_gross,
-                     Recca::efficiency_cols$efficiency_name_suffix) %in% names(etas))
-  expect_true(paste0(Recca::efficiency_cols$eta_pfd_net,
-                     Recca::efficiency_cols$efficiency_name_suffix) %in% names(etas))
-
-  # Check content of name columns.
-  expect_equal(etas[[paste0(Recca::efficiency_cols$eta_pfd_gross,
-                            Recca::efficiency_cols$efficiency_name_suffix)]] %>% unique(),
-               list("eta_E_pf_gross", "eta_E_ps_gross", "eta_E_pu_gross", "eta_X_ps_gross"))
-  expect_equal(etas[[paste0(Recca::efficiency_cols$eta_pfd_net,
-                            Recca::efficiency_cols$efficiency_name_suffix)]] %>% unique(),
-               list("eta_E_pf_net", "eta_E_ps_net", "eta_E_pu_net", "eta_X_ps_net"))
-
-  # Now try when abbreviations are not used.
-  etas_no_abbrev <- chop_Y_aggs %>%
-    calc_eta_pfd()
-  expect_equal(etas_no_abbrev[[paste0(Recca::efficiency_cols$eta_pfd_gross,
-                                      Recca::efficiency_cols$efficiency_name_suffix)]] %>% unique(),
-               list("eta_E_pf_gross", "eta_E_ps_gross", "eta_E_pu_gross", "eta_X_ps_gross"))
-  expect_equal(etas_no_abbrev[[paste0(Recca::efficiency_cols$eta_pfd_net,
-                                      Recca::efficiency_cols$efficiency_name_suffix)]] %>% unique(),
-               list("eta_E_pf_net", "eta_E_ps_net", "eta_E_pu_net", "eta_X_ps_net"))
 })
 
 

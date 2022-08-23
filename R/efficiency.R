@@ -155,11 +155,13 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
   eta_pfd_func <- function(primary_val, gross_fd_val, net_fd_val, energy_type_val, last_stage_val) {
     eta_pfd_gross_val <- gross_fd_val / primary_val
     eta_pfd_net_val <- net_fd_val / primary_val
-    eta_pfd_gross_name <- paste0("eta_", energy_type_val, "_p", substr(last_stage_val, 1, 1) %>% tolower(), "_gross")
-    eta_pfd_net_name <- gsub(pattern = "_gross", replacement = "_net", x = eta_pfd_gross_name)
+    # eta_pfd_gross_name <- paste0("eta_", energy_type_val, "_p", substr(last_stage_val, 1, 1) %>% tolower(), "_gross")
+    # eta_pfd_net_name <- gsub(pattern = "_gross", replacement = "_net", x = eta_pfd_gross_name)
 
-    c(eta_pfd_gross_val, eta_pfd_net_val, eta_pfd_gross_name, eta_pfd_net_name) %>%
-      magrittr::set_names(c(eta_pfd_gross, eta_pfd_net, eta_pfd_gross_colname, eta_pfd_net_colname))
+    # c(eta_pfd_gross_val, eta_pfd_net_val, eta_pfd_gross_name, eta_pfd_net_name) %>%
+    #   magrittr::set_names(c(eta_pfd_gross, eta_pfd_net, eta_pfd_gross_colname, eta_pfd_net_colname))
+    c(eta_pfd_gross_val, eta_pfd_net_val) %>%
+      magrittr::set_names(c(eta_pfd_gross, eta_pfd_net))
   }
   out <- matsindf::matsindf_apply(.aggregate_df,
                                   FUN = eta_pfd_func,
