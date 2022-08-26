@@ -48,6 +48,7 @@
 #' \item{gross_aggregate_primary}{The name of a column in a wide-by-matrices data frame containing aggregates of gross primary energy.}
 #' \item{net_aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of net final demand energy (excluding energy industry own use), regardless of whether the last stage is final energy or useful energy.}
 #' \item{gross_aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of gross final demand energy (including energy industry own use), regardless of whether the last stage is final energy or useful energy.}
+#' \item{aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of final demand energy (including energy industry own use), regardless of whether the last stage is final energy or useful energy.}
 #' \item{region}{The name of a column in a wide-by-matrices data frame containing regions.}
 #' \item{aggregated_suffix}{The suffix for column names containing aggregated matrices.}
 #' \item{product_sector}{The name of a column containing names of products, industries, or sectors. Default is "Product.Industry.Sector".}
@@ -71,6 +72,7 @@
 #' \item{eta_i}{The name of a column in a wide-by-matrices data frame containing industry efficiencies.}
 #' \item{eta_pfd_gross}{The name of a column in a wide-by-matrices data frame containing  efficiencies between the primary and gross final demand stages.}
 #' \item{eta_pfd_net}{The name of a column in a wide-by-matrices data frame containing efficiencies between the primary and net final demand stages.}
+#' \item{eta_pfd}{The name of a column in a wide-by-matrices data frame containing efficiencies between the primary and final demand stages, regardless of net or gross.}
 #' \item{eta_pf}{The string name for primary-to-final efficiency.}
 #' \item{eta_fu}{The string name for final-to-useful efficiency.}
 #' \item{eta_pu}{The string name for primary-to-useful efficiency.}

@@ -108,40 +108,4 @@ test_that("calc_eta_pfd() works with the output from chop_Y()", {
 })
 
 
-test_that("pivot_clean_complete_eta_pfd() works as expected", {
-  psut_mats <- UKEnergy2000mats %>%
-    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
-  p_industries <- c("Resources - Crude", "Resources - NG")
-  fd_sectors <- c("Residential", "Transport", "Oil fields")
-  chop_Y_aggs <- psut_mats %>%
-    Recca::chop_Y(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
-  etas <- chop_Y_aggs %>%
-    calc_eta_pfd()
-  cleaned <- etas %>%
-    pivot_clean_complete_eta_pfd()
-  expect_true(Recca::efficiency_cols$eta_pf %in% colnames(cleaned))
-  expect_true(Recca::efficiency_cols$eta_fu %in% colnames(cleaned))
-  expect_true(Recca::efficiency_cols$eta_us %in% colnames(cleaned))
-  expect_true(Recca::efficiency_cols$eta_ps %in% colnames(cleaned))
-})
-
-
-test_that("pivot_clean_complete_eta_pfd() works with wellbeing as last stage", {
-  psut_mats <- UKEnergy2000mats %>%
-    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
-  # Say the bottom row has last stage wellbeing.
-  psut_mats[[Recca::psut_cols$last_stage]][[4]] <- "Well-being"
-  p_industries <- c("Resources - Crude", "Resources - NG")
-  fd_sectors <- c("Residential", "Transport", "Oil fields")
-  chop_Y_aggs <- psut_mats %>%
-    Recca::chop_Y(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
-  etas <- chop_Y_aggs %>%
-    calc_eta_pfd()
-  cleaned <- etas %>%
-    pivot_clean_complete_eta_pfd()
-  expect_true(Recca::efficiency_cols$eta_sw %in% colnames(cleaned))
-  expect_true(Recca::efficiency_cols$eta_pw %in% colnames(cleaned))
-})
-
-
 
