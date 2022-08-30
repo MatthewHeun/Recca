@@ -120,7 +120,7 @@
 #'               This string is used as a suffix that is appended to
 #'               many variable names.
 #'               Default is "_prime".
-#' @param R_colname,U_colname,U_feed_colname,U_eiou_colname,r_eiou_colname,V_colname,Y_colname Names of input matrices in `.sut_data`. See `Recca::psut_cols` for default values.
+#' @param R_colname,U_colname,U_feed_colname,U_eiou_colname,r_eiou_colname,V_colname,Y_colname,S_units_colname Names of input matrices in `.sut_data`. See `Recca::psut_cols` for default values.
 #' @param R_prime_colname,U_prime_colname,U_feed_prime_colname,U_eiou_prime_colname,r_eiou_prime_colname,V_prime_colname,Y_prime_colname Names of output matrices in the return value.
 #'                                        Default values are constructed from
 #'                                        `Recca::psut_cols` values suffixed with
@@ -184,6 +184,7 @@ chop_Y <- function(.sut_data = NULL,
                    r_eiou_colname = Recca::psut_cols$r_eiou,
                    V_colname = Recca::psut_cols$V,
                    Y_colname = Recca::psut_cols$Y,
+                   S_units_colname = Recca::psut_cols$S_units,
                    R_prime_colname = paste0(R_colname, .prime),
                    U_prime_colname = paste0(U_colname, .prime),
                    U_feed_prime_colname = paste0(U_feed_colname, .prime),
@@ -195,12 +196,34 @@ chop_Y <- function(.sut_data = NULL,
   pattern_type <- match.arg(pattern_type)
   method <- match.arg(method)
 
-  footprint_func <- function(R_mat, U_mat, U_feed_mat, V_mat, Y_mat, S_units_mat) {
+  chopY_func <- function(R_mat, U_mat, U_feed_mat, V_mat, Y_mat, S_units_mat) {
     # At this point, we have single matrices for each of the above variables.
-    # Calculate the IO matrices
-    with_io <- list(R = R_mat, U = U_mat, U_feed = U_feed_mat, V = V_mat, Y = Y_mat, S_units = S_units_mat) %>%
-      # We accept the default vector and matrix names.
-      calc_io_mats(method = method, tol = tol_invert)
+    # First thing to do is verify that we can swim upstream with Y_mat
+    # to duplicate R_mat, U_mat, and V_mat
+
+    # Calculate io matrices in a separate step, because we will use these later.
+    with_io <- list(R_mat, U_mat, U_feed_mat, V_mat, Y_mat, S_units_mat) %>%
+      magrittr::set_names(c(R_colname, U_colname, U_feed_colname, V_colname, Y_colname, S_units_colname)) %>%
+      calc_io_mats(method = method, tol = tol_invert,
+                   R = R_colname, U = U_colname, U_feed = U_feed_colname, V = V_colname, Y = Y_colname, S_units = S_units_colname)
+    upstream_swim <- with_io %>%
+      new_Y(Y_prime = Y_colname, R_prime = R_prime_colname, U_prime = U_prime_colname, U_feed_prime = U_feed_prime_colname,
+            U_eiou_prime = U_eiou_prime_colname, r_eiou_prime = r_eiou_prime_colname, V_prime = V_prime_colname)
+    # Verify that R_prime is equal to R
+    assertthat::assert_that(matsbyname::equal_byname(upstream_swim[[R_prime_colname]], R_mat))
+    # Verify that U_prime is equal to U
+    assertthat::assert_that(matsbyname::equal_byname(upstream_swim[[U_prime_colname]], U_mat))
+    # Verify that U_feed_prime is equal to U_feed
+    assertthat::assert_that(matsbyname::equal_byname(upstream_swim[[U_feed_prime_colname]], U_feed_mat))
+    # Verify that U_eiou_prime is equal to U_eiou
+    assertthat::assert_that(matsbyname::equal_byname(upstream_swim[[U_eiou_prime_colname]],
+                                                     matsbyname::difference_byname(U_mat, upstream_swim[[U_feed_colname]])))
+    # Verify that V_prime is equal to V
+    assertthat::assert_that(matsbyname::equal_byname(upstream_swim[[V_prime_colname]], V_mat))
+
+
+    # Now that we have verified that we can swim upstream,
+    # chop the Y matrix and swim upstream for each row and column independently.
 
     # Get the row names in Y. Those are the Products we want to evaluate.
     product_names <- matsbyname::getrownames_byname(Y_mat)
@@ -297,7 +320,7 @@ chop_Y <- function(.sut_data = NULL,
   }
 
   out <- matsindf::matsindf_apply(.sut_data,
-                                  FUN = footprint_func,
+                                  FUN = chopY_func,
                                   R_mat = R,
                                   U_mat = U,
                                   U_feed_mat = U_feed,

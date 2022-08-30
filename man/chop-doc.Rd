@@ -35,6 +35,7 @@ chop_Y(
   r_eiou_colname = Recca::psut_cols$r_eiou,
   V_colname = Recca::psut_cols$V,
   Y_colname = Recca::psut_cols$Y,
+  S_units_colname = Recca::psut_cols$S_units,
   R_prime_colname = paste0(R_colname, .prime),
   U_prime_colname = paste0(U_colname, .prime),
   U_feed_prime_colname = paste0(U_feed_colname, .prime),
@@ -148,7 +149,7 @@ This string is used as a suffix that is appended to
 many variable names.
 Default is "_prime".}
 
-\item{R_colname, U_colname, U_feed_colname, U_eiou_colname, r_eiou_colname, V_colname, Y_colname}{Names of input matrices in \code{.sut_data}. See \code{Recca::psut_cols} for default values.}
+\item{R_colname, U_colname, U_feed_colname, U_eiou_colname, r_eiou_colname, V_colname, Y_colname, S_units_colname}{Names of input matrices in \code{.sut_data}. See \code{Recca::psut_cols} for default values.}
 
 \item{R_prime_colname, U_prime_colname, U_feed_prime_colname, U_eiou_prime_colname, r_eiou_prime_colname, V_prime_colname, Y_prime_colname}{Names of output matrices in the return value.
 Default values are constructed from
