@@ -45,7 +45,7 @@
 #'    If calculated, add the primary and final demand aggregates
 #'    as columns in the nested data frame.
 #'
-#' Use `unnest` to define how the aggregate data are added to the right side of `.sut_data`
+#' Use the `unnest` argument to define how the aggregate data are added to the right side of `.sut_data`
 #' when `.sut_data` is a `matsindf` data frame.
 #'
 #' Note that the nested data frame includes columns for the ECC matrices
@@ -63,6 +63,13 @@
 #' See the documentation at `matsbyname::invert_byname()` for details.
 #'
 #' Both `tol` and `method` should be a single values and apply to all rows of `.sut_data`.
+#'
+#' Before chopping and swimming are performed,
+#' the original **R** or **Y** matrix is used for an downstream or upstream swim (respectively).
+#' An error will be emitted
+#' if we are unable to reproduce the other ECC matrices
+#' (**U**, **U_feed**, **U_EIOU**, **V**, and **Y** in the case of a downstream swim when chopping **R**;
+#'  **R**, **U**, **U_feed**, **U_EIOU**, and **V** in the case of an upstream swim when chopping **Y**).
 #'
 #' When the **R** and **Y** matrices are chopped by rows or columns, the sum of the ECCs
 #' created from the chopped rows or columns should equal the original ECC.
@@ -378,7 +385,15 @@ chop_R <- function(.sut_data = NULL,
                    V_prime_colname = paste0(V_colname, .prime),
                    Y_prime_colname = paste0(Y_colname, .prime)) {
 
-  effects_func <- function(R_mat, U_mat, U_feed_mat, V_mat, Y_mat, S_units_mat) {
+  chopR_func <- function(R_mat, U_mat, U_feed_mat, V_mat, Y_mat, S_units_mat) {
+
+    # Before chopping R and swimming downstream,
+    # verify that we can do the downstream swim with R_mat to
+    # re-calculate U_mat, U_feed_mat, V_mat, and Y_mat.
+
+    # Add this code after modifying calc_io_mats() to take a direction argument
+    # to specify demand-sided or supply-sided sense of these calculations.
+
 
     # Get the column names in R. Those are the Products we want to evaluate.
     product_names <- matsbyname::getcolnames_byname(R_mat)
@@ -443,7 +458,7 @@ chop_R <- function(.sut_data = NULL,
   }
 
   out <- matsindf::matsindf_apply(.sut_data,
-                                  FUN = effects_func,
+                                  FUN = chopR_func,
                                   R_mat = R,
                                   U_mat = U,
                                   U_feed_mat = U_feed,

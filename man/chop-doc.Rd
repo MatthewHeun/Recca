@@ -209,7 +209,7 @@ If calculated, add the primary and final demand aggregates
 as columns in the nested data frame.
 }
 
-Use \code{unnest} to define how the aggregate data are added to the right side of \code{.sut_data}
+Use the \code{unnest} argument to define how the aggregate data are added to the right side of \code{.sut_data}
 when \code{.sut_data} is a \code{matsindf} data frame.
 
 Note that the nested data frame includes columns for the ECC matrices
@@ -227,6 +227,13 @@ to be inverted.
 See the documentation at \code{matsbyname::invert_byname()} for details.
 
 Both \code{tol} and \code{method} should be a single values and apply to all rows of \code{.sut_data}.
+
+Before chopping and swimming are performed,
+the original \strong{R} or \strong{Y} matrix is used for an downstream or upstream swim (respectively).
+An error will be emitted
+if we are unable to reproduce the other ECC matrices
+(\strong{U}, \strong{U_feed}, \strong{U_EIOU}, \strong{V}, and \strong{Y} in the case of a downstream swim when chopping \strong{R};
+\strong{R}, \strong{U}, \strong{U_feed}, \strong{U_EIOU}, and \strong{V} in the case of an upstream swim when chopping \strong{Y}).
 
 When the \strong{R} and \strong{Y} matrices are chopped by rows or columns, the sum of the ECCs
 created from the chopped rows or columns should equal the original ECC.
