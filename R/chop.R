@@ -247,33 +247,33 @@ chop_Y <- function(.sut_data = NULL,
     # The sum of the ECCs associated with new_Y_products should be equal to the original ECC.
     product_prime_mats <- ecc_prime[product_names] %>%
       purrr::transpose()
-    product_prime_balanced <- verify_footprint_effects_aggregate_energy_balance(tol = tol_chop_sum,
-                                                                                R_mat = R_mat,
-                                                                                U_mat = U_mat,
-                                                                                U_feed_mat = U_feed_mat,
-                                                                                V_mat = V_mat,
-                                                                                Y_mat = Y_mat,
-                                                                                R_chop_list = product_prime_mats[[R_prime_colname]],
-                                                                                U_chop_list = product_prime_mats[[U_prime_colname]],
-                                                                                U_feed_chop_list = product_prime_mats[[U_feed_prime_colname]],
-                                                                                V_chop_list = product_prime_mats[[V_prime_colname]],
-                                                                                Y_chop_list = product_prime_mats[[Y_prime_colname]])
+    product_prime_balanced <- verify_chop_energy_sum(tol = tol_chop_sum,
+                                                     R_mat = R_mat,
+                                                     U_mat = U_mat,
+                                                     U_feed_mat = U_feed_mat,
+                                                     V_mat = V_mat,
+                                                     Y_mat = Y_mat,
+                                                     R_chop_list = product_prime_mats[[R_prime_colname]],
+                                                     U_chop_list = product_prime_mats[[U_prime_colname]],
+                                                     U_feed_chop_list = product_prime_mats[[U_feed_prime_colname]],
+                                                     V_chop_list = product_prime_mats[[V_prime_colname]],
+                                                     Y_chop_list = product_prime_mats[[Y_prime_colname]])
     assertthat::assert_that(product_prime_balanced, msg = "Products not balanced in footprint_aggregates()")
 
     # The sum of the ECCs associated with new_Y_sectors should be equal to the original ECC.
     sector_prime_mats <- ecc_prime[sector_names] %>%
       purrr::transpose()
-    sector_prime_balanced <- verify_footprint_effects_aggregate_energy_balance(tol = tol_chop_sum,
-                                                                               R_mat = R_mat,
-                                                                               U_mat = U_mat,
-                                                                               U_feed_mat = U_feed_mat,
-                                                                               V_mat = V_mat,
-                                                                               Y_mat = Y_mat,
-                                                                               R_chop_list = sector_prime_mats[[R_prime_colname]],
-                                                                               U_chop_list = sector_prime_mats[[U_prime_colname]],
-                                                                               U_feed_chop_list = sector_prime_mats[[U_feed_prime_colname]],
-                                                                               V_chop_list = sector_prime_mats[[V_prime_colname]],
-                                                                               Y_chop_list = sector_prime_mats[[Y_prime_colname]])
+    sector_prime_balanced <- verify_chop_energy_sum(tol = tol_chop_sum,
+                                                    R_mat = R_mat,
+                                                    U_mat = U_mat,
+                                                    U_feed_mat = U_feed_mat,
+                                                    V_mat = V_mat,
+                                                    Y_mat = Y_mat,
+                                                    R_chop_list = sector_prime_mats[[R_prime_colname]],
+                                                    U_chop_list = sector_prime_mats[[U_prime_colname]],
+                                                    U_feed_chop_list = sector_prime_mats[[U_feed_prime_colname]],
+                                                    V_chop_list = sector_prime_mats[[V_prime_colname]],
+                                                    Y_chop_list = sector_prime_mats[[Y_prime_colname]])
     assertthat::assert_that(sector_prime_balanced, msg = "Sectors not balanced in footprint_aggregates()")
 
     # Calculate primary and final demand aggregates for each of the new ECCs.
@@ -386,17 +386,17 @@ chop_R <- function(.sut_data = NULL,
     # The sum of the ECCs associated with new_R_products should be equal to the original ECC.
     product_prime_mats <- ecc_prime[product_names] %>%
       purrr::transpose()
-    product_prime_balanced <- verify_footprint_effects_aggregate_energy_balance(tol = tol_chop_sum,
-                                                                                R_mat = R_mat,
-                                                                                U_mat = U_mat,
-                                                                                U_feed_mat = U_feed_mat,
-                                                                                V_mat = V_mat,
-                                                                                Y_mat = Y_mat,
-                                                                                R_chop_list = product_prime_mats[[R_prime_colname]],
-                                                                                U_chop_list = product_prime_mats[[U_prime_colname]],
-                                                                                U_feed_chop_list = product_prime_mats[[U_feed_prime_colname]],
-                                                                                V_chop_list = product_prime_mats[[V_prime_colname]],
-                                                                                Y_chop_list = product_prime_mats[[Y_prime_colname]])
+    product_prime_balanced <- verify_chop_energy_sum(tol = tol_chop_sum,
+                                                     R_mat = R_mat,
+                                                     U_mat = U_mat,
+                                                     U_feed_mat = U_feed_mat,
+                                                     V_mat = V_mat,
+                                                     Y_mat = Y_mat,
+                                                     R_chop_list = product_prime_mats[[R_prime_colname]],
+                                                     U_chop_list = product_prime_mats[[U_prime_colname]],
+                                                     U_feed_chop_list = product_prime_mats[[U_feed_prime_colname]],
+                                                     V_chop_list = product_prime_mats[[V_prime_colname]],
+                                                     Y_chop_list = product_prime_mats[[Y_prime_colname]])
     assertthat::assert_that(product_prime_balanced, msg = "Products not balanced in effects_aggregates()")
 
     # Calculate primary and final demand aggregates for each of the new ECCs.
@@ -437,25 +437,28 @@ chop_R <- function(.sut_data = NULL,
 }
 
 
-#' Verify energy balance after footprint calculations
+#' Verify energy sum after chop calculations
 #'
-#' Footprint calculations involve
-#' isolating rows or columns of the **Y** matrix (chopping),
-#' performing upstream swims (with `new_Y()`), and
-#' creating the ECC portions that support the creation of the row or column of **Y**.
-#' After performing that upstream swim, the sum of the
+#' **R** and **Y** chop calculations involve
+#' isolating rows or columns of the **R** and **Y** matrices,
+#' performing downstream swims (with `new_R_ps()`) and
+#' upstream swims (with `new_Y()`), and
+#' creating the ECC portions that
+#' follow from the row or column of **R** or
+#' support the creation of the row or column of **Y**.
+#' After performing that downstream or upstream swim, the sum of the
 #' isolated (chopped) ECCs should equal the original ECC.
 #' This function performs that energy balance verification.
 #'
 #' The various `*_chop_list` arguments should be lists of matrices
-#' formed by isolating (chopping) different parts of **Y**.
+#' formed by isolating (chopping) different parts of **R** or **Y**.
 #' The matrices in `R_chop_list`, `U_chop_list`, `U_feed_chop_list`
-#' `U_eiou_chop_list`, `V_chop_list`, and `Y_chop_list` should sum to
-#' `R`, `U`, `U_feed`, `U_eiou`, `V`, and `Y`, respectively.
+#' `V_chop_list`, and `Y_chop_list` should sum to
+#' `R`, `U`, `U_feed`, `V`, and `Y`, respectively.
 #'
 #' This is not a public function.
 #' It is an internal helper function
-#' for `footprint_aggregates()` and `effects_aggregates()`..
+#' for `chop_R()` and `chop_Y()`.
 #'
 #' @param .sut_data An optional data frame of energy conversion chain matrices.
 #' @param tol The tolerance within which energy balance is assumed to be OK. Default is `1e-4`.
@@ -463,10 +466,10 @@ chop_R <- function(.sut_data = NULL,
 #' @param R_chop_list,U_chop_list,U_feed_chop_list,V_chop_list,Y_chop_list Lists of matrices from different upstream swims corresponding to different rows or columns of **Y**.
 #'
 #' @return `TRUE` if energy balance is observed, `FALSE` otherwise.
-verify_footprint_effects_aggregate_energy_balance <- function(.sut_data = NULL,
-                                                              tol = 1e-4,
-                                                              R_mat, U_mat, U_feed_mat, V_mat, Y_mat,
-                                                              R_chop_list, U_chop_list, U_feed_chop_list, V_chop_list, Y_chop_list) {
+verify_chop_energy_sum <- function(.sut_data = NULL,
+                                   tol = 1e-4,
+                                   R_mat, U_mat, U_feed_mat, V_mat, Y_mat,
+                                   R_chop_list, U_chop_list, U_feed_chop_list, V_chop_list, Y_chop_list) {
 
   verify_func <- function(chop_list, mat) {
     mat_sum <- matsbyname::sum_byname(chop_list, .summarise = TRUE)[[1]] %>%
