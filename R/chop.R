@@ -477,7 +477,7 @@ verify_chop_energy_sum <- function(.sut_data = NULL,
     err <- matsbyname::difference_byname(mat_sum, mat)
     OK <- matsbyname::iszero_byname(err, tol = tol)
     if (!OK) {
-      warning("energy balance not observed in verify_footprint_effects_aggregate_energy_balance()")
+      warning("energy balance not observed in verify_chop_energy_sum()")
     }
     return(OK)
   }
