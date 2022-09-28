@@ -164,7 +164,10 @@ chop_Y <- function(.sut_data = NULL,
                    calc_pfd_aggs = TRUE,
                    p_industries = NULL,
                    fd_sectors = NULL,
+                   piece = NULL,
+                   notation = RCLabels::notations_list,
                    pattern_type = c("exact", "leading", "trailing", "anywhere"),
+                   prepositions = RCLabels::prepositions_list,
                    unnest = FALSE,
                    method = c("solve", "QR", "SVD"),
                    tol_invert = .Machine$double.eps,
@@ -238,7 +241,12 @@ chop_Y <- function(.sut_data = NULL,
       sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_product) {
         # For each product (in each row), make a new Y matrix to be used for the calculation.
         Y_mat %>%
-          matsbyname::select_rows_byname(Hmisc::escapeRegex(this_product))
+          matsbyname::select_rowcol_piece_byname(retain = this_product,
+                                                 piece = piece,
+                                                 notation = notation,
+                                                 pattern_type = pattern_type,
+                                                 prepositions = prepositions,
+                                                 margin = "Product")
       })
 
     # Get the column names in Y. Those are the Sectors we want to evaluate.
