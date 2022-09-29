@@ -7,7 +7,10 @@
 finaldemand_aggregates(
   .sutdata = NULL,
   fd_sectors,
-  pattern_type = c("exact", "leading", "trailing", "anywhere"),
+  piece = "all",
+  notation = RCLabels::notations_list,
+  pattern_type = c("exact", "leading", "trailing", "anywhere", "literal"),
+  prepositions = RCLabels::prepositions_list,
   U = Recca::psut_cols$U,
   U_feed = Recca::psut_cols$U_feed,
   Y = Recca::psut_cols$Y,
@@ -23,13 +26,18 @@ finaldemand_aggregates(
 Names should include columns in the \code{Y} and \code{U_EIOU} matrices
 to cover both net (in \code{Y}) and gross (in \code{Y} and \code{U_EIOU}) final demand.}
 
-\item{pattern_type}{One of "exact", "leading", "trailing", or "anywhere" which specifies
-how matches are made for \code{fd_sectors}.
-If "exact", exact matches specify the sectors to be aggregated.
-If "leading", sectors are aggregated if any entry in \code{fd_sectors} matches the leading part of a final demand sector's name.
-If "trailing", sectors are aggregated if any entry in \code{fd_sectors} matches the trailing part of a final demand sector's name.
-If "anywhere", sectors are aggregated if any entry in \code{fd_sectors} matches any part of a final demand sector's name.
-Default is "exact".}
+\item{piece, notation, pattern_type, prepositions}{Arguments that control the way row and column matching
+is accomplished when selecting parts of the \strong{R}, \strong{V}, and \strong{Y}
+matrices for primary aggregation.
+These arguments are passed to
+\code{matsbyname::select_rowcol_piece_byname()} and eventually
+\code{RCLabels::match_by_pattern()} and
+\code{RCLabels::make_or_pattern()}.
+Default values are
+\code{piece = "all"},
+\code{notation = RCLabels::notations_list},
+\code{pattern_type = "exact"}, and
+\code{prepositions = RCLabels::prepositions_list}.}
 
 \item{U, U_feed, Y}{Input matrices. See \code{Recca::psut_cols}.}
 

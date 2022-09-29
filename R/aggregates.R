@@ -26,13 +26,18 @@
 #'                     primary industry names if they can be identified by prefixes.
 #' @param add_net_gross_cols A boolean that tells whether to add net and gross columns (`TRUE`) or not (`FALSE`).
 #'                           Default is `FALSE`.
-#' @param pattern_type One of "exact", "leading", "trailing", or "anywhere" which specifies
-#'                     how matches are made for `p_industries`.
-#'                     If "exact", exact matches specify the sectors to be aggregated.
-#'                     If "leading", sectors are aggregated if any entry in `p_industries` matches the leading part of a final demand sector's name.
-#'                     If "trailing", sectors are aggregated if any entry in `p_industries` matches the trailing part of a final demand sector's name.
-#'                     If "anywhere", sectors are aggregated if any entry in `p_industries` matches any part of a final demand sector's name.
-#'                     Default is "exact".
+#' @param piece,notation,pattern_type,prepositions Arguments that control the way row and column matching
+#'                                                 is accomplished when selecting parts of the **R**, **V**, and **Y**
+#'                                                 matrices for primary aggregation.
+#'                                                 These arguments are passed to
+#'                                                 `matsbyname::select_rowcol_piece_byname()` and eventually
+#'                                                 `RCLabels::match_by_pattern()` and
+#'                                                 `RCLabels::make_or_pattern()`.
+#'                                                 Default values are
+#'                                                 `piece = "all"`,
+#'                                                 `notation = RCLabels::notations_list`,
+#'                                                 `pattern_type = "exact"`, and
+#'                                                 `prepositions = RCLabels::prepositions_list`.
 #' @param R,V,Y See `Recca::psut_cols`.
 #' @param by One of "Total", "Product", "Industry", or "Flow" to indicate the desired aggregation:
 #'           \itemize{
@@ -92,8 +97,6 @@ primary_aggregates <- function(.sutdata = NULL,
   prim_func <- function(R_mat = NULL, V_mat, Y_mat){
     # Look for primary industries in each of R, V, and Y matrices
     RT_p <- matsbyname::transpose_byname(R_mat) %>%
-      # matsbyname::select_cols_byname(retain_pattern =
-      #                                  RCLabels::make_or_pattern(strings = p_industries, pattern_type = pattern_type))
       matsbyname::select_rowcol_piece_byname(retain = p_industries,
                                              piece = piece,
                                              notation = notation,
@@ -101,8 +104,6 @@ primary_aggregates <- function(.sutdata = NULL,
                                              prepositions = prepositions,
                                              margin = 2)
     VT_p <- matsbyname::transpose_byname(V_mat) %>%
-      # matsbyname::select_cols_byname(retain_pattern =
-      #                                  RCLabels::make_or_pattern(strings = p_industries, pattern_type = pattern_type))
       matsbyname::select_rowcol_piece_byname(retain = p_industries,
                                              piece = piece,
                                              notation = notation,
@@ -110,8 +111,6 @@ primary_aggregates <- function(.sutdata = NULL,
                                              prepositions = prepositions,
                                              margin = 2)
     # Get the primary industries from the Y matrix.
-    # Y_p <- Y_mat %>% matsbyname::select_cols_byname(retain_pattern =
-    #                                                   RCLabels::make_or_pattern(strings = p_industries, pattern_type = pattern_type))
     Y_p <- Y_mat %>% matsbyname::select_rowcol_piece_byname(retain = p_industries,
                                                             piece = piece,
                                                             notation = notation,
@@ -156,13 +155,18 @@ primary_aggregates <- function(.sutdata = NULL,
 #' @param fd_sectors A vector of names of sectors in final demand.
 #'                   Names should include columns in the `Y` and `U_EIOU` matrices
 #'                   to cover both net (in `Y`) and gross (in `Y` and `U_EIOU`) final demand.
-#' @param pattern_type One of "exact", "leading", "trailing", or "anywhere" which specifies
-#'                     how matches are made for `fd_sectors`.
-#'                     If "exact", exact matches specify the sectors to be aggregated.
-#'                     If "leading", sectors are aggregated if any entry in `fd_sectors` matches the leading part of a final demand sector's name.
-#'                     If "trailing", sectors are aggregated if any entry in `fd_sectors` matches the trailing part of a final demand sector's name.
-#'                     If "anywhere", sectors are aggregated if any entry in `fd_sectors` matches any part of a final demand sector's name.
-#'                     Default is "exact".
+#' @param piece,notation,pattern_type,prepositions Arguments that control the way row and column matching
+#'                                                 is accomplished when selecting parts of the **R**, **V**, and **Y**
+#'                                                 matrices for primary aggregation.
+#'                                                 These arguments are passed to
+#'                                                 `matsbyname::select_rowcol_piece_byname()` and eventually
+#'                                                 `RCLabels::match_by_pattern()` and
+#'                                                 `RCLabels::make_or_pattern()`.
+#'                                                 Default values are
+#'                                                 `piece = "all"`,
+#'                                                 `notation = RCLabels::notations_list`,
+#'                                                 `pattern_type = "exact"`, and
+#'                                                 `prepositions = RCLabels::prepositions_list`.
 #' @param U,U_feed,Y Input matrices. See `Recca::psut_cols`.
 #' @param by One of "Product", "Sector", or "Total" to indicate the desired aggregation:
 #'           "Product" for aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.),
@@ -188,7 +192,10 @@ primary_aggregates <- function(.sutdata = NULL,
 #'   finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Sector")
 finaldemand_aggregates <- function(.sutdata = NULL,
                                    fd_sectors,
-                                   pattern_type = c("exact", "leading", "trailing", "anywhere"),
+                                   piece = "all",
+                                   notation = RCLabels::notations_list,
+                                   pattern_type = c("exact", "leading", "trailing", "anywhere", "literal"),
+                                   prepositions = RCLabels::prepositions_list,
                                    # Input names
                                    U = Recca::psut_cols$U,
                                    U_feed = Recca::psut_cols$U_feed,
@@ -205,11 +212,19 @@ finaldemand_aggregates <- function(.sutdata = NULL,
     U_eiou_mat <- matsbyname::difference_byname(U_mat, U_feed_mat)
 
     Y_mat_cols <- Y_mat %>%
-      matsbyname::select_cols_byname(retain_pattern =
-                                       RCLabels::make_or_pattern(strings = fd_sectors, pattern_type = pattern_type))
+      matsbyname::select_rowcol_piece_byname(retain = fd_sectors,
+                                             piece = piece,
+                                             notation = notation,
+                                             pattern_type = pattern_type,
+                                             prepositions = prepositions,
+                                             margin = 2)
     U_eiou_mat_cols <- U_eiou_mat %>%
-      matsbyname::select_cols_byname(retain_pattern =
-                                       RCLabels::make_or_pattern(strings = fd_sectors, pattern_type = pattern_type))
+      matsbyname::select_rowcol_piece_byname(retain = fd_sectors,
+                                             piece = piece,
+                                             notation = notation,
+                                             pattern_type = pattern_type,
+                                             prepositions = prepositions,
+                                             margin = 2)
 
     # Use the right function for the requested aggregation
     if (by == "Total") {

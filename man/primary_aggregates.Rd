@@ -38,13 +38,18 @@ primary industry names if they can be identified by prefixes.}
 \item{add_net_gross_cols}{A boolean that tells whether to add net and gross columns (\code{TRUE}) or not (\code{FALSE}).
 Default is \code{FALSE}.}
 
-\item{pattern_type}{One of "exact", "leading", "trailing", or "anywhere" which specifies
-how matches are made for \code{p_industries}.
-If "exact", exact matches specify the sectors to be aggregated.
-If "leading", sectors are aggregated if any entry in \code{p_industries} matches the leading part of a final demand sector's name.
-If "trailing", sectors are aggregated if any entry in \code{p_industries} matches the trailing part of a final demand sector's name.
-If "anywhere", sectors are aggregated if any entry in \code{p_industries} matches any part of a final demand sector's name.
-Default is "exact".}
+\item{piece, notation, pattern_type, prepositions}{Arguments that control the way row and column matching
+is accomplished when selecting parts of the \strong{R}, \strong{V}, and \strong{Y}
+matrices for primary aggregation.
+These arguments are passed to
+\code{matsbyname::select_rowcol_piece_byname()} and eventually
+\code{RCLabels::match_by_pattern()} and
+\code{RCLabels::make_or_pattern()}.
+Default values are
+\code{piece = "all"},
+\code{notation = RCLabels::notations_list},
+\code{pattern_type = "exact"}, and
+\code{prepositions = RCLabels::prepositions_list}.}
 
 \item{R, V, Y}{See \code{Recca::psut_cols}.}
 
