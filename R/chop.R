@@ -440,7 +440,6 @@ chop_R <- function(.sut_data = NULL,
       sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_product) {
         # For each product (in each column), make a new Y matrix to be used for the calculation.
         R_mat %>%
-        #   matsbyname::select_cols_byname(Hmisc::escapeRegex(this_product))
         matsbyname::select_rowcol_piece_byname(retain = this_product,
                                                piece = "all",
                                                notation = notation,
