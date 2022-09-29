@@ -115,14 +115,15 @@ to cover both net (in \strong{Y}) and gross (in \strong{Y} and \strong{U_EIOU}) 
 This argument is passed to \code{finaldemand_aggregates()}.
 Default is \code{NULL}.}
 
-\item{pattern_type}{One of "exact", "leading", "trailing", or "anywhere" which specifies
-how matches are made for \code{p_industries}.
-If "exact", exact matches specify the sectors to be aggregated.
-If "leading", sectors are aggregated if any entry in \code{p_industries} matches the leading part of a final demand sector's name.
-If "trailing", sectors are aggregated if any entry in \code{p_industries} matches the trailing part of a final demand sector's name.
-If "anywhere", sectors are aggregated if any entry in \code{p_industries} matches any part of a final demand sector's name.
-Default is "exact".
-This argument is passed to both \code{primary_aggregates()} and \code{finaldemand_aggregates()}.}
+\item{piece, notation, pattern_type, prepositions}{Arguments passed to
+both \code{primary_aggregates()} and \code{finaldemand_aggregates()}
+and, ultimately, to
+\code{matsbyname::select_rowcol_piece_byname()}
+for the purpose of selecting rows and columns
+for primary and final demand aggregations.
+See
+\code{matsbyname::select_rowcol_piece_byname()}
+for details.}
 
 \item{unnest}{A boolean that tells whether to unnest the outgoing data.
 When \code{TRUE}, creates a new column called \code{product_sector} and columns of primary and final demand aggregates.
@@ -178,9 +179,9 @@ by the following algorithm:
 \item Calculate io matrices with \code{calc_io_mats()}.
 \item Identify each product from columns of the \strong{R} matrix.
 \item For each product independently,
-perform an downstream swim with \code{new_R_ps()}
+perform a downstream swim with \code{new_R_ps()}
 to obtain the ECC induced by that product only.
-\item Optionally (but included by default),
+\item Optionally (but included by default with \code{calc_pfd_aggs = TRUE}),
 calculate primary and final demand aggregates using \code{primary_aggregates()} and
 \code{finaldemand_aggregates()}.
 Both functions are called with \code{by = "Total"},

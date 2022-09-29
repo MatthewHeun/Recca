@@ -13,7 +13,10 @@ test_that("primary_aggregates() works as expected", {
   # Primary TOTAL aggregates
   primary_total_aggregates_sut <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
-    Recca::primary_aggregates(p_industries = p_industries, by = "Total", aggregate_primary = "EX_total_agg.ktoe")
+    # Recca::primary_aggregates(p_industries = p_industries, by = "Total", aggregate_primary = "EX_total_agg.ktoe")
+    Recca::primary_aggregates(p_industries = p_industries,
+                              notation = RCLabels::dash_notation,
+                              by = "Total", aggregate_primary = "EX_total_agg.ktoe")
   expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
                       dplyr::select("EX_total_agg.ktoe"), 93000)
   expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$useful) %>%
@@ -66,7 +69,10 @@ test_that("primary_aggregates() works with leading pattern for names", {
   # Primary TOTAL aggregates
   primary_total_aggregates_sut <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
-    Recca::primary_aggregates(p_industries = p_industries, pattern_type = "leading", by = "Total", aggregate_primary = "EX_total_agg.ktoe")
+    Recca::primary_aggregates(p_industries = p_industries,
+                              piece = "noun",
+                              notation = RCLabels::dash_notation,
+                              pattern_type = "leading", by = "Total", aggregate_primary = "EX_total_agg.ktoe")
   expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
                       dplyr::select("EX_total_agg.ktoe"), 93000)
   expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$useful) %>%
@@ -89,8 +95,10 @@ test_that("primary_aggregates() works when R is folded into V", {
       V = matsbyname::sum_byname(R, V),
       R = NULL
     ) %>%
-    Recca::primary_aggregates(p_industries = p_industries, by = "Total",
-                       aggregate_primary = "EX_total_agg.ktoe")
+    Recca::primary_aggregates(p_industries = p_industries,
+                              notation = RCLabels::dash_notation,
+                              by = "Total",
+                              aggregate_primary = "EX_total_agg.ktoe")
   expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
                       dplyr::select("EX_total_agg.ktoe"), 93000)
 })
@@ -104,6 +112,7 @@ test_that("primary_aggregates() works for net and gross", {
   primary_total_aggregates_sut <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
     Recca::primary_aggregates(p_industries = p_industries,
+                              notation = RCLabels::dash_notation,
                               add_net_gross_cols = TRUE,
                               by = "Total")
   expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%

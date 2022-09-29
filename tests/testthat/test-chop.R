@@ -6,7 +6,9 @@ test_that("chop_Y() works as expected", {
     tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
   # Calculate aggregates
   chopped_Y <- psut_mats %>%
-    Recca::chop_Y(p_industries = p_industries, fd_sectors = fd_sectors)
+    Recca::chop_Y(p_industries = p_industries, fd_sectors = fd_sectors,
+                  piece = "all", notation = RCLabels::dash_notation,
+                  pattern_type = "exact", prepositions = RCLabels::prepositions_list)
   expect_true(Recca::aggregate_cols$chop_df %in% names(chopped_Y))
   chopped_Y_unnested <- psut_mats %>%
     Recca::chop_Y(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)

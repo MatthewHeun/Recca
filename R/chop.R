@@ -13,9 +13,9 @@
 #' 1. Calculate io matrices with `calc_io_mats()`.
 #' 2. Identify each product from columns of the **R** matrix.
 #' 3. For each product independently,
-#'    perform an downstream swim with `new_R_ps()`
+#'    perform a downstream swim with `new_R_ps()`
 #'    to obtain the ECC induced by that product only.
-#' 4. Optionally (but included by default),
+#' 4. Optionally (but included by default with `calc_pfd_aggs = TRUE`),
 #'    calculate primary and final demand aggregates using `primary_aggregates()` and
 #'    `finaldemand_aggregates()`.
 #'    Both functions are called with `by = "Total"`,
@@ -99,14 +99,15 @@
 #'                   to cover both net (in **Y**) and gross (in **Y** and **U_EIOU**) final demand.
 #'                   This argument is passed to `finaldemand_aggregates()`.
 #'                   Default is `NULL`.
-#' @param pattern_type One of "exact", "leading", "trailing", or "anywhere" which specifies
-#'                     how matches are made for `p_industries`.
-#'                     If "exact", exact matches specify the sectors to be aggregated.
-#'                     If "leading", sectors are aggregated if any entry in `p_industries` matches the leading part of a final demand sector's name.
-#'                     If "trailing", sectors are aggregated if any entry in `p_industries` matches the trailing part of a final demand sector's name.
-#'                     If "anywhere", sectors are aggregated if any entry in `p_industries` matches any part of a final demand sector's name.
-#'                     Default is "exact".
-#'                     This argument is passed to both `primary_aggregates()` and `finaldemand_aggregates()`.
+#' @param piece,notation,pattern_type,prepositions Arguments passed to
+#'                                                 both `primary_aggregates()` and `finaldemand_aggregates()`
+#'                                                 and, ultimately, to
+#'                                                 `matsbyname::select_rowcol_piece_byname()`
+#'                                                 for the purpose of selecting rows and columns
+#'                                                 for primary and final demand aggregations.
+#'                                                 See
+#'                                                 `matsbyname::select_rowcol_piece_byname()`
+#'                                                 for details.
 #' @param unnest A boolean that tells whether to unnest the outgoing data.
 #'               When `TRUE`, creates a new column called `product_sector` and columns of primary and final demand aggregates.
 #'               Default is `FALSE`.
@@ -231,7 +232,6 @@ chop_Y <- function(.sut_data = NULL,
     # Verify that V_prime is equal to V
     assertthat::assert_that(matsbyname::equal_byname(upstream_swim[[V_prime_colname]], V_mat))
 
-
     # Now that we have verified that we can swim upstream,
     # chop the Y matrix and swim upstream for each row and column independently.
 
@@ -240,23 +240,48 @@ chop_Y <- function(.sut_data = NULL,
     new_Y_products <- product_names %>%
       sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_product) {
         # For each product (in each row), make a new Y matrix to be used for the calculation.
+        # Set piece = "all" and pattern_type = "exact", because we have the exact
+        # names of the columns in product_names.
         Y_mat %>%
           matsbyname::select_rowcol_piece_byname(retain = this_product,
-                                                 piece = piece,
+                                                 piece = "all",
                                                  notation = notation,
-                                                 pattern_type = pattern_type,
+                                                 pattern_type = "exact",
                                                  prepositions = prepositions,
-                                                 margin = "Product")
+                                                 margin = 1)
       })
+    # Ensure that every item in new_Y_products has exactly one row.
+    for (i in 1:length(new_Y_products)) {
+      this_new_Y_products_mat <- new_Y_products[[i]]
+      this_new_Y_products_name <- names(new_Y_products)[[i]]
+      numrows <- matsbyname::nrow_byname(this_new_Y_products_mat)
+      assertthat::assert_that(numrows == 1,
+                              msg = paste(this_new_Y_products_name, "has", numrows, "rows but should have exactly 1 in Recca::chop_Y()."))
+    }
 
     # Get the column names in Y. Those are the Sectors we want to evaluate.
     sector_names <- matsbyname::getcolnames_byname(Y_mat)
     new_Y_sectors <- sector_names %>%
       sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_sector) {
         # For each sector (in each column), make a new Y matrix to be used for the calculation.
+        # Set piece = "all" and pattern_type = "exact", because we have the exact
+        # names of the rows in sector_names.
         Y_mat %>%
-          matsbyname::select_cols_byname(Hmisc::escapeRegex(this_sector))
+          matsbyname::select_rowcol_piece_byname(retain = this_sector,
+                                                 piece = "all",
+                                                 notation = notation,
+                                                 pattern_type = "exact",
+                                                 prepositions = prepositions,
+                                                 margin = 2)
       })
+    # Ensure that every item in new_Y_sectors has exactly one column.
+    for (i in 1:length(new_Y_sectors)) {
+      this_new_Y_sectors_mat <- new_Y_sectors[[i]]
+      this_new_Y_sectors_name <- names(new_Y_sectors)[[i]]
+      numcols <- matsbyname::ncol_byname(this_new_Y_sectors_mat)
+      assertthat::assert_that(numcols == 1,
+                              msg = paste(this_new_Y_sectors_name, "has", numcols, "columns but should have exactly 1 in Recca::chop_Y()."))
+    }
 
     # Create a list with new Y matrices for all products and sectors
     new_Y_list <- c(new_Y_products, new_Y_sectors)

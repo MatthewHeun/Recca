@@ -8,11 +8,14 @@ primary_aggregates(
   .sutdata = NULL,
   p_industries,
   add_net_gross_cols = FALSE,
-  pattern_type = c("exact", "leading", "trailing", "anywhere"),
+  piece = "all",
+  notation = RCLabels::notations_list,
+  pattern_type = c("exact", "leading", "trailing", "anywhere", "literal"),
+  prepositions = RCLabels::prepositions_list,
   R = Recca::psut_cols$R,
   V = Recca::psut_cols$V,
   Y = Recca::psut_cols$Y,
-  by = c("Total", "Product", "Flow"),
+  by = c("Total", "Product", "Industry", "Flow"),
   aggregate_primary = Recca::aggregate_cols$aggregate_primary,
   net_aggregate_primary = Recca::aggregate_cols$net_aggregate_primary,
   gross_aggregate_primary = Recca::aggregate_cols$gross_aggregate_primary
@@ -45,11 +48,11 @@ Default is "exact".}
 
 \item{R, V, Y}{See \code{Recca::psut_cols}.}
 
-\item{by}{One of "Total", "Product", or "Flow" to indicate the desired aggregation:
+\item{by}{One of "Total", "Product", "Industry", or "Flow" to indicate the desired aggregation:
 \itemize{
 \item "Total": aggregation over both Product and Flow (the default),
 \item "Product": aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.), or
-\item "Flow": aggregation by type of flow (Production, Imports, Exports, etc.).
+\item "Industry" or "Flow": aggregation by Industry (Production, Imports, Exports, etc.).
 }}
 
 \item{aggregate_primary, net_aggregate_primary, gross_aggregate_primary}{The names for aggregates of primary energy on output.}
