@@ -440,8 +440,21 @@ chop_R <- function(.sut_data = NULL,
       sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_product) {
         # For each product (in each column), make a new Y matrix to be used for the calculation.
         R_mat %>%
-          matsbyname::select_cols_byname(Hmisc::escapeRegex(this_product))
+        #   matsbyname::select_cols_byname(Hmisc::escapeRegex(this_product))
+        matsbyname::select_rowcol_piece_byname(retain = this_product,
+                                               piece = "all",
+                                               notation = notation,
+                                               pattern_type = "exact",
+                                               prepositions = prepositions,
+                                               margin = 2)
       })
+    for (i in 1:length(new_R_products)) {
+      this_new_R_products_mat <- new_R_products[[i]]
+      this_new_R_products_name <- names(new_R_products)[[i]]
+      numcols <- matsbyname::ncol_byname(this_new_R_products_mat)
+      assertthat::assert_that(numcols == 1,
+                              msg = paste(this_new_R_products_name, "has", numcols, "columns but should have exactly 1 in Recca::chop_R()."))
+    }
 
     # For each item in this list, make a new set of ECC matrices
     with_qf <- list(R = R_mat, U = U_mat, U_feed = U_feed_mat,
