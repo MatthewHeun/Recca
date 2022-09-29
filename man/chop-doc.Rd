@@ -13,7 +13,7 @@ chop_Y(
   fd_sectors = NULL,
   piece = NULL,
   notation = RCLabels::notations_list,
-  pattern_type = c("exact", "leading", "trailing", "anywhere"),
+  pattern_type = c("exact", "leading", "trailing", "anywhere", "literal"),
   prepositions = RCLabels::prepositions_list,
   unnest = FALSE,
   method = c("solve", "QR", "SVD"),
