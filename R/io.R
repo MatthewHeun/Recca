@@ -101,7 +101,7 @@ calc_io_mats <- function(.sutdata = NULL,
     f_vec <- yqfgW[[f]]
     g_vec <- yqfgW[[g]]
     r_vec <- yqfgW[[r]]
-    h_vec <- yqfgW[[y]]
+    h_vec <- yqfgW[[h]]
 
     ZKCDA <- calc_A(R = R_mat, U = U_mat, V = V_mat, q = q_vec, f = f_vec, g = g_vec, r = r_vec, h = h_vec,
                     Z = Z, K = K, C = C, D = D, A = A, O = O)
@@ -319,7 +319,7 @@ calc_A <- function(.sutdata = NULL,
 
     D_mat <- matsbyname::matrixproduct_byname(V_mat, matsbyname::hatinv_byname(q_vec, keep = "rownames"))
     A_mat <- matsbyname::matrixproduct_byname(Z_mat, D_mat)
-    O_mat <- matsbyname::matrixproduct_byname(matsbyname::hatinv_byname(r_vec, keep = "rownames"), R_mat)
+    O_mat <- matsbyname::matrixproduct_byname(R_mat, matsbyname::hatinv_byname(h_vec, keep = "rownames"))
 
     # Put all output matrices in a list and return it.
     list(Z_mat, K_mat, C_mat, D_mat, A_mat, O_mat) %>%

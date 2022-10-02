@@ -4,6 +4,9 @@ output: html_document
 ---
 
 
+* Fixed two bugs in `new_Y()`. 
+  There were compensatory formula errors
+  that only appeared in weird edge cases.
 * Aggregations are now optional (on by default)
   in `chop_R()` and `chop_Y()`.
 * Renamed `effects_aggregates()` and `footprint_aggregates()`
