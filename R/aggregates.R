@@ -173,8 +173,11 @@ primary_aggregates <- function(.sutdata = NULL,
 #'           "Sector" for aggregation by final demand sector (Agriculture/forestry, Domestic navigation, etc.), or
 #'           "Total" for aggregation over both Product and Sector (the default).
 #' @param net_aggregate_demand,gross_aggregate_demand See `Recca::aggregate_cols`.
-#'        Net energy demand is calculated by `sumall(Y_fd)`.
-#'        Gross energy demand is calculated by `sumall(Y_fd) + sumall(U_EIOU)`.
+#'        Net energy demand is calculated by `matsbyname::sumall_byname(Y_fd)`.
+#'        Gross energy demand is calculated by `matsbyname::sumall_byname(Y_fd) + matsbyname::sumall_byname(U_EIOU)`.
+#'        Defaults are `Recca::aggregate_cols$net_aggregate_demand` and
+#'        `Recca::aggregate_cols$gross_aggregate_demand`.
+#'
 #'
 #' @return A list or data frame containing `net_aggregate_demand` and `gross_aggregate_demand` columns.
 #'
@@ -264,8 +267,13 @@ finaldemand_aggregates <- function(.sutdata = NULL,
     if (by == "Sector") {
       # If "Sector" aggregation is requested, the results will be row vectors.
       # Convert to column vectors.
-      net <- matsbyname::transpose_byname(net)
-      gross <- matsbyname::transpose_byname(gross)
+      if (net != 0 & is.matrix(net)) {
+        # Only convert to a column vector if net is not equal to zero
+        net <- matsbyname::transpose_byname(net)
+      }
+      if (gross != 0 & is.matrix(net)) {
+        gross <- matsbyname::transpose_byname(gross)
+      }
     }
     list(net, gross) %>% magrittr::set_names(c(net_aggregate_demand, gross_aggregate_demand))
   }

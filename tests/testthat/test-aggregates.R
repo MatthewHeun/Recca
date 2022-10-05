@@ -403,3 +403,16 @@ test_that("grouped_aggregates() works as expected", {
   expect_equal(res$Y_aggregated[[1]][3, 2], 40750)
 })
 
+
+test_that("finaldemand_aggregates() works when there are no columns with fd_sectors", {
+  U <- matrix(1, dimnames = list("bogus_row", "bogus_col"))
+  U_feed <- matrix(1, dimnames = list("bogus_row", "bogus_col"))
+  Y <- matrix(1, dimnames = list("bogus_row", "bogus_col"))
+  res <- finaldemand_aggregates(fd_sectors = "fd_sector", piece = "noun",
+                                notation = RCLabels::bracket_notation, pattern_type = "exact",
+                                U = U, U_feed = U_feed, Y = Y, by = "Sector")
+  expect_equal(res$EX.fd_net, 0)
+  expect_false(is.matrix(res$EX.fd_net))
+  expect_equal(res$EX.fd_gross, 0)
+  expect_false(is.matrix(res$EX.fd_gross))
+})

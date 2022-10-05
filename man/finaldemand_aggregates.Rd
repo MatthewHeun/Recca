@@ -47,8 +47,10 @@ Default values are
 "Total" for aggregation over both Product and Sector (the default).}
 
 \item{net_aggregate_demand, gross_aggregate_demand}{See \code{Recca::aggregate_cols}.
-Net energy demand is calculated by \code{sumall(Y_fd)}.
-Gross energy demand is calculated by \code{sumall(Y_fd) + sumall(U_EIOU)}.}
+Net energy demand is calculated by \code{matsbyname::sumall_byname(Y_fd)}.
+Gross energy demand is calculated by \code{matsbyname::sumall_byname(Y_fd) + matsbyname::sumall_byname(U_EIOU)}.
+Defaults are \code{Recca::aggregate_cols$net_aggregate_demand} and
+\code{Recca::aggregate_cols$gross_aggregate_demand}.}
 }
 \value{
 A list or data frame containing \code{net_aggregate_demand} and \code{gross_aggregate_demand} columns.
