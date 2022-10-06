@@ -11,7 +11,10 @@ chop_Y(
   calc_pfd_aggs = TRUE,
   p_industries = NULL,
   fd_sectors = NULL,
-  pattern_type = c("exact", "leading", "trailing", "anywhere"),
+  piece = "all",
+  notation = RCLabels::notations_list,
+  pattern_type = c("exact", "leading", "trailing", "anywhere", "literal"),
+  prepositions = RCLabels::prepositions_list,
   unnest = FALSE,
   method = c("solve", "QR", "SVD"),
   tol_invert = .Machine$double.eps,
@@ -35,6 +38,7 @@ chop_Y(
   r_eiou_colname = Recca::psut_cols$r_eiou,
   V_colname = Recca::psut_cols$V,
   Y_colname = Recca::psut_cols$Y,
+  S_units_colname = Recca::psut_cols$S_units,
   R_prime_colname = paste0(R_colname, .prime),
   U_prime_colname = paste0(U_colname, .prime),
   U_feed_prime_colname = paste0(U_feed_colname, .prime),
@@ -49,7 +53,10 @@ chop_R(
   calc_pfd_aggs = TRUE,
   p_industries = NULL,
   fd_sectors = NULL,
-  pattern_type = c("exact", "leading", "trailing", "anywhere"),
+  piece = "all",
+  notation = RCLabels::notations_list,
+  pattern_type = c("exact", "leading", "trailing", "anywhere", "literal"),
+  prepositions = RCLabels::prepositions_list,
   unnest = FALSE,
   method = c("solve", "QR", "SVD"),
   tol_invert = .Machine$double.eps,
@@ -111,14 +118,15 @@ to cover both net (in \strong{Y}) and gross (in \strong{Y} and \strong{U_EIOU}) 
 This argument is passed to \code{finaldemand_aggregates()}.
 Default is \code{NULL}.}
 
-\item{pattern_type}{One of "exact", "leading", "trailing", or "anywhere" which specifies
-how matches are made for \code{p_industries}.
-If "exact", exact matches specify the sectors to be aggregated.
-If "leading", sectors are aggregated if any entry in \code{p_industries} matches the leading part of a final demand sector's name.
-If "trailing", sectors are aggregated if any entry in \code{p_industries} matches the trailing part of a final demand sector's name.
-If "anywhere", sectors are aggregated if any entry in \code{p_industries} matches any part of a final demand sector's name.
-Default is "exact".
-This argument is passed to both \code{primary_aggregates()} and \code{finaldemand_aggregates()}.}
+\item{piece, notation, pattern_type, prepositions}{Arguments passed to
+both \code{primary_aggregates()} and \code{finaldemand_aggregates()}
+and, ultimately, to
+\code{matsbyname::select_rowcol_piece_byname()}
+for the purpose of selecting rows and columns
+for primary and final demand aggregations.
+See
+\code{matsbyname::select_rowcol_piece_byname()}
+for details.}
 
 \item{unnest}{A boolean that tells whether to unnest the outgoing data.
 When \code{TRUE}, creates a new column called \code{product_sector} and columns of primary and final demand aggregates.
@@ -148,7 +156,7 @@ This string is used as a suffix that is appended to
 many variable names.
 Default is "_prime".}
 
-\item{R_colname, U_colname, U_feed_colname, U_eiou_colname, r_eiou_colname, V_colname, Y_colname}{Names of input matrices in \code{.sut_data}. See \code{Recca::psut_cols} for default values.}
+\item{R_colname, U_colname, U_feed_colname, U_eiou_colname, r_eiou_colname, V_colname, Y_colname, S_units_colname}{Names of input matrices in \code{.sut_data}. See \code{Recca::psut_cols} for default values.}
 
 \item{R_prime_colname, U_prime_colname, U_feed_prime_colname, U_eiou_prime_colname, r_eiou_prime_colname, V_prime_colname, Y_prime_colname}{Names of output matrices in the return value.
 Default values are constructed from
@@ -174,9 +182,9 @@ by the following algorithm:
 \item Calculate io matrices with \code{calc_io_mats()}.
 \item Identify each product from columns of the \strong{R} matrix.
 \item For each product independently,
-perform an downstream swim with \code{new_R_ps()}
+perform a downstream swim with \code{new_R_ps()}
 to obtain the ECC induced by that product only.
-\item Optionally (but included by default),
+\item Optionally (but included by default with \code{calc_pfd_aggs = TRUE}),
 calculate primary and final demand aggregates using \code{primary_aggregates()} and
 \code{finaldemand_aggregates()}.
 Both functions are called with \code{by = "Total"},
@@ -208,7 +216,7 @@ If calculated, add the primary and final demand aggregates
 as columns in the nested data frame.
 }
 
-Use \code{unnest} to define how the aggregate data are added to the right side of \code{.sut_data}
+Use the \code{unnest} argument to define how the aggregate data are added to the right side of \code{.sut_data}
 when \code{.sut_data} is a \code{matsindf} data frame.
 
 Note that the nested data frame includes columns for the ECC matrices
@@ -226,6 +234,13 @@ to be inverted.
 See the documentation at \code{matsbyname::invert_byname()} for details.
 
 Both \code{tol} and \code{method} should be a single values and apply to all rows of \code{.sut_data}.
+
+Before chopping and swimming are performed,
+the original \strong{R} or \strong{Y} matrix is used for an downstream or upstream swim (respectively).
+An error will be emitted
+if we are unable to reproduce the other ECC matrices
+(\strong{U}, \strong{U_feed}, \strong{U_EIOU}, \strong{V}, and \strong{Y} in the case of a downstream swim when chopping \strong{R};
+\strong{R}, \strong{U}, \strong{U_feed}, \strong{U_EIOU}, and \strong{V} in the case of an upstream swim when chopping \strong{Y}).
 
 When the \strong{R} and \strong{Y} matrices are chopped by rows or columns, the sum of the ECCs
 created from the chopped rows or columns should equal the original ECC.

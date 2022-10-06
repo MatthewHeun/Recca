@@ -8,11 +8,14 @@ primary_aggregates(
   .sutdata = NULL,
   p_industries,
   add_net_gross_cols = FALSE,
-  pattern_type = c("exact", "leading", "trailing", "anywhere"),
+  piece = "all",
+  notation = RCLabels::notations_list,
+  pattern_type = c("exact", "leading", "trailing", "anywhere", "literal"),
+  prepositions = RCLabels::prepositions_list,
   R = Recca::psut_cols$R,
   V = Recca::psut_cols$V,
   Y = Recca::psut_cols$Y,
-  by = c("Total", "Product", "Flow"),
+  by = c("Total", "Product", "Industry", "Flow"),
   aggregate_primary = Recca::aggregate_cols$aggregate_primary,
   net_aggregate_primary = Recca::aggregate_cols$net_aggregate_primary,
   gross_aggregate_primary = Recca::aggregate_cols$gross_aggregate_primary
@@ -35,21 +38,26 @@ primary industry names if they can be identified by prefixes.}
 \item{add_net_gross_cols}{A boolean that tells whether to add net and gross columns (\code{TRUE}) or not (\code{FALSE}).
 Default is \code{FALSE}.}
 
-\item{pattern_type}{One of "exact", "leading", "trailing", or "anywhere" which specifies
-how matches are made for \code{p_industries}.
-If "exact", exact matches specify the sectors to be aggregated.
-If "leading", sectors are aggregated if any entry in \code{p_industries} matches the leading part of a final demand sector's name.
-If "trailing", sectors are aggregated if any entry in \code{p_industries} matches the trailing part of a final demand sector's name.
-If "anywhere", sectors are aggregated if any entry in \code{p_industries} matches any part of a final demand sector's name.
-Default is "exact".}
+\item{piece, notation, pattern_type, prepositions}{Arguments that control the way row and column matching
+is accomplished when selecting parts of the \strong{R}, \strong{V}, and \strong{Y}
+matrices for primary aggregation.
+These arguments are passed to
+\code{matsbyname::select_rowcol_piece_byname()} and eventually
+\code{RCLabels::match_by_pattern()} and
+\code{RCLabels::make_or_pattern()}.
+Default values are
+\code{piece = "all"},
+\code{notation = RCLabels::notations_list},
+\code{pattern_type = "exact"}, and
+\code{prepositions = RCLabels::prepositions_list}.}
 
 \item{R, V, Y}{See \code{Recca::psut_cols}.}
 
-\item{by}{One of "Total", "Product", or "Flow" to indicate the desired aggregation:
+\item{by}{One of "Total", "Product", "Industry", or "Flow" to indicate the desired aggregation:
 \itemize{
 \item "Total": aggregation over both Product and Flow (the default),
 \item "Product": aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.), or
-\item "Flow": aggregation by type of flow (Production, Imports, Exports, etc.).
+\item "Industry" or "Flow": aggregation by Industry (Production, Imports, Exports, etc.).
 }}
 
 \item{aggregate_primary, net_aggregate_primary, gross_aggregate_primary}{The names for aggregates of primary energy on output.}

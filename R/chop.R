@@ -13,9 +13,9 @@
 #' 1. Calculate io matrices with `calc_io_mats()`.
 #' 2. Identify each product from columns of the **R** matrix.
 #' 3. For each product independently,
-#'    perform an downstream swim with `new_R_ps()`
+#'    perform a downstream swim with `new_R_ps()`
 #'    to obtain the ECC induced by that product only.
-#' 4. Optionally (but included by default),
+#' 4. Optionally (but included by default with `calc_pfd_aggs = TRUE`),
 #'    calculate primary and final demand aggregates using `primary_aggregates()` and
 #'    `finaldemand_aggregates()`.
 #'    Both functions are called with `by = "Total"`,
@@ -45,7 +45,7 @@
 #'    If calculated, add the primary and final demand aggregates
 #'    as columns in the nested data frame.
 #'
-#' Use `unnest` to define how the aggregate data are added to the right side of `.sut_data`
+#' Use the `unnest` argument to define how the aggregate data are added to the right side of `.sut_data`
 #' when `.sut_data` is a `matsindf` data frame.
 #'
 #' Note that the nested data frame includes columns for the ECC matrices
@@ -63,6 +63,13 @@
 #' See the documentation at `matsbyname::invert_byname()` for details.
 #'
 #' Both `tol` and `method` should be a single values and apply to all rows of `.sut_data`.
+#'
+#' Before chopping and swimming are performed,
+#' the original **R** or **Y** matrix is used for an downstream or upstream swim (respectively).
+#' An error will be emitted
+#' if we are unable to reproduce the other ECC matrices
+#' (**U**, **U_feed**, **U_EIOU**, **V**, and **Y** in the case of a downstream swim when chopping **R**;
+#'  **R**, **U**, **U_feed**, **U_EIOU**, and **V** in the case of an upstream swim when chopping **Y**).
 #'
 #' When the **R** and **Y** matrices are chopped by rows or columns, the sum of the ECCs
 #' created from the chopped rows or columns should equal the original ECC.
@@ -92,14 +99,15 @@
 #'                   to cover both net (in **Y**) and gross (in **Y** and **U_EIOU**) final demand.
 #'                   This argument is passed to `finaldemand_aggregates()`.
 #'                   Default is `NULL`.
-#' @param pattern_type One of "exact", "leading", "trailing", or "anywhere" which specifies
-#'                     how matches are made for `p_industries`.
-#'                     If "exact", exact matches specify the sectors to be aggregated.
-#'                     If "leading", sectors are aggregated if any entry in `p_industries` matches the leading part of a final demand sector's name.
-#'                     If "trailing", sectors are aggregated if any entry in `p_industries` matches the trailing part of a final demand sector's name.
-#'                     If "anywhere", sectors are aggregated if any entry in `p_industries` matches any part of a final demand sector's name.
-#'                     Default is "exact".
-#'                     This argument is passed to both `primary_aggregates()` and `finaldemand_aggregates()`.
+#' @param piece,notation,pattern_type,prepositions Arguments passed to
+#'                                                 both `primary_aggregates()` and `finaldemand_aggregates()`
+#'                                                 and, ultimately, to
+#'                                                 `matsbyname::select_rowcol_piece_byname()`
+#'                                                 for the purpose of selecting rows and columns
+#'                                                 for primary and final demand aggregations.
+#'                                                 See
+#'                                                 `matsbyname::select_rowcol_piece_byname()`
+#'                                                 for details.
 #' @param unnest A boolean that tells whether to unnest the outgoing data.
 #'               When `TRUE`, creates a new column called `product_sector` and columns of primary and final demand aggregates.
 #'               Default is `FALSE`.
@@ -120,7 +128,7 @@
 #'               This string is used as a suffix that is appended to
 #'               many variable names.
 #'               Default is "_prime".
-#' @param R_colname,U_colname,U_feed_colname,U_eiou_colname,r_eiou_colname,V_colname,Y_colname Names of input matrices in `.sut_data`. See `Recca::psut_cols` for default values.
+#' @param R_colname,U_colname,U_feed_colname,U_eiou_colname,r_eiou_colname,V_colname,Y_colname,S_units_colname Names of input matrices in `.sut_data`. See `Recca::psut_cols` for default values.
 #' @param R_prime_colname,U_prime_colname,U_feed_prime_colname,U_eiou_prime_colname,r_eiou_prime_colname,V_prime_colname,Y_prime_colname Names of output matrices in the return value.
 #'                                        Default values are constructed from
 #'                                        `Recca::psut_cols` values suffixed with
@@ -157,7 +165,10 @@ chop_Y <- function(.sut_data = NULL,
                    calc_pfd_aggs = TRUE,
                    p_industries = NULL,
                    fd_sectors = NULL,
-                   pattern_type = c("exact", "leading", "trailing", "anywhere"),
+                   piece = "all",
+                   notation = RCLabels::notations_list,
+                   pattern_type = c("exact", "leading", "trailing", "anywhere", "literal"),
+                   prepositions = RCLabels::prepositions_list,
                    unnest = FALSE,
                    method = c("solve", "QR", "SVD"),
                    tol_invert = .Machine$double.eps,
@@ -184,6 +195,7 @@ chop_Y <- function(.sut_data = NULL,
                    r_eiou_colname = Recca::psut_cols$r_eiou,
                    V_colname = Recca::psut_cols$V,
                    Y_colname = Recca::psut_cols$Y,
+                   S_units_colname = Recca::psut_cols$S_units,
                    R_prime_colname = paste0(R_colname, .prime),
                    U_prime_colname = paste0(U_colname, .prime),
                    U_feed_prime_colname = paste0(U_feed_colname, .prime),
@@ -195,30 +207,81 @@ chop_Y <- function(.sut_data = NULL,
   pattern_type <- match.arg(pattern_type)
   method <- match.arg(method)
 
-  footprint_func <- function(R_mat, U_mat, U_feed_mat, V_mat, Y_mat, S_units_mat) {
+  chopY_func <- function(R_mat, U_mat, U_feed_mat, V_mat, Y_mat, S_units_mat) {
     # At this point, we have single matrices for each of the above variables.
-    # Calculate the IO matrices
-    with_io <- list(R = R_mat, U = U_mat, U_feed = U_feed_mat, V = V_mat, Y = Y_mat, S_units = S_units_mat) %>%
-      # We accept the default vector and matrix names.
-      calc_io_mats(method = method, tol = tol_invert)
+    # First thing to do is verify that we can swim upstream with Y_mat
+    # to duplicate R_mat, U_mat, and V_mat
+
+    # Calculate io matrices in a separate step, because we will use these later.
+    with_io <- list(R_mat, U_mat, U_feed_mat, V_mat, Y_mat, S_units_mat) %>%
+      magrittr::set_names(c(R_colname, U_colname, U_feed_colname, V_colname, Y_colname, S_units_colname)) %>%
+      calc_io_mats(method = method, tol = tol_invert,
+                   R = R_colname, U = U_colname, U_feed = U_feed_colname, V = V_colname, Y = Y_colname, S_units = S_units_colname)
+    upstream_swim <- with_io %>%
+      new_Y(Y_prime = Y_colname, R_prime = R_prime_colname, U_prime = U_prime_colname, U_feed_prime = U_feed_prime_colname,
+            U_eiou_prime = U_eiou_prime_colname, r_eiou_prime = r_eiou_prime_colname, V_prime = V_prime_colname)
+    # Verify that R_prime is equal to R
+    assertthat::assert_that(matsbyname::equal_byname(upstream_swim[[R_prime_colname]], R_mat))
+    # Verify that U_prime is equal to U
+    assertthat::assert_that(matsbyname::equal_byname(upstream_swim[[U_prime_colname]], U_mat))
+    # Verify that U_feed_prime is equal to U_feed
+    assertthat::assert_that(matsbyname::equal_byname(upstream_swim[[U_feed_prime_colname]], U_feed_mat))
+    # Verify that U_eiou_prime is equal to U_eiou
+    assertthat::assert_that(matsbyname::equal_byname(upstream_swim[[U_eiou_prime_colname]],
+                                                     matsbyname::difference_byname(U_mat, upstream_swim[[U_feed_colname]])))
+    # Verify that V_prime is equal to V
+    assertthat::assert_that(matsbyname::equal_byname(upstream_swim[[V_prime_colname]], V_mat))
+
+    # Now that we have verified that we can swim upstream,
+    # chop the Y matrix and swim upstream for each row and column independently.
 
     # Get the row names in Y. Those are the Products we want to evaluate.
     product_names <- matsbyname::getrownames_byname(Y_mat)
     new_Y_products <- product_names %>%
       sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_product) {
         # For each product (in each row), make a new Y matrix to be used for the calculation.
+        # Set piece = "all" and pattern_type = "exact", because we have the exact
+        # names of the columns in product_names.
         Y_mat %>%
-          matsbyname::select_rows_byname(Hmisc::escapeRegex(this_product))
+          matsbyname::select_rowcol_piece_byname(retain = this_product,
+                                                 piece = "all",
+                                                 notation = notation,
+                                                 pattern_type = "exact",
+                                                 prepositions = prepositions,
+                                                 margin = 1)
       })
+    # Ensure that every item in new_Y_products has exactly one row.
+    for (i in 1:length(new_Y_products)) {
+      this_new_Y_products_mat <- new_Y_products[[i]]
+      this_new_Y_products_name <- names(new_Y_products)[[i]]
+      numrows <- matsbyname::nrow_byname(this_new_Y_products_mat)
+      assertthat::assert_that(numrows == 1,
+                              msg = paste(this_new_Y_products_name, "has", numrows, "rows but should have exactly 1 in Recca::chop_Y()."))
+    }
 
     # Get the column names in Y. Those are the Sectors we want to evaluate.
     sector_names <- matsbyname::getcolnames_byname(Y_mat)
     new_Y_sectors <- sector_names %>%
       sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_sector) {
         # For each sector (in each column), make a new Y matrix to be used for the calculation.
+        # Set piece = "all" and pattern_type = "exact", because we have the exact
+        # names of the rows in sector_names.
         Y_mat %>%
-          matsbyname::select_cols_byname(Hmisc::escapeRegex(this_sector))
+          matsbyname::select_rowcol_piece_byname(retain = this_sector,
+                                                 piece = "all",
+                                                 notation = notation,
+                                                 pattern_type = "exact",
+                                                 prepositions = prepositions,
+                                                 margin = 2)
       })
+    # Ensure that every item in new_Y_sectors has exactly one column.
+    for (i in 1:length(new_Y_sectors)) {
+      this_new_Y_sectors_mat <- new_Y_sectors[[i]]
+      this_new_Y_sectors_name <- names(new_Y_sectors)[[i]]
+      numcols <- matsbyname::ncol_byname(this_new_Y_sectors_mat)
+      assertthat::assert_that(numcols == 1,
+                              msg = paste(this_new_Y_sectors_name, "has", numcols, "columns but should have exactly 1 in Recca::chop_Y()."))
+    }
 
     # Create a list with new Y matrices for all products and sectors
     new_Y_list <- c(new_Y_products, new_Y_sectors)
@@ -281,7 +344,10 @@ chop_Y <- function(.sut_data = NULL,
                                    calc_pfd_aggs = calc_pfd_aggs,
                                    p_industries = p_industries,
                                    fd_sectors = fd_sectors,
+                                   piece = piece,
+                                   notation = notation,
                                    pattern_type = pattern_type,
+                                   prepositions = prepositions,
                                    aggregate_primary = aggregate_primary,
                                    gross_aggregate_demand = gross_aggregate_demand,
                                    net_aggregate_demand = net_aggregate_demand,
@@ -297,7 +363,7 @@ chop_Y <- function(.sut_data = NULL,
   }
 
   out <- matsindf::matsindf_apply(.sut_data,
-                                  FUN = footprint_func,
+                                  FUN = chopY_func,
                                   R_mat = R,
                                   U_mat = U,
                                   U_feed_mat = U_feed,
@@ -320,7 +386,10 @@ chop_R <- function(.sut_data = NULL,
                    calc_pfd_aggs = TRUE,
                    p_industries = NULL,
                    fd_sectors = NULL,
-                   pattern_type = c("exact", "leading", "trailing", "anywhere"),
+                   piece = "all",
+                   notation = RCLabels::notations_list,
+                   pattern_type = c("exact", "leading", "trailing", "anywhere", "literal"),
+                   prepositions = RCLabels::prepositions_list,
                    unnest = FALSE,
                    method = c("solve", "QR", "SVD"),
                    tol_invert = .Machine$double.eps,
@@ -355,7 +424,15 @@ chop_R <- function(.sut_data = NULL,
                    V_prime_colname = paste0(V_colname, .prime),
                    Y_prime_colname = paste0(Y_colname, .prime)) {
 
-  effects_func <- function(R_mat, U_mat, U_feed_mat, V_mat, Y_mat, S_units_mat) {
+  chopR_func <- function(R_mat, U_mat, U_feed_mat, V_mat, Y_mat, S_units_mat) {
+
+    # Before chopping R and swimming downstream,
+    # verify that we can do the downstream swim with R_mat to
+    # re-calculate U_mat, U_feed_mat, V_mat, and Y_mat.
+
+    # Add this code after modifying calc_io_mats() to take a direction argument
+    # to specify demand-sided or supply-sided sense of these calculations.
+
 
     # Get the column names in R. Those are the Products we want to evaluate.
     product_names <- matsbyname::getcolnames_byname(R_mat)
@@ -363,8 +440,20 @@ chop_R <- function(.sut_data = NULL,
       sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_product) {
         # For each product (in each column), make a new Y matrix to be used for the calculation.
         R_mat %>%
-          matsbyname::select_cols_byname(Hmisc::escapeRegex(this_product))
+        matsbyname::select_rowcol_piece_byname(retain = this_product,
+                                               piece = "all",
+                                               notation = notation,
+                                               pattern_type = "exact",
+                                               prepositions = prepositions,
+                                               margin = 2)
       })
+    for (i in 1:length(new_R_products)) {
+      this_new_R_products_mat <- new_R_products[[i]]
+      this_new_R_products_name <- names(new_R_products)[[i]]
+      numcols <- matsbyname::ncol_byname(this_new_R_products_mat)
+      assertthat::assert_that(numcols == 1,
+                              msg = paste(this_new_R_products_name, "has", numcols, "columns but should have exactly 1 in Recca::chop_R()."))
+    }
 
     # For each item in this list, make a new set of ECC matrices
     with_qf <- list(R = R_mat, U = U_mat, U_feed = U_feed_mat,
@@ -404,7 +493,10 @@ chop_R <- function(.sut_data = NULL,
                                    calc_pfd_aggs = calc_pfd_aggs,
                                    p_industries = p_industries,
                                    fd_sectors = fd_sectors,
+                                   piece = piece,
+                                   notation = notation,
                                    pattern_type = pattern_type,
+                                   prepositions = prepositions,
                                    aggregate_primary = aggregate_primary,
                                    gross_aggregate_demand = gross_aggregate_demand,
                                    net_aggregate_demand = net_aggregate_demand,
@@ -420,7 +512,7 @@ chop_R <- function(.sut_data = NULL,
   }
 
   out <- matsindf::matsindf_apply(.sut_data,
-                                  FUN = effects_func,
+                                  FUN = chopR_func,
                                   R_mat = R,
                                   U_mat = U,
                                   U_feed_mat = U_feed,
@@ -524,7 +616,10 @@ calc_aggregates_from_ecc_prime <- function(ecc_prime,
                                            calc_pfd_aggs,
                                            p_industries,
                                            fd_sectors,
-                                           pattern_type,
+                                           piece = "all",
+                                           notation = RCLabels::notations_list,
+                                           pattern_type = c("exact", "leading", "trailing", "anywhere", "literal"),
+                                           prepositions = RCLabels::prepositions_list,
                                            product_sector,
                                            chop_df,
                                            aggregate_primary,
@@ -568,7 +663,10 @@ calc_aggregates_from_ecc_prime <- function(ecc_prime,
                              R = R_prime_colname,
                              V = V_prime_colname,
                              Y = Y_prime_colname,
+                             piece = piece,
+                             notation = notation,
                              pattern_type = pattern_type,
+                             prepositions = prepositions,
                              by = "Total",
                              aggregate_primary = aggregate_primary)
       }) %>%
@@ -581,7 +679,10 @@ calc_aggregates_from_ecc_prime <- function(ecc_prime,
                                  U = U_prime_colname,
                                  U_feed = U_feed_prime_colname,
                                  Y = Y_prime_colname,
+                                 piece = piece,
+                                 notation = notation,
                                  pattern_type = pattern_type,
+                                 prepositions = prepositions,
                                  by = "Total",
                                  net_aggregate_demand = net_aggregate_demand,
                                  gross_aggregate_demand = gross_aggregate_demand)
