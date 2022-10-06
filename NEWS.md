@@ -6,8 +6,8 @@ output: html_document
 
 * `finaldemand_aggregates()` now produces true `0`
   instead of a 1x1 matrix without row or column labels
-  when there are neither **U_EIOU** nor **Y**
-  columns whose names match `fd_sectors`.
+  when no columns names of **U_EIOU** or **Y**
+  match `fd_sectors`.
 * Fixed two bugs in `new_Y()`. 
   There were compensatory formula errors
   that only appeared in weird edge cases.
