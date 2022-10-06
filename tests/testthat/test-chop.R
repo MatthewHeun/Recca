@@ -1,3 +1,57 @@
+test_that("chop_R() works as expected", {
+  p_industries <- c("Resources - Crude", "Resources - NG")
+  fd_sectors <- c("Residential", "Transport", "Oil fields")
+
+  psut_mats <- UKEnergy2000mats %>%
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) %>%
+    # To avoid the services rows on which NA values are obtained.
+    dplyr::slice(1, 3)
+  # Calculate aggregates
+  chop_R_aggs <- psut_mats %>%
+    Recca::chop_R(p_industries = p_industries, fd_sectors = fd_sectors)
+  expect_true(Recca::aggregate_cols$chop_df %in% names(chop_R_aggs))
+  chop_R_aggs_unnested <- psut_mats %>%
+    Recca::chop_R(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
+  expect_true(Recca::aggregate_cols$product_sector %in% names(chop_R_aggs_unnested))
+  expect_true(Recca::aggregate_cols$aggregate_primary %in% names(chop_R_aggs_unnested))
+  expect_true(Recca::aggregate_cols$net_aggregate_demand %in% names(chop_R_aggs_unnested))
+  expect_true(Recca::aggregate_cols$gross_aggregate_demand %in% names(chop_R_aggs_unnested))
+  expect_true(paste0(Recca::psut_cols$R, "_prime") %in% names(chop_R_aggs_unnested))
+  expect_true(paste0(Recca::psut_cols$U, "_prime") %in% names(chop_R_aggs_unnested))
+  expect_true(paste0(Recca::psut_cols$U_feed, "_prime") %in% names(chop_R_aggs_unnested))
+  expect_true(paste0(Recca::psut_cols$U_eiou, "_prime") %in% names(chop_R_aggs_unnested))
+  expect_true(paste0(Recca::psut_cols$r_eiou, "_prime") %in% names(chop_R_aggs_unnested))
+  expect_true(paste0(Recca::psut_cols$V, "_prime") %in% names(chop_R_aggs_unnested))
+  expect_true(paste0(Recca::psut_cols$Y, "_prime") %in% names(chop_R_aggs_unnested))
+})
+
+
+test_that("chop_R() works without aggregates", {
+  p_industries <- c("Resources - Crude", "Resources - NG")
+  fd_sectors <- c("Residential", "Transport", "Oil fields")
+
+  psut_mats <- UKEnergy2000mats %>%
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) %>%
+    # To avoid the services rows on which NA values are obtained.
+    dplyr::slice(1, 3)
+  # Calculate aggregates
+  chopped_R_unnested <- psut_mats %>%
+    Recca::chop_R(p_industries = p_industries, fd_sectors = fd_sectors,
+                  unnest = TRUE, calc_pfd_aggs = FALSE)
+  expect_true(Recca::aggregate_cols$product_sector %in% names(chopped_R_unnested))
+  expect_false(Recca::aggregate_cols$aggregate_primary %in% names(chopped_R_unnested))
+  expect_false(Recca::aggregate_cols$net_aggregate_demand %in% names(chopped_R_unnested))
+  expect_false(Recca::aggregate_cols$gross_aggregate_demand %in% names(chopped_R_unnested))
+  expect_true(paste0(Recca::psut_cols$R, "_prime") %in% names(chopped_R_unnested))
+  expect_true(paste0(Recca::psut_cols$U, "_prime") %in% names(chopped_R_unnested))
+  expect_true(paste0(Recca::psut_cols$U_feed, "_prime") %in% names(chopped_R_unnested))
+  expect_true(paste0(Recca::psut_cols$U_eiou, "_prime") %in% names(chopped_R_unnested))
+  expect_true(paste0(Recca::psut_cols$r_eiou, "_prime") %in% names(chopped_R_unnested))
+  expect_true(paste0(Recca::psut_cols$V, "_prime") %in% names(chopped_R_unnested))
+  expect_true(paste0(Recca::psut_cols$Y, "_prime") %in% names(chopped_R_unnested))
+})
+
+
 test_that("chop_Y() works as expected", {
   p_industries <- c("Resources - Crude", "Resources - NG")
   fd_sectors <- c("Residential", "Transport", "Oil fields")
@@ -56,6 +110,7 @@ test_that("chop_Y() works with Losses", {
   expect_true(!any(which_null_gross))
 })
 
+
 test_that("chop_Y() works without aggregates", {
   p_industries <- c("Resources - Crude", "Resources - NG")
   fd_sectors <- c("Residential", "Transport", "Oil fields")
@@ -80,56 +135,15 @@ test_that("chop_Y() works without aggregates", {
 })
 
 
-test_that("chop_R() works as expected", {
+test_that("chop_Y() errors when energy balance is not obtained", {
   p_industries <- c("Resources - Crude", "Resources - NG")
   fd_sectors <- c("Residential", "Transport", "Oil fields")
 
   psut_mats <- UKEnergy2000mats %>%
-    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) %>%
-    # To avoid the services rows on which NA values are obtained.
-    dplyr::slice(1, 3)
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
   # Calculate aggregates
-  chop_R_aggs <- psut_mats %>%
-    Recca::chop_R(p_industries = p_industries, fd_sectors = fd_sectors)
-  expect_true(Recca::aggregate_cols$chop_df %in% names(chop_R_aggs))
-  chop_R_aggs_unnested <- psut_mats %>%
-    Recca::chop_R(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
-  expect_true(Recca::aggregate_cols$product_sector %in% names(chop_R_aggs_unnested))
-  expect_true(Recca::aggregate_cols$aggregate_primary %in% names(chop_R_aggs_unnested))
-  expect_true(Recca::aggregate_cols$net_aggregate_demand %in% names(chop_R_aggs_unnested))
-  expect_true(Recca::aggregate_cols$gross_aggregate_demand %in% names(chop_R_aggs_unnested))
-  expect_true(paste0(Recca::psut_cols$R, "_prime") %in% names(chop_R_aggs_unnested))
-  expect_true(paste0(Recca::psut_cols$U, "_prime") %in% names(chop_R_aggs_unnested))
-  expect_true(paste0(Recca::psut_cols$U_feed, "_prime") %in% names(chop_R_aggs_unnested))
-  expect_true(paste0(Recca::psut_cols$U_eiou, "_prime") %in% names(chop_R_aggs_unnested))
-  expect_true(paste0(Recca::psut_cols$r_eiou, "_prime") %in% names(chop_R_aggs_unnested))
-  expect_true(paste0(Recca::psut_cols$V, "_prime") %in% names(chop_R_aggs_unnested))
-  expect_true(paste0(Recca::psut_cols$Y, "_prime") %in% names(chop_R_aggs_unnested))
+  expect_error(psut_mats %>%
+    Recca::chop_Y(p_industries = p_industries, fd_sectors = fd_sectors,
+                  unnest = TRUE, calc_pfd_aggs = FALSE, tol_chop_sum = 1e-20), "Products not balanced") %>%
+    expect_warning("energy balance not observed")
 })
-
-
-test_that("chop_R() works without aggregates", {
-  p_industries <- c("Resources - Crude", "Resources - NG")
-  fd_sectors <- c("Residential", "Transport", "Oil fields")
-
-  psut_mats <- UKEnergy2000mats %>%
-    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) %>%
-    # To avoid the services rows on which NA values are obtained.
-    dplyr::slice(1, 3)
-  # Calculate aggregates
-  chopped_R_unnested <- psut_mats %>%
-    Recca::chop_R(p_industries = p_industries, fd_sectors = fd_sectors,
-                  unnest = TRUE, calc_pfd_aggs = FALSE)
-  expect_true(Recca::aggregate_cols$product_sector %in% names(chopped_R_unnested))
-  expect_false(Recca::aggregate_cols$aggregate_primary %in% names(chopped_R_unnested))
-  expect_false(Recca::aggregate_cols$net_aggregate_demand %in% names(chopped_R_unnested))
-  expect_false(Recca::aggregate_cols$gross_aggregate_demand %in% names(chopped_R_unnested))
-  expect_true(paste0(Recca::psut_cols$R, "_prime") %in% names(chopped_R_unnested))
-  expect_true(paste0(Recca::psut_cols$U, "_prime") %in% names(chopped_R_unnested))
-  expect_true(paste0(Recca::psut_cols$U_feed, "_prime") %in% names(chopped_R_unnested))
-  expect_true(paste0(Recca::psut_cols$U_eiou, "_prime") %in% names(chopped_R_unnested))
-  expect_true(paste0(Recca::psut_cols$r_eiou, "_prime") %in% names(chopped_R_unnested))
-  expect_true(paste0(Recca::psut_cols$V, "_prime") %in% names(chopped_R_unnested))
-  expect_true(paste0(Recca::psut_cols$Y, "_prime") %in% names(chopped_R_unnested))
-})
-
