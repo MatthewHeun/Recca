@@ -265,15 +265,8 @@ finaldemand_aggregates <- function(.sutdata = NULL,
     # }
 
     if (by == "Sector") {
-      # If "Sector" aggregation is requested, the results will be row vectors.
-      # Convert to column vectors.
-      if (net != 0 & is.matrix(net)) {
-        # Only convert to a column vector if net is not equal to zero
-        net <- matsbyname::transpose_byname(net)
-      }
-      if (gross != 0 & is.matrix(net)) {
-        gross <- matsbyname::transpose_byname(gross)
-      }
+      net <- matsbyname::transpose_byname(net)
+      gross <- matsbyname::transpose_byname(gross)
     }
     list(net, gross) %>% magrittr::set_names(c(net_aggregate_demand, gross_aggregate_demand))
   }
