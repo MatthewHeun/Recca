@@ -14,7 +14,19 @@
 #' corresponding to a supply-sided view of **q**.
 #' In the case of a balanced ECC, the method does not matter.
 #'
-#' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
+#' Input-output matrices can be calculated for either
+#' an upstream swim (demand-sided as Leontief) or
+#' a downstream swim (supply-sided as Ghosh).
+#' The `direction` argument defines the direction.
+#' Different IO matrices are calculated based on direction.
+#' The default is "upstream", meaning that an upstream swim is desired.
+#' Note that "upstream", "demand", and "Leontief" are synonyms.
+#' "downstream", "supply", and "Ghosh" are synonyms.
+#'
+#' @param .sutdata A data frame of supply-use table matrices with matrices arranged in columns.
+#' @param direction A string that identifies the directionality of the IO matrices.
+#'                  See details.
+#'                  Default is "upstream".
 #' @param method One of "solve", "QR", or "SVD". Default is "solve". See details.
 #' @param tol The tolerance for detecting linear dependencies during matrix inversion.
 #'            Default is `.Machine$double.eps`.
@@ -78,6 +90,8 @@
 #'   select(Country, Year, Energy.type, Last.stage, U, U_feed, V, Y, r_EIOU, S_units) %>%
 #'   calc_io_mats()
 calc_io_mats <- function(.sutdata = NULL,
+                         direction = c("upstream", "demand", "Leontief",
+                                       "downstream", "supply", "Ghosh"),
                          method = c("solve", "QR", "SVD"),
                          tol = .Machine$double.eps,
                          method_q_calculation = c("sum_U_Y_rows", "sum_R_V_cols"),
@@ -90,6 +104,7 @@ calc_io_mats <- function(.sutdata = NULL,
 
   method <- match.arg(method)
   method_q_calculation <- match.arg(method_q_calculation)
+  direction <- match.arg(direction)
 
   io_func <- function(R_mat = NULL, U_mat, U_feed_mat, V_mat, Y_mat, S_units_mat = NULL){
     yqfgW <- calc_yqfgW(method_q_calculation = method_q_calculation,
@@ -103,31 +118,37 @@ calc_io_mats <- function(.sutdata = NULL,
     r_vec <- yqfgW[[r]]
     h_vec <- yqfgW[[h]]
 
-    ZKCDA <- calc_A(R = R_mat, U = U_mat, V = V_mat, q = q_vec, f = f_vec, g = g_vec, r = r_vec, h = h_vec,
-                    Z = Z, K = K, C = C, D = D, A = A, O = O)
+    if (direction %in% c("upstream", "demand", "Leontief", "leontief")) {
+      ZKCDA <- calc_A(R = R_mat, U = U_mat, V = V_mat, q = q_vec, f = f_vec, g = g_vec, r = r_vec, h = h_vec,
+                      Z = Z, K = K, C = C, D = D, A = A, O = O)
 
-    D_mat <- ZKCDA[[D]]
-    A_mat <- ZKCDA[[A]]
+      D_mat <- ZKCDA[[D]]
+      A_mat <- ZKCDA[[A]]
 
-    L_mats <- calc_L(method = method, tol = tol,
-                     D = D_mat, A = A_mat,
-                     L_ixp = L_ixp, L_pxp = L_pxp)
+      L_mats <- calc_L(method = method, tol = tol,
+                       D = D_mat, A = A_mat,
+                       L_ixp = L_ixp, L_pxp = L_pxp)
 
-    # Work on the "_feed" matrices.
+      # Work on the "_feed" matrices.
 
-    ZKCDA_all_feed <- calc_A(R = R_mat, U = U_feed_mat, V = V_mat, q = q_vec, f = f_vec, g = g_vec, r = r_vec, h = h_vec,
-                             Z = Z_feed, K = K_feed, C = C, D = D, A = A_feed, O = O)
-    ZKCDA_feed <- list(Z_feed = ZKCDA_all_feed[[Z_feed]],
-                       K_feed = ZKCDA_all_feed[[K_feed]],
-                       A_feed = ZKCDA_all_feed[[A_feed]])
+      ZKCDA_all_feed <- calc_A(R = R_mat, U = U_feed_mat, V = V_mat, q = q_vec, f = f_vec, g = g_vec, r = r_vec, h = h_vec,
+                               Z = Z_feed, K = K_feed, C = C, D = D, A = A_feed, O = O)
+      ZKCDA_feed <- list(Z_feed = ZKCDA_all_feed[[Z_feed]],
+                         K_feed = ZKCDA_all_feed[[K_feed]],
+                         A_feed = ZKCDA_all_feed[[A_feed]])
 
-    A_feed_mat <- ZKCDA_feed[[A_feed]]
-    L_feed_mats <- calc_L(method = method, tol = tol,
-                          D = D_mat, A = A_feed_mat,
-                          L_ixp = L_ixp_feed, L_pxp = L_pxp_feed)
+      A_feed_mat <- ZKCDA_feed[[A_feed]]
+      L_feed_mats <- calc_L(method = method, tol = tol,
+                            D = D_mat, A = A_feed_mat,
+                            L_ixp = L_ixp_feed, L_pxp = L_pxp_feed)
 
-    # Return a list
-    c(yqfgW, ZKCDA, L_mats, ZKCDA_feed, L_feed_mats)
+      # Return a list
+      return(c(yqfgW, ZKCDA, L_mats, ZKCDA_feed, L_feed_mats))
+
+    } else if (direction %in% c("downstream", "supply", "Ghosh", "ghosh")) {
+
+    }
+
   }
   matsindf::matsindf_apply(.sutdata, FUN = io_func, R_mat = R, U_mat = U, U_feed_mat = U_feed, V_mat = V, Y_mat = Y, S_units_mat = S_units)
 }
