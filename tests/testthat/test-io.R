@@ -369,3 +369,48 @@ test_that("NA in g works as expected", {
   expect_true(all(is.na(actual$A[[1]])))
 })
 
+
+test_that("calc_A() works as expected for downstream swim", {
+  io_mats <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    calc_yqfgW() %>%
+    calc_A(direction = "downstream")
+  rowtypeC_s <- io_mats[["C_s"]][[1]] %>% matsbyname::rowtype()
+  coltypeC_s <- io_mats[["C_s"]][[1]] %>% matsbyname::coltype()
+  rowtypeZ_s <- io_mats[["Z_s"]][[1]] %>% matsbyname::rowtype()
+  coltypeZ_s <- io_mats[["Z_s"]][[1]] %>% matsbyname::coltype()
+
+
+
+
+
+
+
+
+
+
+
+
+  # Try when one of the f vector entries is NA
+  temp <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    calc_yqfgW()
+  # Set one of the values in the first f vector to NA for this test.
+  temp$f[[1]][, 1][1] <- NA_real_
+  io_mats_NA <- temp %>%
+    calc_A(direction = "downstream")
+  expect_equal(io_mats_NA[["C_s"]][[1]] %>% matsbyname::rowtype(), rowtypeC_s)
+  expect_equal(io_mats_NA[["C_s"]][[1]] %>% matsbyname::coltype(), coltypeC_s)
+  expect_equal(io_mats_NA[["Z_s"]][[1]] %>% matsbyname::rowtype(), rowtypeZ_s)
+  expect_equal(io_mats_NA[["Z_s"]][[1]] %>% matsbyname::coltype(), coltypeZ_s)
+  expect_true(is.na(io_mats_NA[["C_s"]][[1]]))
+  expect_true(is.na(io_mats_NA[["Z_s"]][[1]]))
+
+})
+
+
+test_that("calc_A() gives correct downstream matrices for NA f_vec", {
+
+
+})
+

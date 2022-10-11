@@ -315,11 +315,12 @@ calc_A <- function(.sutdata = NULL,
                    # Input names
                    R = "R", U = "U", V = "V", q = "q", f = "f", g = "g", r = "r", h = "h",
                    # Output names
-                   Z = "Z", K = "K", C = "C", D = "D", A = "A", O = "O"){
+                   Z = "Z", K = "K", C = "C", D = "D", A = "A", O = "O",
+                   Z_s = "Z_s", C_s = "C_s"){
   direction <- match.arg(direction)
 
   A_func <- function(R_mat, U_mat, V_mat, q_vec, f_vec, g_vec, r_vec, h_vec){
-    if (direction %in% c("upstream", "demand", "Leontief")) {
+    if (direction %in% c("upstream", "demand", "Leontief", "leontief")) {
       if (is.null(R_mat)) {
         # No R matrix, just use the V matrix, assuming that resources are included there.
         R_plus_V_mat <- V_mat
@@ -337,7 +338,7 @@ calc_A <- function(.sutdata = NULL,
       # The calculation of C and Z will fail when g contains NA values.
       # NA values can be created when V has any industry whose outputs are unit inhomogeneous.
       # Test here if any entry in g is NA.
-      # If so, the value for C will be assigned to NA.
+      # If so, the values for C and Z will be assigned to NA.
       if (any(is.na(g_vec))) {
         C_mat <- NA_real_ %>%
           # rowtype of C_mat is rowtype(transpose(R_plus_V_mat)), which is same as coltype(R_plus_V_mat))
@@ -370,8 +371,46 @@ calc_A <- function(.sutdata = NULL,
       out <- list(Z_mat, K_mat, C_mat, D_mat, A_mat, O_mat) %>%
         magrittr::set_names(c(Z, K, C, D, A, O))
       return(out)
-    } else if (direction %in% c("upstream", "demand", "Leontief")) {
-      # Nothing here yet.
+    } else if (direction %in% c("downstream", "supply", "Ghosh", "ghosh")) {
+      # "_s" is for supply
+      # If f is a 1-column vector (because U_mat has only 1 column),
+      # need to strip off the column name, because hatinv(f) will fail.
+      # But actually we don't care about the name of the single column in the f vector,
+      # so delete the column name.
+      # We use hatinv(f) in several places below, so calculate it once here.
+      fhatinv <- f_vec %>%
+        matsbyname::hatinv_byname(keep = "rownames")
+
+      # The calculation of C_s and Z_s will fail when f contains NA values.
+      # NA values can be created when U has any industry whose outputs are unit inhomogeneous.
+      # Test here if any entry in f is NA.
+      # If so, the values for C_s and Z_s will be assigned to NA.
+      if (any(is.na(f_vec))) {
+        C_s_mat <- NA_real_ %>%
+          matsbyname::setrowtype(matsbyname::rowtype(U_mat)) %>%
+          matsbyname::setcoltype(matsbyname::coltype(fhatinv))
+        Z_s_mat <- NA_real_ %>%
+          # rowtype of Z_s_mat is rowtype(transpose(V_mat)), which is same as coltype(V_mat))
+          matsbyname::setrowtype(matsbyname::coltype(V_mat)) %>%
+          matsbyname::setcoltype(matsbyname::coltype(fhatinv))
+      } else {
+        C_s_mat <- matsbyname::matrixproduct_byname(U_mat, fhatinv)
+        Z_s_mat <- matsbyname::matrixproduct_byname(matsbyname::transpose_byname(V_mat), fhatinv)
+      }
+
+
+
+
+
+
+
+
+
+
+
+      out <- list(Z_s_mat, C_s_mat) %>%
+        magrittr::set_names(c(Z_s, C_s))
+      return(out)
     }
   }
 

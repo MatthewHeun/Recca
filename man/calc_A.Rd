@@ -20,7 +20,9 @@ calc_A(
   C = "C",
   D = "D",
   A = "A",
-  O = "O"
+  O = "O",
+  Z_s = "Z_s",
+  C_s = "C_s"
 )
 }
 \arguments{
