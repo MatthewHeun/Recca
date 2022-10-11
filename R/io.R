@@ -119,26 +119,30 @@ calc_io_mats <- function(.sutdata = NULL,
     h_vec <- yqfgW[[h]]
 
     if (direction %in% c("upstream", "demand", "Leontief", "leontief")) {
-      ZKCDA <- calc_A(R = R_mat, U = U_mat, V = V_mat, q = q_vec, f = f_vec, g = g_vec, r = r_vec, h = h_vec,
+      ZKCDA <- calc_A(direction = direction,
+                      R = R_mat, U = U_mat, V = V_mat, q = q_vec, f = f_vec, g = g_vec, r = r_vec, h = h_vec,
                       Z = Z, K = K, C = C, D = D, A = A, O = O)
 
       D_mat <- ZKCDA[[D]]
       A_mat <- ZKCDA[[A]]
 
-      L_mats <- calc_L(method = method, tol = tol,
+      L_mats <- calc_L(direction = direction,
+                       method = method, tol = tol,
                        D = D_mat, A = A_mat,
                        L_ixp = L_ixp, L_pxp = L_pxp)
 
       # Work on the "_feed" matrices.
 
-      ZKCDA_all_feed <- calc_A(R = R_mat, U = U_feed_mat, V = V_mat, q = q_vec, f = f_vec, g = g_vec, r = r_vec, h = h_vec,
+      ZKCDA_all_feed <- calc_A(direction = direction,
+                               R = R_mat, U = U_feed_mat, V = V_mat, q = q_vec, f = f_vec, g = g_vec, r = r_vec, h = h_vec,
                                Z = Z_feed, K = K_feed, C = C, D = D, A = A_feed, O = O)
       ZKCDA_feed <- list(Z_feed = ZKCDA_all_feed[[Z_feed]],
                          K_feed = ZKCDA_all_feed[[K_feed]],
                          A_feed = ZKCDA_all_feed[[A_feed]])
 
       A_feed_mat <- ZKCDA_feed[[A_feed]]
-      L_feed_mats <- calc_L(method = method, tol = tol,
+      L_feed_mats <- calc_L(direction = direction,
+                            method = method, tol = tol,
                             D = D_mat, A = A_feed_mat,
                             L_ixp = L_ixp_feed, L_pxp = L_pxp_feed)
 
@@ -262,7 +266,21 @@ calc_yqfgW <- function(.sutdata = NULL,
 
 #' Calculate **Z**, **K**, **C**, **D**, **A**, and **O** matrices
 #'
+#' These matrices define the IO structure of an energy conversion chain.
+#'
+#' Input-output matrices can be calculated for either
+#' an upstream swim (demand-sided as Leontief) or
+#' a downstream swim (supply-sided as Ghosh).
+#' The `direction` argument defines the direction.
+#' Different IO matrices are calculated based on direction.
+#' The default is "upstream", meaning that an upstream swim is desired.
+#' Note that "upstream", "demand", and "Leontief" are synonyms.
+#' "downstream", "supply", and "Ghosh" are synonyms.
+#'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
+#' @param direction A string that identifies the directionality of the IO matrices.
+#'                  See details.
+#'                  Default is "upstream".
 #' @param R resources (**R**) matrix or name of the column in `.sutmats` that contains same. Default is "R".
 #'          `R` is an optional argument.
 #'          If all of **R** is added to **V**, this argument can be left unspecified.
@@ -291,61 +309,71 @@ calc_yqfgW <- function(.sutdata = NULL,
 #'
 #' @export
 calc_A <- function(.sutdata = NULL,
+                   direction = c("upstream", "demand", "Leontief",
+                                 "downstream", "supply", "Ghosh"),
                    # Input names
                    R = "R", U = "U", V = "V", q = "q", f = "f", g = "g", r = "r", h = "h",
                    # Output names
                    Z = "Z", K = "K", C = "C", D = "D", A = "A", O = "O"){
+  direction <- match.arg(direction)
+
   A_func <- function(R_mat, U_mat, V_mat, q_vec, f_vec, g_vec, r_vec, h_vec){
-    if (is.null(R_mat)) {
-      # No R matrix, just use the V matrix, assuming that resources are included there.
-      R_plus_V_mat <- V_mat
-    } else {
-      # An R matrix is present. Sum R and V before proceeding.
-      R_plus_V_mat <- matsbyname::sum_byname(R_mat, V_mat)
-    }
-    # If g is a 1-row vector (because V_mat has only 1 row),
-    # need to strip off the column name, because hatinv(g) will fail.
-    # But actually we don't care about the name of the single column in the g vector,
-    # so delete the column name.
-    # We use hatinv(g) in several places below, so calculate it once here.
-    ghatinv <- g_vec %>%
-      matsbyname::hatinv_byname(keep = "rownames")
-    # The calculation of C and Z will fail when g contains NA values.
-    # NA values can be created when V has any industry whose outputs are unit inhomogeneous.
-    # Test here if any entry in g is NA.
-    # If so, the value for C will be assigned to NA.
-    if (any(is.na(g_vec))) {
-      C_mat <- NA_real_ %>%
-        # rowtype of C_mat is rowtype(transpose(R_plus_V_mat)), which is same as coltype(R_plus_V_mat))
-        matsbyname::setrowtype(matsbyname::coltype(V_mat)) %>%
-        matsbyname::setcoltype(matsbyname::coltype(ghatinv))
-      Z_mat <- NA_real_ %>%
-        matsbyname::setrowtype(matsbyname::rowtype(U_mat)) %>%
-        matsbyname::setcoltype(matsbyname::coltype(ghatinv))
-    } else {
-      C_mat <- matsbyname::matrixproduct_byname(matsbyname::transpose_byname(V_mat), ghatinv)
-      Z_mat <- matsbyname::matrixproduct_byname(U_mat, ghatinv)
-    }
-    # The calculation of K will fail when f contains NA values.
-    # NA values can be created when U has any industry whose inputs are inhomogeneous.
-    # Test here if any entry in f is NA.
-    # If so, the value for K will be assigned NA.
-    if (any(is.na(f_vec))) {
-      K_mat <- NA_real_ %>%
-        matsbyname::setrowtype(U_mat) %>%
-        matsbyname::setcoltype(matsbyname::coltype(matsbyname::hatinv_byname(f_vec, keep = "rownames")))
-    } else {
-      K_mat <- matsbyname::matrixproduct_byname(U_mat, matsbyname::hatinv_byname(f_vec, keep = "rownames"))
-    }
+    if (direction %in% c("upstream", "demand", "Leontief")) {
+      if (is.null(R_mat)) {
+        # No R matrix, just use the V matrix, assuming that resources are included there.
+        R_plus_V_mat <- V_mat
+      } else {
+        # An R matrix is present. Sum R and V before proceeding.
+        R_plus_V_mat <- matsbyname::sum_byname(R_mat, V_mat)
+      }
+      # If g is a 1-row vector (because V_mat has only 1 row),
+      # need to strip off the column name, because hatinv(g) will fail.
+      # But actually we don't care about the name of the single column in the g vector,
+      # so delete the column name.
+      # We use hatinv(g) in several places below, so calculate it once here.
+      ghatinv <- g_vec %>%
+        matsbyname::hatinv_byname(keep = "rownames")
+      # The calculation of C and Z will fail when g contains NA values.
+      # NA values can be created when V has any industry whose outputs are unit inhomogeneous.
+      # Test here if any entry in g is NA.
+      # If so, the value for C will be assigned to NA.
+      if (any(is.na(g_vec))) {
+        C_mat <- NA_real_ %>%
+          # rowtype of C_mat is rowtype(transpose(R_plus_V_mat)), which is same as coltype(R_plus_V_mat))
+          matsbyname::setrowtype(matsbyname::coltype(V_mat)) %>%
+          matsbyname::setcoltype(matsbyname::coltype(ghatinv))
+        Z_mat <- NA_real_ %>%
+          matsbyname::setrowtype(matsbyname::rowtype(U_mat)) %>%
+          matsbyname::setcoltype(matsbyname::coltype(ghatinv))
+      } else {
+        C_mat <- matsbyname::matrixproduct_byname(matsbyname::transpose_byname(V_mat), ghatinv)
+        Z_mat <- matsbyname::matrixproduct_byname(U_mat, ghatinv)
+      }
+      # The calculation of K will fail when f contains NA values.
+      # NA values can be created when U has any industry whose inputs are inhomogeneous.
+      # Test here if any entry in f is NA.
+      # If so, the value for K will be assigned NA.
+      if (any(is.na(f_vec))) {
+        K_mat <- NA_real_ %>%
+          matsbyname::setrowtype(U_mat) %>%
+          matsbyname::setcoltype(matsbyname::coltype(matsbyname::hatinv_byname(f_vec, keep = "rownames")))
+      } else {
+        K_mat <- matsbyname::matrixproduct_byname(U_mat, matsbyname::hatinv_byname(f_vec, keep = "rownames"))
+      }
 
-    D_mat <- matsbyname::matrixproduct_byname(V_mat, matsbyname::hatinv_byname(q_vec, keep = "rownames"))
-    A_mat <- matsbyname::matrixproduct_byname(Z_mat, D_mat)
-    O_mat <- matsbyname::matrixproduct_byname(R_mat, matsbyname::hatinv_byname(h_vec, keep = "rownames"))
+      D_mat <- matsbyname::matrixproduct_byname(V_mat, matsbyname::hatinv_byname(q_vec, keep = "rownames"))
+      A_mat <- matsbyname::matrixproduct_byname(Z_mat, D_mat)
+      O_mat <- matsbyname::matrixproduct_byname(R_mat, matsbyname::hatinv_byname(h_vec, keep = "rownames"))
 
-    # Put all output matrices in a list and return it.
-    list(Z_mat, K_mat, C_mat, D_mat, A_mat, O_mat) %>%
-      magrittr::set_names(c(Z, K, C, D, A, O))
+      # Put all output matrices in a list and return it.
+      out <- list(Z_mat, K_mat, C_mat, D_mat, A_mat, O_mat) %>%
+        magrittr::set_names(c(Z, K, C, D, A, O))
+      return(out)
+    } else if (direction %in% c("upstream", "demand", "Leontief")) {
+      # Nothing here yet.
+    }
   }
+
   matsindf::matsindf_apply(.sutdata, FUN = A_func, R_mat = R, U_mat = U, V_mat = V, q_vec = q, f_vec = f, g_vec = g, r_vec = r, h_vec = h)
 }
 
@@ -363,9 +391,21 @@ calc_A <- function(.sutdata = NULL,
 #'
 #' Both `tol` and `method` should be single values and apply to all matrices being inverted.
 #'
+#' Input-output matrices can be calculated for either
+#' an upstream swim (demand-sided as Leontief) or
+#' a downstream swim (supply-sided as Ghosh).
+#' The `direction` argument defines the direction.
+#' Different IO matrices are calculated based on direction.
+#' The default is "upstream", meaning that an upstream swim is desired.
+#' Note that "upstream", "demand", and "Leontief" are synonyms.
+#' "downstream", "supply", and "Ghosh" are synonyms.
+#'
 #' @param .sutdata A data frame of supply-use table matrices with matrices arranged in columns.
 #'                 Default is `NULL`, meaning that matrices will be taken from the `D` and `A` arguments.
 #'                 Set to a list or data frame to pull matrices from its store.
+#' @param direction A string that identifies the directionality of the IO matrices.
+#'                  See details.
+#'                  Default is "upstream".
 #' @param method One of "solve", "QR", or "SVD". Default is "solve". See details.
 #' @param tol The tolerance for detecting linear dependencies during matrix inversion.
 #'            Default is `.Machine$double.eps`.
@@ -380,6 +420,8 @@ calc_A <- function(.sutdata = NULL,
 #'
 #' @export
 calc_L <- function(.sutdata = NULL,
+                   direction = c("upstream", "demand", "Leontief",
+                                 "downstream", "supply", "Ghosh"),
                    method = c("solve", "QR", "SVD"),
                    tol = .Machine$double.eps,
                    # Input names
@@ -387,12 +429,20 @@ calc_L <- function(.sutdata = NULL,
                    # Output names
                    L_pxp = "L_pxp", L_ixp = "L_ixp"){
   method <- match.arg(method)
+  direction <- match.arg(direction)
+
   L_func <- function(D_mat, A_mat){
-    L_pxp_mat <- matsbyname::Iminus_byname(A_mat) %>%
-      matsbyname::invert_byname(method = method, tol = tol)
-    L_ixp_mat <- matsbyname::matrixproduct_byname(D_mat, L_pxp_mat)
-    list(L_pxp_mat, L_ixp_mat) %>%
-      magrittr::set_names(c(L_pxp, L_ixp))
+    if (direction %in% c("upstream", "demand", "Leontief")) {
+
+      L_pxp_mat <- matsbyname::Iminus_byname(A_mat) %>%
+        matsbyname::invert_byname(method = method, tol = tol)
+      L_ixp_mat <- matsbyname::matrixproduct_byname(D_mat, L_pxp_mat)
+      out <- list(L_pxp_mat, L_ixp_mat) %>%
+        magrittr::set_names(c(L_pxp, L_ixp))
+      return(out)
+    } else if (direction %in% c("upstream", "demand", "Leontief")) {
+
+    }
   }
   matsindf::matsindf_apply(.sutdata, FUN = L_func, D_mat = D, A_mat = A)
 }

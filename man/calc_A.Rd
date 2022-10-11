@@ -6,6 +6,7 @@
 \usage{
 calc_A(
   .sutdata = NULL,
+  direction = c("upstream", "demand", "Leontief", "downstream", "supply", "Ghosh"),
   R = "R",
   U = "U",
   V = "V",
@@ -24,6 +25,10 @@ calc_A(
 }
 \arguments{
 \item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
+
+\item{direction}{A string that identifies the directionality of the IO matrices.
+See details.
+Default is "upstream".}
 
 \item{R}{resources (\strong{R}) matrix or name of the column in \code{.sutmats} that contains same. Default is "R".
 \code{R} is an optional argument.
@@ -66,5 +71,15 @@ A list or data frame containing \strong{Z},
 \strong{K}, \strong{C}, \strong{D}, and \strong{A} matrices.
 }
 \description{
-Calculate \strong{Z}, \strong{K}, \strong{C}, \strong{D}, \strong{A}, and \strong{O} matrices
+These matrices define the IO structure of an energy conversion chain.
+}
+\details{
+Input-output matrices can be calculated for either
+an upstream swim (demand-sided as Leontief) or
+a downstream swim (supply-sided as Ghosh).
+The \code{direction} argument defines the direction.
+Different IO matrices are calculated based on direction.
+The default is "upstream", meaning that an upstream swim is desired.
+Note that "upstream", "demand", and "Leontief" are synonyms.
+"downstream", "supply", and "Ghosh" are synonyms.
 }

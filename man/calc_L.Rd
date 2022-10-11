@@ -6,6 +6,7 @@
 \usage{
 calc_L(
   .sutdata = NULL,
+  direction = c("upstream", "demand", "Leontief", "downstream", "supply", "Ghosh"),
   method = c("solve", "QR", "SVD"),
   tol = .Machine$double.eps,
   D = "D",
@@ -18,6 +19,10 @@ calc_L(
 \item{.sutdata}{A data frame of supply-use table matrices with matrices arranged in columns.
 Default is \code{NULL}, meaning that matrices will be taken from the \code{D} and \code{A} arguments.
 Set to a list or data frame to pull matrices from its store.}
+
+\item{direction}{A string that identifies the directionality of the IO matrices.
+See details.
+Default is "upstream".}
 
 \item{method}{One of "solve", "QR", or "SVD". Default is "solve". See details.}
 
@@ -49,4 +54,13 @@ calculating the inverse.
 See \code{matsbyname::invert_byname()}.
 
 Both \code{tol} and \code{method} should be single values and apply to all matrices being inverted.
+
+Input-output matrices can be calculated for either
+an upstream swim (demand-sided as Leontief) or
+a downstream swim (supply-sided as Ghosh).
+The \code{direction} argument defines the direction.
+Different IO matrices are calculated based on direction.
+The default is "upstream", meaning that an upstream swim is desired.
+Note that "upstream", "demand", and "Leontief" are synonyms.
+"downstream", "supply", and "Ghosh" are synonyms.
 }
