@@ -176,6 +176,7 @@ calc_io_mats <- function(.sutdata = NULL,
 #' Alternatively, an analyst can choose to use the "sum_R_V_cols" method,
 #' corresponding to a supply-sided view of **q**.
 #' In the case of a balanced ECC, the method does not matter.
+#' Both methods give a column vector as a result.
 #'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
 #' @param method_q_calculation Specifies the method with which the q vector should be calculated. See details.
