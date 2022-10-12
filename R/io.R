@@ -441,10 +441,11 @@ calc_A <- function(.sutdata = NULL,
 }
 
 
-#' Calculates total requirements matrices (**L_pxp** and **L_ixp**)
+#' Calculates total requirements matrices (**L_pxp** and **L_ixp** or **G_pxp** and **G_ixp**)
 #'
 #' **L_pxp** tells how much of a product (in a row) is required to make another product (in a column).
 #' **L_ixp** tells how much of an industry's output (in a row) is required to make another product (in a column).
+#' **G_xpx** and **G_ixp** are the Ghosh (downstream, supply-sided) equivalents.
 #'
 #' Calculating some matrices requires
 #' a matrix inversion operation.
@@ -463,6 +464,12 @@ calc_A <- function(.sutdata = NULL,
 #' Note that "upstream", "demand", and "Leontief" are synonyms.
 #' "downstream", "supply", and "Ghosh" are synonyms.
 #'
+#' Upstream swim matrices are named after Leontief and are called **L_pxp** and **L_ixp**.
+#' Downstream swim matrices are named after Ghosh and are called **G_pxp** and **G_ixp**.
+#' Which matrices are returned (**L** or **G**) depends on the value of the `direction` argument.
+#' "upstream", "demand", or "Leontief" generates **L** matrices.
+#' "downstream", "supply, or "Ghosh" generates **G** matrices.
+#'
 #' @param .sutdata A data frame of supply-use table matrices with matrices arranged in columns.
 #'                 Default is `NULL`, meaning that matrices will be taken from the `D` and `A` arguments.
 #'                 Set to a list or data frame to pull matrices from its store.
@@ -472,12 +479,22 @@ calc_A <- function(.sutdata = NULL,
 #' @param method One of "solve", "QR", or "SVD". Default is "solve". See details.
 #' @param tol The tolerance for detecting linear dependencies during matrix inversion.
 #'            Default is `.Machine$double.eps`.
-#' @param D The **D** matrix or name of the column in `.sutmats` that contains same. Default is "D".
-#' @param A The **A** matrix or name of the column in `.sutmats` that contains same. Default is "A".
+#' @param D The **D** matrix or name of the column in `.sutmats` that contains same.
+#'          `D` is required for `direction = "upstream"`. Default is "D".
+#' @param A The **A** matrix or name of the column in `.sutmats` that contains same.
+#'          `D` is required for `direction = "upstream"`. Default is "A".
+#' @param D_s The **D_s** matrix or name of the column in `.sutmats` that contains same.
+#'            `D_s` is required for `direction = "downstream"`. Default is "D_s".
+#' @param A_s The **A_s** matrix or name of the column in `.sutmats` that contains same.
+#'            `A_s` is required for `direction = "downstream"`. Default is "A_s".
 #' @param L_pxp The name for the **L_pxp** matrix on output. Default is "L_pxp".
 #'              `L_pxp` is calculated by `inverse(I - A)`.
 #' @param L_ixp The name for the **L_ixp** matrix on output. Default is "L_ixp".
 #'              **L_ixp** is calculated by `D * L_pxp`.
+#' @param G_pxp The name for the **G_pxp** matrix on output. Default is "G_pxp".
+#'              `G_pxp` is calculated by `inverse(I - A_s)`.
+#' @param G_ixp The name for the **G_ixp** matrix on output. Default is "G_ixp".
+#'              **G_ixp** is calculated by `D_s * G_pxp`.
 #'
 #' @return A list or data frame containing **L_pxp** and **L_ixp** matrices.
 #'
@@ -488,13 +505,14 @@ calc_L <- function(.sutdata = NULL,
                    method = c("solve", "QR", "SVD"),
                    tol = .Machine$double.eps,
                    # Input names
-                   D = "D", A = "A",
+                   D = "D", A = "A", D_s = "D_s", A_s = "A_s",
                    # Output names
-                   L_pxp = "L_pxp", L_ixp = "L_ixp"){
+                   L_pxp = "L_pxp", L_ixp = "L_ixp",
+                   G_pxp = "G_pxp", G_ixp = "G_ixp"){
   method <- match.arg(method)
   direction <- match.arg(direction)
 
-  L_func <- function(D_mat, A_mat){
+  L_func <- function(D_mat, A_mat, D_s_mat, A_s_mat){
     if (direction %in% c("upstream", "demand", "Leontief")) {
 
       L_pxp_mat <- matsbyname::Iminus_byname(A_mat) %>%
@@ -503,9 +521,13 @@ calc_L <- function(.sutdata = NULL,
       out <- list(L_pxp_mat, L_ixp_mat) %>%
         magrittr::set_names(c(L_pxp, L_ixp))
       return(out)
-    } else if (direction %in% c("upstream", "demand", "Leontief")) {
-
+    } else if (direction %in% c("downstream", "supply", "Ghosh", "ghosh")) {
+      G_pxp_mat <- matsbyname::Iminus_byname(A_s_mat) %>% matsbyname::invert_byname(method = method, tol = tol)
+      G_ixp_mat <- matsbyname::matrixproduct_byname(D_s_mat, G_pxp_mat)
+      out <- list(G_pxp_mat, G_ixp_mat) %>%
+        magrittr::set_names(c(G_pxp, G_ixp))
+      return(out)
     }
   }
-  matsindf::matsindf_apply(.sutdata, FUN = L_func, D_mat = D, A_mat = A)
+  matsindf::matsindf_apply(.sutdata, FUN = L_func, D_mat = D, A_mat = A, D_s_mat = D_s, A_s_mat = A_s)
 }

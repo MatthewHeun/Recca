@@ -406,3 +406,11 @@ test_that("calc_A() works as expected for downstream swim", {
 
 
 
+test_that("calc_L() works as expected for downstream swim", {
+  io_mats <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    calc_yqfgW() %>%
+    calc_A(direction = "downstream") %>%
+    calc_L(direction = "downstream")
+
+})
