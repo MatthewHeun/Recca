@@ -413,4 +413,9 @@ test_that("calc_L() works as expected for downstream swim", {
     calc_A(direction = "downstream") %>%
     calc_L(direction = "downstream")
 
+  expect_true("G_pxp" %in% colnames(io_mats))
+  expect_true("G_ixp" %in% colnames(io_mats))
+
+  expect_true(!("L_pxp" %in% colnames(io_mats)))
+  expect_true(!("L_ixp" %in% colnames(io_mats)))
 })
