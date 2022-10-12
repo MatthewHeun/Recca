@@ -522,9 +522,7 @@ calc_L <- function(.sutdata = NULL,
 
   L_func <- function(D_mat, A_mat, D_s_mat, A_s_mat){
     if (direction %in% c("upstream", "demand", "Leontief")) {
-
-      L_pxp_mat <- matsbyname::Iminus_byname(A_mat) %>%
-        matsbyname::invert_byname(method = method, tol = tol)
+      L_pxp_mat <- matsbyname::Iminus_byname(A_mat) %>% matsbyname::invert_byname(method = method, tol = tol)
       L_ixp_mat <- matsbyname::matrixproduct_byname(D_mat, L_pxp_mat)
       out <- list(L_pxp_mat, L_ixp_mat) %>%
         magrittr::set_names(c(L_pxp, L_ixp))

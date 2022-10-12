@@ -431,6 +431,11 @@ test_that("calc_L() works as expected for downstream swim", {
 
   expect_true(!("L_pxp" %in% colnames(io_mats)))
   expect_true(!("L_ixp" %in% colnames(io_mats)))
+
+  # Check some values in the resulting matrices.
+  expect_equal(io_mats$G_pxp[[1]]["Crude - Dist.", "Crude - Fields"], 0.9978994404)
+  # At the moment, many NA values in the 2nd and 4th G_pxp matrices.
+
 })
 
 
