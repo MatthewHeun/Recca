@@ -375,23 +375,20 @@ test_that("calc_A() works as expected for downstream swim", {
     tidyr::spread(key = matrix.name, value = matrix) %>%
     calc_yqfgW() %>%
     calc_A(direction = "downstream")
+  # Gather some row and column types for later use.
   rowtypeC_s <- io_mats[["C_s"]][[1]] %>% matsbyname::rowtype()
   coltypeC_s <- io_mats[["C_s"]][[1]] %>% matsbyname::coltype()
   rowtypeZ_s <- io_mats[["Z_s"]][[1]] %>% matsbyname::rowtype()
   coltypeZ_s <- io_mats[["Z_s"]][[1]] %>% matsbyname::coltype()
 
+  # Check some values in the resulting matrices.
+  expect_equal(io_mats$Z_s[[1]]["Crude - Fields", "Oil fields"], 0.9510223490)
+  expect_equal(io_mats$D_s[[2]]["Furnaces", "NG - Dist."], 0.6097560976)
+  expect_equal(io_mats$D_feed_s[[3]]["Power plants", "NG - Dist."], 0.3902439)
+  expect_equal(io_mats$O_s[[4]]["Freight [tonne-km/year]", "Transport"], 0.9527775309)
+  expect_equal(io_mats$A_s[[3]]["Diesel - Dist.", "MD - Truck engines"], 0.009762856)
 
-
-
-
-
-
-
-
-
-
-
-  # Try when one of the f vector entries is NA
+# Try when one of the f vector entries is NA
   temp <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
     calc_yqfgW()
@@ -405,12 +402,7 @@ test_that("calc_A() works as expected for downstream swim", {
   expect_equal(io_mats_NA[["Z_s"]][[1]] %>% matsbyname::coltype(), coltypeZ_s)
   expect_true(is.na(io_mats_NA[["C_s"]][[1]]))
   expect_true(is.na(io_mats_NA[["Z_s"]][[1]]))
-
 })
 
 
-test_that("calc_A() gives correct downstream matrices for NA f_vec", {
-
-
-})
 
