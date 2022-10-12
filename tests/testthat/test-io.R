@@ -381,6 +381,20 @@ test_that("calc_A() works as expected for downstream swim", {
   rowtypeZ_s <- io_mats[["Z_s"]][[1]] %>% matsbyname::rowtype()
   coltypeZ_s <- io_mats[["Z_s"]][[1]] %>% matsbyname::coltype()
 
+  expect_true("C_s" %in% colnames(io_mats))
+  expect_true("Z_s" %in% colnames(io_mats))
+  expect_true("D_s" %in% colnames(io_mats))
+  expect_true("D_feed_s" %in% colnames(io_mats))
+  expect_true("O_s" %in% colnames(io_mats))
+  expect_true("A_s" %in% colnames(io_mats))
+
+  expect_true(!("C" %in% colnames(io_mats)))
+  expect_true(!("Z" %in% colnames(io_mats)))
+  expect_true(!("D" %in% colnames(io_mats)))
+  expect_true(!("K" %in% colnames(io_mats)))
+  expect_true(!("O" %in% colnames(io_mats)))
+  expect_true(!("A" %in% colnames(io_mats)))
+
   # Check some values in the resulting matrices.
   expect_equal(io_mats$Z_s[[1]]["Crude - Fields", "Oil fields"], 0.9510223490)
   expect_equal(io_mats$D_s[[2]]["Furnaces", "NG - Dist."], 0.6097560976)
@@ -405,7 +419,6 @@ test_that("calc_A() works as expected for downstream swim", {
 })
 
 
-
 test_that("calc_L() works as expected for downstream swim", {
   io_mats <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
@@ -418,4 +431,19 @@ test_that("calc_L() works as expected for downstream swim", {
 
   expect_true(!("L_pxp" %in% colnames(io_mats)))
   expect_true(!("L_ixp" %in% colnames(io_mats)))
+})
+
+
+test_that("calc_G() is an alias for downstream swim.", {
+  io_mats_L <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    calc_yqfgW() %>%
+    calc_A(direction = "downstream") %>%
+    calc_L(direction = "downstream")
+  io_mats_G <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    calc_yqfgW() %>%
+    calc_A(direction = "downstream") %>%
+    calc_G(direction = "downstream")
+  expect_equal(io_mats_G, io_mats_L)
 })

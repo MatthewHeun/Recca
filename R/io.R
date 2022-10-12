@@ -445,7 +445,7 @@ calc_A <- function(.sutdata = NULL,
 #'
 #' **L_pxp** tells how much of a product (in a row) is required to make another product (in a column).
 #' **L_ixp** tells how much of an industry's output (in a row) is required to make another product (in a column).
-#' **G_xpx** and **G_ixp** are the Ghosh (downstream, supply-sided) equivalents.
+#' **G_pxp** and **G_ixp** are the Ghosh (downstream, supply-sided) equivalents.
 #'
 #' Calculating some matrices requires
 #' a matrix inversion operation.
@@ -469,6 +469,14 @@ calc_A <- function(.sutdata = NULL,
 #' Which matrices are returned (**L** or **G**) depends on the value of the `direction` argument.
 #' "upstream", "demand", or "Leontief" generates **L** matrices.
 #' "downstream", "supply, or "Ghosh" generates **G** matrices.
+#'
+#' Note that for historical reasons,
+#' `calc_L()` and `calc_G()` are synonyms.
+#' Both will calculate **L** matrices or **G** matrices,
+#' depending on the value of the `direction` argument.
+#' But it is good practice to call `calc_L()` when doing an upstream swim
+#' and `calc_G()` when doing a downstream swim.
+#' Doing so clearly signals intent.
 #'
 #' @param .sutdata A data frame of supply-use table matrices with matrices arranged in columns.
 #'                 Default is `NULL`, meaning that matrices will be taken from the `D` and `A` arguments.
@@ -496,7 +504,7 @@ calc_A <- function(.sutdata = NULL,
 #' @param G_ixp The name for the **G_ixp** matrix on output. Default is "G_ixp".
 #'              **G_ixp** is calculated by `D_s * G_pxp`.
 #'
-#' @return A list or data frame containing **L_pxp** and **L_ixp** matrices.
+#' @return A list or data frame containing **L_pxp** and **L_ixp** or **G_pxp** and **G_ixp** matrices.
 #'
 #' @export
 calc_L <- function(.sutdata = NULL,
@@ -531,3 +539,10 @@ calc_L <- function(.sutdata = NULL,
   }
   matsindf::matsindf_apply(.sutdata, FUN = L_func, D_mat = D, A_mat = A, D_s_mat = D_s, A_s_mat = A_s)
 }
+
+
+# Create an alias for calc_L, namely calc_G.
+
+#' @rdname calc_L
+#' @export
+calc_G <- calc_L

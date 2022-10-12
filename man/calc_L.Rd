@@ -2,9 +2,25 @@
 % Please edit documentation in R/io.R
 \name{calc_L}
 \alias{calc_L}
+\alias{calc_G}
 \title{Calculates total requirements matrices (\strong{L_pxp} and \strong{L_ixp} or \strong{G_pxp} and \strong{G_ixp})}
 \usage{
 calc_L(
+  .sutdata = NULL,
+  direction = c("upstream", "demand", "Leontief", "downstream", "supply", "Ghosh"),
+  method = c("solve", "QR", "SVD"),
+  tol = .Machine$double.eps,
+  D = "D",
+  A = "A",
+  D_s = "D_s",
+  A_s = "A_s",
+  L_pxp = "L_pxp",
+  L_ixp = "L_ixp",
+  G_pxp = "G_pxp",
+  G_ixp = "G_ixp"
+)
+
+calc_G(
   .sutdata = NULL,
   direction = c("upstream", "demand", "Leontief", "downstream", "supply", "Ghosh"),
   method = c("solve", "QR", "SVD"),
@@ -58,12 +74,12 @@ Default is \code{.Machine$double.eps}.}
 \strong{G_ixp} is calculated by \code{D_s * G_pxp}.}
 }
 \value{
-A list or data frame containing \strong{L_pxp} and \strong{L_ixp} matrices.
+A list or data frame containing \strong{L_pxp} and \strong{L_ixp} or \strong{G_pxp} and \strong{G_ixp} matrices.
 }
 \description{
 \strong{L_pxp} tells how much of a product (in a row) is required to make another product (in a column).
 \strong{L_ixp} tells how much of an industry's output (in a row) is required to make another product (in a column).
-\strong{G_xpx} and \strong{G_ixp} are the Ghosh (downstream, supply-sided) equivalents.
+\strong{G_pxp} and \strong{G_ixp} are the Ghosh (downstream, supply-sided) equivalents.
 }
 \details{
 Calculating some matrices requires
@@ -88,4 +104,12 @@ Downstream swim matrices are named after Ghosh and are called \strong{G_pxp} and
 Which matrices are returned (\strong{L} or \strong{G}) depends on the value of the \code{direction} argument.
 "upstream", "demand", or "Leontief" generates \strong{L} matrices.
 "downstream", "supply, or "Ghosh" generates \strong{G} matrices.
+
+Note that for historical reasons,
+\code{calc_L()} and \code{calc_G()} are synonyms.
+Both will calculate \strong{L} matrices or \strong{G} matrices,
+depending on the value of the \code{direction} argument.
+But it is good practice to call \code{calc_L()} when doing an upstream swim
+and \code{calc_G()} when doing a downstream swim.
+Doing so clearly signals intent.
 }
