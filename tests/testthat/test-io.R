@@ -419,27 +419,7 @@ test_that("calc_A() works as expected for downstream swim", {
 })
 
 
-test_that("calc_L() works as expected for downstream swim", {
-  io_mats <- UKEnergy2000mats %>%
-    tidyr::spread(key = matrix.name, value = matrix) %>%
-    calc_yqfgW() %>%
-    calc_A(direction = "downstream") %>%
-    calc_L(direction = "downstream")
-
-  expect_true("G_pxp" %in% colnames(io_mats))
-  expect_true("G_ixp" %in% colnames(io_mats))
-
-  expect_true(!("L_pxp" %in% colnames(io_mats)))
-  expect_true(!("L_ixp" %in% colnames(io_mats)))
-
-  # Check some values in the resulting matrices.
-  expect_equal(io_mats$G_pxp[[1]]["Crude - Dist.", "Crude - Fields"], 0.9978994404)
-  # At the moment, many NA values in the 2nd and 4th G_pxp matrices.
-
-})
-
-
-test_that("calc_G() is an alias for downstream swim.", {
+test_that("calc_G() is an alias for calc_L()", {
   io_mats_L <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
     calc_yqfgW() %>%
@@ -452,3 +432,28 @@ test_that("calc_G() is an alias for downstream swim.", {
     calc_G(direction = "downstream")
   expect_equal(io_mats_G, io_mats_L)
 })
+
+
+test_that("calc_L() works as expected for downstream swim", {
+  io_mats <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    # Last.stage == "Services" has unit inhomogeniety and bad results.
+    dplyr::filter(Last.stage != "Services") %>%
+    calc_yqfgW() %>%
+    calc_A(direction = "downstream") %>%
+    calc_L(direction = "downstream")
+
+  expect_true("G_pxp" %in% colnames(io_mats))
+  expect_true("G_ixp" %in% colnames(io_mats))
+
+  expect_true(!("L_pxp" %in% colnames(io_mats)))
+  expect_true(!("L_ixp" %in% colnames(io_mats)))
+
+  # Check some values in the resulting matrices.
+  expect_equal(io_mats$G_pxp[[1]]["Crude - Dist.", "Crude - Fields"], 0.9978994404)
+  expect_equal(io_mats$G_pxp[[2]]["Elect - Grid", "Crude - Fields"], 2.175612e-04)
+  expect_equal(io_mats$G_ixp[[1]]["Petrol dist.", "Petrol"], 1.0186915888)
+  expect_equal(io_mats$G_ixp[[2]]["Light fixtures", "Elect - Grid"], 0.963300755)
+})
+
+
