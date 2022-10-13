@@ -163,9 +163,9 @@ calc_io_mats <- function(.sutdata = NULL,
                        D_s = D_s_mat, A_s = A_s_mat,
                        G_ixp = G_ixp, G_pxp = G_pxp)
 
-
+      # Return a list
+      return(c(yqfgW, ZKCDA_s, G_mats))
     }
-
   }
   matsindf::matsindf_apply(.sutdata, FUN = io_func, R_mat = R, U_mat = U, U_feed_mat = U_feed, V_mat = V, Y_mat = Y, S_units_mat = S_units)
 }

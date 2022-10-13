@@ -460,8 +460,14 @@ test_that("calc_L() works as expected for downstream swim", {
 test_that("calc_io_mats() works for downstream swim", {
   G_mats <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
+    # Last.stage == "Services" has unit inhomogeniety and bad results.
+    dplyr::filter(Last.stage != "Services") %>%
     calc_io_mats(direction = "Ghosh") %>%
     # Look at the G matrices, because they depend on everything else.
     dplyr::select(Country, Year, Energy.type, Last.stage, G_ixp, G_pxp)
-
+  # Make sure these results match expected results by testing a few values.
+  expect_equal(G_mats$G_pxp[[1]]["Crude - Dist.", "Crude - Fields"], 0.9978994404)
+  expect_equal(G_mats$G_pxp[[2]]["Elect - Grid", "Crude - Fields"], 2.175612e-04)
+  expect_equal(G_mats$G_ixp[[1]]["Petrol dist.", "Petrol"], 1.0186915888)
+  expect_equal(G_mats$G_ixp[[2]]["Light fixtures", "Elect - Grid"], 0.963300755)
 })
