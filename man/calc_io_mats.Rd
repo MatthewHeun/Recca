@@ -35,7 +35,15 @@ calc_io_mats(
   K_feed = "K_feed",
   A_feed = "A_feed",
   L_ixp_feed = "L_ixp_feed",
-  L_pxp_feed = "L_pxp_feed"
+  L_pxp_feed = "L_pxp_feed",
+  Z_s = "Z_s",
+  C_s = "C_s",
+  D_s = "D_s",
+  D_feed_s = "D_feed_s",
+  A_s = "A_s",
+  G_ixp = "G_ixp",
+  G_pxp = "G_pxp",
+  O_s = "O_s"
 )
 }
 \arguments{

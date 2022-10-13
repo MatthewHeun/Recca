@@ -100,7 +100,8 @@ calc_io_mats <- function(.sutdata = NULL,
                          # Output names
                          y = "y", q = "q", f = "f", g = "g", h = "h", r = "r", W = "W", K = "K",
                          Z = "Z", C = "C", D = "D", A = "A", L_ixp = "L_ixp", L_pxp = "L_pxp", O = "O",
-                         Z_feed = "Z_feed", K_feed = "K_feed", A_feed = "A_feed", L_ixp_feed = "L_ixp_feed", L_pxp_feed = "L_pxp_feed"){
+                         Z_feed = "Z_feed", K_feed = "K_feed", A_feed = "A_feed", L_ixp_feed = "L_ixp_feed", L_pxp_feed = "L_pxp_feed",
+                         Z_s = "Z_s", C_s = "C_s", D_s = "D_s", D_feed_s = "D_feed_s", A_s = "A_s", G_ixp = "G_ixp", G_pxp = "G_pxp", O_s = "O_s"){
 
   method <- match.arg(method)
   method_q_calculation <- match.arg(method_q_calculation)
@@ -150,6 +151,18 @@ calc_io_mats <- function(.sutdata = NULL,
       return(c(yqfgW, ZKCDA, L_mats, ZKCDA_feed, L_feed_mats))
 
     } else if (direction %in% c("downstream", "supply", "Ghosh", "ghosh")) {
+      ZKCDA_s <- calc_A(direction = direction,
+                        R = R_mat, U = U_mat, U_feed = U_feed_mat, V = V_mat, Y = Y_mat, q = q_vec, f = f_vec, g = g_vec, r = r_vec, h = h_vec,
+                        Z_s = Z_s, C_s = C_s, D_s = D_s, D_feed_s = D_feed_s, A_s = A_s, O_s = O_s)
+
+      D_s_mat <- ZKCDA_s[[D_s]]
+      A_s_mat <- ZKCDA_s[[A_s]]
+
+      G_mats <- calc_G(direction = direction,
+                       method = method, tol = tol,
+                       D_s = D_s_mat, A_s = A_s_mat,
+                       G_ixp = G_ixp, G_pxp = G_pxp)
+
 
     }
 

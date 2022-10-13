@@ -457,3 +457,11 @@ test_that("calc_L() works as expected for downstream swim", {
 })
 
 
+test_that("calc_io_mats() works for downstream swim", {
+  G_mats <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    calc_io_mats(direction = "Ghosh") %>%
+    # Look at the G matrices, because they depend on everything else.
+    dplyr::select(Country, Year, Energy.type, Last.stage, G_ixp, G_pxp)
+
+})
