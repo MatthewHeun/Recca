@@ -601,9 +601,12 @@ verify_chop_energy_sum <- function(.sut_data = NULL,
 #'                     See `footprint_aggregates()` for details.
 #' @param fd_sectors A vector of names of sectors in final demand.
 #'                   See `footprint_aggregates()` for details.
+#' @param piece The piece of labels to be matched. Default is "all". See the `RCLabels` package.
+#' @param notation The notation type for matching. Default is `RCLabels::notations_list`.
 #' @param pattern_type One of "exact", "leading", "trailing", or "anywhere" which specifies
 #'                     how matches are made for `p_industries`.
 #'                     See `footprint_aggregates()` for details.
+#' @param prepositions Prepositions for notation matching. Default is `RCLabels::prepositions_list`.
 #' @param product_sector The name of the output column that contains the product, industry, or sector
 #'                       for which footprint aggregates are given.
 #' @param chop_df,aggregate_primary,net_aggregate_demand,gross_aggregate_demand Names of output columns.
