@@ -39,9 +39,15 @@ See \code{footprint_aggregates()} for details.}
 \item{fd_sectors}{A vector of names of sectors in final demand.
 See \code{footprint_aggregates()} for details.}
 
+\item{piece}{The piece of labels to be matched. Default is "all". See the \code{RCLabels} package.}
+
+\item{notation}{The notation type for matching. Default is \code{RCLabels::notations_list}.}
+
 \item{pattern_type}{One of "exact", "leading", "trailing", or "anywhere" which specifies
 how matches are made for \code{p_industries}.
 See \code{footprint_aggregates()} for details.}
+
+\item{prepositions}{Prepositions for notation matching. Default is \code{RCLabels::prepositions_list}.}
 
 \item{product_sector}{The name of the output column that contains the product, industry, or sector
 for which footprint aggregates are given.}
