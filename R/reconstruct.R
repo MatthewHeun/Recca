@@ -233,7 +233,7 @@ new_k_ps <- function(.sutmats = NULL,
     # Ensure that the column sum of k_prime_2 is exactly 1.0.
     assertthat::assert_that(matsbyname::colsums_byname(k_prime_2) == 1,
                             msg = paste("k_prime_2 has column sum of",
-                                        matsbyname::colsums_byname(y_prime_2),
+                                        matsbyname::colsums_byname(k_prime_2),
                                         "but it must be exactly 1.0."))
     # Grab the k_prime_1 (not k_prime_2) column out of the existing K matrix.
     # k_prime_1 is the column from the K matrix with the same name as k_prime_2.

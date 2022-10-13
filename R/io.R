@@ -77,6 +77,22 @@
 #'        **L_ixp_feed** is calculated by `D_feed * L_pxp_feed`.
 #' @param L_pxp_feed The name for the **L_pxp_feed** matrix on output. Default is "L_pxp_feed".
 #'        **L_pxp_feed** is calculated by `(I - Z_feed*D)^-1`.
+#' @param Z_s The name for the **Z_s** matrix on output. Default is "Z_s".
+#'            **Z_s** is calculated by `transpose(V) * f_hat_inv`.
+#' @param C_s The name for the **C_s** matrix on output. Default is "C_s".
+#'            **C_s** is calculated by `U * f_hat_inv`.
+#' @param D_s The name for the **D_s** matrix on output. Default is "D_s".
+#'            **D_s** is calculated by `transpose(U) * q_hat_inv`.
+#' @param D_feed_s The name for the **D_feed_s** matrix on output. Default is "D_feed_s".
+#'                 **D_s** is calculated by `transpose(U_feed) * q_hat_inv`.
+#' @param A_s The name for the **A_s** matrix on output. Default is "A_s".
+#'            **A_s** is calculated by `Z_s * D_s`.
+#' @param O_s The name for the **O_s** matrix on output. Default is "O_s".
+#'            **O** is calculated by `q_hat_inv * Y`.
+#' @param G_pxp The name for the **G_pxp** matrix on output. Default is "G_pxp".
+#'              `G_pxp` is calculated by `inverse(I - A_s)`.
+#' @param G_ixp The name for the **G_ixp** matrix on output. Default is "G_ixp".
+#'              **G_ixp** is calculated by `D_s * G_pxp`.
 #'
 #' @return A list or data frame containing input-output matrices.
 #'

@@ -131,6 +131,30 @@ Default is \code{.Machine$double.eps}.}
 
 \item{L_pxp_feed}{The name for the \strong{L_pxp_feed} matrix on output. Default is "L_pxp_feed".
 \strong{L_pxp_feed} is calculated by \code{(I - Z_feed*D)^-1}.}
+
+\item{Z_s}{The name for the \strong{Z_s} matrix on output. Default is "Z_s".
+\strong{Z_s} is calculated by \code{transpose(V) * f_hat_inv}.}
+
+\item{C_s}{The name for the \strong{C_s} matrix on output. Default is "C_s".
+\strong{C_s} is calculated by \code{U * f_hat_inv}.}
+
+\item{D_s}{The name for the \strong{D_s} matrix on output. Default is "D_s".
+\strong{D_s} is calculated by \code{transpose(U) * q_hat_inv}.}
+
+\item{D_feed_s}{The name for the \strong{D_feed_s} matrix on output. Default is "D_feed_s".
+\strong{D_s} is calculated by \code{transpose(U_feed) * q_hat_inv}.}
+
+\item{A_s}{The name for the \strong{A_s} matrix on output. Default is "A_s".
+\strong{A_s} is calculated by \code{Z_s * D_s}.}
+
+\item{G_ixp}{The name for the \strong{G_ixp} matrix on output. Default is "G_ixp".
+\strong{G_ixp} is calculated by \code{D_s * G_pxp}.}
+
+\item{G_pxp}{The name for the \strong{G_pxp} matrix on output. Default is "G_pxp".
+\code{G_pxp} is calculated by \code{inverse(I - A_s)}.}
+
+\item{O_s}{The name for the \strong{O_s} matrix on output. Default is "O_s".
+\strong{O} is calculated by \code{q_hat_inv * Y}.}
 }
 \value{
 A list or data frame containing input-output matrices.
