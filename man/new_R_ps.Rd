@@ -15,6 +15,12 @@ new_R_ps(
   Y = "Y",
   q = "q",
   f = "f",
+  G_pxp = "G_pxp",
+  G_ixp = "G_ixp",
+  O_s = "O_s",
+  D_s = "D_s",
+  D_feed_s = "D_feed_s",
+  Z_s = "Z_s",
   U_prime = "U_prime",
   U_feed_prime = "U_feed_prime",
   U_eiou_prime = "U_EIOU_prime",
@@ -100,7 +106,7 @@ Both \code{tol} and \code{method} should be a single values and apply to all mat
 UKEnergy2000mats \%>\%
   tidyr::spread(key = "matrix.name", value = "matrix") \%>\%
   # Calculate the input-output matrices which are inputs to the new_R function.
-  calc_io_mats() \%>\%
+  calc_io_mats(direction = "downstream") \%>\%
   # Make an R_prime matrix that gives twice the resource inputs to the economy.
   dplyr::mutate(
     R_prime = matsbyname::hadamardproduct_byname(2, R)

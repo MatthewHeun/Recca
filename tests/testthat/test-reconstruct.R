@@ -350,7 +350,7 @@ test_that("new_R_ps() works as expected", {
     # Avoid by using only ECCs with "Final" and "Useful" as the Last.stage.
     dplyr::filter(Last.stage != IEATools::last_stages$services) %>%
     # Calculate the input-output matrices which are inputs to the new_R function.
-    calc_io_mats() %>%
+    calc_io_mats(direction = "downstream") %>%
     # Make an R_prime matrix that gives the same the resource inputs to the economy.
     # For testing purposes!
     dplyr::mutate(
@@ -393,7 +393,7 @@ test_that("new_R_ps() works as expected", {
     # Avoid by using only ECCs with "Final" and "Useful" as the Last.stage.
     dplyr::filter(Last.stage != IEATools::last_stages$services) %>%
     # Calculate the input-output matrices which are inputs to the new_R function.
-    calc_io_mats() %>%
+    calc_io_mats(direction = "downstream") %>%
     # Make an R_prime matrix that gives twice the resource inputs to the economy.
     dplyr::mutate(
       R_prime = matsbyname::hadamardproduct_byname(2, R)
@@ -430,11 +430,19 @@ test_that("new_R_ps() works as expected", {
 
   # Check some values when the new R matrix has 1's in it.
   # These tests are in preparation for converting new_R_ps()
-  # to
-  unitaryR <- setup
+  # to use new calc_io_mats(direction =- "downstream").
+  unitaryR <- UKEnergy2000mats %>%
+    tidyr::spread(key = "matrix.name", value = "matrix") %>%
+    # When Last.stage is "services", we get units problems.
+    # Avoid by using only ECCs with "Final" and "Useful" as the Last.stage.
+    dplyr::filter(Last.stage != IEATools::last_stages$services) %>%
+    dplyr::mutate(
+      R_prime = matsbyname::hadamardproduct_byname(2, R)
+    )
   unitaryR$R_prime[[1]]["Resources - Crude", "Crude"] <- 1
   unitaryR$R_prime[[1]]["Resources - NG", "NG"] <- 1
   unitaryR <- unitaryR %>%
+    calc_io_mats(direction = "downstream") %>%
     new_R_ps()
   expect_equal(unitaryR$U_prime[[1]]["Crude - Dist.", "Oil refineries"], 0.940157103)
   expect_equal(unitaryR$U_prime[[1]]["Elect - Grid", "Crude dist."], 0.0005812516)
@@ -451,7 +459,7 @@ test_that("new_R_ps() works as expected", {
   WithDiffUnits <- UKEnergy2000mats %>%
     tidyr::spread(key = "matrix.name", value = "matrix") %>%
     # Calculate the input-output matrices which are inputs to the new_R function.
-    calc_io_mats() %>%
+    calc_io_mats(direction = "downstream") %>%
     # Make an R_prime matrix that gives twice the resource inputs to the economy.
     dplyr::mutate(
       R_prime = matsbyname::hadamardproduct_byname(2, R)
