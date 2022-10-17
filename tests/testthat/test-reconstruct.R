@@ -387,7 +387,6 @@ test_that("new_R_ps() works as expected", {
     expect_true(matsbyname::equal_byname(newRsameasoldR$W_prime[[i]], newRsameasoldR$expected_W[[i]]))
   }
 
-
   doubleR <- UKEnergy2000mats %>%
     tidyr::spread(key = "matrix.name", value = "matrix") %>%
     # When Last.stage is "services", we get units problems.
@@ -428,6 +427,16 @@ test_that("new_R_ps() works as expected", {
     expect_equal(doubleR$Y_prime[[i]], doubleR$expected_Y[[i]])
     expect_equal(doubleR$W_prime[[i]], doubleR$expected_W[[i]])
   }
+
+  # Check some values when the new R matrix has 1's in it.
+  unitaryR <- setup
+  unitaryR$R_prime[[1]]["Resources - Crude", "Crude"] <- 1
+  unitaryR$R_prime[[1]]["Resources - NG", "NG"] <- 1
+  unitaryR <- unitaryR %>%
+    new_R_ps()
+  expect_equal(unitaryR$Y_prime[[1]]["Elect - Grid", "Residential"], 0.1395004)
+
+
 
   # Test when the units on Products in U are not all same.
   # Under those conditions, we expect that U_prime, V_prime, and Y_prime are all NA.
