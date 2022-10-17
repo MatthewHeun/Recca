@@ -429,13 +429,19 @@ test_that("new_R_ps() works as expected", {
   }
 
   # Check some values when the new R matrix has 1's in it.
+  # These tests are in preparation for converting new_R_ps()
+  # to
   unitaryR <- setup
   unitaryR$R_prime[[1]]["Resources - Crude", "Crude"] <- 1
   unitaryR$R_prime[[1]]["Resources - NG", "NG"] <- 1
   unitaryR <- unitaryR %>%
     new_R_ps()
+  expect_equal(unitaryR$U_prime[[1]]["Crude - Dist.", "Oil refineries"], 0.940157103)
+  expect_equal(unitaryR$U_prime[[1]]["Elect - Grid", "Crude dist."], 0.0005812516)
+  expect_equal(unitaryR$V_prime[[1]]["Petrol dist.", "Petrol - Dist."], 0.53022566)
+  expect_equal(unitaryR$V_prime[[1]]["Oil refineries", "Diesel"], 0.41017456)
   expect_equal(unitaryR$Y_prime[[1]]["Elect - Grid", "Residential"], 0.1395004)
-
+  expect_equal(unitaryR$Y_prime[[1]]["Petrol - Dist.", "Transport"], 0.5202214)
 
 
   # Test when the units on Products in U are not all same.
