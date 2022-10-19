@@ -4,6 +4,12 @@ output: html_document
 ---
 
 
+* `calc_io_mats()` gains new argument `direction`
+  that tells whether the input-output matrices
+  are for "upstream" or "downstream" swims.
+* `chopR()` now uses `calc_io_mats(direction = "downstream"),
+  thereby bringing consistency to the API for 
+  upstream and downstream swims.
 * `finaldemand_aggregates()` now produces true `0`
   instead of a 1x1 matrix without row or column labels
   when no columns names of **U_EIOU** or **Y**
