@@ -321,7 +321,7 @@ chop_Y <- function(.sut_data = NULL,
                                                      U_feed_chop_list = product_prime_mats[[U_feed_prime_colname]],
                                                      V_chop_list = product_prime_mats[[V_prime_colname]],
                                                      Y_chop_list = product_prime_mats[[Y_prime_colname]])
-    assertthat::assert_that(product_prime_balanced, msg = "Products not balanced in footprint_aggregates()")
+    assertthat::assert_that(product_prime_balanced, msg = "Products not balanced in chop_Y_func()")
 
     # The sum of the ECCs associated with new_Y_sectors should be equal to the original ECC.
     sector_prime_mats <- ecc_prime[sector_names] %>%
@@ -337,7 +337,7 @@ chop_Y <- function(.sut_data = NULL,
                                                     U_feed_chop_list = sector_prime_mats[[U_feed_prime_colname]],
                                                     V_chop_list = sector_prime_mats[[V_prime_colname]],
                                                     Y_chop_list = sector_prime_mats[[Y_prime_colname]])
-    assertthat::assert_that(sector_prime_balanced, msg = "Sectors not balanced in footprint_aggregates()")
+    assertthat::assert_that(sector_prime_balanced, msg = "Sectors not balanced in chop_Y_func()")
 
     # Calculate primary and final demand aggregates for each of the new ECCs.
     calc_aggregates_from_ecc_prime(ecc_prime,
@@ -416,6 +416,7 @@ chop_R <- function(.sut_data = NULL,
                    r_eiou_colname = Recca::psut_cols$r_eiou,
                    V_colname = Recca::psut_cols$V,
                    Y_colname = Recca::psut_cols$Y,
+                   S_units_colname = Recca::psut_cols$S_units,
                    R_prime_colname = paste0(R_colname, .prime),
                    U_prime_colname = paste0(U_colname, .prime),
                    U_feed_prime_colname = paste0(U_feed_colname, .prime),
@@ -430,15 +431,35 @@ chop_R <- function(.sut_data = NULL,
     # verify that we can do the downstream swim with R_mat to
     # re-calculate U_mat, U_feed_mat, V_mat, and Y_mat.
 
-    # Add this code after modifying calc_io_mats() to take a direction argument
-    # to specify demand-sided or supply-sided sense of these calculations.
+    # Calculate io matrices in a separate step, because we will use these later.
+    with_io <- list(R_mat, U_mat, U_feed_mat, V_mat, Y_mat, S_units_mat) %>%
+      magrittr::set_names(c(R_colname, U_colname, U_feed_colname, V_colname, Y_colname, S_units_colname)) %>%
+      calc_io_mats(method = method, tol = tol_invert, direction = "downstream",
+                   R = R_colname, U = U_colname, U_feed = U_feed_colname, V = V_colname, Y = Y_colname, S_units = S_units_colname)
+    downstream_swim <- with_io %>%
+      new_R_ps(R_prime = R_colname, U_prime = U_prime_colname, U_feed_prime = U_feed_prime_colname,
+               U_eiou_prime = U_eiou_prime_colname, r_eiou_prime = r_eiou_prime_colname, V_prime = V_prime_colname, Y_prime = Y_prime_colname)
+    # Verify that U_prime is equal to U
+    assertthat::assert_that(matsbyname::equal_byname(downstream_swim[[U_prime_colname]], U_mat))
+    # Verify that U_feed_prime is equal to U_feed
+    assertthat::assert_that(matsbyname::equal_byname(downstream_swim[[U_feed_prime_colname]], U_feed_mat))
+    # Verify that U_eiou_prime is equal to U_eiou
+    assertthat::assert_that(matsbyname::equal_byname(downstream_swim[[U_eiou_prime_colname]],
+                                                     matsbyname::difference_byname(U_mat, downstream_swim[[U_feed_colname]])))
+    # Verify that V_prime is equal to V
+    assertthat::assert_that(matsbyname::equal_byname(downstream_swim[[V_prime_colname]], V_mat))
+    # Verify that Y_prime is equal to Y
+    assertthat::assert_that(matsbyname::equal_byname(downstream_swim[[Y_prime_colname]], Y_mat))
 
-
+    # Now that we have verified that we can swim downstream,
+    # chop the R matrix and swim downstream for each row and column independently.
     # Get the column names in R. Those are the Products we want to evaluate.
     product_names <- matsbyname::getcolnames_byname(R_mat)
     new_R_products <- product_names %>%
       sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_product) {
-        # For each product (in each column), make a new Y matrix to be used for the calculation.
+        # For each product (in each column), make a new R matrix to be used for the calculation.
+        # Set piece = "all" and pattern_type = "exact", because we have the exact
+        # names of the rows in sector_names.
         R_mat %>%
         matsbyname::select_rowcol_piece_byname(retain = this_product,
                                                piece = "all",
@@ -447,6 +468,7 @@ chop_R <- function(.sut_data = NULL,
                                                prepositions = prepositions,
                                                margin = 2)
       })
+    # Ensure that every item in new_Y_sectors has exactly one column.
     for (i in 1:length(new_R_products)) {
       this_new_R_products_mat <- new_R_products[[i]]
       this_new_R_products_name <- names(new_R_products)[[i]]
@@ -456,17 +478,21 @@ chop_R <- function(.sut_data = NULL,
     }
 
     # For each item in this list, make a new set of ECC matrices
-    with_qf <- list(R = R_mat, U = U_mat, U_feed = U_feed_mat,
-                    V = V_mat, Y = Y_mat, S_units = S_units_mat) %>%
-      calc_yqfgW()
     ecc_prime <- new_R_products %>%
       sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_new_R) {
-        with_qf %>%
+        with_io %>%
           append(list(this_new_R) %>% magrittr::set_names(R_prime_colname)) %>%
           # Calculate all the new ECC matrices,
-          # giving the new (prime) description of the ECC.
+          # accepting the default names for intermediate
+          # vectors and matrices.
+          # We can accept default names for G_ixp, G_pxp, Z, Z_feed, D, and O,
+          # because we didn't change those names in the call to calc_io_mats().
+          # This gives the new (prime) description of the ECC.
           new_R_ps(R_prime = R_prime_colname,
                    U_prime = U_prime_colname,
+                   U_feed_prime = U_feed_prime_colname,
+                   U_eiou_prime = U_eiou_prime_colname,
+                   r_eiou_prime = r_eiou_prime_colname,
                    V_prime = V_prime_colname,
                    Y_prime = Y_prime_colname)
       })
@@ -486,7 +512,7 @@ chop_R <- function(.sut_data = NULL,
                                                      U_feed_chop_list = product_prime_mats[[U_feed_prime_colname]],
                                                      V_chop_list = product_prime_mats[[V_prime_colname]],
                                                      Y_chop_list = product_prime_mats[[Y_prime_colname]])
-    assertthat::assert_that(product_prime_balanced, msg = "Products not balanced in effects_aggregates()")
+    assertthat::assert_that(product_prime_balanced, msg = "Products not balanced in chop_R_func()")
 
     # Calculate primary and final demand aggregates for each of the new ECCs.
     calc_aggregates_from_ecc_prime(ecc_prime,
