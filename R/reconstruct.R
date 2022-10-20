@@ -331,6 +331,18 @@ new_k_ps <- function(.sutmats = NULL,
 #'          Default is "q".
 #' @param f The name of the **f** vector column in the input data frame.
 #'          Default is "f".
+#' @param G_pxp The name of the **G_pxp** matrix column in the input data frame.
+#'              Default is "G_pxp".
+#' @param G_ixp The name of the **G_ixp** matrix column in the input data frame.
+#'              Default is "G_ixp".
+#' @param O_s The name of the **O_s** matrix column in the input data frame.
+#'            Default is "O_s", where "_s" indicates supply-sided.
+#' @param D_s The name of the **D_s** matrix column in the input data frame.
+#'            Default is "D_s", where "_s" indicates supply-sided.
+#' @param D_feed_s The name of the **D_feed_s** matrix column in the input data frame.
+#'                 Default is "D_feed_s", where "_s" indicates supply-sided.
+#' @param Z_s The name of the **Z_s** matrix column in the input data frame.
+#'            Default is "Z_s", where "_s" indicates supply-sided.
 #' @param U_prime The name of the output column containing the new **U** matrices.
 #'                Default is "U_prime".
 #' @param U_feed_prime The name of the output column containing the new **U_feed** matrices.
@@ -381,45 +393,6 @@ new_R_ps <- function(.sutmats = NULL,
   new_R_func <- function(R_prime_mat, U_mat, U_feed_mat, V_mat, Y_mat,
                          q_vec, f_vec,
                          G_pxp_mat, G_ixp_mat, O_s_mat, D_s_mat, D_feed_s_mat, Z_s_mat){
-
-    # Calculating all symmetric IO matrices:
-    # Z_sym_mat <- matsbyname::matrixproduct_byname(
-    #   matsbyname::transpose_byname(V_mat),
-    #   matsbyname::hatinv_byname(f_vec, keep = "rownames")
-    # )
-    #
-    # C_sym_mat <- matsbyname::matrixproduct_byname(
-    #   U_mat,
-    #   matsbyname::hatinv_byname(f_vec, keep = "rownames")
-    # )
-    #
-    # D_sym_mat <- matsbyname::matrixproduct_byname(
-    #   matsbyname::transpose_byname(U_mat),
-    #   matsbyname::hatinv_byname(q_vec, keep = "rownames")
-    # )
-    #
-    # D_feed_sym_mat <- matsbyname::matrixproduct_byname(
-    #   matsbyname::transpose_byname(U_feed_mat),
-    #   matsbyname::hatinv_byname(q_vec, keep = "rownames")
-    # )
-    #
-    # O_sym_mat <- matsbyname::matrixproduct_byname(
-    #   matsbyname::hatinv_byname(q_vec, keep = "rownames"),
-    #   Y_mat
-    # )
-    #
-    # A_sym_mat <- matsbyname::matrixproduct_byname(
-    #   Z_sym_mat,
-    #   D_sym_mat
-    # )
-    #
-    # L_pxp_sym_mat <- matsbyname::Iminus_byname(A_sym_mat) %>% matsbyname::invert_byname(method = method, tol = tol)
-    #
-    # L_ixp_sym_mat <- matsbyname::matrixproduct_byname(
-    #   D_sym_mat,
-    #   L_pxp_sym_mat
-    # )
-
 
     # Now, calculating the set of prime matrices:
     q_prime_vec <- matsbyname::matrixproduct_byname(
