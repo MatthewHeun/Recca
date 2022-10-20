@@ -369,3 +369,105 @@ test_that("NA in g works as expected", {
   expect_true(all(is.na(actual$A[[1]])))
 })
 
+
+test_that("calc_A() works as expected for downstream swim", {
+  io_mats <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    calc_yqfgW() %>%
+    calc_A(direction = "downstream")
+  # Gather some row and column types for later use.
+  rowtypeC_s <- io_mats[["C_s"]][[1]] %>% matsbyname::rowtype()
+  coltypeC_s <- io_mats[["C_s"]][[1]] %>% matsbyname::coltype()
+  rowtypeZ_s <- io_mats[["Z_s"]][[1]] %>% matsbyname::rowtype()
+  coltypeZ_s <- io_mats[["Z_s"]][[1]] %>% matsbyname::coltype()
+
+  expect_true("C_s" %in% colnames(io_mats))
+  expect_true("Z_s" %in% colnames(io_mats))
+  expect_true("D_s" %in% colnames(io_mats))
+  expect_true("D_feed_s" %in% colnames(io_mats))
+  expect_true("O_s" %in% colnames(io_mats))
+  expect_true("A_s" %in% colnames(io_mats))
+
+  expect_true(!("C" %in% colnames(io_mats)))
+  expect_true(!("Z" %in% colnames(io_mats)))
+  expect_true(!("D" %in% colnames(io_mats)))
+  expect_true(!("K" %in% colnames(io_mats)))
+  expect_true(!("O" %in% colnames(io_mats)))
+  expect_true(!("A" %in% colnames(io_mats)))
+
+  # Check some values in the resulting matrices.
+  expect_equal(io_mats$Z_s[[1]]["Crude - Fields", "Oil fields"], 0.9510223490)
+  expect_equal(io_mats$D_s[[2]]["Furnaces", "NG - Dist."], 0.6097560976)
+  expect_equal(io_mats$D_feed_s[[3]]["Power plants", "NG - Dist."], 0.3902439)
+  expect_equal(io_mats$O_s[[4]]["Freight [tonne-km/year]", "Transport"], 0.9527775309)
+  expect_equal(io_mats$A_s[[3]]["Diesel - Dist.", "MD - Truck engines"], 0.009762856)
+
+# Try when one of the f vector entries is NA
+  temp <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    calc_yqfgW()
+  # Set one of the values in the first f vector to NA for this test.
+  temp$f[[1]][, 1][1] <- NA_real_
+  io_mats_NA <- temp %>%
+    calc_A(direction = "downstream")
+  expect_equal(io_mats_NA[["C_s"]][[1]] %>% matsbyname::rowtype(), rowtypeC_s)
+  expect_equal(io_mats_NA[["C_s"]][[1]] %>% matsbyname::coltype(), coltypeC_s)
+  expect_equal(io_mats_NA[["Z_s"]][[1]] %>% matsbyname::rowtype(), rowtypeZ_s)
+  expect_equal(io_mats_NA[["Z_s"]][[1]] %>% matsbyname::coltype(), coltypeZ_s)
+  expect_true(is.na(io_mats_NA[["C_s"]][[1]]))
+  expect_true(is.na(io_mats_NA[["Z_s"]][[1]]))
+})
+
+
+test_that("calc_G() is an alias for calc_L()", {
+  io_mats_L <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    calc_yqfgW() %>%
+    calc_A(direction = "downstream") %>%
+    calc_L(direction = "downstream")
+  io_mats_G <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    calc_yqfgW() %>%
+    calc_A(direction = "downstream") %>%
+    calc_G(direction = "downstream")
+  expect_equal(io_mats_G, io_mats_L)
+})
+
+
+test_that("calc_L() works as expected for downstream swim", {
+  io_mats <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    # Last.stage == "Services" has unit inhomogeniety and bad results.
+    dplyr::filter(Last.stage != "Services") %>%
+    calc_yqfgW() %>%
+    calc_A(direction = "downstream") %>%
+    calc_L(direction = "downstream")
+
+  expect_true("G_pxp" %in% colnames(io_mats))
+  expect_true("G_ixp" %in% colnames(io_mats))
+
+  expect_true(!("L_pxp" %in% colnames(io_mats)))
+  expect_true(!("L_ixp" %in% colnames(io_mats)))
+
+  # Check some values in the resulting matrices.
+  expect_equal(io_mats$G_pxp[[1]]["Crude - Dist.", "Crude - Fields"], 0.9978994404)
+  expect_equal(io_mats$G_pxp[[2]]["Elect - Grid", "Crude - Fields"], 2.175612e-04)
+  expect_equal(io_mats$G_ixp[[1]]["Petrol dist.", "Petrol"], 1.0186915888)
+  expect_equal(io_mats$G_ixp[[2]]["Light fixtures", "Elect - Grid"], 0.963300755)
+})
+
+
+test_that("calc_io_mats() works for downstream swim", {
+  G_mats <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    # Last.stage == "Services" has unit inhomogeniety and bad results.
+    dplyr::filter(Last.stage != "Services") %>%
+    calc_io_mats(direction = "Ghosh") %>%
+    # Look at the G matrices, because they depend on everything else.
+    dplyr::select(Country, Year, Energy.type, Last.stage, G_ixp, G_pxp)
+  # Make sure these results match expected results by testing a few values.
+  expect_equal(G_mats$G_pxp[[1]]["Crude - Dist.", "Crude - Fields"], 0.9978994404)
+  expect_equal(G_mats$G_pxp[[2]]["Elect - Grid", "Crude - Fields"], 2.175612e-04)
+  expect_equal(G_mats$G_ixp[[1]]["Petrol dist.", "Petrol"], 1.0186915888)
+  expect_equal(G_mats$G_ixp[[2]]["Light fixtures", "Elect - Grid"], 0.963300755)
+})

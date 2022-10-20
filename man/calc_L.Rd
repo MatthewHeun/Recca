@@ -2,16 +2,37 @@
 % Please edit documentation in R/io.R
 \name{calc_L}
 \alias{calc_L}
-\title{Calculates total requirements matrices (\strong{L_pxp} and \strong{L_ixp})}
+\alias{calc_G}
+\title{Calculates total requirements matrices (\strong{L_pxp} and \strong{L_ixp} or \strong{G_pxp} and \strong{G_ixp})}
 \usage{
 calc_L(
   .sutdata = NULL,
+  direction = c("upstream", "demand", "Leontief", "downstream", "supply", "Ghosh"),
   method = c("solve", "QR", "SVD"),
   tol = .Machine$double.eps,
   D = "D",
   A = "A",
+  D_s = "D_s",
+  A_s = "A_s",
   L_pxp = "L_pxp",
-  L_ixp = "L_ixp"
+  L_ixp = "L_ixp",
+  G_pxp = "G_pxp",
+  G_ixp = "G_ixp"
+)
+
+calc_G(
+  .sutdata = NULL,
+  direction = c("upstream", "demand", "Leontief", "downstream", "supply", "Ghosh"),
+  method = c("solve", "QR", "SVD"),
+  tol = .Machine$double.eps,
+  D = "D",
+  A = "A",
+  D_s = "D_s",
+  A_s = "A_s",
+  L_pxp = "L_pxp",
+  L_ixp = "L_ixp",
+  G_pxp = "G_pxp",
+  G_ixp = "G_ixp"
 )
 }
 \arguments{
@@ -19,27 +40,46 @@ calc_L(
 Default is \code{NULL}, meaning that matrices will be taken from the \code{D} and \code{A} arguments.
 Set to a list or data frame to pull matrices from its store.}
 
+\item{direction}{A string that identifies the directionality of the IO matrices.
+See details.
+Default is "upstream".}
+
 \item{method}{One of "solve", "QR", or "SVD". Default is "solve". See details.}
 
 \item{tol}{The tolerance for detecting linear dependencies during matrix inversion.
 Default is \code{.Machine$double.eps}.}
 
-\item{D}{The \strong{D} matrix or name of the column in \code{.sutmats} that contains same. Default is "D".}
+\item{D}{The \strong{D} matrix or name of the column in \code{.sutmats} that contains same.
+\code{D} is required for \code{direction = "upstream"}. Default is "D".}
 
-\item{A}{The \strong{A} matrix or name of the column in \code{.sutmats} that contains same. Default is "A".}
+\item{A}{The \strong{A} matrix or name of the column in \code{.sutmats} that contains same.
+\code{D} is required for \code{direction = "upstream"}. Default is "A".}
+
+\item{D_s}{The \strong{D_s} matrix or name of the column in \code{.sutmats} that contains same.
+\code{D_s} is required for \code{direction = "downstream"}. Default is "D_s".}
+
+\item{A_s}{The \strong{A_s} matrix or name of the column in \code{.sutmats} that contains same.
+\code{A_s} is required for \code{direction = "downstream"}. Default is "A_s".}
 
 \item{L_pxp}{The name for the \strong{L_pxp} matrix on output. Default is "L_pxp".
 \code{L_pxp} is calculated by \code{inverse(I - A)}.}
 
 \item{L_ixp}{The name for the \strong{L_ixp} matrix on output. Default is "L_ixp".
 \strong{L_ixp} is calculated by \code{D * L_pxp}.}
+
+\item{G_pxp}{The name for the \strong{G_pxp} matrix on output. Default is "G_pxp".
+\code{G_pxp} is calculated by \code{inverse(I - A_s)}.}
+
+\item{G_ixp}{The name for the \strong{G_ixp} matrix on output. Default is "G_ixp".
+\strong{G_ixp} is calculated by \code{D_s * G_pxp}.}
 }
 \value{
-A list or data frame containing \strong{L_pxp} and \strong{L_ixp} matrices.
+A list or data frame containing \strong{L_pxp} and \strong{L_ixp} or \strong{G_pxp} and \strong{G_ixp} matrices.
 }
 \description{
 \strong{L_pxp} tells how much of a product (in a row) is required to make another product (in a column).
 \strong{L_ixp} tells how much of an industry's output (in a row) is required to make another product (in a column).
+\strong{G_pxp} and \strong{G_ixp} are the Ghosh (downstream, supply-sided) equivalents.
 }
 \details{
 Calculating some matrices requires
@@ -49,4 +89,27 @@ calculating the inverse.
 See \code{matsbyname::invert_byname()}.
 
 Both \code{tol} and \code{method} should be single values and apply to all matrices being inverted.
+
+Input-output matrices can be calculated for either
+an upstream swim (demand-sided as Leontief) or
+a downstream swim (supply-sided as Ghosh).
+The \code{direction} argument defines the direction.
+Different IO matrices are calculated based on direction.
+The default is "upstream", meaning that an upstream swim is desired.
+Note that "upstream", "demand", and "Leontief" are synonyms.
+"downstream", "supply", and "Ghosh" are synonyms.
+
+Upstream swim matrices are named after Leontief and are called \strong{L_pxp} and \strong{L_ixp}.
+Downstream swim matrices are named after Ghosh and are called \strong{G_pxp} and \strong{G_ixp}.
+Which matrices are returned (\strong{L} or \strong{G}) depends on the value of the \code{direction} argument.
+"upstream", "demand", or "Leontief" generates \strong{L} matrices.
+"downstream", "supply, or "Ghosh" generates \strong{G} matrices.
+
+Note that for historical reasons,
+\code{calc_L()} and \code{calc_G()} are synonyms.
+Both will calculate \strong{L} matrices or \strong{G} matrices,
+depending on the value of the \code{direction} argument.
+But it is good practice to call \code{calc_L()} when doing an upstream swim
+and \code{calc_G()} when doing a downstream swim.
+Doing so clearly signals intent.
 }

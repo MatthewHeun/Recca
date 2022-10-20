@@ -15,6 +15,12 @@ new_R_ps(
   Y = "Y",
   q = "q",
   f = "f",
+  G_pxp = "G_pxp",
+  G_ixp = "G_ixp",
+  O_s = "O_s",
+  D_s = "D_s",
+  D_feed_s = "D_feed_s",
+  Z_s = "Z_s",
   U_prime = "U_prime",
   U_feed_prime = "U_feed_prime",
   U_eiou_prime = "U_EIOU_prime",
@@ -51,6 +57,24 @@ Default is "q".}
 
 \item{f}{The name of the \strong{f} vector column in the input data frame.
 Default is "f".}
+
+\item{G_pxp}{The name of the \strong{G_pxp} matrix column in the input data frame.
+Default is "G_pxp".}
+
+\item{G_ixp}{The name of the \strong{G_ixp} matrix column in the input data frame.
+Default is "G_ixp".}
+
+\item{O_s}{The name of the \strong{O_s} matrix column in the input data frame.
+Default is "O_s", where "_s" indicates supply-sided.}
+
+\item{D_s}{The name of the \strong{D_s} matrix column in the input data frame.
+Default is "D_s", where "_s" indicates supply-sided.}
+
+\item{D_feed_s}{The name of the \strong{D_feed_s} matrix column in the input data frame.
+Default is "D_feed_s", where "_s" indicates supply-sided.}
+
+\item{Z_s}{The name of the \strong{Z_s} matrix column in the input data frame.
+Default is "Z_s", where "_s" indicates supply-sided.}
 
 \item{U_prime}{The name of the output column containing the new \strong{U} matrices.
 Default is "U_prime".}
@@ -100,7 +124,7 @@ Both \code{tol} and \code{method} should be a single values and apply to all mat
 UKEnergy2000mats \%>\%
   tidyr::spread(key = "matrix.name", value = "matrix") \%>\%
   # Calculate the input-output matrices which are inputs to the new_R function.
-  calc_io_mats() \%>\%
+  calc_io_mats(direction = "downstream") \%>\%
   # Make an R_prime matrix that gives twice the resource inputs to the economy.
   dplyr::mutate(
     R_prime = matsbyname::hadamardproduct_byname(2, R)

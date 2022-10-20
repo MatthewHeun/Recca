@@ -80,6 +80,7 @@ chop_R(
   r_eiou_colname = Recca::psut_cols$r_eiou,
   V_colname = Recca::psut_cols$V,
   Y_colname = Recca::psut_cols$Y,
+  S_units_colname = Recca::psut_cols$S_units,
   R_prime_colname = paste0(R_colname, .prime),
   U_prime_colname = paste0(U_colname, .prime),
   U_feed_prime_colname = paste0(U_feed_colname, .prime),

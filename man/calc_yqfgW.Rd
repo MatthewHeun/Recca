@@ -79,4 +79,5 @@ Default is "sum_U_Y_rows", corresponding to a demand-sided view of \strong{q}.
 Alternatively, an analyst can choose to use the "sum_R_V_cols" method,
 corresponding to a supply-sided view of \strong{q}.
 In the case of a balanced ECC, the method does not matter.
+Both methods give a column vector as a result.
 }

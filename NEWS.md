@@ -4,13 +4,24 @@ output: html_document
 ---
 
 
+* `chopR()` now checks for the ability to swim downstream with
+  **R_prime** = **R** to re-create the original energy conversion chain, 
+  thereby bringing consistency with `chopY()`.
+  This approach identifies numerical precision errors
+  before they cause a problem.
+* `chopR()` now uses `calc_io_mats(direction = "downstream")`,
+  thereby consistently using `calc_io_mats()` for both
+  upstream and downstream swims.
+* `calc_io_mats()` gains new argument `direction`
+  that tells whether the input-output matrices
+  are for "upstream" or "downstream" swims.
 * `finaldemand_aggregates()` now produces true `0`
   instead of a 1x1 matrix without row or column labels
   when no columns names of **U_EIOU** or **Y**
   match `fd_sectors`.
 * Fixed two bugs in `new_Y()`. 
   There were compensatory formula errors
-  that only appeared in weird edge cases.
+  that only appeared in some edge cases.
 * Aggregations are now optional (on by default)
   in `chop_R()` and `chop_Y()`.
 * Renamed `effects_aggregates()` and `footprint_aggregates()`
@@ -66,9 +77,9 @@ output: html_document
   which produces net and gross columns that are different.)
 * `aggregate_regions()` now returns an empty data frame
   with the expected columns if the input data frame 
-  is empty.
+  has no rows.
 * Many new tests for new features.
-    * Now up to 628 tests, all passing.
+    * Now up to 686 tests, all passing.
     * Test coverage remains at 100 %.
 
 

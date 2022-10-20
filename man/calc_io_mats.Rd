@@ -6,6 +6,7 @@
 \usage{
 calc_io_mats(
   .sutdata = NULL,
+  direction = c("upstream", "demand", "Leontief", "downstream", "supply", "Ghosh"),
   method = c("solve", "QR", "SVD"),
   tol = .Machine$double.eps,
   method_q_calculation = c("sum_U_Y_rows", "sum_R_V_cols"),
@@ -34,11 +35,23 @@ calc_io_mats(
   K_feed = "K_feed",
   A_feed = "A_feed",
   L_ixp_feed = "L_ixp_feed",
-  L_pxp_feed = "L_pxp_feed"
+  L_pxp_feed = "L_pxp_feed",
+  Z_s = "Z_s",
+  C_s = "C_s",
+  D_s = "D_s",
+  D_feed_s = "D_feed_s",
+  A_s = "A_s",
+  G_ixp = "G_ixp",
+  G_pxp = "G_pxp",
+  O_s = "O_s"
 )
 }
 \arguments{
-\item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
+\item{.sutdata}{A data frame of supply-use table matrices with matrices arranged in columns.}
+
+\item{direction}{A string that identifies the directionality of the IO matrices.
+See details.
+Default is "upstream".}
 
 \item{method}{One of "solve", "QR", or "SVD". Default is "solve". See details.}
 
@@ -118,6 +131,30 @@ Default is \code{.Machine$double.eps}.}
 
 \item{L_pxp_feed}{The name for the \strong{L_pxp_feed} matrix on output. Default is "L_pxp_feed".
 \strong{L_pxp_feed} is calculated by \code{(I - Z_feed*D)^-1}.}
+
+\item{Z_s}{The name for the \strong{Z_s} matrix on output. Default is "Z_s".
+\strong{Z_s} is calculated by \code{transpose(V) * f_hat_inv}.}
+
+\item{C_s}{The name for the \strong{C_s} matrix on output. Default is "C_s".
+\strong{C_s} is calculated by \code{U * f_hat_inv}.}
+
+\item{D_s}{The name for the \strong{D_s} matrix on output. Default is "D_s".
+\strong{D_s} is calculated by \code{transpose(U) * q_hat_inv}.}
+
+\item{D_feed_s}{The name for the \strong{D_feed_s} matrix on output. Default is "D_feed_s".
+\strong{D_s} is calculated by \code{transpose(U_feed) * q_hat_inv}.}
+
+\item{A_s}{The name for the \strong{A_s} matrix on output. Default is "A_s".
+\strong{A_s} is calculated by \code{Z_s * D_s}.}
+
+\item{G_ixp}{The name for the \strong{G_ixp} matrix on output. Default is "G_ixp".
+\strong{G_ixp} is calculated by \code{D_s * G_pxp}.}
+
+\item{G_pxp}{The name for the \strong{G_pxp} matrix on output. Default is "G_pxp".
+\code{G_pxp} is calculated by \code{inverse(I - A_s)}.}
+
+\item{O_s}{The name for the \strong{O_s} matrix on output. Default is "O_s".
+\strong{O} is calculated by \code{q_hat_inv * Y}.}
 }
 \value{
 A list or data frame containing input-output matrices.
@@ -137,6 +174,15 @@ Default is "sum_U_Y_rows", corresponding to a demand-sided view of \strong{q}.
 Alternatively, an analyst can choose to use the "sum_R_V_cols" method,
 corresponding to a supply-sided view of \strong{q}.
 In the case of a balanced ECC, the method does not matter.
+
+Input-output matrices can be calculated for either
+an upstream swim (demand-sided as Leontief) or
+a downstream swim (supply-sided as Ghosh).
+The \code{direction} argument defines the direction.
+Different IO matrices are calculated based on direction.
+The default is "upstream", meaning that an upstream swim is desired.
+Note that "upstream", "demand", and "Leontief" are synonyms.
+"downstream", "supply", and "Ghosh" are synonyms.
 }
 \examples{
 library(dplyr)

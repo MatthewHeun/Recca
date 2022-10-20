@@ -233,7 +233,7 @@ new_k_ps <- function(.sutmats = NULL,
     # Ensure that the column sum of k_prime_2 is exactly 1.0.
     assertthat::assert_that(matsbyname::colsums_byname(k_prime_2) == 1,
                             msg = paste("k_prime_2 has column sum of",
-                                        matsbyname::colsums_byname(y_prime_2),
+                                        matsbyname::colsums_byname(k_prime_2),
                                         "but it must be exactly 1.0."))
     # Grab the k_prime_1 (not k_prime_2) column out of the existing K matrix.
     # k_prime_1 is the column from the K matrix with the same name as k_prime_2.
@@ -331,6 +331,18 @@ new_k_ps <- function(.sutmats = NULL,
 #'          Default is "q".
 #' @param f The name of the **f** vector column in the input data frame.
 #'          Default is "f".
+#' @param G_pxp The name of the **G_pxp** matrix column in the input data frame.
+#'              Default is "G_pxp".
+#' @param G_ixp The name of the **G_ixp** matrix column in the input data frame.
+#'              Default is "G_ixp".
+#' @param O_s The name of the **O_s** matrix column in the input data frame.
+#'            Default is "O_s", where "_s" indicates supply-sided.
+#' @param D_s The name of the **D_s** matrix column in the input data frame.
+#'            Default is "D_s", where "_s" indicates supply-sided.
+#' @param D_feed_s The name of the **D_feed_s** matrix column in the input data frame.
+#'                 Default is "D_feed_s", where "_s" indicates supply-sided.
+#' @param Z_s The name of the **Z_s** matrix column in the input data frame.
+#'            Default is "Z_s", where "_s" indicates supply-sided.
 #' @param U_prime The name of the output column containing the new **U** matrices.
 #'                Default is "U_prime".
 #' @param U_feed_prime The name of the output column containing the new **U_feed** matrices.
@@ -352,7 +364,7 @@ new_k_ps <- function(.sutmats = NULL,
 #' UKEnergy2000mats %>%
 #'   tidyr::spread(key = "matrix.name", value = "matrix") %>%
 #'   # Calculate the input-output matrices which are inputs to the new_R function.
-#'   calc_io_mats() %>%
+#'   calc_io_mats(direction = "downstream") %>%
 #'   # Make an R_prime matrix that gives twice the resource inputs to the economy.
 #'   dplyr::mutate(
 #'     R_prime = matsbyname::hadamardproduct_byname(2, R)
@@ -370,72 +382,37 @@ new_R_ps <- function(.sutmats = NULL,
                      R_prime = "R_prime",
                      U = "U", U_feed = "U_feed", V = "V", Y = "Y",
                      q = "q", f = "f",
+                     G_pxp = "G_pxp", G_ixp = "G_ixp",
+                     O_s = "O_s", D_s = "D_s", D_feed_s = "D_feed_s", Z_s = "Z_s",
                      # Output names
                      U_prime = "U_prime", U_feed_prime = "U_feed_prime", U_eiou_prime = "U_EIOU_prime", r_eiou_prime = "r_EIOU_prime",
                      V_prime = "V_prime", Y_prime = "Y_prime"){
 
   method <- match.arg(method)
 
-  new_R_func <- function(R_prime_mat, U_mat, U_feed_mat, V_mat, Y_mat, q_vec, f_vec){
-
-    # Calculating all symmetric IO matrices:
-    Z_sym_mat <- matsbyname::matrixproduct_byname(
-      matsbyname::transpose_byname(V_mat),
-      matsbyname::hatinv_byname(f_vec, keep = "rownames")
-    )
-
-    C_sym_mat <- matsbyname::matrixproduct_byname(
-      U_mat,
-      matsbyname::hatinv_byname(f_vec, keep = "rownames")
-    )
-
-    D_sym_mat <- matsbyname::matrixproduct_byname(
-      matsbyname::transpose_byname(U_mat),
-      matsbyname::hatinv_byname(q_vec, keep = "rownames")
-    )
-
-    D_feed_sym_mat <- matsbyname::matrixproduct_byname(
-      matsbyname::transpose_byname(U_feed_mat),
-      matsbyname::hatinv_byname(q_vec, keep = "rownames")
-    )
-
-    O_sym_mat <- matsbyname::matrixproduct_byname(
-      matsbyname::hatinv_byname(q_vec, keep = "rownames"),
-      Y_mat
-    )
-
-    A_sym_mat <- matsbyname::matrixproduct_byname(
-      Z_sym_mat,
-      D_sym_mat
-    )
-
-    L_pxp_sym_mat <- matsbyname::Iminus_byname(A_sym_mat) %>% matsbyname::invert_byname(method = method, tol = tol)
-
-    L_ixp_sym_mat <- matsbyname::matrixproduct_byname(
-      D_sym_mat,
-      L_pxp_sym_mat
-    )
-
+  new_R_func <- function(R_prime_mat, U_mat, U_feed_mat, V_mat, Y_mat,
+                         q_vec, f_vec,
+                         G_pxp_mat, G_ixp_mat, O_s_mat, D_s_mat, D_feed_s_mat, Z_s_mat){
 
     # Now, calculating the set of prime matrices:
     q_prime_vec <- matsbyname::matrixproduct_byname(
-      L_pxp_sym_mat,
+      G_pxp_mat,
       matsbyname::transpose_byname(R_prime_mat) %>% matsbyname::rowsums_byname()
     )
 
     Y_prime_mat <- matsbyname::matrixproduct_byname(
       matsbyname::hatize_byname(q_prime_vec, keep = "rownames"),
-      O_sym_mat
+      O_s_mat
     )
 
     U_prime_mat <- matsbyname::matrixproduct_byname(
       matsbyname::hatize_byname(q_prime_vec, keep = "rownames"),
-      matsbyname::transpose_byname(D_sym_mat)
+      matsbyname::transpose_byname(D_s_mat)
     )
 
     U_feed_prime_mat <- matsbyname::matrixproduct_byname(
       matsbyname::hatize_byname(q_prime_vec, keep = "rownames"),
-      matsbyname::transpose_byname(D_feed_sym_mat)
+      matsbyname::transpose_byname(D_feed_s_mat)
     )
 
     U_eiou_prime_mat <- matsbyname::difference_byname(U_prime_mat, U_feed_prime_mat)
@@ -446,11 +423,11 @@ new_R_ps <- function(.sutmats = NULL,
     # Issue here.
     V_prime_mat <- matsbyname::matrixproduct_byname(
       matsbyname::matrixproduct_byname(
-        L_ixp_sym_mat,
+        G_ixp_mat,
         matsbyname::transpose_byname(R_prime_mat) %>% matsbyname::rowsums_byname()
       ) %>%
         matsbyname::hatize_byname(keep = "rownames"),
-      matsbyname::transpose_byname(Z_sym_mat)
+      matsbyname::transpose_byname(Z_s_mat)
     )
 
     # Return the new U, V, and Y matrices.
@@ -465,7 +442,9 @@ new_R_ps <- function(.sutmats = NULL,
   matsindf::matsindf_apply(.sutmats, FUN = new_R_func, R_prime_mat = R_prime,
                            U_mat = U, U_feed_mat = U_feed,
                            V_mat = V, Y_mat = Y,
-                           q_vec = q, f_vec = f)
+                           q_vec = q, f_vec = f,
+                           G_pxp_mat = G_pxp, G_ixp_mat = G_ixp, O_s_mat = O_s,
+                           D_s_mat = D_s, D_feed_s_mat = D_feed_s, Z_s_mat = Z_s)
 }
 
 
