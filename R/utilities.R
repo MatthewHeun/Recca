@@ -799,18 +799,29 @@ write_ecc_to_excel <- function(.psut_data = NULL,
 
     # Complete matrices relative to one another to make sure we have same number
     # of rows or columns, as appropriate
+    # Ensure same columns of U and rows of V
+    U_mat_T <- matsbyname::transpose_byname(U_mat)
+    completedUV <- matsbyname::complete_and_sort(U_mat_T, V_mat, margin = 1)
+    U_mat <- matsbyname::transpose_byname(completedUV[[1]])
+    V_mat <- completedUV[[2]]
+    # Ensure same columns for R and V
     completedRV <- matsbyname::complete_and_sort(R_mat, V_mat, margin = 2)
     R_mat <- completedRV[[1]]
     V_mat <- completedRV[[2]]
+    # Ensure same rows for U and Y
     completedUY <- matsbyname::complete_and_sort(U_mat, Y_mat, margin = 1)
     U_mat <- completedUY[[1]]
     Y_mat <- completedUY[[2]]
+    # Ensure same rows and cols for U_EIOU and U
     completedU_eiou <- matsbyname::complete_and_sort(U_eiou_mat, U_mat, margin = c(1, 2))
     U_eiou_mat <- completedU_eiou[[1]]
+    # Ensure same rows and cols for U_feed and U
     completedU_feed <- matsbyname::complete_and_sort(U_feed_mat, U_mat, margin = c(1, 2))
     U_feed_mat <- completedU_feed[[1]]
+    # Ensure same rows and cols for r_EIOU and U
     completedr_eiou <- matsbyname::complete_and_sort(r_eiou_mat, U_mat, margin = c(1, 2))
     r_eiou_mat <- completedr_eiou[[1]]
+    # Ensure same rows for S_units and U
     completedS_units <- matsbyname::complete_and_sort(S_units_mat, U_mat, margin = 1)
     S_units_mat <- completedS_units[[1]]
 
