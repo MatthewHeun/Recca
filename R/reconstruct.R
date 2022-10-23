@@ -435,8 +435,6 @@ new_R_ps <- function(.sutmats = NULL,
          V_prime_mat, Y_prime_mat) %>%
       magrittr::set_names(c(U_prime, U_feed_prime, U_eiou_prime, r_eiou_prime,
                             V_prime, Y_prime))
-
-
   }
 
   matsindf::matsindf_apply(.sutmats, FUN = new_R_func, R_prime_mat = R_prime,
