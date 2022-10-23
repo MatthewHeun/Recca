@@ -4,6 +4,10 @@ output: html_document
 ---
 
 
+* `write_ecc_to_excel()` now ensures that columns of **U** and rows of **V**
+  are the same, even if it means adding zero columns to **U** or 
+  zero rows to **V**.
+  This change makes further Excel calculations easier.
 * `chopR()` now checks for the ability to swim downstream with
   **R_prime** = **R** to re-create the original energy conversion chain, 
   thereby bringing consistency with `chopY()`.
