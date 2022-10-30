@@ -357,7 +357,8 @@ new_k_ps <- function(.sutmats = NULL,
 #'                Default is "Y_prime".
 #'
 #' @return A data frame with added columns representing each of the new
-#'         **U_prime**, **V_prime**, **W_prime**, and **Y_prime** matrices.
+#'         **U_prime**, **U_feed_prime**, **U_EIOU_prime**, **r_EIOU_prime**,
+#'         **V_prime**, and **Y_prime** matrices.
 #' @export
 #'
 #' @examples
@@ -394,24 +395,30 @@ new_R_ps <- function(.sutmats = NULL,
                          q_vec, f_vec,
                          G_pxp_mat, G_ixp_mat, O_s_mat, D_s_mat, D_feed_s_mat, Z_s_mat){
 
-    # Now, calculating the set of prime matrices:
-    q_prime_vec <- matsbyname::matrixproduct_byname(
-      G_pxp_mat,
-      matsbyname::transpose_byname(R_prime_mat) %>% matsbyname::rowsums_byname()
-    )
+    # Calculate the set of prime matrices for the downstream swim.
 
-    Y_prime_mat <- matsbyname::matrixproduct_byname(
-      matsbyname::hatize_byname(q_prime_vec, keep = "rownames"),
-      O_s_mat
-    )
+    h_prime_vec <- matsbyname::colsums_byname(R_prime_mat) %>%
+      matsbyname::transpose_byname()
+
+    q_prime_vec <- matsbyname::matrixproduct_byname(G_pxp_mat, h_prime_vec)
+
+    q_prim_vec_hat <- matsbyname::hatize_byname(q_prime_vec, keep = "rownames")
 
     U_prime_mat <- matsbyname::matrixproduct_byname(
-      matsbyname::hatize_byname(q_prime_vec, keep = "rownames"),
+      q_prim_vec_hat,
       matsbyname::transpose_byname(D_s_mat)
     )
 
+    f_prime_vec <- matsbyname::colsums_byname(U_prime_mat) %>%
+      matsbyname::transpose_byname()
+
+    Y_prime_mat <- matsbyname::matrixproduct_byname(
+      q_prim_vec_hat,
+      O_s_mat
+    )
+
     U_feed_prime_mat <- matsbyname::matrixproduct_byname(
-      matsbyname::hatize_byname(q_prime_vec, keep = "rownames"),
+      q_prim_vec_hat,
       matsbyname::transpose_byname(D_feed_s_mat)
     )
 
@@ -420,13 +427,8 @@ new_R_ps <- function(.sutmats = NULL,
     r_eiou_prime_mat <- matsbyname::quotient_byname(U_eiou_prime_mat, U_prime_mat) %>%
       matsbyname::replaceNaN_byname(val = 0)
 
-    # Issue here.
     V_prime_mat <- matsbyname::matrixproduct_byname(
-      matsbyname::matrixproduct_byname(
-        G_ixp_mat,
-        matsbyname::transpose_byname(R_prime_mat) %>% matsbyname::rowsums_byname()
-      ) %>%
-        matsbyname::hatize_byname(keep = "rownames"),
+      matsbyname::hatize_byname(f_prime_vec, keep = "rownames"),
       matsbyname::transpose_byname(Z_s_mat)
     )
 
