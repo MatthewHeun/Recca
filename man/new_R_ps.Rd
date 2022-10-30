@@ -96,7 +96,8 @@ Default is "Y_prime".}
 }
 \value{
 A data frame with added columns representing each of the new
-\strong{U_prime}, \strong{V_prime}, \strong{W_prime}, and \strong{Y_prime} matrices.
+\strong{U_prime}, \strong{U_feed_prime}, \strong{U_EIOU_prime}, \strong{r_EIOU_prime},
+\strong{V_prime}, and \strong{Y_prime} matrices.
 }
 \description{
 This function calculates the effect of changing the resources available to an ECC,

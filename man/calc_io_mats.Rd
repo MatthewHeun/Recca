@@ -40,7 +40,7 @@ calc_io_mats(
   C_s = "C_s",
   D_s = "D_s",
   D_feed_s = "D_feed_s",
-  A_s = "A_s",
+  B = "B",
   G_ixp = "G_ixp",
   G_pxp = "G_pxp",
   O_s = "O_s"
@@ -144,8 +144,8 @@ Default is \code{.Machine$double.eps}.}
 \item{D_feed_s}{The name for the \strong{D_feed_s} matrix on output. Default is "D_feed_s".
 \strong{D_s} is calculated by \code{transpose(U_feed) * q_hat_inv}.}
 
-\item{A_s}{The name for the \strong{A_s} matrix on output. Default is "A_s".
-\strong{A_s} is calculated by \code{Z_s * D_s}.}
+\item{B}{The name for the \strong{B} matrix on output. Default is "B".
+\strong{B} is calculated by \code{Z_s * D_s}.}
 
 \item{G_ixp}{The name for the \strong{G_ixp} matrix on output. Default is "G_ixp".
 \strong{G_ixp} is calculated by \code{D_s * G_pxp}.}

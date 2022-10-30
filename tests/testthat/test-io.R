@@ -386,7 +386,7 @@ test_that("calc_A() works as expected for downstream swim", {
   expect_true("D_s" %in% colnames(io_mats))
   expect_true("D_feed_s" %in% colnames(io_mats))
   expect_true("O_s" %in% colnames(io_mats))
-  expect_true("A_s" %in% colnames(io_mats))
+  expect_true("B" %in% colnames(io_mats))
 
   expect_true(!("C" %in% colnames(io_mats)))
   expect_true(!("Z" %in% colnames(io_mats)))
@@ -400,7 +400,7 @@ test_that("calc_A() works as expected for downstream swim", {
   expect_equal(io_mats$D_s[[2]]["Furnaces", "NG - Dist."], 0.6097560976)
   expect_equal(io_mats$D_feed_s[[3]]["Power plants", "NG - Dist."], 0.3902439)
   expect_equal(io_mats$O_s[[4]]["Freight [tonne-km/year]", "Transport"], 0.9527775309)
-  expect_equal(io_mats$A_s[[3]]["Diesel - Dist.", "MD - Truck engines"], 0.009762856)
+  expect_equal(io_mats$B[[3]]["Diesel - Dist.", "MD - Truck engines"], 0.009762856)
 
 # Try when one of the f vector entries is NA
   temp <- UKEnergy2000mats %>%

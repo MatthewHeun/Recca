@@ -85,8 +85,8 @@
 #'            **D_s** is calculated by `transpose(U) * q_hat_inv`.
 #' @param D_feed_s The name for the **D_feed_s** matrix on output. Default is "D_feed_s".
 #'                 **D_s** is calculated by `transpose(U_feed) * q_hat_inv`.
-#' @param A_s The name for the **A_s** matrix on output. Default is "A_s".
-#'            **A_s** is calculated by `Z_s * D_s`.
+#' @param B The name for the **B** matrix on output. Default is "B".
+#'          **B** is calculated by `Z_s * D_s`.
 #' @param O_s The name for the **O_s** matrix on output. Default is "O_s".
 #'            **O** is calculated by `q_hat_inv * Y`.
 #' @param G_pxp The name for the **G_pxp** matrix on output. Default is "G_pxp".
@@ -117,7 +117,7 @@ calc_io_mats <- function(.sutdata = NULL,
                          y = "y", q = "q", f = "f", g = "g", h = "h", r = "r", W = "W", K = "K",
                          Z = "Z", C = "C", D = "D", A = "A", L_ixp = "L_ixp", L_pxp = "L_pxp", O = "O",
                          Z_feed = "Z_feed", K_feed = "K_feed", A_feed = "A_feed", L_ixp_feed = "L_ixp_feed", L_pxp_feed = "L_pxp_feed",
-                         Z_s = "Z_s", C_s = "C_s", D_s = "D_s", D_feed_s = "D_feed_s", A_s = "A_s", G_ixp = "G_ixp", G_pxp = "G_pxp", O_s = "O_s"){
+                         Z_s = "Z_s", C_s = "C_s", D_s = "D_s", D_feed_s = "D_feed_s", B = "B", G_ixp = "G_ixp", G_pxp = "G_pxp", O_s = "O_s"){
 
   method <- match.arg(method)
   method_q_calculation <- match.arg(method_q_calculation)
@@ -169,14 +169,14 @@ calc_io_mats <- function(.sutdata = NULL,
     } else if (direction %in% c("downstream", "supply", "Ghosh", "ghosh")) {
       ZKCDA_s <- calc_A(direction = direction,
                         R = R_mat, U = U_mat, U_feed = U_feed_mat, V = V_mat, Y = Y_mat, q = q_vec, f = f_vec, g = g_vec, r = r_vec, h = h_vec,
-                        Z_s = Z_s, C_s = C_s, D_s = D_s, D_feed_s = D_feed_s, A_s = A_s, O_s = O_s)
+                        Z_s = Z_s, C_s = C_s, D_s = D_s, D_feed_s = D_feed_s, B = B, O_s = O_s)
 
       D_s_mat <- ZKCDA_s[[D_s]]
-      A_s_mat <- ZKCDA_s[[A_s]]
+      B_mat <- ZKCDA_s[[B]]
 
       G_mats <- calc_G(direction = direction,
                        method = method, tol = tol,
-                       D_s = D_s_mat, A_s = A_s_mat,
+                       D_s = D_s_mat, B = B_mat,
                        G_ixp = G_ixp, G_pxp = G_pxp)
 
       # Return a list
@@ -294,7 +294,7 @@ calc_yqfgW <- function(.sutdata = NULL,
 }
 
 
-#' Calculate **Z**, **K**, **C**, **D**, **A**, and **O** matrices
+#' Calculate **Z**, **K**, **C**, **D**, **A**, **B**, and **O** matrices
 #'
 #' These matrices define the IO structure of an energy conversion chain.
 #'
@@ -311,7 +311,7 @@ calc_yqfgW <- function(.sutdata = NULL,
 #' **Z**, **K**, **C**, **D**, **A**, and **O**
 #' matrices are calculated.
 #' For `direction = "downstream"`,
-#' **Z_s**, **C_s**, **D_s**, **D_feed_s**, **A_s**, and **O_s**
+#' **Z_s**, **C_s**, **D_s**, **D_feed_s**, **B**, and **O_s**
 #' matrices are calculated.
 #'
 #' @param .sutdata a data frame of supply-use table matrices with matrices arranged in columns.
@@ -350,14 +350,14 @@ calc_yqfgW <- function(.sutdata = NULL,
 #'            **D_s** is calculated by `transpose(U) * q_hat_inv`.
 #' @param D_feed_s The name for the **D_feed_s** matrix on output. Default is "D_feed_s".
 #'                 **D_s** is calculated by `transpose(U_feed) * q_hat_inv`.
-#' @param A_s The name for the **A_s** matrix on output. Default is "A_s".
-#'            **A_s** is calculated by `Z_s * D_s`.
+#' @param B The name for the **B** matrix on output. Default is "B".
+#'            **B** is calculated by `Z_s * D_s`.
 #' @param O_s The name for the **O_s** matrix on output. Default is "O_s".
 #'            **O** is calculated by `q_hat_inv * Y`.
 #'
 #' @return A list or data frame containing
 #'         **Z**, **K**, **C**, **D**, **A**, and **O** matrices or
-#'         **Z_s**, **C_s**, **D_s**, **D_feed_s**, **A_s**, and **O_s** matrices,
+#'         **Z_s**, **C_s**, **D_s**, **D_feed_s**, **B**, and **O_s** matrices,
 #'         depending on the value of `direction`.
 #'
 #' @export
@@ -370,7 +370,7 @@ calc_A <- function(.sutdata = NULL,
                    # Upstream swim (demand, Leontief) matrices
                    Z = "Z", K = "K", C = "C", D = "D", A = "A", O = "O",
                    # Downstream swim (supply, Ghosh) matrices
-                   Z_s = "Z_s", C_s = "C_s", D_s = "D_s", D_feed_s = "D_feed_s", A_s = "A_s", O_s = "O_s"){
+                   Z_s = "Z_s", C_s = "C_s", D_s = "D_s", D_feed_s = "D_feed_s", B = "B", O_s = "O_s"){
   direction <- match.arg(direction)
 
   A_func <- function(R_mat, U_mat, U_feed_mat, V_mat, Y_mat, q_vec, f_vec, g_vec, r_vec, h_vec){
@@ -457,10 +457,10 @@ calc_A <- function(.sutdata = NULL,
 
       O_s_mat <- matsbyname::matrixproduct_byname(qhatinv, Y_mat)
 
-      A_s_mat <- matsbyname::matrixproduct_byname(Z_s_mat, D_s_mat)
+      B_mat <- matsbyname::matrixproduct_byname(Z_s_mat, D_s_mat)
 
-      out <- list(Z_s_mat, C_s_mat, D_s_mat, D_feed_s_mat, O_s_mat, A_s_mat) %>%
-        magrittr::set_names(c(Z_s, C_s, D_s, D_feed_s, O_s, A_s))
+      out <- list(Z_s_mat, C_s_mat, D_s_mat, D_feed_s_mat, O_s_mat, B_mat) %>%
+        magrittr::set_names(c(Z_s, C_s, D_s, D_feed_s, O_s, B))
       return(out)
     }
   }
@@ -542,14 +542,14 @@ calc_L <- function(.sutdata = NULL,
                    method = c("solve", "QR", "SVD"),
                    tol = .Machine$double.eps,
                    # Input names
-                   D = "D", A = "A", D_s = "D_s", A_s = "A_s",
+                   D = "D", A = "A", D_s = "D_s", B = "B",
                    # Output names
                    L_pxp = "L_pxp", L_ixp = "L_ixp",
                    G_pxp = "G_pxp", G_ixp = "G_ixp"){
   method <- match.arg(method)
   direction <- match.arg(direction)
 
-  L_func <- function(D_mat, A_mat, D_s_mat, A_s_mat){
+  L_func <- function(D_mat, A_mat, D_s_mat, B_mat){
     if (direction %in% c("upstream", "demand", "Leontief")) {
       L_pxp_mat <- matsbyname::Iminus_byname(A_mat) %>% matsbyname::invert_byname(method = method, tol = tol)
       L_ixp_mat <- matsbyname::matrixproduct_byname(D_mat, L_pxp_mat)
@@ -557,14 +557,14 @@ calc_L <- function(.sutdata = NULL,
         magrittr::set_names(c(L_pxp, L_ixp))
       return(out)
     } else if (direction %in% c("downstream", "supply", "Ghosh", "ghosh")) {
-      G_pxp_mat <- matsbyname::Iminus_byname(A_s_mat) %>% matsbyname::invert_byname(method = method, tol = tol)
+      G_pxp_mat <- matsbyname::Iminus_byname(B_mat) %>% matsbyname::invert_byname(method = method, tol = tol)
       G_ixp_mat <- matsbyname::matrixproduct_byname(D_s_mat, G_pxp_mat)
       out <- list(G_pxp_mat, G_ixp_mat) %>%
         magrittr::set_names(c(G_pxp, G_ixp))
       return(out)
     }
   }
-  matsindf::matsindf_apply(.sutdata, FUN = L_func, D_mat = D, A_mat = A, D_s_mat = D_s, A_s_mat = A_s)
+  matsindf::matsindf_apply(.sutdata, FUN = L_func, D_mat = D, A_mat = A, D_s_mat = D_s, B_mat = B)
 }
 
 
