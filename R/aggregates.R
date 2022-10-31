@@ -342,9 +342,9 @@ region_aggregates <- function(.sut_data,
         "{many_colname}" := NULL
       ) %>%
       dplyr::rename(
-        "{many_colname}" := .data[[few_colname]]
+        "{many_colname}" := dplyr::all_of(few_colname)
       ) %>%
-      dplyr::relocate(.data[[many_colname]]) # Relocates to left, where it belongs.
+      dplyr::relocate(dplyr::all_of(many_colname)) # Relocates to left, where it belongs.
     return(out)
   }
 
@@ -363,10 +363,10 @@ region_aggregates <- function(.sut_data,
     dplyr::summarise("{matrix_values}" := matsbyname::sum_byname(.data[[matrix_values]], .summarise = TRUE)) %>%
     # Rename few_colname to many_colname
     dplyr::rename(
-      "{many_colname}" := .data[[few_colname]]
+      "{many_colname}" := dplyr::all_of(few_colname)
     ) %>%
     # And pivot wider again to give wide by matrices shape.
-    tidyr::pivot_wider(names_from = matrix_names, values_from = matrix_values) %>%
+    tidyr::pivot_wider(names_from = dplyr::all_of(matrix_names), values_from = dplyr::all_of(matrix_values)) %>%
     # Remove the groupings we added.
     dplyr::ungroup() %>%
     # Recalculate U and r_EIOU matrices

@@ -2,7 +2,7 @@
 % Please edit documentation in R/io.R
 \name{calc_A}
 \alias{calc_A}
-\title{Calculate \strong{Z}, \strong{K}, \strong{C}, \strong{D}, \strong{A}, and \strong{O} matrices}
+\title{Calculate \strong{Z}, \strong{K}, \strong{C}, \strong{D}, \strong{A}, \strong{B}, and \strong{O} matrices}
 \usage{
 calc_A(
   .sutdata = NULL,
@@ -27,7 +27,7 @@ calc_A(
   C_s = "C_s",
   D_s = "D_s",
   D_feed_s = "D_feed_s",
-  A_s = "A_s",
+  B = "B",
   O_s = "O_s"
 )
 }
@@ -90,8 +90,8 @@ If all of \strong{R} is added to \strong{V}, this argument can be left unspecifi
 \item{D_feed_s}{The name for the \strong{D_feed_s} matrix on output. Default is "D_feed_s".
 \strong{D_s} is calculated by \code{transpose(U_feed) * q_hat_inv}.}
 
-\item{A_s}{The name for the \strong{A_s} matrix on output. Default is "A_s".
-\strong{A_s} is calculated by \code{Z_s * D_s}.}
+\item{B}{The name for the \strong{B} matrix on output. Default is "B".
+\strong{B} is calculated by \code{Z_s * D_s}.}
 
 \item{O_s}{The name for the \strong{O_s} matrix on output. Default is "O_s".
 \strong{O} is calculated by \code{q_hat_inv * Y}.}
@@ -99,7 +99,7 @@ If all of \strong{R} is added to \strong{V}, this argument can be left unspecifi
 \value{
 A list or data frame containing
 \strong{Z}, \strong{K}, \strong{C}, \strong{D}, \strong{A}, and \strong{O} matrices or
-\strong{Z_s}, \strong{C_s}, \strong{D_s}, \strong{D_feed_s}, \strong{A_s}, and \strong{O_s} matrices,
+\strong{Z_s}, \strong{C_s}, \strong{D_s}, \strong{D_feed_s}, \strong{B}, and \strong{O_s} matrices,
 depending on the value of \code{direction}.
 }
 \description{
@@ -119,6 +119,6 @@ For \code{direction = "upstream"},
 \strong{Z}, \strong{K}, \strong{C}, \strong{D}, \strong{A}, and \strong{O}
 matrices are calculated.
 For \code{direction = "downstream"},
-\strong{Z_s}, \strong{C_s}, \strong{D_s}, \strong{D_feed_s}, \strong{A_s}, and \strong{O_s}
+\strong{Z_s}, \strong{C_s}, \strong{D_s}, \strong{D_feed_s}, \strong{B}, and \strong{O_s}
 matrices are calculated.
 }

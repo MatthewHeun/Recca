@@ -343,7 +343,7 @@ waste_edges <- function(U_mat, V_mat,
       !!as.name(to) := waste,
       !!as.name(product) := waste
     ) %>%
-    dplyr::select(from, to, value, product)
+    dplyr::select(dplyr::all_of(c(from, to, value, product)))
 }
 
 

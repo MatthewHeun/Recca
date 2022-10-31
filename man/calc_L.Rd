@@ -13,7 +13,7 @@ calc_L(
   D = "D",
   A = "A",
   D_s = "D_s",
-  A_s = "A_s",
+  B = "B",
   L_pxp = "L_pxp",
   L_ixp = "L_ixp",
   G_pxp = "G_pxp",
@@ -28,7 +28,7 @@ calc_G(
   D = "D",
   A = "A",
   D_s = "D_s",
-  A_s = "A_s",
+  B = "B",
   L_pxp = "L_pxp",
   L_ixp = "L_ixp",
   G_pxp = "G_pxp",
@@ -58,9 +58,6 @@ Default is \code{.Machine$double.eps}.}
 \item{D_s}{The \strong{D_s} matrix or name of the column in \code{.sutmats} that contains same.
 \code{D_s} is required for \code{direction = "downstream"}. Default is "D_s".}
 
-\item{A_s}{The \strong{A_s} matrix or name of the column in \code{.sutmats} that contains same.
-\code{A_s} is required for \code{direction = "downstream"}. Default is "A_s".}
-
 \item{L_pxp}{The name for the \strong{L_pxp} matrix on output. Default is "L_pxp".
 \code{L_pxp} is calculated by \code{inverse(I - A)}.}
 
@@ -72,6 +69,9 @@ Default is \code{.Machine$double.eps}.}
 
 \item{G_ixp}{The name for the \strong{G_ixp} matrix on output. Default is "G_ixp".
 \strong{G_ixp} is calculated by \code{D_s * G_pxp}.}
+
+\item{A_s}{The \strong{A_s} matrix or name of the column in \code{.sutmats} that contains same.
+\code{A_s} is required for \code{direction = "downstream"}. Default is "A_s".}
 }
 \value{
 A list or data frame containing \strong{L_pxp} and \strong{L_ixp} or \strong{G_pxp} and \strong{G_ixp} matrices.
