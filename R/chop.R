@@ -374,7 +374,7 @@ chop_Y <- function(.sut_data = NULL,
   # If .sut_data is a data frame, unnest if desired.
   if (is.data.frame(.sut_data) & unnest) {
     out <- out %>%
-      tidyr::unnest(cols = chop_df)
+      tidyr::unnest(cols = dplyr::all_of(chop_df))
   }
   return(out)
 }
@@ -549,7 +549,7 @@ chop_R <- function(.sut_data = NULL,
   # If .sut_data is a data frame, unnest if desired.
   if (is.data.frame(.sut_data) & unnest) {
     out <- out %>%
-      tidyr::unnest(cols = chop_df)
+      tidyr::unnest(cols = dplyr::all_of(chop_df))
   }
   return(out)
 }

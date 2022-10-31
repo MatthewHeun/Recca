@@ -220,7 +220,7 @@ extend_to_exergy <- function(.sutmats = NULL,
                                   .symbols = FALSE)
     # We'll need to strip suffixes off column names.
     exergy_df <- out %>%
-      dplyr::select(cols_to_keep) %>%
+      dplyr::select(dplyr::any_of(cols_to_keep)) %>%
       # Change the Energy.type column to Useful
       dplyr::mutate(
         "{energy_type}" := exergy
