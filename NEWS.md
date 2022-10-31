@@ -4,9 +4,9 @@ output: html_document
 ---
 
 
-* Switch to simpler formulas derived by MKH
+* Switched to simpler formulas derived by MKH
   for `new_R_ps()`.
-* Eliminate `tidyselect` warnings.
+* Eliminated `tidyselect` warnings.
 * `write_ecc_to_excel()` now ensures that columns of **U** and rows of **V**
   are the same, even if it means adding zero columns to **U** or 
   zero rows to **V**.
