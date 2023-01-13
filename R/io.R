@@ -522,8 +522,8 @@ calc_A <- function(.sutdata = NULL,
 #'          `D` is required for `direction = "upstream"`. Default is "A".
 #' @param D_s The **D_s** matrix or name of the column in `.sutmats` that contains same.
 #'            `D_s` is required for `direction = "downstream"`. Default is "D_s".
-#' @param A_s The **A_s** matrix or name of the column in `.sutmats` that contains same.
-#'            `A_s` is required for `direction = "downstream"`. Default is "A_s".
+#' @param B The **B** matrix or name of the column in `.sutmats` that contains same.
+#'          `B` is required for `direction = "downstream"`. Default is "B".
 #' @param L_pxp The name for the **L_pxp** matrix on output. Default is "L_pxp".
 #'              `L_pxp` is calculated by `inverse(I - A)`.
 #' @param L_ixp The name for the **L_ixp** matrix on output. Default is "L_ixp".

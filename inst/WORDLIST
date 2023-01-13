@@ -45,6 +45,7 @@ importFrom
 inds
 ing
 inhomogeneous
+inhomogeneity
 inversetranspose
 io
 Ip
@@ -64,6 +65,7 @@ mathbf
 mathrm
 MatthewHeun
 matwithdims
+MKH
 MTH
 MWE
 NER
