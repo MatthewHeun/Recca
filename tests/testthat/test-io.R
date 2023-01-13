@@ -405,6 +405,8 @@ test_that("calc_A() works as expected for downstream swim", {
 # Try when one of the f vector entries is NA
   temp <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
+    # Eliminate the Services rows, because they are not unit homogeneous.
+    dplyr::filter(!(.data[[Recca::psut_cols$last_stage]] %in% "Services")) %>%
     calc_yqfgW()
   # Set one of the values in the first f vector to NA for this test.
   temp$f[[1]][, 1][1] <- NA_real_
@@ -422,11 +424,15 @@ test_that("calc_A() works as expected for downstream swim", {
 test_that("calc_G() is an alias for calc_L()", {
   io_mats_L <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
+    # Eliminate the Services rows, because they are not unit homogeneous.
+    dplyr::filter(!(.data[[Recca::psut_cols$last_stage]] %in% "Services")) %>%
     calc_yqfgW() %>%
     calc_A(direction = "downstream") %>%
     calc_L(direction = "downstream")
   io_mats_G <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
+    # Eliminate the Services rows, because they are not unit homogeneous.
+    dplyr::filter(!(.data[[Recca::psut_cols$last_stage]] %in% "Services")) %>%
     calc_yqfgW() %>%
     calc_A(direction = "downstream") %>%
     calc_G(direction = "downstream")
@@ -438,7 +444,7 @@ test_that("calc_L() works as expected for downstream swim", {
   io_mats <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
     # Last.stage == "Services" has unit inhomogeniety and bad results.
-    dplyr::filter(Last.stage != "Services") %>%
+    dplyr::filter(!(.data[[Recca::psut_cols$last_stage]] %in% "Services")) %>%
     calc_yqfgW() %>%
     calc_A(direction = "downstream") %>%
     calc_L(direction = "downstream")

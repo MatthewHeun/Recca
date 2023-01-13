@@ -4,6 +4,9 @@ output: html_document
 ---
 
 
+* Eliminated data frame rows for a couple tests
+  that were producing `NA` values 
+  due to unit inhomogeneity. 
 * Switched to simpler formulas derived by MKH
   for `new_R_ps()`.
 * Eliminated `tidyselect` warnings.
