@@ -7,6 +7,9 @@
     <loc>/LICENSE-text.html</loc>
   </url>
   <url>
+    <loc>/articles/Aggregation.html</loc>
+  </url>
+  <url>
     <loc>/articles/Recca.html</loc>
   </url>
   <url>
@@ -85,6 +88,9 @@
     <loc>/reference/calc_M.html</loc>
   </url>
   <url>
+    <loc>/reference/calc_aggregates_from_ecc_prime.html</loc>
+  </url>
+  <url>
     <loc>/reference/calc_embodied_EIOU.html</loc>
   </url>
   <url>
@@ -106,7 +112,13 @@
     <loc>/reference/calc_io_mats.html</loc>
   </url>
   <url>
+    <loc>/reference/calc_mats_locations_excel.html</loc>
+  </url>
+  <url>
     <loc>/reference/calc_yqfgW.html</loc>
+  </url>
+  <url>
+    <loc>/reference/chop-doc.html</loc>
   </url>
   <url>
     <loc>/reference/combine_RV.html</loc>
@@ -116,6 +128,9 @@
   </url>
   <url>
     <loc>/reference/data.html</loc>
+  </url>
+  <url>
+    <loc>/reference/despecified_aggregates.html</loc>
   </url>
   <url>
     <loc>/reference/edge_list.html</loc>
@@ -146,6 +161,9 @@
   </url>
   <url>
     <loc>/reference/flows_unit_homogeneous.html</loc>
+  </url>
+  <url>
+    <loc>/reference/grouped_aggregates.html</loc>
   </url>
   <url>
     <loc>/reference/hpm_eu.products.html</loc>
@@ -265,6 +283,12 @@
     <loc>/reference/verify_SUT_industry_production.html</loc>
   </url>
   <url>
+    <loc>/reference/verify_chop_energy_sum.html</loc>
+  </url>
+  <url>
     <loc>/reference/waste_edges.html</loc>
+  </url>
+  <url>
+    <loc>/reference/write_ecc_to_excel.html</loc>
   </url>
 </urlset>

@@ -3,7 +3,7 @@
 The calculation includes non-energy uses if they are present in the final demand matrix.
 The calculation does not include balancing items (Losses and Statistical differences).
 If .sutdata is a data frame, fd_sectors should be the name of a column in the data frame.
-If .sutdata is NULL, fd_sectors can be a single vector of industry names."><title>Final demand energy and exergy aggregates — finaldemand_aggregates • Recca</title><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Final demand energy and exergy aggregates — finaldemand_aggregates"><meta property="og:description" content="Calculates aggregate final demand energy from a data frame of Supply-Use matrices.
+If .sutdata is NULL, fd_sectors can be a single vector of industry names."><title>Final demand energy and exergy aggregates — finaldemand_aggregates • Recca</title><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Final demand energy and exergy aggregates — finaldemand_aggregates"><meta property="og:description" content="Calculates aggregate final demand energy from a data frame of Supply-Use matrices.
 The calculation includes non-energy uses if they are present in the final demand matrix.
 The calculation does not include balancing items (Losses and Statistical differences).
 If .sutdata is a data frame, fd_sectors should be the name of a column in the data frame.
@@ -35,6 +35,7 @@ If .sutdata is NULL, fd_sectors can be a single vector of industry names."><!-- 
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/Aggregation.html">Aggregation</a>
     <a class="dropdown-item" href="../articles/new-function-interaction.html">new_* function interactions</a>
     <a class="dropdown-item" href="../articles/new-functions.html">new_* functions</a>
   </div>
@@ -73,63 +74,86 @@ If <code>.sutdata</code> is <code>NULL</code>, <code>fd_sectors</code> can be a 
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">finaldemand_aggregates</span><span class="op">(</span>
-  .sutdata <span class="op">=</span> <span class="cn">NULL</span>,
-  <span class="va">fd_sectors</span>,
-  pattern_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"exact"</span>, <span class="st">"leading"</span>, <span class="st">"trailing"</span>, <span class="st">"anywhere"</span><span class="op">)</span>,
-  U <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">U</span>,
-  Y <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">Y</span>,
-  r_EIOU <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">r_eiou</span>,
-  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Total"</span>, <span class="st">"Product"</span>, <span class="st">"Sector"</span><span class="op">)</span>,
-  net_aggregate_demand <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="aggregate_cols.html">aggregate_cols</a></span><span class="op">$</span><span class="va">net_aggregate_demand</span>,
-  gross_aggregate_demand <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="aggregate_cols.html">aggregate_cols</a></span><span class="op">$</span><span class="va">gross_aggregate_demand</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">finaldemand_aggregates</span><span class="op">(</span></span>
+<span>  .sutdata <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">fd_sectors</span>,</span>
+<span>  piece <span class="op">=</span> <span class="st">"all"</span>,</span>
+<span>  notation <span class="op">=</span> <span class="fu">RCLabels</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/RCLabels/man/notations_list.html" class="external-link">notations_list</a></span>,</span>
+<span>  pattern_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"exact"</span>, <span class="st">"leading"</span>, <span class="st">"trailing"</span>, <span class="st">"anywhere"</span>, <span class="st">"literal"</span><span class="op">)</span>,</span>
+<span>  prepositions <span class="op">=</span> <span class="fu">RCLabels</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/RCLabels/man/prepositions_list.html" class="external-link">prepositions_list</a></span>,</span>
+<span>  U <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">U</span>,</span>
+<span>  U_feed <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">U_feed</span>,</span>
+<span>  Y <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">Y</span>,</span>
+<span>  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Total"</span>, <span class="st">"Product"</span>, <span class="st">"Sector"</span><span class="op">)</span>,</span>
+<span>  net_aggregate_demand <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="aggregate_cols.html">aggregate_cols</a></span><span class="op">$</span><span class="va">net_aggregate_demand</span>,</span>
+<span>  gross_aggregate_demand <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="aggregate_cols.html">aggregate_cols</a></span><span class="op">$</span><span class="va">gross_aggregate_demand</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>.sutdata</dt>
 <dd><p>A data frame with columns of matrices from a supply-use analysis.</p></dd>
+
+
 <dt>fd_sectors</dt>
 <dd><p>A vector of names of sectors in final demand.
 Names should include columns in the <code>Y</code> and <code>U_EIOU</code> matrices
 to cover both net (in <code>Y</code>) and gross (in <code>Y</code> and <code>U_EIOU</code>) final demand.</p></dd>
-<dt>pattern_type</dt>
-<dd><p>One of "exact", "leading", "trailing", or "anywhere" which specifies
-how matches are made for <code>fd_sectors</code>.
-If "exact", exact matches specify the sectors to be aggregated.
-If "leading", sectors are aggregated if any entry in <code>fd_sectors</code> matches the leading part of a final demand sector's name.
-If "trailing", sectors are aggregated if any entry in <code>fd_sectors</code> matches the trailing part of a final demand sector's name.
-If "anywhere", sectors are aggregated if any entry in <code>fd_sectors</code> matches any part of a final demand sector's name.
-Default is "exact".</p></dd>
-<dt>U, Y, r_EIOU</dt>
-<dd><p>See <code><a href="psut_cols.html">Recca::psut_cols</a></code>.</p></dd>
+
+
+<dt>piece, notation, pattern_type, prepositions</dt>
+<dd><p>Arguments that control the way row and column matching
+is accomplished when selecting parts of the <strong>R</strong>, <strong>V</strong>, and <strong>Y</strong>
+matrices for primary aggregation.
+These arguments are passed to
+<code><a href="https://rdrr.io/pkg/matsbyname/man/select_rowcol_piece_byname.html" class="external-link">matsbyname::select_rowcol_piece_byname()</a></code> and eventually
+<code><a href="https://rdrr.io/pkg/RCLabels/man/regex_funcs.html" class="external-link">RCLabels::match_by_pattern()</a></code> and
+<code><a href="https://rdrr.io/pkg/RCLabels/man/make_or_pattern.html" class="external-link">RCLabels::make_or_pattern()</a></code>.
+Default values are
+<code>piece = "all"</code>,
+<code>notation = RCLabels::notations_list</code>,
+<code>pattern_type = "exact"</code>, and
+<code>prepositions = RCLabels::prepositions_list</code>.</p></dd>
+
+
+<dt>U, U_feed, Y</dt>
+<dd><p>Input matrices. See <code><a href="psut_cols.html">Recca::psut_cols</a></code>.</p></dd>
+
+
 <dt>by</dt>
 <dd><p>One of "Product", "Sector", or "Total" to indicate the desired aggregation:
 "Product" for aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.),
 "Sector" for aggregation by final demand sector (Agriculture/forestry, Domestic navigation, etc.), or
 "Total" for aggregation over both Product and Sector (the default).</p></dd>
+
+
 <dt>net_aggregate_demand, gross_aggregate_demand</dt>
 <dd><p>See <code><a href="aggregate_cols.html">Recca::aggregate_cols</a></code>.
-Net energy demand is calculated by <code>sumall(Y_fd)</code>.
-Gross energy demand is calculated by <code>sumall(Y_fd) + sumall(U_EIOU)</code>.</p></dd>
+Net energy demand is calculated by <code>matsbyname::sumall_byname(Y_fd)</code>.
+Gross energy demand is calculated by <code>matsbyname::sumall_byname(Y_fd) + matsbyname::sumall_byname(U_EIOU)</code>.
+Defaults are <code>Recca::aggregate_cols$net_aggregate_demand</code> and
+<code>Recca::aggregate_cols$gross_aggregate_demand</code>.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list or data frame containing <code>net_aggregate_demand</code> and <code>gross_aggregate_demand</code> columns.</p>
+    
+
+<p>A list or data frame containing <code>net_aggregate_demand</code> and <code>gross_aggregate_demand</code> columns.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/MatthewHeun/matsbyname" class="external-link">matsbyname</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">UKEnergy2000mats</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="st">"matrix.name"</span>, values_from <span class="op">=</span> <span class="st">"matrix"</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span class="r-in">    fd_sectors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Residential"</span>, <span class="st">"Transport"</span><span class="op">)</span><span class="op">)</span>, times <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in">  <span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Last.stage</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/last_stages.html" class="external-link">last_stages</a></span><span class="op">$</span><span class="va">final</span>,</span>
-<span class="r-in">                                  <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/last_stages.html" class="external-link">last_stages</a></span><span class="op">$</span><span class="va">useful</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu">finaldemand_aggregates</span><span class="op">(</span>fd_sectors <span class="op">=</span> <span class="st">"fd_sectors"</span>, by <span class="op">=</span> <span class="st">"Sector"</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/MatthewHeun/matsbyname" class="external-link">matsbyname</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">UKEnergy2000mats</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="st">"matrix.name"</span>, values_from <span class="op">=</span> <span class="st">"matrix"</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    fd_sectors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Residential"</span>, <span class="st">"Transport"</span><span class="op">)</span><span class="op">)</span>, times <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Last.stage</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/last_stages.html" class="external-link">last_stages</a></span><span class="op">$</span><span class="va">final</span>,</span></span>
+<span class="r-in"><span>                                  <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/last_stages.html" class="external-link">last_stages</a></span><span class="op">$</span><span class="va">useful</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">finaldemand_aggregates</span><span class="op">(</span>fd_sectors <span class="op">=</span> <span class="st">"fd_sectors"</span>, by <span class="op">=</span> <span class="st">"Sector"</span><span class="op">)</span></span></span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in finaldemand_aggregates(., fd_sectors = "fd_sectors", by = "Sector"):</span> unused arguments (fd_sectors = "fd_sectors", by = "Sector")</span>
 </code></pre></div>
     </div>
@@ -142,7 +166,7 @@ Gross energy demand is calculated by <code>sumall(Y_fd) + sumall(U_EIOU)</code>.
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
     </footer></div>

@@ -5,7 +5,7 @@ But what if different resources were available?
 The analysis is the same if resources become final demand (and vice versa)
 and make becomes use (and vice versa).
 That is, the analysis is the same if you're dealing with a reversed energy conversion chain (ECC).
-This function performs that reversal."><title>Reverse an energy conversion chain — reverse • Recca</title><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Reverse an energy conversion chain — reverse"><meta property="og:description" content="Leontief's original input-output analysis involved swimming
+This function performs that reversal."><title>Reverse an energy conversion chain — reverse • Recca</title><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Reverse an energy conversion chain — reverse"><meta property="og:description" content="Leontief's original input-output analysis involved swimming
 &quot;upstream&quot; to estimate the economy that would be needed if different final demand were observed.
 But what if different resources were available?
 The analysis is the same if resources become final demand (and vice versa)
@@ -39,6 +39,7 @@ This function performs that reversal."><!-- mathjax --><script src="https://cdnj
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/Aggregation.html">Aggregation</a>
     <a class="dropdown-item" href="../articles/new-function-interaction.html">new_* function interactions</a>
     <a class="dropdown-item" href="../articles/new-functions.html">new_* functions</a>
   </div>
@@ -79,65 +80,81 @@ This function performs that reversal.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">reverse</span><span class="op">(</span>
-  .sutmats <span class="op">=</span> <span class="cn">NULL</span>,
-  R <span class="op">=</span> <span class="st">"R"</span>,
-  V <span class="op">=</span> <span class="st">"V"</span>,
-  U <span class="op">=</span> <span class="st">"U"</span>,
-  Y <span class="op">=</span> <span class="st">"Y"</span>,
-  suffix <span class="op">=</span> <span class="st">"_rev"</span>,
-  R_rev <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">R</span>, <span class="va">suffix</span><span class="op">)</span>,
-  V_rev <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">V</span>, <span class="va">suffix</span><span class="op">)</span>,
-  U_rev <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">U</span>, <span class="va">suffix</span><span class="op">)</span>,
-  Y_rev <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">Y</span>, <span class="va">suffix</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">reverse</span><span class="op">(</span></span>
+<span>  .sutmats <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  R <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">R</span>,</span>
+<span>  U <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">U</span>,</span>
+<span>  V <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">V</span>,</span>
+<span>  Y <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">Y</span>,</span>
+<span>  R_rev <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">R</span>, <span class="st">"_rev"</span><span class="op">)</span>,</span>
+<span>  U_rev <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">U</span>, <span class="st">"_rev"</span><span class="op">)</span>,</span>
+<span>  V_rev <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">V</span>, <span class="st">"_rev"</span><span class="op">)</span>,</span>
+<span>  Y_rev <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">Y</span>, <span class="st">"_rev"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>.sutmats</dt>
 <dd><p>the input ECC</p></dd>
+
+
 <dt>R</dt>
-<dd><p>the <code>R</code> matrix in the ECC to be reversed. (Default is "<code>R</code>".)</p></dd>
-<dt>V</dt>
-<dd><p>the <code>V</code> matrix in the ECC to be reversed. (Default is "<code>V</code>".)</p></dd>
+<dd><p>The <strong>R</strong> matrix in the ECC to be reversed. (Default is "R".)</p></dd>
+
+
 <dt>U</dt>
-<dd><p>the <code>U</code> matrix in the ECC to be reversed. (Default is "<code>U</code>".)</p></dd>
+<dd><p>The <strong>U</strong> matrix in the ECC to be reversed. (Default is "U".)</p></dd>
+
+
+<dt>V</dt>
+<dd><p>The <strong>V</strong> matrix in the ECC to be reversed. (Default is "V".)</p></dd>
+
+
 <dt>Y</dt>
-<dd><p>the <code>Y</code> matrix in the ECC to be reversed. (Default is "<code>Y</code>".)</p></dd>
-<dt>suffix</dt>
-<dd><p>the suffix to be added to matrix names. (Default is "_rev".)</p></dd>
+<dd><p>The <strong>Y</strong> matrix in the ECC to be reversed. (Default is "Y".)</p></dd>
+
+
 <dt>R_rev</dt>
-<dd><p>the name of the <code>R</code> matrix in the reversed ECC. (Default is "<code>R_rev</code>".)</p></dd>
-<dt>V_rev</dt>
-<dd><p>the name of the <code>V</code> matrix in the reversed ECC. (Default is "<code>V_rev</code>".)</p></dd>
+<dd><p>The name of the <strong>R</strong> matrix in the reversed ECC. (Default is "R_rev".)</p></dd>
+
+
 <dt>U_rev</dt>
-<dd><p>the name of the <code>U</code> matrix in the reversed ECC. (Default is "<code>U_rev</code>".)</p></dd>
+<dd><p>The name of the <strong>U</strong> matrix in the reversed ECC. (Default is "U_rev".)</p></dd>
+
+
+<dt>V_rev</dt>
+<dd><p>The name of the <strong>V</strong> matrix in the reversed ECC. (Default is "V_rev".)</p></dd>
+
+
 <dt>Y_rev</dt>
-<dd><p>the name of the <code>Y</code> matrix in the reversed ECC. (Default is "<code>Y_rev</code>".)</p></dd>
+<dd><p>The name of the <strong>Y</strong> matrix in the reversed ECC. (Default is "Y_rev".)</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>a reversed version of the ECC described by <code>R</code>, <code>V</code>, <code>U</code>, and <code>Y</code>.</p>
+    
+
+<p>A reversed version of the ECC described by <strong>R</strong>, <strong>U</strong>, <strong>V</strong>, and <strong>Y</strong>.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>To reverse an ECC, the <code>R</code>, <code>V</code>, <code>U</code>, and <code>Y</code> matrices
+    <p>To reverse an ECC, the <strong>R</strong>, <strong>U</strong>, <strong>V</strong>, and <strong>Y</strong> matrices
 need to be transposed and swapped:
-<code>R</code> with <code>Y</code> and
-<code>V</code> with <code>U</code>.
+<strong>R</strong> with <strong>Y</strong> and
+<strong>U</strong> with <strong>V</strong>.
 This function performs those operations.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/MatthewHeun/Recca" class="external-link">Recca</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">mats</span> <span class="op">&lt;-</span> <span class="va">UKEnergy2000mats</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/spread.html" class="external-link">spread</a></span><span class="op">(</span>key <span class="op">=</span> <span class="st">"matrix.name"</span>, value <span class="op">=</span> <span class="st">"matrix"</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu">reverse</span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">mats</span><span class="op">$</span><span class="va">R_rev</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/MatthewHeun/Recca" class="external-link">Recca</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mats</span> <span class="op">&lt;-</span> <span class="va">UKEnergy2000mats</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/spread.html" class="external-link">spread</a></span><span class="op">(</span>key <span class="op">=</span> <span class="st">"matrix.name"</span>, value <span class="op">=</span> <span class="st">"matrix"</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">reverse</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mats</span><span class="op">$</span><span class="va">R_rev</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             Diesel - Dist. Elect - Grid NG - Dist. Petrol - Dist.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Residential              0         6000      25000              0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Transport            14750            0          0          26000</span>
@@ -145,7 +162,7 @@ This function performs those operations.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Industry"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"coltype")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Product"</span>
-<span class="r-in"><span class="va">mats</span><span class="op">$</span><span class="va">U_rev</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span class="r-in"><span><span class="va">mats</span><span class="op">$</span><span class="va">U_rev</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                Crude dist. Diesel dist. Elect. grid Gas wells &amp; proc. NG dist.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Crude - Dist.        47500            0           0                 0        0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Crude - Fields           0            0           0                 0        0</span>
@@ -172,7 +189,7 @@ This function performs those operations.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Product"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"coltype")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Industry"</span>
-<span class="r-in"><span class="va">mats</span><span class="op">$</span><span class="va">V_rev</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span class="r-in"><span><span class="va">mats</span><span class="op">$</span><span class="va">V_rev</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                   Crude Crude - Dist. Crude - Fields Diesel Diesel - Dist.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Crude dist.           0           500          47500      0             25</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Diesel dist.          0             0              0  15500            350</span>
@@ -207,7 +224,7 @@ This function performs those operations.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Industry"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"coltype")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Product"</span>
-<span class="r-in"><span class="va">mats</span><span class="op">$</span><span class="va">Y_rev</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span class="r-in"><span><span class="va">mats</span><span class="op">$</span><span class="va">Y_rev</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Resources - Crude Resources - NG</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Crude             50000              0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> NG                    0          43000</span>
@@ -226,7 +243,7 @@ This function performs those operations.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
     </footer></div>

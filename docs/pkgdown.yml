@@ -1,9 +1,10 @@
-pandoc: 2.14.0.3
-pkgdown: 2.0.2
+pandoc: 2.19.2
+pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
+  Aggregation: Aggregation.html
   Recca: Recca.html
   new-function-interaction: new-function-interaction.html
   new-functions: new-functions.html
-last_built: 2022-04-02T20:43Z
+last_built: 2023-01-19T23:23Z
 
