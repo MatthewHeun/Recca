@@ -4,6 +4,10 @@ output: html_document
 ---
 
 
+* Move tests associated with `verify_cols_missing()`
+  from the `Recca` package to `matsindf`.
+  Those tests didn't belong in `Recca`,
+  because `verify_cols_missing()` is no longer in `Recca`.
 * Eliminated data frame rows for a couple tests
   that were producing `NA` values 
   due to unit inhomogeneity. 
