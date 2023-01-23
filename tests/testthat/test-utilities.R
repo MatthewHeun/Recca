@@ -332,7 +332,9 @@ test_that("find_p_industry_names() works as expected", {
   # Try with a null matrix.  Should fail.
   expect_error(find_p_industry_names(p_industry_prefixes = list(p_industry_prefixes),
                                      R = list(R), V = NULL, Y = list(Y)),
-               "subscript out of bounds")
+               # Newer versions of R give the "subscript out of bounds" error.
+               # Older versions of R give the "zero-length" error.
+               "subscript out of bounds|zero-length inputs cannot be mixed with those of non-zero length")
 
   # Try with a data frame.
   DF <- tibble::tibble(R = list(R,R), V = list(V,V), Y = list(Y,Y),
