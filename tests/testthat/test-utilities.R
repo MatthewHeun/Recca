@@ -365,7 +365,7 @@ test_that("write_ecc_to_excel() fails when the file already exists", {
   ecc_temp_path <- tempfile(pattern = "write_excel_ecc_test_file", fileext = ".xlsx")
   file.create(ecc_temp_path)
   expect_error(write_ecc_to_excel(ecc, path = ecc_temp_path, overwrite = FALSE),
-               regexp = paste0("File ", ecc_temp_path, " already exists. Call write_ecc_to_excel\\(overwrite = TRUE\\) to overwrite."))
+               regexp = paste0("File ", ecc_temp_path, " already exists. Call write_ecc_to_excel with overwrite = TRUE to overwrite."))
   if (file.exists(ecc_temp_path)) {
     file.remove(ecc_temp_path)
   }
