@@ -5,10 +5,15 @@ biofuels
 Brockway
 CMD
 ces
+colname
 coltypes
 colvec
 colvecwithdims
 csv
+Despecify
+despecify
+despecified
+directionality
 doi
 ecc
 ef
@@ -27,6 +32,7 @@ fd
 feedstock
 feedstocks
 finaldemand
+Ghosh
 github
 hatinv
 hatized
@@ -39,6 +45,7 @@ importFrom
 inds
 ing
 inhomogeneous
+inhomogeneity
 inversetranspose
 io
 Ip
@@ -49,6 +56,7 @@ Kuperus
 Leontief
 Leontief's
 lifecycle
+linearities
 Lpp
 LTC
 LTH
@@ -57,6 +65,7 @@ mathbf
 mathrm
 MatthewHeun
 matwithdims
+MKH
 MTH
 MWE
 NER
@@ -66,6 +75,7 @@ PSUT
 pxp
 Qx
 quantifications
+RoP
 rowtypes
 rowvec
 Sankey
@@ -83,6 +93,7 @@ un
 Un
 underset
 unencoded
+unnest
 vectorized
 WIP
 widehat

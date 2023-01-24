@@ -5,7 +5,7 @@
 \alias{psut_cols}
 \title{Physical Supply-Use Table (PSUT) data frame column names}
 \format{
-A string list with 17 entries.
+A string list with 23 entries.
 \describe{
 \item{resources,R}{The name of a column in a wide-by-matrices data frame containing resource (\code{R}) matrices.}
 \item{U_feed}{The name of a column in a wide-by-matrices data frame containing use (\code{U}) matrices that exclude energy industry own use.}
@@ -19,7 +19,11 @@ A string list with 17 entries.
 \item{matvals}{The name of a column in a tidy data frame containing matrices.}
 \item{matnames}{The name of a column in a tidy data frame containing matrix names.}
 \item{sector}{The name of a column in a tidy data frame containing sector names.}
+\item{country}{The name of a column in a tidy data frame containing names of countries.}
+\item{year}{The name of a column in a tidy data frame containing years.}
+\item{method}{The name of a column in a tidy data frame containing the method for accounting for the primary equivalent of renewable electricity.}
 \item{energy_type}{The name of a column in a tidy data frame containing names of energy types.}
+\item{last_stage}{The name of a column in a tidy data frame last stages of the energy conversion chain.}
 }
 }
 \usage{

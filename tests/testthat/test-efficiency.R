@@ -48,10 +48,7 @@ test_that("calc_eta_pfu() works correctly", {
   p_industries <- c("Resources - Crude", "Resources - NG")
 
   primary_total_aggregates_sut <- wide %>%
-    dplyr::mutate(
-      p_industries = rep(list(p_industries), times = nrow(.))
-    ) %>%
-    Recca::primary_aggregates(p_industries = "p_industries", by = "Total") %>%
+    Recca::primary_aggregates(p_industries = p_industries, by = "Total") %>%
     # Get rid of unneeded matrix columns.
     dplyr::mutate(
       "{Recca::psut_cols$R}" := NULL,
@@ -69,10 +66,7 @@ test_that("calc_eta_pfu() works correctly", {
   fd_sectors <- c("Residential", "Transport", "Oil fields")
 
   finaldemand_total_aggregates_sut <- wide %>%
-    dplyr::mutate(
-      fd_sectors = rep(list(fd_sectors), times = nrow(.))
-    ) %>%
-    Recca::finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Total") %>%
+    Recca::finaldemand_aggregates(fd_sectors = fd_sectors, by = "Total") %>%
     # Get rid of unneeded matrix columns.
     dplyr::mutate(
       "{Recca::psut_cols$R}" := NULL,
@@ -94,7 +88,24 @@ test_that("calc_eta_pfu() works correctly", {
                                   IEATools::iea_cols$last_stage)) %>%
     calc_eta_pfd()
 
-  expect_equal(etas$eta_pfd_gross, list(0.799193548387097, 5384063619.67424, 0.279466456989247, 5097922181.12103))
-  expect_equal(etas$eta_pfd_net, list(0.771505376344086, 5384063619.67343, 0.278660005376344, 5097922181.12023))
+  expect_equal(etas$eta_pfd_gross, c(0.799193548387097, 5384063619.67424, 0.279466456989247, 5097922181.12103))
+  expect_equal(etas$eta_pfd_net, c(0.771505376344086, 5384063619.67343, 0.278660005376344, 5097922181.12023))
 })
+
+
+test_that("calc_eta_pfd() works with the output from chop_Y()", {
+  psut_mats <- UKEnergy2000mats %>%
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
+  p_industries <- c("Resources - Crude", "Resources - NG")
+  fd_sectors <- c("Residential", "Transport", "Oil fields")
+  chop_Y_aggs <- psut_mats %>%
+    Recca::chop_Y(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
+  etas <- chop_Y_aggs %>%
+    calc_eta_pfd()
+  # Make sure expected efficiency columns are present
+  expect_true(Recca::efficiency_cols$eta_pfd_gross %in% names(etas))
+  expect_true(Recca::efficiency_cols$eta_pfd_net %in% names(etas))
+})
+
+
 

@@ -22,7 +22,11 @@
 #' \item{matvals}{The name of a column in a tidy data frame containing matrices.}
 #' \item{matnames}{The name of a column in a tidy data frame containing matrix names.}
 #' \item{sector}{The name of a column in a tidy data frame containing sector names.}
+#' \item{country}{The name of a column in a tidy data frame containing names of countries.}
+#' \item{year}{The name of a column in a tidy data frame containing years.}
+#' \item{method}{The name of a column in a tidy data frame containing the method for accounting for the primary equivalent of renewable electricity.}
 #' \item{energy_type}{The name of a column in a tidy data frame containing names of energy types.}
+#' \item{last_stage}{The name of a column in a tidy data frame last stages of the energy conversion chain.}
 #' }
 #'
 #' @examples
@@ -40,11 +44,15 @@
 #' @format A string list with `r length(aggregate_cols)` entries.
 #' \describe{
 #' \item{aggregate_primary}{The name of a column in a wide-by-matrices data frame containing aggregates of primary energy.}
+#' \item{net_aggregate_primary}{The name of a column in a wide-by-matrices data frame containing aggregates of net primary energy.}
+#' \item{gross_aggregate_primary}{The name of a column in a wide-by-matrices data frame containing aggregates of gross primary energy.}
 #' \item{net_aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of net final demand energy (excluding energy industry own use), regardless of whether the last stage is final energy or useful energy.}
 #' \item{gross_aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of gross final demand energy (including energy industry own use), regardless of whether the last stage is final energy or useful energy.}
-#' \item{aggregate_primary_iea}{The name of a column in an IEA-style frame containing aggregates of primary energy.}
-#' \item{net_aggregate_demand_iea}{The name of a column in an IEA-style frame containing aggregates of net final demand energy (excluding energy industry own use), regardless of whether the last stage is final energy or useful energy.}
-#' \item{gross_aggregate_demand_iea}{The name of a column in an IEA-style frame containing aggregates of gross final demand energy (including energy industry own use), regardless of whether the last stage is final energy or useful energy.}
+#' \item{aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of final demand energy (including energy industry own use), regardless of whether the last stage is final energy or useful energy.}
+#' \item{region}{The name of a column in a wide-by-matrices data frame containing regions.}
+#' \item{aggregated_suffix}{The suffix for column names containing aggregated matrices.}
+#' \item{product_sector}{The name of a column containing names of products, industries, or sectors. Default is "Product.Industry.Sector".}
+#' \item{chop_df}{The name of a column containing a nested data frame of chopped energy conversion chains. Default is "Chopped.ECCs".}
 #' }
 #'
 #' @examples
@@ -64,6 +72,18 @@
 #' \item{eta_i}{The name of a column in a wide-by-matrices data frame containing industry efficiencies.}
 #' \item{eta_pfd_gross}{The name of a column in a wide-by-matrices data frame containing  efficiencies between the primary and gross final demand stages.}
 #' \item{eta_pfd_net}{The name of a column in a wide-by-matrices data frame containing efficiencies between the primary and net final demand stages.}
+#' \item{eta_pfd}{The name of a column in a wide-by-matrices data frame containing efficiencies between the primary and final demand stages, regardless of net or gross.}
+#' \item{eta_pf}{The string name for primary-to-final efficiency.}
+#' \item{eta_fu}{The string name for final-to-useful efficiency.}
+#' \item{eta_pu}{The string name for primary-to-useful efficiency.}
+#' \item{eta_ps}{The string name for primary-to-services efficiency.}
+#' \item{eta_us}{The string name for useful-to-services efficiency.}
+#' \item{eta_pw}{The string name for primary-to-well-being efficiency.}
+#' \item{eta_sw}{The string name for services-to-well-being efficiency.}
+#' \item{efficiency_name_suffix}{The suffix for names of columns containing efficiency names.}
+#' \item{gross_net}{The name of a column that contains "Gross" or "Net" for the type of efficiency.}
+#' \item{gross}{The entry in the `gross_net` column that identifies a gross efficiency.}
+#' \item{net}{The entry in the `gross_net` column that identifies a net efficiency.}
 #' }
 #'
 #' @examples

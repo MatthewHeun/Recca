@@ -5,14 +5,18 @@
 \alias{aggregate_cols}
 \title{Aggregate data frame column names}
 \format{
-A string list with 4 entries.
+A string list with 10 entries.
 \describe{
 \item{aggregate_primary}{The name of a column in a wide-by-matrices data frame containing aggregates of primary energy.}
+\item{net_aggregate_primary}{The name of a column in a wide-by-matrices data frame containing aggregates of net primary energy.}
+\item{gross_aggregate_primary}{The name of a column in a wide-by-matrices data frame containing aggregates of gross primary energy.}
 \item{net_aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of net final demand energy (excluding energy industry own use), regardless of whether the last stage is final energy or useful energy.}
 \item{gross_aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of gross final demand energy (including energy industry own use), regardless of whether the last stage is final energy or useful energy.}
-\item{aggregate_primary_iea}{The name of a column in an IEA-style frame containing aggregates of primary energy.}
-\item{net_aggregate_demand_iea}{The name of a column in an IEA-style frame containing aggregates of net final demand energy (excluding energy industry own use), regardless of whether the last stage is final energy or useful energy.}
-\item{gross_aggregate_demand_iea}{The name of a column in an IEA-style frame containing aggregates of gross final demand energy (including energy industry own use), regardless of whether the last stage is final energy or useful energy.}
+\item{aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of final demand energy (including energy industry own use), regardless of whether the last stage is final energy or useful energy.}
+\item{region}{The name of a column in a wide-by-matrices data frame containing regions.}
+\item{aggregated_suffix}{The suffix for column names containing aggregated matrices.}
+\item{product_sector}{The name of a column containing names of products, industries, or sectors. Default is "Product.Industry.Sector".}
+\item{chop_df}{The name of a column containing a nested data frame of chopped energy conversion chains. Default is "Chopped.ECCs".}
 }
 }
 \usage{

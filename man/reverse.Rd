@@ -6,40 +6,37 @@
 \usage{
 reverse(
   .sutmats = NULL,
-  R = "R",
-  V = "V",
-  U = "U",
-  Y = "Y",
-  suffix = "_rev",
-  R_rev = paste0(R, suffix),
-  V_rev = paste0(V, suffix),
-  U_rev = paste0(U, suffix),
-  Y_rev = paste0(Y, suffix)
+  R = Recca::psut_cols$R,
+  U = Recca::psut_cols$U,
+  V = Recca::psut_cols$V,
+  Y = Recca::psut_cols$Y,
+  R_rev = paste0(Recca::psut_cols$R, "_rev"),
+  U_rev = paste0(Recca::psut_cols$U, "_rev"),
+  V_rev = paste0(Recca::psut_cols$V, "_rev"),
+  Y_rev = paste0(Recca::psut_cols$Y, "_rev")
 )
 }
 \arguments{
 \item{.sutmats}{the input ECC}
 
-\item{R}{the \code{R} matrix in the ECC to be reversed. (Default is "\code{R}".)}
+\item{R}{The \strong{R} matrix in the ECC to be reversed. (Default is "R".)}
 
-\item{V}{the \code{V} matrix in the ECC to be reversed. (Default is "\code{V}".)}
+\item{U}{The \strong{U} matrix in the ECC to be reversed. (Default is "U".)}
 
-\item{U}{the \code{U} matrix in the ECC to be reversed. (Default is "\code{U}".)}
+\item{V}{The \strong{V} matrix in the ECC to be reversed. (Default is "V".)}
 
-\item{Y}{the \code{Y} matrix in the ECC to be reversed. (Default is "\code{Y}".)}
+\item{Y}{The \strong{Y} matrix in the ECC to be reversed. (Default is "Y".)}
 
-\item{suffix}{the suffix to be added to matrix names. (Default is "_rev".)}
+\item{R_rev}{The name of the \strong{R} matrix in the reversed ECC. (Default is "R_rev".)}
 
-\item{R_rev}{the name of the \code{R} matrix in the reversed ECC. (Default is "\code{R_rev}".)}
+\item{U_rev}{The name of the \strong{U} matrix in the reversed ECC. (Default is "U_rev".)}
 
-\item{V_rev}{the name of the \code{V} matrix in the reversed ECC. (Default is "\code{V_rev}".)}
+\item{V_rev}{The name of the \strong{V} matrix in the reversed ECC. (Default is "V_rev".)}
 
-\item{U_rev}{the name of the \code{U} matrix in the reversed ECC. (Default is "\code{U_rev}".)}
-
-\item{Y_rev}{the name of the \code{Y} matrix in the reversed ECC. (Default is "\code{Y_rev}".)}
+\item{Y_rev}{The name of the \strong{Y} matrix in the reversed ECC. (Default is "Y_rev".)}
 }
 \value{
-a reversed version of the ECC described by \code{R}, \code{V}, \code{U}, and \code{Y}.
+A reversed version of the ECC described by \strong{R}, \strong{U}, \strong{V}, and \strong{Y}.
 }
 \description{
 Leontief's original input-output analysis involved swimming
@@ -51,10 +48,10 @@ That is, the analysis is the same if you're dealing with a reversed energy conve
 This function performs that reversal.
 }
 \details{
-To reverse an ECC, the \code{R}, \code{V}, \code{U}, and \code{Y} matrices
+To reverse an ECC, the \strong{R}, \strong{U}, \strong{V}, and \strong{Y} matrices
 need to be transposed and swapped:
-\code{R} with \code{Y} and
-\code{V} with \code{U}.
+\strong{R} with \strong{Y} and
+\strong{U} with \strong{V}.
 This function performs those operations.
 }
 \examples{

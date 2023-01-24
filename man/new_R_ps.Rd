@@ -6,79 +6,137 @@
 \usage{
 new_R_ps(
   .sutmats = NULL,
+  method = c("solve", "QR", "SVD"),
+  tol = .Machine$double.eps,
   R_prime = "R_prime",
   U = "U",
+  U_feed = "U_feed",
   V = "V",
   Y = "Y",
   q = "q",
   f = "f",
+  G_pxp = "G_pxp",
+  G_ixp = "G_ixp",
+  O_s = "O_s",
+  D_s = "D_s",
+  D_feed_s = "D_feed_s",
+  Z_s = "Z_s",
   U_prime = "U_prime",
+  U_feed_prime = "U_feed_prime",
+  U_eiou_prime = "U_EIOU_prime",
+  r_eiou_prime = "r_EIOU_prime",
   V_prime = "V_prime",
-  W_prime = "W_prime",
   Y_prime = "Y_prime"
 )
 }
 \arguments{
 \item{.sutmats}{a data frame of supply-use table matrices with matrices arranged in columns.}
 
-\item{R_prime}{The name of the new R matrix column in the input data frame, for which the new ECC must be assessed.
+\item{method}{One of "solve", "QR", or "SVD". Default is "solve". See details.}
+
+\item{tol}{The tolerance for detecting linear dependencies during matrix inversion.
+Default is \code{.Machine$double.eps}.}
+
+\item{R_prime}{The name of the new \strong{R} matrix column in the input data frame, for which the new ECC must be assessed.
 Default is "R_prime".}
 
-\item{U}{The name of the U matrix column in the input data frame.
+\item{U}{The name of the \strong{U} matrix column in the input data frame.
 Default is "U".}
 
-\item{V}{The name of the V matrix column in the input data frame.
+\item{U_feed}{The name of the \strong{U_feed} matrix column in the input data frame.
+Default is "U_feed".}
+
+\item{V}{The name of the \strong{V} matrix column in the input data frame.
 Default is "V".}
 
-\item{Y}{The name of the Y matrix column in the input data frame.
+\item{Y}{The name of the \strong{Y} matrix column in the input data frame.
 Default is "Y".}
 
-\item{q}{The name of the q vector column in the input data frame.
+\item{q}{The name of the \strong{q} vector column in the input data frame.
 Default is "q".}
 
-\item{f}{The name of the f vector column in the input data frame.
+\item{f}{The name of the \strong{f} vector column in the input data frame.
 Default is "f".}
 
-\item{U_prime}{The name of the output column containing the new U matrices.
+\item{G_pxp}{The name of the \strong{G_pxp} matrix column in the input data frame.
+Default is "G_pxp".}
+
+\item{G_ixp}{The name of the \strong{G_ixp} matrix column in the input data frame.
+Default is "G_ixp".}
+
+\item{O_s}{The name of the \strong{O_s} matrix column in the input data frame.
+Default is "O_s", where "_s" indicates supply-sided.}
+
+\item{D_s}{The name of the \strong{D_s} matrix column in the input data frame.
+Default is "D_s", where "_s" indicates supply-sided.}
+
+\item{D_feed_s}{The name of the \strong{D_feed_s} matrix column in the input data frame.
+Default is "D_feed_s", where "_s" indicates supply-sided.}
+
+\item{Z_s}{The name of the \strong{Z_s} matrix column in the input data frame.
+Default is "Z_s", where "_s" indicates supply-sided.}
+
+\item{U_prime}{The name of the output column containing the new \strong{U} matrices.
 Default is "U_prime".}
 
-\item{V_prime}{The name of the output column containing the new V matrices.
+\item{U_feed_prime}{The name of the output column containing the new \strong{U_feed} matrices.
+Default is "U_feed_prime".}
+
+\item{U_eiou_prime}{The name of the output column containing the new \strong{U_EIOU} matrices.
+Default is "U_EIOU_prime".}
+
+\item{r_eiou_prime}{The name of the output column containing the new \strong{r_EIOU} matrices.
+Default is "r_EIOU_prime".}
+
+\item{V_prime}{The name of the output column containing the new \strong{V} matrices.
 Default is "V_prime".}
 
-\item{W_prime}{The name of the output column containing the new W matrices.
-Default is "W_prime".}
-
-\item{Y_prime}{The name of the output column containing the new Y matrices.
+\item{Y_prime}{The name of the output column containing the new \strong{Y} matrices.
 Default is "Y_prime".}
 }
 \value{
-A data frame with added columns representing each of the new \code{U_prime}, \code{V_prime}, \code{W_prime}, and \code{Ý_prime} matrices.
+A data frame with added columns representing each of the new
+\strong{U_prime}, \strong{U_feed_prime}, \strong{U_EIOU_prime}, \strong{r_EIOU_prime},
+\strong{V_prime}, and \strong{Y_prime} matrices.
 }
 \description{
 This function calculates the effect of changing the resources available to an ECC,
-i.e. of a new resources matrix \code{R} on the rest of the ECC matrices (\code{U}, \code{V}, \code{W}, and \code{Ý}).
-New versions of the \code{U}, \code{V}, \code{W}, and \code{Ý} matrices are returned,
-and respectively called \code{U_prime}, \code{V_prime}, \code{W_prime}, and \code{Ý_prime}.
+i.e. of a new resources matrix \strong{R_prime} on the rest of the ECC matrices (\strong{U}, \strong{V}, \strong{W}, and \strong{Y}).
+New versions of the \strong{U}, \strong{V}, \strong{W}, and \strong{Y} matrices are returned,
+and respectively called \code{U_prime}, \code{V_prime}, \code{W_prime}, and \code{Y_prime}.
 This function assumes that each industry's inputs are perfectly substitutable (ps).
 }
 \details{
 Each industry must be unit-homogeneous on its inputs.
 If not, a matrix populated with \code{NA} is returned as the result for
-\code{U_prime}, \code{V_prime}, and \code{Y_prime}.
+\strong{U_prime}, \strong{V_prime}, and \strong{Y_prime}.
+
+Calculating the new matrices requires
+a matrix inversion operation.
+The \code{method} argument specifies which method should be used for
+calculating the inverse.
+"solve" uses \code{base::solve()} and the value of \code{tol}.
+"QR" uses \code{base::solve.qr()} and the value of \code{tol}.
+"SVD" uses \code{matrixcalc::svd.inverse()}, ignoring the \code{tol} argument.
+
+Both \code{tol} and \code{method} should be a single values and apply to all matrices in \code{a}.
 }
 \examples{
 UKEnergy2000mats \%>\%
-tidyr::spread(key = "matrix.name", value = "matrix") \%>\%
-# Calculate the input-output matrices which are inputs to the new_R function.
- calc_io_mats() \%>\%
-# Make an R_prime matrix that gives twice the resource inputs to the economy.
- dplyr::mutate(
-   R_prime = matsbyname::hadamardproduct_byname(2, R)
- ) \%>\%
-# Now call the new_R function which will calculate
-# updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
-# given R_prime.
-# Each of the *_prime matrices should be 2x their originals,
-# because R_prime is 2x relative to R.
- new_R_ps()
+  tidyr::spread(key = "matrix.name", value = "matrix") \%>\%
+  # When Last.stage is "services", we get units problems.
+  # Avoid by using only ECCs with "Final" and "Useful" as the Last.stage.
+  dplyr::filter(Last.stage != IEATools::last_stages$services) \%>\%
+  # Calculate the input-output matrices which are inputs to the new_R function.
+  calc_io_mats(direction = "downstream") \%>\%
+  # Make an R_prime matrix that gives twice the resource inputs to the economy.
+  dplyr::mutate(
+    R_prime = matsbyname::hadamardproduct_byname(2, R)
+  ) \%>\%
+  # Now call new_R_ps() which will calculate
+  # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
+  # given R_prime.
+  # Each of the *_prime matrices should be 2x their originals,
+  # because R_prime is 2x relative to R.
+  new_R_ps()
 }

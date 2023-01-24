@@ -3,8 +3,108 @@ title: "Release notes for `Recca`"
 output: html_document
 ---
 
+# Recca 0.1.39 (2023-01-24)
 
-# Recca 0.1.38 (2022-04-02) 
+* Tests once again all passing on 
+  all test rigs of GitHub Actions.
+  Tests had been failing due to new code that 
+  correctly detects unit errors (inhomogeneity)
+  for some upstream swim calculations
+  with services as the last stage in an ECC.
+* Move tests associated with `verify_cols_missing()`
+  from the `Recca` package to `matsindf`.
+  Those tests didn't belong in `Recca`,
+  because `verify_cols_missing()` is no longer in `Recca`.
+* Eliminated data frame rows for a couple tests
+  that were producing `NA` values 
+  due to unit inhomogeneity. 
+* Switched to simpler formulas derived by MKH
+  for `new_R_ps()`.
+* Eliminated `tidyselect` warnings.
+* `write_ecc_to_excel()` now ensures that columns of **U** and rows of **V**
+  are the same, even if it means adding zero columns to **U** or 
+  zero rows to **V**.
+  This change makes further Excel calculations easier.
+* `chopR()` now checks for the ability to swim downstream with
+  **R_prime** = **R** to re-create the original energy conversion chain, 
+  thereby bringing consistency with `chopY()`.
+  This approach identifies numerical precision errors
+  before they cause a problem.
+* `chopR()` now uses `calc_io_mats(direction = "downstream")`,
+  thereby consistently using `calc_io_mats()` for both
+  upstream and downstream swims.
+* `calc_io_mats()` gains new argument `direction`
+  that tells whether the input-output matrices
+  are for "upstream" or "downstream" swims.
+* `finaldemand_aggregates()` now produces true `0`
+  instead of a 1x1 matrix without row or column labels
+  when no columns names of **U_EIOU** or **Y**
+  match `fd_sectors`.
+* Fixed two bugs in `new_Y()`. 
+  There were compensatory formula errors
+  that only appeared in some edge cases.
+* Aggregations are now optional (on by default)
+  in `chop_R()` and `chop_Y()`.
+* Renamed `effects_aggregates()` and `footprint_aggregates()`
+  to `chop_R()` and `chop_Y()`.
+* New function `effects_aggregates()`
+  swims downstream from the **R** matrix to 
+  final demand for each column (energy carrier)
+  in the **R** matrix and calculates primary and final demand aggregates.
+* `footprint_aggregates()` now checks that
+  the chopped ECCs sum to the original ECC
+  on every calculation.
+* `region_aggregates()` now correctly
+  eliminates the `few_colname` when
+  the incoming data frame has no rows.
+* `footprint_aggregates()` now also includes the
+  `*_prime_colname` matrices in the nested data frame.
+* `calc_io_mats()` and `calc_L()`
+  gain `method` and `tol` arguments
+  to control matrix inversion.
+* `calc_eta_pfd()` now includes 
+  columns of names of efficiencies in its output.
+  This feature will assist pivoting on efficiencies later.
+* New function `footprint_aggregates()` calculates 
+  primary and final demand aggregates
+  for each isolated row and column in **Y**.
+* `new_Y()` now also produced matrices
+  **U_feed**, **U_eiou**, and **r_eiou**
+  in its output.
+* **W** matrix no longer included in the output of `new_Y()`.
+  **W** can always be calculated from **V**^T - **U**.
+* New function `write_ecc_to_excel()`
+  stores ECCs in spatial format in Excel.
+  All ECC matrices are written to the Excel file:
+  **R**, **U**, **V**, **Y**, 
+  **U_feed**, **U_eiou**, **r_eiou**, and **S_units**.
+* `primary_aggregates()` and `finaldemand_aggregates()`
+  no longer require `p_industries` and `fd_sectors`
+  to be present in the incoming list or data frame.
+  Rather, `p_industries` and `fd_sectors` are treated 
+  as parameters that apply to all items in the incoming list
+  or rows in the incoming data frame.
+  This change brings consistency with other functions that
+  use `matsindf::matsindf_apply()` internally.
+* New function `group_aggregates()` that
+  aggregates PSUT matrices according to an aggregation map.
+* New function `despecified_aggregates()` that
+  aggregates PSUT matrices to a piece of row and column labels. 
+* New argument `add_net_gross_cols` on `primary_aggregates()` that tells
+  whether to add both net and gross primary energy columns.
+  (Net and gross primary energy aggregate columns will contain identical values,
+  but the presence of both net and gross columns may make it easier to mesh with
+  results from the `finaldemand_aggregates()` function, 
+  which produces net and gross columns that are different.)
+* `aggregate_regions()` now returns an empty data frame
+  with the expected columns if the input data frame 
+  has no rows.
+* Many new tests for new features.
+    * Now up to 686 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
+# Recca 0.1.38 (2022-04-02) [![DOI](https://zenodo.org/badge/116066838.svg)](https://zenodo.org/badge/latestdoi/116066838)
 
 * Removed unnecessary assertion that `matsbyname` is available
   in aggregation functions.
@@ -37,11 +137,11 @@ output: html_document
     * Test coverage remains at 100 %.
 
 
-# Recca 0.1.36 (2021-09-10)  [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5226086.svg)](https://doi.org/10.5281/zenodo.5500310)
+# Recca 0.1.36 (2021-09-10)  [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5500310.svg)](https://doi.org/10.5281/zenodo.5500310)
 
-* Get started file updated. Some matrices definitions (G, H, E)
+* Get started file updated. Some matrices definitions (**G**, **H**, **E**)
   needed to be updated.
-* Removed redundant IO matrices (C_feed, D_feed, and O_feed).
+* Removed redundant IO matrices (**C_feed**, **D_feed**, and **O_feed**).
 * Tests
     * 512 tests
     * Test coverage remains at 100 %
@@ -113,7 +213,7 @@ output: html_document
 
 # Recca 0.1.28 (2020-12-23)
 
-* New function `find_p_industry_names()` looks at `R`, `V`, and `Y` matrices 
+* New function `find_p_industry_names()` looks at **R**, **V**, and **Y** matrices 
   to find names of primary industries (industries that produce primary energy).
   The function looks for prefixes among row (`R` and `V`) and column (`Y`) names
   to identify primary industries.
@@ -153,9 +253,6 @@ output: html_document
 # Recca 0.1.25 (2020-09-17)
 
 * New author Emmanuel Aramendia. Welcome!
-* Added tests for new features and old bugs.
-    * Now up to 407 tests, all of which pass.
-    * Test coverage remains at 100 %.
 * Test coverage now up to 100%.
 * Created a new function `calc_embodied_EIOU()` that calculates different embodied EIOU matrices for a given final demand
 * Created a new function `calc_erois()` that calculates different vector of product-level and industry-level EROIs 
@@ -168,6 +265,9 @@ output: html_document
 * `prep_UK2000.R` and `prep_perfectsub.R` scripts
   fixed to work with `IEATools`, which now uses
   `U_feed` instead of `U_excl_EIOU`.
+* Added tests for new features and old bugs.
+    * Now up to 407 tests, all of which pass.
+    * Test coverage remains at 100 %.
 
 
 # Recca 0.1.24 (2020-03-17)
@@ -187,16 +287,16 @@ output: html_document
 # Recca 0.1.22 (2020-05-02)
 
 * Fixed a bug in `primary_aggregates()`.
-  `primary_aggregates()` had been assuming that either the `R` or the `V` matrix (but not both) 
+  `primary_aggregates()` had been assuming that either the **R** or the **V** matrix (but not both) 
   could contain industries counted in total primary energy supply (production, imports, exports, etc.).
   However, that is not true. 
-  `R` is for resource industries, so 
+  **R** is for resource industries, so 
   imports, exports, marine and aviation bunkers, and stock changes
-  are excluded from `R`.
+  are excluded from **R**.
   However, 
   imports, exports, marine and aviation bunkers, and stock changes
   _are_ included in total primary energy supply. 
-  I removed the conditional `xor` check for appearance of TPES industries in `R` and `V`.
+  I removed the conditional `xor` check for appearance of TPES industries in **R** and **V**.
   Everything seems to be working now.
 
 
@@ -213,7 +313,7 @@ output: html_document
 * Completed the conversion of the entire package
   to enable use of `R` matrices in the PSUT framework.
   This effort involved converting several functions to accept *either* 
-    1) both `R` and `V` matrices in the `R` and `V` arguments or
+    1) both **R** and **V** matrices in the `R` and `V` arguments or
     2) nothing supplied to the `R` argument and `R + V` supplied to the `V` argument.
 * Worked around a bug in `openxlsx::read.xlsx()` that HTML-escapes referenced cells
   that contain "&", "<", or ">".  
@@ -249,7 +349,7 @@ output: html_document
 # Recca 0.1.17 (2019-02-25)
 
 * First draft of completed vignette.
-* Removed ecc_layout function. It was not being used, and there is a create_sankey function, anyway.
+* Removed ecc_layout(). It was not being used, and there is a `create_sankey()` function, anyway.
 
 
 # Recca 0.1.16 (2019-02-16)
@@ -258,8 +358,8 @@ output: html_document
 * Added new `reverse()` function to change flow direction of an ECC.
   `reverse()` will be useful for downstream swim functions.
 * Simplified and improved `resource_industries()` function.
-    - No longer summing columns of `U` matrix.
-    - Instead, cleaning 0 columns of `U` and comparing names of columns to the original `U`.
+    - No longer summing columns of **U** matrix.
+    - Instead, cleaning 0 columns of **U** and comparing names of columns to the original **U**.
 * Eliminated all `@importFrom` statements by fully-qualifying all function calls.
 * Test coverage now up to 100%.
 
@@ -275,7 +375,7 @@ output: html_document
 * New function `make_sankey()` does what it says: makes a Sankey diagram.
   `make_sankey()` is the first function that optionally uses the resource (`R`) matrix.
 * `edge_list()` also now accepts a resource (`R`) matrix on input.
-* The vignette describing the `new*` functions now has a section on `new_R_ps()`.
+* The vignette describing the `new*()` functions now has a section on `new_R_ps()`.
 
 
 # Recca 0.1.13 (2018-12-21)
@@ -327,13 +427,13 @@ output: html_document
 
 # Recca 0.1.9 (2018-11-08)
 
-* Breaking change: `reconstruct_UV` --> `new_Y`. 
-  This change allows for several `new_*` functions that assess changes to the ECC
+* Breaking change: `reconstruct_UV()` --> `new_Y()`.
+  This change allows for several `new_*()` functions that assess changes to the ECC
   when some part of the ECC changes.
-* New function `new_k_ps` assesses changes to the ECC when 
+* New function `new_k_ps()` assesses changes to the ECC when 
   proportion of inputs to an industry change 
   under the assumption of perfect substitution.
-* New functions `products_unit_homogeneous`, `inputs_unit_homogeneous`, and `outputs_unit_homogeneous`
+* New functions `products_unit_homogeneous()`, `inputs_unit_homogeneous()`, and `outputs_unit_homogeneous()`
   test whether products, inputs to all industries, and outputs from all industries are unit-homogeneous.
 
 
@@ -374,7 +474,7 @@ output: html_document
 
 # Recca 0.1.2 (2018-05-20)
 
-* All functions now use the `matsindf::matsindf_apply` function
+* All functions now use `matsindf::matsindf_apply()`.
 * `F` functions now do internal energy balance checks.
 * Much code and API cleanup.
 * Note that some API changes are expected, 
@@ -384,9 +484,9 @@ output: html_document
 # Recca 0.1.1 (2018-04-16)
 
 * New function `calc_io_mats`: 
-  calculate input-output (PSUT version) matrices, including `y`, `q`, `g`, `W`, 
-  `Z`, `D`, `C`, `A`, `L_ixp`, and `L_pxp`.
-* New function `reconstruct_UV`:
+  calculate input-output (PSUT version) matrices, including **y**, **q**, **g**, **W**, 
+  **Z**, **D**, **C**, **A**, **L_ixp**, and **L_pxp**.
+* New function `reconstruct_UV()`:
   Reconstruct the energy conversion chain (new `U` and `V` matrices) from a new final demand matrix (`Y`)
 
 

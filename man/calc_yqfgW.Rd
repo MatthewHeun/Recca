@@ -2,7 +2,7 @@
 % Please edit documentation in R/io.R
 \name{calc_yqfgW}
 \alias{calc_yqfgW}
-\title{Calculate \code{y}, \code{f}, \code{g}, and \code{q} vectors and the \code{W} matrix}
+\title{Calculate \strong{y}, \strong{f}, \strong{g}, \strong{q}, \strong{h}, and \strong{r} vectors and the \strong{W} matrix}
 \usage{
 calc_yqfgW(
   .sutdata = NULL,
@@ -24,54 +24,60 @@ calc_yqfgW(
 \arguments{
 \item{.sutdata}{a data frame of supply-use table matrices with matrices arranged in columns.}
 
-\item{method_q_calculation}{Specifies the method which with the q vector should be calculated.
-Default is \code{sum_U_Y_rows}.
-Alternatively, an analyst can choose to use the \code{sum_R_V_cols} method.
-In the case of a balanced ECC, the method does not matter.}
+\item{method_q_calculation}{Specifies the method with which the q vector should be calculated. See details.}
 
-\item{R}{The resources (\code{R}) matrix or name of the column in \code{.sutmats} that contains same. Default is "R".}
+\item{R}{The resources (\strong{R}) matrix or name of the column in \code{.sutmats} that contains same. Default is "R".}
 
-\item{U}{The use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "U".}
+\item{U}{The use (\strong{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "U".}
 
-\item{V}{The make (\code{V}) matrix or name of the column in \code{.sutmats} that contains same. Default is "V".}
+\item{V}{The make (\strong{V}) matrix or name of the column in \code{.sutmats} that contains same. Default is "V".}
 
-\item{Y}{The final demand (\code{Y}) matrix or name of the column in `.sutmats`` that contains same. Default is "Y".}
+\item{Y}{The final demand (\strong{Y}) matrix or name of the column in `.sutmats`` that contains same. Default is "Y".}
 
-\item{S_units}{The \code{S_units} matrix or name of the column in \code{.sutmats} that contains same. Default is "S_units".}
+\item{S_units}{The \strong{S_units} matrix or name of the column in \code{.sutmats} that contains same. Default is "S_units".}
 
-\item{y}{The name for the \code{y} vector on output. Default is "y".
-\code{y} is calculated by \code{rowsums(Y)}.}
+\item{y}{The name for the \strong{y} vector on output. Default is "y".
+\strong{y} is calculated by \code{rowsums(Y)}.}
 
-\item{q}{The name for the \code{q} vector on output. Default is "q".
-\code{q} is calculated by \code{rowsums(U) + y}.}
+\item{q}{The name for the \strong{q} vector on output. Default is "q".
+\strong{q} is calculated by \code{rowsums(U) + y}.}
 
-\item{f}{The name for the \code{f} vector on output. Default is "f".
-\code{f} is calculated by \code{colsums(U)}.}
+\item{f}{The name for the \strong{f} vector on output. Default is "f".
+\strong{f} is calculated by \code{colsums(U)}.}
 
-\item{g}{The name for the \code{g} vector on output. Default is "g".
-\code{g} is calculated by \code{rowsums(V)}.}
+\item{g}{The name for the \strong{g} vector on output. Default is "g".
+\strong{g} is calculated by \code{rowsums(V)}.}
 
-\item{h}{The name for the \code{h} vector on output. Default is "h".
-\code{h} is calculated by \code{colsums(transpose(R))}.}
+\item{h}{The name for the \strong{h} vector on output. Default is "h".
+\strong{h} is calculated by \code{colsums(transpose(R))}.}
 
-\item{r}{The name for the \code{r} vector on output. Default is "r".
-\code{r} is calculated by \code{rowsums(R)}.}
+\item{r}{The name for the \strong{r} vector on output. Default is "r".
+\strong{r} is calculated by \code{rowsums(R)}.}
 
-\item{W}{The name for the \code{W} matrix on output. Default is "W".
-\code{W} is calculated by \code{transpose(V) - U}.}
+\item{W}{The name for the \strong{W} matrix on output. Default is "W".
+\strong{W} is calculated by \code{transpose(V) - U}.}
 }
 \value{
-A list or data frame containing \code{y}, \code{q},
-\code{f}, \code{g}, and \code{W}.
+A list or data frame containing \strong{y}, \strong{q},
+\strong{f}, \strong{g}, \strong{h}, and \strong{r} vectors and the \strong{W} matrix.
 }
 \description{
-Note that a necessary condition for calculating the \code{f} and \code{g} vectors is that
-the U_bar and V_bar matrices should have only one entry per column and row, respectively,
+Note that a necessary condition for calculating the \strong{f}, \strong{g}, and \strong{r} vectors is that
+the \strong{R_bar}, \strong{U_bar}, and \strong{V_bar} matrices
+should have only one entry per column and row, respectively,
 meaning that all products entering a given industry need to be unit homogeneous
-before we can calculate the \code{f} vector and
+before we can calculate the \strong{f} vector and
 all products of a given industry are measured in the same units
-before we can calculate the \code{g} vector.
-If the unit homogeneity assumptions above are violated, we will return NA
-for violating industries in the \code{f} and \code{g} vectors.
-The checks for unit homogeneity are performed only when an \code{S_units} matrix is present.
+before we can calculate the \strong{g} vector.
+If the unit homogeneity assumptions above are violated, we will return \code{NA}
+for violating industries in the \strong{f} and \strong{g} vectors.
+The checks for unit homogeneity are performed only when an \strong{S_units} matrix is present.
+}
+\details{
+\code{method_q_calculation} specifies the method with which the q vector should be calculated.
+Default is "sum_U_Y_rows", corresponding to a demand-sided view of \strong{q}.
+Alternatively, an analyst can choose to use the "sum_R_V_cols" method,
+corresponding to a supply-sided view of \strong{q}.
+In the case of a balanced ECC, the method does not matter.
+Both methods give a column vector as a result.
 }

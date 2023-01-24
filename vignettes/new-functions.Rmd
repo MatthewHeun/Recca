@@ -225,7 +225,9 @@ we'll use the `matsbyname::elementapply_byname()` function.
 half <- function(x){
   x/2
 }
-HalfCrude <- IO_mats %>% 
+HalfCrude <- OurECC %>% 
+  # Obtain the I-O structure of the ECCs
+  calc_io_mats(direction = "downstream") %>% 
   mutate(
     R_prime = elementapply_byname(half, a = R, row = "Resources - Crude", col = "Crude")
   )
@@ -280,7 +282,6 @@ OurECC %>%
 
 ```{r}
 HalfCrude %>% 
-  filter(!is.na(K)) %>% 
   mutate(
     R_plus_V_prime = sum_byname(R_prime, V_prime)
   ) %>% 

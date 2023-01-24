@@ -1,6 +1,3 @@
-# This file contains functions that calculate direct efficiencies for an ECC.
-
-
 #' Calculate industry efficiencies
 #'
 #' Calculates industry efficiencies for all energy conversion industries in the ECC.
@@ -10,25 +7,25 @@
 #' Applied Energy, vol 226, pp. 1134-1162.
 #'
 #' The efficiency for a given industry is calculated iff the units for inputs and outputs for that industry are unit-homogeneous.
-#' If units for inputs and outputs are heterogeneous for an industry, \code{NA} is the result.
+#' If units for inputs and outputs are heterogeneous for an industry, `NA` is the result.
 #'
-#' Note that these efficiencies (\code{eta}) are different from
-#' final demand sector and product efficiencies (\code{eta_s} and \code{eta_p}, respectively).
+#' Note that these efficiencies (`eta`) are different from
+#' final demand sector and product efficiencies (`eta_s` and `eta_p`, respectively).
 #' Both final demand sector and product efficiencies
-#' (\code{eta_s} and \code{eta_p}) are based on embodied energy, whereas
-#' industry efficiencies (\code{eta}) is based on direct inputs consumed and outputs produced
+#' (`eta_s` and `eta_p`) are based on embodied energy, whereas
+#' industry efficiencies (`eta`) is based on direct inputs consumed and outputs produced
 #' by the energy conversion industry.
 #'
 #' To calculate energy conversion final demand sector and product efficiencies, use the
-#' \code{\link{calc_embodied_etas}} function.
+#' `calc_embodied_etas()` function.
 #'
-#' @param .sutmats a data frame containing columns for \code{U}, \code{V}, and \code{S_units} matrices
-#' @param U a string for the name of a column of \code{U} matrices in \code{.sutmats}. (Default is "\code{U}".)
-#' @param V a string for the name of a column of \code{V} matrices in \code{.sutmats}. (Default is "\code{V}".)
-#' @param S_units a string for the name of a column of \code{S_units} matrices in \code{.sutmats}. (Default is "\code{S_units}".)
-#' @param eta_i the name of the industry efficiency column in output. Default is "\code{eta_i}".
+#' @param .sutmats A data frame containing columns for **U**, **V**, and **S_units** matrices.
+#' @param U A string for the name of a column of **U** matrices in `.sutmats`. (Default is "U".)
+#' @param V A string for the name of a column of **V** matrices in `.sutmats`. (Default is "V".)
+#' @param S_units A string for the name of a column of **S_units** matrices in `.sutmats`. (Default is "S_units".)
+#' @param eta_i The name of the industry efficiency column in output. Default is "eta_i".
 #'
-#' @return \code{.sutmats} with an additional column "\code{eta_i}"
+#' @return `.sutmats` with an additional column `eta_i`
 #'
 #' @export
 #'
@@ -73,16 +70,18 @@ calc_eta_i <- function(.sutmats,
 #'
 #' Calculates aggregate (total) primary-to-final demand (gross and net) efficiencies
 #' across the energy conversion chain.
-#'
 #' `.aggregate_df` is probably formed by joining the results from
-#' `primary_aggregates()` and `finaldemand_aggregates()`.
+#' `primary_aggregates()` and `finaldemand_aggregates()`
+#' or by calling `footprint_aggregates()`.
 #' See examples.
 #'
 #' @param .aggregate_df A data frame or list containing columns
 #'                      `aggregate_primary_colname`,
 #'                      `net_aggregate_demand_colname`,
 #'                      `gross_aggregate_demand_colname`,
-#'                      probably formed by joining the results from
+#'                      probably the result of calling `footprint_aggregates()`.
+#' @param efficiency_name_suffix The suffix for efficiency names.
+#'                               Default is `Recca::efficiency_cols$efficiency_name_suffix`.
 #' @param aggregate_primary_colname The name of the column in `p_aggregates` that contains primary energy or exergy aggregates.
 #'                                  Default is `Recca::aggregate_cols$aggregate_primary`.
 #' @param gross_aggregate_demand_colname The name of the column in `finaldemand_aggregates`
@@ -91,12 +90,18 @@ calc_eta_i <- function(.sutmats,
 #' @param net_aggregate_demand_colname The name of the column in `finaldemand_aggregates`
 #'                                     that contains net final demand aggregates.
 #'                                     Default is `Recca::aggregate_cols$net_aggregate_demand`.
+#' @param energy_type The name of the energy type column. Default is `Recca::psut_cols$energy_type`.
+#' @param last_stage The name of the last stage column. Default is `Recca::psut_cols$last_stage`.
 #' @param eta_pfd_gross The name of the output column containing efficiencies
 #'                      of converting primary energy into gross final demand energy.
 #'                      Default is `Recca::efficiency_cols$eta_pfd_gross`.
 #' @param eta_pfd_net The name of the output column containing efficiencies
 #'                    of converting primary energy into net final demand energy.
 #'                    Default is `Recca::efficiency_cols$eta_pfd_net`.
+#' @param eta_pfd_gross_colname The name of the output column containing names of gross efficiency parameters.
+#'                              Default is `paste0(eta_pfd_gross, efficiency_name_suffix)`.
+#' @param eta_pfd_net_colname The name of the output column containing names of net efficiency parameters.
+#'                            Default is `paste0(eta_pfd_net, efficiency_name_suffix)`.
 #'
 #' @return A data frame of aggregate efficiencies.
 #'
@@ -108,10 +113,7 @@ calc_eta_i <- function(.sutmats,
 #' # Define primary industries
 #' p_industries <- c("Resources - Crude", "Resources - NG")
 #' primary_total_aggregates <- wide %>%
-#'   dplyr::mutate(
-#'     p_industries = rep(list(p_industries), times = nrow(.))
-#'   ) %>%
-#'   Recca::primary_aggregates(p_industries = "p_industries", by = "Total") %>%
+#'   Recca::primary_aggregates(p_industries = p_industries, by = "Total") %>%
 #'   # Don't need the matrices
 #'   dplyr::select(IEATools::iea_cols$country,
 #'                 IEATools::iea_cols$year,
@@ -121,10 +123,7 @@ calc_eta_i <- function(.sutmats,
 #' # Define final demand sectors
 #' fd_sectors <- c("Residential", "Transport", "Oil fields")
 #' finaldemand_total_aggregates <- wide %>%
-#'   dplyr::mutate(
-#'     fd_sectors = rep(list(fd_sectors), times = nrow(.))
-#'   ) %>%
-#'   Recca::finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Total") %>%
+#'   Recca::finaldemand_aggregates(fd_sectors = fd_sectors, by = "Total") %>%
 #'   # Don't need the matrices
 #'   dplyr::select(IEATools::iea_cols$country,
 #'                 IEATools::iea_cols$year,
@@ -140,22 +139,50 @@ calc_eta_i <- function(.sutmats,
 #'                         IEATools::iea_cols$last_stage)) %>%
 #'   calc_eta_pfd()
 calc_eta_pfd <- function(.aggregate_df = NULL,
+                         efficiency_name_suffix = Recca::efficiency_cols$efficiency_name_suffix,
                          # Inputs
                          aggregate_primary_colname = Recca::aggregate_cols$aggregate_primary,
                          gross_aggregate_demand_colname = Recca::aggregate_cols$gross_aggregate_demand,
                          net_aggregate_demand_colname = Recca::aggregate_cols$net_aggregate_demand,
+                         energy_type = Recca::psut_cols$energy_type,
+                         last_stage = Recca::psut_cols$last_stage,
                          # Outputs
                          eta_pfd_gross = Recca::efficiency_cols$eta_pfd_gross,
-                         eta_pfd_net = Recca::efficiency_cols$eta_pfd_net) {
-  eta_pfd_func <- function(primary, gross_fd, net_fd) {
-    eta_pfd_gross_val <- gross_fd / primary
-    eta_pfd_net_val <- net_fd / primary
-    list(eta_pfd_gross_val, eta_pfd_net_val) %>%
+                         eta_pfd_net = Recca::efficiency_cols$eta_pfd_net,
+                         eta_pfd_gross_colname = paste0(eta_pfd_gross, efficiency_name_suffix),
+                         eta_pfd_net_colname = paste0(eta_pfd_net, efficiency_name_suffix)) {
+
+  eta_pfd_func <- function(primary_val, gross_fd_val, net_fd_val, energy_type_val, last_stage_val) {
+    eta_pfd_gross_val <- gross_fd_val / primary_val
+    eta_pfd_net_val <- net_fd_val / primary_val
+    # eta_pfd_gross_name <- paste0("eta_", energy_type_val, "_p", substr(last_stage_val, 1, 1) %>% tolower(), "_gross")
+    # eta_pfd_net_name <- gsub(pattern = "_gross", replacement = "_net", x = eta_pfd_gross_name)
+
+    # c(eta_pfd_gross_val, eta_pfd_net_val, eta_pfd_gross_name, eta_pfd_net_name) %>%
+    #   magrittr::set_names(c(eta_pfd_gross, eta_pfd_net, eta_pfd_gross_colname, eta_pfd_net_colname))
+    c(eta_pfd_gross_val, eta_pfd_net_val) %>%
       magrittr::set_names(c(eta_pfd_gross, eta_pfd_net))
   }
-  matsindf::matsindf_apply(.aggregate_df,
-                           FUN = eta_pfd_func,
-                           primary = aggregate_primary_colname,
-                           gross_fd = gross_aggregate_demand_colname,
-                           net_fd = net_aggregate_demand_colname)
+  out <- matsindf::matsindf_apply(.aggregate_df,
+                                  FUN = eta_pfd_func,
+                                  primary_val = aggregate_primary_colname,
+                                  gross_fd_val = gross_aggregate_demand_colname,
+                                  net_fd_val = net_aggregate_demand_colname,
+                                  energy_type_val = energy_type,
+                                  last_stage_val = last_stage)
+  if (is.data.frame(out)) {
+    out <- out %>%
+      dplyr::mutate(
+        "{eta_pfd_gross}" := as.numeric(unlist(.data[[eta_pfd_gross]])),
+        "{eta_pfd_net}" := as.numeric(unlist(.data[[eta_pfd_net]]))
+      )
+  }
+  return(out)
 }
+
+
+
+
+
+
+

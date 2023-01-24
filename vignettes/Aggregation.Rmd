@@ -1,0 +1,131 @@
+---
+title: "Aggregation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Aggregation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, include = FALSE}
+library(magrittr)
+library(Recca)
+```
+
+
+## Introduction
+
+`Recca` (`R` Energy Conversion Chain Analysis) contains 
+many functions useful for aggregating industries and products in energy conversion chains.
+
+The types of aggregation are shown in the following table.
+
+| Function                   | Meaning                                                                                     |
+|---------------------------:|:--------------------------------------------------------------------------------------------|
+| `primary_aggregates()`     | Aggregates primary energy                                                                   |
+| `finaldemand_aggregates()` | Aggregates final demand energy                                                              |
+| `region_aggregates()`      | Aggregates regions                                                                          |
+| `despecified_aggregates()` | Despecifies industries and products, then aggregates                                        |
+| `grouped_aggregates()`     | Groups industries and products, then aggregates                                             |
+| `footprint_aggregates()`   | Isolates each final demand product and sector, then aggregates by primary and final demand  |
+| `effects_aggregates()`     | Isolates each product in the resources matrix, then aggregates by primary and final demand  |
+
+This vignette describes those functions and demonstrates their use.
+
+
+## `primary_aggregates()`
+
+`primary_aggregates()` creates a column of primary energy sums coming from the industries 
+specified in the `p_industries` argument.
+These industries are often found in the **R**, **V**, and **Y** matrices 
+of the PSUT framework.
+Typical `p_industries` are Resources, Imports, and Exports.
+In the example below, 
+primary aggregates are calculated 
+for the four rows of the `UKEnergy2000mats` data frame.
+
+In the first example,
+only 1 aggregate column is created ("EX.p"), because there is no
+difference between net and gross aggregation for primary energy.
+Net and gross primary aggregates are identical.
+
+```{r}
+library(matsbyname)
+p_industries <- c("Resources - Crude", "Resources - NG")
+# Calculate primary total aggregates
+ECCs <- UKEnergy2000mats %>%
+  tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix")
+ECCs
+res <- ECCs %>%
+  Recca::primary_aggregates(p_industries = p_industries, by = "Total")
+tibble::as_tibble(res)
+res[[Recca::aggregate_cols$aggregate_primary]]
+```
+
+In the next example,
+both net and gross aggregation columns are created
+("EX.p_net" and "EX.p_gross"),
+for compatibility with the `finaldemand_aggregates()` function
+discussed below.
+
+```{r}
+res2 <- ECCs %>%
+  Recca::primary_aggregates(p_industries = p_industries,
+                            add_net_gross_cols = TRUE,
+                            by = "Total")
+tibble::as_tibble(res2)
+res2[[Recca::aggregate_cols$net_aggregate_primary]]
+res2[[Recca::aggregate_cols$gross_aggregate_primary]]
+```
+
+
+## `finaldemand_aggregates()`
+
+`finaldemand_aggregates()` is similar to `primary_aggregates()`, 
+except that it aggregates energy at the final demand stage in the **Y** matrix.
+
+```{r}
+fd_sectors <- c("Residential", "Transport")
+res <- ECCs %>%
+  Recca::finaldemand_aggregates(fd_sectors = fd_sectors, by = "Sector")
+tibble::as_tibble(res)
+res[[Recca::aggregate_cols$net_aggregate_demand]]
+res[[Recca::aggregate_cols$gross_aggregate_demand]]
+```
+
+
+## `region_aggregates()`
+
+
+
+## `despecified_aggregates()`
+
+
+
+## `grouped_aggregates()`
+
+
+
+## `footprint_aggregates()`
+
+
+
+## `effects_aggregages()`
+
+
+
+
+
+## Conclusion
+
+
+
+
+

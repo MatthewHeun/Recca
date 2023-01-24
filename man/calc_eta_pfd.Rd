@@ -6,11 +6,16 @@
 \usage{
 calc_eta_pfd(
   .aggregate_df = NULL,
+  efficiency_name_suffix = Recca::efficiency_cols$efficiency_name_suffix,
   aggregate_primary_colname = Recca::aggregate_cols$aggregate_primary,
   gross_aggregate_demand_colname = Recca::aggregate_cols$gross_aggregate_demand,
   net_aggregate_demand_colname = Recca::aggregate_cols$net_aggregate_demand,
+  energy_type = Recca::psut_cols$energy_type,
+  last_stage = Recca::psut_cols$last_stage,
   eta_pfd_gross = Recca::efficiency_cols$eta_pfd_gross,
-  eta_pfd_net = Recca::efficiency_cols$eta_pfd_net
+  eta_pfd_net = Recca::efficiency_cols$eta_pfd_net,
+  eta_pfd_gross_colname = paste0(eta_pfd_gross, efficiency_name_suffix),
+  eta_pfd_net_colname = paste0(eta_pfd_net, efficiency_name_suffix)
 )
 }
 \arguments{
@@ -18,7 +23,10 @@ calc_eta_pfd(
 \code{aggregate_primary_colname},
 \code{net_aggregate_demand_colname},
 \code{gross_aggregate_demand_colname},
-probably formed by joining the results from}
+probably the result of calling \code{footprint_aggregates()}.}
+
+\item{efficiency_name_suffix}{The suffix for efficiency names.
+Default is \code{Recca::efficiency_cols$efficiency_name_suffix}.}
 
 \item{aggregate_primary_colname}{The name of the column in \code{p_aggregates} that contains primary energy or exergy aggregates.
 Default is \code{Recca::aggregate_cols$aggregate_primary}.}
@@ -31,6 +39,10 @@ Default is \code{Recca::aggregate_cols$gross_aggregate_demand}.}
 that contains net final demand aggregates.
 Default is \code{Recca::aggregate_cols$net_aggregate_demand}.}
 
+\item{energy_type}{The name of the energy type column. Default is \code{Recca::psut_cols$energy_type}.}
+
+\item{last_stage}{The name of the last stage column. Default is \code{Recca::psut_cols$last_stage}.}
+
 \item{eta_pfd_gross}{The name of the output column containing efficiencies
 of converting primary energy into gross final demand energy.
 Default is \code{Recca::efficiency_cols$eta_pfd_gross}.}
@@ -38,6 +50,12 @@ Default is \code{Recca::efficiency_cols$eta_pfd_gross}.}
 \item{eta_pfd_net}{The name of the output column containing efficiencies
 of converting primary energy into net final demand energy.
 Default is \code{Recca::efficiency_cols$eta_pfd_net}.}
+
+\item{eta_pfd_gross_colname}{The name of the output column containing names of gross efficiency parameters.
+Default is \code{paste0(eta_pfd_gross, efficiency_name_suffix)}.}
+
+\item{eta_pfd_net_colname}{The name of the output column containing names of net efficiency parameters.
+Default is \code{paste0(eta_pfd_net, efficiency_name_suffix)}.}
 }
 \value{
 A data frame of aggregate efficiencies.
@@ -45,10 +63,9 @@ A data frame of aggregate efficiencies.
 \description{
 Calculates aggregate (total) primary-to-final demand (gross and net) efficiencies
 across the energy conversion chain.
-}
-\details{
 \code{.aggregate_df} is probably formed by joining the results from
-\code{primary_aggregates()} and \code{finaldemand_aggregates()}.
+\code{primary_aggregates()} and \code{finaldemand_aggregates()}
+or by calling \code{footprint_aggregates()}.
 See examples.
 }
 \examples{
@@ -57,10 +74,7 @@ wide <- primary_total_aggregates_sut <- UKEnergy2000mats \%>\%
 # Define primary industries
 p_industries <- c("Resources - Crude", "Resources - NG")
 primary_total_aggregates <- wide \%>\%
-  dplyr::mutate(
-    p_industries = rep(list(p_industries), times = nrow(.))
-  ) \%>\%
-  Recca::primary_aggregates(p_industries = "p_industries", by = "Total") \%>\%
+  Recca::primary_aggregates(p_industries = p_industries, by = "Total") \%>\%
   # Don't need the matrices
   dplyr::select(IEATools::iea_cols$country,
                 IEATools::iea_cols$year,
@@ -70,10 +84,7 @@ primary_total_aggregates <- wide \%>\%
 # Define final demand sectors
 fd_sectors <- c("Residential", "Transport", "Oil fields")
 finaldemand_total_aggregates <- wide \%>\%
-  dplyr::mutate(
-    fd_sectors = rep(list(fd_sectors), times = nrow(.))
-  ) \%>\%
-  Recca::finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Total") \%>\%
+  Recca::finaldemand_aggregates(fd_sectors = fd_sectors, by = "Total") \%>\%
   # Don't need the matrices
   dplyr::select(IEATools::iea_cols$country,
                 IEATools::iea_cols$year,

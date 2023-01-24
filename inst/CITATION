@@ -3,13 +3,13 @@ citHeader("To cite package ‘Recca’ in publications use:")
 citEntry(entry = "Manual",
   title        = "Recca: R Energy Conversion Chain Analysis",
   author       = personList(as.person("Matthew Kuperus Heun"), as.person("Emmanuel Aramendia")),
-  year         = "2022",
-  note         = "R package version 0.1.38",
+  year         = "2023",
+  note         = "R package version 0.1.39",
   url          = "https://github.com/MatthewHeun/Recca",
 
   textVersion  =
-  paste("Matthew Kuperus Heun, Emmanuel Aramendia (2022).",
+  paste("Matthew Kuperus Heun, Emmanuel Aramendia (2023).",
         "Recca: R Energy Conversion Chain Analysis.",
-        "R package version 0.1.38.",
+        "R package version 0.1.39.",
         "https://github.com/MatthewHeun/Recca")
 )
