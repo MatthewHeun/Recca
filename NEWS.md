@@ -3,6 +3,7 @@ title: "Release notes for `Recca`"
 output: html_document
 ---
 
+# Recca 0.1.39 (2023-01-24)
 
 * Move tests associated with `verify_cols_missing()`
   from the `Recca` package to `matsindf`.
