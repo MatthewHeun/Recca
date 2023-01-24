@@ -364,13 +364,16 @@ new_k_ps <- function(.sutmats = NULL,
 #' @examples
 #' UKEnergy2000mats %>%
 #'   tidyr::spread(key = "matrix.name", value = "matrix") %>%
+#'   # When Last.stage is "services", we get units problems.
+#'   # Avoid by using only ECCs with "Final" and "Useful" as the Last.stage.
+#'   dplyr::filter(Last.stage != IEATools::last_stages$services) %>%
 #'   # Calculate the input-output matrices which are inputs to the new_R function.
 #'   calc_io_mats(direction = "downstream") %>%
 #'   # Make an R_prime matrix that gives twice the resource inputs to the economy.
 #'   dplyr::mutate(
 #'     R_prime = matsbyname::hadamardproduct_byname(2, R)
 #'   ) %>%
-#'   # Now call the new_R function which will calculate
+#'   # Now call new_R_ps() which will calculate
 #'   # updated U, V, and Y matrices (U_prime, V_prime, and Y_prime)
 #'   # given R_prime.
 #'   # Each of the *_prime matrices should be 2x their originals,
