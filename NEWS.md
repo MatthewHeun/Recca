@@ -5,6 +5,12 @@ output: html_document
 
 # Recca 0.1.39 (2023-01-24)
 
+* Tests once again all passing on 
+  all test rigs of GitHub Actions.
+  Tests had been failing due to new code that 
+  correctly detects unit errors (inhomogeneity)
+  for some upstream swim calculations
+  with services as the last stage in an ECC.
 * Move tests associated with `verify_cols_missing()`
   from the `Recca` package to `matsindf`.
   Those tests didn't belong in `Recca`,
