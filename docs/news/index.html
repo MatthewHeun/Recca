@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.38</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.39</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,6 +55,55 @@
       <small>Source: <a href="https://github.com/MatthewHeun/Recca/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.39" id="recca-0139-2023-01-24">Recca 0.1.39 (2023-01-24)<a class="anchor" aria-label="anchor" href="#recca-0139-2023-01-24"></a></h2>
+<ul><li>Tests once again all passing on all test rigs of GitHub Actions. Tests had been failing due to new code that correctly detects unit errors (inhomogeneity) for some upstream swim calculations with services as the last stage in an ECC.</li>
+<li>Move tests associated with <code><a href="https://rdrr.io/pkg/matsindf/man/verify_cols_missing.html" class="external-link">verify_cols_missing()</a></code> from the <code>Recca</code> package to <code>matsindf</code>. Those tests didn’t belong in <code>Recca</code>, because <code><a href="https://rdrr.io/pkg/matsindf/man/verify_cols_missing.html" class="external-link">verify_cols_missing()</a></code> is no longer in <code>Recca</code>.</li>
+<li>Eliminated data frame rows for a couple tests that were producing <code>NA</code> values due to unit inhomogeneity.</li>
+<li>Switched to simpler formulas derived by MKH for <code><a href="../reference/new_R_ps.html">new_R_ps()</a></code>.</li>
+<li>Eliminated <code>tidyselect</code> warnings.</li>
+<li>
+<code><a href="../reference/write_ecc_to_excel.html">write_ecc_to_excel()</a></code> now ensures that columns of <strong>U</strong> and rows of <strong>V</strong> are the same, even if it means adding zero columns to <strong>U</strong> or zero rows to <strong>V</strong>. This change makes further Excel calculations easier.</li>
+<li>
+<code>chopR()</code> now checks for the ability to swim downstream with <strong>R_prime</strong> = <strong>R</strong> to re-create the original energy conversion chain, thereby bringing consistency with <code>chopY()</code>. This approach identifies numerical precision errors before they cause a problem.</li>
+<li>
+<code>chopR()</code> now uses <code>calc_io_mats(direction = "downstream")</code>, thereby consistently using <code><a href="../reference/calc_io_mats.html">calc_io_mats()</a></code> for both upstream and downstream swims.</li>
+<li>
+<code><a href="../reference/calc_io_mats.html">calc_io_mats()</a></code> gains new argument <code>direction</code> that tells whether the input-output matrices are for “upstream” or “downstream” swims.</li>
+<li>
+<code><a href="../reference/finaldemand_aggregates.html">finaldemand_aggregates()</a></code> now produces true <code>0</code> instead of a 1x1 matrix without row or column labels when no columns names of <strong>U_EIOU</strong> or <strong>Y</strong> match <code>fd_sectors</code>.</li>
+<li>Fixed two bugs in <code><a href="../reference/new_Y.html">new_Y()</a></code>. There were compensatory formula errors that only appeared in some edge cases.</li>
+<li>Aggregations are now optional (on by default) in <code><a href="../reference/chop-doc.html">chop_R()</a></code> and <code><a href="../reference/chop-doc.html">chop_Y()</a></code>.</li>
+<li>Renamed <code>effects_aggregates()</code> and <code>footprint_aggregates()</code> to <code><a href="../reference/chop-doc.html">chop_R()</a></code> and <code><a href="../reference/chop-doc.html">chop_Y()</a></code>.</li>
+<li>New function <code>effects_aggregates()</code> swims downstream from the <strong>R</strong> matrix to final demand for each column (energy carrier) in the <strong>R</strong> matrix and calculates primary and final demand aggregates.</li>
+<li>
+<code>footprint_aggregates()</code> now checks that the chopped ECCs sum to the original ECC on every calculation.</li>
+<li>
+<code><a href="../reference/region_aggregates.html">region_aggregates()</a></code> now correctly eliminates the <code>few_colname</code> when the incoming data frame has no rows.</li>
+<li>
+<code>footprint_aggregates()</code> now also includes the <code>*_prime_colname</code> matrices in the nested data frame.</li>
+<li>
+<code><a href="../reference/calc_io_mats.html">calc_io_mats()</a></code> and <code><a href="../reference/calc_L.html">calc_L()</a></code> gain <code>method</code> and <code>tol</code> arguments to control matrix inversion.</li>
+<li>
+<code><a href="../reference/calc_eta_pfd.html">calc_eta_pfd()</a></code> now includes columns of names of efficiencies in its output. This feature will assist pivoting on efficiencies later.</li>
+<li>New function <code>footprint_aggregates()</code> calculates primary and final demand aggregates for each isolated row and column in <strong>Y</strong>.</li>
+<li>
+<code><a href="../reference/new_Y.html">new_Y()</a></code> now also produced matrices <strong>U_feed</strong>, <strong>U_eiou</strong>, and <strong>r_eiou</strong> in its output.</li>
+<li>
+<strong>W</strong> matrix no longer included in the output of <code><a href="../reference/new_Y.html">new_Y()</a></code>. <strong>W</strong> can always be calculated from <strong>V</strong>^T - <strong>U</strong>.</li>
+<li>New function <code><a href="../reference/write_ecc_to_excel.html">write_ecc_to_excel()</a></code> stores ECCs in spatial format in Excel. All ECC matrices are written to the Excel file: <strong>R</strong>, <strong>U</strong>, <strong>V</strong>, <strong>Y</strong>, <strong>U_feed</strong>, <strong>U_eiou</strong>, <strong>r_eiou</strong>, and <strong>S_units</strong>.</li>
+<li>
+<code><a href="../reference/primary_aggregates.html">primary_aggregates()</a></code> and <code><a href="../reference/finaldemand_aggregates.html">finaldemand_aggregates()</a></code> no longer require <code>p_industries</code> and <code>fd_sectors</code> to be present in the incoming list or data frame. Rather, <code>p_industries</code> and <code>fd_sectors</code> are treated as parameters that apply to all items in the incoming list or rows in the incoming data frame. This change brings consistency with other functions that use <code><a href="https://rdrr.io/pkg/matsindf/man/matsindf_apply.html" class="external-link">matsindf::matsindf_apply()</a></code> internally.</li>
+<li>New function <code>group_aggregates()</code> that aggregates PSUT matrices according to an aggregation map.</li>
+<li>New function <code><a href="../reference/despecified_aggregates.html">despecified_aggregates()</a></code> that aggregates PSUT matrices to a piece of row and column labels.</li>
+<li>New argument <code>add_net_gross_cols</code> on <code><a href="../reference/primary_aggregates.html">primary_aggregates()</a></code> that tells whether to add both net and gross primary energy columns. (Net and gross primary energy aggregate columns will contain identical values, but the presence of both net and gross columns may make it easier to mesh with results from the <code><a href="../reference/finaldemand_aggregates.html">finaldemand_aggregates()</a></code> function, which produces net and gross columns that are different.)</li>
+<li>
+<code><a href="https://rdrr.io/pkg/IEATools/man/aggregate_regions.html" class="external-link">aggregate_regions()</a></code> now returns an empty data frame with the expected columns if the input data frame has no rows.</li>
+<li>Many new tests for new features.
+<ul><li>Now up to 686 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.38" id="recca-0138-2022-04-02-doi">Recca 0.1.38 (2022-04-02) <a href="https://zenodo.org/badge/latestdoi/116066838" class="external-link"><img src="https://zenodo.org/badge/116066838.svg" alt="DOI"></a>
 <a class="anchor" aria-label="anchor" href="#recca-0138-2022-04-02-doi"></a></h2>
