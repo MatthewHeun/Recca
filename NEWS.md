@@ -3,11 +3,15 @@ title: "Release notes for `Recca`"
 output: html_document
 ---
 
+# Recca 0.1.40 (2023-01-25) 
 
+* This version contains only fixes to the continuous integration
+  build system. 
+  There are no changes to any code.
 * Remove use of the `Remotes:` field in DESCRIPTION.
   Instead, now using `pkgdepends` syntax in
   the `extra-packages:` fields of `R_CMD-check.yaml` and `test-coverage.yaml`.
-* Update to latest version of GitHub action for
+* Update to latest version of the GitHub action for
   test coverage.
 * No new tests.
     * Still at 672 tests, all passing.
