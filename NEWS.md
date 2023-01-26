@@ -3,6 +3,14 @@ title: "Release notes for `Recca`"
 output: html_document
 ---
 
+
+* Remove use of the `Remotes:` field in DESCRIPTION.
+  Instead, now using `pkgdepends` syntax in
+  the `extra-packages:` fields of `R_CMD-check.yaml` and `test-coverage.yaml`.
+* Update to latest version of GitHub action for
+  test coverage.
+
+
 # Recca 0.1.39 (2023-01-24) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7566435.svg)](https://doi.org/10.5281/zenodo.7566435)
 
 * Tests once again all passing on 
