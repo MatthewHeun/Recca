@@ -11,8 +11,8 @@ status](https://www.r-pkg.org/badges/version/Recca)](https://cran.r-project.org/
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![R-CMD-check](https://github.com/MatthewHeun/Recca/workflows/R-CMD-check/badge.svg)](https://github.com/MatthewHeun/Recca/actions)
-[![Coverage
-status](https://codecov.io/gh/MatthewHeun/Recca/branch/master/graph/badge.svg)](https://codecov.io/github/MatthewHeun/Recca?branch=master)
+[![Codecov test
+coverage](https://codecov.io/gh/MatthewHeun/Recca/branch/master/graph/badge.svg)](https://app.codecov.io/gh/MatthewHeun/Recca?branch=master)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5226085.svg)](https://doi.org/10.5281/zenodo.5226085)
 
 # Recca
