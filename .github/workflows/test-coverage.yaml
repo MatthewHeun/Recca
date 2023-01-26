@@ -6,6 +6,9 @@
 # github::MatthewHeun/IEATools
 # to extra-packages.
 # Also add scheduled nightly builds.
+#   schedule:
+#     # Build main daily at 8 AM UTC, 3 AM EST, 4 AM EDT, one hour after nightly builds.
+#     - cron: "0 8 * * *"
 
 on:
   push:
