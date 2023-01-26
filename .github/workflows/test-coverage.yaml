@@ -3,7 +3,7 @@
 
 # Setup with usethis::use_github_action("test-coverage")
 # Then add
-# github:MatthewHeun/IEATools
+# github::MatthewHeun/IEATools
 # to extra-packages.
 
 on:
