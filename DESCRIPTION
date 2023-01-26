@@ -47,6 +47,4 @@ Suggests:
     rmarkdown,
     testthat,
     spelling
-Remotes: 
-    github::MatthewHeun/IEATools
 VignetteBuilder: knitr
