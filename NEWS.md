@@ -9,6 +9,9 @@ output: html_document
   the `extra-packages:` fields of `R_CMD-check.yaml` and `test-coverage.yaml`.
 * Update to latest version of GitHub action for
   test coverage.
+* No new tests.
+    * Still at 672 tests, all passing.
+    * Test coverage remains at 100 %.
 
 
 # Recca 0.1.39 (2023-01-24) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7566435.svg)](https://doi.org/10.5281/zenodo.7566435)
