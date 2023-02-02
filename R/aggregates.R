@@ -89,7 +89,7 @@ primary_aggregates <- function(.sutdata = NULL,
                                # Output names
                                aggregate_primary = Recca::aggregate_cols$aggregate_primary,
                                net_aggregate_primary = Recca::aggregate_cols$net_aggregate_primary,
-                               gross_aggregate_primary = Recca:: aggregate_cols$gross_aggregate_primary){
+                               gross_aggregate_primary = Recca::aggregate_cols$gross_aggregate_primary){
 
   pattern_type <- match.arg(pattern_type)
   by <- match.arg(by)
