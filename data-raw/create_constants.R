@@ -191,6 +191,7 @@ usethis::use_data(neu_eu.products, overwrite = TRUE)
 #
 # Eu.product Aggregation information
 #
+
 euproduct_aggregation_map <-
   list(`High pressure matter` = Recca::hpm_eu.products %>% unlist() %>% unname(),
        `High temperature heat` = Recca::hth_eu.products %>% unlist() %>% unname(),
@@ -203,3 +204,12 @@ euproduct_aggregation_map <-
        `Light` = Recca::l_eu.products %>% unlist() %>% unname(),
        `Non-energy use` = Recca::neu_eu.products %>% unlist() %>% unname())
 usethis::use_data(euproduct_aggregation_map, overwrite = TRUE)
+
+
+#
+# Names of columns containing product and industry names
+#
+
+prod_ind_names_colnames <- list(product_names = "Product.names",
+                                industry_names = "Industry.names")
+usethis::use_data(prod_ind_names_colnames, overwrite = TRUE)

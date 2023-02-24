@@ -393,7 +393,32 @@ test_that("calc_mats_locations_excel() fails correctly", {
 })
 
 
+test_that("get_all_products_and_industries() works as intended", {
+  ecc <- UKEnergy2000mats %>%
+    tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix")
 
+  res <- ecc %>%
+    get_all_products_and_industries()
+
+  expect_setequal(res[[Recca::prod_ind_names_colnames$product_names]][[1]],
+                  c("Crude", "NG", "Crude - Dist.", "Crude - Fields", "Diesel", "Diesel - Dist.", "Elect", "Elect - Grid",
+                    "NG - Dist.", "NG - Wells", "Petrol", "Petrol - Dist."))
+  expect_setequal(res[[Recca::prod_ind_names_colnames$industry_names]][[1]],
+                  c("Resources - Crude", "Resources - NG", "Crude dist.", "Diesel dist.", "Elect. grid", "Gas wells & proc.", "NG dist.",
+                  "Oil fields", "Oil refineries", "Petrol dist.", "Power plants", "Residential", "Transport"))
+
+  expect_setequal(res[[Recca::prod_ind_names_colnames$product_names]][[2]],
+                  c("Crude", "NG", "Crude - Dist.", "Crude - Fields",
+                    "Diesel", "Diesel - Dist.", "Elect", "Elect - Grid",
+                    "Freight [tonne-km/year]", "Light", "LTH", "MD - Car engines",
+                    "MD - Truck engines", "NG - Dist.", "NG - Wells", "Petrol",
+                    "Petrol - Dist.", "Illumination [lumen-hrs/yr]", "Passenger [passenger-km/yr]", "Space heating [m3-K]"))
+
+  expect_setequal(res[[Recca::prod_ind_names_colnames$industry_names]][[4]],
+                  c("Resources - Crude", "Resources - NG", "Car engines", "Cars", "Crude dist.", "Diesel dist.", "Elect. grid",
+                    "Furnaces", "Gas wells & proc.", "Homes", "Light fixtures", "NG dist.", "Oil fields", "Oil refineries",
+                    "Petrol dist.", "Power plants", "Rooms", "Truck engines", "Trucks", "Residential", "Transport"))
+})
 
 
 

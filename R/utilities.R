@@ -1026,4 +1026,59 @@ calc_mats_locations_excel <- function(R, U, V, Y, r_eiou, U_eiou, U_feed, S_unit
 }
 
 
+#' Create lists of all products and industries
+#'
+#' From matrices that describe an energy conversion chain (**R**, **U**, **V**, and **Y**),
+#' create a list of unique products (energy carriers) and industries (processing stages)
+#' in the energy conversion chain.
+#'
+#' This function is a `matsindf::matsindf_apply()` style function.
+#' It can accept a `matsindf` data frame in the `.df` argument
+#' and string for the `R`, `U`, `V`, and `Y` (as column names) in the arguments.
+#'
+#' @param .sutdata A data frame or list of `matsindf` matrices.
+#' @param R,U,V,Y The names of PSUT matrices. See `IEAtools::psut_cols`.
+#' @param products_col The name of the products column in the output list or data frame.
+#'                     Default is `Recca::prod_ind_names_colnames$product_names`.
+#' @param industries_col The name of the products column in the output list or data frame.
+#'                       Default is `Recca::prod_ind_names_colnames$industry_names`.
+#'
+#' @return `.sutdata` with two new columns containing the names of products and industries.
+#'
+#' @export
+#'
+#' @examples
+get_all_products_and_industries <- function(.sutdata,
+                                            R = IEATools::psut_cols$R,
+                                            U = IEATools::psut_cols$U,
+                                            V = IEATools::psut_cols$V,
+                                            Y = IEATools::psut_cols$Y,
+                                            products_col = Recca::prod_ind_names_colnames$product_names,
+                                            industries_col = Recca::prod_ind_names_colnames$industry_names) {
+
+  fd_func <- function(R_mat, U_mat, V_mat, Y_mat){
+
+    # Make a list of Products
+    R_prods <- matsbyname::getcolnames_byname(R_mat)
+    U_prods <- matsbyname::getrownames_byname(U_mat)
+    V_prods <- matsbyname::getcolnames_byname(V_mat)
+    Y_prods <- matsbyname::getrownames_byname(Y_mat)
+    prods <- c(R_prods, U_prods, V_prods, Y_prods) %>%
+      unique()
+
+    # Make a list of Industries
+    R_inds <- matsbyname::getrownames_byname(R_mat)
+    U_inds <- matsbyname::getcolnames_byname(U_mat)
+    V_inds <- matsbyname::getrownames_byname(V_mat)
+    Y_inds <- matsbyname::getcolnames_byname(Y_mat)
+    inds <- c(R_inds, U_inds, V_inds, Y_inds) %>%
+      unique()
+
+    list(prods, inds) %>%
+      magrittr::set_names(c(products_col, industries_col))
+  }
+
+  matsindf::matsindf_apply(.sutdata, FUN = fd_func, R_mat = R, U_mat = U, V_mat = V, Y_mat = Y)
+
+}
 
