@@ -403,6 +403,7 @@ test_that("get_all_products_and_industries() works as intended", {
   expect_setequal(res[[Recca::prod_ind_names_colnames$product_names]][[1]],
                   c("Crude", "NG", "Crude - Dist.", "Crude - Fields", "Diesel", "Diesel - Dist.", "Elect", "Elect - Grid",
                     "NG - Dist.", "NG - Wells", "Petrol", "Petrol - Dist."))
+
   expect_setequal(res[[Recca::prod_ind_names_colnames$industry_names]][[1]],
                   c("Resources - Crude", "Resources - NG", "Crude dist.", "Diesel dist.", "Elect. grid", "Gas wells & proc.", "NG dist.",
                   "Oil fields", "Oil refineries", "Petrol dist.", "Power plants", "Residential", "Transport"))
@@ -420,6 +421,18 @@ test_that("get_all_products_and_industries() works as intended", {
                     "Petrol dist.", "Power plants", "Rooms", "Truck engines", "Trucks", "Residential", "Transport"))
 })
 
+
+test_that("get_all_products_and_industries() works with pieces", {
+  ecc <- UKEnergy2000mats %>%
+    tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix")
+  res <- ecc %>%
+    get_all_products_and_industries(piece = "noun", inf_notation = FALSE, notation = RCLabels::notations_list$dash_notation)
+  expect_equal(res$Product.names[[1]],
+               c("Crude", "NG", "Diesel", "Elect", "Petrol"))
+  expect_equal(res$Industry.names[[1]],
+               c("Resources", "Crude dist.", "Diesel dist.", "Elect. grid", "Gas wells & proc.", "NG dist.", "Oil fields",
+                 "Oil refineries", "Petrol dist.", "Power plants", "Residential", "Transport"))
+})
 
 
 

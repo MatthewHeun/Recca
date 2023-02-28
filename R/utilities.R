@@ -1037,6 +1037,26 @@ calc_mats_locations_excel <- function(R, U, V, Y, r_eiou, U_eiou, U_feed, S_unit
 #' and string for the `R`, `U`, `V`, and `Y` (as column names) in the arguments.
 #'
 #' @param .sutdata A data frame or list of `matsindf` matrices.
+#' @param piece A character string indicating which piece of the row or column names to retain,
+#'              one of "all", "noun", "pps", "pref" or "suff", or a preposition,
+#'              indicating which part of the row or column name is to be retained.
+#'              Default is "all".
+#' @param inf_notation A boolean that tells whether to infer notation.
+#'                     Default is `TRUE`.
+#' @param notation The notation used for row and column labels.
+#'                 Default is `list(RCLabels::notations_list)`.
+#'                 The default value is wrapped in a list,
+#'                 because `RCLabels::notations_list` is, itself, a list.
+#'                 See `RCLabels`.
+#' @param choose_most_specific A boolean that indicates whether the most-specific notation
+#'                             will be inferred when more than one of `notation` matches
+#'                             a row or column label
+#'                             and `allow_multiple = FALSE`.
+#'                             When `FALSE`, the first matching notation in `notations`
+#'                             is returned when `allow_multiple = FALSE`.
+#'                             Default is `FALSE`.
+#' @param prepositions Prepositions that can be used in the row and column label.
+#'                     Default is `RCLabels::prepositions_list`.
 #' @param R,U,V,Y The names of PSUT matrices. See `IEAtools::psut_cols`.
 #' @param products_col The name of the products column in the output list or data frame.
 #'                     Default is `Recca::prod_ind_names_colnames$product_names`.
@@ -1048,7 +1068,20 @@ calc_mats_locations_excel <- function(R, U, V, Y, r_eiou, U_eiou, U_feed, S_unit
 #' @export
 #'
 #' @examples
+#' ecc <- UKEnergy2000mats %>%
+#'   tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") %>%
+#'   get_all_products_and_industries()
+#' # Show all unique product (energy carrier) names in the first row of ecc
+#' ecc[[Recca::prod_ind_names_colnames$product_names]][[1]]
+#' # Show all unique industry (processing stage) names
+#' # in the fourth row of ecc.
+#' ecc[[Recca::prod_ind_names_colnames$industry_names]][[4]]
 get_all_products_and_industries <- function(.sutdata,
+                                            piece = "all",
+                                            inf_notation = TRUE,
+                                            notation = list(RCLabels::notations_list),
+                                            choose_most_specific = FALSE,
+                                            prepositions = list(RCLabels::prepositions_list),
                                             R = IEATools::psut_cols$R,
                                             U = IEATools::psut_cols$U,
                                             V = IEATools::psut_cols$V,
@@ -1059,18 +1092,26 @@ get_all_products_and_industries <- function(.sutdata,
   fd_func <- function(R_mat, U_mat, V_mat, Y_mat){
 
     # Make a list of Products
-    R_prods <- matsbyname::getcolnames_byname(R_mat)
-    U_prods <- matsbyname::getrownames_byname(U_mat)
-    V_prods <- matsbyname::getcolnames_byname(V_mat)
-    Y_prods <- matsbyname::getrownames_byname(Y_mat)
+    R_prods <- matsbyname::getcolnames_byname(R_mat) %>%
+      RCLabels::get_piece(piece = piece, inf_notation = inf_notation, notation = notation, choose_most_specific = choose_most_specific, prepositions = prepositions)
+    U_prods <- matsbyname::getrownames_byname(U_mat) %>%
+      RCLabels::get_piece(piece = piece, inf_notation = inf_notation, notation = notation, choose_most_specific = choose_most_specific, prepositions = prepositions)
+    V_prods <- matsbyname::getcolnames_byname(V_mat) %>%
+      RCLabels::get_piece(piece = piece, inf_notation = inf_notation, notation = notation, choose_most_specific = choose_most_specific, prepositions = prepositions)
+    Y_prods <- matsbyname::getrownames_byname(Y_mat) %>%
+      RCLabels::get_piece(piece = piece, inf_notation = inf_notation, notation = notation, choose_most_specific = choose_most_specific, prepositions = prepositions)
     prods <- c(R_prods, U_prods, V_prods, Y_prods) %>%
       unique()
 
     # Make a list of Industries
-    R_inds <- matsbyname::getrownames_byname(R_mat)
-    U_inds <- matsbyname::getcolnames_byname(U_mat)
-    V_inds <- matsbyname::getrownames_byname(V_mat)
-    Y_inds <- matsbyname::getcolnames_byname(Y_mat)
+    R_inds <- matsbyname::getrownames_byname(R_mat) %>%
+      RCLabels::get_piece(piece = piece, inf_notation = inf_notation, notation = notation, choose_most_specific = choose_most_specific, prepositions = prepositions)
+    U_inds <- matsbyname::getcolnames_byname(U_mat) %>%
+      RCLabels::get_piece(piece = piece, inf_notation = inf_notation, notation = notation, choose_most_specific = choose_most_specific, prepositions = prepositions)
+    V_inds <- matsbyname::getrownames_byname(V_mat) %>%
+      RCLabels::get_piece(piece = piece, inf_notation = inf_notation, notation = notation, choose_most_specific = choose_most_specific, prepositions = prepositions)
+    Y_inds <- matsbyname::getcolnames_byname(Y_mat) %>%
+      RCLabels::get_piece(piece = piece, inf_notation = inf_notation, notation = notation, choose_most_specific = choose_most_specific, prepositions = prepositions)
     inds <- c(R_inds, U_inds, V_inds, Y_inds) %>%
       unique()
 
