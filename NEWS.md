@@ -4,6 +4,9 @@ output: html_document
 ---
 
 
+* `chop_R()` now also chops by rows (industries), 
+  since we are now including 
+  all exogenous sources of energy in the **R** matrix.
 * New function `get_all_products_and_industries()` generates lists
   of unique product and industry names for an ECC and 
   is aware of `RCLabels`-type `piece`s of row and column names.
