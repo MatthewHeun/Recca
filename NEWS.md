@@ -10,6 +10,7 @@ output: html_document
 * New function `get_all_products_and_industries()` generates lists
   of unique product and industry names for an ECC and 
   is aware of `RCLabels`-type `piece`s of row and column names.
+* Net EROI calculations removed, only gross values calculated.
   
 
 # Recca 0.1.40 (2023-01-25) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7571202.svg)](https://doi.org/10.5281/zenodo.7571202)

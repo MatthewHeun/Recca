@@ -1089,7 +1089,7 @@ get_all_products_and_industries <- function(.sutdata,
                                             products_col = Recca::prod_ind_names_colnames$product_names,
                                             industries_col = Recca::prod_ind_names_colnames$industry_names) {
 
-  fd_func <- function(R_mat, U_mat, V_mat, Y_mat){
+  prod_ind_names_func <- function(R_mat, U_mat, V_mat, Y_mat){
 
     # Make a list of Products
     R_prods <- matsbyname::getcolnames_byname(R_mat) %>%
@@ -1119,7 +1119,7 @@ get_all_products_and_industries <- function(.sutdata,
       magrittr::set_names(c(products_col, industries_col))
   }
 
-  matsindf::matsindf_apply(.sutdata, FUN = fd_func, R_mat = R, U_mat = U, V_mat = V, Y_mat = Y)
+  matsindf::matsindf_apply(.sutdata, FUN = prod_ind_names_func, R_mat = R, U_mat = U, V_mat = V, Y_mat = Y)
 
 }
 
