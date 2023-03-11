@@ -4,6 +4,13 @@ output: html_document
 ---
 
 
+* Adjusted example ECC names. 
+  Example changes include:
+    - "Resources - Crude" --> "Resources [of Crude]"
+    - "Crude - Fields" --> "Crude [from Fields]"
+    - "MD - Car engines" --> "MD [from Car engines]"
+  These changes align the example ECC with the naming conventions
+  we are now using throughout the packages and various pipelines.
 * `chop_R()` now also chops by rows (industries), 
   since we are now including 
   all exogenous sources of energy in the **R** matrix.

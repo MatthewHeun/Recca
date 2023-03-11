@@ -29,7 +29,7 @@ test_that("startsWith_any_of() works properly", {
 test_that("resource_industries() works correctly", {
   mats <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix)
-  expected <- c("Resources - Crude", "Resources - NG")
+  expected <- c("Resources [of Crude]", "Resources [of NG]")
   expect_equal(resource_industries(mats)[["r_industries"]],
                list(expected, expected, expected, expected))
   # Try with individual matrices
@@ -401,22 +401,22 @@ test_that("get_all_products_and_industries() works as intended", {
     get_all_products_and_industries()
 
   expect_setequal(res[[Recca::prod_ind_names_colnames$product_names]][[1]],
-                  c("Crude", "NG", "Crude - Dist.", "Crude - Fields", "Diesel", "Diesel - Dist.", "Elect", "Elect - Grid",
-                    "NG - Dist.", "NG - Wells", "Petrol", "Petrol - Dist."))
+                  c("Crude", "NG", "Crude [from Dist.]", "Crude [from Fields]", "Diesel", "Diesel [from Dist.]", "Elect", "Elect [from Grid]",
+                    "NG [from Dist.]", "NG [from Wells]", "Petrol", "Petrol [from Dist.]"))
 
   expect_setequal(res[[Recca::prod_ind_names_colnames$industry_names]][[1]],
-                  c("Resources - Crude", "Resources - NG", "Crude dist.", "Diesel dist.", "Elect. grid", "Gas wells & proc.", "NG dist.",
+                  c("Resources [of Crude]", "Resources [of NG]", "Crude dist.", "Diesel dist.", "Elect. grid", "Gas wells & proc.", "NG dist.",
                   "Oil fields", "Oil refineries", "Petrol dist.", "Power plants", "Residential", "Transport"))
 
   expect_setequal(res[[Recca::prod_ind_names_colnames$product_names]][[2]],
-                  c("Crude", "NG", "Crude - Dist.", "Crude - Fields",
-                    "Diesel", "Diesel - Dist.", "Elect", "Elect - Grid",
-                    "Freight [tonne-km/year]", "Light", "LTH", "MD - Car engines",
-                    "MD - Truck engines", "NG - Dist.", "NG - Wells", "Petrol",
-                    "Petrol - Dist.", "Illumination [lumen-hrs/yr]", "Passenger [passenger-km/yr]", "Space heating [m3-K]"))
+                  c("Crude", "NG", "Crude [from Dist.]", "Crude [from Fields]",
+                    "Diesel", "Diesel [from Dist.]", "Elect", "Elect [from Grid]",
+                    "Freight [tonne-km/year]", "Light", "LTH", "MD [from Car engines]",
+                    "MD [from Truck engines]", "NG [from Dist.]", "NG [from Wells]", "Petrol",
+                    "Petrol [from Dist.]", "Illumination [lumen-hrs/yr]", "Passenger [passenger-km/yr]", "Space heating [m3-K]"))
 
   expect_setequal(res[[Recca::prod_ind_names_colnames$industry_names]][[4]],
-                  c("Resources - Crude", "Resources - NG", "Car engines", "Cars", "Crude dist.", "Diesel dist.", "Elect. grid",
+                  c("Resources [of Crude]", "Resources [of NG]", "Car engines", "Cars", "Crude dist.", "Diesel dist.", "Elect. grid",
                     "Furnaces", "Gas wells & proc.", "Homes", "Light fixtures", "NG dist.", "Oil fields", "Oil refineries",
                     "Petrol dist.", "Power plants", "Rooms", "Truck engines", "Trucks", "Residential", "Transport"))
 })
@@ -426,7 +426,7 @@ test_that("get_all_products_and_industries() works with pieces", {
   ecc <- UKEnergy2000mats %>%
     tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix")
   res <- ecc %>%
-    get_all_products_and_industries(piece = "noun", inf_notation = FALSE, notation = RCLabels::notations_list$dash_notation)
+    get_all_products_and_industries(piece = "noun", inf_notation = FALSE, notation = RCLabels::notations_list$bracket_notation)
   expect_equal(res$Product.names[[1]],
                c("Crude", "NG", "Diesel", "Elect", "Petrol"))
   expect_equal(res$Industry.names[[1]],

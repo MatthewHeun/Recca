@@ -18,10 +18,10 @@ test_that("calc_E_EIOU returns correct E_EIOU matrix and e_EIOU vector",{
   # --- EAR, September 1st 2020
 
   # Checking E_EIOU
-  expect_equal(E_EIOU["Crude - Dist.", "Crude dist."], 0.0105263157894737)
-  expect_equal(E_EIOU["Diesel - Dist.", "Gas wells & proc."], 0.00116279069767442)
-  expect_equal(E_EIOU["Diesel - Dist.", "NG dist."], 0.000609756097560976)
-  expect_equal(E_EIOU["Elect - Grid", "Gas wells & proc."], 0.000581395348837209)
+  expect_equal(E_EIOU["Crude [from Dist.]", "Crude dist."], 0.0105263157894737)
+  expect_equal(E_EIOU["Diesel [from Dist.]", "Gas wells & proc."], 0.00116279069767442)
+  expect_equal(E_EIOU["Diesel [from Dist.]", "NG dist."], 0.000609756097560976)
+  expect_equal(E_EIOU["Elect [from Grid]", "Gas wells & proc."], 0.000581395348837209)
 
   # Checking e_EIOU
   expect_equal(e_EIOU["Crude dist.", "Product"], 0.0115789473684211)
@@ -65,8 +65,8 @@ test_that("calc_erois() returns appropriate EROIs",{
 
   # g_eroi_p
   expect_equal(eroi_g_p["Diesel", "Industry"], 5.09969733020006)
-  expect_equal(eroi_g_p["NG - Wells", "Industry"], 19.6173481664719)
-  expect_equal(eroi_g_p["Petrol - Dist.", "Industry"], 4.33166026595272)
+  expect_equal(eroi_g_p["NG [from Wells]", "Industry"], 19.6173481664719)
+  expect_equal(eroi_g_p["Petrol [from Dist.]", "Industry"], 4.33166026595272)
 
   # n_eroi_p
   # expect_equal(eroi_n_p["Diesel", "Industry"], 4.09969733020006)
@@ -86,7 +86,7 @@ test_that("calc_erois() returns appropriate EROIs",{
   # Checking feed EROIs
 
   # g_eroi_p_feed
-  expect_equal(eroi_g_p_feed["Crude - Dist.", "Industry"], 15.8531497705465)
+  expect_equal(eroi_g_p_feed["Crude [from Dist.]", "Industry"], 15.8531497705465)
   expect_equal(eroi_g_p_feed["Petrol", "Industry"], 5.84598162410927)
   expect_equal(eroi_g_p_feed["NG", "Industry"], Inf)
 

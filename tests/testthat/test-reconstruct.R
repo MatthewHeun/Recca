@@ -58,7 +58,7 @@ test_that("new_Y() works as expected", {
   expect_true(all(as.logical(Reconstructed$VOK)))
 
   # Try a list of new Y matrices, each of which contains only final demand for residential lighting.
-  Y_prime_finalE <- matrix(6000, nrow = 1, ncol = 1, dimnames = list("Elect - Grid", "Residential")) %>%
+  Y_prime_finalE <- matrix(6000, nrow = 1, ncol = 1, dimnames = list("Elect [from Grid]", "Residential")) %>%
     matsbyname::setrowtype("Product") %>% matsbyname::setcoltype("Industry")
   Y_prime_usefulE <- matrix(1200, nrow = 1, ncol = 1, dimnames = list("Light", "Residential")) %>%
     matsbyname::setrowtype("Product") %>% matsbyname::setcoltype("Industry")
@@ -78,17 +78,17 @@ test_that("new_Y() works as expected", {
     matsindf::expand_to_tidy(drop = 0)
 
   expect_equivalent(Reconstructed_Residential %>%
-                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "U_prime", rownames == "Crude - Dist.", colnames == "Crude dist.") %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "U_prime", rownames == "Crude [from Dist.]", colnames == "Crude dist.") %>%
                       dplyr::select(matvals) %>%
                       unlist(),
                     0.3481179450)
   expect_equivalent(Reconstructed_Residential %>%
-                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$useful, matnames == "V_prime", rownames == "Truck engines", colnames == "MD - Truck engines") %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$useful, matnames == "V_prime", rownames == "Truck engines", colnames == "MD [from Truck engines]") %>%
                       dplyr::select(matvals) %>%
                       unlist(),
                     7.748625)
   expect_equivalent(Reconstructed_Residential %>%
-                      dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, matnames == "V_prime", rownames == "Gas wells & proc.", colnames == "NG - Wells") %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, matnames == "V_prime", rownames == "Gas wells & proc.", colnames == "NG [from Wells]") %>%
                       dplyr::select(matvals) %>%
                       unlist(),
                     16220.3637987185)
@@ -98,16 +98,15 @@ test_that("new_Y() works as expected", {
                       unlist(),
                     6238.6014610456)
   expect_equivalent(Reconstructed_Residential %>%
-                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "R_prime", rownames == "Resources - NG", colnames == "NG") %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "R_prime", rownames == "Resources [of NG]", colnames == "NG") %>%
                       dplyr::select(matvals) %>%
                       unlist(),
                     16356.84944)
   expect_equivalent(Reconstructed_Residential %>%
-                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$useful, matnames == "R_prime", rownames == "Resources - Crude", colnames == "Crude") %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$useful, matnames == "R_prime", rownames == "Resources [of Crude]", colnames == "Crude") %>%
                       dplyr::select(matvals) %>%
                       unlist(),
                     102.20081)
-
 
   # Double Y matrix
   Reconstructed_Double_Y <- UKEnergy2000mats %>%
@@ -123,7 +122,7 @@ test_that("new_Y() works as expected", {
   Reconstructed_Double_Y %>%
     magrittr::extract2("R_prime") %>%
     matsindf::expand_to_tidy() %>%
-    dplyr::filter(rownames == "Resources - Crude", colnames == "Crude") %>%
+    dplyr::filter(rownames == "Resources [of Crude]", colnames == "Crude") %>%
     magrittr::extract2("matvals") %>%
     dplyr::first() %>%
     expect_equal(100000)
@@ -131,7 +130,7 @@ test_that("new_Y() works as expected", {
   Reconstructed_Double_Y %>%
     magrittr::extract2("R_prime") %>%
     matsindf::expand_to_tidy() %>%
-    dplyr::filter(rownames == "Resources - Crude", colnames == "Crude") %>%
+    dplyr::filter(rownames == "Resources [of Crude]", colnames == "Crude") %>%
     magrittr::extract2("matvals") %>%
     dplyr::last() %>%
     expect_equal(53500*2)
@@ -139,7 +138,7 @@ test_that("new_Y() works as expected", {
   Reconstructed_Double_Y %>%
     magrittr::extract2("R_prime") %>%
     matsindf::expand_to_tidy() %>%
-    dplyr::filter(rownames == "Resources - NG", colnames == "NG") %>%
+    dplyr::filter(rownames == "Resources [of NG]", colnames == "NG") %>%
     magrittr::extract2("matvals") %>%
     dplyr::first() %>%
     expect_equal(86000)
@@ -180,8 +179,8 @@ test_that("new_Y() works as expected", {
       Y_prime = "Y_prime"
     )
 
-  Reconstructed_NULL %>%
-    dplyr::filter(! is.null(R_prime))
+  # Reconstructed_NULL %>%
+  #   dplyr::filter(! is.null(R_prime))
 
   expect_equal(Reconstructed_NULL$Y_prime[[1]], NULL)
   expect_equal(Reconstructed_NULL$R_prime[[1]], NULL)
@@ -439,17 +438,17 @@ test_that("new_R_ps() works as expected", {
     dplyr::mutate(
       R_prime = matsbyname::hadamardproduct_byname(2, R)
     )
-  unitaryR$R_prime[[1]]["Resources - Crude", "Crude"] <- 1
-  unitaryR$R_prime[[1]]["Resources - NG", "NG"] <- 1
+  unitaryR$R_prime[[1]]["Resources [of Crude]", "Crude"] <- 1
+  unitaryR$R_prime[[1]]["Resources [of NG]", "NG"] <- 1
   unitaryR <- unitaryR %>%
     calc_io_mats(direction = "downstream") %>%
     new_R_ps()
-  expect_equal(unitaryR$U_prime[[1]]["Crude - Dist.", "Oil refineries"], 0.940157103)
-  expect_equal(unitaryR$U_prime[[1]]["Elect - Grid", "Crude dist."], 0.0005812516)
-  expect_equal(unitaryR$V_prime[[1]]["Petrol dist.", "Petrol - Dist."], 0.53022566)
+  expect_equal(unitaryR$U_prime[[1]]["Crude [from Dist.]", "Oil refineries"], 0.940157103)
+  expect_equal(unitaryR$U_prime[[1]]["Elect [from Grid]", "Crude dist."], 0.0005812516)
+  expect_equal(unitaryR$V_prime[[1]]["Petrol dist.", "Petrol [from Dist.]"], 0.53022566)
   expect_equal(unitaryR$V_prime[[1]]["Oil refineries", "Diesel"], 0.41017456)
-  expect_equal(unitaryR$Y_prime[[1]]["Elect - Grid", "Residential"], 0.1395004)
-  expect_equal(unitaryR$Y_prime[[1]]["Petrol - Dist.", "Transport"], 0.5202214)
+  expect_equal(unitaryR$Y_prime[[1]]["Elect [from Grid]", "Residential"], 0.1395004)
+  expect_equal(unitaryR$Y_prime[[1]]["Petrol [from Dist.]", "Transport"], 0.5202214)
 
 
   # The tests below fail on UNIX systems in GitHub actions, especially
