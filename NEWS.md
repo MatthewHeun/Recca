@@ -4,6 +4,9 @@ output: html_document
 ---
 
 
+* `region_aggregates()` gains `drop_na_few` argument
+  that tells whether to eliminate rows 
+  with `NA` in `few_colname`.
 * Adjusted example ECC names. 
   Example changes include:
     - "Resources - Crude" --> "Resources [of Crude]"

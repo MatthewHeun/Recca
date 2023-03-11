@@ -356,6 +356,55 @@ test_that("region_aggregates() works as expected", {
 })
 
 
+test_that("region_aggregates() works with WRLD not in aggregation_map", {
+  # This test approximates what happens when
+  # we have the WRLD country in with other countries
+  # but WRLD is not included in the aggregation map.
+  mats_GBR <- UKEnergy2000mats %>%
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
+  # Add more countries, by duplicating GBR
+  mats <- dplyr::bind_rows(mats_GBR,
+                           mats_GBR %>% dplyr::mutate(Country = "USA"),
+                           mats_GBR %>% dplyr::mutate(Country = "FRA"),
+                           mats_GBR %>% dplyr::mutate(Country = "WRLD"))
+  # Leave WRLD out of the agg_map.
+  agg_map <- list(Europe = c("GBR", "FRA"), NoAmr = "USA")
+  agg_df <- matsbyname::agg_map_to_agg_table(agg_map,
+                                             few_colname = "Continent",
+                                             many_colname = IEATools::iea_cols$country)
+  # Results in NA values for Continent column for WRLD country
+  mats <- dplyr::left_join(mats, agg_df, by = IEATools::iea_cols$country)
+  mats |>
+    dplyr::filter(.data[[Recca::psut_cols$country]] == "WRLD") |>
+    dplyr::select("Continent") |>
+    is.na() |>
+    all() |>
+    expect_true()
+
+  # Now do the aggregation.
+  # Unless we specify drop_na_few = TRUE,
+  # we'll get NA rows for WRLD.
+  res <- region_aggregates(mats,
+                           many_colname = IEATools::iea_cols$country,
+                           few_colname = "Continent")
+  res |>
+    dplyr::filter(is.na(.data[[Recca::psut_cols$country]])) |>
+    nrow() |>
+    expect_equal(4)
+
+  # Try with eliminating the NA rows
+  # by setting drop_na_few = TRUE.
+  res2 <- region_aggregates(mats,
+                           many_colname = IEATools::iea_cols$country,
+                           few_colname = "Continent",
+                           drop_na_few = TRUE)
+  res2 |>
+    dplyr::filter(is.na(.data[[Recca::psut_cols$country]])) |>
+    nrow() |>
+    expect_equal(0)
+})
+
+
 test_that("despecified_aggregates() works as expected", {
   mats_GBR <- UKEnergy2000mats %>%
     tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)

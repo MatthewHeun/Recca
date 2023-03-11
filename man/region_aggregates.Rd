@@ -8,6 +8,7 @@ region_aggregates(
   .sut_data,
   many_colname = IEATools::iea_cols$country,
   few_colname = Recca::aggregate_cols$region,
+  drop_na_few = FALSE,
   year = IEATools::iea_cols$year,
   method = IEATools::iea_cols$method,
   energy_type = IEATools::iea_cols$energy_type,
@@ -31,6 +32,10 @@ Default is \code{IEATools::iea_cols$country}.}
 for example continents into which countries are to be aggregated.
 Default is \code{Recca::aggregate_cols$region}.}
 
+\item{drop_na_few}{A boolean that tells whether to ignore (not aggregate) rows with  \code{NA} values in \code{few_colname}.
+See details.
+Default is \code{FALSE}.}
+
 \item{year, method, energy_type, last_stage}{See \code{IEATools::iea_cols}.}
 
 \item{matrix_cols}{Names of columns in .sut_data containing matrices.
@@ -47,6 +52,22 @@ by \code{few_colname} as specified by \code{aggregation_map}.
 Aggregates a data frame according to the regions given in a column of the data frame.
 The data frame (\code{.sut_data}) should contain metadata columns (including \code{many_colname} and \code{few_colname})
 and be wide-by-matrices.
+}
+\details{
+The argument \code{drop_na_few} controls what happens when an item \code{many_colname}
+does not have a corresonding value in \code{few_colname}.
+This condition can occur when, say, "WRLD" is a country.
+"WRLD" (as a country in \code{many_colname})
+should not be aggregated to "World" (as a region in the \code{few_colname}).
+In those circumstances,
+a well-formed \code{aggregation_map} will leave \code{NA} in \code{few_colname}.
+Setting \code{drop_na_few} will eliminate rows with \code{NA} in \code{few_colname}
+before doing the aggregation so those \code{NA} rows do not end up as
+\code{NA} in the outgoing data frame.
+
+The default value for \code{drop_na_few} is \code{FALSE},
+because setting to \code{TRUE} will result in data loss.
+You need to opt in to this behavior when you know it's what you want.
 }
 \examples{
 library(dplyr)
