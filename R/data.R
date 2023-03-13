@@ -421,3 +421,19 @@
 #'   \item{industry_names}{The name of a data frame column that contains Industries. Default is "Industry.names".}
 #' }
 "prod_ind_names_colnames"
+
+
+#' Names of row and column types in PSUT matrices
+#'
+#' A list of row and column types.
+#'
+#' @format A list with `r length(prod_ind_names_colnames)` entries.
+#' \describe{
+#'   \item{product_type}{The name of the product row and column type. Default is "Product".}
+#'   \item{industry_type}{The name of the industry row and column type. Default is "Industry".}
+#' }
+"row_col_types"
+
+
+
+

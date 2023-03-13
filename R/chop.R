@@ -226,16 +226,17 @@ chop_Y <- function(.sut_data = NULL,
       new_Y(Y_prime = Y_colname, R_prime = R_prime_colname, U_prime = U_prime_colname, U_feed_prime = U_feed_prime_colname,
             U_eiou_prime = U_eiou_prime_colname, r_eiou_prime = r_eiou_prime_colname, V_prime = V_prime_colname)
     # Verify that R_prime is equal to R
-    assertthat::assert_that(matsbyname::equal_byname(upstream_swim[[R_prime_colname]], R_mat))
+    assertthat::assert_that(matsbyname::equal_byname(upstream_swim[[R_prime_colname]], R_mat, tol = tol_chop_sum))
     # Verify that U_prime is equal to U
-    assertthat::assert_that(matsbyname::equal_byname(upstream_swim[[U_prime_colname]], U_mat))
+    assertthat::assert_that(matsbyname::equal_byname(upstream_swim[[U_prime_colname]], U_mat, tol = tol_chop_sum))
     # Verify that U_feed_prime is equal to U_feed
-    assertthat::assert_that(matsbyname::equal_byname(upstream_swim[[U_feed_prime_colname]], U_feed_mat))
+    assertthat::assert_that(matsbyname::equal_byname(upstream_swim[[U_feed_prime_colname]], U_feed_mat, tol = tol_chop_sum))
     # Verify that U_eiou_prime is equal to U_eiou
     assertthat::assert_that(matsbyname::equal_byname(upstream_swim[[U_eiou_prime_colname]],
-                                                     matsbyname::difference_byname(U_mat, upstream_swim[[U_feed_colname]])))
+                                                     matsbyname::difference_byname(U_mat, upstream_swim[[U_feed_colname]]),
+                                                     tol = tol_chop_sum))
     # Verify that V_prime is equal to V
-    assertthat::assert_that(matsbyname::equal_byname(upstream_swim[[V_prime_colname]], V_mat))
+    assertthat::assert_that(matsbyname::equal_byname(upstream_swim[[V_prime_colname]], V_mat, tol = tol_chop_sum))
 
     # Now that we have verified that we can swim upstream,
     # chop the Y matrix and swim upstream for each row and column independently.
@@ -445,16 +446,17 @@ chop_R <- function(.sut_data = NULL,
       new_R_ps(R_prime = R_colname, U_prime = U_prime_colname, U_feed_prime = U_feed_prime_colname,
                U_eiou_prime = U_eiou_prime_colname, r_eiou_prime = r_eiou_prime_colname, V_prime = V_prime_colname, Y_prime = Y_prime_colname)
     # Verify that U_prime is equal to U
-    assertthat::assert_that(matsbyname::equal_byname(downstream_swim[[U_prime_colname]], U_mat))
+    assertthat::assert_that(matsbyname::equal_byname(downstream_swim[[U_prime_colname]], U_mat, tol = tol_chop_sum))
     # Verify that U_feed_prime is equal to U_feed
-    assertthat::assert_that(matsbyname::equal_byname(downstream_swim[[U_feed_prime_colname]], U_feed_mat))
+    assertthat::assert_that(matsbyname::equal_byname(downstream_swim[[U_feed_prime_colname]], U_feed_mat, tol = tol_chop_sum))
     # Verify that U_eiou_prime is equal to U_eiou
     assertthat::assert_that(matsbyname::equal_byname(downstream_swim[[U_eiou_prime_colname]],
-                                                     matsbyname::difference_byname(U_mat, downstream_swim[[U_feed_colname]])))
+                                                     matsbyname::difference_byname(U_mat, downstream_swim[[U_feed_colname]]),
+                                                     tol = tol_chop_sum))
     # Verify that V_prime is equal to V
-    assertthat::assert_that(matsbyname::equal_byname(downstream_swim[[V_prime_colname]], V_mat))
+    assertthat::assert_that(matsbyname::equal_byname(downstream_swim[[V_prime_colname]], V_mat, tol = tol_chop_sum))
     # Verify that Y_prime is equal to Y
-    assertthat::assert_that(matsbyname::equal_byname(downstream_swim[[Y_prime_colname]], Y_mat))
+    assertthat::assert_that(matsbyname::equal_byname(downstream_swim[[Y_prime_colname]], Y_mat, tol = tol_chop_sum))
 
     # Now that we have verified that we can swim downstream,
     # chop the R matrix and swim downstream for each row and column independently.

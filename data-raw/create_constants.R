@@ -213,3 +213,12 @@ usethis::use_data(euproduct_aggregation_map, overwrite = TRUE)
 prod_ind_names_colnames <- list(product_names = "Product.names",
                                 industry_names = "Industry.names")
 usethis::use_data(prod_ind_names_colnames, overwrite = TRUE)
+
+
+#
+# Row and column types
+#
+
+row_col_types <- list(product_type = "Product",
+                      industry_type = "Industry")
+usethis::use_data(row_col_types, overwrite = TRUE)

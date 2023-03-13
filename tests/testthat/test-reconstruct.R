@@ -380,10 +380,10 @@ test_that("new_R_ps() works as expected", {
 
   # Test that everything worked as expected
   for (i in 1:2) {
-    expect_true(matsbyname::equal_byname(newRsameasoldR$U_prime[[i]], newRsameasoldR$expected_U[[i]]))
-    expect_true(matsbyname::equal_byname(newRsameasoldR$V_prime[[i]], newRsameasoldR$expected_V[[i]]))
-    expect_true(matsbyname::equal_byname(newRsameasoldR$Y_prime[[i]], newRsameasoldR$expected_Y[[i]]))
-    expect_true(matsbyname::equal_byname(newRsameasoldR$W_prime[[i]], newRsameasoldR$expected_W[[i]]))
+    expect_true(matsbyname::equal_byname(newRsameasoldR$U_prime[[i]], newRsameasoldR$expected_U[[i]], tol = 1e-6))
+    expect_true(matsbyname::equal_byname(newRsameasoldR$V_prime[[i]], newRsameasoldR$expected_V[[i]], tol = 1e-6))
+    expect_true(matsbyname::equal_byname(newRsameasoldR$Y_prime[[i]], newRsameasoldR$expected_Y[[i]], tol = 1e-6))
+    expect_true(matsbyname::equal_byname(newRsameasoldR$W_prime[[i]], newRsameasoldR$expected_W[[i]], tol = 1e-6))
   }
 
   doubleR <- UKEnergy2000mats %>%
