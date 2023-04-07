@@ -152,9 +152,6 @@ test_that("calculating y, q, f, g, h, W, A, and L works as expected", {
   are_0 <- abs(sum_O) < 1e-10
   expect_true(all(are_1 + are_0))
 
-
-
-
   # Focus on L matrices (L_ixp and L_pxp)
   L <- io_mats %>%
     dplyr::select(Country, Year, Energy.type, Last.stage, L_ixp, L_pxp) %>%
@@ -210,7 +207,6 @@ test_that("calculating y, q, f, g, h, W, A, and L works as expected", {
       tidyr::spread(key = matrix.name, value = matrix) %>%
       calc_yqfgW(method_q_calculation = "Method_not_supported")
   )
-
 })
 
 
