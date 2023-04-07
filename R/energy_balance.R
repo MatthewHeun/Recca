@@ -164,9 +164,9 @@ verify_SUT_energy_balance_with_units <- function(.sutmats = NULL,
 #' @param .sutmats an SUT-style data frame containing metadata columns
 #' (typically `Country`, `Year`, `Ledger.side`, `Product`, etc.)
 #' and columns of SUT matrices, including `U` and `V`.
-#' @param R resources (`R`) matrix or name of the column in `.sutmats` that contains same. Default is "R".
-#' @param U use (`U`) matrix or name of the column in `.sutmats` that contains same. Default is "U".
-#' @param V make (`V`) matrix or name of the column in `.sutmats`that contains same. Default is "V".
+#' @param R resources (**R**) matrix or name of the column in `.sutmats` that contains same. Default is "R".
+#' @param U use (**U**) matrix or name of the column in `.sutmats` that contains same. Default is "U".
+#' @param V make (**V**) matrix or name of the column in `.sutmats`that contains same. Default is "V".
 #' @param industry_production_OK the name of the column in the output that
 #'        tells whether all industries produce something. Default is ".industry_production_OK".
 #' @param problem_industries the name of the column in the output that
@@ -186,7 +186,7 @@ verify_SUT_industry_production <- function(.sutmats = NULL,
                                            # Output column names
                                            industry_production_OK = ".industry_production_OK",
                                            problem_industries = ".problem_industries"){
-  verify_func <- function(R_mat = NULL, U_mat, V_mat){
+  verify_func <- function(R_mat = NULL, U_mat, V_mat) {
     if (is.null(R_mat)) {
       R_plus_V_mat <- V_mat
     } else {
@@ -196,13 +196,17 @@ verify_SUT_industry_production <- function(.sutmats = NULL,
       matsbyname::complete_rows_cols(mat = matsbyname::transpose_byname(U_mat), margin = 1)
     OK <- !any(check == 0)
     problems <- rownames(check)[which(check == 0)]
+    if (length(problems) == 0) {
+      # To enable building the outgoing list.
+      problems <- NULL
+    }
     list(OK, problems) %>% magrittr::set_names(c(industry_production_OK, problem_industries))
   }
-  Out <- matsindf::matsindf_apply(.sutmats, FUN = verify_func, R_mat = R, U_mat = U, V_mat = V)
-  if (!all(Out[[industry_production_OK]] %>% as.logical())) {
+  out <- matsindf::matsindf_apply(.sutmats, FUN = verify_func, R_mat = R, U_mat = U, V_mat = V)
+  if (!all(out[[industry_production_OK]] %>% as.logical())) {
     warning(paste("There are some industries that consume but do not produce energy. See column", industry_production_OK))
   }
-  return(Out)
+  return(out)
 }
 
 
