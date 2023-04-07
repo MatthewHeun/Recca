@@ -1,6 +1,3 @@
-###########################################################
-context("IO calculations")
-###########################################################
 
 test_that("calculating y, q, f, g, h, W, A, and L works as expected", {
   io_mats <- UKEnergy2000mats %>%
