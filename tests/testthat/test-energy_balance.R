@@ -1,6 +1,3 @@
-###########################################################
-context("SUT energy balance")
-###########################################################
 
 test_that("SUT matrix energy balance works with energy only", {
   expect_silent(
