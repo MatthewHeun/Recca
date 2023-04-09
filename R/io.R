@@ -373,7 +373,8 @@ calc_A <- function(.sutdata = NULL,
                    Z_s = "Z_s", C_s = "C_s", D_s = "D_s", D_feed_s = "D_feed_s", B = "B", O_s = "O_s"){
   direction <- match.arg(direction)
 
-  A_func <- function(R_mat, U_mat, U_feed_mat, V_mat, Y_mat, q_vec, f_vec, g_vec, r_vec, h_vec){
+  A_func <- function(R_mat = NULL, U_mat = NULL, U_feed_mat = NULL, V_mat = NULL, Y_mat = NULL, q_vec = NULL,
+                     f_vec = NULL, g_vec = NULL, r_vec = NULL, h_vec = NULL){
     if (direction %in% c("upstream", "demand", "Leontief", "leontief")) {
       if (is.null(R_mat)) {
         # No R matrix, just use the V matrix, assuming that resources are included there.
