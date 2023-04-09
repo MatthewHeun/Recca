@@ -549,7 +549,7 @@ calc_L <- function(.sutdata = NULL,
   method <- match.arg(method)
   direction <- match.arg(direction)
 
-  L_func <- function(D_mat, A_mat, D_s_mat, B_mat){
+  L_func <- function(D_mat = NULL, A_mat = NULL, D_s_mat = NULL, B_mat = NULL){
     if (direction %in% c("upstream", "demand", "Leontief")) {
       L_pxp_mat <- matsbyname::Iminus_byname(A_mat) %>% matsbyname::invert_byname(method = method, tol = tol)
       L_ixp_mat <- matsbyname::matrixproduct_byname(D_mat, L_pxp_mat)
