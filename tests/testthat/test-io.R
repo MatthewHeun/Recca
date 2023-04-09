@@ -467,3 +467,4 @@ test_that("calc_io_mats() works for downstream swim", {
   expect_equal(G_mats$G_ixp[[1]]["Petrol dist.", "Petrol"], 1.0186915888)
   expect_equal(G_mats$G_ixp[[2]]["Light fixtures", "Elect [from Grid]"], 0.963300755)
 })
+
