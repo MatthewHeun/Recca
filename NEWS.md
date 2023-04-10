@@ -4,6 +4,8 @@ output: html_document
 ---
 
 
+* Responded to policy changes in `matsindf::matsindf_apply()`
+  by setting default arguments to `NULL` for several internal functions.
 * `region_aggregates()` gains `drop_na_few` argument
   that tells whether to eliminate rows 
   with `NA` in `few_colname`.
