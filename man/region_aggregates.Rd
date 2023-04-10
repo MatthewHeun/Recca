@@ -84,5 +84,5 @@ agg_df <- list(EUR = c("GBR", "FRA"), AMR = "USA") \%>\%
   matsbyname::agg_map_to_agg_table(few_colname = "Continent", many_colname = "Country")
 # Aggregate into continents
 dplyr::left_join(mats, agg_df, by = "Country") \%>\%
-  region_aggregates(mats, many_colname = "Country", few_colname = "Continent")
+  region_aggregates(many_colname = "Country", few_colname = "Continent")
 }
