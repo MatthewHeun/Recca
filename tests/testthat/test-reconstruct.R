@@ -17,8 +17,8 @@ test_that("reconstructing R, U, and V, from single matrices works as expected", 
     expect_equal(UV$R_prime, allUV$R_prime[[i]])
     expect_equal(UV$U_prime, allUV$U_prime[[i]])
     expect_equal(UV$U_feed_prime, allUV$U_feed_prime[[i]])
-    expect_equal(UV$U_eiou_prime, allUV$U_eiou_prime[[i]])
-    expect_equal(UV$r_eiou_prime, allUV$r_eiou_prime[[i]])
+    expect_equal(UV$U_EIOU_prime, allUV$U_EIOU_prime[[i]])
+    expect_equal(UV$r_EIOU_prime, allUV$r_EIOU_prime[[i]])
     expect_equal(UV$V_prime, allUV$V_prime[[i]])
   }
 })
