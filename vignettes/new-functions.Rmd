@@ -40,6 +40,7 @@ library(tidyr)
 \newcommand{\transposeinverse}[1]{\inverse{\left( \transpose{\mat{#1}} \right)}}
 \newcommand{\hatinv}[1]{\inverse{\widehat{#1}}}
 ```
+
 ## Introduction
 
 `Recca` is an `R` package that builds upon input-output (I-O) analysis,
@@ -79,9 +80,9 @@ library(matsindf)
 library(Recca)
 library(tidyr)
 OurECC <- UKEnergy2000mats %>% 
-  filter(Last.stage == "Final") %>% 
-  spread(key = "matrix.name", value = "matrix")
-glimpse(OurECC)
+  dplyr::filter(Last.stage == "Final") %>% 
+  tidyr::spread(key = "matrix.name", value = "matrix")
+dplyr::glimpse(OurECC)
 ```
 
 After a short discussion of the inputs to the `new_*` functions, each
@@ -103,8 +104,8 @@ the first row of the `UKEnergyMatsWithR` data frame is given below.
 
 ```{r, fig.width = 7, fig.height = 4}
 make_sankey(OurECC) %>% 
-  extract2("Sankey") %>% # Extracts the "Sankey" column
-  extract2(1) # Extracts the first row of the "Sankey" column
+  magrittr::extract2("Sankey") %>% # Extracts the "Sankey" column
+  magrittr::extract2(1) # Extracts the first row of the "Sankey" column
 ```
 
 ### Matrices that describe the input-output structure of the ECC
@@ -123,7 +124,7 @@ IO_mats <- OurECC %>%
   # Obtain the I-O structure of the ECCs
   calc_io_mats()
 # Note additional columns appended to the data frame.
-glimpse(IO_mats)
+dplyr::glimpse(IO_mats)
 ```
 
 With the I-O structure of the ECC determined (and represented by the
@@ -141,13 +142,13 @@ in final demand. To demonstrate, we'll double the `Residential` final
 demand for electricity from the grid (`Elect - Grid`) in our ECC.
 
 ```{r}
-double <- function(x){
+double <- function(x) {
   2*x
 }
 
 DoubleRes <- IO_mats %>% 
   mutate(
-    Y_prime = elementapply_byname(double, a = Y, row = "Elect - Grid", col = "Residential")
+    Y_prime = matsbyname::elementapply_byname(double, a = Y, row = "Elect [from Grid]", col = "Residential")
   )
 DoubleRes$Y[[1]]
 DoubleRes$Y_prime[[1]]
@@ -229,7 +230,7 @@ HalfCrude <- OurECC %>%
   # Obtain the I-O structure of the ECCs
   calc_io_mats(direction = "downstream") %>% 
   mutate(
-    R_prime = elementapply_byname(half, a = R, row = "Resources - Crude", col = "Crude")
+    R_prime = elementapply_byname(half, a = R, row = "Resources [of Crude]", col = "Crude")
   )
 HalfCrude$R_prime[[1]] %>% clean_byname()
 ```
