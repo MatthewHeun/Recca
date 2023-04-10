@@ -326,15 +326,12 @@ test_that("find_p_industry_names() works as expected", {
   p_industries_full_names <- find_p_industry_names(p_industry_prefixes = list(p_industry_prefixes),
                                                    R = list(R), V = list(V), Y = list(Y))
   expect_type(p_industries_full_names, type = "list")
-  expect_s3_class(p_industries_full_names, class = "data.frame")
-  expect_equal(p_industries_full_names[["p_industries_complete"]][[1]], c(Rrows, Vrows, Ycols))
+  expect_equal(p_industries_full_names[["p_industries_complete"]], c(Rrows, Vrows, Ycols))
 
-  # Try with a null matrix.  Should fail.
-  expect_error(find_p_industry_names(p_industry_prefixes = list(p_industry_prefixes),
-                                     R = list(R), V = NULL, Y = list(Y)),
-               # Newer versions of R give the "subscript out of bounds" error.
-               # Older versions of R give the "zero-length" error.
-               "subscript out of bounds|zero-length inputs cannot be mixed with those of non-zero length")
+  # Try with a null matrix.  Should still work.
+  p_industries_full_names_RY <- find_p_industry_names(p_industry_prefixes = list(p_industry_prefixes),
+                                                      R = list(R), V = NULL, Y = list(Y))
+  expect_equal(p_industries_full_names_RY[[1]], c(Rrows, Ycols))
 
   # Try with a data frame.
   DF <- tibble::tibble(R = list(R,R), V = list(V,V), Y = list(Y,Y),
@@ -343,7 +340,6 @@ test_that("find_p_industry_names() works as expected", {
   DF_augmented <- DF %>%
     find_p_industry_names()
   expect_equal(DF_augmented[[Recca::industry_cols$p_industries_complete]], DF_augmented$expected)
-
 })
 
 
