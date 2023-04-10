@@ -15,7 +15,7 @@ output: html_document
     - "Crude - Fields" --> "Crude [from Fields]"
     - "MD - Car engines" --> "MD [from Car engines]"
   These changes align the example ECC with the naming conventions
-  now in use throughout the package and various pipelines.
+  now in use throughout the package and in various pipelines.
 * `chop_R()` now also chops by rows (industries), 
   since we are now including 
   all exogenous sources of energy in the **R** matrix.
@@ -23,6 +23,9 @@ output: html_document
   of unique product and industry names for an ECC and 
   is aware of `RCLabels`-type `piece`s of row and column names.
 * Net EROI calculations removed, only gross values calculated.
+* Simplifications reduced number of tests.
+    * Still at 672 tests, all passing.
+    * Test coverage remains at 100 %.
   
 
 # Recca 0.1.40 (2023-01-25) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7571202.svg)](https://doi.org/10.5281/zenodo.7571202)
