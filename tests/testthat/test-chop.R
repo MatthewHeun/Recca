@@ -156,6 +156,7 @@ test_that("verify_chop_energy_sum() fails when tol_chop_sum is set too tight", {
   psut_mats <- UKEnergy2000mats %>%
     tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
 
+  # This should work, because we're simply comparing each matrix to itself.
   Recca:::verify_chop_energy_sum(R_mat = psut_mats$R[[1]],
                                  U_mat = psut_mats$U[[1]],
                                  U_feed_mat = psut_mats$U_feed[[1]],
@@ -169,7 +170,7 @@ test_that("verify_chop_energy_sum() fails when tol_chop_sum is set too tight", {
                                  Y_chop_list = list(psut_mats$Y[[1]])) |>
     expect_true()
 
-  # Mess with the energy balance a bit to trigger the warning.
+  # Mess with the energy balance to trigger the warning.
   psut_mats_adjusted <- psut_mats
   psut_mats_adjusted$R[[1]] <- 1.1 * psut_mats$R[[1]]
   # Check the balance
