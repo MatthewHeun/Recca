@@ -4,6 +4,8 @@ output: html_document
 ---
 
 
+# Recca 0.1.41 (2023-04-28)
+
 * Responded to policy changes in `matsindf::matsindf_apply()`
   by setting default arguments to `NULL` for several internal functions.
 * `region_aggregates()` gains `drop_na_few` argument
@@ -24,7 +26,7 @@ output: html_document
   is aware of `RCLabels`-type `piece`s of row and column names.
 * Net EROI calculations removed, only gross values calculated.
 * Simplifications reduced number of tests.
-    * Still at 672 tests, all passing.
+    * Still at 632 tests, all passing.
     * Test coverage remains at 100 %.
   
 
