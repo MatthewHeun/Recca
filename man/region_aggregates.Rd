@@ -55,7 +55,7 @@ and be wide-by-matrices.
 }
 \details{
 The argument \code{drop_na_few} controls what happens when an item \code{many_colname}
-does not have a corresonding value in \code{few_colname}.
+does not have a corresponding value in \code{few_colname}.
 This condition can occur when, say, "WRLD" is a country.
 "WRLD" (as a country in \code{many_colname})
 should not be aggregated to "World" (as a region in the \code{few_colname}).
@@ -84,5 +84,5 @@ agg_df <- list(EUR = c("GBR", "FRA"), AMR = "USA") \%>\%
   matsbyname::agg_map_to_agg_table(few_colname = "Continent", many_colname = "Country")
 # Aggregate into continents
 dplyr::left_join(mats, agg_df, by = "Country") \%>\%
-  region_aggregates(mats, many_colname = "Country", few_colname = "Continent")
+  region_aggregates(many_colname = "Country", few_colname = "Continent")
 }

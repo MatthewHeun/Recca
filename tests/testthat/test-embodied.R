@@ -1,6 +1,3 @@
-###########################################################
-context("Embodied energy calculations")
-###########################################################
 
 test_that("embodied energy calculations works as expected", {
   # Get a vector of primary industries for the example data set.

@@ -515,7 +515,8 @@ chop_R <- function(.sut_data = NULL,
     ecc_prime <- new_R_list %>%
       sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_new_R) {
         with_io %>%
-          append(list(this_new_R) %>% magrittr::set_names(R_prime_colname)) %>%
+          append(list(this_new_R) %>%
+                   magrittr::set_names(R_prime_colname)) %>%
           # Calculate all the new ECC matrices,
           # accepting the default names for intermediate
           # vectors and matrices.

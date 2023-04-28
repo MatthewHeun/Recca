@@ -1,10 +1,7 @@
-###########################################################
-context("IO calculations")
-###########################################################
 
 test_that("calculating y, q, f, g, h, W, A, and L works as expected", {
   io_mats <- UKEnergy2000mats %>%
-    tidyr::spread(key = matrix.name, value = matrix) %>%
+    tidyr::spread(key = "matrix.name", value = "matrix") %>%
     calc_yqfgW() %>%
     calc_A() %>%
     calc_L()
@@ -155,9 +152,6 @@ test_that("calculating y, q, f, g, h, W, A, and L works as expected", {
   are_0 <- abs(sum_O) < 1e-10
   expect_true(all(are_1 + are_0))
 
-
-
-
   # Focus on L matrices (L_ixp and L_pxp)
   L <- io_mats %>%
     dplyr::select(Country, Year, Energy.type, Last.stage, L_ixp, L_pxp) %>%
@@ -213,7 +207,6 @@ test_that("calculating y, q, f, g, h, W, A, and L works as expected", {
       tidyr::spread(key = matrix.name, value = matrix) %>%
       calc_yqfgW(method_q_calculation = "Method_not_supported")
   )
-
 })
 
 
@@ -244,7 +237,7 @@ test_that("calculating Z_feed works as expected", {
 })
 
 
-test_that("calc_io_mats give correct _feed matrices", {
+test_that("calc_io_mats() give correct _feed matrices", {
   feed_mats <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
     dplyr::mutate(
@@ -271,8 +264,6 @@ test_that("calc_io_mats give correct _feed matrices", {
   expect_equal(A_feed_final["Petrol", "Petrol [from Dist.]"], 1)
   expect_equal(A_feed_final["Crude", "Diesel"], 0)
 
-
-
   # Check L_pxp_feed
   L_pxp_feed_final <- feed_mats$L_pxp_feed[[1]]
   expect_equal(L_pxp_feed_final["NG", "Elect"], 2.5)
@@ -281,7 +272,6 @@ test_that("calc_io_mats give correct _feed matrices", {
   expect_equal(L_pxp_feed_final["Crude [from Dist.]", "Petrol"], 1)
   expect_equal(L_pxp_feed_final["Diesel", "Elect"], 0)
   expect_equal(L_pxp_feed_final["Diesel", "Diesel [from Dist.]"], 1)
-
 
   # Check L_ixp_feed
   L_ixp_feed_final <- feed_mats$L_ixp_feed[[1]]
@@ -477,3 +467,4 @@ test_that("calc_io_mats() works for downstream swim", {
   expect_equal(G_mats$G_ixp[[1]]["Petrol dist.", "Petrol"], 1.0186915888)
   expect_equal(G_mats$G_ixp[[2]]["Light fixtures", "Elect [from Grid]"], 0.963300755)
 })
+

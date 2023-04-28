@@ -281,7 +281,7 @@ finaldemand_aggregates <- function(.sutdata = NULL,
 #' and be wide-by-matrices.
 #'
 #' The argument `drop_na_few` controls what happens when an item `many_colname`
-#' does not have a corresonding value in `few_colname`.
+#' does not have a corresponding value in `few_colname`.
 #' This condition can occur when, say, "WRLD" is a country.
 #' "WRLD" (as a country in `many_colname`)
 #' should not be aggregated to "World" (as a region in the `few_colname`).
@@ -331,7 +331,7 @@ finaldemand_aggregates <- function(.sutdata = NULL,
 #'   matsbyname::agg_map_to_agg_table(few_colname = "Continent", many_colname = "Country")
 #' # Aggregate into continents
 #' dplyr::left_join(mats, agg_df, by = "Country") %>%
-#'   region_aggregates(mats, many_colname = "Country", few_colname = "Continent")
+#'   region_aggregates(many_colname = "Country", few_colname = "Continent")
 region_aggregates <- function(.sut_data,
                               many_colname = IEATools::iea_cols$country,
                               few_colname = Recca::aggregate_cols$region,

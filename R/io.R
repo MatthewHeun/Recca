@@ -373,7 +373,8 @@ calc_A <- function(.sutdata = NULL,
                    Z_s = "Z_s", C_s = "C_s", D_s = "D_s", D_feed_s = "D_feed_s", B = "B", O_s = "O_s"){
   direction <- match.arg(direction)
 
-  A_func <- function(R_mat, U_mat, U_feed_mat, V_mat, Y_mat, q_vec, f_vec, g_vec, r_vec, h_vec){
+  A_func <- function(R_mat = NULL, U_mat = NULL, U_feed_mat = NULL, V_mat = NULL, Y_mat = NULL, q_vec = NULL,
+                     f_vec = NULL, g_vec = NULL, r_vec = NULL, h_vec = NULL){
     if (direction %in% c("upstream", "demand", "Leontief", "leontief")) {
       if (is.null(R_mat)) {
         # No R matrix, just use the V matrix, assuming that resources are included there.
@@ -549,7 +550,7 @@ calc_L <- function(.sutdata = NULL,
   method <- match.arg(method)
   direction <- match.arg(direction)
 
-  L_func <- function(D_mat, A_mat, D_s_mat, B_mat){
+  L_func <- function(D_mat = NULL, A_mat = NULL, D_s_mat = NULL, B_mat = NULL){
     if (direction %in% c("upstream", "demand", "Leontief")) {
       L_pxp_mat <- matsbyname::Iminus_byname(A_mat) %>% matsbyname::invert_byname(method = method, tol = tol)
       L_ixp_mat <- matsbyname::matrixproduct_byname(D_mat, L_pxp_mat)

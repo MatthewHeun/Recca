@@ -18,11 +18,11 @@ verify_SUT_industry_production(
 (typically \code{Country}, \code{Year}, \code{Ledger.side}, \code{Product}, etc.)
 and columns of SUT matrices, including \code{U} and \code{V}.}
 
-\item{R}{resources (\code{R}) matrix or name of the column in \code{.sutmats} that contains same. Default is "R".}
+\item{R}{resources (\strong{R}) matrix or name of the column in \code{.sutmats} that contains same. Default is "R".}
 
-\item{U}{use (\code{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "U".}
+\item{U}{use (\strong{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "U".}
 
-\item{V}{make (\code{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "V".}
+\item{V}{make (\strong{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "V".}
 
 \item{industry_production_OK}{the name of the column in the output that
 tells whether all industries produce something. Default is ".industry_production_OK".}
