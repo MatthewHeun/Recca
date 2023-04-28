@@ -16,7 +16,7 @@ and one for "To".'><!-- mathjax --><script src="https://cdnjs.cloudflare.com/aja
     
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.40</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.41</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -122,46 +122,46 @@ the value of the <code>from</code> and <code>to</code> arguments with the value 
 <span class="r-in"><span><span class="co"># Suppress adding node IDs</span></span></span>
 <span class="r-in"><span><span class="va">elDF</span> <span class="op">&lt;-</span> <span class="fu"><a href="edge_list.html">edge_list</a></span><span class="op">(</span><span class="va">sutmats</span>, node_id <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span><span class="op">$</span><span class="va">`Edge list`</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="fu">add_node_ids</span><span class="op">(</span><span class="va">elDF</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 From                To Value        Product edge_id</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  Resources - Crude        Oil fields 50000          Crude       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2        Crude dist.       Crude dist.   500  Crude - Dist.       2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3        Crude dist.    Oil refineries 47000  Crude - Dist.       3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4         Oil fields       Crude dist. 47500 Crude - Fields       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5         Oil fields        Oil fields  2500 Crude - Fields       5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     Oil refineries      Diesel dist. 15500         Diesel       6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7     Oil refineries    Oil refineries  5000         Diesel       7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8       Diesel dist.       Crude dist.    25 Diesel - Dist.       8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9       Diesel dist.      Diesel dist.   350 Diesel - Dist.       9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10      Diesel dist. Gas wells &amp; proc.    50 Diesel - Dist.      10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11      Diesel dist.          NG dist.    25 Diesel - Dist.      11</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12      Diesel dist.        Oil fields    50 Diesel - Dist.      12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13      Diesel dist.      Petrol dist.   250 Diesel - Dist.      13</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14      Diesel dist.         Transport 14750 Diesel - Dist.      14</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15      Power plants       Elect. grid  6400          Elect      15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16       Elect. grid       Crude dist.    25   Elect - Grid      16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17       Elect. grid Gas wells &amp; proc.    25   Elect - Grid      17</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18       Elect. grid          NG dist.    25   Elect - Grid      18</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19       Elect. grid        Oil fields    25   Elect - Grid      19</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20       Elect. grid    Oil refineries    75   Elect - Grid      20</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21       Elect. grid      Power plants   100   Elect - Grid      21</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22       Elect. grid       Residential  6000   Elect - Grid      22</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23    Resources - NG Gas wells &amp; proc. 43000             NG      23</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24          NG dist.      Power plants 16000     NG - Dist.      24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25          NG dist.       Residential 25000     NG - Dist.      25</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26 Gas wells &amp; proc. Gas wells &amp; proc.  2000     NG - Wells      26</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27 Gas wells &amp; proc.          NG dist. 41000     NG - Wells      27</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28    Oil refineries      Petrol dist. 26500         Petrol      28</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 29      Petrol dist.      Petrol dist.   500 Petrol - Dist.      29</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 30      Petrol dist.         Transport 26000 Petrol - Dist.      30</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 31       Crude dist.             Waste   550          Waste      31</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 32      Diesel dist.             Waste   350          Waste      32</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 33       Elect. grid             Waste   125          Waste      33</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 34 Gas wells &amp; proc.             Waste  2075          Waste      34</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 35          NG dist.             Waste    50          Waste      35</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 36        Oil fields             Waste  2575          Waste      36</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 37    Oil refineries             Waste  5075          Waste      37</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 38      Petrol dist.             Waste   750          Waste      38</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 39      Power plants             Waste  9700          Waste      39</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                    From                To Value             Product edge_id</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  Resources [of Crude]        Oil fields 50000               Crude       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2           Crude dist.       Crude dist.   500  Crude [from Dist.]       2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3           Crude dist.    Oil refineries 47000  Crude [from Dist.]       3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4            Oil fields       Crude dist. 47500 Crude [from Fields]       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5            Oil fields        Oil fields  2500 Crude [from Fields]       5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6        Oil refineries      Diesel dist. 15500              Diesel       6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7        Oil refineries    Oil refineries  5000              Diesel       7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8          Diesel dist.       Crude dist.    25 Diesel [from Dist.]       8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9          Diesel dist.      Diesel dist.   350 Diesel [from Dist.]       9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10         Diesel dist. Gas wells &amp; proc.    50 Diesel [from Dist.]      10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11         Diesel dist.          NG dist.    25 Diesel [from Dist.]      11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12         Diesel dist.        Oil fields    50 Diesel [from Dist.]      12</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13         Diesel dist.      Petrol dist.   250 Diesel [from Dist.]      13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14         Diesel dist.         Transport 14750 Diesel [from Dist.]      14</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15         Power plants       Elect. grid  6400               Elect      15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16          Elect. grid       Crude dist.    25   Elect [from Grid]      16</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17          Elect. grid Gas wells &amp; proc.    25   Elect [from Grid]      17</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18          Elect. grid          NG dist.    25   Elect [from Grid]      18</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19          Elect. grid        Oil fields    25   Elect [from Grid]      19</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20          Elect. grid    Oil refineries    75   Elect [from Grid]      20</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21          Elect. grid      Power plants   100   Elect [from Grid]      21</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22          Elect. grid       Residential  6000   Elect [from Grid]      22</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23    Resources [of NG] Gas wells &amp; proc. 43000                  NG      23</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24             NG dist.      Power plants 16000     NG [from Dist.]      24</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25             NG dist.       Residential 25000     NG [from Dist.]      25</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26    Gas wells &amp; proc. Gas wells &amp; proc.  2000     NG [from Wells]      26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27    Gas wells &amp; proc.          NG dist. 41000     NG [from Wells]      27</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28       Oil refineries      Petrol dist. 26500              Petrol      28</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29         Petrol dist.      Petrol dist.   500 Petrol [from Dist.]      29</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30         Petrol dist.         Transport 26000 Petrol [from Dist.]      30</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31          Crude dist.             Waste   550               Waste      31</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32         Diesel dist.             Waste   350               Waste      32</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33          Elect. grid             Waste   125               Waste      33</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34    Gas wells &amp; proc.             Waste  2075               Waste      34</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35             NG dist.             Waste    50               Waste      35</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36           Oil fields             Waste  2575               Waste      36</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37       Oil refineries             Waste  5075               Waste      37</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38         Petrol dist.             Waste   750               Waste      38</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39         Power plants             Waste  9700               Waste      39</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    From_node_id To_node_id</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1             0          2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2             1          1</span>

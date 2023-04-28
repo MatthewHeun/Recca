@@ -237,6 +237,7 @@
 "PerfectSubmats"
 
 
+
 #' A vector of phi (exergy-to-energy ratios) values
 #'
 #' Converting from energy to exergy requires vectors of phi values.
@@ -245,6 +246,7 @@
 #'
 #' @format A matrix with energy products in rows and phi values in a single column.
 "phi_vec"
+
 
 
 #' A list of energy types
@@ -259,6 +261,8 @@
 #' }
 "energy_types"
 
+
+
 #' A list of High pressure matter (HPM) useful work products
 #'
 #' A list of High pressure matter (HPM) useful work products.
@@ -270,6 +274,8 @@
 #'   \item{HPNG}{The useful work product (Eu.product) "High pressure natural gas"}
 #' }
 "hpm_eu.products"
+
+
 
 #' A list of High temperature heat (HTH) useful work products
 #'
@@ -287,6 +293,8 @@
 #' }
 "hth_eu.products"
 
+
+
 #' A list of Medium temperature heat (MTH) useful work products
 #'
 #' A list of Medium temperature heat (MTH) useful work products
@@ -297,6 +305,8 @@
 #'   \item{MTH.200.C}{The useful work product (Eu.product) "MTH.200.C"}
 #' }
 "mth_eu.products"
+
+
 
 #' A list of Low temperature heat (LTH) useful work products
 #'
@@ -309,6 +319,8 @@
 #' }
 "lth_eu.products"
 
+
+
 #' A list of Cooling useful work products
 #'
 #' A list of Cooling useful work products
@@ -319,6 +331,8 @@
 #'   \item{LTC.20.C}{The useful work product (Eu.product) "LTC.20.C"}
 #' }
 "cooling_eu.products"
+
+
 
 #' A list of Propulsion useful work products
 #'
@@ -331,6 +345,8 @@
 #'   \item{RaP}{The useful work product (Eu.product) Rail propulsion}
 #' }
 "propulsion_eu.products"
+
+
 
 #' A list of Mechanical useful work products
 #'
@@ -345,6 +361,8 @@
 #' }
 "mechanical_eu.products"
 
+
+
 #' A list of Information processing useful work products
 #'
 #' A list of Information processing useful work products
@@ -354,6 +372,8 @@
 #'   \item{IP}{The useful work product (Eu.product) Information processing}
 #' }
 "ip_eu.products"
+
+
 
 #' A list of Light useful work products
 #'
@@ -365,6 +385,8 @@
 #' }
 "l_eu.products"
 
+
+
 #' A list of Non-energy use useful work products
 #'
 #' A list of Non-energy use useful work products
@@ -375,6 +397,8 @@
 #' }
 "neu_eu.products"
 
+
+
 #' A list of Name - Eu.product list combinations
 #'
 #' A list of Name - Eu.product list combinations for use in aggregating individual
@@ -382,5 +406,34 @@
 #'
 #' @format A list with `r length(euproduct_aggregation_map)` entries.
 "euproduct_aggregation_map"
+
+
+
+#' Names of data frame columns containing Product and Industry matrix row and column names
+#'
+#' A list of data frame column names.
+#' The data frame columns contain vectors of unique Product and Industry column names
+#' from **R**, **U**, **V**, and **Y** matrices.
+#'
+#' @format A list with `r length(prod_ind_names_colnames)` entries.
+#' \describe{
+#'   \item{product_names}{The name of a data frame column that contains Products. Default is "Product.names".}
+#'   \item{industry_names}{The name of a data frame column that contains Industries. Default is "Industry.names".}
+#' }
+"prod_ind_names_colnames"
+
+
+#' Names of row and column types in PSUT matrices
+#'
+#' A list of row and column types.
+#'
+#' @format A list with `r length(prod_ind_names_colnames)` entries.
+#' \describe{
+#'   \item{product_type}{The name of the product row and column type. Default is "Product".}
+#'   \item{industry_type}{The name of the industry row and column type. Default is "Industry".}
+#' }
+"row_col_types"
+
+
 
 

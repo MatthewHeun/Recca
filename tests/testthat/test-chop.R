@@ -1,5 +1,5 @@
 test_that("chop_R() works as expected", {
-  p_industries <- c("Resources - Crude", "Resources - NG")
+  p_industries <- c("Resources [of Crude]", "Resources [of NG]")
   fd_sectors <- c("Residential", "Transport", "Oil fields")
 
   psut_mats <- UKEnergy2000mats %>%
@@ -8,10 +8,10 @@ test_that("chop_R() works as expected", {
     dplyr::slice(1, 3)
   # Calculate aggregates
   chop_R_aggs <- psut_mats %>%
-    Recca::chop_R(p_industries = p_industries, fd_sectors = fd_sectors)
+    chop_R(p_industries = p_industries, fd_sectors = fd_sectors)
   expect_true(Recca::aggregate_cols$chop_df %in% names(chop_R_aggs))
   chop_R_aggs_unnested <- psut_mats %>%
-    Recca::chop_R(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
+    chop_R(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
   expect_true(Recca::aggregate_cols$product_sector %in% names(chop_R_aggs_unnested))
   expect_true(Recca::aggregate_cols$aggregate_primary %in% names(chop_R_aggs_unnested))
   expect_true(Recca::aggregate_cols$net_aggregate_demand %in% names(chop_R_aggs_unnested))
@@ -27,7 +27,7 @@ test_that("chop_R() works as expected", {
 
 
 test_that("chop_R() works without aggregates", {
-  p_industries <- c("Resources - Crude", "Resources - NG")
+  p_industries <- c("Resources [of Crude]", "Resources - NG")
   fd_sectors <- c("Residential", "Transport", "Oil fields")
 
   psut_mats <- UKEnergy2000mats %>%
@@ -136,7 +136,7 @@ test_that("chop_Y() works without aggregates", {
 
 
 test_that("chop_Y() errors when energy balance is not obtained", {
-  p_industries <- c("Resources - Crude", "Resources - NG")
+  p_industries <- c("Resources [of Crude]", "Resources [of NG]")
   fd_sectors <- c("Residential", "Transport", "Oil fields")
 
   psut_mats <- UKEnergy2000mats %>%
@@ -144,6 +144,46 @@ test_that("chop_Y() errors when energy balance is not obtained", {
   # Calculate aggregates
   expect_error(psut_mats %>%
     Recca::chop_Y(p_industries = p_industries, fd_sectors = fd_sectors,
-                  unnest = TRUE, calc_pfd_aggs = FALSE, tol_chop_sum = 1e-20), "Products not balanced") %>%
-    expect_warning("energy balance not observed")
+                  unnest = TRUE, calc_pfd_aggs = FALSE, tol_chop_sum = 1e-20),
+    "matsbyname::equal_byname")
+})
+
+
+test_that("verify_chop_energy_sum() fails when tol_chop_sum is set too tight", {
+  p_industries <- c("Resources [of Crude]", "Resources [of NG]")
+  fd_sectors <- c("Residential", "Transport", "Oil fields")
+
+  psut_mats <- UKEnergy2000mats %>%
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
+
+  # This should work, because we're simply comparing each matrix to itself.
+  Recca:::verify_chop_energy_sum(R_mat = psut_mats$R[[1]],
+                                 U_mat = psut_mats$U[[1]],
+                                 U_feed_mat = psut_mats$U_feed[[1]],
+                                 V_mat = psut_mats$V[[1]],
+                                 Y_mat = psut_mats$Y[[1]],
+
+                                 R_chop_list = list(psut_mats$R[[1]]),
+                                 U_chop_list = list(psut_mats$U[[1]]),
+                                 U_feed_chop_list = list(psut_mats$U_feed[[1]]),
+                                 V_chop_list = list(psut_mats$V[[1]]),
+                                 Y_chop_list = list(psut_mats$Y[[1]])) |>
+    expect_true()
+
+  # Mess with the energy balance to trigger the warning.
+  psut_mats_adjusted <- psut_mats
+  psut_mats_adjusted$R[[1]] <- 1.1 * psut_mats$R[[1]]
+  # Check the balance
+  expect_warning(Recca:::verify_chop_energy_sum(R_mat = psut_mats$R[[1]],
+                                                U_mat = psut_mats$U[[1]],
+                                                U_feed_mat = psut_mats$U_feed[[1]],
+                                                V_mat = psut_mats$V[[1]],
+                                                Y_mat = psut_mats$Y[[1]],
+
+                                                R_chop_list = list(psut_mats_adjusted$R[[1]]),
+                                                U_chop_list = list(psut_mats_adjusted$U[[1]]),
+                                                U_feed_chop_list = list(psut_mats_adjusted$U_feed[[1]]),
+                                                V_chop_list = list(psut_mats_adjusted$V[[1]]),
+                                                Y_chop_list = list(psut_mats_adjusted$Y[[1]])),
+                 "energy balance not observed in verify_chop_energy_sum\\(\\)")
 })

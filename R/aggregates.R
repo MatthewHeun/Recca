@@ -89,7 +89,7 @@ primary_aggregates <- function(.sutdata = NULL,
                                # Output names
                                aggregate_primary = Recca::aggregate_cols$aggregate_primary,
                                net_aggregate_primary = Recca::aggregate_cols$net_aggregate_primary,
-                               gross_aggregate_primary = Recca:: aggregate_cols$gross_aggregate_primary){
+                               gross_aggregate_primary = Recca::aggregate_cols$gross_aggregate_primary){
 
   pattern_type <- match.arg(pattern_type)
   by <- match.arg(by)
@@ -280,6 +280,21 @@ finaldemand_aggregates <- function(.sutdata = NULL,
 #' The data frame (`.sut_data`) should contain metadata columns (including `many_colname` and `few_colname`)
 #' and be wide-by-matrices.
 #'
+#' The argument `drop_na_few` controls what happens when an item `many_colname`
+#' does not have a corresponding value in `few_colname`.
+#' This condition can occur when, say, "WRLD" is a country.
+#' "WRLD" (as a country in `many_colname`)
+#' should not be aggregated to "World" (as a region in the `few_colname`).
+#' In those circumstances,
+#' a well-formed `aggregation_map` will leave `NA` in `few_colname`.
+#' Setting `drop_na_few` will eliminate rows with `NA` in `few_colname`
+#' before doing the aggregation so those `NA` rows do not end up as
+#' `NA` in the outgoing data frame.
+#'
+#' The default value for `drop_na_few` is `FALSE`,
+#' because setting to `TRUE` will result in data loss.
+#' You need to opt in to this behavior when you know it's what you want.
+#'
 #' @param .sut_data A wide-by-matrices `matsindf`-style data frame of PSUT matrices.
 #' @param many_colname The name of the column in `.sut_data` that contains the "many" descriptions,
 #'                     for example countries that need to be aggregated to continents.
@@ -287,6 +302,9 @@ finaldemand_aggregates <- function(.sutdata = NULL,
 #' @param few_colname The of the column in `.sut_data` that contains the "few" descriptions,
 #'                    for example continents into which countries are to be aggregated.
 #'                    Default is `Recca::aggregate_cols$region`.
+#' @param drop_na_few A boolean that tells whether to ignore (not aggregate) rows with  `NA` values in `few_colname`.
+#'                    See details.
+#'                    Default is `FALSE`.
 #' @param year,method,energy_type,last_stage See `IEATools::iea_cols`.
 #' @param matrix_cols Names of columns in .sut_data containing matrices.
 #'                    Default is a vector of names from `Recca::psut_cols`:
@@ -313,10 +331,11 @@ finaldemand_aggregates <- function(.sutdata = NULL,
 #'   matsbyname::agg_map_to_agg_table(few_colname = "Continent", many_colname = "Country")
 #' # Aggregate into continents
 #' dplyr::left_join(mats, agg_df, by = "Country") %>%
-#'   region_aggregates(mats, many_colname = "Country", few_colname = "Continent")
+#'   region_aggregates(many_colname = "Country", few_colname = "Continent")
 region_aggregates <- function(.sut_data,
                               many_colname = IEATools::iea_cols$country,
                               few_colname = Recca::aggregate_cols$region,
+                              drop_na_few = FALSE,
                               year = IEATools::iea_cols$year,
                               method = IEATools::iea_cols$method,
                               energy_type = IEATools::iea_cols$energy_type,
@@ -354,6 +373,12 @@ region_aggregates <- function(.sut_data,
     # We need to re-calculate U ad r_EIOU matrices after aggregation.
     # So get rid of them here.
     dplyr::filter(! .data[[matrix_names]] == matrix_cols[["U"]], ! .data[[matrix_names]] == matrix_cols[["r_eiou"]])
+  if (drop_na_few) {
+    # When drop_na_few is true, we eliminate
+    # rows with NA in few_colname.
+    tidy_df <- tidy_df |>
+      dplyr::filter(!is.na(.data[[few_colname]]))
+  }
   group_cols <- names(tidy_df) %>%
     setdiff(many_colname) %>%
     setdiff(matrix_values)

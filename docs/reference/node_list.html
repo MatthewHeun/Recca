@@ -12,7 +12,7 @@ This function creates a node list from an edge list, as shown in the examples.">
     
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.40</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.41</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -116,21 +116,21 @@ or a single edge list data frame.
 <span class="r-in"><span><span class="va">sutmats</span> <span class="op">&lt;-</span> <span class="va">UKEnergy2000mats</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/spread.html" class="external-link">spread</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">matrix.name</span>, value <span class="op">=</span> <span class="va">matrix</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">el</span> <span class="op">&lt;-</span> <span class="fu"><a href="edge_list.html">edge_list</a></span><span class="op">(</span><span class="va">sutmats</span><span class="op">)</span><span class="op">$</span><span class="va">`Edge list`</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="fu">node_list</span><span class="op">(</span><span class="va">el</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 Node node_id</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  Resources - Crude       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2        Crude dist.       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4         Oil fields       2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     Oil refineries       3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8       Diesel dist.       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15      Power plants       5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16       Elect. grid       6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23    Resources - NG       7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24          NG dist.       8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26 Gas wells &amp; proc.       9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 29      Petrol dist.      10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 53         Transport      11</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 61       Residential      12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 70             Waste      13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                    Node node_id</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  Resources [of Crude]       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2           Crude dist.       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4            Oil fields       2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6        Oil refineries       3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8          Diesel dist.       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15         Power plants       5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16          Elect. grid       6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23    Resources [of NG]       7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24             NG dist.       8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26    Gas wells &amp; proc.       9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29         Petrol dist.      10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 53            Transport      11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 61          Residential      12</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 70                Waste      13</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

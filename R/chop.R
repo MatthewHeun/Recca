@@ -6,15 +6,17 @@
 #' associated with each resource or final demand category.
 #' These functions perform those calculations.
 #'
-#' Chopping **R** involves calculating an ECC for each product column in the **R** matrix.
+#' Chopping **R** involves calculating an ECC for each industry row
+#' and each product column in the **R** matrix.
 #' This calculation is accomplished for each description of an energy conversion chain (ECC)
 #' by the following algorithm:
 #'
-#' 1. Calculate io matrices with `calc_io_mats()`.
-#' 2. Identify each product from columns of the **R** matrix.
-#' 3. For each product independently,
+#' 1. Calculate IO matrices with `calc_io_mats()`.
+#'    (Do this step prior to calling this function.)
+#' 2. Identify each industry and each product from rows and columns of the **R** matrix.
+#' 3. For each industry and product independently,
 #'    perform a downstream swim with `new_R_ps()`
-#'    to obtain the ECC induced by that product only.
+#'    to obtain the ECC induced by that industry or product only.
 #' 4. Optionally (but included by default with `calc_pfd_aggs = TRUE`),
 #'    calculate primary and final demand aggregates using `primary_aggregates()` and
 #'    `finaldemand_aggregates()`.
@@ -31,6 +33,7 @@
 #' by the following algorithm:
 #'
 #' 1. Calculate io matrices with `calc_io_mats()`.
+#'    (Do this step prior to calling this function.)
 #' 2. Identify each product and sector from rows and columns of the **Y** matrix.
 #' 3. For each product and sector independently,
 #'    perform an upstream swim with `new_Y()`
@@ -69,11 +72,13 @@
 #' An error will be emitted
 #' if we are unable to reproduce the other ECC matrices
 #' (**U**, **U_feed**, **U_EIOU**, **V**, and **Y** in the case of a downstream swim when chopping **R**;
-#'  **R**, **U**, **U_feed**, **U_EIOU**, and **V** in the case of an upstream swim when chopping **Y**).
+#' **R**, **U**, **U_feed**, **U_EIOU**, and **V** in the case of an upstream swim when chopping **Y**)
+#' to within machine precision.
 #'
 #' When the **R** and **Y** matrices are chopped by rows or columns, the sum of the ECCs
 #' created from the chopped rows or columns should equal the original ECC.
-#' Internally, this function checks for sum consistency and emits an error if not.
+#' Internally, these functions check for sum consistency and emits an error if
+#' inconsistencies are found.
 #'
 #' @param .sut_data A data frame or list of physical supply-use table matrices.
 #'                  Default is `NULL`.
@@ -221,16 +226,17 @@ chop_Y <- function(.sut_data = NULL,
       new_Y(Y_prime = Y_colname, R_prime = R_prime_colname, U_prime = U_prime_colname, U_feed_prime = U_feed_prime_colname,
             U_eiou_prime = U_eiou_prime_colname, r_eiou_prime = r_eiou_prime_colname, V_prime = V_prime_colname)
     # Verify that R_prime is equal to R
-    assertthat::assert_that(matsbyname::equal_byname(upstream_swim[[R_prime_colname]], R_mat))
+    assertthat::assert_that(matsbyname::equal_byname(upstream_swim[[R_prime_colname]], R_mat, tol = tol_chop_sum))
     # Verify that U_prime is equal to U
-    assertthat::assert_that(matsbyname::equal_byname(upstream_swim[[U_prime_colname]], U_mat))
+    assertthat::assert_that(matsbyname::equal_byname(upstream_swim[[U_prime_colname]], U_mat, tol = tol_chop_sum))
     # Verify that U_feed_prime is equal to U_feed
-    assertthat::assert_that(matsbyname::equal_byname(upstream_swim[[U_feed_prime_colname]], U_feed_mat))
+    assertthat::assert_that(matsbyname::equal_byname(upstream_swim[[U_feed_prime_colname]], U_feed_mat, tol = tol_chop_sum))
     # Verify that U_eiou_prime is equal to U_eiou
     assertthat::assert_that(matsbyname::equal_byname(upstream_swim[[U_eiou_prime_colname]],
-                                                     matsbyname::difference_byname(U_mat, upstream_swim[[U_feed_colname]])))
+                                                     matsbyname::difference_byname(U_mat, upstream_swim[[U_feed_colname]]),
+                                                     tol = tol_chop_sum))
     # Verify that V_prime is equal to V
-    assertthat::assert_that(matsbyname::equal_byname(upstream_swim[[V_prime_colname]], V_mat))
+    assertthat::assert_that(matsbyname::equal_byname(upstream_swim[[V_prime_colname]], V_mat, tol = tol_chop_sum))
 
     # Now that we have verified that we can swim upstream,
     # chop the Y matrix and swim upstream for each row and column independently.
@@ -440,16 +446,17 @@ chop_R <- function(.sut_data = NULL,
       new_R_ps(R_prime = R_colname, U_prime = U_prime_colname, U_feed_prime = U_feed_prime_colname,
                U_eiou_prime = U_eiou_prime_colname, r_eiou_prime = r_eiou_prime_colname, V_prime = V_prime_colname, Y_prime = Y_prime_colname)
     # Verify that U_prime is equal to U
-    assertthat::assert_that(matsbyname::equal_byname(downstream_swim[[U_prime_colname]], U_mat))
+    assertthat::assert_that(matsbyname::equal_byname(downstream_swim[[U_prime_colname]], U_mat, tol = tol_chop_sum))
     # Verify that U_feed_prime is equal to U_feed
-    assertthat::assert_that(matsbyname::equal_byname(downstream_swim[[U_feed_prime_colname]], U_feed_mat))
+    assertthat::assert_that(matsbyname::equal_byname(downstream_swim[[U_feed_prime_colname]], U_feed_mat, tol = tol_chop_sum))
     # Verify that U_eiou_prime is equal to U_eiou
     assertthat::assert_that(matsbyname::equal_byname(downstream_swim[[U_eiou_prime_colname]],
-                                                     matsbyname::difference_byname(U_mat, downstream_swim[[U_feed_colname]])))
+                                                     matsbyname::difference_byname(U_mat, downstream_swim[[U_feed_colname]]),
+                                                     tol = tol_chop_sum))
     # Verify that V_prime is equal to V
-    assertthat::assert_that(matsbyname::equal_byname(downstream_swim[[V_prime_colname]], V_mat))
+    assertthat::assert_that(matsbyname::equal_byname(downstream_swim[[V_prime_colname]], V_mat, tol = tol_chop_sum))
     # Verify that Y_prime is equal to Y
-    assertthat::assert_that(matsbyname::equal_byname(downstream_swim[[Y_prime_colname]], Y_mat))
+    assertthat::assert_that(matsbyname::equal_byname(downstream_swim[[Y_prime_colname]], Y_mat, tol = tol_chop_sum))
 
     # Now that we have verified that we can swim downstream,
     # chop the R matrix and swim downstream for each row and column independently.
@@ -468,7 +475,7 @@ chop_R <- function(.sut_data = NULL,
                                                prepositions = prepositions,
                                                margin = 2)
       })
-    # Ensure that every item in new_Y_sectors has exactly one column.
+    # Ensure that every item in new_R_products has exactly one column.
     for (i in 1:length(new_R_products)) {
       this_new_R_products_mat <- new_R_products[[i]]
       this_new_R_products_name <- names(new_R_products)[[i]]
@@ -477,11 +484,39 @@ chop_R <- function(.sut_data = NULL,
                               msg = paste(this_new_R_products_name, "has", numcols, "columns but should have exactly 1 in Recca::chop_R()."))
     }
 
+    # Get the row names in R. Those are the Resource industries (sectors) we want to evaluate.
+    sector_names <- matsbyname::getrownames_byname(R_mat)
+    new_R_sectors <- sector_names %>%
+      sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_sector) {
+        # For each industry (in each row), make a new R matrix to be used for the calculation.
+        # Set piece = "all" and pattern_type = "exact", because we have the exact
+        # names of the rows in sector_names.
+        R_mat %>%
+          matsbyname::select_rowcol_piece_byname(retain = this_sector,
+                                                 piece = "all",
+                                                 notation = notation,
+                                                 pattern_type = "exact",
+                                                 prepositions = prepositions,
+                                                 margin = 1)
+      })
+    # Ensure that every item in new_R_sectors has exactly one column.
+    for (i in 1:length(new_R_sectors)) {
+      this_new_R_sectors_mat <- new_R_sectors[[i]]
+      this_new_R_sectors_name <- names(new_R_sectors)[[i]]
+      numrows <- matsbyname::nrow_byname(this_new_R_sectors_mat)
+      assertthat::assert_that(numrows == 1,
+                              msg = paste(this_new_R_sectors_name, "has", numrows, "rows but should have exactly 1 in Recca::chop_R()."))
+    }
+
+    # Create a list with new Y matrices for all products and sectors
+    new_R_list <- c(new_R_products, new_R_sectors)
+
     # For each item in this list, make a new set of ECC matrices
-    ecc_prime <- new_R_products %>%
+    ecc_prime <- new_R_list %>%
       sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_new_R) {
         with_io %>%
-          append(list(this_new_R) %>% magrittr::set_names(R_prime_colname)) %>%
+          append(list(this_new_R) %>%
+                   magrittr::set_names(R_prime_colname)) %>%
           # Calculate all the new ECC matrices,
           # accepting the default names for intermediate
           # vectors and matrices.
@@ -513,6 +548,21 @@ chop_R <- function(.sut_data = NULL,
                                                      V_chop_list = product_prime_mats[[V_prime_colname]],
                                                      Y_chop_list = product_prime_mats[[Y_prime_colname]])
     assertthat::assert_that(product_prime_balanced, msg = "Products not balanced in chop_R_func()")
+    # The sum of the ECCs associated with new_R_sectors should be equal to the original ECC.
+    sector_prime_mats <- ecc_prime[sector_names] %>%
+      purrr::transpose()
+    sector_prime_balanced <- verify_chop_energy_sum(tol = tol_chop_sum,
+                                                    R_mat = R_mat,
+                                                    U_mat = U_mat,
+                                                    U_feed_mat = U_feed_mat,
+                                                    V_mat = V_mat,
+                                                    Y_mat = Y_mat,
+                                                    R_chop_list = sector_prime_mats[[R_prime_colname]],
+                                                    U_chop_list = sector_prime_mats[[U_prime_colname]],
+                                                    U_feed_chop_list = sector_prime_mats[[U_feed_prime_colname]],
+                                                    V_chop_list = sector_prime_mats[[V_prime_colname]],
+                                                    Y_chop_list = sector_prime_mats[[Y_prime_colname]])
+    assertthat::assert_that(sector_prime_balanced, msg = "Sectors not balanced in chop_R_func()")
 
     # Calculate primary and final demand aggregates for each of the new ECCs.
     calc_aggregates_from_ecc_prime(ecc_prime,

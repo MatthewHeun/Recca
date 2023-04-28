@@ -23,9 +23,9 @@ test_that("add_matnames identifies resource industries correctly", {
     IEATools::add_psut_matnames() %>%
     dplyr::filter(matnames == "R") %>%
     as.data.frame()
-  # We expect that every flow from a "Resources - *" industry will end up in the R matrix.
+  # We expect that every flow from a "Resources [of *]" industry will end up in the R matrix.
   Expected <- UKEnergy2000tidy %>%
-    dplyr::filter(startsWith_any_of(Flow, "Resources - ")) %>%
+    dplyr::filter(startsWith_any_of(Flow, "Resources [of ")) %>%
     dplyr::mutate(matnames = "R")
 
   expect_equal(WithR, Expected)
@@ -86,7 +86,7 @@ test_that("S_units_from_tidy works as expected", {
                       unlist(),
                     1)
   expect_equivalent(S_units_expanded %>%
-                      dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, rownames == "MD - Car engines", colnames == "passenger-km/yr") %>%
+                      dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, rownames == "MD [from Car engines]", colnames == "passenger-km/yr") %>%
                       dplyr::select(matvals) %>%
                       unlist(),
                     0)

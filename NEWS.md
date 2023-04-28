@@ -3,7 +3,34 @@ title: "Release notes for `Recca`"
 output: html_document
 ---
 
-# Recca 0.1.40 (2023-01-25) 
+
+# Recca 0.1.41 (2023-04-28)
+
+* Responded to policy changes in `matsindf::matsindf_apply()`
+  by setting default arguments to `NULL` for several internal functions.
+* `region_aggregates()` gains `drop_na_few` argument
+  that tells whether to eliminate rows 
+  with `NA` in `few_colname`.
+* Adjusted example ECC names. 
+  Example changes include:
+    - "Resources - Crude" --> "Resources [of Crude]"
+    - "Crude - Fields" --> "Crude [from Fields]"
+    - "MD - Car engines" --> "MD [from Car engines]"
+  These changes align the example ECC with the naming conventions
+  now in use throughout the package and in various pipelines.
+* `chop_R()` now also chops by rows (industries), 
+  since we are now including 
+  all exogenous sources of energy in the **R** matrix.
+* New function `get_all_products_and_industries()` generates lists
+  of unique product and industry names for an ECC and 
+  is aware of `RCLabels`-type `piece`s of row and column names.
+* Net EROI calculations removed, only gross values calculated.
+* Simplifications reduced number of tests.
+    * Still at 632 tests, all passing.
+    * Test coverage remains at 100 %.
+  
+
+# Recca 0.1.40 (2023-01-25) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7571202.svg)](https://doi.org/10.5281/zenodo.7571202)
 
 * This version contains only fixes to the continuous integration
   build system. 

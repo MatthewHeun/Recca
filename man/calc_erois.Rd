@@ -12,13 +12,9 @@ calc_erois(
   D = "D",
   C = "C",
   eroi_g_p = "eroi_g_p",
-  eroi_n_p = "eroi_n_p",
   eroi_g_i = "eroi_g_i",
-  eroi_n_i = "eroi_n_i",
   eroi_g_p_feed = "eroi_g_p_feed",
-  eroi_n_p_feed = "eroi_n_p_feed",
-  eroi_g_i_feed = "eroi_g_i_feed",
-  eroi_n_i_feed = "eroi_n_i_feed"
+  eroi_g_i_feed = "eroi_g_i_feed"
 )
 }
 \arguments{
@@ -40,33 +36,17 @@ See the example.}
 \item{eroi_g_p}{The name of the output column containing vectors of product-level gross EROIs, including both energy use for feedstock and EIOU production.
 Default is "eroi_g_p".}
 
-\item{eroi_n_p}{The name of the output column containing product-level net EROIs,
-including both energy use for feedstock and EIOU production.
-Default is "eroi_n_p".}
-
 \item{eroi_g_i}{The name of the output column containing vectors of industry-level gross EROIs,
 including both energy use for feedstock and EIOU production.
 Default is "eroi_g_i".}
-
-\item{eroi_n_i}{The name of the output column containing vectors of industry-level net EROIs,
-including both energy use for feedstock and EIOU production.
-Default is "eroi_n_i".}
 
 \item{eroi_g_p_feed}{The name of the output column containing vectors of product-level gross EROIs,
 including only energy use for feedstock production.
 Default is "eroi_g_p_feed".}
 
-\item{eroi_n_p_feed}{The name of the output column containing vectors of product-level net EROIs,
-including only energy use for feedstock production.
-Default is "eroi_n_p_feed".}
-
 \item{eroi_g_i_feed}{The name of the output column containing vectors of industry-level gross EROIs,
 including only energy use for feedstock production.
 Default is "eroi_g_i_feed".}
-
-\item{eroi_n_i_feed}{The name of the output column containing vectors of industry-level net EROIs,
-including only energy use for feedstock production.
-Default is "eroi_n_i_feed".}
 }
 \value{
 A data frame that includes several additional EROIs vectors in added columns.
@@ -101,20 +81,12 @@ Output columns include:
 \itemize{
 \item \code{eroi_g_p}: vector of product-level gross EROIs, including both EIOU required for feedstock and EIOU inputs production.
 The inverse of \code{eroi_g_p} is calculated by \code{transpose(i) \%*\% e_EIOU_hat \%*\% L_ixp}.
-\item \code{eroi_n_p}: vector of product-level net EROIs, including both EIOU required for feedstock and EIOU inputs production.
-\code{eroi_n_p} is calculated by \code{eroi_g_p - 1}.
 \item \code{eroi_g_i}: vector of industry-level gross EROIs, including both EIOU required for feedstock and EIOU inputs production.
 The inverse of \code{eroi_i_p} is calculated by \code{transpose(C) * eroi_g_p_inv}.
-\item \code{eroi_n_i}: vector of industry-level net EROIs, including both EIOU required for feedstock and EIOU inputs production.
-\code{eroi_n_i} is calculated by \code{eroi_g_i - 1}.
 \item \code{eroi_g_p_feed}: vector of product-level gross EROIs, including only EIOU required for feedstock inputs production.
 The inverse of \code{eroi_g_p_feed} is calculated by \code{transpose(i) \%*\% e_EIOU_hat \%*\% L_ixp_feed}.
-\item \code{eroi_n_p_feed}: vector of product-level net EROIs, including only EIOU required for feedstock inputs production.
-\code{eroi_n_p_feed} is calculated by \code{eroi_g_p_feed - 1}.
 \item \code{eroi_g_i_feed}: vector of industry-level gross EROIs, including only EIOU required for feedstock inputs production.
 The inverse of \code{eroi_i_p} is calculated by \code{transpose(C) \%*\% eroi_g_p_feed_inv}.
-\item \code{eroi_n_i_feed}: vector of industry-level net EROIs, including only EIOU required for feedstock inputs production.
-\code{eroi_n_i_feed} is calculated by \code{eroi_g_i_feed - 1}.
 }
 
 Note: All matrix multiplication (\code{\%*\%}) is performed "by name" using

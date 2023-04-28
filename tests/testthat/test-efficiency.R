@@ -45,7 +45,7 @@ test_that("calc_eta_pfu() works correctly", {
     tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
 
   # Define primary industries
-  p_industries <- c("Resources - Crude", "Resources - NG")
+  p_industries <- c("Resources [of Crude]", "Resources [of NG]")
 
   primary_total_aggregates_sut <- wide %>%
     Recca::primary_aggregates(p_industries = p_industries, by = "Total") %>%

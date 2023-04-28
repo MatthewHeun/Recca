@@ -163,6 +163,9 @@
     <loc>/reference/flows_unit_homogeneous.html</loc>
   </url>
   <url>
+    <loc>/reference/get_all_products_and_industries.html</loc>
+  </url>
+  <url>
     <loc>/reference/grouped_aggregates.html</loc>
   </url>
   <url>
@@ -232,6 +235,9 @@
     <loc>/reference/primary_aggregates_IEA.html</loc>
   </url>
   <url>
+    <loc>/reference/prod_ind_names_colnames.html</loc>
+  </url>
+  <url>
     <loc>/reference/products_unit_homogeneous.html</loc>
   </url>
   <url>
@@ -254,6 +260,9 @@
   </url>
   <url>
     <loc>/reference/reverse.html</loc>
+  </url>
+  <url>
+    <loc>/reference/row_col_types.html</loc>
   </url>
   <url>
     <loc>/reference/sankey_cols.html</loc>

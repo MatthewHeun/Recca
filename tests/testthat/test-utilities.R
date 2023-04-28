@@ -29,7 +29,7 @@ test_that("startsWith_any_of() works properly", {
 test_that("resource_industries() works correctly", {
   mats <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix)
-  expected <- c("Resources - Crude", "Resources - NG")
+  expected <- c("Resources [of Crude]", "Resources [of NG]")
   expect_equal(resource_industries(mats)[["r_industries"]],
                list(expected, expected, expected, expected))
   # Try with individual matrices
@@ -326,15 +326,12 @@ test_that("find_p_industry_names() works as expected", {
   p_industries_full_names <- find_p_industry_names(p_industry_prefixes = list(p_industry_prefixes),
                                                    R = list(R), V = list(V), Y = list(Y))
   expect_type(p_industries_full_names, type = "list")
-  expect_s3_class(p_industries_full_names, class = "data.frame")
-  expect_equal(p_industries_full_names[["p_industries_complete"]][[1]], c(Rrows, Vrows, Ycols))
+  expect_equal(p_industries_full_names[["p_industries_complete"]], c(Rrows, Vrows, Ycols))
 
-  # Try with a null matrix.  Should fail.
-  expect_error(find_p_industry_names(p_industry_prefixes = list(p_industry_prefixes),
-                                     R = list(R), V = NULL, Y = list(Y)),
-               # Newer versions of R give the "subscript out of bounds" error.
-               # Older versions of R give the "zero-length" error.
-               "subscript out of bounds|zero-length inputs cannot be mixed with those of non-zero length")
+  # Try with a null matrix.  Should still work.
+  p_industries_full_names_RY <- find_p_industry_names(p_industry_prefixes = list(p_industry_prefixes),
+                                                      R = list(R), V = NULL, Y = list(Y))
+  expect_equal(p_industries_full_names_RY[[1]], c(Rrows, Ycols))
 
   # Try with a data frame.
   DF <- tibble::tibble(R = list(R,R), V = list(V,V), Y = list(Y,Y),
@@ -343,7 +340,6 @@ test_that("find_p_industry_names() works as expected", {
   DF_augmented <- DF %>%
     find_p_industry_names()
   expect_equal(DF_augmented[[Recca::industry_cols$p_industries_complete]], DF_augmented$expected)
-
 })
 
 
@@ -393,8 +389,46 @@ test_that("calc_mats_locations_excel() fails correctly", {
 })
 
 
+test_that("get_all_products_and_industries() works as intended", {
+  ecc <- UKEnergy2000mats %>%
+    tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix")
+
+  res <- ecc %>%
+    get_all_products_and_industries()
+
+  expect_setequal(res[[Recca::prod_ind_names_colnames$product_names]][[1]],
+                  c("Crude", "NG", "Crude [from Dist.]", "Crude [from Fields]", "Diesel", "Diesel [from Dist.]", "Elect", "Elect [from Grid]",
+                    "NG [from Dist.]", "NG [from Wells]", "Petrol", "Petrol [from Dist.]"))
+
+  expect_setequal(res[[Recca::prod_ind_names_colnames$industry_names]][[1]],
+                  c("Resources [of Crude]", "Resources [of NG]", "Crude dist.", "Diesel dist.", "Elect. grid", "Gas wells & proc.", "NG dist.",
+                  "Oil fields", "Oil refineries", "Petrol dist.", "Power plants", "Residential", "Transport"))
+
+  expect_setequal(res[[Recca::prod_ind_names_colnames$product_names]][[2]],
+                  c("Crude", "NG", "Crude [from Dist.]", "Crude [from Fields]",
+                    "Diesel", "Diesel [from Dist.]", "Elect", "Elect [from Grid]",
+                    "Freight [tonne-km/year]", "Light", "LTH", "MD [from Car engines]",
+                    "MD [from Truck engines]", "NG [from Dist.]", "NG [from Wells]", "Petrol",
+                    "Petrol [from Dist.]", "Illumination [lumen-hrs/yr]", "Passenger [passenger-km/yr]", "Space heating [m3-K]"))
+
+  expect_setequal(res[[Recca::prod_ind_names_colnames$industry_names]][[4]],
+                  c("Resources [of Crude]", "Resources [of NG]", "Car engines", "Cars", "Crude dist.", "Diesel dist.", "Elect. grid",
+                    "Furnaces", "Gas wells & proc.", "Homes", "Light fixtures", "NG dist.", "Oil fields", "Oil refineries",
+                    "Petrol dist.", "Power plants", "Rooms", "Truck engines", "Trucks", "Residential", "Transport"))
+})
 
 
+test_that("get_all_products_and_industries() works with pieces", {
+  ecc <- UKEnergy2000mats %>%
+    tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix")
+  res <- ecc %>%
+    get_all_products_and_industries(piece = "noun", inf_notation = FALSE, notation = RCLabels::notations_list$bracket_notation)
+  expect_equal(res$Product.names[[1]],
+               c("Crude", "NG", "Diesel", "Elect", "Petrol"))
+  expect_equal(res$Industry.names[[1]],
+               c("Resources", "Crude dist.", "Diesel dist.", "Elect. grid", "Gas wells & proc.", "NG dist.", "Oil fields",
+                 "Oil refineries", "Petrol dist.", "Power plants", "Residential", "Transport"))
+})
 
 
 

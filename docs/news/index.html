@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.40</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.41</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,7 +56,27 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.40" id="recca-0140-2023-01-25">Recca 0.1.40 (2023-01-25)<a class="anchor" aria-label="anchor" href="#recca-0140-2023-01-25"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.41" id="recca-0141-2023-04-28">Recca 0.1.41 (2023-04-28)<a class="anchor" aria-label="anchor" href="#recca-0141-2023-04-28"></a></h2>
+<ul><li>Responded to policy changes in <code><a href="https://rdrr.io/pkg/matsindf/man/matsindf_apply.html" class="external-link">matsindf::matsindf_apply()</a></code> by setting default arguments to <code>NULL</code> for several internal functions.</li>
+<li>
+<code><a href="../reference/region_aggregates.html">region_aggregates()</a></code> gains <code>drop_na_few</code> argument that tells whether to eliminate rows with <code>NA</code> in <code>few_colname</code>.</li>
+<li>Adjusted example ECC names. Example changes include:
+<ul><li>“Resources - Crude” –&gt; “Resources [of Crude]”</li>
+<li>“Crude - Fields” –&gt; “Crude [from Fields]”</li>
+<li>“MD - Car engines” –&gt; “MD [from Car engines]” These changes align the example ECC with the naming conventions now in use throughout the package and in various pipelines.</li>
+</ul></li>
+<li>
+<code><a href="../reference/chop-doc.html">chop_R()</a></code> now also chops by rows (industries), since we are now including all exogenous sources of energy in the <strong>R</strong> matrix.</li>
+<li>New function <code><a href="../reference/get_all_products_and_industries.html">get_all_products_and_industries()</a></code> generates lists of unique product and industry names for an ECC and is aware of <code>RCLabels</code>-type <code>piece</code>s of row and column names.</li>
+<li>Net EROI calculations removed, only gross values calculated.</li>
+<li>Simplifications reduced number of tests.
+<ul><li>Still at 632 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.40" id="recca-0140-2023-01-25-doi">Recca 0.1.40 (2023-01-25) <a href="https://doi.org/10.5281/zenodo.7571202" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.7571202.svg" alt="DOI"></a>
+<a class="anchor" aria-label="anchor" href="#recca-0140-2023-01-25-doi"></a></h2>
 <ul><li>This version contains only fixes to the continuous integration build system. There are no changes to any code.</li>
 <li>Remove use of the <code>Remotes:</code> field in DESCRIPTION. Instead, now using <code>pkgdepends</code> syntax in the <code>extra-packages:</code> fields of <code>R_CMD-check.yaml</code> and <code>test-coverage.yaml</code>.</li>
 <li>Update to latest version of the GitHub action for test coverage.</li>

@@ -8,7 +8,7 @@ library(tidyr)
 
 test_that("primary_aggregates() works as expected", {
   # Define primary industries
-  p_industries <- c("Resources - Crude", "Resources - NG")
+  p_industries <- c("Resources [of Crude]", "Resources [of NG]")
 
   # Primary TOTAL aggregates
   primary_total_aggregates_sut <- UKEnergy2000mats %>%
@@ -51,13 +51,13 @@ test_that("primary_aggregates() works as expected", {
     dplyr::select(Country, Year, Last.stage, Energy.type, EX_flow_agg.ktoe) %>%
     tidyr::gather(key = "matnames", value = "matvals", EX_flow_agg.ktoe) %>%
     matsindf::expand_to_tidy(drop = 0)
-  expect_equivalent(primary_flow_aggregates_sut %>% dplyr::filter(Energy.type == "E" & colnames == "Resources - Crude") %>%
+  expect_equivalent(primary_flow_aggregates_sut %>% dplyr::filter(Energy.type == "E" & colnames == "Resources [of Crude]") %>%
                       dplyr::select(matvals) %>% unlist(), rep(50000, 3))
-  expect_equivalent(primary_flow_aggregates_sut %>% dplyr::filter(Energy.type == "E" & colnames == "Resources - NG") %>%
+  expect_equivalent(primary_flow_aggregates_sut %>% dplyr::filter(Energy.type == "E" & colnames == "Resources [of NG]") %>%
                       dplyr::select(matvals) %>% unlist(), rep(43000, 3))
-  expect_equivalent(primary_flow_aggregates_sut %>% dplyr::filter(Energy.type == "X" & colnames == "Resources - Crude") %>%
+  expect_equivalent(primary_flow_aggregates_sut %>% dplyr::filter(Energy.type == "X" & colnames == "Resources [of Crude]") %>%
                       dplyr::select(matvals) %>% unlist(), 53500)
-  expect_equivalent(primary_flow_aggregates_sut %>% dplyr::filter(Energy.type == "X" & colnames == "Resources - NG") %>%
+  expect_equivalent(primary_flow_aggregates_sut %>% dplyr::filter(Energy.type == "X" & colnames == "Resources [of NG]") %>%
                       dplyr::select(matvals) %>% unlist(), 44720)
 })
 
@@ -71,7 +71,7 @@ test_that("primary_aggregates() works with leading pattern for names", {
     tidyr::spread(key = matrix.name, value = matrix) %>%
     Recca::primary_aggregates(p_industries = p_industries,
                               piece = "noun",
-                              notation = RCLabels::dash_notation,
+                              notation = RCLabels::of_notation,
                               pattern_type = "leading", by = "Total", aggregate_primary = "EX_total_agg.ktoe")
   expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
                       dplyr::select("EX_total_agg.ktoe"), 93000)
@@ -85,7 +85,7 @@ test_that("primary_aggregates() works with leading pattern for names", {
 
 
 test_that("primary_aggregates() works when R is folded into V", {
-  p_industries <- c("Resources - Crude", "Resources - NG")
+  p_industries <- c("Resources [of Crude]", "Resources [of NG]")
 
   # Primary TOTAL aggregates
   primary_total_aggregates_sut <- UKEnergy2000mats %>%
@@ -106,13 +106,13 @@ test_that("primary_aggregates() works when R is folded into V", {
 
 test_that("primary_aggregates() works for net and gross", {
   # Define primary industries
-  p_industries <- c("Resources - Crude", "Resources - NG")
+  p_industries <- c("Resources [of Crude]", "Resources [of NG]")
 
   # Primary TOTAL aggregates
   primary_total_aggregates_sut <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
     Recca::primary_aggregates(p_industries = p_industries,
-                              notation = RCLabels::dash_notation,
+                              notation = RCLabels::of_notation,
                               add_net_gross_cols = TRUE,
                               by = "Total")
   expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
@@ -136,7 +136,7 @@ test_that("primary_aggregates() works for net and gross", {
 
 test_that("primary_aggregates() works with lists", {
   # Define primary industries
-  p_industries <- c("Resources - Crude", "Resources - NG")
+  p_industries <- c("Resources [of Crude]", "Resources [of NG]")
 
   # Primary TOTAL aggregates
   psut <- UKEnergy2000mats %>%
@@ -183,11 +183,11 @@ test_that("finaldemand_aggregates() of SUT data work as expected without units",
     tidyr::gather(key = "matnames", value = "matvals", EX_product_net_agg.ktoe, EX_product_gross_agg.ktoe) %>%
     matsindf::expand_to_tidy(drop = 0)
   expect_equivalent(final_demand_product_aggregates_sut %>%
-                      dplyr::filter(Last.stage == "Final", Energy.type == "E", matnames == "EX_product_gross_agg.ktoe", rownames == "Crude - Fields") %>%
+                      dplyr::filter(Last.stage == "Final", Energy.type == "E", matnames == "EX_product_gross_agg.ktoe", rownames == "Crude [from Fields]") %>%
                       dplyr::select(matvals) %>% unlist(),
                     2500)
   expect_equivalent(final_demand_product_aggregates_sut %>%
-                      dplyr::filter(Last.stage == "Final", Energy.type == "E", matnames == "EX_product_net_agg.ktoe", rownames == "Elect - Grid") %>%
+                      dplyr::filter(Last.stage == "Final", Energy.type == "E", matnames == "EX_product_net_agg.ktoe", rownames == "Elect [from Grid]") %>%
                       dplyr::select(matvals) %>% unlist(),
                     6000)
   expect_equivalent(final_demand_product_aggregates_sut %>%
@@ -195,7 +195,7 @@ test_that("finaldemand_aggregates() of SUT data work as expected without units",
                       dplyr::select(matvals) %>% unlist(),
                     20000)
   expect_equivalent(final_demand_product_aggregates_sut %>%
-                      dplyr::filter(Last.stage == "Useful", Energy.type == "E", matnames == "EX_product_net_agg.ktoe", rownames == "MD - Car engines") %>%
+                      dplyr::filter(Last.stage == "Useful", Energy.type == "E", matnames == "EX_product_net_agg.ktoe", rownames == "MD [from Car engines]") %>%
                       dplyr::select(matvals) %>% unlist(),
                     3000.4)
   expect_equivalent(final_demand_product_aggregates_sut %>%
@@ -356,6 +356,55 @@ test_that("region_aggregates() works as expected", {
 })
 
 
+test_that("region_aggregates() works with WRLD not in aggregation_map", {
+  # This test approximates what happens when
+  # we have the WRLD country in with other countries
+  # but WRLD is not included in the aggregation map.
+  mats_GBR <- UKEnergy2000mats %>%
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
+  # Add more countries, by duplicating GBR
+  mats <- dplyr::bind_rows(mats_GBR,
+                           mats_GBR %>% dplyr::mutate(Country = "USA"),
+                           mats_GBR %>% dplyr::mutate(Country = "FRA"),
+                           mats_GBR %>% dplyr::mutate(Country = "WRLD"))
+  # Leave WRLD out of the agg_map.
+  agg_map <- list(Europe = c("GBR", "FRA"), NoAmr = "USA")
+  agg_df <- matsbyname::agg_map_to_agg_table(agg_map,
+                                             few_colname = "Continent",
+                                             many_colname = IEATools::iea_cols$country)
+  # Results in NA values for Continent column for WRLD country
+  mats <- dplyr::left_join(mats, agg_df, by = IEATools::iea_cols$country)
+  mats |>
+    dplyr::filter(.data[[Recca::psut_cols$country]] == "WRLD") |>
+    dplyr::select("Continent") |>
+    is.na() |>
+    all() |>
+    expect_true()
+
+  # Now do the aggregation.
+  # Unless we specify drop_na_few = TRUE,
+  # we'll get NA rows for WRLD.
+  res <- region_aggregates(mats,
+                           many_colname = IEATools::iea_cols$country,
+                           few_colname = "Continent")
+  res |>
+    dplyr::filter(is.na(.data[[Recca::psut_cols$country]])) |>
+    nrow() |>
+    expect_equal(4)
+
+  # Try with eliminating the NA rows
+  # by setting drop_na_few = TRUE.
+  res2 <- region_aggregates(mats,
+                           many_colname = IEATools::iea_cols$country,
+                           few_colname = "Continent",
+                           drop_na_few = TRUE)
+  res2 |>
+    dplyr::filter(is.na(.data[[Recca::psut_cols$country]])) |>
+    nrow() |>
+    expect_equal(0)
+})
+
+
 test_that("despecified_aggregates() works as expected", {
   mats_GBR <- UKEnergy2000mats %>%
     tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
@@ -375,9 +424,9 @@ test_that("despecified_aggregates() works as expected", {
   expect_equal(res$U_aggregated[[1]][2, 2], 15850)
 
   expect_equal(rownames(mats_GBR$U[[1]]),
-               c("Crude", "Crude - Dist.", "Crude - Fields", "Diesel", "Diesel - Dist.",
-                 "Elect", "Elect - Grid", "NG", "NG - Dist.", "NG - Wells",
-                 "Petrol", "Petrol - Dist."))
+               c("Crude", "Crude [from Dist.]", "Crude [from Fields]", "Diesel", "Diesel [from Dist.]",
+                 "Elect", "Elect [from Grid]", "NG", "NG [from Dist.]", "NG [from Wells]",
+                 "Petrol", "Petrol [from Dist.]"))
   expect_equal(rownames(res$U_aggregated[[1]]), c("Crude", "Diesel", "Elect", "NG", "Petrol"))
 })
 
@@ -391,9 +440,9 @@ test_that("grouped_aggregates() works as expected", {
                        pattern_type = "leading", margin = "Product")
 
   expect_equal(colnames(res$R_aggregated[[1]]), c("NG", "Oil and oil products"))
-  expect_equal(rownames(res$U_aggregated[[1]]), c("Elect", "Elect - Grid", "NG", "NG - Dist.", "NG - Wells", "Oil and oil products"))
-  expect_equal(colnames(res$V_aggregated[[1]]), c("Elect", "Elect - Grid", "NG - Dist.", "NG - Wells", "Oil and oil products"))
-  expect_equal(rownames(res$Y_aggregated[[1]]), c("Elect - Grid", "NG - Dist.", "Oil and oil products"))
+  expect_equal(rownames(res$U_aggregated[[1]]), c("Elect", "Elect [from Grid]", "NG", "NG [from Dist.]", "NG [from Wells]", "Oil and oil products"))
+  expect_equal(colnames(res$V_aggregated[[1]]), c("Elect", "Elect [from Grid]", "NG [from Dist.]", "NG [from Wells]", "Oil and oil products"))
+  expect_equal(rownames(res$Y_aggregated[[1]]), c("Elect [from Grid]", "NG [from Dist.]", "Oil and oil products"))
 
   # Check some values
 

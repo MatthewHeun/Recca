@@ -2,7 +2,7 @@
 context("Sankey")
 ###########################################################
 
-test_that("make_sankey works as expected", {
+test_that("make_sankey() works as expected", {
 
   sutmats <- UKEnergy2000mats %>%
     tidyr::spread(key = "matrix.name", value = "matrix")

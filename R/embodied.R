@@ -40,7 +40,7 @@ calc_embodied_mats <- function(.iomats = NULL,
                                M_p = "M_p", M_s = "M_s",
                                F_footprint_p = "F_footprint_p", F_effects_p = "F_effects_p",
                                F_footprint_s = "F_footprint_s", F_effects_s = "F_effects_s"){
-  embodied_func <- function(Y_mat, q_vec, L_ixp_mat, g_vec, r_vec, W_mat, U_EIOU_mat, A_mat, R_mat, V_mat, U_mat, U_feed_mat){
+  embodied_func <- function(Y_mat, q_vec, L_ixp_mat, g_vec, r_vec, A_mat, R_mat, V_mat, U_feed_mat) {
     GH_list <- calc_GH(Y = Y_mat, L_ixp = L_ixp_mat, R = R_mat, A = A_mat, q = q_vec,
                        G = G, H = H)
     G_mat <- GH_list[[G]]
@@ -51,12 +51,13 @@ calc_embodied_mats <- function(.iomats = NULL,
     M_p_mat <- M_list[[M_p]]
     M_s_mat <- M_list[[M_s]]
     F_list <- calc_F_footprint_effects(M_p = M_p_mat, M_s = M_s_mat,
-                                     F_footprint_p = F_footprint_p, F_effects_p = F_effects_p,
-                                     F_footprint_s = F_footprint_s, F_effects_s = F_effects_s)
-    c(GH_list, E_list, M_list, F_list) %>% magrittr::set_names(c(names(GH_list), names(E_list), names(M_list), names(F_list)))
+                                       F_footprint_p = F_footprint_p, F_effects_p = F_effects_p,
+                                       F_footprint_s = F_footprint_s, F_effects_s = F_effects_s)
+    c(GH_list, E_list, M_list, F_list) %>%
+      magrittr::set_names(c(names(GH_list), names(E_list), names(M_list), names(F_list)))
   }
   matsindf::matsindf_apply(.iomats, FUN = embodied_func, Y_mat = Y, q_vec = q, r_vec = r,
-                 L_ixp_mat = L_ixp, g_vec = g, A_mat = A, R_mat = R, V_mat = V, U_feed_mat = U_feed)
+                           L_ixp_mat = L_ixp, g_vec = g, A_mat = A, R_mat = R, V_mat = V, U_feed_mat = U_feed)
 }
 
 

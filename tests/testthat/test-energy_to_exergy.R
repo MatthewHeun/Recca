@@ -18,32 +18,32 @@ test_that("extend_to_exergy() works as expected", {
   # Check a couple values
 
   # R matrix
-  energy_val <- res[[Recca::psut_cols$R]][[1]]["Resources - Crude", "Crude"]
-  exergy_val <- res[[Recca::psut_cols$R]][[3]]["Resources - Crude", "Crude"]
+  energy_val <- res[[Recca::psut_cols$R]][[1]]["Resources [of Crude]", "Crude"]
+  exergy_val <- res[[Recca::psut_cols$R]][[3]]["Resources [of Crude]", "Crude"]
   phi <- Recca::phi_vec["Crude", ]
   expect_equal(energy_val*phi, exergy_val)
 
-  energy_val <- res[[Recca::psut_cols$R]][[1]]["Resources - NG", "NG"]
-  exergy_val <- res[[Recca::psut_cols$R]][[3]]["Resources - NG", "NG"]
+  energy_val <- res[[Recca::psut_cols$R]][[1]]["Resources [of NG]", "NG"]
+  exergy_val <- res[[Recca::psut_cols$R]][[3]]["Resources [of NG]", "NG"]
   phi <- Recca::phi_vec["NG", ]
 
   expect_true((res[[Recca::psut_cols$R]] %>% matsbyname::rowtype() == "Industry") %>% all())
   expect_true((res[[Recca::psut_cols$R]] %>% matsbyname::coltype() == "Product") %>% all())
 
   # U matrix
-  energy_val <- res[[Recca::psut_cols$U]][[1]]["Diesel - Dist.", "NG dist."]
-  exergy_val <- res[[Recca::psut_cols$U]][[3]]["Diesel - Dist.", "NG dist."]
-  phi <- Recca::phi_vec["Diesel - Dist.", ]
+  energy_val <- res[[Recca::psut_cols$U]][[1]]["Diesel [from Dist.]", "NG dist."]
+  exergy_val <- res[[Recca::psut_cols$U]][[3]]["Diesel [from Dist.]", "NG dist."]
+  phi <- Recca::phi_vec["Diesel [from Dist.]", ]
   expect_equal(energy_val*phi, exergy_val)
 
-  energy_val <- res[[Recca::psut_cols$U_feed]][[2]]["Elect - Grid", "Light fixtures"]
-  exergy_val <- res[[Recca::psut_cols$U_feed]][[4]]["Elect - Grid", "Light fixtures"]
-  phi <- Recca::phi_vec["Elect - Grid", ]
+  energy_val <- res[[Recca::psut_cols$U_feed]][[2]]["Elect [from Grid]", "Light fixtures"]
+  exergy_val <- res[[Recca::psut_cols$U_feed]][[4]]["Elect [from Grid]", "Light fixtures"]
+  phi <- Recca::phi_vec["Elect [from Grid]", ]
   expect_equal(energy_val*phi, exergy_val)
 
-  energy_val <- res[[Recca::psut_cols$U_eiou]][[2]]["Diesel - Dist.", "Gas wells & proc."]
-  exergy_val <- res[[Recca::psut_cols$U_eiou]][[4]]["Diesel - Dist.", "Gas wells & proc."]
-  phi <- Recca::phi_vec["Diesel - Dist.", ]
+  energy_val <- res[[Recca::psut_cols$U_eiou]][[2]]["Diesel [from Dist.]", "Gas wells & proc."]
+  exergy_val <- res[[Recca::psut_cols$U_eiou]][[4]]["Diesel [from Dist.]", "Gas wells & proc."]
+  phi <- Recca::phi_vec["Diesel [from Dist.]", ]
   expect_equal(energy_val*phi, exergy_val)
 
   expect_true((res[[Recca::psut_cols$U]] %>% matsbyname::rowtype() == "Product") %>% all())
@@ -84,7 +84,6 @@ test_that("extend_to_exergy() works as expected", {
     ) %>%
     extend_to_exergy() %>%
     expect_error("non-energy rows were found:")
-
 })
 
 

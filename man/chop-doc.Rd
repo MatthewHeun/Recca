@@ -176,15 +176,17 @@ associated with each resource or final demand category.
 These functions perform those calculations.
 }
 \details{
-Chopping \strong{R} involves calculating an ECC for each product column in the \strong{R} matrix.
+Chopping \strong{R} involves calculating an ECC for each industry row
+and each product column in the \strong{R} matrix.
 This calculation is accomplished for each description of an energy conversion chain (ECC)
 by the following algorithm:
 \enumerate{
-\item Calculate io matrices with \code{calc_io_mats()}.
-\item Identify each product from columns of the \strong{R} matrix.
-\item For each product independently,
+\item Calculate IO matrices with \code{calc_io_mats()}.
+(Do this step prior to calling this function.)
+\item Identify each industry and each product from rows and columns of the \strong{R} matrix.
+\item For each industry and product independently,
 perform a downstream swim with \code{new_R_ps()}
-to obtain the ECC induced by that product only.
+to obtain the ECC induced by that industry or product only.
 \item Optionally (but included by default with \code{calc_pfd_aggs = TRUE}),
 calculate primary and final demand aggregates using \code{primary_aggregates()} and
 \code{finaldemand_aggregates()}.
@@ -202,6 +204,7 @@ This calculation is accomplished for each description of an ECC
 by the following algorithm:
 \enumerate{
 \item Calculate io matrices with \code{calc_io_mats()}.
+(Do this step prior to calling this function.)
 \item Identify each product and sector from rows and columns of the \strong{Y} matrix.
 \item For each product and sector independently,
 perform an upstream swim with \code{new_Y()}
@@ -241,11 +244,13 @@ the original \strong{R} or \strong{Y} matrix is used for an downstream or upstre
 An error will be emitted
 if we are unable to reproduce the other ECC matrices
 (\strong{U}, \strong{U_feed}, \strong{U_EIOU}, \strong{V}, and \strong{Y} in the case of a downstream swim when chopping \strong{R};
-\strong{R}, \strong{U}, \strong{U_feed}, \strong{U_EIOU}, and \strong{V} in the case of an upstream swim when chopping \strong{Y}).
+\strong{R}, \strong{U}, \strong{U_feed}, \strong{U_EIOU}, and \strong{V} in the case of an upstream swim when chopping \strong{Y})
+to within machine precision.
 
 When the \strong{R} and \strong{Y} matrices are chopped by rows or columns, the sum of the ECCs
 created from the chopped rows or columns should equal the original ECC.
-Internally, this function checks for sum consistency and emits an error if not.
+Internally, these functions check for sum consistency and emits an error if
+inconsistencies are found.
 }
 \examples{
 p_industries <- c("Resources - Crude", "Resources - NG")
