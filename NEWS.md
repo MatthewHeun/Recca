@@ -4,7 +4,7 @@ output: html_document
 ---
 
 
-# Recca 0.1.41 (2023-04-28)
+# Recca 0.1.41 (2023-04-28) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7877495.svg)](https://doi.org/10.5281/zenodo.7877495)
 
 * Responded to policy changes in `matsindf::matsindf_apply()`
   by setting default arguments to `NULL` for several internal functions.
