@@ -14,7 +14,7 @@ and be wide-by-matrices."><!-- mathjax --><script src="https://cdnjs.cloudflare.
     
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.40</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.41</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -72,6 +72,7 @@ and be wide-by-matrices.</p>
 <span>  <span class="va">.sut_data</span>,</span>
 <span>  many_colname <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">country</span>,</span>
 <span>  few_colname <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="aggregate_cols.html">aggregate_cols</a></span><span class="op">$</span><span class="va">region</span>,</span>
+<span>  drop_na_few <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  year <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">year</span>,</span>
 <span>  method <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">method</span>,</span>
 <span>  energy_type <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">energy_type</span>,</span>
@@ -103,6 +104,12 @@ for example continents into which countries are to be aggregated.
 Default is <code>Recca::aggregate_cols$region</code>.</p></dd>
 
 
+<dt>drop_na_few</dt>
+<dd><p>A boolean that tells whether to ignore (not aggregate) rows with  <code>NA</code> values in <code>few_colname</code>.
+See details.
+Default is <code>FALSE</code>.</p></dd>
+
+
 <dt>year, method, energy_type, last_stage</dt>
 <dd><p>See <code><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">IEATools::iea_cols</a></code>.</p></dd>
 
@@ -124,6 +131,22 @@ R, U, U_feed, U_eiou, r_eiou, V, Y, and S_units.</p></dd>
 <p>An aggregated version of <code>.sut_data</code> wherein the <code>many_colname</code> column is replaced
 by <code>few_colname</code> as specified by <code>aggregation_map</code>.</p>
     </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>The argument <code>drop_na_few</code> controls what happens when an item <code>many_colname</code>
+does not have a corresponding value in <code>few_colname</code>.
+This condition can occur when, say, "WRLD" is a country.
+"WRLD" (as a country in <code>many_colname</code>)
+should not be aggregated to "World" (as a region in the <code>few_colname</code>).
+In those circumstances,
+a well-formed <code>aggregation_map</code> will leave <code>NA</code> in <code>few_colname</code>.
+Setting <code>drop_na_few</code> will eliminate rows with <code>NA</code> in <code>few_colname</code>
+before doing the aggregation so those <code>NA</code> rows do not end up as
+<code>NA</code> in the outgoing data frame.</p>
+<p>The default value for <code>drop_na_few</code> is <code>FALSE</code>,
+because setting to <code>TRUE</code> will result in data loss.
+You need to opt in to this behavior when you know it's what you want.</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
@@ -141,20 +164,19 @@ by <code>few_colname</code> as specified by <code>aggregation_map</code>.</p>
 <span class="r-in"><span>  <span class="fu">matsbyname</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/aggregation_map_helpers.html" class="external-link">agg_map_to_agg_table</a></span><span class="op">(</span>few_colname <span class="op">=</span> <span class="st">"Continent"</span>, many_colname <span class="op">=</span> <span class="st">"Country"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># Aggregate into continents</span></span></span>
 <span class="r-in"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">mats</span>, <span class="va">agg_df</span>, by <span class="op">=</span> <span class="st">"Country"</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
-<span class="r-in"><span>  <span class="fu">region_aggregates</span><span class="op">(</span><span class="va">mats</span>, many_colname <span class="op">=</span> <span class="st">"Country"</span>, few_colname <span class="op">=</span> <span class="st">"Continent"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu">region_aggregates</span><span class="op">(</span>many_colname <span class="op">=</span> <span class="st">"Country"</span>, few_colname <span class="op">=</span> <span class="st">"Continent"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 8 × 12</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Year Energy.type Last.…¹ Country R        S_units  U_EIOU   U_feed   V       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>  <span style="text-decoration: underline;">2</span>000 E           Final   AMR     &lt;dbl[…]&gt; &lt;dbl[…]&gt; &lt;dbl[…]&gt; &lt;dbl[…]&gt; &lt;dbl[…]&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>  <span style="text-decoration: underline;">2</span>000 E           Final   EUR     &lt;dbl[…]&gt; &lt;dbl[…]&gt; &lt;dbl[…]&gt; &lt;dbl[…]&gt; &lt;dbl[…]&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>  <span style="text-decoration: underline;">2</span>000 E           Servic… AMR     &lt;dbl[…]&gt; &lt;dbl[…]&gt; &lt;dbl[…]&gt; &lt;dbl[…]&gt; &lt;dbl[…]&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>  <span style="text-decoration: underline;">2</span>000 E           Servic… EUR     &lt;dbl[…]&gt; &lt;dbl[…]&gt; &lt;dbl[…]&gt; &lt;dbl[…]&gt; &lt;dbl[…]&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>  <span style="text-decoration: underline;">2</span>000 E           Useful  AMR     &lt;dbl[…]&gt; &lt;dbl[…]&gt; &lt;dbl[…]&gt; &lt;dbl[…]&gt; &lt;dbl[…]&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>  <span style="text-decoration: underline;">2</span>000 E           Useful  EUR     &lt;dbl[…]&gt; &lt;dbl[…]&gt; &lt;dbl[…]&gt; &lt;dbl[…]&gt; &lt;dbl[…]&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span>  <span style="text-decoration: underline;">2</span>000 X           Servic… AMR     &lt;dbl[…]&gt; &lt;dbl[…]&gt; &lt;dbl[…]&gt; &lt;dbl[…]&gt; &lt;dbl[…]&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span>  <span style="text-decoration: underline;">2</span>000 X           Servic… EUR     &lt;dbl[…]&gt; &lt;dbl[…]&gt; &lt;dbl[…]&gt; &lt;dbl[…]&gt; &lt;dbl[…]&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 3 more variables: Y &lt;list&gt;, U &lt;list&gt;, r_EIOU &lt;list&gt;, and abbreviated</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   variable name ¹​Last.stage</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Year Energy.type Last.stage Country R             S_units  U_EIOU   U_feed  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>  <span style="text-decoration: underline;">2</span>000 E           Final      AMR     <span style="color: #949494;">&lt;dbl [2 × 2]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>  <span style="text-decoration: underline;">2</span>000 E           Final      EUR     <span style="color: #949494;">&lt;dbl [2 × 2]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>  <span style="text-decoration: underline;">2</span>000 E           Services   AMR     <span style="color: #949494;">&lt;dbl [2 × 2]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>  <span style="text-decoration: underline;">2</span>000 E           Services   EUR     <span style="color: #949494;">&lt;dbl [2 × 2]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>  <span style="text-decoration: underline;">2</span>000 E           Useful     AMR     <span style="color: #949494;">&lt;dbl [2 × 2]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>  <span style="text-decoration: underline;">2</span>000 E           Useful     EUR     <span style="color: #949494;">&lt;dbl [2 × 2]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span>  <span style="text-decoration: underline;">2</span>000 X           Services   AMR     <span style="color: #949494;">&lt;dbl [2 × 2]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span>  <span style="text-decoration: underline;">2</span>000 X           Services   EUR     <span style="color: #949494;">&lt;dbl [2 × 2]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 4 more variables: V &lt;list&gt;, Y &lt;list&gt;, U &lt;list&gt;, r_EIOU &lt;list&gt;</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

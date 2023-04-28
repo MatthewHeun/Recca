@@ -14,7 +14,7 @@ in the physical supply-use table (PSUT) format for an energy conversion chain.">
     
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.40</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.41</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -76,13 +76,9 @@ in the physical supply-use table (PSUT) format for an energy conversion chain.</
 <span>  D <span class="op">=</span> <span class="st">"D"</span>,</span>
 <span>  C <span class="op">=</span> <span class="st">"C"</span>,</span>
 <span>  eroi_g_p <span class="op">=</span> <span class="st">"eroi_g_p"</span>,</span>
-<span>  eroi_n_p <span class="op">=</span> <span class="st">"eroi_n_p"</span>,</span>
 <span>  eroi_g_i <span class="op">=</span> <span class="st">"eroi_g_i"</span>,</span>
-<span>  eroi_n_i <span class="op">=</span> <span class="st">"eroi_n_i"</span>,</span>
 <span>  eroi_g_p_feed <span class="op">=</span> <span class="st">"eroi_g_p_feed"</span>,</span>
-<span>  eroi_n_p_feed <span class="op">=</span> <span class="st">"eroi_n_p_feed"</span>,</span>
-<span>  eroi_g_i_feed <span class="op">=</span> <span class="st">"eroi_g_i_feed"</span>,</span>
-<span>  eroi_n_i_feed <span class="op">=</span> <span class="st">"eroi_n_i_feed"</span></span>
+<span>  eroi_g_i_feed <span class="op">=</span> <span class="st">"eroi_g_i_feed"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -120,22 +116,10 @@ See the example.</p></dd>
 Default is "eroi_g_p".</p></dd>
 
 
-<dt>eroi_n_p</dt>
-<dd><p>The name of the output column containing product-level net EROIs,
-including both energy use for feedstock and EIOU production.
-Default is "eroi_n_p".</p></dd>
-
-
 <dt>eroi_g_i</dt>
 <dd><p>The name of the output column containing vectors of industry-level gross EROIs,
 including both energy use for feedstock and EIOU production.
 Default is "eroi_g_i".</p></dd>
-
-
-<dt>eroi_n_i</dt>
-<dd><p>The name of the output column containing vectors of industry-level net EROIs,
-including both energy use for feedstock and EIOU production.
-Default is "eroi_n_i".</p></dd>
 
 
 <dt>eroi_g_p_feed</dt>
@@ -144,22 +128,10 @@ including only energy use for feedstock production.
 Default is "eroi_g_p_feed".</p></dd>
 
 
-<dt>eroi_n_p_feed</dt>
-<dd><p>The name of the output column containing vectors of product-level net EROIs,
-including only energy use for feedstock production.
-Default is "eroi_n_p_feed".</p></dd>
-
-
 <dt>eroi_g_i_feed</dt>
 <dd><p>The name of the output column containing vectors of industry-level gross EROIs,
 including only energy use for feedstock production.
 Default is "eroi_g_i_feed".</p></dd>
-
-
-<dt>eroi_n_i_feed</dt>
-<dd><p>The name of the output column containing vectors of industry-level net EROIs,
-including only energy use for feedstock production.
-Default is "eroi_n_i_feed".</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -182,20 +154,12 @@ The default column names use the following naming convention:</p><ul><li><p>name
 <li><p>both EIOU required for feedstock and EIOU inputs production (no additional string in the name).</p></li>
 </ul><p>Output columns include:</p><ul><li><p><code>eroi_g_p</code>: vector of product-level gross EROIs, including both EIOU required for feedstock and EIOU inputs production.
 The inverse of <code>eroi_g_p</code> is calculated by <code>transpose(i) %*% e_EIOU_hat %*% L_ixp</code>.</p></li>
-<li><p><code>eroi_n_p</code>: vector of product-level net EROIs, including both EIOU required for feedstock and EIOU inputs production.
-<code>eroi_n_p</code> is calculated by <code>eroi_g_p - 1</code>.</p></li>
 <li><p><code>eroi_g_i</code>: vector of industry-level gross EROIs, including both EIOU required for feedstock and EIOU inputs production.
 The inverse of <code>eroi_i_p</code> is calculated by <code>transpose(C) * eroi_g_p_inv</code>.</p></li>
-<li><p><code>eroi_n_i</code>: vector of industry-level net EROIs, including both EIOU required for feedstock and EIOU inputs production.
-<code>eroi_n_i</code> is calculated by <code>eroi_g_i - 1</code>.</p></li>
 <li><p><code>eroi_g_p_feed</code>: vector of product-level gross EROIs, including only EIOU required for feedstock inputs production.
 The inverse of <code>eroi_g_p_feed</code> is calculated by <code>transpose(i) %*% e_EIOU_hat %*% L_ixp_feed</code>.</p></li>
-<li><p><code>eroi_n_p_feed</code>: vector of product-level net EROIs, including only EIOU required for feedstock inputs production.
-<code>eroi_n_p_feed</code> is calculated by <code>eroi_g_p_feed - 1</code>.</p></li>
 <li><p><code>eroi_g_i_feed</code>: vector of industry-level gross EROIs, including only EIOU required for feedstock inputs production.
 The inverse of <code>eroi_i_p</code> is calculated by <code>transpose(C) %*% eroi_g_p_feed_inv</code>.</p></li>
-<li><p><code>eroi_n_i_feed</code>: vector of industry-level net EROIs, including only EIOU required for feedstock inputs production.
-<code>eroi_n_i_feed</code> is calculated by <code>eroi_g_i_feed - 1</code>.</p></li>
 </ul><p>Note: All matrix multiplication (<code>%*%</code>) is performed "by name" using
 <code><a href="https://rdrr.io/pkg/matsbyname/man/matrixproduct_byname.html" class="external-link">matsbyname::matrixproduct_byname()</a></code>.</p>
     </div>
@@ -209,17 +173,17 @@ The inverse of <code>eroi_i_p</code> is calculated by <code>transpose(C) %*% ero
 <span class="r-in"><span>  <span class="fu"><a href="calc_io_mats.html">calc_io_mats</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="calc_E_EIOU.html">calc_E_EIOU</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
 <span class="r-in"><span>  <span class="fu">calc_erois</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 42</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Country  Year Energy.type Last.…¹ R        U        U_EIOU   U_feed   V       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> GBR      <span style="text-decoration: underline;">2</span>000 E           Final   &lt;dbl[…]&gt; &lt;dbl[…]&gt; &lt;dbl[…]&gt; &lt;dbl[…]&gt; &lt;dbl[…]&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 33 more variables: Y &lt;list&gt;, r_EIOU &lt;list&gt;, S_units &lt;list&gt;, y &lt;list&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   q &lt;list&gt;, f &lt;list&gt;, g &lt;list&gt;, h &lt;list&gt;, r &lt;list&gt;, W &lt;list&gt;, Z &lt;list&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   K &lt;list&gt;, C &lt;list&gt;, D &lt;list&gt;, A &lt;list&gt;, O &lt;list&gt;, L_pxp &lt;list&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 38</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Country  Year Energy.type Last.stage R             U        U_EIOU   U_feed  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> GBR      <span style="text-decoration: underline;">2</span>000 E           Final      <span style="color: #949494;">&lt;dbl [2 × 2]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 30 more variables: V &lt;list&gt;, Y &lt;list&gt;, r_EIOU &lt;list&gt;, S_units &lt;list&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   y &lt;list&gt;, q &lt;list&gt;, f &lt;list&gt;, g &lt;list&gt;, h &lt;list&gt;, r &lt;list&gt;, W &lt;list&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Z &lt;list&gt;, K &lt;list&gt;, C &lt;list&gt;, D &lt;list&gt;, A &lt;list&gt;, O &lt;list&gt;, L_pxp &lt;list&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   L_ixp &lt;list&gt;, Z_feed &lt;list&gt;, K_feed &lt;list&gt;, A_feed &lt;list&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   L_pxp_feed &lt;list&gt;, L_ixp_feed &lt;list&gt;, E_EIOU &lt;list&gt;, e_EIOU &lt;list&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   eroi_g_p &lt;list&gt;, eroi_n_p &lt;list&gt;, eroi_g_i &lt;list&gt;, eroi_n_i &lt;list&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   eroi_g_p_feed &lt;list&gt;, eroi_n_p_feed &lt;list&gt;, eroi_g_i_feed &lt;list&gt;, …</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   eroi_g_p &lt;list&gt;, eroi_g_i &lt;list&gt;, eroi_g_p_feed &lt;list&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   eroi_g_i_feed &lt;list&gt;</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
