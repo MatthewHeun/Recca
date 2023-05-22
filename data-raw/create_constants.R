@@ -76,6 +76,14 @@ usethis::use_data(efficiency_cols, overwrite = TRUE)
 
 
 #
+# Allocation and efficiency columns
+#
+alloc_cols <- list(C_Y = "C_Y",
+                   C_eiou = "C_EIOU")
+usethis::use_data(alloc_cols, overwrite = TRUE)
+
+
+#
 # Give the column names of Sankey data
 #
 

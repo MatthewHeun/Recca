@@ -20,10 +20,10 @@
 #' `calc_embodied_etas()` function.
 #'
 #' @param .sutmats A data frame containing columns for **U**, **V**, and **S_units** matrices.
-#' @param U A string for the name of a column of **U** matrices in `.sutmats`. (Default is "U".)
-#' @param V A string for the name of a column of **V** matrices in `.sutmats`. (Default is "V".)
-#' @param S_units A string for the name of a column of **S_units** matrices in `.sutmats`. (Default is "S_units".)
-#' @param eta_i The name of the industry efficiency column in output. Default is "eta_i".
+#' @param U A string for the name of a column of **U** matrices in `.sutmats`. Default is `Recca::psut_cols$U`.
+#' @param V A string for the name of a column of **V** matrices in `.sutmats`. Default is `Recca::psut_cols$V`.
+#' @param S_units A string for the name of a column of **S_units** matrices in `.sutmats`. Default is `Recca::psut_cols$S_units`.)
+#' @param eta_i The name of the industry efficiency column in output. Default is `Recca::psut_cols$S_units`.
 #'
 #' @return `.sutmats` with an additional column `eta_i`
 #'
@@ -36,9 +36,11 @@
 #'   calc_eta_i()
 calc_eta_i <- function(.sutmats,
                        # Inputs
-                       U = "U", V = "V", S_units = "S_units",
+                       U = Recca::psut_cols$U,
+                       V = Recca::psut_cols$V,
+                       S_units = Recca::psut_cols$S_units,
                        # Outputs
-                       eta_i = "eta_i"){
+                       eta_i = Recca::efficiency_cols$eta_i){
   eta_func <- function(U_mat, V_mat, S_units_mat){
     f_vec <- matsbyname::colsums_byname(U_mat) %>% matsbyname::transpose_byname()
     g_vec <- matsbyname::rowsums_byname(V_mat)
@@ -181,7 +183,73 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 }
 
 
+#' Calculate final-to-useful efficiencies
+#'
+#' Final-to-useful efficiencies can be calculated from
+#' allocations (`C_Y` and `C_eiou`),
+#' efficiencies (`eta_i`), and
+#' (for exergy) exergy-to-energy ratios (`phi`).
+#' This function performs those calculations.
+#'
+#' The matrix formula for calculating energy efficiencies
+#' is **eta_fu_E** `=` **C** `*` **eta_i**.
+#' The matrix formula for calculating exergy efficiencies
+#' from allocations and machine energy efficiencies is
+#' **eta_fu_X** `=` (**phi_u_hat_inv** `*` (**C_Y** `*` **eta_fu_hat**)) `*` **phi_u**.
+#'
+#' @param .c_mats_eta_phi_vecs A data frame containing allocation matrices (`C_Y` and `C_eiou`),
+#'                             vectors of machine efficiencies (`eta_i`), and
+#'                             exergy-to-energy ratio vectors (`phi`).
+#'                             Default is `NULL`, in which case individual matrices or vectors
+#'                             can be passed to `C_Y`, `C_eiou`, `eta_i`, and `phi`.
+#' @param C_Y The name of the column in `.c_mats_eta_phi_vecs` containing allocation
+#'            matrices for final demand (the `Y` in `C_Y`).
+#'            Or a single **C_Y** matrix.
+#'            Or a list of **C_Y** matrices.
+#'            Default is `Recca::alloc_cols$C_Y`.
+#' @param C_eiou The name of the column in `.c_mats_eta_phi_vecs` containing allocation
+#'               matrices for energy industry own use (the `eiou` in `C_eiou`).
+#'               Or a single **C_EIOU** matrix.
+#'               Or a list of **C_EIOU** matrices.
+#'               Default is `Recca::alloc_cols$C_eiou`.
+#' @param eta_i The name of the column in `.c_mats_eta_phi_vecs` containing machine efficiencies.
+#'              Or a single **eta_i** vector.
+#'              Default is `Recca::efficiency_cols$eta_i`.
+#' @param phi The name of the column in `.c_mats_eta_phi_vecs` containing exergy-to-energy ratios.
+#'            Or a single **phi** vector.
+#'            Default is `Recca::psut_cols$phi`.
+#' @param energy_type,energy,exergy See `Recca::energy_types`.
+#' @param eta_fu The base name of the output columns.
+#'               Default is `Recca::efficiency_cols$eta_fu`.
+#' @param eta_fu_e The name of the energy efficiency output column.
+#'                 Default is `paste0(eta_fu, "_", energy)`.
+#' @param eta_fu_x The name of the exergy efficiency output column.
+#'                 Default is `paste0(eta_fu, "_", exergy)`.
+#'
+#' @return A data frame or list containing final-to-useful efficiencies.
+#'
+#' @export
+#'
+#' @examples
+calc_eta_fu <- function(.c_mats_eta_phi_vecs = NULL,
+                        C_Y = Recca::alloc_cols$C_Y,
+                        C_eiou = Recca::alloc_cols$C_eiou,
+                        eta_i = Recca::efficiency_cols$eta_i,
+                        phi = Recca::psut_cols$phi,
+                        energy_type = Recca::energy_types$energy_type,
+                        eta_fu = Recca::efficiency_cols$eta_fu,
+                        energy = Recca::energy_types$e,
+                        exergy = Recca::energy_types$x,
+                        eta_fu_e = paste0(eta_fu, "_", energy),
+                        eta_fu_x = paste0(eta_fu, "_", exergy)) {
 
+  eta_func <- function(C_Y_mat, C_eiou_mat, eta_i_vec, phi_vec) {
+
+  }
+
+  matsindf::matsindf_apply(.c_mats_eta_phi_vecs, FUN = eta_func, C_Y_mat = C_Y, C_eiou_mat = C_eiou,
+                           eta_i_vec = eta_i, phi_vec = phi)
+}
 
 
 
