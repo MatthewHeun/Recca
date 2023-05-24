@@ -276,16 +276,22 @@ calc_eta_fu <- function(.c_mats_eta_phi_vecs = NULL,
   eta_func <- function(C_Y_mat, C_eiou_mat, eta_i_vec, phi_vec) {
     # At this point, all incoming matrices and vectors will be single matrices or vectors
     # Trim eta_i_vec to include only those machines included in C_Y_mat
-    eta_i_vec_trimmed <- matsbyname::trim_rows_cols(a = eta_i_vec, mat = matsbyname::transpose_byname(C_Y_mat),
-                                                    margin = 1, notation = notation)
-    eta_fu_Y_E_vec <- matsbyname::matrixproduct_byname(C_Y_mat, eta_i_vec_trimmed) |>
+    eta_i_vec_trimmed_Y_E <- matsbyname::trim_rows_cols(a = eta_i_vec, mat = matsbyname::transpose_byname(C_Y_mat),
+                                                        margin = 1, notation = notation)
+    eta_fu_Y_E_vec <- matsbyname::matrixproduct_byname(C_Y_mat, eta_i_vec_trimmed_Y_E) |>
       matsbyname::setcolnames_byname(eta_fu_Y_e)
+
+    eta_i_vec_trimmed_eiou_E <- matsbyname::trim_rows_cols(a = eta_i_vec, mat = matsbyname::transpose_byname(C_eiou_mat),
+                                                           margin = 1, notation = notation)
+    eta_fu_eiou_E_vec <- matsbyname::matrixproduct_byname(C_eiou_mat, eta_i_vec_trimmed_eiou_E) |>
+      matsbyname::setcolnames_byname(eta_fu_eiou_e)
+
 
 
 
     # Build an output list
-    list(eta_fu_Y_E_vec) |>
-      magrittr::set_names(c(eta_fu_Y_e))
+    list(eta_fu_Y_E_vec, eta_fu_eiou_E_vec) |>
+      magrittr::set_names(c(eta_fu_Y_e, eta_fu_eiou_e))
   }
   matsindf::matsindf_apply(.c_mats_eta_phi_vecs, FUN = eta_func, C_Y_mat = C_Y, C_eiou_mat = C_eiou,
                            eta_i_vec = eta_i, phi_vec = phi)

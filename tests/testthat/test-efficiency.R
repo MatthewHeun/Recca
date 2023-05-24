@@ -129,5 +129,8 @@ test_that("calc_eta_fu() works as expected", {
   expect_equal(res$eta_fu_Y_E,
                matrix(c(0.69, 0.37), ncol = 1, dimnames = list(c("Electricity -> Non-ferrous metals", "PSB -> Residential"),
                                                                "eta_fu_Y_E")))
+  expect_equal(res$eta_fu_EIOU_E,
+               matrix(c(0.69, 0.37), ncol = 1, dimnames = list(c("Electricity -> Non-ferrous metals", "PSB -> Residential"),
+                                                               "eta_fu_EIOU_E")))
 
 })
