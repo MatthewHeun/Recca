@@ -42,6 +42,7 @@ Default is \code{Recca::alloc_cols$C_eiou}.}
 
 \item{eta_i}{The name of the column in \code{.c_mats_eta_phi_vecs} containing machine efficiencies.
 Or a single \strong{eta_i} vector.
+Or a list of \strong{eta_i} vectors.
 Default is \code{Recca::efficiency_cols$eta_i}.}
 
 \item{phi}{The name of the column in \code{.c_mats_eta_phi_vecs} containing exergy-to-energy ratios.
@@ -84,10 +85,11 @@ This function performs those calculations.
 }
 \details{
 The matrix formula for calculating energy efficiencies
-is \strong{eta_fu_E} \code{=} \strong{C} \code{*} \strong{eta_i}.
+is \strong{eta_fu_E} \code{=} \strong{C} \code{*} \strong{eta_i},
+where \strong{C} is one of \strong{C_Y} or \strong{C_EIOU}.
 The matrix formula for calculating exergy efficiencies
 from allocations and machine energy efficiencies is
-\strong{eta_fu_X} \code{=} (\strong{phi_u_hat_inv} \code{*} (\strong{C_Y} \code{*} \strong{eta_fu_hat})) \code{*} \strong{phi_u}.
+\strong{eta_fu_X} \code{=} (\strong{phi_u_hat_inv} \code{*} (\strong{C} \code{*} \strong{eta_fu_hat})) \code{*} \strong{phi_u}.
 
 The \strong{C_Y} matrix is assumed to have rows named
 with prefixes of final energy carriers and
@@ -99,20 +101,24 @@ energy industry sector into which the final energy carrier flows.
 The columns of the \strong{C_Y} and \strong{C_EIOU} matrices
 are named with prefixes of machine names and
 suffixes of useful energy product made by the machine.
+See examples.
 
 The \strong{eta_i} vector of machine efficiencies
 has rows named with
 prefixes same as \strong{C_Y} and \strong{C_EIOU} columns.
 The name of the \strong{eta_i} column is not used.
+See examples.
 
 The \strong{phi} vector of exergy-to-energy ratios
 has rows named with energy carriers
 that correspond to the prefixes of
 \strong{C_Y} and \strong{C_EIOU} rows and the suffixes of
 \strong{C_Y} and \strong{C_EIOU} columns.
+See examples.
 
-This function trims the \code{eta_i} and \code{phi} vectors before multiplying
-to eliminate unnecessary growth of the output matrices.
+This function uses \code{\link[matsbyname:vec_from_store_byname]{matsbyname::vec_from_store_byname()}}
+to construct the \code{eta_i} and \code{phi} vectors before multiplying, thereby
+eliminating unnecessary growth of the output vectors.
 }
 \examples{
 C_Y <- matrix(c(0.7, 0.3, 0,   0,   0,

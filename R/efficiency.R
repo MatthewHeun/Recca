@@ -192,10 +192,11 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 #' This function performs those calculations.
 #'
 #' The matrix formula for calculating energy efficiencies
-#' is **eta_fu_E** `=` **C** `*` **eta_i**.
+#' is **eta_fu_E** `=` **C** `*` **eta_i**,
+#' where **C** is one of **C_Y** or **C_EIOU**.
 #' The matrix formula for calculating exergy efficiencies
 #' from allocations and machine energy efficiencies is
-#' **eta_fu_X** `=` (**phi_u_hat_inv** `*` (**C_Y** `*` **eta_fu_hat**)) `*` **phi_u**.
+#' **eta_fu_X** `=` (**phi_u_hat_inv** `*` (**C** `*` **eta_fu_hat**)) `*` **phi_u**.
 #'
 #' The **C_Y** matrix is assumed to have rows named
 #' with prefixes of final energy carriers and
@@ -207,20 +208,24 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 #' The columns of the **C_Y** and **C_EIOU** matrices
 #' are named with prefixes of machine names and
 #' suffixes of useful energy product made by the machine.
+#' See examples.
 #'
 #' The **eta_i** vector of machine efficiencies
 #' has rows named with
 #' prefixes same as **C_Y** and **C_EIOU** columns.
 #' The name of the **eta_i** column is not used.
+#' See examples.
 #'
 #' The **phi** vector of exergy-to-energy ratios
 #' has rows named with energy carriers
 #' that correspond to the prefixes of
 #' **C_Y** and **C_EIOU** rows and the suffixes of
 #' **C_Y** and **C_EIOU** columns.
+#' See examples.
 #'
-#' This function trims the `eta_i` and `phi` vectors before multiplying
-#' to eliminate unnecessary growth of the output matrices.
+#' This function uses [matsbyname::vec_from_store_byname()]
+#' to construct the `eta_i` and `phi` vectors before multiplying, thereby
+#' eliminating unnecessary growth of the output vectors.
 #'
 #' @param .c_mats_eta_phi_vecs A data frame containing allocation matrices (`C_Y` and `C_eiou`),
 #'                             vectors of machine efficiencies (`eta_i`), and
@@ -239,6 +244,7 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 #'               Default is `Recca::alloc_cols$C_eiou`.
 #' @param eta_i The name of the column in `.c_mats_eta_phi_vecs` containing machine efficiencies.
 #'              Or a single **eta_i** vector.
+#'              Or a list of **eta_i** vectors.
 #'              Default is `Recca::efficiency_cols$eta_i`.
 #' @param phi The name of the column in `.c_mats_eta_phi_vecs` containing exergy-to-energy ratios.
 #'            Or a single **phi** vector.
@@ -354,7 +360,7 @@ calc_eta_fu <- function(.c_mats_eta_phi_vecs = NULL,
     phi_Y_num <- matsbyname::vec_from_store_byname(a = CYetaihat, v = phi_vec, margin = 2, notation = RCLabels::arrow_notation, a_piece = "suff")
     phi_EIOU_num <- matsbyname::vec_from_store_byname(a = CEIOUetaihat, v = phi_vec, margin = 2, notation = RCLabels::arrow_notation, a_piece = "suff")
 
-    # Now do the calculations
+    # Now do the exergy calculations
     eta_fu_Y_X_vec <- matsbyname::matrixproduct_byname(phi_hat_inv_Y_denom, CYetaihat) |>
       matsbyname::matrixproduct_byname(phi_Y_num) |>
       matsbyname::setcolnames_byname(eta_fu_Y_x)
@@ -369,7 +375,3 @@ calc_eta_fu <- function(.c_mats_eta_phi_vecs = NULL,
   matsindf::matsindf_apply(.c_mats_eta_phi_vecs, FUN = eta_func, C_Y_mat = C_Y, C_eiou_mat = C_eiou,
                            eta_i_vec = eta_i, phi_vec = phi)
 }
-
-
-
-
