@@ -197,6 +197,31 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 #' from allocations and machine energy efficiencies is
 #' **eta_fu_X** `=` (**phi_u_hat_inv** `*` (**C_Y** `*` **eta_fu_hat**)) `*` **phi_u**.
 #'
+#' The **C_Y** matrix is assumed to have rows named
+#' with prefixes of final energy carriers and
+#' suffixes of the final demand sector
+#' into which the final energy carrier flows.
+#' The **C_EIOU** matrix is similar, except that
+#' its rows are named with suffixes of the
+#' energy industry sector into which the final energy carrier flows.
+#' The columns of the **C_Y** and **C_EIOU** matrices
+#' are named with prefixes of machine names and
+#' suffixes of useful energy product made by the machine.
+#'
+#' The **eta_i** vector of machine efficiencies
+#' has rows named with
+#' prefixes same as **C_Y** and **C_EIOU** columns.
+#' The name of the **eta_i** column is not used.
+#'
+#' The **phi** vector of exergy-to-energy ratios
+#' has rows named with energy carriers
+#' that correspond to the prefixes of
+#' **C_Y** and **C_EIOU** rows and the suffixes of
+#' **C_Y** and **C_EIOU** columns.
+#'
+#' This function trims the `eta_i` and `phi` vectors before multiplying
+#' to eliminate unnecessary growth of the output matrices.
+#'
 #' @param .c_mats_eta_phi_vecs A data frame containing allocation matrices (`C_Y` and `C_eiou`),
 #'                             vectors of machine efficiencies (`eta_i`), and
 #'                             exergy-to-energy ratio vectors (`phi`).
@@ -225,6 +250,8 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 #'                 Default is `paste0(eta_fu, "_", energy)`.
 #' @param eta_fu_x The name of the exergy efficiency output column.
 #'                 Default is `paste0(eta_fu, "_", exergy)`.
+#' @param notation The notation for the row and column labels.
+#'                 Default is `RCLabels::arrow_notation`.
 #'
 #' @return A data frame or list containing final-to-useful efficiencies.
 #'
@@ -240,13 +267,26 @@ calc_eta_fu <- function(.c_mats_eta_phi_vecs = NULL,
                         eta_fu = Recca::efficiency_cols$eta_fu,
                         energy = Recca::energy_types$e,
                         exergy = Recca::energy_types$x,
-                        eta_fu_e = paste0(eta_fu, "_", energy),
-                        eta_fu_x = paste0(eta_fu, "_", exergy)) {
+                        eta_fu_Y_e = paste0(eta_fu, "_Y_", energy),
+                        eta_fu_Y_x = paste0(eta_fu, "_Y_", exergy),
+                        eta_fu_eiou_e = paste0(eta_fu, "_EIOU_", energy),
+                        eta_fu_eiou_x = paste0(eta_fu, "_EIOU_", exergy),
+                        notation = RCLabels::arrow_notation) {
 
   eta_func <- function(C_Y_mat, C_eiou_mat, eta_i_vec, phi_vec) {
+    # At this point, all incoming matrices and vectors will be single matrices or vectors
+    # Trim eta_i_vec to include only those machines included in C_Y_mat
+    eta_i_vec_trimmed <- matsbyname::trim_rows_cols(a = eta_i_vec, mat = matsbyname::transpose_byname(C_Y_mat),
+                                                    margin = 1, notation = notation)
+    eta_fu_Y_E_vec <- matsbyname::matrixproduct_byname(C_Y_mat, eta_i_vec_trimmed) |>
+      matsbyname::setcolnames_byname(eta_fu_Y_e)
 
+
+
+    # Build an output list
+    list(eta_fu_Y_E_vec) |>
+      magrittr::set_names(c(eta_fu_Y_e))
   }
-
   matsindf::matsindf_apply(.c_mats_eta_phi_vecs, FUN = eta_func, C_Y_mat = C_Y, C_eiou_mat = C_eiou,
                            eta_i_vec = eta_i, phi_vec = phi)
 }

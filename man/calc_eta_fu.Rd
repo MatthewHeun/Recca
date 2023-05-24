@@ -14,8 +14,11 @@ calc_eta_fu(
   eta_fu = Recca::efficiency_cols$eta_fu,
   energy = Recca::energy_types$e,
   exergy = Recca::energy_types$x,
-  eta_fu_e = paste0(eta_fu, "_", energy),
-  eta_fu_x = paste0(eta_fu, "_", exergy)
+  eta_fu_Y_e = paste0(eta_fu, "_Y_", energy),
+  eta_fu_Y_x = paste0(eta_fu, "_Y_", exergy),
+  eta_fu_eiou_e = paste0(eta_fu, "_EIOU_", energy),
+  eta_fu_eiou_x = paste0(eta_fu, "_EIOU_", exergy),
+  notation = RCLabels::arrow_notation
 )
 }
 \arguments{
@@ -50,6 +53,9 @@ Default is \code{Recca::psut_cols$phi}.}
 \item{eta_fu}{The base name of the output columns.
 Default is \code{Recca::efficiency_cols$eta_fu}.}
 
+\item{notation}{The notation for the row and column labels.
+Default is \code{RCLabels::arrow_notation}.}
+
 \item{eta_fu_e}{The name of the energy efficiency output column.
 Default is \code{paste0(eta_fu, "_", energy)}.}
 
@@ -72,4 +78,29 @@ is \strong{eta_fu_E} \code{=} \strong{C} \code{*} \strong{eta_i}.
 The matrix formula for calculating exergy efficiencies
 from allocations and machine energy efficiencies is
 \strong{eta_fu_X} \code{=} (\strong{phi_u_hat_inv} \code{*} (\strong{C_Y} \code{*} \strong{eta_fu_hat})) \code{*} \strong{phi_u}.
+
+The \strong{C_Y} matrix is assumed to have rows named
+with prefixes of final energy carriers and
+suffixes of the final demand sector
+into which the final energy carrier flows.
+The \strong{C_EIOU} matrix is similar, except that
+its rows are named with suffixes of the
+energy industry sector into which the final energy carrier flows.
+The columns of the \strong{C_Y} and \strong{C_EIOU} matrices
+are named with prefixes of machine names and
+suffixes of useful energy product made by the machine.
+
+The \strong{eta_i} vector of machine efficiencies
+has rows named with
+prefixes same as \strong{C_Y} and \strong{C_EIOU} columns.
+The name of the \strong{eta_i} column is not used.
+
+The \strong{phi} vector of exergy-to-energy ratios
+has rows named with energy carriers
+that correspond to the prefixes of
+\strong{C_Y} and \strong{C_EIOU} rows and the suffixes of
+\strong{C_Y} and \strong{C_EIOU} columns.
+
+This function trims the \code{eta_i} and \code{phi} vectors before multiplying
+to eliminate unnecessary growth of the output matrices.
 }
