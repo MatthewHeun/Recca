@@ -275,23 +275,58 @@ calc_eta_fu <- function(.c_mats_eta_phi_vecs = NULL,
 
   eta_func <- function(C_Y_mat, C_eiou_mat, eta_i_vec, phi_vec) {
     # At this point, all incoming matrices and vectors will be single matrices or vectors
-    # Trim eta_i_vec to include only those machines included in C_Y_mat
-    eta_i_vec_trimmed_Y_E <- matsbyname::trim_rows_cols(a = eta_i_vec, mat = matsbyname::transpose_byname(C_Y_mat),
-                                                        margin = 1, notation = notation)
-    eta_fu_Y_E_vec <- matsbyname::matrixproduct_byname(C_Y_mat, eta_i_vec_trimmed_Y_E) |>
-      matsbyname::setcolnames_byname(eta_fu_Y_e)
 
-    eta_i_vec_trimmed_eiou_E <- matsbyname::trim_rows_cols(a = eta_i_vec, mat = matsbyname::transpose_byname(C_eiou_mat),
-                                                           margin = 1, notation = notation)
-    eta_fu_eiou_E_vec <- matsbyname::matrixproduct_byname(C_eiou_mat, eta_i_vec_trimmed_eiou_E) |>
+    # Calculate some preliminary information, namely C_Y * eta_i_hat.
+    # This is used for both energy and exergy calculations.
+
+    # Trim eta_i_vec to include only those machines included in C_Y_mat or C_EIOU_mat
+    eta_i_vec_trimmed_hat_Y_E <- matsbyname::trim_rows_cols(a = eta_i_vec, mat = matsbyname::transpose_byname(C_Y_mat),
+                                                            margin = 1, notation = notation) |>
+      matsbyname::hatize_byname()
+    eta_i_vec_trimmed_hat_eiou_E <- matsbyname::trim_rows_cols(a = eta_i_vec, mat = matsbyname::transpose_byname(C_eiou_mat),
+                                                               margin = 1, notation = notation) |>
+      matsbyname::hatize_byname()
+
+    # Post-multiply C_Y and C_EIOU by hatized eta vectors.
+    CYetaihat <- matsbyname::matrixproduct_byname(C_Y_mat, eta_i_vec_trimmed_hat_Y_E)
+    CEIOUetaihat <- matsbyname::matrixproduct_byname(C_eiou_mat, eta_i_vec_trimmed_hat_eiou_E)
+
+
+    # eta_fu for final demand (Y) and energy (E)
+
+    # Do the multiplication required to get eta_fu values
+    eta_fu_Y_E_vec <- matsbyname::rowsums_byname(CYetaihat) |>
+      matsbyname::setcolnames_byname(eta_fu_Y_e)
+    eta_fu_eiou_E_vec <- matsbyname::rowsums_byname(CEIOUetaihat) |>
       matsbyname::setcolnames_byname(eta_fu_eiou_e)
 
+    # eta_fu for final demand (Y) and energy (X)
 
+    # Build phi_hat_inv for the denominator by trimming phi to keep only rows that match prefixes of rows of the
+    # CYetaihat and CEIOUetaihat matrices.
+    phi_hat_inv_Y_denom <- matsbyname::vec_from_store_byname(a = CYetaihat, v = phi_vec, notation = RCLabels::arrow_notation, a_piece = "pref") |>
+      matsbyname::hatinv_byname()
+    phi_hat_inv_EIOU_denom <- matsbyname::vec_from_store_byname(a = CEIOUetaihat, v = phi_vec, notation = RCLabels::arrow_notation, a_piece = "pref") |>
+      matsbyname::hatinv_byname()
 
+    # Build phi vectors for the numerator by creating the vector from the suffixes of the columns of the
+    # CYetaihat and CEIOUetaihat matrices.
+    phi_Y_num <- matsbyname::vec_from_store_byname(a = CYetaihat, v = phi_vec, column = FALSE, notation = RCLabels::arrow_notation, a_piece = "suff") |>
+      matsbyname::transpose_byname()
+    phi_EIOU_num <- matsbyname::vec_from_store_byname(a = CEIOUetaihat, v = phi_vec, column = FALSE, notation = RCLabels::arrow_notation, a_piece = "suff") |>
+      matsbyname::transpose_byname()
+
+    # Now do the calculations
+    eta_fu_Y_X_vec <- matsbyname::matrixproduct_byname(phi_hat_inv_Y_denom, CYetaihat) |>
+      matsbyname::matrixproduct_byname(phi_Y_num) |>
+      matsbyname::setcolnames_byname(eta_fu_Y_x)
+    eta_fu_EIOU_X_vec <- matsbyname::matrixproduct_byname(phi_hat_inv_EIOU_denom, CYetaihat) |>
+      matsbyname::matrixproduct_byname(phi_EIOU_num) |>
+      matsbyname::setcolnames_byname(eta_fu_eiou_x)
 
     # Build an output list
-    list(eta_fu_Y_E_vec, eta_fu_eiou_E_vec) |>
-      magrittr::set_names(c(eta_fu_Y_e, eta_fu_eiou_e))
+    list(eta_fu_Y_E_vec, eta_fu_eiou_E_vec, eta_fu_Y_X_vec, eta_fu_EIOU_X_vec) |>
+      magrittr::set_names(c(eta_fu_Y_e, eta_fu_eiou_e, eta_fu_Y_x, eta_fu_eiou_x))
   }
   matsindf::matsindf_apply(.c_mats_eta_phi_vecs, FUN = eta_func, C_Y_mat = C_Y, C_eiou_mat = C_eiou,
                            eta_i_vec = eta_i, phi_vec = phi)
