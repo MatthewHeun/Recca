@@ -108,4 +108,22 @@ test_that("calc_eta_pfd() works with the output from chop_Y()", {
 })
 
 
+test_that("calc_eta_fu() works as expected", {
+  # This example comes from the file named "Example f-u matrix efficiency calcs.xlsx"
+  # Build example matrices
+  C_Y <- matrix(c(0.7, 0.3, 0, 0,   0,
+                  0,   0, 0.2, 0.5, 0.3), byrow = TRUE, nrow = 2, ncol = 5,
+                dimnames = list(c("Electricity -> Non-ferrous metals", "PSB -> Residential"),
+                                c("Electric arc furnaces -> HTH.600.C", "Electric lights -> L",
+                                  "Wood stoves -> LTH.20.C", "Wood stoves -> LTH.50.C", "Wood stoves -> MTH.100.C")))
+  eta_i <- matrix(c(0.9, 0.2, 0.4, 0.4, 0.3), nrow = 5, ncol = 1,
+                  dimnames = list(c("Electric arc furnaces -> HTH.600.C", "Electric lights -> L",
+                                    "Wood stoves -> LTH.20.C", "Wood stoves -> LTH.50.C", "Wood stoves -> MTH.100.C"),
+                                  "eta_fu"))
+  phi <- matrix(c(1, 1.1, 1 - 298.15/(600+273.15), 0.95, 1 - (20 + 273.15)/298.15, 1 - 298.15/(50+273.15), 1 - 298.15/(100+273.15)),
+                nrow = 7, ncol = 1,
+                dimnames = list(c("Electricity", "PSB", "HTH.600.C", "L", "LTH.20.C", "LTH.50.C", "MTH.100.C"), "phi"))
 
+  calc_eta_fu(C_Y = C_Y, C_eiou = C_Y, eta_i = eta_i, phi = phi)
+
+})
