@@ -188,7 +188,7 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 #' Final-to-useful efficiencies can be calculated from
 #' allocations (`C_Y` and `C_eiou`),
 #' efficiencies (`eta_i`), and
-#' (for exergy) exergy-to-energy ratios (`phi`).
+#' (for exergetic efficiencies) exergy-to-energy ratios (`phi`).
 #' This function performs those calculations.
 #'
 #' The matrix formula for calculating energy efficiencies
@@ -246,11 +246,19 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 #' @param energy_type,energy,exergy See `Recca::energy_types`.
 #' @param eta_fu The base name of the output columns.
 #'               Default is `Recca::efficiency_cols$eta_fu`.
-#' @param eta_fu_e The name of the energy efficiency output column.
-#'                 Default is `paste0(eta_fu, "_", energy)`.
-#' @param eta_fu_x The name of the exergy efficiency output column.
-#'                 Default is `paste0(eta_fu, "_", exergy)`.
-#' @param notation The notation for the row and column labels.
+#' @param eta_fu_Y_e The name of the energy efficiency output column
+#'                   for energy flowing into final demand (**Y**).
+#'                   Default is `paste0(eta_fu, "_Y_", energy)`.
+#' @param eta_fu_Y_x The name of the exergy efficiency output column
+#'                   for energy flowing into final demand (**Y**).
+#'                   Default is `paste0(eta_fu, "_Y_", exergy)`.
+#' @param eta_fu_eiou_e The name of the energy efficiency output column
+#'                      for energy flowing into the energy industry (**U_EIOU**).
+#'                      Default is `paste0(eta_fu, "_EIOU_", energy)`.
+#' @param eta_fu_eiou_x The name of the exergy efficiency output column
+#'                      for energy flowing into the energy industry (**U_EIOU**).
+#'                      Default is `paste0(eta_fu, "_EIOU_", energy)`.
+#' @param notation The notation for the row and column labels of the matrices and vectors.
 #'                 Default is `RCLabels::arrow_notation`.
 #'
 #' @return A data frame or list containing final-to-useful efficiencies.
@@ -258,6 +266,38 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 #' @export
 #'
 #' @examples
+#' C_Y <- matrix(c(0.7, 0.3, 0,   0,   0,
+#'                 0,   0,   0.2, 0.5, 0.3), byrow = TRUE, nrow = 2, ncol = 5,
+#'               dimnames = list(c("Electricity -> Non-ferrous metals",
+#'                                 "PSB -> Residential"),
+#'                               c("Electric arc furnaces -> HTH.600.C",
+#'                                 "Electric lights -> L",
+#'                                 "Wood stoves -> LTH.20.C",
+#'                                 "Wood stoves -> LTH.50.C",
+#'                                 "Wood stoves -> MTH.100.C")))
+#' C_Y
+#' eta_i <- matrix(c(0.9, 0.2, 0.4, 0.4, 0.3), nrow = 5, ncol = 1,
+#'                   dimnames = list(c("Electric arc furnaces -> HTH.600.C",
+#'                                     "Electric lights -> L",
+#'                                     "Wood stoves -> LTH.20.C",
+#'                                     "Wood stoves -> LTH.50.C",
+#'                                     "Wood stoves -> MTH.100.C"),
+#'                                   "eta_i"))
+#' eta_i
+#' phi <- matrix(c(1, 1.1, 1 - 298.15/(600+273.15), 0.95,
+#'                 1 - (20 + 273.15)/298.15,
+#'                 1 - 298.15/(50+273.15),
+#'                 1 - 298.15/(100+273.15)),
+#'               nrow = 7, ncol = 1,
+#'               dimnames = list(c("Electricity", "PSB", "HTH.600.C", "L",
+#'                                 "LTH.20.C", "LTH.50.C", "MTH.100.C"),
+#'                               "phi"))
+#' phi
+#' res <- calc_eta_fu(C_Y = C_Y, C_eiou = C_Y, eta_i = eta_i, phi = phi)
+#' res$eta_fu_Y_E
+#' res$eta_fu_EIOU_E # Same because C_Y and C_EIOU are same
+#' res$eta_fu_Y_X
+#' res$eta_fu_EIOU_X # Same because C_Y and C_EIOU are same
 calc_eta_fu <- function(.c_mats_eta_phi_vecs = NULL,
                         C_Y = Recca::alloc_cols$C_Y,
                         C_eiou = Recca::alloc_cols$C_eiou,
@@ -311,10 +351,8 @@ calc_eta_fu <- function(.c_mats_eta_phi_vecs = NULL,
 
     # Build phi vectors for the numerator by creating the vector from the suffixes of the columns of the
     # CYetaihat and CEIOUetaihat matrices.
-    phi_Y_num <- matsbyname::vec_from_store_byname(a = CYetaihat, v = phi_vec, column = FALSE, notation = RCLabels::arrow_notation, a_piece = "suff") |>
-      matsbyname::transpose_byname()
-    phi_EIOU_num <- matsbyname::vec_from_store_byname(a = CEIOUetaihat, v = phi_vec, column = FALSE, notation = RCLabels::arrow_notation, a_piece = "suff") |>
-      matsbyname::transpose_byname()
+    phi_Y_num <- matsbyname::vec_from_store_byname(a = CYetaihat, v = phi_vec, margin = 2, notation = RCLabels::arrow_notation, a_piece = "suff")
+    phi_EIOU_num <- matsbyname::vec_from_store_byname(a = CEIOUetaihat, v = phi_vec, margin = 2, notation = RCLabels::arrow_notation, a_piece = "suff")
 
     # Now do the calculations
     eta_fu_Y_X_vec <- matsbyname::matrixproduct_byname(phi_hat_inv_Y_denom, CYetaihat) |>
