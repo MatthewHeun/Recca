@@ -2,7 +2,7 @@
 % Please edit documentation in R/efficiency.R
 \name{calc_eta_fu_Y_eiou}
 \alias{calc_eta_fu_Y_eiou}
-\title{Calculate final-to-useful efficiencies}
+\title{Calculate final-to-useful efficiencies for final demand and EIOU}
 \usage{
 calc_eta_fu_Y_eiou(
   .c_mats_eta_phi_vecs = NULL,
@@ -77,7 +77,9 @@ Default is \code{RCLabels::arrow_notation}.}
 A data frame or list containing final-to-useful efficiencies.
 }
 \description{
-Final-to-useful efficiencies can be calculated from
+Final-to-useful efficiencies for energy carriers and sectors
+in final demand and energy industry own use
+can be calculated from
 allocations (\code{C_Y} and \code{C_eiou}),
 efficiencies (\code{eta_i}), and
 (for exergetic efficiencies) exergy-to-energy ratios (\code{phi}).
