@@ -138,7 +138,7 @@ test_that("calc_eta_fu_Y_eiou() works as expected", {
                 dimnames = list(c("Electricity", "PSB", "HTH.600.C", "L", "LTH.20.C", "LTH.50.C", "MTH.100.C"), "phi")) |>
     matsbyname::setrowtype("Product") |> matsbyname::setcolnames_byname("phi")
 
-  res <- calc_eta_fu_Y_eiou(C_Y = C_Y, C_eiou = C_Y, eta_i = eta_i, phi = phi)
+  res <- calc_eta_fu_Y_eiou(C_Y = C_Y, C_eiou = C_Y, eta_i = eta_i, phi = phi, matricize = FALSE)
 
   # Check the energy results
   expect_equal(res$eta_fu_Y_E,
@@ -159,4 +159,27 @@ test_that("calc_eta_fu_Y_eiou() works as expected", {
                matrix(c(0.471877169, 0.031730489), ncol = 1, dimnames = list(c("Electricity -> Non-ferrous metals", "PSB -> Residential"),
                                                                              "eta_fu_EIOU_X")) |>
                  matsbyname::setrowtype("Product -> Industry") |> matsbyname::setcoltype("eta_fu_EIOU_X"))
+
+  # Try with matrix output
+  resm <- calc_eta_fu_Y_eiou(C_Y = C_Y, C_eiou = C_Y, eta_i = eta_i, phi = phi)
+
+  # Check the energy results
+  expect_equal(resm$eta_fu_Y_E,
+               matrix(c(0.69, 0,
+                        0, 0.37), nrow = 2, ncol = 2, dimnames = list(c("Electricity", "PSB"), c("Non-ferrous metals", "Residential"))) |>
+                 matsbyname::setrowtype("Product") |> matsbyname::setcoltype("Industry"))
+  expect_equal(resm$eta_fu_EIOU_E,
+               matrix(c(0.69, 0,
+                        0, 0.37), nrow = 2, ncol = 2, dimnames = list(c("Electricity", "PSB"), c("Non-ferrous metals", "Residential"))) |>
+                 matsbyname::setrowtype("Product") |> matsbyname::setcoltype("Industry"))
+
+  # Check the exergy results
+  expect_equal(resm$eta_fu_Y_X,
+               matrix(c(0.471877169, 0,
+                        0, 0.031730489), nrow = 2, ncol = 2, dimnames = list(c("Electricity", "PSB"), c("Non-ferrous metals", "Residential"))) |>
+                 matsbyname::setrowtype("Product") |> matsbyname::setcoltype("Industry"))
+  expect_equal(resm$eta_fu_EIOU_X,
+               matrix(c(0.471877169, 0,
+                        0, 0.031730489), nrow = 2, ncol = 2, dimnames = list(c("Electricity", "PSB"), c("Non-ferrous metals", "Residential"))) |>
+                 matsbyname::setrowtype("Product") |> matsbyname::setcoltype("Industry"))
 })

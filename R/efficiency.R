@@ -251,6 +251,8 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 #' @param phi The name of the column in `.c_mats_eta_phi_vecs` containing exergy-to-energy ratios.
 #'            Or a single **phi** vector.
 #'            Default is `Recca::psut_cols$phi`.
+#' @param matricize A boolean that tells whether to return a matrix.
+#'                  Default is `TRUE`.
 #' @param energy_type,energy,exergy See `Recca::energy_types`.
 #' @param eta_fu The base name of the output columns.
 #'               Default is `Recca::efficiency_cols$eta_fu`.
@@ -311,6 +313,7 @@ calc_eta_fu_Y_eiou <- function(.c_mats_eta_phi_vecs = NULL,
                                C_eiou = Recca::alloc_cols$C_eiou,
                                eta_i = Recca::efficiency_cols$eta_i,
                                phi = Recca::psut_cols$phi,
+                               matricize = TRUE,
                                energy_type = Recca::energy_types$energy_type,
                                eta_fu = Recca::efficiency_cols$eta_fu,
                                energy = Recca::energy_types$e,
@@ -381,7 +384,11 @@ calc_eta_fu_Y_eiou <- function(.c_mats_eta_phi_vecs = NULL,
       matsbyname::setrowtype(matsbyname::rowtype(CEIOUetaihat)) |> matsbyname::setcoltype(eta_fu_eiou_x)
 
     # Build an output list
-    list(eta_fu_Y_E_vec, eta_fu_eiou_E_vec, eta_fu_Y_X_vec, eta_fu_EIOU_X_vec) |>
+    out <- list(eta_fu_Y_E_vec, eta_fu_eiou_E_vec, eta_fu_Y_X_vec, eta_fu_EIOU_X_vec)
+    if (matricize) {
+      out <- lapply(out, matsbyname::matricize_byname, notation = notation)
+    }
+    out |>
       magrittr::set_names(c(eta_fu_Y_e, eta_fu_eiou_e, eta_fu_Y_x, eta_fu_eiou_x))
   }
   matsindf::matsindf_apply(.c_mats_eta_phi_vecs, FUN = eta_func, C_Y_mat = C_Y, C_eiou_mat = C_eiou,

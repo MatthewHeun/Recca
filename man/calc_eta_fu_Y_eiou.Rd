@@ -10,6 +10,7 @@ calc_eta_fu_Y_eiou(
   C_eiou = Recca::alloc_cols$C_eiou,
   eta_i = Recca::efficiency_cols$eta_i,
   phi = Recca::psut_cols$phi,
+  matricize = TRUE,
   energy_type = Recca::energy_types$energy_type,
   eta_fu = Recca::efficiency_cols$eta_fu,
   energy = Recca::energy_types$e,
@@ -48,6 +49,9 @@ Default is \code{Recca::efficiency_cols$eta_i}.}
 \item{phi}{The name of the column in \code{.c_mats_eta_phi_vecs} containing exergy-to-energy ratios.
 Or a single \strong{phi} vector.
 Default is \code{Recca::psut_cols$phi}.}
+
+\item{matricize}{A boolean that tells whether to return a matrix.
+Default is \code{TRUE}.}
 
 \item{energy_type, energy, exergy}{See \code{Recca::energy_types}.}
 
