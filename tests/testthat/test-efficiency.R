@@ -119,7 +119,7 @@ test_that("calc_eta_pfd() works with the output from chop_Y()", {
 })
 
 
-test_that("calc_eta_fu() works as expected", {
+test_that("calc_eta_fu_Y_eiou() works as expected", {
   # This example comes from the file named "Example f-u matrix efficiency calcs.xlsx"
   # Build example matrices
   C_Y <- matrix(c(0.7, 0.3, 0, 0, 0,
@@ -135,7 +135,7 @@ test_that("calc_eta_fu() works as expected", {
                 nrow = 7, ncol = 1,
                 dimnames = list(c("Electricity", "PSB", "HTH.600.C", "L", "LTH.20.C", "LTH.50.C", "MTH.100.C"), "phi"))
 
-  res <- calc_eta_fu(C_Y = C_Y, C_eiou = C_Y, eta_i = eta_i, phi = phi)
+  res <- calc_eta_fu_Y_eiou(C_Y = C_Y, C_eiou = C_Y, eta_i = eta_i, phi = phi)
 
   # Check the energy results
   expect_equal(res$eta_fu_Y_E,

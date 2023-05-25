@@ -183,9 +183,11 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 }
 
 
-#' Calculate final-to-useful efficiencies
+#' Calculate final-to-useful efficiencies for final demand and EIOU
 #'
-#' Final-to-useful efficiencies can be calculated from
+#' Final-to-useful efficiencies for energy carriers and sectors
+#' in final demand and energy industry own use
+#' can be calculated from
 #' allocations (`C_Y` and `C_eiou`),
 #' efficiencies (`eta_i`), and
 #' (for exergetic efficiencies) exergy-to-energy ratios (`phi`).
@@ -299,25 +301,25 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 #'                                 "LTH.20.C", "LTH.50.C", "MTH.100.C"),
 #'                               "phi"))
 #' phi
-#' res <- calc_eta_fu(C_Y = C_Y, C_eiou = C_Y, eta_i = eta_i, phi = phi)
+#' res <- calc_eta_fu_Y_eiou(C_Y = C_Y, C_eiou = C_Y, eta_i = eta_i, phi = phi)
 #' res$eta_fu_Y_E
 #' res$eta_fu_EIOU_E # Same because C_Y and C_EIOU are same
 #' res$eta_fu_Y_X
 #' res$eta_fu_EIOU_X # Same because C_Y and C_EIOU are same
-calc_eta_fu <- function(.c_mats_eta_phi_vecs = NULL,
-                        C_Y = Recca::alloc_cols$C_Y,
-                        C_eiou = Recca::alloc_cols$C_eiou,
-                        eta_i = Recca::efficiency_cols$eta_i,
-                        phi = Recca::psut_cols$phi,
-                        energy_type = Recca::energy_types$energy_type,
-                        eta_fu = Recca::efficiency_cols$eta_fu,
-                        energy = Recca::energy_types$e,
-                        exergy = Recca::energy_types$x,
-                        eta_fu_Y_e = paste0(eta_fu, "_Y_", energy),
-                        eta_fu_Y_x = paste0(eta_fu, "_Y_", exergy),
-                        eta_fu_eiou_e = paste0(eta_fu, "_EIOU_", energy),
-                        eta_fu_eiou_x = paste0(eta_fu, "_EIOU_", exergy),
-                        notation = RCLabels::arrow_notation) {
+calc_eta_fu_Y_eiou <- function(.c_mats_eta_phi_vecs = NULL,
+                               C_Y = Recca::alloc_cols$C_Y,
+                               C_eiou = Recca::alloc_cols$C_eiou,
+                               eta_i = Recca::efficiency_cols$eta_i,
+                               phi = Recca::psut_cols$phi,
+                               energy_type = Recca::energy_types$energy_type,
+                               eta_fu = Recca::efficiency_cols$eta_fu,
+                               energy = Recca::energy_types$e,
+                               exergy = Recca::energy_types$x,
+                               eta_fu_Y_e = paste0(eta_fu, "_Y_", energy),
+                               eta_fu_Y_x = paste0(eta_fu, "_Y_", exergy),
+                               eta_fu_eiou_e = paste0(eta_fu, "_EIOU_", energy),
+                               eta_fu_eiou_x = paste0(eta_fu, "_EIOU_", exergy),
+                               notation = RCLabels::arrow_notation) {
 
   eta_func <- function(C_Y_mat, C_eiou_mat, eta_i_vec, phi_vec) {
     # At this point, all incoming matrices and vectors will be single matrices or vectors
