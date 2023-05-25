@@ -50,8 +50,11 @@ Default is \code{Recca::efficiency_cols$eta_i}.}
 Or a single \strong{phi} vector.
 Default is \code{Recca::psut_cols$phi}.}
 
-\item{matricize}{A boolean that tells whether to return a matrix.
-Default is \code{TRUE}.}
+\item{matricize}{A boolean that tells whether to return matrices of the same
+structure as \strong{Y} and \strong{U_EIOU}.
+Default is \code{TRUE}.
+\code{FALSE} returns a column vector with rows same as
+\strong{C_Y} and \strong{C_EIOU}.}
 
 \item{energy_type, energy, exergy}{See \code{Recca::energy_types}.}
 
@@ -159,4 +162,8 @@ res$eta_fu_Y_E
 res$eta_fu_EIOU_E # Same because C_Y and C_EIOU are same
 res$eta_fu_Y_X
 res$eta_fu_EIOU_X # Same because C_Y and C_EIOU are same
+res2 <- calc_eta_fu_Y_eiou(C_Y = C_Y, C_eiou = C_Y, eta_i = eta_i, phi = phi,
+                           matricize = FALSE)
+res2$eta_fu_Y_E
+res2$eta_fu_Y_X
 }

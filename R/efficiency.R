@@ -251,8 +251,11 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 #' @param phi The name of the column in `.c_mats_eta_phi_vecs` containing exergy-to-energy ratios.
 #'            Or a single **phi** vector.
 #'            Default is `Recca::psut_cols$phi`.
-#' @param matricize A boolean that tells whether to return a matrix.
+#' @param matricize A boolean that tells whether to return matrices of the same
+#'                  structure as **Y** and **U_EIOU**.
 #'                  Default is `TRUE`.
+#'                  `FALSE` returns a column vector with rows same as
+#'                  **C_Y** and **C_EIOU**.
 #' @param energy_type,energy,exergy See `Recca::energy_types`.
 #' @param eta_fu The base name of the output columns.
 #'               Default is `Recca::efficiency_cols$eta_fu`.
@@ -308,6 +311,10 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 #' res$eta_fu_EIOU_E # Same because C_Y and C_EIOU are same
 #' res$eta_fu_Y_X
 #' res$eta_fu_EIOU_X # Same because C_Y and C_EIOU are same
+#' res2 <- calc_eta_fu_Y_eiou(C_Y = C_Y, C_eiou = C_Y, eta_i = eta_i, phi = phi,
+#'                            matricize = FALSE)
+#' res2$eta_fu_Y_E
+#' res2$eta_fu_Y_X
 calc_eta_fu_Y_eiou <- function(.c_mats_eta_phi_vecs = NULL,
                                C_Y = Recca::alloc_cols$C_Y,
                                C_eiou = Recca::alloc_cols$C_eiou,
