@@ -340,10 +340,10 @@ calc_eta_fu_Y_eiou <- function(.c_mats_eta_phi_vecs = NULL,
     # Trim eta_i_vec to include only those machines included in C_Y_mat or C_EIOU_mat
     eta_i_vec_trimmed_hat_Y_E <- matsbyname::trim_rows_cols(a = eta_i_vec, mat = matsbyname::transpose_byname(C_Y_mat),
                                                             margin = 1, notation = notation) |>
-      matsbyname::hatize_byname()
+      matsbyname::hatize_byname(keep = "rownames")
     eta_i_vec_trimmed_hat_eiou_E <- matsbyname::trim_rows_cols(a = eta_i_vec, mat = matsbyname::transpose_byname(C_eiou_mat),
                                                                margin = 1, notation = notation) |>
-      matsbyname::hatize_byname()
+      matsbyname::hatize_byname(keep = "rownames")
 
     # Post-multiply C_Y and C_EIOU by hatized eta vectors.
     CYetaihat <- matsbyname::matrixproduct_byname(C_Y_mat, eta_i_vec_trimmed_hat_Y_E)
