@@ -134,15 +134,15 @@ extend_to_exergy <- function(.sutmats = NULL,
                                                                                   v = matsbyname::transpose_byname(phi_vec),
                                                                                   a_piece = mat_piece, v_piece = phi_piece,
                                                                                   notation = notation, prepositions = prepositions,
-                                                                                  column = FALSE) %>%
-                                                  matsbyname::hatize_byname(keep = "colnames"))
+                                                                                  margin = 2) %>%
+                                                  matsbyname::hatize_byname(keep = "rownames"))
 
     # U_X = phi_hat * U_E
     U_X_mat <- matsbyname::matrixproduct_byname(matsbyname::vec_from_store_byname(a = U_mat,
                                                                                   v = phi_vec,
                                                                                   a_piece = mat_piece, v_piece = phi_piece,
                                                                                   notation = notation, prepositions = prepositions,
-                                                                                  column = TRUE) %>%
+                                                                                  margin = 1) %>%
                                                   matsbyname::hatize_byname(keep = "rownames"),
                                                 U_mat)
 
@@ -151,7 +151,7 @@ extend_to_exergy <- function(.sutmats = NULL,
                                                                                        v = phi_vec,
                                                                                        a_piece = mat_piece, v_piece = phi_piece,
                                                                                        notation = notation, prepositions = prepositions,
-                                                                                       column = TRUE) %>%
+                                                                                       margin = 1) %>%
                                                        matsbyname::hatize_byname(keep = "rownames"),
                                                      U_feed_mat)
 
@@ -160,7 +160,7 @@ extend_to_exergy <- function(.sutmats = NULL,
                                                                                        v = phi_vec,
                                                                                        a_piece = mat_piece, v_piece = phi_piece,
                                                                                        notation = notation, prepositions = prepositions,
-                                                                                       column = TRUE) %>%
+                                                                                       margin = 1) %>%
                                                        matsbyname::hatize_byname(keep = "rownames"),
                                                      U_eiou_mat)
 
@@ -170,8 +170,8 @@ extend_to_exergy <- function(.sutmats = NULL,
                                                                                   v = matsbyname::transpose_byname(phi_vec),
                                                                                   a_piece = mat_piece, v_piece = phi_piece,
                                                                                   notation = notation, prepositions = prepositions,
-                                                                                  column = FALSE) %>%
-                                                  matsbyname::hatize_byname(keep = "colnames"))
+                                                                                  margin = 2) %>%
+                                                  matsbyname::hatize_byname(keep = "rownames"))
 
 
     # Y_X = phi_hat * Y_E
@@ -179,7 +179,7 @@ extend_to_exergy <- function(.sutmats = NULL,
                                                                                   v = phi_vec,
                                                                                   a_piece = mat_piece, v_piece = phi_piece,
                                                                                   notation = notation, prepositions = prepositions,
-                                                                                  column = TRUE) %>%
+                                                                                  margin = 1) %>%
                                                   matsbyname::hatize_byname(keep = "rownames"),
                                                 Y_mat)
 

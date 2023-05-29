@@ -5,11 +5,11 @@ test_that("industry efficiencies are calculated correctly", {
     calc_eta_i() %>%
     dplyr::select(Country, Year, Energy.type, Last.stage, eta_i) %>%
     tidyr::gather(key = matnames, value = matvals, eta_i) %>%
-    expand_to_tidy() %>%
+    matsindf::expand_to_tidy() %>%
     dplyr::rename(eta_i = matvals) %>%
     dplyr::mutate(
       # Make expected values
-      expected = case_when(
+      expected = dplyr::case_when(
         startsWith(rownames, "Resources - ") ~ Inf,
         Last.stage == "services" & endsWith(rownames, " dist.") ~ NA_real_,
         rownames %in% c("Cars", "Homes", "Rooms", "Trucks") ~ NA_real_,
@@ -20,10 +20,21 @@ test_that("industry efficiencies are calculated correctly", {
   expect_equal(result$eta_i, result$expected)
 
   # Test some specific values
-  expect_equal(result %>% filter(Last.stage == IEATools::last_stages$final, rownames == "Crude dist.") %>% extract2("eta_i"), 0.98855359)
-  expect_equal(result %>% filter(Last.stage == IEATools::last_stages$useful, rownames == "Power plants") %>% extract2("eta_i"), 0.39751553)
-  expect_equal(result %>% filter(Last.stage == IEATools::last_stages$services, Energy.type == IEATools::energy_types$e, rownames == "Oil fields") %>% extract2("eta_i"), 0.94857713)
-  expect_equal(result %>% filter(Last.stage == IEATools::last_stages$services, Energy.type == IEATools::energy_types$x, rownames == "Oil fields") %>% extract2("eta_i"), 0.94860812)
+  expect_equal(result %>%
+                 dplyr::filter(Last.stage == IEATools::last_stages$final, rownames == "Crude dist.") |>
+                 magrittr::extract2("eta_i"),
+               0.98855359)
+  expect_equal(result %>%
+                 dplyr::filter(Last.stage == IEATools::last_stages$useful, rownames == "Power plants") |>
+                 magrittr::extract2("eta_i"),
+               0.39751553)
+  expect_equal(result |>
+                 dplyr::filter(Last.stage == IEATools::last_stages$services, Energy.type == IEATools::energy_types$e, rownames == "Oil fields") |>
+                 magrittr::extract2("eta_i"),
+               0.94857713)
+  expect_equal(result |>
+                 dplyr::filter(Last.stage == IEATools::last_stages$services, Energy.type == IEATools::energy_types$x, rownames == "Oil fields") |>
+                 magrittr::extract2("eta_i"), 0.94860812)
 })
 
 
@@ -108,4 +119,67 @@ test_that("calc_eta_pfd() works with the output from chop_Y()", {
 })
 
 
+test_that("calc_eta_fu_Y_eiou() works as expected", {
+  # This example comes from the file named "Example f-u matrix efficiency calcs.xlsx"
+  # Build example matrices
+  C_Y <- matrix(c(0.7, 0.3, 0, 0, 0,
+                  0,   0, 0.2, 0.5, 0.3), byrow = TRUE, nrow = 2, ncol = 5,
+                dimnames = list(c("Electricity -> Non-ferrous metals", "PSB -> Residential"),
+                                c("Electric arc furnaces -> HTH.600.C", "Electric lights -> L",
+                                  "Wood stoves -> LTH.20.C", "Wood stoves -> LTH.50.C", "Wood stoves -> MTH.100.C"))) |>
+    matsbyname::setrowtype("Product -> Industry") |> matsbyname::setcoltype("Industry -> Product")
+  eta_i <- matrix(c(0.9, 0.2, 0.4, 0.4, 0.3), nrow = 5, ncol = 1,
+                  dimnames = list(c("Electric arc furnaces -> HTH.600.C", "Electric lights -> L",
+                                    "Wood stoves -> LTH.20.C", "Wood stoves -> LTH.50.C", "Wood stoves -> MTH.100.C"),
+                                  "eta_i")) |>
+    matsbyname::setrowtype("Industry -> Product") |> matsbyname::setcoltype("eta.i")
+  phi <- matrix(c(1, 1.1, 1 - 298.15/(600+273.15), 0.95, 1 - (20 + 273.15)/298.15, 1 - 298.15/(50+273.15), 1 - 298.15/(100+273.15)),
+                nrow = 7, ncol = 1,
+                dimnames = list(c("Electricity", "PSB", "HTH.600.C", "L", "LTH.20.C", "LTH.50.C", "MTH.100.C"), "phi")) |>
+    matsbyname::setrowtype("Product") |> matsbyname::setcolnames_byname("phi")
 
+  res <- calc_eta_fu_Y_eiou(C_Y = C_Y, C_eiou = C_Y, eta_i = eta_i, phi = phi, matricize = FALSE)
+
+  # Check the energy results
+  expect_equal(res$eta_fu_Y_E,
+               matrix(c(0.69, 0.37), ncol = 1, dimnames = list(c("Electricity -> Non-ferrous metals", "PSB -> Residential"),
+                                                               "eta_fu_Y_E")) |>
+                 matsbyname::setrowtype("Product -> Industry") |> matsbyname::setcoltype("eta_fu_Y_E"))
+  expect_equal(res$eta_fu_EIOU_E,
+               matrix(c(0.69, 0.37), ncol = 1, dimnames = list(c("Electricity -> Non-ferrous metals", "PSB -> Residential"),
+                                                               "eta_fu_EIOU_E")) |>
+                 matsbyname::setrowtype("Product -> Industry") |> matsbyname::setcoltype("eta_fu_EIOU_E"))
+
+  # Check the exergy results
+  expect_equal(res$eta_fu_Y_X,
+               matrix(c(0.471877169, 0.031730489), ncol = 1, dimnames = list(c("Electricity -> Non-ferrous metals", "PSB -> Residential"),
+                                                                             "eta_fu_Y_X")) |>
+                 matsbyname::setrowtype("Product -> Industry") |> matsbyname::setcoltype("eta_fu_Y_X"))
+  expect_equal(res$eta_fu_EIOU_X,
+               matrix(c(0.471877169, 0.031730489), ncol = 1, dimnames = list(c("Electricity -> Non-ferrous metals", "PSB -> Residential"),
+                                                                             "eta_fu_EIOU_X")) |>
+                 matsbyname::setrowtype("Product -> Industry") |> matsbyname::setcoltype("eta_fu_EIOU_X"))
+
+  # Try with matrix output
+  resm <- calc_eta_fu_Y_eiou(C_Y = C_Y, C_eiou = C_Y, eta_i = eta_i, phi = phi)
+
+  # Check the energy results
+  expect_equal(resm$eta_fu_Y_E,
+               matrix(c(0.69, 0,
+                        0, 0.37), nrow = 2, ncol = 2, dimnames = list(c("Electricity", "PSB"), c("Non-ferrous metals", "Residential"))) |>
+                 matsbyname::setrowtype("Product") |> matsbyname::setcoltype("Industry"))
+  expect_equal(resm$eta_fu_EIOU_E,
+               matrix(c(0.69, 0,
+                        0, 0.37), nrow = 2, ncol = 2, dimnames = list(c("Electricity", "PSB"), c("Non-ferrous metals", "Residential"))) |>
+                 matsbyname::setrowtype("Product") |> matsbyname::setcoltype("Industry"))
+
+  # Check the exergy results
+  expect_equal(resm$eta_fu_Y_X,
+               matrix(c(0.471877169, 0,
+                        0, 0.031730489), nrow = 2, ncol = 2, dimnames = list(c("Electricity", "PSB"), c("Non-ferrous metals", "Residential"))) |>
+                 matsbyname::setrowtype("Product") |> matsbyname::setcoltype("Industry"))
+  expect_equal(resm$eta_fu_EIOU_X,
+               matrix(c(0.471877169, 0,
+                        0, 0.031730489), nrow = 2, ncol = 2, dimnames = list(c("Electricity", "PSB"), c("Non-ferrous metals", "Residential"))) |>
+                 matsbyname::setrowtype("Product") |> matsbyname::setcoltype("Industry"))
+})

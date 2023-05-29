@@ -3,6 +3,11 @@ title: "Release notes for `Recca`"
 output: html_document
 ---
 
+* New function `calc_eta_fu()` calculates 
+  final-to-useful efficiencies for 
+  every entry in **Y** and **U_EIOU** matrices, 
+  responding to a feature request from Pierre Jacques.
+
 
 # Recca 0.1.41 (2023-04-28) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7877495.svg)](https://doi.org/10.5281/zenodo.7877495)
 

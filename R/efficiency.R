@@ -20,10 +20,10 @@
 #' `calc_embodied_etas()` function.
 #'
 #' @param .sutmats A data frame containing columns for **U**, **V**, and **S_units** matrices.
-#' @param U A string for the name of a column of **U** matrices in `.sutmats`. (Default is "U".)
-#' @param V A string for the name of a column of **V** matrices in `.sutmats`. (Default is "V".)
-#' @param S_units A string for the name of a column of **S_units** matrices in `.sutmats`. (Default is "S_units".)
-#' @param eta_i The name of the industry efficiency column in output. Default is "eta_i".
+#' @param U A string for the name of a column of **U** matrices in `.sutmats`. Default is `Recca::psut_cols$U`.
+#' @param V A string for the name of a column of **V** matrices in `.sutmats`. Default is `Recca::psut_cols$V`.
+#' @param S_units A string for the name of a column of **S_units** matrices in `.sutmats`. Default is `Recca::psut_cols$S_units`.)
+#' @param eta_i The name of the industry efficiency column in output. Default is `Recca::psut_cols$S_units`.
 #'
 #' @return `.sutmats` with an additional column `eta_i`
 #'
@@ -36,9 +36,11 @@
 #'   calc_eta_i()
 calc_eta_i <- function(.sutmats,
                        # Inputs
-                       U = "U", V = "V", S_units = "S_units",
+                       U = Recca::psut_cols$U,
+                       V = Recca::psut_cols$V,
+                       S_units = Recca::psut_cols$S_units,
                        # Outputs
-                       eta_i = "eta_i"){
+                       eta_i = Recca::efficiency_cols$eta_i){
   eta_func <- function(U_mat, V_mat, S_units_mat){
     f_vec <- matsbyname::colsums_byname(U_mat) %>% matsbyname::transpose_byname()
     g_vec <- matsbyname::rowsums_byname(V_mat)
@@ -181,8 +183,221 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 }
 
 
+#' Calculate final-to-useful efficiencies for final demand and EIOU
+#'
+#' Final-to-useful efficiencies for energy carriers and sectors
+#' in final demand and energy industry own use
+#' can be calculated from
+#' allocations (`C_Y` and `C_eiou`),
+#' machine efficiencies (`eta_i`), and
+#' (for exergetic efficiencies) exergy-to-energy ratios (`phi`).
+#' This function performs those calculations.
+#'
+#' The matrix formula for calculating energy efficiencies
+#' is **eta_fu_E** `=` **C** `*` **eta_i**,
+#' where **C** is one of **C_Y** or **C_EIOU**.
+#' The matrix formula for calculating exergy efficiencies
+#' from allocations and machine energy efficiencies is
+#' **eta_fu_X** `=` (**phi_u_hat_inv** `*` (**C** `*` **eta_fu_hat**)) `*` **phi_u**.
+#'
+#' The **C_Y** matrix is assumed to have rows named
+#' with prefixes of final energy carriers and
+#' suffixes of the final demand sector
+#' into which the final energy carrier flows.
+#' The **C_EIOU** matrix is similar, except that
+#' its rows are named with suffixes of the
+#' energy industry sector into which the final energy carrier flows.
+#' The columns of the **C_Y** and **C_EIOU** matrices
+#' are named with prefixes of machine names and
+#' suffixes of useful energy product made by the machine.
+#' See examples.
+#'
+#' The **eta_i** vector of machine efficiencies
+#' has rows named with
+#' prefixes same as **C_Y** and **C_EIOU** columns.
+#' The name of the **eta_i** column is not used.
+#' See examples.
+#'
+#' The **phi** vector of exergy-to-energy ratios
+#' has rows named with energy carriers
+#' that correspond to the prefixes of
+#' **C_Y** and **C_EIOU** rows and the suffixes of
+#' **C_Y** and **C_EIOU** columns.
+#' See examples.
+#'
+#' This function uses [matsbyname::vec_from_store_byname()]
+#' to construct the `eta_i` and `phi` vectors before multiplying, thereby
+#' eliminating unnecessary growth of the output vectors.
+#'
+#' @param .c_mats_eta_phi_vecs A data frame containing allocation matrices (`C_Y` and `C_eiou`),
+#'                             vectors of machine efficiencies (`eta_i`), and
+#'                             exergy-to-energy ratio vectors (`phi`).
+#'                             Default is `NULL`, in which case individual matrices or vectors
+#'                             can be passed to `C_Y`, `C_eiou`, `eta_i`, and `phi`.
+#' @param C_Y The name of the column in `.c_mats_eta_phi_vecs` containing allocation
+#'            matrices for final demand (the `Y` in `C_Y`).
+#'            Or a single **C_Y** matrix.
+#'            Or a list of **C_Y** matrices.
+#'            Default is `Recca::alloc_cols$C_Y`.
+#' @param C_eiou The name of the column in `.c_mats_eta_phi_vecs` containing allocation
+#'               matrices for energy industry own use (the `eiou` in `C_eiou`).
+#'               Or a single **C_EIOU** matrix.
+#'               Or a list of **C_EIOU** matrices.
+#'               Default is `Recca::alloc_cols$C_eiou`.
+#' @param eta_i The name of the column in `.c_mats_eta_phi_vecs` containing machine efficiencies.
+#'              Or a single **eta_i** vector.
+#'              Or a list of **eta_i** vectors.
+#'              Default is `Recca::efficiency_cols$eta_i`.
+#' @param phi The name of the column in `.c_mats_eta_phi_vecs` containing exergy-to-energy ratios.
+#'            Or a single **phi** vector.
+#'            Default is `Recca::psut_cols$phi`.
+#' @param matricize A boolean that tells whether to return matrices of the same
+#'                  structure as **Y** and **U_EIOU**.
+#'                  Default is `TRUE`.
+#'                  `FALSE` returns a column vector with rows same as
+#'                  **C_Y** and **C_EIOU**.
+#' @param energy_type,energy,exergy See `Recca::energy_types`.
+#' @param eta_fu The base name of the output columns.
+#'               Default is `Recca::efficiency_cols$eta_fu`.
+#' @param eta_fu_Y_e The name of the energy efficiency output column
+#'                   for energy flowing into final demand (**Y**).
+#'                   Default is `paste0(eta_fu, "_Y_", energy)`.
+#' @param eta_fu_Y_x The name of the exergy efficiency output column
+#'                   for energy flowing into final demand (**Y**).
+#'                   Default is `paste0(eta_fu, "_Y_", exergy)`.
+#' @param eta_fu_eiou_e The name of the energy efficiency output column
+#'                      for energy flowing into the energy industry (**U_EIOU**).
+#'                      Default is `paste0(eta_fu, "_EIOU_", energy)`.
+#' @param eta_fu_eiou_x The name of the exergy efficiency output column
+#'                      for energy flowing into the energy industry (**U_EIOU**).
+#'                      Default is `paste0(eta_fu, "_EIOU_", energy)`.
+#' @param notation The notation for the row and column labels of the matrices and vectors.
+#'                 Default is `RCLabels::arrow_notation`.
+#'
+#' @return A data frame or list containing final-to-useful efficiencies.
+#'
+#' @export
+#'
+#' @examples
+#' C_Y <- matrix(c(0.7, 0.3, 0,   0,   0,
+#'                 0,   0,   0.2, 0.5, 0.3), byrow = TRUE, nrow = 2, ncol = 5,
+#'               dimnames = list(c("Electricity -> Non-ferrous metals",
+#'                                 "PSB -> Residential"),
+#'                               c("Electric arc furnaces -> HTH.600.C",
+#'                                 "Electric lights -> L",
+#'                                 "Wood stoves -> LTH.20.C",
+#'                                 "Wood stoves -> LTH.50.C",
+#'                                 "Wood stoves -> MTH.100.C")))
+#' C_Y
+#' eta_i <- matrix(c(0.9, 0.2, 0.4, 0.4, 0.3), nrow = 5, ncol = 1,
+#'                   dimnames = list(c("Electric arc furnaces -> HTH.600.C",
+#'                                     "Electric lights -> L",
+#'                                     "Wood stoves -> LTH.20.C",
+#'                                     "Wood stoves -> LTH.50.C",
+#'                                     "Wood stoves -> MTH.100.C"),
+#'                                   "eta_i"))
+#' eta_i
+#' phi <- matrix(c(1, 1.1, 1 - 298.15/(600+273.15), 0.95,
+#'                 1 - (20 + 273.15)/298.15,
+#'                 1 - 298.15/(50+273.15),
+#'                 1 - 298.15/(100+273.15)),
+#'               nrow = 7, ncol = 1,
+#'               dimnames = list(c("Electricity", "PSB", "HTH.600.C", "L",
+#'                                 "LTH.20.C", "LTH.50.C", "MTH.100.C"),
+#'                               "phi"))
+#' phi
+#' res <- calc_eta_fu_Y_eiou(C_Y = C_Y, C_eiou = C_Y, eta_i = eta_i, phi = phi)
+#' res$eta_fu_Y_E
+#' res$eta_fu_EIOU_E # Same because C_Y and C_EIOU are same
+#' res$eta_fu_Y_X
+#' res$eta_fu_EIOU_X # Same because C_Y and C_EIOU are same
+#' res2 <- calc_eta_fu_Y_eiou(C_Y = C_Y, C_eiou = C_Y, eta_i = eta_i, phi = phi,
+#'                            matricize = FALSE)
+#' res2$eta_fu_Y_E
+#' res2$eta_fu_Y_X
+calc_eta_fu_Y_eiou <- function(.c_mats_eta_phi_vecs = NULL,
+                               C_Y = Recca::alloc_cols$C_Y,
+                               C_eiou = Recca::alloc_cols$C_eiou,
+                               eta_i = Recca::efficiency_cols$eta_i,
+                               phi = Recca::psut_cols$phi,
+                               matricize = TRUE,
+                               energy_type = Recca::energy_types$energy_type,
+                               eta_fu = Recca::efficiency_cols$eta_fu,
+                               energy = Recca::energy_types$e,
+                               exergy = Recca::energy_types$x,
+                               eta_fu_Y_e = paste0(eta_fu, "_Y_", energy),
+                               eta_fu_Y_x = paste0(eta_fu, "_Y_", exergy),
+                               eta_fu_eiou_e = paste0(eta_fu, "_EIOU_", energy),
+                               eta_fu_eiou_x = paste0(eta_fu, "_EIOU_", exergy),
+                               notation = RCLabels::arrow_notation) {
+
+  eta_func <- function(C_Y_mat, C_eiou_mat, eta_i_vec, phi_vec) {
+    # At this point, all incoming matrices and vectors will be single matrices or vectors
+
+    # Calculate some preliminary information, namely C_Y * eta_i_hat.
+    # This is used for both energy and exergy calculations.
+
+    # Trim eta_i_vec to include only those machines included in C_Y_mat or C_EIOU_mat
+    eta_i_vec_trimmed_hat_Y_E <- matsbyname::trim_rows_cols(a = eta_i_vec, mat = matsbyname::transpose_byname(C_Y_mat),
+                                                            margin = 1, notation = notation) |>
+      matsbyname::hatize_byname(keep = "rownames")
+    eta_i_vec_trimmed_hat_eiou_E <- matsbyname::trim_rows_cols(a = eta_i_vec, mat = matsbyname::transpose_byname(C_eiou_mat),
+                                                               margin = 1, notation = notation) |>
+      matsbyname::hatize_byname(keep = "rownames")
+
+    # Post-multiply C_Y and C_EIOU by hatized eta vectors.
+    CYetaihat <- matsbyname::matrixproduct_byname(C_Y_mat, eta_i_vec_trimmed_hat_Y_E)
+    CEIOUetaihat <- matsbyname::matrixproduct_byname(C_eiou_mat, eta_i_vec_trimmed_hat_eiou_E)
 
 
+    # eta_fu for final demand (Y) and energy (E)
+
+    # Do the multiplication required to get eta_fu values
+    eta_fu_Y_E_vec <- matsbyname::rowsums_byname(CYetaihat) |>
+      matsbyname::setcolnames_byname(eta_fu_Y_e) |>
+      matsbyname::setcoltype(eta_fu_Y_e)
+    eta_fu_eiou_E_vec <- matsbyname::rowsums_byname(CEIOUetaihat) |>
+      matsbyname::setcolnames_byname(eta_fu_eiou_e) |>
+      matsbyname::setcoltype(eta_fu_eiou_e)
+
+    # eta_fu for final demand (Y) and energy (X)
+
+    # Build phi_hat_inv for the denominator with only rows that match prefixes of rows of the
+    # CYetaihat and CEIOUetaihat matrices.
+    # And change the coltype to enable multiplication.
+    phi_hat_inv_Y_denom <- matsbyname::vec_from_store_byname(a = CYetaihat, v = phi_vec, notation = RCLabels::arrow_notation, a_piece = "pref") |>
+      matsbyname::hatinv_byname(keep = "rownames") |>
+      matsbyname::setcoltype(matsbyname::rowtype(CYetaihat))
+    phi_hat_inv_EIOU_denom <- matsbyname::vec_from_store_byname(a = CEIOUetaihat, v = phi_vec, notation = RCLabels::arrow_notation, a_piece = "pref") |>
+      matsbyname::hatinv_byname(keep = "rownames") |>
+      matsbyname::setcoltype(matsbyname::rowtype(CEIOUetaihat))
 
 
+    # Build phi vectors for the numerator by creating the vector from the suffixes of the columns of the
+    # CYetaihat and CEIOUetaihat matrices.
+    phi_Y_num <- matsbyname::vec_from_store_byname(a = CYetaihat, v = phi_vec, margin = 2, notation = RCLabels::arrow_notation, a_piece = "suff") |>
+      matsbyname::setrowtype(matsbyname::coltype(CYetaihat))
+    phi_EIOU_num <- matsbyname::vec_from_store_byname(a = CEIOUetaihat, v = phi_vec, margin = 2, notation = RCLabels::arrow_notation, a_piece = "suff") |>
+      matsbyname::setrowtype(matsbyname::coltype(CEIOUetaihat))
 
+    # Now do the exergy calculations
+    eta_fu_Y_X_vec <- matsbyname::matrixproduct_byname(phi_hat_inv_Y_denom, CYetaihat) |>
+      matsbyname::matrixproduct_byname(phi_Y_num) |>
+      matsbyname::setcolnames_byname(eta_fu_Y_x) |>
+      matsbyname::setrowtype(matsbyname::rowtype(CYetaihat)) |> matsbyname::setcoltype(eta_fu_Y_x)
+    eta_fu_EIOU_X_vec <- matsbyname::matrixproduct_byname(phi_hat_inv_EIOU_denom, CYetaihat) |>
+      matsbyname::matrixproduct_byname(phi_EIOU_num) |>
+      matsbyname::setcolnames_byname(eta_fu_eiou_x) |>
+      matsbyname::setrowtype(matsbyname::rowtype(CEIOUetaihat)) |> matsbyname::setcoltype(eta_fu_eiou_x)
+
+    # Build an output list
+    out <- list(eta_fu_Y_E_vec, eta_fu_eiou_E_vec, eta_fu_Y_X_vec, eta_fu_EIOU_X_vec)
+    if (matricize) {
+      out <- lapply(out, matsbyname::matricize_byname, notation = notation)
+    }
+    out |>
+      magrittr::set_names(c(eta_fu_Y_e, eta_fu_eiou_e, eta_fu_Y_x, eta_fu_eiou_x))
+  }
+  matsindf::matsindf_apply(.c_mats_eta_phi_vecs, FUN = eta_func, C_Y_mat = C_Y, C_eiou_mat = C_eiou,
+                           eta_i_vec = eta_i, phi_vec = phi)
+}
