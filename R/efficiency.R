@@ -366,10 +366,10 @@ calc_eta_fu_Y_eiou <- function(.c_mats_eta_phi_vecs = NULL,
     # CYetaihat and CEIOUetaihat matrices.
     # And change the coltype to enable multiplication.
     phi_hat_inv_Y_denom <- matsbyname::vec_from_store_byname(a = CYetaihat, v = phi_vec, notation = RCLabels::arrow_notation, a_piece = "pref") |>
-      matsbyname::hatinv_byname() |>
+      matsbyname::hatinv_byname(keep = "rownames") |>
       matsbyname::setcoltype(matsbyname::rowtype(CYetaihat))
     phi_hat_inv_EIOU_denom <- matsbyname::vec_from_store_byname(a = CEIOUetaihat, v = phi_vec, notation = RCLabels::arrow_notation, a_piece = "pref") |>
-      matsbyname::hatinv_byname() |>
+      matsbyname::hatinv_byname(keep = "rownames") |>
       matsbyname::setcoltype(matsbyname::rowtype(CEIOUetaihat))
 
 
