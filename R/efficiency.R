@@ -189,7 +189,7 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 #' in final demand and energy industry own use
 #' can be calculated from
 #' allocations (`C_Y` and `C_eiou`),
-#' efficiencies (`eta_i`), and
+#' machine efficiencies (`eta_i`), and
 #' (for exergetic efficiencies) exergy-to-energy ratios (`phi`).
 #' This function performs those calculations.
 #'
