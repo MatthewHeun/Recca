@@ -351,7 +351,9 @@ test_that("write_ecc_to_excel() works as expected", {
   res <- write_ecc_to_excel(ecc, path = ecc_temp_path, overwrite = TRUE)
 
   expect_true(file.exists(ecc_temp_path))
-  file.remove(ecc_temp_path)
+  if (file.exists(ecc_temp_path)) {
+    file.remove(ecc_temp_path)
+  }
 })
 
 
@@ -367,6 +369,22 @@ test_that("write_ecc_to_excel() fails when the file already exists", {
     # but also the regex escape character.
     # So eliminate that feature of the test.
     # regexp = paste0("File ", ecc_temp_path, " already exists. Call write_ecc_to_excel with overwrite = TRUE to overwrite."))
+  if (file.exists(ecc_temp_path)) {
+    file.remove(ecc_temp_path)
+  }
+})
+
+
+test_that("write_ecc_to_excel() works with Matrix objects", {
+  ecc <- UKEnergy2000mats |>
+    tidyr::spread(key = "matrix.name", value = "matrix") |>
+    dplyr::mutate(
+      R = matsbyname::Matrix(R)
+    )
+  ecc_temp_path <- tempfile(pattern = "write_excel_ecc_test_file", fileext = ".xlsx")
+  res <- write_ecc_to_excel(ecc, path = ecc_temp_path, overwrite = TRUE)
+
+  expect_true(file.exists(ecc_temp_path))
   if (file.exists(ecc_temp_path)) {
     file.remove(ecc_temp_path)
   }

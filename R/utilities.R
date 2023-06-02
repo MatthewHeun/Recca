@@ -848,7 +848,9 @@ write_ecc_to_excel <- function(.psut_data = NULL,
           # Write the data
           openxlsx::writeData(wb = ecc_wb,
                               sheet = sheet_name,
-                              x = this_mat,
+                              # Account for the fact that this_mat could be a
+                              # non-native matrix class (such as Matrix)
+                              x = as.matrix(this_mat),
                               xy = this_loc[["origin"]],
                               array = TRUE, colNames = TRUE, rowNames = TRUE)
           # Set the background color to matrix_bg_color for the numbers in the matrix
