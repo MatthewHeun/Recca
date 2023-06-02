@@ -3,6 +3,9 @@ title: "Release notes for `Recca`"
 output: html_document
 ---
 
+* Fixed a bug where writing `Matrix` objects failed in
+  `write_ecc_to_excel()`. 
+  Thanks to Pierre Jacques for reporting this problem.
 * New function `calc_eta_fu()` calculates 
   final-to-useful efficiencies for 
   every entry in **Y** and **U_EIOU** matrices, 
