@@ -3,7 +3,7 @@ title: "Release notes for `Recca`"
 output: html_document
 ---
 
-# Recca 0.1.42 (2023-06-02)
+# Recca 0.1.42 (2023-06-02) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7998165.svg)](https://doi.org/10.5281/zenodo.7998165)
 
 * Fixed a bug where writing `Matrix` objects failed in
   `write_ecc_to_excel()`. 
