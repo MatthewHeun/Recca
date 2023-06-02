@@ -88,7 +88,7 @@ Final-to-useful efficiencies for energy carriers and sectors
 in final demand and energy industry own use
 can be calculated from
 allocations (\code{C_Y} and \code{C_eiou}),
-efficiencies (\code{eta_i}), and
+machine efficiencies (\code{eta_i}), and
 (for exergetic efficiencies) exergy-to-energy ratios (\code{phi}).
 This function performs those calculations.
 }
