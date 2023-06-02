@@ -4,18 +4,24 @@
 \alias{calc_eta_i}
 \title{Calculate industry efficiencies}
 \usage{
-calc_eta_i(.sutmats, U = "U", V = "V", S_units = "S_units", eta_i = "eta_i")
+calc_eta_i(
+  .sutmats,
+  U = Recca::psut_cols$U,
+  V = Recca::psut_cols$V,
+  S_units = Recca::psut_cols$S_units,
+  eta_i = Recca::efficiency_cols$eta_i
+)
 }
 \arguments{
 \item{.sutmats}{A data frame containing columns for \strong{U}, \strong{V}, and \strong{S_units} matrices.}
 
-\item{U}{A string for the name of a column of \strong{U} matrices in \code{.sutmats}. (Default is "U".)}
+\item{U}{A string for the name of a column of \strong{U} matrices in \code{.sutmats}. Default is \code{Recca::psut_cols$U}.}
 
-\item{V}{A string for the name of a column of \strong{V} matrices in \code{.sutmats}. (Default is "V".)}
+\item{V}{A string for the name of a column of \strong{V} matrices in \code{.sutmats}. Default is \code{Recca::psut_cols$V}.}
 
-\item{S_units}{A string for the name of a column of \strong{S_units} matrices in \code{.sutmats}. (Default is "S_units".)}
+\item{S_units}{A string for the name of a column of \strong{S_units} matrices in \code{.sutmats}. Default is \code{Recca::psut_cols$S_units}.)}
 
-\item{eta_i}{The name of the industry efficiency column in output. Default is "eta_i".}
+\item{eta_i}{The name of the industry efficiency column in output. Default is \code{Recca::psut_cols$S_units}.}
 }
 \value{
 \code{.sutmats} with an additional column \code{eta_i}

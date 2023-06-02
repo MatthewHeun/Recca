@@ -92,6 +92,24 @@
 
 
 
+#' Columns in a data frame that contains final-to-useful allocations
+#'
+#' A string list containing named names of columns in PSUT data frames.
+#' Items in the list provide default values for column name function arguments
+#' throughout the `Recca` package.
+#'
+#' @format A string list with `r length(alloc_cols)` entries.
+#' \describe{
+#' \item{C_Y}{The name of a column in a wide-by-matrices data frame containing allocations to final-to-useful machines used in final demand. "C_Y"}
+#' \item{C_eiou}{The name of a column in a wide-by-matrices data frame containing allocations to final-to-useful machines used in final demand. "C_EIOU"}
+#' }
+#'
+#' @examples
+#' alloc_cols
+"alloc_cols"
+
+
+
 #' Sankey diagram data frame column names
 #'
 #' A string list containing named names of columns in Sankey data frames.

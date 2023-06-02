@@ -3,8 +3,21 @@ title: "Release notes for `Recca`"
 output: html_document
 ---
 
+# Recca 0.1.42 (2023-06-02)
 
-# Recca 0.1.41 (2023-04-28)
+* Fixed a bug where writing `Matrix` objects failed in
+  `write_ecc_to_excel()`. 
+  Thanks to Pierre Jacques for reporting this problem.
+* New function `calc_eta_fu()` calculates 
+  final-to-useful efficiencies for 
+  every entry in **Y** and **U_EIOU** matrices, 
+  responding to a feature request from Pierre Jacques.
+* New tests for new features.
+    * Now up to at 641 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
+# Recca 0.1.41 (2023-04-28) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7877495.svg)](https://doi.org/10.5281/zenodo.7877495)
 
 * Responded to policy changes in `matsindf::matsindf_apply()`
   by setting default arguments to `NULL` for several internal functions.
