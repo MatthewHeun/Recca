@@ -134,7 +134,7 @@
 #'               many variable names.
 #'               Default is "_prime".
 #' @param R_colname,U_colname,U_feed_colname,U_eiou_colname,r_eiou_colname,V_colname,Y_colname,S_units_colname Names of input matrices in `.sut_data`. See `Recca::psut_cols` for default values.
-#' @param R_prime_colname,U_prime_colname,U_feed_prime_colname,U_eiou_prime_colname,r_eiou_prime_colname,V_prime_colname,Y_prime_colname Names of output matrices in the return value.
+#' @param R_prime_colname,U_prime_colname,U_feed_prime_colname,U_eiou_prime_colname,r_eiou_prime_colname,V_prime_colname,Y_prime_colname,S_units_prime_colname Names of output matrices in the return value.
 #'                                        Default values are constructed from
 #'                                        `Recca::psut_cols` values suffixed with
 #'                                        the value of the `.prime` argument.
@@ -207,7 +207,8 @@ chop_Y <- function(.sut_data = NULL,
                    U_eiou_prime_colname = paste0(U_eiou_colname, .prime),
                    r_eiou_prime_colname = paste0(r_eiou_colname, .prime),
                    V_prime_colname = paste0(V_colname, .prime),
-                   Y_prime_colname = paste0(Y_colname, .prime)) {
+                   Y_prime_colname = paste0(Y_colname, .prime),
+                   S_units_prime_colname = paste0(S_units_colname, .prime)) {
 
   pattern_type <- match.arg(pattern_type)
   method <- match.arg(method)
@@ -309,7 +310,9 @@ chop_Y <- function(.sut_data = NULL,
                 U_feed_prime = U_feed_prime_colname,
                 U_eiou_prime = U_eiou_prime_colname,
                 r_eiou_prime = r_eiou_prime_colname,
-                V_prime = V_prime_colname)
+                V_prime = V_prime_colname) |>
+          append(list(S_units_mat) |>
+                   magrittr::set_names(S_units_prime_colname))
       })
 
     # Verify that energy is balanced.
@@ -365,7 +368,8 @@ chop_Y <- function(.sut_data = NULL,
                                    U_eiou_prime_colname = U_eiou_prime_colname,
                                    r_eiou_prime_colname = r_eiou_prime_colname,
                                    V_prime_colname = V_prime_colname,
-                                   Y_prime_colname = Y_prime_colname)
+                                   Y_prime_colname = Y_prime_colname,
+                                   S_units_prime_colname = S_units_prime_colname)
   }
 
   out <- matsindf::matsindf_apply(.sut_data,
@@ -429,7 +433,8 @@ chop_R <- function(.sut_data = NULL,
                    U_eiou_prime_colname = paste0(U_eiou_colname, .prime),
                    r_eiou_prime_colname = paste0(r_eiou_colname, .prime),
                    V_prime_colname = paste0(V_colname, .prime),
-                   Y_prime_colname = paste0(Y_colname, .prime)) {
+                   Y_prime_colname = paste0(Y_colname, .prime),
+                   S_units_prime_colname = paste0(S_units_colname, .prime)) {
 
   chopR_func <- function(R_mat, U_mat, U_feed_mat, V_mat, Y_mat, S_units_mat) {
 
@@ -529,7 +534,9 @@ chop_R <- function(.sut_data = NULL,
                    U_eiou_prime = U_eiou_prime_colname,
                    r_eiou_prime = r_eiou_prime_colname,
                    V_prime = V_prime_colname,
-                   Y_prime = Y_prime_colname)
+                   Y_prime = Y_prime_colname) |>
+          append(list(S_units_mat) |>
+                   magrittr::set_names(S_units_prime_colname))
       })
 
     # Verify that energy is balanced.
@@ -584,7 +591,8 @@ chop_R <- function(.sut_data = NULL,
                                    U_eiou_prime_colname = U_eiou_prime_colname,
                                    r_eiou_prime_colname = r_eiou_prime_colname,
                                    V_prime_colname = V_prime_colname,
-                                   Y_prime_colname = Y_prime_colname)
+                                   Y_prime_colname = Y_prime_colname,
+                                   S_units_prime_colname = S_units_prime_colname)
   }
 
   out <- matsindf::matsindf_apply(.sut_data,
@@ -687,8 +695,8 @@ verify_chop_energy_sum <- function(.sut_data = NULL,
 #'                       for which footprint aggregates are given.
 #' @param chop_df,aggregate_primary,net_aggregate_demand,gross_aggregate_demand Names of output columns.
 #'                                                                                    See `Recca::aggregate_cols`.
-#' @param R_prime_colname,U_prime_colname,U_feed_prime_colname,U_eiou_prime_colname,r_eiou_prime_colname,V_prime_colname,Y_prime_colname Names of output matrices in the return value.
-#'                                                                                                                                       Default values are constructed from
+#' @param R_prime_colname,U_prime_colname,U_feed_prime_colname,U_eiou_prime_colname,r_eiou_prime_colname,V_prime_colname,Y_prime_colname,S_units_prime_colname Names of output matrices in the return value.
+#'                                                                                                                                                             Default values are constructed from
 #' @return A data frame containing reconstructed (prime) matrices and
 #'         primary and final demand aggregates in a list suitable for use in `matsindf::matsindf_apply()`.
 calc_aggregates_from_ecc_prime <- function(ecc_prime,
@@ -710,7 +718,8 @@ calc_aggregates_from_ecc_prime <- function(ecc_prime,
                                            U_eiou_prime_colname,
                                            r_eiou_prime_colname,
                                            V_prime_colname,
-                                           Y_prime_colname) {
+                                           Y_prime_colname,
+                                           S_units_prime_colname) {
 
   # Callers can opt to not include the aggregates on output,
   # but calculate them here anyway.
@@ -730,7 +739,8 @@ calc_aggregates_from_ecc_prime <- function(ecc_prime,
       "{U_eiou_prime_colname}" := ecc_prime_transpose[[U_eiou_prime_colname]],
       "{r_eiou_prime_colname}" := ecc_prime_transpose[[r_eiou_prime_colname]],
       "{V_prime_colname}" := ecc_prime_transpose[[V_prime_colname]],
-      "{Y_prime_colname}" := ecc_prime_transpose[[Y_prime_colname]]
+      "{Y_prime_colname}" := ecc_prime_transpose[[Y_prime_colname]],
+      "{S_units_prime_colname}" := ecc_prime_transpose[[S_units_prime_colname]]
     )
 
   if (calc_pfd_aggs) {

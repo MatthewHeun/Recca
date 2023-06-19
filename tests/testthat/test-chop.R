@@ -23,6 +23,7 @@ test_that("chop_R() works as expected", {
   expect_true(paste0(Recca::psut_cols$r_eiou, "_prime") %in% names(chop_R_aggs_unnested))
   expect_true(paste0(Recca::psut_cols$V, "_prime") %in% names(chop_R_aggs_unnested))
   expect_true(paste0(Recca::psut_cols$Y, "_prime") %in% names(chop_R_aggs_unnested))
+  expect_true(paste0(Recca::psut_cols$S_units, "_prime") %in% names(chop_R_aggs_unnested))
 })
 
 
@@ -49,6 +50,7 @@ test_that("chop_R() works without aggregates", {
   expect_true(paste0(Recca::psut_cols$r_eiou, "_prime") %in% names(chopped_R_unnested))
   expect_true(paste0(Recca::psut_cols$V, "_prime") %in% names(chopped_R_unnested))
   expect_true(paste0(Recca::psut_cols$Y, "_prime") %in% names(chopped_R_unnested))
+  expect_true(paste0(Recca::psut_cols$S_units, "_prime") %in% names(chopped_R_unnested))
 })
 
 
@@ -77,6 +79,7 @@ test_that("chop_Y() works as expected", {
   expect_true(paste0(Recca::psut_cols$r_eiou, "_prime") %in% names(chopped_Y_unnested))
   expect_true(paste0(Recca::psut_cols$V, "_prime") %in% names(chopped_Y_unnested))
   expect_true(paste0(Recca::psut_cols$Y, "_prime") %in% names(chopped_Y_unnested))
+  expect_true(paste0(Recca::psut_cols$S_units, "_prime") %in% names(chopped_Y_unnested))
 })
 
 
@@ -132,6 +135,7 @@ test_that("chop_Y() works without aggregates", {
   expect_true(paste0(Recca::psut_cols$r_eiou, "_prime") %in% names(chopped_Y_unnested))
   expect_true(paste0(Recca::psut_cols$V, "_prime") %in% names(chopped_Y_unnested))
   expect_true(paste0(Recca::psut_cols$Y, "_prime") %in% names(chopped_Y_unnested))
+  expect_true(paste0(Recca::psut_cols$S_units, "_prime") %in% names(chopped_Y_unnested))
 })
 
 
