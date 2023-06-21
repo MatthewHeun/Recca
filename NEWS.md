@@ -6,7 +6,7 @@ output: html_document
 
 * Now returning an `S_units_prime` column when chopping matrices.
 * Wrapped some matrices in `as.matrix()` to guard against
-  sparse matrices in `calc_yqfgW()`.
+  sparse matrices causing a failure in `calc_yqfgW()`.
 
 
 # Recca 0.1.42 (2023-06-02) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7998165.svg)](https://doi.org/10.5281/zenodo.7998165)
