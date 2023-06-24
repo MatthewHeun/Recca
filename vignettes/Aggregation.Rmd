@@ -120,7 +120,7 @@ res[[Recca::aggregate_cols$gross_aggregate_demand]]
 ## `effects_aggregages()`
 
 
-
+## `pfu_aggregates()`
 
 
 ## Conclusion

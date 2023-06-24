@@ -230,3 +230,14 @@ usethis::use_data(prod_ind_names_colnames, overwrite = TRUE)
 row_col_types <- list(product_type = "Product",
                       industry_type = "Industry")
 usethis::use_data(row_col_types, overwrite = TRUE)
+
+
+#
+# All stages in energy conversion chains
+#
+
+all_stages <- list(primary = "Primary",
+                   final = "Final",
+                   useful = "Useful",
+                   services = "Services")
+usethis::use_data(all_stages, overwrite = TRUE)
