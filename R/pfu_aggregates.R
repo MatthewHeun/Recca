@@ -131,7 +131,8 @@ pfu_aggregates <- function(.sutdata,
                            S_units_services = paste0(Recca::psut_cols$S_units, sep, services),
                            # Names of internally pivoted columns
                            .matnames = Recca::psut_cols$matnames,
-                           .matvals = Recca::psut_cols$matvals) {
+                           .matvals = Recca::psut_cols$matvals,
+                           tol = 1e-6) {
 
   # If .sutdata is a data frame and it contains a last_stage column,
   # pivot wider before calling pfu_agg_func().
@@ -164,14 +165,49 @@ pfu_aggregates <- function(.sutdata,
                           Y_final_mat = NULL, Y_useful_mat = NULL, Y_services_mat = NULL,
                           S_units_final_mat = NULL, S_units_useful_mat = NULL, S_units_services_mat = NULL) {
 
-    # Calculate primary aggregates from all 3 last stages (final, useful, and services)
-    ex_p_final <- .sutdata |>
-      primary_aggregates(p_industries = p_industries,
-                         by = by,
-                         add_net_gross_cols = TRUE, piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
-                         R = R_final_mat, V = V_final_mat, Y = Y_final_mat,
-                         aggregate_primary = aggregate_primary, net_aggregate_primary = net_aggregate_primary)
+    out <- list()
 
+    # Calculate primary aggregates from all 3 last stages (final, useful, and services)
+    # When available, calculate primary aggregates when last_stage is final.
+    if (!is.null(R_final_mat) & !is.null(V_final_mat) & !is.null(Y_final_mat)) {
+      ex_p_final <- primary_aggregates(R = R_final_mat, V = V_final_mat, Y = Y_final_mat,
+                                       p_industries = p_industries,
+                                       by = by,
+                                       add_net_gross_cols = TRUE,
+                                       piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
+                                       aggregate_primary = aggregate_primary, net_aggregate_primary = net_aggregate_primary)
+      out <- c(out, ex_p_final)
+    }
+    # When available, calculate primary aggregates when last_stage is useful.
+    if (!is.null(R_useful_mat) & !is.null(V_useful_mat) & !is.null(Y_useful_mat)) {
+      ex_p_useful <- primary_aggregates(R = R_useful_mat, V = V_useful_mat, Y = Y_useful_mat,
+                                        p_industries = p_industries,
+                                        by = by,
+                                        add_net_gross_cols = TRUE,
+                                        piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
+                                        aggregate_primary = aggregate_primary, net_aggregate_primary = net_aggregate_primary)
+      # Ensure that final and useful versions of primary aggregates are same.
+      # If they are not same, we probably don't have the same ECCs, and an error should be thrown.
+      # We don't need to check net in addition to gross, because gross and net are identical.
+      matsbyname::difference_byname(ex_p_final[[gross_aggregate_final]], ex_p_useful[[gross_aggregate_useful]]) |>
+        matsbyname::iszero_byname(tol = tol) |>
+        assertthat::assert_that(msg = "Primary aggregates for last_stage = 'Final' and last_stage = 'Useful' are not same to within `tol` in Recca::pfu_aggregates().")
+    }
+    # When available, calculate primary aggregates when last_stage is services
+    if (!is.null(R_services_mat) & !is.null(V_services_mat) & !is.null(Y_services_mat)) {
+      ex_p_services <- primary_aggregates(R = R_services_mat, V = V_services_mat, Y = Y_services_mat,
+                                          p_industries = p_industries,
+                                          by = by,
+                                          add_net_gross_cols = TRUE,
+                                          piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
+                                          aggregate_primary = aggregate_primary, net_aggregate_primary = net_aggregate_primary)
+      # Ensure that final and services versions of primary aggregates are same.
+      # If they are not same, we probably don't have the same ECCs, and an error should be thrown.
+      # We don't need to check net in addition to gross, because gross and net are identical.
+      matsbyname::difference_byname(ex_p_services[[gross_aggregate_final]], ex_p_services[[gross_aggregate_services]]) |>
+        matsbyname::iszero_byname(tol = tol) |>
+        assertthat::assert_that(msg = "Primary aggregates for last_stage = 'Final' and last_stage = 'Services' are not same to within `tol` in Recca::pfu_aggregates().")
+    }
 
     # Ensure that all 3 primary aggregates agree
     #

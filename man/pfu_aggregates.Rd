@@ -65,7 +65,8 @@ pfu_aggregates(
   Y_services = paste0(Recca::psut_cols$Y, sep, services),
   S_units_services = paste0(Recca::psut_cols$S_units, sep, services),
   .matnames = Recca::psut_cols$matnames,
-  .matvals = Recca::psut_cols$matvals
+  .matvals = Recca::psut_cols$matvals,
+  tol = 1e-06
 )
 }
 \arguments{
