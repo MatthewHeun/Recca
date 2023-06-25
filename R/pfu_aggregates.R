@@ -145,15 +145,21 @@ pfu_aggregates <- function(.sutdata,
         "{last_stage}" := NULL
       ) |>
       tidyr::pivot_wider(names_from = tidyr::all_of(.matnames),
-                         values_from = tidyr::all_of(.matvals))
+                         values_from = tidyr::all_of(.matvals)) |>
+      # Change order of the columns to make sense
+      dplyr::relocate(dplyr::any_of(c(R, U, U_feed, U_eiou, r_eiou, V, Y, S_units,
+                                      R_final, U_final, U_feed_final, U_eiou_final, r_eiou_final, V_final, Y_final, S_units_final,
+                                      R_useful, U_useful, U_feed_useful, U_eiou_useful, r_eiou_useful, V_useful, Y_useful, S_units_useful,
+                                      R_services, U_services, U_feed_services, U_eiou_services, r_eiou_services, V_services, Y_services, S_units_services)),
+                      .after = dplyr::last_col())
   }
 
 
   pfuagg_func <- function(R_final_mat = NULL, R_useful_mat = NULL, R_services_mat = NULL,
                           U_final_mat = NULL, U_useful_mat = NULL, U_services_mat = NULL,
                           U_feed_final_mat = NULL, U_feed_useful_mat = NULL, U_feed_services_mat = NULL,
-                          U_eroi_final_mat = NULL, U_eroi_useful_mat = NULL, U_eroi_services_mat = NULL,
-                          r_eroi_final_mat = NULL, r_eroi_useful_mat = NULL, r_eroi_services_mat = NULL,
+                          U_eiou_final_mat = NULL, U_eiou_useful_mat = NULL, U_eiou_services_mat = NULL,
+                          r_eiou_final_mat = NULL, r_eiou_useful_mat = NULL, r_eiou_services_mat = NULL,
                           V_final_mat = NULL, V_useful_mat = NULL, V_services_mat = NULL,
                           Y_final_mat = NULL, Y_useful_mat = NULL, Y_services_mat = NULL,
                           S_units_final_mat = NULL, S_units_useful_mat = NULL, S_units_services_mat = NULL) {
