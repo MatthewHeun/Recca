@@ -43,9 +43,23 @@ usethis::use_data(psut_cols, overwrite = TRUE)
 aggregate_cols <- list(aggregate_primary = "EX.p",
                        net_aggregate_primary = "EX.p_net",
                        gross_aggregate_primary = "EX.p_gross",
+
+                       aggregate_final = "EX.f",
+                       net_aggregate_final = "EX.f_net",
+                       gross_aggregate_final = "EX.f_gross",
+
+                       aggregate_useful = "EX.u",
+                       net_aggregate_useful = "EX.u_net",
+                       gross_aggregate_useful = "EX.u_gross",
+
+                       net_aggregate_services = "EX.s_net",
+                       aggregate_servides = "EX.s",
+                       gross_aggregate_services = "EX.s_gross",
+
+                       aggregate_demand = "EX.fd",
                        net_aggregate_demand = "EX.fd_net",
                        gross_aggregate_demand = "EX.fd_gross",
-                       aggregate_demand = "EX.fd",
+
                        region = "Region",
                        aggregated_suffix = "_aggregated",
                        product_sector = "Product.Industry.Sector",

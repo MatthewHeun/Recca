@@ -59,51 +59,79 @@
 #'
 #' @examples
 pfu_aggregates <- function(.sutdata,
+                           # Vector of primary industries
+                           p_industries,
+                           by = c("Total", "Product", "Industry", "Flow"),
+                           add_net_gross_cols = FALSE,
+                           piece = "all",
+                           notation = RCLabels::notations_list,
+                           pattern_type = c("exact", "leading", "trailing", "anywhere", "literal"),
+                           prepositions = RCLabels::prepositions_list,
+                           # Output names
+                           aggregate_primary = Recca::aggregate_cols$aggregate_primary,
+                           net_aggregate_primary = Recca::aggregate_cols$net_aggregate_primary,
+                           gross_aggregate_primary = Recca::aggregate_cols$gross_aggregate_primary,
+
+                           aggregate_final = Recca::aggregate_cols$aggregate_final,
+                           net_aggregate_final = Recca::aggregate_cols$net_aggregate_final,
+                           gross_aggregate_final = Recca::aggregate_cols$gross_aggregate_final,
+
+                           aggregate_useful = Recca::aggregate_cols$aggregate_useful,
+                           net_aggregate_useful = Recca::aggregate_cols$net_aggregate_useful,
+                           gross_aggregate_useful = Recca::aggregate_cols$gross_aggregate_useful,
+
+                           aggregate_services = Recca::aggregate_cols$aggregate_services,
+                           net_aggregate_services = Recca::aggregate_cols$net_aggregate_services,
+                           gross_aggregate_services = Recca::aggregate_cols$gross_aggregate_services,
+
+                           net_aggregate_finaldemand = Recca::aggregate_cols$net_aggregate_demand,
+                           gross_aggregate_finaldemand = Recca::aggregate_cols$gross_aggregate_demand,
+
+                           # Stages
                            last_stage = Recca::psut_cols$last_stage,
                            final = Recca::all_stages$final,
                            useful = Recca::all_stages$useful,
                            services = Recca::all_stages$services,
                            sep = "_",
-                           # Regular matrix names
-                           R_colname = Recca::psut_cols$R,
+                           # Regular matrix names for wide by matrix data frames
+                           R = Recca::psut_cols$R,
                            U_colname = Recca::psut_cols$U,
-                           U_feed_colname = Recca::psut_cols$U_feed,
-                           U_eiou_colname = Recca::psut_cols$U_eiou,
-                           r_eiou_colname = Recca::psut_cols$r_eiou,
-                           V_colname = Recca::psut_cols$V,
-                           Y_colname = Recca::psut_cols$Y,
-                           S_units_colname = Recca::psut_cols$S_units,
+                           U_feed = Recca::psut_cols$U_feed,
+                           U_eiou = Recca::psut_cols$U_eiou,
+                           r_eiou = Recca::psut_cols$r_eiou,
+                           V = Recca::psut_cols$V,
+                           Y = Recca::psut_cols$Y,
+                           S_units = Recca::psut_cols$S_units,
                            # Last stage final matrix names
-                           R_final_colname = paste0(Recca::psut_cols$R, sep, final),
-                           U_final_colname = paste0(Recca::psut_cols$U, sep, final),
-                           U_feed_final_colname = paste0(Recca::psut_cols$U_feed, sep, final),
-                           U_eiou_final_colname = paste0(Recca::psut_cols$U_eiou, sep, final),
-                           r_eiou_final_colname = paste0(Recca::psut_cols$r_eiou, sep, final),
-                           V_final_colname = paste0(Recca::psut_cols$V, sep, final),
-                           Y_final_colname = paste0(Recca::psut_cols$Y, sep, final),
-                           S_units_final_colname = paste0(Recca::psut_cols$S_units, sep, final),
+                           R_final = paste0(Recca::psut_cols$R, sep, final),
+                           U_final = paste0(Recca::psut_cols$U, sep, final),
+                           U_feed_final = paste0(Recca::psut_cols$U_feed, sep, final),
+                           U_eiou_final = paste0(Recca::psut_cols$U_eiou, sep, final),
+                           r_eiou_final = paste0(Recca::psut_cols$r_eiou, sep, final),
+                           V_final = paste0(Recca::psut_cols$V, sep, final),
+                           Y_final = paste0(Recca::psut_cols$Y, sep, final),
+                           S_units_final = paste0(Recca::psut_cols$S_units, sep, final),
                            # Last stage useful matrix names
-                           R_useful_colname = paste0(Recca::psut_cols$R, sep, useful),
-                           U_useful_colname = paste0(Recca::psut_cols$U, sep, useful),
-                           U_feed_useful_colname = paste0(Recca::psut_cols$U_feed, sep, useful),
-                           U_eiou_useful_colname = paste0(Recca::psut_cols$U_eiou, sep, useful),
-                           r_eiou_useful_colname = paste0(Recca::psut_cols$r_eiou, sep, useful),
-                           V_useful_colname = paste0(Recca::psut_cols$V, sep, useful),
-                           Y_useful_colname = paste0(Recca::psut_cols$Y, sep, useful),
-                           S_units_useful_colname = paste0(Recca::psut_cols$S_units, sep, useful),
+                           R_useful = paste0(Recca::psut_cols$R, sep, useful),
+                           U_useful = paste0(Recca::psut_cols$U, sep, useful),
+                           U_feed_useful = paste0(Recca::psut_cols$U_feed, sep, useful),
+                           U_eiou_useful = paste0(Recca::psut_cols$U_eiou, sep, useful),
+                           r_eiou_useful = paste0(Recca::psut_cols$r_eiou, sep, useful),
+                           V_useful = paste0(Recca::psut_cols$V, sep, useful),
+                           Y_useful = paste0(Recca::psut_cols$Y, sep, useful),
+                           S_units_useful = paste0(Recca::psut_cols$S_units, sep, useful),
                            # Last stage services matrix names
-                           R_services_colname = paste0(Recca::psut_cols$R, sep, services),
-                           U_services_colname = paste0(Recca::psut_cols$U, sep, services),
-                           U_feed_services_colname = paste0(Recca::psut_cols$U_feed, sep, services),
-                           U_eiou_services_colname = paste0(Recca::psut_cols$U_eiou, sep, services),
-                           r_eiou_services_colname = paste0(Recca::psut_cols$r_eiou, sep, services),
-                           V_services_colname = paste0(Recca::psut_cols$V, sep, services),
-                           Y_services_colname = paste0(Recca::psut_cols$Y, sep, services),
-                           S_units_services_colname = paste0(Recca::psut_cols$S_units, sep, services),
+                           R_services = paste0(Recca::psut_cols$R, sep, services),
+                           U_services = paste0(Recca::psut_cols$U, sep, services),
+                           U_feed_services = paste0(Recca::psut_cols$U_feed, sep, services),
+                           U_eiou_services = paste0(Recca::psut_cols$U_eiou, sep, services),
+                           r_eiou_services = paste0(Recca::psut_cols$r_eiou, sep, services),
+                           V_services = paste0(Recca::psut_cols$V, sep, services),
+                           Y_services = paste0(Recca::psut_cols$Y, sep, services),
+                           S_units_services = paste0(Recca::psut_cols$S_units, sep, services),
                            # Names of internally pivoted columns
                            .matnames = ".matnames",
                            .matvals = ".matvals") {
-
 
   # If .sutdata is a data frame and it contains a last_stage column,
   # pivot wider before calling pfu_agg_func().
@@ -122,5 +150,35 @@ pfu_aggregates <- function(.sutdata,
   }
 
 
+  pfuagg_func <- function(R_final_mat = NULL, R_useful_mat = NULL, R_services_mat = NULL,
+                          U_final_mat = NULL, U_useful_mat = NULL, U_services_mat = NULL,
+                          U_feed_final_mat = NULL, U_feed_useful_mat = NULL, U_feed_services_mat = NULL,
+                          U_eroi_final_mat = NULL, U_eroi_useful_mat = NULL, U_eroi_services_mat = NULL,
+                          r_eroi_final_mat = NULL, r_eroi_useful_mat = NULL, r_eroi_services_mat = NULL,
+                          V_final_mat = NULL, V_useful_mat = NULL, V_services_mat = NULL,
+                          Y_final_mat = NULL, Y_useful_mat = NULL, Y_services_mat = NULL,
+                          S_units_final_mat = NULL, S_units_useful_mat = NULL, S_units_services_mat = NULL) {
+
+    # Calculate primary aggregates from all 3 last stages (final, useful, and services)
+
+
+
+    # Ensure that all 3 primary aggregates agree
+    #
+
+  }
+
+  matsindf::matsindf_apply(.sutdata, FUN = pfuagg_func,
+                           R_final_mat = R_final, R_useful_mat = R_useful, R_services_mat = R_services,
+                           U_final_mat = U_final, U_useful_mat = U_useful, U_services_mat = U_services,
+                           U_feed_final_mat = U_feed_final, U_feed_useful_mat = U_feed_useful, U_feed_services_mat = U_feed_services,
+                           U_eiou_final_mat = U_eiou_final, U_eiou_useful_mat = U_eiou_useful, U_eiou_services_mat = U_eiou_services,
+                           r_eiou_final_mat = r_eiou_final, r_eiou_useful_mat = r_eiou_useful, r_eiou_services_mat = r_eiou_services,
+                           V_final_mat = V_final, V_useful_mat = V_useful, V_services_mat = V_services,
+                           Y_final_mat = Y_final, Y_useful_mat = Y_useful, Y_services_mat = Y_services,
+                           S_units_final_mat = S_units_final, S_units_useful_mat = S_units_useful, S_units_services_mat = S_units_services)
+
+  # If the incoming .sutmats was a wide by matrices data frame,
+  # pivot the output.
 
 }

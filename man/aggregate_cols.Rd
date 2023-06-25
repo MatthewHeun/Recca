@@ -5,14 +5,28 @@
 \alias{aggregate_cols}
 \title{Aggregate data frame column names}
 \format{
-A string list with 10 entries.
+A string list with 19 entries.
 \describe{
 \item{aggregate_primary}{The name of a column in a wide-by-matrices data frame containing aggregates of primary energy.}
-\item{net_aggregate_primary}{The name of a column in a wide-by-matrices data frame containing aggregates of net primary energy.}
-\item{gross_aggregate_primary}{The name of a column in a wide-by-matrices data frame containing aggregates of gross primary energy.}
-\item{net_aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of net final demand energy (excluding energy industry own use), regardless of whether the last stage is final energy or useful energy.}
-\item{gross_aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of gross final demand energy (including energy industry own use), regardless of whether the last stage is final energy or useful energy.}
-\item{aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of final demand energy (including energy industry own use), regardless of whether the last stage is final energy or useful energy.}
+\item{net_aggregate_primary}{The name of a column in a wide-by-matrices data frame containing aggregates of net primary energy. Net and gross aggregates will be identical at the primary stage.}
+\item{gross_aggregate_primary}{The name of a column in a wide-by-matrices data frame containing aggregates of gross primary energy. Net and gross aggregates will be identical at the primary stage.}
+
+\item{aggregate_final}{The name of a column in a wide-by-matrices data frame containing aggregates of final energy.}
+\item{net_aggregate_final}{The name of a column in a wide-by-matrices data frame containing aggregates of net final energy, not including energy industry own use.}
+\item{gross_aggregate_final}{The name of a column in a wide-by-matrices data frame containing aggregates of gross final energy, including energy industry own use.}
+
+\item{aggregate_useful}{The name of a column in a wide-by-matrices data frame containing aggregates of useful energy.}
+\item{net_aggregate_useful}{The name of a column in a wide-by-matrices data frame containing aggregates of net useful energy, not including energy industry own use.}
+\item{gross_aggregate_useful}{The name of a column in a wide-by-matrices data frame containing aggregates of gross useful energy, ncluding energy industry own use.}
+
+\item{aggregate_services}{The name of a column in a wide-by-matrices data frame containing aggregates of energy services.}
+\item{net_aggregate_services}{The name of a column in a wide-by-matrices data frame containing aggregates of net energy services, not including energy industry own use.}
+\item{gross_aggregate_services}{The name of a column in a wide-by-matrices data frame containing aggregates of gross energy services, ncluding energy industry own use.}
+
+\item{aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of final demand energy (including energy industry own use), regardless of whether the last stage is final, useful, or services.}
+\item{net_aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of net final demand energy (excluding energy industry own use), regardless of whether the last stage is final, useful, or services.}
+\item{gross_aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of gross final demand energy (including energy industry own use), regardless of whether the last stage is final, useful, or services.}
+
 \item{region}{The name of a column in a wide-by-matrices data frame containing regions.}
 \item{aggregated_suffix}{The suffix for column names containing aggregated matrices.}
 \item{product_sector}{The name of a column containing names of products, industries, or sectors. Default is "Product.Industry.Sector".}

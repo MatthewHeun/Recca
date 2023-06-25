@@ -63,7 +63,7 @@
 #' # Above, only 1 aggregate column is created, because there is no
 #' # difference between net and gross aggregation for primary energy.
 #' # Below, both net and gross aggregation columns are created,
-#' # for compatibility with the `finaldemand_aggregates()` function.
+#' # for compatibility with the [finaldemand_aggregates()] function.
 #' # Net and gross primary aggregates are identical.
 #' res2 <- UKEnergy2000mats %>%
 #'   tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") %>%
@@ -89,7 +89,7 @@ primary_aggregates <- function(.sutdata = NULL,
                                # Output names
                                aggregate_primary = Recca::aggregate_cols$aggregate_primary,
                                net_aggregate_primary = Recca::aggregate_cols$net_aggregate_primary,
-                               gross_aggregate_primary = Recca::aggregate_cols$gross_aggregate_primary){
+                               gross_aggregate_primary = Recca::aggregate_cols$gross_aggregate_primary) {
 
   pattern_type <- match.arg(pattern_type)
   by <- match.arg(by)
@@ -206,7 +206,7 @@ finaldemand_aggregates <- function(.sutdata = NULL,
                                    by = c("Total", "Product", "Sector"),
                                    # Output names
                                    net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
-                                   gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand){
+                                   gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand) {
 
   pattern_type <- match.arg(pattern_type)
   by <- match.arg(by)
