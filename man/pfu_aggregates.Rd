@@ -33,7 +33,7 @@ pfu_aggregates(
   services = Recca::all_stages$services,
   sep = "_",
   R = Recca::psut_cols$R,
-  U_colname = Recca::psut_cols$U,
+  U = Recca::psut_cols$U,
   U_feed = Recca::psut_cols$U_feed,
   U_eiou = Recca::psut_cols$U_eiou,
   r_eiou = Recca::psut_cols$r_eiou,
@@ -64,8 +64,8 @@ pfu_aggregates(
   V_services = paste0(Recca::psut_cols$V, sep, services),
   Y_services = paste0(Recca::psut_cols$Y, sep, services),
   S_units_services = paste0(Recca::psut_cols$S_units, sep, services),
-  .matnames = ".matnames",
-  .matvals = ".matvals"
+  .matnames = Recca::psut_cols$matnames,
+  .matvals = Recca::psut_cols$matvals
 )
 }
 \arguments{

@@ -95,7 +95,7 @@ pfu_aggregates <- function(.sutdata,
                            sep = "_",
                            # Regular matrix names for wide by matrix data frames
                            R = Recca::psut_cols$R,
-                           U_colname = Recca::psut_cols$U,
+                           U = Recca::psut_cols$U,
                            U_feed = Recca::psut_cols$U_feed,
                            U_eiou = Recca::psut_cols$U_eiou,
                            r_eiou = Recca::psut_cols$r_eiou,
@@ -130,15 +130,14 @@ pfu_aggregates <- function(.sutdata,
                            Y_services = paste0(Recca::psut_cols$Y, sep, services),
                            S_units_services = paste0(Recca::psut_cols$S_units, sep, services),
                            # Names of internally pivoted columns
-                           .matnames = ".matnames",
-                           .matvals = ".matvals") {
+                           .matnames = Recca::psut_cols$matnames,
+                           .matvals = Recca::psut_cols$matvals) {
 
   # If .sutdata is a data frame and it contains a last_stage column,
   # pivot wider before calling pfu_agg_func().
   if (is.data.frame(.sutdata) & (last_stage %in% names(.sutdata))) {
     .sutdata <- .sutdata |>
-      tidyr::pivot_longer(cols = dplyr::any_of(c(R_colname, U_colname, U_feed_colname, U_eiou_colname,
-                                                 r_eiou_colname, V_colname, Y_colname, S_units_colname)),
+      tidyr::pivot_longer(cols = dplyr::any_of(c(R, U, U_feed, U_eiou, r_eiou, V, Y, S_units)),
                           names_to = .matnames,
                           values_to = .matvals) |>
       dplyr::mutate(
@@ -160,7 +159,12 @@ pfu_aggregates <- function(.sutdata,
                           S_units_final_mat = NULL, S_units_useful_mat = NULL, S_units_services_mat = NULL) {
 
     # Calculate primary aggregates from all 3 last stages (final, useful, and services)
-
+    ex_p_final <- .sutdata |>
+      primary_aggregates(p_industries = p_industries,
+                         by = by,
+                         add_net_gross_cols = TRUE, piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
+                         R = R_final_mat, V = V_final_mat, Y = Y_final_mat,
+                         aggregate_primary = aggregate_primary, net_aggregate_primary = net_aggregate_primary)
 
 
     # Ensure that all 3 primary aggregates agree
