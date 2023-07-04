@@ -74,28 +74,37 @@ pfu_aggregates(
 descriptions of energy conversion chains.}
 }
 \description{
+Calculate aggregates at all possible ECC stages
+(primary, final, and useful),
+regardless of whether the last stage is final or useful.
+See details for the approach.
+Note that services aggregations are often inherently problematic,
+because energy services are often quantified in different units.
+This functions does not perform
+aggregation to services.
+Users are referred to \code{\link[=finaldemand_aggregates]{finaldemand_aggregates()}}
+for aggregation to services, if desired and sensible.
+}
+\details{
 There are several ways to aggregate energy conversion chain (ECC) data
 to primary, final, or useful stages of the ECC.
 \code{\link[=primary_aggregates]{primary_aggregates()}} aggregates primary energy using the
 resource (\strong{R}), make (\strong{V}), and final demand (\strong{Y}) matrices.
 \code{\link[=primary_aggregates]{primary_aggregates()}} gives upstream (source) aggregations for an ECC.
 \code{\link[=finaldemand_aggregates]{finaldemand_aggregates()}} aggregates to the last stage
-of an energy conversion chain,
-regardless of whether the last stage is final or useful.
+of an energy conversion chain using \strong{R} and \strong{Y} matrices,
+regardless of whether the last stage is final, useful, or services.
 \code{\link[=finaldemand_aggregates]{finaldemand_aggregates()}} gives downstream (sink) aggregations.
+
 However, applying \code{\link[=finaldemand_aggregates]{finaldemand_aggregates()}} to an ECC
-whose last stage is final cannot produce useful stage aggregattions.
+whose last stage is final cannot produce useful stage aggregations.
 Similarly, applying \code{\link[=finaldemand_aggregates]{finaldemand_aggregates()}} to an ECC whose last stage is useful
-cannot provide final stage aggregates.
-This function calculates aggregates at all ECC stages (primary, final, and useful),
-regardless of whether the last stage is final or useful.
-See details for the approach.
-}
-\details{
-|                | Desired aggregation stage |\tabular{lll}{
-   ECC last stage \tab Final \tab Useful \cr
-   Final \tab \code{\link[=finaldemand_aggregates]{finaldemand_aggregates()}} \tab Not possible \cr
-   Useful \tab Not possible \tab \code{\link[=finaldemand_aggregates]{finaldemand_aggregates()}} \cr
+cannot provide final stage aggregations.
+See the following table.\tabular{lll}{
+   Desired aggregation stage \tab Final \tab Useful \cr
+   ECC last stage \tab  \tab  \cr
+   Final \tab \code{\link[=finaldemand_aggregates]{finaldemand_aggregates()}} \tab Note A \cr
+   Useful \tab Note B \tab \code{\link[=finaldemand_aggregates]{finaldemand_aggregates()}} \cr
 }
 
 
@@ -103,6 +112,34 @@ Whereas \code{\link[=primary_aggregates]{primary_aggregates()}} and \code{\link[
 work independently of the last stage of an ECC,
 this function requires both final and useful last stage ECCs
 to be present in \code{.sutdata}.
+Any data are present with last state of services are ignored in this function.
+
+For the off-axis aggregations, special considerations are employed in this function.
+
+Note A:
+
+When last stage is final but we want useful energy aggregates
+and final-to-useful efficiencies,
+we can employ \code{\link[=calc_eta_fu_Y_eiou]{calc_eta_fu_Y_eiou()}} to calculate
+useful energy for each piece of final demand or EIOU
+when last stage is final, giving \strong{Y} and \strong{U_EIOU}
+matrices with same structure as \strong{Y_Final} and \strong{U_EIOU_Final}
+except containing useful energy data.
+These useful-but-in-same-structure-as-final matrices
+can be used to calculate useful aggregations when last stage is final.
+
+Note B:
+
+When last stage is useful but we want final stage aggregations
+and final-to-useful stage efficiencies,
+we can again employ \code{\link[=calc_eta_fu_Y_eiou]{calc_eta_fu_Y_eiou()}} in an inverse
+relationship to calculate final stage aggregates when
+useful stage information is known.
+The result is \strong{Y} and \strong{U_EIOU} matrices
+of same structure as \strong{Y_Useful} and \strong{U_EIOU_Useful} but containing
+final stage data.
+These final-but-in-same-structure-as-useful matrices
+can be used to calculate final aggregations when last stage is useful.
 
 Suffixes to matrix names are assumed to indicate the last stage
 of the ECC for which the matrix applies.
@@ -123,4 +160,10 @@ See examples.
 Internally, this function uses
 \code{\link[=primary_aggregates]{primary_aggregates()}}, \code{\link[=finaldemand_aggregates]{finaldemand_aggregates()}}, and
 \code{\link[=calc_eta_fu_Y_eiou]{calc_eta_fu_Y_eiou()}} to complete its work.
+
+Primary aggregates can be computed when
+last stage is final and last stage is useful.
+Ostensibly, the primary aggregates should be the same
+in both cases when metadata are the same.
+An error is thrown if that is not true to within \code{tol}.
 }

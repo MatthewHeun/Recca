@@ -107,34 +107,102 @@ See details for the approach.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">pfu_aggregates</span><span class="op">(</span><span class="va">.sutdata</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">pfu_aggregates</span><span class="op">(</span></span>
+<span>  <span class="va">.sutdata</span>,</span>
+<span>  <span class="va">p_industries</span>,</span>
+<span>  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Total"</span>, <span class="st">"Product"</span>, <span class="st">"Industry"</span>, <span class="st">"Flow"</span><span class="op">)</span>,</span>
+<span>  add_net_gross_cols <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  piece <span class="op">=</span> <span class="st">"all"</span>,</span>
+<span>  notation <span class="op">=</span> <span class="fu">RCLabels</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/RCLabels/man/notations_list.html" class="external-link">notations_list</a></span>,</span>
+<span>  pattern_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"exact"</span>, <span class="st">"leading"</span>, <span class="st">"trailing"</span>, <span class="st">"anywhere"</span>, <span class="st">"literal"</span><span class="op">)</span>,</span>
+<span>  prepositions <span class="op">=</span> <span class="fu">RCLabels</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/RCLabels/man/prepositions_list.html" class="external-link">prepositions_list</a></span>,</span>
+<span>  aggregate_primary <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="aggregate_cols.html">aggregate_cols</a></span><span class="op">$</span><span class="va">aggregate_primary</span>,</span>
+<span>  net_aggregate_primary <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="aggregate_cols.html">aggregate_cols</a></span><span class="op">$</span><span class="va">net_aggregate_primary</span>,</span>
+<span>  gross_aggregate_primary <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="aggregate_cols.html">aggregate_cols</a></span><span class="op">$</span><span class="va">gross_aggregate_primary</span>,</span>
+<span>  aggregate_final <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="aggregate_cols.html">aggregate_cols</a></span><span class="op">$</span><span class="va">aggregate_final</span>,</span>
+<span>  net_aggregate_final <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="aggregate_cols.html">aggregate_cols</a></span><span class="op">$</span><span class="va">net_aggregate_final</span>,</span>
+<span>  gross_aggregate_final <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="aggregate_cols.html">aggregate_cols</a></span><span class="op">$</span><span class="va">gross_aggregate_final</span>,</span>
+<span>  aggregate_useful <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="aggregate_cols.html">aggregate_cols</a></span><span class="op">$</span><span class="va">aggregate_useful</span>,</span>
+<span>  net_aggregate_useful <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="aggregate_cols.html">aggregate_cols</a></span><span class="op">$</span><span class="va">net_aggregate_useful</span>,</span>
+<span>  gross_aggregate_useful <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="aggregate_cols.html">aggregate_cols</a></span><span class="op">$</span><span class="va">gross_aggregate_useful</span>,</span>
+<span>  aggregate_services <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="aggregate_cols.html">aggregate_cols</a></span><span class="op">$</span><span class="va">aggregate_services</span>,</span>
+<span>  net_aggregate_services <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="aggregate_cols.html">aggregate_cols</a></span><span class="op">$</span><span class="va">net_aggregate_services</span>,</span>
+<span>  gross_aggregate_services <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="aggregate_cols.html">aggregate_cols</a></span><span class="op">$</span><span class="va">gross_aggregate_services</span>,</span>
+<span>  net_aggregate_finaldemand <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="aggregate_cols.html">aggregate_cols</a></span><span class="op">$</span><span class="va">net_aggregate_demand</span>,</span>
+<span>  gross_aggregate_finaldemand <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="aggregate_cols.html">aggregate_cols</a></span><span class="op">$</span><span class="va">gross_aggregate_demand</span>,</span>
+<span>  last_stage <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">last_stage</span>,</span>
+<span>  final <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="all_stages.html">all_stages</a></span><span class="op">$</span><span class="va">final</span>,</span>
+<span>  useful <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="all_stages.html">all_stages</a></span><span class="op">$</span><span class="va">useful</span>,</span>
+<span>  services <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="all_stages.html">all_stages</a></span><span class="op">$</span><span class="va">services</span>,</span>
+<span>  sep <span class="op">=</span> <span class="st">"_"</span>,</span>
+<span>  R <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">R</span>,</span>
+<span>  U <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">U</span>,</span>
+<span>  U_feed <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">U_feed</span>,</span>
+<span>  U_eiou <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">U_eiou</span>,</span>
+<span>  r_eiou <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">r_eiou</span>,</span>
+<span>  V <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">V</span>,</span>
+<span>  Y <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">Y</span>,</span>
+<span>  S_units <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">S_units</span>,</span>
+<span>  R_final <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">R</span>, <span class="va">sep</span>, <span class="va">final</span><span class="op">)</span>,</span>
+<span>  U_final <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">U</span>, <span class="va">sep</span>, <span class="va">final</span><span class="op">)</span>,</span>
+<span>  U_feed_final <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">U_feed</span>, <span class="va">sep</span>, <span class="va">final</span><span class="op">)</span>,</span>
+<span>  U_eiou_final <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">U_eiou</span>, <span class="va">sep</span>, <span class="va">final</span><span class="op">)</span>,</span>
+<span>  r_eiou_final <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">r_eiou</span>, <span class="va">sep</span>, <span class="va">final</span><span class="op">)</span>,</span>
+<span>  V_final <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">V</span>, <span class="va">sep</span>, <span class="va">final</span><span class="op">)</span>,</span>
+<span>  Y_final <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">Y</span>, <span class="va">sep</span>, <span class="va">final</span><span class="op">)</span>,</span>
+<span>  S_units_final <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">S_units</span>, <span class="va">sep</span>, <span class="va">final</span><span class="op">)</span>,</span>
+<span>  R_useful <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">R</span>, <span class="va">sep</span>, <span class="va">useful</span><span class="op">)</span>,</span>
+<span>  U_useful <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">U</span>, <span class="va">sep</span>, <span class="va">useful</span><span class="op">)</span>,</span>
+<span>  U_feed_useful <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">U_feed</span>, <span class="va">sep</span>, <span class="va">useful</span><span class="op">)</span>,</span>
+<span>  U_eiou_useful <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">U_eiou</span>, <span class="va">sep</span>, <span class="va">useful</span><span class="op">)</span>,</span>
+<span>  r_eiou_useful <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">r_eiou</span>, <span class="va">sep</span>, <span class="va">useful</span><span class="op">)</span>,</span>
+<span>  V_useful <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">V</span>, <span class="va">sep</span>, <span class="va">useful</span><span class="op">)</span>,</span>
+<span>  Y_useful <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">Y</span>, <span class="va">sep</span>, <span class="va">useful</span><span class="op">)</span>,</span>
+<span>  S_units_useful <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">S_units</span>, <span class="va">sep</span>, <span class="va">useful</span><span class="op">)</span>,</span>
+<span>  R_services <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">R</span>, <span class="va">sep</span>, <span class="va">services</span><span class="op">)</span>,</span>
+<span>  U_services <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">U</span>, <span class="va">sep</span>, <span class="va">services</span><span class="op">)</span>,</span>
+<span>  U_feed_services <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">U_feed</span>, <span class="va">sep</span>, <span class="va">services</span><span class="op">)</span>,</span>
+<span>  U_eiou_services <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">U_eiou</span>, <span class="va">sep</span>, <span class="va">services</span><span class="op">)</span>,</span>
+<span>  r_eiou_services <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">r_eiou</span>, <span class="va">sep</span>, <span class="va">services</span><span class="op">)</span>,</span>
+<span>  V_services <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">V</span>, <span class="va">sep</span>, <span class="va">services</span><span class="op">)</span>,</span>
+<span>  Y_services <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">Y</span>, <span class="va">sep</span>, <span class="va">services</span><span class="op">)</span>,</span>
+<span>  S_units_services <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">S_units</span>, <span class="va">sep</span>, <span class="va">services</span><span class="op">)</span>,</span>
+<span>  .matnames <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">matnames</span>,</span>
+<span>  .matvals <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">matvals</span>,</span>
+<span>  tol <span class="op">=</span> <span class="fl">1e-06</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>.sutdata</dt>
-<dd></dd>
+<dd><p>An optional data frame containing physical supply use table
+descriptions of energy conversion chains.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>This function assumes versions of an ECC are available with both
-final and useful energy as the last stage.</p>
-<p>|                | Desired aggregation stage |
-| ECC last stage | Final  | Useful |
-| Final          | <code><a href="finaldemand_aggregates.html">finaldemand_aggregates()</a></code> | Not possible               |
-| Useful         | Not possible               | <code><a href="finaldemand_aggregates.html">finaldemand_aggregates()</a></code> |</p>
-<p>Whereas <code><a href="primary_aggregates.html">primary_aggregates()</a></code> and <code><a href="finaldemand_aggregates.html">finaldemand_aggregates()</a></code>
+    <p>|                | Desired aggregation stage  |                            |</p><table class="table table"><tr><td>ECC last stage</td><td>Final</td><td>Useful</td></tr><tr><td>Final</td><td><code><a href="finaldemand_aggregates.html">finaldemand_aggregates()</a></code></td><td>Not possible</td></tr><tr><td>Useful</td><td>Not possible</td><td><code><a href="finaldemand_aggregates.html">finaldemand_aggregates()</a></code></td></tr></table><p>Whereas <code><a href="primary_aggregates.html">primary_aggregates()</a></code> and <code><a href="finaldemand_aggregates.html">finaldemand_aggregates()</a></code>
 work independently of the last stage of an ECC,
 this function requires both final and useful last stage ECCs
-to be present in <code>.sutdata</code>.
-Suffixes to matrix names are assumed to indicate the last stage
+to be present in <code>.sutdata</code>.</p>
+<p>Suffixes to matrix names are assumed to indicate the last stage
 of the ECC for which the matrix applies.
-If <code>.sutdata</code> is wide by matrices but contains a <code>last_stage</code> column,
-<code>.sutdata</code> is pivoted wide to put data in the correct shape.
-If one of final or useful last stage matrices are missing,
-an error is thrown.
+For example, two versions of the <strong>R</strong> matrix should be present:
+<code>R_final</code> and <code>R_useful</code>.</p>
+<p>If <code>.sutdata</code> is a wide-by-matrices data frame
+but contains a <code>last_stage</code> column,
+<code>.sutdata</code> is pivoted wide to put data into the correct shape,
+forming columns for each ECC matrix.
+The <code>last_stage</code> and <code>R</code> columns make <code>R_final</code> and <code>R_useful</code> columns.
+The <code>last_stage</code> and <code>V</code> columns make <code>V_final</code> and <code>V_useful</code> columns.
+Etc.
+If either the last stage final or the last stage useful ECC representations
+is missing, an error is thrown.
 See examples.</p>
+<p>Internally, this function uses
+<code><a href="primary_aggregates.html">primary_aggregates()</a></code>, <code><a href="finaldemand_aggregates.html">finaldemand_aggregates()</a></code>, and
+<code><a href="calc_eta_fu_Y_eiou.html">calc_eta_fu_Y_eiou()</a></code> to complete its work.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
