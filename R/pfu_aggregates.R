@@ -27,31 +27,20 @@
 #' cannot provide final stage aggregations.
 #' See the following table.
 #'
-#' | Desired aggregation stage | Final                      | Useful                     |
-#' | :------------------------ | :------------------------- | :------------------------- |
-#' | ECC last stage            |                            |                            |
-#' | Final                     | [finaldemand_aggregates()] | Note A                     |
-#' | Useful                    | Note B                     | [finaldemand_aggregates()] |
-#'
-#' Whereas [primary_aggregates()] and [finaldemand_aggregates()]
-#' work independently of the last stage of an ECC,
-#' this function requires both final and useful last stage ECCs
-#' to be present in `.sutdata`.
-#' Any data are present with last state of services are ignored in this function.
+#' | ECC last stage -->        | Final                         | Useful                        |
+#' | :------------------------ | :---------------------------- | :---------------------------- |
+#' | Desired aggregation stage |                               |                               |
+#' | Primary                   | [primary_aggregates()] Note A | [primary_aggregates()] Note A |
+#' | Final                     | [finaldemand_aggregates()]    | Note B                        |
+#' | Useful                    | Note C                        | [finaldemand_aggregates()]    |
 #'
 #' For the off-axis aggregations, special considerations are employed in this function.
 #'
 #' Note A:
 #'
-#' When last stage is final but we want useful energy aggregates
-#' and final-to-useful efficiencies,
-#' we can employ [calc_eta_fu_Y_eiou()] to calculate
-#' useful energy for each piece of final demand or EIOU
-#' when last stage is final, giving **Y** and **U_EIOU**
-#' matrices with same structure as **Y_Final** and **U_EIOU_Final**
-#' except containing useful energy data.
-#' These useful-but-in-same-structure-as-final matrices
-#' can be used to calculate useful aggregations when last stage is final.
+#' The two results from [primary_aggregates()]
+#' should be equal to within `tol`.
+#' If agreement is not observed, an error is given.
 #'
 #' Note B:
 #'
@@ -65,6 +54,24 @@
 #' final stage data.
 #' These final-but-in-same-structure-as-useful matrices
 #' can be used to calculate final aggregations when last stage is useful.
+#'
+#' Note C:
+#'
+#' When last stage is final but we want useful energy aggregates
+#' and final-to-useful efficiencies,
+#' we can employ [calc_eta_fu_Y_eiou()] to calculate
+#' useful energy for each piece of final demand or EIOU
+#' when last stage is final, giving **Y** and **U_EIOU**
+#' matrices with same structure as **Y_Final** and **U_EIOU_Final**
+#' except containing useful energy data.
+#' These useful-but-in-same-structure-as-final matrices
+#' can be used to calculate useful aggregations when last stage is final.
+#'
+#' Whereas [primary_aggregates()] and [finaldemand_aggregates()]
+#' work independently of the last stage of an ECC,
+#' this function requires both final and useful last stage ECCs
+#' to be present in `.sutdata`.
+#' Any data with last state of services are ignored in this function.
 #'
 #' Suffixes to matrix names are assumed to indicate the last stage
 #' of the ECC for which the matrix applies.
@@ -179,6 +186,7 @@ pfu_aggregates <- function(.sutdata,
   # If .sutdata is a data frame and it contains a last_stage column,
   # pivot wider before calling pfu_agg_func().
   if (is.data.frame(.sutdata) & (last_stage %in% names(.sutdata))) {
+    need_to_pivot <- TRUE
     .sutdata <- .sutdata |>
       tidyr::pivot_longer(cols = dplyr::any_of(c(R, U, U_feed, U_eiou, r_eiou, V, Y, S_units)),
                           names_to = .matnames,
@@ -209,7 +217,7 @@ pfu_aggregates <- function(.sutdata,
 
     out <- list()
 
-    # Calculate primary aggregates from all 3 last stages (final, useful, and services)
+    # Calculate primary aggregates from 2 last stages (final and useful)
     # When available, calculate primary aggregates when last_stage is final.
     if (!is.null(R_final_mat) & !is.null(V_final_mat) & !is.null(Y_final_mat)) {
       ex_p_final <- primary_aggregates(R = R_final_mat, V = V_final_mat, Y = Y_final_mat,
@@ -228,32 +236,60 @@ pfu_aggregates <- function(.sutdata,
                                         add_net_gross_cols = TRUE,
                                         piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
                                         aggregate_primary = aggregate_primary, net_aggregate_primary = net_aggregate_primary)
-      # Ensure that final and useful versions of primary aggregates are same.
-      # If they are not same, we probably don't have the same ECCs, and an error should be thrown.
-      # We don't need to check net in addition to gross, because gross and net are identical.
+      if (length(out) == 0) {
+        out <- c(out, ex_p_useful)
+      }
+    }
+    # Ensure that final and useful versions of primary aggregates are same.
+    # If they are not same, we probably don't have the same ECCs, and an error should be thrown.
+    # We don't need to check net in addition to gross, because gross and net are identical.
+    if (!is.null(R_final_mat) & !is.null(V_final_mat) & !is.null(Y_final_mat) &
+        !is.null(R_useful_mat) & !is.null(V_useful_mat) & !is.null(Y_useful_mat)) {
+      # Test gross aggregate primary
       matsbyname::difference_byname(ex_p_final[[gross_aggregate_final]], ex_p_useful[[gross_aggregate_useful]]) |>
         matsbyname::iszero_byname(tol = tol) |>
-        assertthat::assert_that(msg = "Primary aggregates for last_stage = 'Final' and last_stage = 'Useful' are not same to within `tol` in Recca::pfu_aggregates().")
-    }
-    # When available, calculate primary aggregates when last_stage is services
-    if (!is.null(R_services_mat) & !is.null(V_services_mat) & !is.null(Y_services_mat)) {
-      ex_p_services <- primary_aggregates(R = R_services_mat, V = V_services_mat, Y = Y_services_mat,
-                                          p_industries = p_industries,
-                                          by = by,
-                                          add_net_gross_cols = TRUE,
-                                          piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
-                                          aggregate_primary = aggregate_primary, net_aggregate_primary = net_aggregate_primary)
-      # Ensure that final and services versions of primary aggregates are same.
-      # If they are not same, we probably don't have the same ECCs, and an error should be thrown.
-      # We don't need to check net in addition to gross, because gross and net are identical.
-      matsbyname::difference_byname(ex_p_services[[gross_aggregate_final]], ex_p_services[[gross_aggregate_services]]) |>
+        assertthat::assert_that(msg = "Gross primary aggregates for last_stage = 'Final' and last_stage = 'Useful' are not same to within `tol` in Recca::pfu_aggregates().")
+      # Test net aggregate primary
+      matsbyname::difference_byname(ex_p_final[[net_aggregate_final]], ex_p_useful[[net_aggregate_useful]]) |>
         matsbyname::iszero_byname(tol = tol) |>
-        assertthat::assert_that(msg = "Primary aggregates for last_stage = 'Final' and last_stage = 'Services' are not same to within `tol` in Recca::pfu_aggregates().")
+        assertthat::assert_that(msg = "Net primary aggregates for last_stage = 'Final' and last_stage = 'Useful' are not same to within `tol` in Recca::pfu_aggregates().")
     }
 
-    # Ensure that all 3 primary aggregates agree
-    #
 
+    # Calculate final stage aggregates when last_stage = "Final"
+    # Use finaldemand_aggregates()
+
+
+
+    # Calculate final stage aggregates when last_stage = "Useful"
+
+
+    # Ensure that final stage aggregates are same when
+    # last_stage = "Final" and last_stage = "Useful.
+
+
+
+
+
+    # Calculate useful stage aggregations when last_stage = "Final"
+
+
+
+    # Calculate useful stage aggregations when last_stage = "Useful"
+    # Use finaldemand_aggregates()
+
+
+
+    # Ensure that useful stage aggregations are same when
+    # last_stage = "Final" and last_stage = "Useful".
+
+
+
+
+
+
+
+    return(out)
   }
 
   matsindf::matsindf_apply(.sutdata, FUN = pfuagg_func,
@@ -268,5 +304,7 @@ pfu_aggregates <- function(.sutdata,
 
   # If the incoming .sutmats was a wide by matrices data frame,
   # pivot the output.
+  if (need_to_pivot) {
 
+  }
 }
