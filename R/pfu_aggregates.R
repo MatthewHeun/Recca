@@ -141,7 +141,7 @@ pfu_aggregates <- function(.sutdata,
                            final = Recca::all_stages$final,
                            useful = Recca::all_stages$useful,
                            services = Recca::all_stages$services,
-                           sep = "___",
+                           sep = "___ls",
                            # Regular matrix names for wide by matrix data frames
                            R = Recca::psut_cols$R,
                            U = Recca::psut_cols$U,
@@ -257,11 +257,11 @@ pfu_aggregates <- function(.sutdata,
     if (!is.null(R_final_mat) & !is.null(V_final_mat) & !is.null(Y_final_mat) &
         !is.null(R_useful_mat) & !is.null(V_useful_mat) & !is.null(Y_useful_mat)) {
       # Test gross aggregate primary
-      matsbyname::difference_byname(ex_p_final[[gross_aggregate_final]], ex_p_useful[[gross_aggregate_useful]]) |>
+      matsbyname::difference_byname(ex_p_final[[gross_aggregate_primary]], ex_p_useful[[gross_aggregate_primary]]) |>
         matsbyname::iszero_byname(tol = tol) |>
         assertthat::assert_that(msg = "Gross primary aggregates for last_stage = 'Final' and last_stage = 'Useful' are not same to within `tol` in Recca::pfu_aggregates().")
       # Test net aggregate primary
-      matsbyname::difference_byname(ex_p_final[[net_aggregate_final]], ex_p_useful[[net_aggregate_useful]]) |>
+      matsbyname::difference_byname(ex_p_final[[net_aggregate_primary]], ex_p_useful[[net_aggregate_primary]]) |>
         matsbyname::iszero_byname(tol = tol) |>
         assertthat::assert_that(msg = "Net primary aggregates for last_stage = 'Final' and last_stage = 'Useful' are not same to within `tol` in Recca::pfu_aggregates().")
     }
@@ -270,11 +270,11 @@ pfu_aggregates <- function(.sutdata,
     if (!is.null(R_final_mat) & !is.null(V_final_mat) & !is.null(Y_final_mat) &
         !is.null(R_services_mat) & !is.null(V_services_mat) & !is.null(Y_services_mat)) {
       # Test gross aggregate primary
-      matsbyname::difference_byname(ex_p_final[[gross_aggregate_final]], ex_p_services[[gross_aggregate_services]]) |>
+      matsbyname::difference_byname(ex_p_final[[gross_aggregate_primary]], ex_p_services[[gross_aggregate_primary]]) |>
         matsbyname::iszero_byname(tol = tol) |>
         assertthat::assert_that(msg = "Gross primary aggregates for last_stage = 'Final' and last_stage = 'Useful' are not same to within `tol` in Recca::pfu_aggregates().")
       # Test net aggregate primary
-      matsbyname::difference_byname(ex_p_final[[net_aggregate_final]], ex_p_services[[net_aggregate_services]]) |>
+      matsbyname::difference_byname(ex_p_final[[net_aggregate_primary]], ex_p_services[[net_aggregate_primary]]) |>
         matsbyname::iszero_byname(tol = tol) |>
         assertthat::assert_that(msg = "Net primary aggregates for last_stage = 'Final' and last_stage = 'Services' are not same to within `tol` in Recca::pfu_aggregates().")
     }
@@ -283,11 +283,11 @@ pfu_aggregates <- function(.sutdata,
     if (!is.null(R_useful_mat) & !is.null(V_useful_mat) & !is.null(Y_useful_mat) &
         !is.null(R_services_mat) & !is.null(V_services_mat) & !is.null(Y_services_mat)) {
       # Test gross aggregate primary
-      matsbyname::difference_byname(ex_p_useful[[gross_aggregate_useful]], ex_p_services[[gross_aggregate_services]]) |>
+      matsbyname::difference_byname(ex_p_useful[[gross_aggregate_primary]], ex_p_services[[gross_aggregate_primary]]) |>
         matsbyname::iszero_byname(tol = tol) |>
         assertthat::assert_that(msg = "Gross primary aggregates for last_stage = 'Final' and last_stage = 'Useful' are not same to within `tol` in Recca::pfu_aggregates().")
       # Test net aggregate primary
-      matsbyname::difference_byname(ex_p_useful[[net_aggregate_useful]], ex_p_services[[net_aggregate_services]]) |>
+      matsbyname::difference_byname(ex_p_useful[[net_aggregate_primary]], ex_p_services[[net_aggregate_primary]]) |>
         matsbyname::iszero_byname(tol = tol) |>
         assertthat::assert_that(msg = "Net primary aggregates for last_stage = 'Useful' and last_stage = 'Useful' are not same to within `tol` in Recca::pfu_aggregates().")
     }
@@ -348,6 +348,8 @@ pfu_aggregates <- function(.sutdata,
                                                  R_useful, U_useful, U_feed_useful, U_eiou_useful, r_eiou_useful, V_useful, Y_useful, S_units_useful,
                                                  R_services, U_services, U_feed_services, U_eiou_services, r_eiou_services, V_services, Y_services, S_units_services)),
                           names_to = .matnames, values_to = .matvals) |>
+      # Eliminate rows that do not have matrices
+      dplyr::filter(!sapply(.data[[.matvals]], is.null)) |>
       tidyr::separate(col = dplyr::all_of(.matnames), into = c(.matnames, last_stage), sep = sep, remove = TRUE) |>
       tidyr::pivot_wider(names_from = .matnames, values_from = .matvals)
   }
