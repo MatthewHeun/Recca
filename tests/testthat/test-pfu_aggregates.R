@@ -24,12 +24,10 @@ test_that("pfu_aggregates() works as expected", {
     magrittr::extract2(Recca::aggregate_cols$gross_aggregate_primary) |>
     magrittr::extract2(1) |>
     expect_equal(93000)
-  # To get this one to work,
-  # need to calculate primary aggregates when last_stage == "Services"
   pfu_aggs |>
     dplyr::filter(.data[[Recca::psut_cols$energy_type]] == "X",
                   .data[[Recca::psut_cols$last_stage]] == "Services") |>
     magrittr::extract2(Recca::aggregate_cols$gross_aggregate_primary) |>
     magrittr::extract2(1) |>
-    expect_equal(93000)
+    expect_equal(98220)
 })

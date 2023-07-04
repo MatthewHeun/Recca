@@ -217,7 +217,7 @@ pfu_aggregates <- function(.sutdata,
 
     out <- list()
 
-    # Calculate primary aggregates from 2 last stages (final and useful)
+    # Calculate primary aggregates from 3 last stages (final, useful, and services) when each is available.
     # When available, calculate primary aggregates when last_stage is final.
     if (!is.null(R_final_mat) & !is.null(V_final_mat) & !is.null(Y_final_mat)) {
       ex_p_final <- primary_aggregates(R = R_final_mat, V = V_final_mat, Y = Y_final_mat,
@@ -240,9 +240,20 @@ pfu_aggregates <- function(.sutdata,
         out <- c(out, ex_p_useful)
       }
     }
+    # When available, calculate primary aggregates when last_stage is services.
+    if (!is.null(R_services_mat) & !is.null(V_services_mat) & !is.null(Y_services_mat)) {
+      ex_p_services <- primary_aggregates(R = R_services_mat, V = V_services_mat, Y = Y_services_mat,
+                                          p_industries = p_industries,
+                                          by = by,
+                                          add_net_gross_cols = TRUE,
+                                          piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
+                                          aggregate_primary = aggregate_primary, net_aggregate_primary = net_aggregate_primary)
+      if (length(out) == 0) {
+        out <- c(out, ex_p_services)
+      }
+    }
     # Ensure that final and useful versions of primary aggregates are same.
     # If they are not same, we probably don't have the same ECCs, and an error should be thrown.
-    # We don't need to check net in addition to gross, because gross and net are identical.
     if (!is.null(R_final_mat) & !is.null(V_final_mat) & !is.null(Y_final_mat) &
         !is.null(R_useful_mat) & !is.null(V_useful_mat) & !is.null(Y_useful_mat)) {
       # Test gross aggregate primary
@@ -254,6 +265,33 @@ pfu_aggregates <- function(.sutdata,
         matsbyname::iszero_byname(tol = tol) |>
         assertthat::assert_that(msg = "Net primary aggregates for last_stage = 'Final' and last_stage = 'Useful' are not same to within `tol` in Recca::pfu_aggregates().")
     }
+    # Ensure that final and services versions of primary aggregates are same.
+    # If they are not same, we probably don't have the same ECCs, and an error should be thrown.
+    if (!is.null(R_final_mat) & !is.null(V_final_mat) & !is.null(Y_final_mat) &
+        !is.null(R_services_mat) & !is.null(V_services_mat) & !is.null(Y_services_mat)) {
+      # Test gross aggregate primary
+      matsbyname::difference_byname(ex_p_final[[gross_aggregate_final]], ex_p_services[[gross_aggregate_services]]) |>
+        matsbyname::iszero_byname(tol = tol) |>
+        assertthat::assert_that(msg = "Gross primary aggregates for last_stage = 'Final' and last_stage = 'Useful' are not same to within `tol` in Recca::pfu_aggregates().")
+      # Test net aggregate primary
+      matsbyname::difference_byname(ex_p_final[[net_aggregate_final]], ex_p_services[[net_aggregate_services]]) |>
+        matsbyname::iszero_byname(tol = tol) |>
+        assertthat::assert_that(msg = "Net primary aggregates for last_stage = 'Final' and last_stage = 'Services' are not same to within `tol` in Recca::pfu_aggregates().")
+    }
+    # Ensure that useful and services versions of primary aggregates are same.
+    # If they are not same, we probably don't have the same ECCs, and an error should be thrown.
+    if (!is.null(R_useful_mat) & !is.null(V_useful_mat) & !is.null(Y_useful_mat) &
+        !is.null(R_services_mat) & !is.null(V_services_mat) & !is.null(Y_services_mat)) {
+      # Test gross aggregate primary
+      matsbyname::difference_byname(ex_p_useful[[gross_aggregate_useful]], ex_p_services[[gross_aggregate_services]]) |>
+        matsbyname::iszero_byname(tol = tol) |>
+        assertthat::assert_that(msg = "Gross primary aggregates for last_stage = 'Final' and last_stage = 'Useful' are not same to within `tol` in Recca::pfu_aggregates().")
+      # Test net aggregate primary
+      matsbyname::difference_byname(ex_p_useful[[net_aggregate_useful]], ex_p_services[[net_aggregate_services]]) |>
+        matsbyname::iszero_byname(tol = tol) |>
+        assertthat::assert_that(msg = "Net primary aggregates for last_stage = 'Useful' and last_stage = 'Useful' are not same to within `tol` in Recca::pfu_aggregates().")
+    }
+
 
 
     # Calculate final stage aggregates when last_stage = "Final"
