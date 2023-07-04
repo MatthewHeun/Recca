@@ -141,7 +141,7 @@ pfu_aggregates <- function(.sutdata,
                            final = Recca::all_stages$final,
                            useful = Recca::all_stages$useful,
                            services = Recca::all_stages$services,
-                           sep = "_",
+                           sep = "___",
                            # Regular matrix names for wide by matrix data frames
                            R = Recca::psut_cols$R,
                            U = Recca::psut_cols$U,
@@ -292,19 +292,26 @@ pfu_aggregates <- function(.sutdata,
     return(out)
   }
 
-  matsindf::matsindf_apply(.sutdata, FUN = pfuagg_func,
-                           R_final_mat = R_final, R_useful_mat = R_useful, R_services_mat = R_services,
-                           U_final_mat = U_final, U_useful_mat = U_useful, U_services_mat = U_services,
-                           U_feed_final_mat = U_feed_final, U_feed_useful_mat = U_feed_useful, U_feed_services_mat = U_feed_services,
-                           U_eiou_final_mat = U_eiou_final, U_eiou_useful_mat = U_eiou_useful, U_eiou_services_mat = U_eiou_services,
-                           r_eiou_final_mat = r_eiou_final, r_eiou_useful_mat = r_eiou_useful, r_eiou_services_mat = r_eiou_services,
-                           V_final_mat = V_final, V_useful_mat = V_useful, V_services_mat = V_services,
-                           Y_final_mat = Y_final, Y_useful_mat = Y_useful, Y_services_mat = Y_services,
-                           S_units_final_mat = S_units_final, S_units_useful_mat = S_units_useful, S_units_services_mat = S_units_services)
+  result <- matsindf::matsindf_apply(.sutdata, FUN = pfuagg_func,
+                                     R_final_mat = R_final, R_useful_mat = R_useful, R_services_mat = R_services,
+                                     U_final_mat = U_final, U_useful_mat = U_useful, U_services_mat = U_services,
+                                     U_feed_final_mat = U_feed_final, U_feed_useful_mat = U_feed_useful, U_feed_services_mat = U_feed_services,
+                                     U_eiou_final_mat = U_eiou_final, U_eiou_useful_mat = U_eiou_useful, U_eiou_services_mat = U_eiou_services,
+                                     r_eiou_final_mat = r_eiou_final, r_eiou_useful_mat = r_eiou_useful, r_eiou_services_mat = r_eiou_services,
+                                     V_final_mat = V_final, V_useful_mat = V_useful, V_services_mat = V_services,
+                                     Y_final_mat = Y_final, Y_useful_mat = Y_useful, Y_services_mat = Y_services,
+                                     S_units_final_mat = S_units_final, S_units_useful_mat = S_units_useful, S_units_services_mat = S_units_services)
 
   # If the incoming .sutmats was a wide by matrices data frame,
   # pivot the output.
   if (need_to_pivot) {
-
+    result <- result |>
+      tidyr::pivot_longer(cols = dplyr::any_of(c(R_final, U_final, U_feed_final, U_eiou_final, r_eiou_final, V_final, Y_final, S_units_final,
+                                                 R_useful, U_useful, U_feed_useful, U_eiou_useful, r_eiou_useful, V_useful, Y_useful, S_units_useful,
+                                                 R_services, U_services, U_feed_services, U_eiou_services, r_eiou_services, V_services, Y_services, S_units_services)),
+                          names_to = .matnames, values_to = .matvals) |>
+      tidyr::separate(col = dplyr::all_of(.matnames), into = c(.matnames, last_stage), sep = sep, remove = TRUE) |>
+      tidyr::pivot_wider(names_from = .matnames, values_from = .matvals)
   }
+  return(result)
 }
