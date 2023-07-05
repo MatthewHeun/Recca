@@ -215,7 +215,9 @@ pfu_aggregates <- function(.sutdata,
                           Y_final_mat = NULL, Y_useful_mat = NULL, Y_services_mat = NULL,
                           S_units_final_mat = NULL, S_units_useful_mat = NULL, S_units_services_mat = NULL) {
 
-
+    # Calculate primary aggregates from
+    # last_stage == "Final", last_stage == "Useful", and last_stage == "Services"
+    # when available
     out <- calc_primary_aggs_helper(R_final_mat = R_final_mat, V_final_mat = V_final_mat, Y_final_mat = Y_final_mat,
                                     R_useful_mat = R_useful_mat, V_useful_mat = V_useful_mat, Y_useful_mat = Y_useful_mat,
                                     R_services_mat = R_services_mat, V_services_mat = V_services_mat, Y_services_mat = Y_services_mat,
@@ -228,7 +230,7 @@ pfu_aggregates <- function(.sutdata,
                                     tol = tol)
 
     # Calculate final stage aggregates when last_stage = "Final"
-    # Use finaldemand_aggregates()
+    # with finaldemand_aggregates()
 
 
 
@@ -247,7 +249,7 @@ pfu_aggregates <- function(.sutdata,
 
 
     # Calculate useful stage aggregations when last_stage = "Useful"
-    # Use finaldemand_aggregates()
+    # with finaldemand_aggregates()
 
 
 
