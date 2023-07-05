@@ -157,8 +157,8 @@ test_that("finaldemand_aggregates() of SUT data work as expected without units",
   final_demand_total_aggregates_sut <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
     Recca::finaldemand_aggregates(fd_sectors = fd_sectors, by = "Total",
-                           net_aggregate_demand = "EX_total_net_agg.ktoe",
-                           gross_aggregate_demand = "EX_total_gross_agg.ktoe") %>%
+                                  net_aggregate_demand = "EX_total_net_agg.ktoe",
+                                  gross_aggregate_demand = "EX_total_gross_agg.ktoe") %>%
     dplyr::select(Country, Year, Last.stage, Energy.type, EX_total_net_agg.ktoe, EX_total_gross_agg.ktoe)
   expect_equivalent(final_demand_total_aggregates_sut %>%
                       dplyr::filter(Last.stage == "Final", Energy.type == "E") %>%

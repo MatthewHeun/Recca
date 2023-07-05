@@ -110,6 +110,7 @@
 pfu_aggregates <- function(.sutdata,
                            # Vector of primary industries
                            p_industries,
+                           fd_sectors,
                            by = c("Total", "Product", "Industry", "Flow"),
                            add_net_gross_cols = FALSE,
                            piece = "all",
@@ -231,7 +232,18 @@ pfu_aggregates <- function(.sutdata,
 
     # Calculate final stage aggregates when last_stage = "Final"
     # with finaldemand_aggregates()
-
+    if (!is.null(U_final_mat) & !is.null(U_feed_final_mat) & !is.null(Y_final_mat)) {
+      res <- finaldemand_aggregates(fd_sectors = fd_sectors,
+                                    piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
+                                    U = U_final_mat, U_feed = U_feed_final_mat, Y = Y_final_mat,
+                                    by = by,
+                                    net_aggregate_demand = net_aggregate_final,
+                                    gross_aggregate_demand = gross_aggregate_final)
+      out <- c(out, res)
+    } else {
+      out <- c(out, list(NULL, NULL) |>
+                 magrittr::set_names(c(net_aggregate_final, gross_aggregate_final)))
+    }
 
 
     # Calculate final stage aggregates when last_stage = "Useful"
@@ -250,11 +262,39 @@ pfu_aggregates <- function(.sutdata,
 
     # Calculate useful stage aggregations when last_stage = "Useful"
     # with finaldemand_aggregates()
-
+    if (!is.null(U_useful_mat) & !is.null(U_feed_useful_mat) & !is.null(Y_useful_mat)) {
+      res <- finaldemand_aggregates(fd_sectors = fd_sectors,
+                                    piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
+                                    U = U_useful_mat, U_feed = U_feed_useful_mat, Y = Y_useful_mat,
+                                    by = by,
+                                    net_aggregate_demand = net_aggregate_useful,
+                                    gross_aggregate_demand = gross_aggregate_useful)
+      out <- c(out, res)
+    } else {
+      out <- c(out, list(NULL, NULL) |>
+                 magrittr::set_names(c(net_aggregate_useful, gross_aggregate_useful)))
+    }
 
 
     # Ensure that useful stage aggregations are same when
     # last_stage = "Final" and last_stage = "Useful".
+
+
+
+    # Calculate services stage aggregations when last_stage = "Services"
+    # with finaldemand_aggregates()
+    if (!is.null(U_services_mat) & !is.null(U_feed_services_mat) & !is.null(Y_services_mat)) {
+      res <- finaldemand_aggregates(fd_sectors = fd_sectors,
+                                    piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
+                                    U = U_services_mat, U_feed = U_feed_services_mat, Y = Y_services_mat,
+                                    by = by,
+                                    net_aggregate_demand = net_aggregate_services,
+                                    gross_aggregate_demand = gross_aggregate_services)
+      out <- c(out, res)
+    } else {
+      out <- c(out, list(NULL, NULL) |>
+                 magrittr::set_names(c(net_aggregate_services, gross_aggregate_services)))
+    }
 
 
     return(out)
@@ -281,7 +321,12 @@ pfu_aggregates <- function(.sutdata,
       # Eliminate rows that do not have matrices
       dplyr::filter(!sapply(.data[[.matvals]], is.null)) |>
       tidyr::separate(col = dplyr::all_of(.matnames), into = c(.matnames, last_stage), sep = sep, remove = TRUE) |>
-      tidyr::pivot_wider(names_from = dplyr::all_of(.matnames), values_from = dplyr::all_of(.matvals))
+      tidyr::pivot_wider(names_from = dplyr::all_of(.matnames), values_from = dplyr::all_of(.matvals)) |>
+      dplyr::relocate(dplyr::any_of(c(net_aggregate_primary, gross_aggregate_primary,
+                                      net_aggregate_final, gross_aggregate_final,
+                                      net_aggregate_useful, gross_aggregate_useful,
+                                      net_aggregate_services, gross_aggregate_services)),
+                      .after = dplyr::last_col())
   }
   return(result)
 }

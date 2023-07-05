@@ -1,11 +1,13 @@
 test_that("pfu_aggregates() works as expected", {
   # Define primary industries
   p_industries <- c("Resources [of Crude]", "Resources [of NG]")
+  fd_sectors <- c("Residential", "Transport", "Oil fields")
 
   # Primary TOTAL aggregates
   pfu_aggs_total <- UKEnergy2000mats |>
     tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
-    pfu_aggregates(p_industries = p_industries, by = "Total")
+    pfu_aggregates(p_industries = p_industries, fd_sectors = fd_sectors,
+                   by = "Total")
 
   pfu_aggs_total |>
     dplyr::filter(.data[[Recca::psut_cols$energy_type]] == "E",
