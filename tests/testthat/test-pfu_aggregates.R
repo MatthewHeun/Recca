@@ -32,7 +32,6 @@ test_that("pfu_aggregates() works as expected", {
     magrittr::extract2(1) |>
     expect_equal(98220)
 
-
   # Primary PRODUCT aggregates
   pfu_aggs_product <- UKEnergy2000mats |>
     tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
@@ -66,7 +65,6 @@ test_that("pfu_aggregates() works as expected", {
     magrittr::extract2(1) |>
     expect_equal(matrix(c(53500, 44720), ncol = 1, dimnames = list(c("Crude", "NG"), "Industry")) |>
                    matsbyname::setrowtype("Product") |> matsbyname::setcoltype("Industry"))
-
 
   # Primary INDUSTRY aggregates
   pfu_aggs_industry <- UKEnergy2000mats |>
