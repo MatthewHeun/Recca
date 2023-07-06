@@ -220,4 +220,26 @@ test_that("pfu_aggregates() works for useful aggregates", {
                                                                   "MD [from Car engines]",
                                                                   "MD [from Truck engines]"), "Industry")) |>
                    matsbyname::setrowtype("Product") |> matsbyname::setcoltype("Industry"))
+
+  # Useful INDUSTRY aggregates
+  pfu_aggs_industry <- UKEnergy2000mats |>
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
+    pfu_aggregates(p_industries = p_industries, fd_sectors = fd_sectors,
+                   by = "Industry")
+
+  pfu_aggs_industry |>
+    dplyr::filter(.data[[Recca::psut_cols$energy_type]] == "E") |>
+    magrittr::extract2(paste0(Recca::aggregate_cols$gross_aggregate_useful, sep, Recca::all_stages$useful)) |>
+    magrittr::extract2(1) |>
+    expect_equal(matrix(c(75, 4200.4, 21714.9805),
+                        nrow = 1, dimnames = list("Product",
+                                                  c("Oil fields", "Residential", "Transport"))) |>
+                   matsbyname::setrowtype("Product") |> matsbyname::setcoltype("Industry"))
+  pfu_aggs_industry |>
+    dplyr::filter(.data[[Recca::psut_cols$energy_type]] == "E") |>
+    magrittr::extract2(paste0(Recca::aggregate_cols$net_aggregate_useful, sep, Recca::all_stages$useful)) |>
+    magrittr::extract2(1) |>
+    expect_equal(matrix(c(4200.4, 21714.9805), nrow = 1, dimnames = list("Product",
+                                                                         c("Residential", "Transport"))) |>
+                   matsbyname::setrowtype("Product") |> matsbyname::setcoltype("Industry"))
 })

@@ -120,24 +120,17 @@ pfu_aggregates <- function(.sutdata,
                            pattern_type = c("exact", "leading", "trailing", "anywhere", "literal"),
                            prepositions = RCLabels::prepositions_list,
                            # Output names
-                           aggregate_primary = Recca::aggregate_cols$aggregate_primary,
                            net_aggregate_primary = Recca::aggregate_cols$net_aggregate_primary,
                            gross_aggregate_primary = Recca::aggregate_cols$gross_aggregate_primary,
 
-                           aggregate_final = Recca::aggregate_cols$aggregate_final,
                            net_aggregate_final = Recca::aggregate_cols$net_aggregate_final,
                            gross_aggregate_final = Recca::aggregate_cols$gross_aggregate_final,
 
-                           aggregate_useful = Recca::aggregate_cols$aggregate_useful,
                            net_aggregate_useful = Recca::aggregate_cols$net_aggregate_useful,
                            gross_aggregate_useful = Recca::aggregate_cols$gross_aggregate_useful,
 
-                           aggregate_services = Recca::aggregate_cols$aggregate_services,
                            net_aggregate_services = Recca::aggregate_cols$net_aggregate_services,
                            gross_aggregate_services = Recca::aggregate_cols$gross_aggregate_services,
-
-                           net_aggregate_finaldemand = Recca::aggregate_cols$net_aggregate_demand,
-                           gross_aggregate_finaldemand = Recca::aggregate_cols$gross_aggregate_demand,
 
                            # Stages
                            last_stage = Recca::psut_cols$last_stage,
@@ -358,6 +351,45 @@ pfu_aggregates <- function(.sutdata,
   # }
   # return(result)
 }
+
+
+calc_services_aggs_helper <- function(U_eiou_final_mat, Y_final_mat,
+                                      U_eiou_useful_mat, Y_useful_mat,
+                                      U_eiou_services_mat, Y_services_mat,
+                                      fd_sectors,
+                                      piece, notation, pattern_type, prepositions,
+                                      by,
+                                      net_aggregate_services_lsfinal = net_aggregate_services_lsfinal,
+                                      gross_aggregate_services_lsfinal = gross_aggregate_services_lsfinal,
+                                      net_aggregate_services_lsuseful = net_aggregate_services_lsuseful,
+                                      gross_aggregate_services_lsuseful = gross_aggregate_services_lsuseful,
+                                      net_aggregate_services_lsservices = net_aggregate_services_lsservices,
+                                      gross_aggregate_services_lsservices = gross_aggregate_services_lsservices) {
+
+  out <- list()
+
+  # Calculate services stage aggregations when last_stage = "Final"
+
+  # Calculate services stage aggregations when last_stage = "Useful"
+
+  # Calculate services stage aggregations when last_stage = "Services"
+  # with finaldemand_aggregates()
+  if (!is.null(U_eiou_services_mat) & !is.null(Y_services_mat)) {
+    res <- finaldemand_aggregates(fd_sectors = fd_sectors,
+                                  piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
+                                  U_eiou = U_eiou_services_mat, Y = Y_services_mat,
+                                  by = by,
+                                  net_aggregate_demand = net_aggregate_services_lsservices,
+                                  gross_aggregate_demand = gross_aggregate_services_lsservices)
+    out <- c(out, res)
+  } else {
+    out <- c(out, list(NULL, NULL) |>
+               magrittr::set_names(c(net_aggregate_services_lsuseful, gross_aggregate_services_lsuseful)))
+  }
+
+
+}
+
 
 
 calc_useful_aggs_helper <- function(U_eiou_final_mat, Y_final_mat,
