@@ -149,32 +149,32 @@ pfu_aggregates <- function(.sutdata,
                            Y = Recca::psut_cols$Y,
                            S_units = Recca::psut_cols$S_units,
                            # Last stage final matrix names
-                           R_final = paste0(Recca::psut_cols$R, sep, final),
-                           U_final = paste0(Recca::psut_cols$U, sep, final),
-                           U_feed_final = paste0(Recca::psut_cols$U_feed, sep, final),
-                           U_eiou_final = paste0(Recca::psut_cols$U_eiou, sep, final),
-                           r_eiou_final = paste0(Recca::psut_cols$r_eiou, sep, final),
-                           V_final = paste0(Recca::psut_cols$V, sep, final),
-                           Y_final = paste0(Recca::psut_cols$Y, sep, final),
-                           S_units_final = paste0(Recca::psut_cols$S_units, sep, final),
+                           R_lsfinal = paste0(Recca::psut_cols$R, sep, final),
+                           U_lsfinal = paste0(Recca::psut_cols$U, sep, final),
+                           U_feed_lsfinal = paste0(Recca::psut_cols$U_feed, sep, final),
+                           U_eiou_lsfinal = paste0(Recca::psut_cols$U_eiou, sep, final),
+                           r_eiou_lsfinal = paste0(Recca::psut_cols$r_eiou, sep, final),
+                           V_lsfinal = paste0(Recca::psut_cols$V, sep, final),
+                           Y_lsfinal = paste0(Recca::psut_cols$Y, sep, final),
+                           S_units_lsfinal = paste0(Recca::psut_cols$S_units, sep, final),
                            # Last stage useful matrix names
-                           R_useful = paste0(Recca::psut_cols$R, sep, useful),
-                           U_useful = paste0(Recca::psut_cols$U, sep, useful),
-                           U_feed_useful = paste0(Recca::psut_cols$U_feed, sep, useful),
-                           U_eiou_useful = paste0(Recca::psut_cols$U_eiou, sep, useful),
-                           r_eiou_useful = paste0(Recca::psut_cols$r_eiou, sep, useful),
-                           V_useful = paste0(Recca::psut_cols$V, sep, useful),
-                           Y_useful = paste0(Recca::psut_cols$Y, sep, useful),
-                           S_units_useful = paste0(Recca::psut_cols$S_units, sep, useful),
+                           R_lsuseful = paste0(Recca::psut_cols$R, sep, useful),
+                           U_lsuseful = paste0(Recca::psut_cols$U, sep, useful),
+                           U_feed_lsuseful = paste0(Recca::psut_cols$U_feed, sep, useful),
+                           U_eiou_lsuseful = paste0(Recca::psut_cols$U_eiou, sep, useful),
+                           r_eiou_lsuseful = paste0(Recca::psut_cols$r_eiou, sep, useful),
+                           V_lsuseful = paste0(Recca::psut_cols$V, sep, useful),
+                           Y_lsuseful = paste0(Recca::psut_cols$Y, sep, useful),
+                           S_units_lsuseful = paste0(Recca::psut_cols$S_units, sep, useful),
                            # Last stage services matrix names
-                           R_services = paste0(Recca::psut_cols$R, sep, services),
-                           U_services = paste0(Recca::psut_cols$U, sep, services),
-                           U_feed_services = paste0(Recca::psut_cols$U_feed, sep, services),
-                           U_eiou_services = paste0(Recca::psut_cols$U_eiou, sep, services),
-                           r_eiou_services = paste0(Recca::psut_cols$r_eiou, sep, services),
-                           V_services = paste0(Recca::psut_cols$V, sep, services),
-                           Y_services = paste0(Recca::psut_cols$Y, sep, services),
-                           S_units_services = paste0(Recca::psut_cols$S_units, sep, services),
+                           R_lsservices = paste0(Recca::psut_cols$R, sep, services),
+                           U_lsservices = paste0(Recca::psut_cols$U, sep, services),
+                           U_feed_lsservices = paste0(Recca::psut_cols$U_feed, sep, services),
+                           U_eiou_lsservices = paste0(Recca::psut_cols$U_eiou, sep, services),
+                           r_eiou_lsservices = paste0(Recca::psut_cols$r_eiou, sep, services),
+                           V_lsservices = paste0(Recca::psut_cols$V, sep, services),
+                           Y_lsservices = paste0(Recca::psut_cols$Y, sep, services),
+                           S_units_lsservices = paste0(Recca::psut_cols$S_units, sep, services),
                            # Names of internally pivoted columns
                            .matnames = Recca::psut_cols$matnames,
                            .matvals = Recca::psut_cols$matvals,
@@ -196,9 +196,9 @@ pfu_aggregates <- function(.sutdata,
                          values_from = tidyr::all_of(.matvals)) |>
       # Change order of the columns to make sense
       dplyr::relocate(dplyr::any_of(c(R, U, U_feed, U_eiou, r_eiou, V, Y, S_units,
-                                      R_final, U_final, U_feed_final, U_eiou_final, r_eiou_final, V_final, Y_final, S_units_final,
-                                      R_useful, U_useful, U_feed_useful, U_eiou_useful, r_eiou_useful, V_useful, Y_useful, S_units_useful,
-                                      R_services, U_services, U_feed_services, U_eiou_services, r_eiou_services, V_services, Y_services, S_units_services)),
+                                      R_lsfinal, U_lsfinal, U_feed_lsfinal, U_eiou_lsfinal, r_eiou_lsfinal, V_lsfinal, Y_lsfinal, S_units_lsfinal,
+                                      R_lsuseful, U_lsuseful, U_feed_lsuseful, U_eiou_lsuseful, r_eiou_lsuseful, V_lsuseful, Y_lsuseful, S_units_lsuseful,
+                                      R_lsservices, U_lsservices, U_feed_lsservices, U_eiou_lsservices, r_eiou_lsservices, V_lsservices, Y_lsservices, S_units_lsservices)),
                       .after = dplyr::last_col())
   }
 
@@ -243,19 +243,19 @@ pfu_aggregates <- function(.sutdata,
                           S_units_final_mat = NULL, S_units_useful_mat = NULL, S_units_services_mat = NULL) {
 
     # Calculate primary-stage aggregates
-    out <- calc_primary_aggs_helper(R_final_mat = R_final_mat, V_final_mat = V_final_mat, Y_final_mat = Y_final_mat,
-                                    R_useful_mat = R_useful_mat, V_useful_mat = V_useful_mat, Y_useful_mat = Y_useful_mat,
-                                    R_services_mat = R_services_mat, V_services_mat = V_services_mat, Y_services_mat = Y_services_mat,
-                                    p_industries = p_industries, by = by,
-                                    add_net_gross_cols = add_net_gross_cols,
-                                    piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
-                                    net_aggregate_primary_lsfinal = net_aggregate_primary_lsfinal,
-                                    gross_aggregate_primary_lsfinal = gross_aggregate_primary_lsfinal,
-                                    net_aggregate_primary_lsuseful = net_aggregate_primary_lsuseful,
-                                    gross_aggregate_primary_lsuseful = gross_aggregate_primary_lsuseful,
-                                    net_aggregate_primary_lsservices = net_aggregate_primary_lsservices,
-                                    gross_aggregate_primary_lsservices = gross_aggregate_primary_lsservices,
-                                    tol = tol)
+    out_primary <- calc_primary_aggs_helper(R_final_mat = R_final_mat, V_final_mat = V_final_mat, Y_final_mat = Y_final_mat,
+                                            R_useful_mat = R_useful_mat, V_useful_mat = V_useful_mat, Y_useful_mat = Y_useful_mat,
+                                            R_services_mat = R_services_mat, V_services_mat = V_services_mat, Y_services_mat = Y_services_mat,
+                                            p_industries = p_industries, by = by,
+                                            add_net_gross_cols = add_net_gross_cols,
+                                            piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
+                                            net_aggregate_primary_lsfinal = net_aggregate_primary_lsfinal,
+                                            gross_aggregate_primary_lsfinal = gross_aggregate_primary_lsfinal,
+                                            net_aggregate_primary_lsuseful = net_aggregate_primary_lsuseful,
+                                            gross_aggregate_primary_lsuseful = gross_aggregate_primary_lsuseful,
+                                            net_aggregate_primary_lsservices = net_aggregate_primary_lsservices,
+                                            gross_aggregate_primary_lsservices = gross_aggregate_primary_lsservices,
+                                            tol = tol)
 
     # Calculate final-stage aggregates
     out_final <- calc_final_aggs_helper(U_eiou_final_mat = U_eiou_final_mat, Y_final_mat = Y_final_mat,
@@ -269,7 +269,6 @@ pfu_aggregates <- function(.sutdata,
                                         gross_aggregate_final_lsuseful = gross_aggregate_final_lsuseful,
                                         net_aggregate_final_lsservices = net_aggregate_final_lsservices,
                                         gross_aggregate_final_lsservices = gross_aggregate_final_lsservices)
-    out <- c(out, out_final)
 
     # Calculate useful-stage aggregates
     out_useful <- calc_useful_aggs_helper(U_eiou_final_mat, Y_final_mat,
@@ -284,44 +283,34 @@ pfu_aggregates <- function(.sutdata,
                                           gross_aggregate_useful_lsuseful = gross_aggregate_useful_lsuseful,
                                           net_aggregate_useful_lsservices = net_aggregate_useful_lsservices,
                                           gross_aggregate_useful_lsservices = gross_aggregate_useful_lsservices)
-    out <- c(out, out_useful)
 
     # Calculate services-stage aggregates
+    out_services <- calc_services_aggs_helper(U_eiou_final_mat, Y_final_mat,
+                                              U_eiou_useful_mat, Y_useful_mat,
+                                              U_eiou_services_mat, Y_services_mat,
+                                              fd_sectors,
+                                              piece, notation, pattern_type, prepositions,
+                                              by,
+                                              net_aggregate_services_lsfinal = net_aggregate_services_lsfinal,
+                                              gross_aggregate_services_lsfinal = gross_aggregate_services_lsfinal,
+                                              net_aggregate_services_lsuseful = net_aggregate_services_lsuseful,
+                                              gross_aggregate_services_lsuseful = gross_aggregate_services_lsuseful,
+                                              net_aggregate_services_lsservices = net_aggregate_services_lsservices,
+                                              gross_aggregate_services_lsservices = gross_aggregate_services_lsservices)
 
-
-
-
-
-
-
-    # Calculate services stage aggregations when last_stage = "Services"
-    # with finaldemand_aggregates()
-    # if (!is.null(U_services_mat) & !is.null(U_feed_services_mat) & !is.null(Y_services_mat)) {
-    #   res <- finaldemand_aggregates(fd_sectors = fd_sectors,
-    #                                 piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
-    #                                 U_eiou = U_eiou_services_mat, Y = Y_services_mat,
-    #                                 by = by,
-    #                                 net_aggregate_demand = net_aggregate_services,
-    #                                 gross_aggregate_demand = gross_aggregate_services)
-    #   out <- c(out, res)
-    # } else {
-    #   out <- c(out, list(NULL, NULL) |>
-    #              magrittr::set_names(c(net_aggregate_services, gross_aggregate_services)))
-    # }
-
-    return(out)
+    c(out_primary, out_final, out_useful, out_services)
   }
 
   # result <- matsindf::matsindf_apply(.sutdata, FUN = pfuagg_func,
   matsindf::matsindf_apply(.sutdata, FUN = pfuagg_func,
-                           R_final_mat = R_final, R_useful_mat = R_useful, R_services_mat = R_services,
-                           U_final_mat = U_final, U_useful_mat = U_useful, U_services_mat = U_services,
-                           U_feed_final_mat = U_feed_final, U_feed_useful_mat = U_feed_useful, U_feed_services_mat = U_feed_services,
-                           U_eiou_final_mat = U_eiou_final, U_eiou_useful_mat = U_eiou_useful, U_eiou_services_mat = U_eiou_services,
-                           r_eiou_final_mat = r_eiou_final, r_eiou_useful_mat = r_eiou_useful, r_eiou_services_mat = r_eiou_services,
-                           V_final_mat = V_final, V_useful_mat = V_useful, V_services_mat = V_services,
-                           Y_final_mat = Y_final, Y_useful_mat = Y_useful, Y_services_mat = Y_services,
-                           S_units_final_mat = S_units_final, S_units_useful_mat = S_units_useful, S_units_services_mat = S_units_services)
+                           R_final_mat = R_lsfinal, R_useful_mat = R_lsuseful, R_services_mat = R_lsservices,
+                           U_final_mat = U_lsfinal, U_useful_mat = U_lsuseful, U_services_mat = U_lsservices,
+                           U_feed_final_mat = U_feed_lsfinal, U_feed_useful_mat = U_feed_lsuseful, U_feed_services_mat = U_feed_lsservices,
+                           U_eiou_final_mat = U_eiou_lsfinal, U_eiou_useful_mat = U_eiou_lsuseful, U_eiou_services_mat = U_eiou_lsservices,
+                           r_eiou_final_mat = r_eiou_lsfinal, r_eiou_useful_mat = r_eiou_lsuseful, r_eiou_services_mat = r_eiou_lsservices,
+                           V_final_mat = V_lsfinal, V_useful_mat = V_lsuseful, V_services_mat = V_lsservices,
+                           Y_final_mat = Y_lsfinal, Y_useful_mat = Y_lsuseful, Y_services_mat = Y_lsservices,
+                           S_units_final_mat = S_units_lsfinal, S_units_useful_mat = S_units_lsuseful, S_units_services_mat = S_units_lsservices)
 
   # If the incoming .sutmats was a wide by matrices data frame,
   # pivot the output.
@@ -353,145 +342,6 @@ pfu_aggregates <- function(.sutdata,
 }
 
 
-calc_services_aggs_helper <- function(U_eiou_final_mat, Y_final_mat,
-                                      U_eiou_useful_mat, Y_useful_mat,
-                                      U_eiou_services_mat, Y_services_mat,
-                                      fd_sectors,
-                                      piece, notation, pattern_type, prepositions,
-                                      by,
-                                      net_aggregate_services_lsfinal = net_aggregate_services_lsfinal,
-                                      gross_aggregate_services_lsfinal = gross_aggregate_services_lsfinal,
-                                      net_aggregate_services_lsuseful = net_aggregate_services_lsuseful,
-                                      gross_aggregate_services_lsuseful = gross_aggregate_services_lsuseful,
-                                      net_aggregate_services_lsservices = net_aggregate_services_lsservices,
-                                      gross_aggregate_services_lsservices = gross_aggregate_services_lsservices) {
-
-  out <- list()
-
-  # Calculate services stage aggregations when last_stage = "Final"
-
-  # Calculate services stage aggregations when last_stage = "Useful"
-
-  # Calculate services stage aggregations when last_stage = "Services"
-  # with finaldemand_aggregates()
-  if (!is.null(U_eiou_services_mat) & !is.null(Y_services_mat)) {
-    res <- finaldemand_aggregates(fd_sectors = fd_sectors,
-                                  piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
-                                  U_eiou = U_eiou_services_mat, Y = Y_services_mat,
-                                  by = by,
-                                  net_aggregate_demand = net_aggregate_services_lsservices,
-                                  gross_aggregate_demand = gross_aggregate_services_lsservices)
-    out <- c(out, res)
-  } else {
-    out <- c(out, list(NULL, NULL) |>
-               magrittr::set_names(c(net_aggregate_services_lsuseful, gross_aggregate_services_lsuseful)))
-  }
-
-
-}
-
-
-
-calc_useful_aggs_helper <- function(U_eiou_final_mat, Y_final_mat,
-                                    U_eiou_useful_mat, Y_useful_mat,
-                                    U_eiou_services_mat, Y_services_mat,
-                                    fd_sectors,
-                                    piece, notation, pattern_type, prepositions,
-                                    by,
-                                    net_aggregate_useful_lsfinal = net_aggregate_useful_lsfinal,
-                                    gross_aggregate_useful_lsfinal = gross_aggregate_useful_lsfinal,
-                                    net_aggregate_useful_lsuseful = net_aggregate_useful_lsuseful,
-                                    gross_aggregate_useful_lsuseful = gross_aggregate_useful_lsuseful,
-                                    net_aggregate_useful_lsservices = net_aggregate_useful_lsservices,
-                                    gross_aggregate_useful_lsservices = gross_aggregate_useful_lsservices) {
-
-  out <- list()
-
-  # Calculate useful stage aggregations when last_stage = "Final"
-
-  # Calculate useful stage aggregations when last_stage = "Useful"
-  # with finaldemand_aggregates()
-  if (!is.null(U_eiou_useful_mat) & !is.null(Y_useful_mat)) {
-    res <- finaldemand_aggregates(fd_sectors = fd_sectors,
-                                  piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
-                                  U_eiou = U_eiou_useful_mat, Y = Y_useful_mat,
-                                  by = by,
-                                  net_aggregate_demand = net_aggregate_useful_lsuseful,
-                                  gross_aggregate_demand = gross_aggregate_useful_lsuseful)
-    out <- c(out, res)
-  } else {
-    out <- c(out, list(NULL, NULL) |>
-               magrittr::set_names(c(net_aggregate_useful_lsuseful, gross_aggregate_useful_lsuseful)))
-  }
-
-
-  # Ensure that useful stage aggregations are same when
-  # last_stage = "Final" and last_stage = "Useful".
-
-
-  # Calculate useful stage aggregations when last_stage = "Services"
-
-
-  return(out)
-}
-
-
-calc_final_aggs_helper <- function(U_eiou_final_mat, Y_final_mat,
-                                   U_eiou_useful_mat, Y_useful_mat,
-                                   U_eiou_services_mat, Y_services_mat,
-                                   fd_sectors,
-                                   piece, notation, pattern_type, prepositions,
-                                   by,
-                                   net_aggregate_final_lsfinal = net_aggregate_final_lsfinal,
-                                   gross_aggregate_final_lsfinal = gross_aggregate_final_lsfinal,
-                                   net_aggregate_final_lsuseful = net_aggregate_final_lsuseful,
-                                   gross_aggregate_final_lsuseful = gross_aggregate_final_lsuseful,
-                                   net_aggregate_final_lsservices = net_aggregate_final_lsservices,
-                                   gross_aggregate_final_lsservices = gross_aggregate_final_lsservices) {
-
-  out <- list()
-  # Calculate final stage aggregates when last_stage = "Final"
-  # with finaldemand_aggregates()
-  if (!is.null(U_eiou_final_mat) & !is.null(Y_final_mat)) {
-    res <- finaldemand_aggregates(fd_sectors = fd_sectors,
-                                  piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
-                                  U_eiou = U_eiou_final_mat, Y = Y_final_mat,
-                                  by = by,
-                                  net_aggregate_demand = net_aggregate_final_lsfinal,
-                                  gross_aggregate_demand = gross_aggregate_final_lsfinal)
-    out <- c(out, res)
-  } else {
-    out <- c(out, list(NULL, NULL) |>
-               magrittr::set_names(c(net_aggregate_final_lsfinal, gross_aggregate_final_lsfinal)))
-  }
-
-
-  # Calculate final stage aggregates when last_stage = "Useful"
-  if (!is.null(U_eiou_useful_mat) & !is.null(Y_useful_mat)) {
-    out <- c(out, list(NULL, NULL) |>
-               magrittr::set_names(c(net_aggregate_final_lsuseful, gross_aggregate_final_lsuseful)))
-  } else {
-    out <- c(out, list(NULL, NULL) |>
-               magrittr::set_names(c(net_aggregate_final_lsuseful, gross_aggregate_final_lsuseful)))
-  }
-
-  # Calculate final stage aggregates when last_stage = "Services"
-  if (!is.null(U_eiou_services_mat) & !is.null(Y_services_mat)) {
-    out <- c(out, list(NULL, NULL) |>
-               magrittr::set_names(c(net_aggregate_final_lsservices, gross_aggregate_final_lsservices)))
-  } else {
-    out <- c(out, list(NULL, NULL) |>
-               magrittr::set_names(c(net_aggregate_final_lsservices, gross_aggregate_final_lsservices)))
-  }
-
-
-  # Ensure that final stage aggregates are same when
-  # last_stage = "Final" and last_stage = "Useful.
-
-  return(out)
-}
-
-
 
 calc_primary_aggs_helper <- function(R_final_mat, V_final_mat, Y_final_mat,
                                      R_useful_mat, V_useful_mat, Y_useful_mat,
@@ -507,8 +357,6 @@ calc_primary_aggs_helper <- function(R_final_mat, V_final_mat, Y_final_mat,
                                      gross_aggregate_primary_lsservices = gross_aggregate_primary_lsservices,
                                      tol) {
 
-  out <- list()
-
   # Calculate primary aggregates from 3 last stages (final, useful, and services) when each is available.
   # When available, calculate primary aggregates when last_stage is final.
   if (!is.null(R_final_mat) & !is.null(V_final_mat) & !is.null(Y_final_mat)) {
@@ -519,7 +367,9 @@ calc_primary_aggs_helper <- function(R_final_mat, V_final_mat, Y_final_mat,
                                        piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
                                        net_aggregate_primary = net_aggregate_primary_lsfinal,
                                        gross_aggregate_primary = gross_aggregate_primary_lsfinal)
-    out <- c(out, ex_p_lsfinal)
+  } else {
+    ex_p_lsfinal <- list(NULL, NULL) |>
+      magrittr::set_names(c(net_aggregate_primary_lsfinal, gross_aggregate_primary_lsfinal))
   }
   # When available, calculate primary aggregates when last_stage is useful.
   if (!is.null(R_useful_mat) & !is.null(V_useful_mat) & !is.null(Y_useful_mat)) {
@@ -530,7 +380,9 @@ calc_primary_aggs_helper <- function(R_final_mat, V_final_mat, Y_final_mat,
                                         piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
                                         net_aggregate_primary = net_aggregate_primary_lsuseful,
                                         gross_aggregate_primary = gross_aggregate_primary_lsuseful)
-    out <- c(out, ex_p_lsuseful)
+  } else {
+    ex_p_lsuseful <- list(NULL, NULL) |>
+      magrittr::set_names(c(net_aggregate_primary_lsuseful, gross_aggregate_primary_lsuseful))
   }
   # When available, calculate primary aggregates when last_stage is services.
   if (!is.null(R_services_mat) & !is.null(V_services_mat) & !is.null(Y_services_mat)) {
@@ -541,7 +393,10 @@ calc_primary_aggs_helper <- function(R_final_mat, V_final_mat, Y_final_mat,
                                           piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
                                           net_aggregate_primary = net_aggregate_primary_lsservices,
                                           gross_aggregate_primary = gross_aggregate_primary_lsservices)
-    out <- c(out, ex_p_lsservices)
+  } else {
+    ex_p_lsservices <- list(NULL, NULL) |>
+      magrittr::set_names(c(net_aggregate_primary_lsservices, gross_aggregate_primary_lsservices))
+
   }
   # Ensure that final and useful versions of primary aggregates are same.
   # If they are not same, we probably don't have the same ECCs, and an error should be thrown.
@@ -583,5 +438,136 @@ calc_primary_aggs_helper <- function(R_final_mat, V_final_mat, Y_final_mat,
       assertthat::assert_that(msg = "Net primary aggregates for last_stage = 'Useful' and last_stage = 'Useful' are not same to within `tol` in Recca::pfu_aggregates().")
   }
 
-  return(out)
+  c(ex_p_lsfinal, ex_p_lsuseful, ex_p_lsservices)
 }
+
+
+
+calc_final_aggs_helper <- function(U_eiou_final_mat, Y_final_mat,
+                                   U_eiou_useful_mat, Y_useful_mat,
+                                   U_eiou_services_mat, Y_services_mat,
+                                   fd_sectors,
+                                   piece, notation, pattern_type, prepositions,
+                                   by,
+                                   net_aggregate_final_lsfinal = net_aggregate_final_lsfinal,
+                                   gross_aggregate_final_lsfinal = gross_aggregate_final_lsfinal,
+                                   net_aggregate_final_lsuseful = net_aggregate_final_lsuseful,
+                                   gross_aggregate_final_lsuseful = gross_aggregate_final_lsuseful,
+                                   net_aggregate_final_lsservices = net_aggregate_final_lsservices,
+                                   gross_aggregate_final_lsservices = gross_aggregate_final_lsservices) {
+
+  # Calculate final stage aggregates when last_stage = "Final"
+  # with finaldemand_aggregates()
+  if (!is.null(U_eiou_final_mat) & !is.null(Y_final_mat)) {
+    ex_f_lsfinal <- finaldemand_aggregates(fd_sectors = fd_sectors,
+                                           piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
+                                           U_eiou = U_eiou_final_mat, Y = Y_final_mat,
+                                           by = by,
+                                           net_aggregate_demand = net_aggregate_final_lsfinal,
+                                           gross_aggregate_demand = gross_aggregate_final_lsfinal)
+  } else {
+    ex_f_lsfinal <- list(NULL, NULL) |>
+      magrittr::set_names(c(net_aggregate_final_lsfinal, gross_aggregate_final_lsfinal))
+  }
+
+
+  # Calculate final stage aggregates when last_stage = "Useful"
+  ex_f_lsuseful <- list(NULL, NULL) |>
+    magrittr::set_names(c(net_aggregate_final_lsuseful, gross_aggregate_final_lsuseful))
+
+  # Ensure that final stage aggregates are same when
+  # last_stage = "Final" and last_stage = "Useful.
+
+  # Calculate final stage aggregates when last_stage = "Services"
+  ex_f_lsservices <- list(NULL, NULL) |>
+    magrittr::set_names(c(net_aggregate_final_lsservices, gross_aggregate_final_lsservices))
+
+  c(ex_f_lsfinal, ex_f_lsuseful, ex_f_lsservices)
+}
+
+
+
+calc_useful_aggs_helper <- function(U_eiou_final_mat, Y_final_mat,
+                                    U_eiou_useful_mat, Y_useful_mat,
+                                    U_eiou_services_mat, Y_services_mat,
+                                    fd_sectors,
+                                    piece, notation, pattern_type, prepositions,
+                                    by,
+                                    net_aggregate_useful_lsfinal = net_aggregate_useful_lsfinal,
+                                    gross_aggregate_useful_lsfinal = gross_aggregate_useful_lsfinal,
+                                    net_aggregate_useful_lsuseful = net_aggregate_useful_lsuseful,
+                                    gross_aggregate_useful_lsuseful = gross_aggregate_useful_lsuseful,
+                                    net_aggregate_useful_lsservices = net_aggregate_useful_lsservices,
+                                    gross_aggregate_useful_lsservices = gross_aggregate_useful_lsservices) {
+
+  # Calculate useful stage aggregations when last_stage = "Final"
+  ex_u_lsfinal <- list(NULL, NULL) |>
+    magrittr::set_names(c(net_aggregate_useful_lsfinal, gross_aggregate_useful_lsfinal))
+
+  # Calculate useful stage aggregations when last_stage = "Useful"
+  # with finaldemand_aggregates()
+  if (!is.null(U_eiou_useful_mat) & !is.null(Y_useful_mat)) {
+    ex_u_lsuseful <- finaldemand_aggregates(fd_sectors = fd_sectors,
+                                            piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
+                                            U_eiou = U_eiou_useful_mat, Y = Y_useful_mat,
+                                            by = by,
+                                            net_aggregate_demand = net_aggregate_useful_lsuseful,
+                                            gross_aggregate_demand = gross_aggregate_useful_lsuseful)
+  } else {
+    ex_u_lsuseful <- list(NULL, NULL) |>
+      magrittr::set_names(c(net_aggregate_useful_lsuseful, gross_aggregate_useful_lsuseful))
+  }
+
+
+  # Ensure that useful stage aggregations are same when
+  # last_stage = "Final" and last_stage = "Useful".
+
+
+  # Calculate useful stage aggregations when last_stage = "Services"
+  ex_u_lsservices <- list(NULL, NULL) |>
+    magrittr::set_names(c(net_aggregate_useful_lsservices, gross_aggregate_useful_lsservices))
+
+  c(ex_u_lsfinal, ex_u_lsuseful, ex_u_lsservices)
+}
+
+
+
+calc_services_aggs_helper <- function(U_eiou_final_mat, Y_final_mat,
+                                      U_eiou_useful_mat, Y_useful_mat,
+                                      U_eiou_services_mat, Y_services_mat,
+                                      fd_sectors,
+                                      piece, notation, pattern_type, prepositions,
+                                      by,
+                                      net_aggregate_services_lsfinal = net_aggregate_services_lsfinal,
+                                      gross_aggregate_services_lsfinal = gross_aggregate_services_lsfinal,
+                                      net_aggregate_services_lsuseful = net_aggregate_services_lsuseful,
+                                      gross_aggregate_services_lsuseful = gross_aggregate_services_lsuseful,
+                                      net_aggregate_services_lsservices = net_aggregate_services_lsservices,
+                                      gross_aggregate_services_lsservices = gross_aggregate_services_lsservices) {
+
+  # Calculate services stage aggregations when last_stage = "Final"
+  ex_s_lsfinal <- list(NULL, NULL) |>
+    magrittr::set_names(c(net_aggregate_services_lsfinal, gross_aggregate_services_lsfinal))
+
+  # Calculate services stage aggregations when last_stage = "Useful"
+  ex_s_lsuseful <- list(NULL, NULL) |>
+    magrittr::set_names(c(net_aggregate_services_lsuseful, gross_aggregate_services_lsuseful))
+
+  # Calculate services stage aggregations when last_stage = "Services"
+  # with finaldemand_aggregates()
+  if (!is.null(U_eiou_services_mat) & !is.null(Y_services_mat)) {
+    ex_s_lsservices <- finaldemand_aggregates(fd_sectors = fd_sectors,
+                                              piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
+                                              U_eiou = U_eiou_services_mat, Y = Y_services_mat,
+                                              by = by,
+                                              net_aggregate_demand = net_aggregate_services_lsservices,
+                                              gross_aggregate_demand = gross_aggregate_services_lsservices)
+  } else {
+    ex_s_lsservices <- list(NULL, NULL) |>
+      magrittr::set_names(c(net_aggregate_services_lsuseful, gross_aggregate_services_lsuseful))
+  }
+
+  c(ex_s_lsfinal, ex_s_lsuseful, ex_s_lsservices)
+}
+
+
