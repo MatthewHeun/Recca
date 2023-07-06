@@ -5,12 +5,13 @@
 \alias{all_stages}
 \title{All energy conversion chain stages}
 \format{
-A string list with 4
+A string list with 5
 \describe{
 \item{primary}{The string identifier for the Primary stage of the energy conversion chain.}
 \item{final}{The string identifier for the Final stage of the energy conversion chain.}
 \item{useful}{The string identifier for the Useful stage of the energy conversion chain.}
 \item{services}{The string identifier for the Services stage of the energy conversion chain.}
+\item{last_stage_sep}{A string that separates last-stage identifiers in variable names.}
 }
 }
 \usage{

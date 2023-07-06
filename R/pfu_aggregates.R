@@ -145,7 +145,7 @@ pfu_aggregates <- function(.sutdata,
                            final = Recca::all_stages$final,
                            useful = Recca::all_stages$useful,
                            services = Recca::all_stages$services,
-                           sep = "___ls",
+                           sep = Recca::all_stages$last_stage_sep,
                            # Regular matrix names for wide by matrix data frames
                            R = Recca::psut_cols$R,
                            U = Recca::psut_cols$U,
@@ -249,9 +249,7 @@ pfu_aggregates <- function(.sutdata,
                           Y_final_mat = NULL, Y_useful_mat = NULL, Y_services_mat = NULL,
                           S_units_final_mat = NULL, S_units_useful_mat = NULL, S_units_services_mat = NULL) {
 
-    # Calculate primary aggregates from
-    # last_stage == "Final", last_stage == "Useful", and last_stage == "Services"
-    # when available
+    # Calculate primary-stage aggregates
     out <- calc_primary_aggs_helper(R_final_mat = R_final_mat, V_final_mat = V_final_mat, Y_final_mat = Y_final_mat,
                                     R_useful_mat = R_useful_mat, V_useful_mat = V_useful_mat, Y_useful_mat = Y_useful_mat,
                                     R_services_mat = R_services_mat, V_services_mat = V_services_mat, Y_services_mat = Y_services_mat,
@@ -266,6 +264,7 @@ pfu_aggregates <- function(.sutdata,
                                     gross_aggregate_primary_lsservices = gross_aggregate_primary_lsservices,
                                     tol = tol)
 
+    # Calculate final-stage aggregates
     out_final <- calc_final_aggs_helper(U_eiou_final_mat = U_eiou_final_mat, Y_final_mat = Y_final_mat,
                                         U_eiou_useful_mat = U_eiou_useful_mat, Y_useful_mat = Y_useful_mat,
                                         U_eiou_services_mat = U_eiou_services_mat, Y_services_mat = Y_services_mat,
@@ -279,49 +278,43 @@ pfu_aggregates <- function(.sutdata,
                                         gross_aggregate_final_lsservices = gross_aggregate_final_lsservices)
     out <- c(out, out_final)
 
+    # Calculate useful-stage aggregates
+    out_useful <- calc_useful_aggs_helper(U_eiou_final_mat, Y_final_mat,
+                                          U_eiou_useful_mat, Y_useful_mat,
+                                          U_eiou_services_mat, Y_services_mat,
+                                          fd_sectors,
+                                          piece, notation, pattern_type, prepositions,
+                                          by,
+                                          net_aggregate_useful_lsfinal = net_aggregate_useful_lsfinal,
+                                          gross_aggregate_useful_lsfinal = gross_aggregate_useful_lsfinal,
+                                          net_aggregate_useful_lsuseful = net_aggregate_useful_lsuseful,
+                                          gross_aggregate_useful_lsuseful = gross_aggregate_useful_lsuseful,
+                                          net_aggregate_useful_lsservices = net_aggregate_useful_lsservices,
+                                          gross_aggregate_useful_lsservices = gross_aggregate_useful_lsservices)
+    out <- c(out, out_useful)
+
+    # Calculate services-stage aggregates
 
 
 
 
-    # Calculate useful stage aggregations when last_stage = "Final"
-
-
-
-    # Calculate useful stage aggregations when last_stage = "Useful"
-    # with finaldemand_aggregates()
-    if (!is.null(U_useful_mat) & !is.null(U_feed_useful_mat) & !is.null(Y_useful_mat)) {
-      res <- finaldemand_aggregates(fd_sectors = fd_sectors,
-                                    piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
-                                    U_eiou = U_eiou_useful_mat, Y = Y_useful_mat,
-                                    by = by,
-                                    net_aggregate_demand = net_aggregate_useful,
-                                    gross_aggregate_demand = gross_aggregate_useful)
-      out <- c(out, res)
-    } else {
-      out <- c(out, list(NULL, NULL) |>
-                 magrittr::set_names(c(net_aggregate_useful, gross_aggregate_useful)))
-    }
-
-
-    # Ensure that useful stage aggregations are same when
-    # last_stage = "Final" and last_stage = "Useful".
 
 
 
     # Calculate services stage aggregations when last_stage = "Services"
     # with finaldemand_aggregates()
-    if (!is.null(U_services_mat) & !is.null(U_feed_services_mat) & !is.null(Y_services_mat)) {
-      res <- finaldemand_aggregates(fd_sectors = fd_sectors,
-                                    piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
-                                    U_eiou = U_eiou_services_mat, Y = Y_services_mat,
-                                    by = by,
-                                    net_aggregate_demand = net_aggregate_services,
-                                    gross_aggregate_demand = gross_aggregate_services)
-      out <- c(out, res)
-    } else {
-      out <- c(out, list(NULL, NULL) |>
-                 magrittr::set_names(c(net_aggregate_services, gross_aggregate_services)))
-    }
+    # if (!is.null(U_services_mat) & !is.null(U_feed_services_mat) & !is.null(Y_services_mat)) {
+    #   res <- finaldemand_aggregates(fd_sectors = fd_sectors,
+    #                                 piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
+    #                                 U_eiou = U_eiou_services_mat, Y = Y_services_mat,
+    #                                 by = by,
+    #                                 net_aggregate_demand = net_aggregate_services,
+    #                                 gross_aggregate_demand = gross_aggregate_services)
+    #   out <- c(out, res)
+    # } else {
+    #   out <- c(out, list(NULL, NULL) |>
+    #              magrittr::set_names(c(net_aggregate_services, gross_aggregate_services)))
+    # }
 
     return(out)
   }
@@ -380,6 +373,34 @@ calc_useful_aggs_helper <- function(U_eiou_final_mat, Y_final_mat,
                                     net_aggregate_useful_lsservices = net_aggregate_useful_lsservices,
                                     gross_aggregate_useful_lsservices = gross_aggregate_useful_lsservices) {
 
+  out <- list()
+
+  # Calculate useful stage aggregations when last_stage = "Final"
+
+  # Calculate useful stage aggregations when last_stage = "Useful"
+  # with finaldemand_aggregates()
+  if (!is.null(U_eiou_useful_mat) & !is.null(Y_useful_mat)) {
+    res <- finaldemand_aggregates(fd_sectors = fd_sectors,
+                                  piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
+                                  U_eiou = U_eiou_useful_mat, Y = Y_useful_mat,
+                                  by = by,
+                                  net_aggregate_demand = net_aggregate_useful_lsuseful,
+                                  gross_aggregate_demand = gross_aggregate_useful_lsuseful)
+    out <- c(out, res)
+  } else {
+    out <- c(out, list(NULL, NULL) |>
+               magrittr::set_names(c(net_aggregate_useful_lsuseful, gross_aggregate_useful_lsuseful)))
+  }
+
+
+  # Ensure that useful stage aggregations are same when
+  # last_stage = "Final" and last_stage = "Useful".
+
+
+  # Calculate useful stage aggregations when last_stage = "Services"
+
+
+  return(out)
 }
 
 

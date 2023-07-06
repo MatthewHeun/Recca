@@ -33,7 +33,7 @@ pfu_aggregates(
   final = Recca::all_stages$final,
   useful = Recca::all_stages$useful,
   services = Recca::all_stages$services,
-  sep = "___ls",
+  sep = Recca::all_stages$last_stage_sep,
   R = Recca::psut_cols$R,
   U = Recca::psut_cols$U,
   U_feed = Recca::psut_cols$U_feed,

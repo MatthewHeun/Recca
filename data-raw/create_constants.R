@@ -253,5 +253,6 @@ usethis::use_data(row_col_types, overwrite = TRUE)
 all_stages <- list(primary = "Primary",
                    final = "Final",
                    useful = "Useful",
-                   services = "Services")
+                   services = "Services",
+                   last_stage_sep = "___ls")
 usethis::use_data(all_stages, overwrite = TRUE)
