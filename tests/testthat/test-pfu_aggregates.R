@@ -208,5 +208,16 @@ test_that("pfu_aggregates() works for useful aggregates", {
                                                                 "MD [from Car engines]",
                                                                 "MD [from Truck engines]"), "Industry")) |>
                    matsbyname::setrowtype("Product") |> matsbyname::setcoltype("Industry"))
-
+  pfu_aggs_product |>
+    dplyr::filter(.data[[Recca::psut_cols$energy_type]] == "E") |>
+    magrittr::extract2(paste0(Recca::aggregate_cols$net_aggregate_useful, sep, Recca::all_stages$useful)) |>
+    magrittr::extract2(1) |>
+    expect_equal(matrix(c(1200,
+                          20000,
+                          3000.4,
+                          1714.9805), ncol = 1, dimnames = list(c("Light",
+                                                                  "LTH",
+                                                                  "MD [from Car engines]",
+                                                                  "MD [from Truck engines]"), "Industry")) |>
+                   matsbyname::setrowtype("Product") |> matsbyname::setcoltype("Industry"))
 })
