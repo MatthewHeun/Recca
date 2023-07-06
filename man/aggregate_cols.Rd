@@ -17,11 +17,11 @@ A string list with 19 entries.
 
 \item{aggregate_useful}{The name of a column in a wide-by-matrices data frame containing aggregates of useful energy.}
 \item{net_aggregate_useful}{The name of a column in a wide-by-matrices data frame containing aggregates of net useful energy, not including energy industry own use.}
-\item{gross_aggregate_useful}{The name of a column in a wide-by-matrices data frame containing aggregates of gross useful energy, ncluding energy industry own use.}
+\item{gross_aggregate_useful}{The name of a column in a wide-by-matrices data frame containing aggregates of gross useful energy, including energy industry own use.}
 
 \item{aggregate_services}{The name of a column in a wide-by-matrices data frame containing aggregates of energy services.}
 \item{net_aggregate_services}{The name of a column in a wide-by-matrices data frame containing aggregates of net energy services, not including energy industry own use.}
-\item{gross_aggregate_services}{The name of a column in a wide-by-matrices data frame containing aggregates of gross energy services, ncluding energy industry own use.}
+\item{gross_aggregate_services}{The name of a column in a wide-by-matrices data frame containing aggregates of gross energy services, including energy industry own use.}
 
 \item{aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of final demand energy (including energy industry own use), regardless of whether the last stage is final, useful, or services.}
 \item{net_aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of net final demand energy (excluding energy industry own use), regardless of whether the last stage is final, useful, or services.}
