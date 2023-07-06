@@ -11,10 +11,9 @@ finaldemand_aggregates(
   notation = RCLabels::notations_list,
   pattern_type = c("exact", "leading", "trailing", "anywhere", "literal"),
   prepositions = RCLabels::prepositions_list,
-  U = Recca::psut_cols$U,
-  U_feed = Recca::psut_cols$U_feed,
+  U_eiou = Recca::psut_cols$U_eiou,
   Y = Recca::psut_cols$Y,
-  by = c("Total", "Product", "Sector"),
+  by = c("Total", "Product", "Sector", "Industry"),
   net_aggregate_demand = Recca::aggregate_cols$net_aggregate_demand,
   gross_aggregate_demand = Recca::aggregate_cols$gross_aggregate_demand
 )
@@ -27,8 +26,8 @@ Names should include columns in the \code{Y} and \code{U_EIOU} matrices
 to cover both net (in \code{Y}) and gross (in \code{Y} and \code{U_EIOU}) final demand.}
 
 \item{piece, notation, pattern_type, prepositions}{Arguments that control the way row and column matching
-is accomplished when selecting parts of the \strong{R}, \strong{V}, and \strong{Y}
-matrices for primary aggregation.
+is accomplished when selecting parts of the \strong{U_EIOU} and \strong{Y}
+matrices for final demand aggregation.
 These arguments are passed to
 \code{matsbyname::select_rowcol_piece_byname()} and eventually
 \code{RCLabels::match_by_pattern()} and
@@ -39,7 +38,7 @@ Default values are
 \code{pattern_type = "exact"}, and
 \code{prepositions = RCLabels::prepositions_list}.}
 
-\item{U, U_feed, Y}{Input matrices. See \code{Recca::psut_cols}.}
+\item{U_eiou, Y}{Input matrices. See \code{Recca::psut_cols}.}
 
 \item{by}{One of "Product", "Sector", or "Total" to indicate the desired aggregation:
 "Product" for aggregation by energy carrier (Crude oil, Primary solid biofuels, etc.),
@@ -47,8 +46,6 @@ Default values are
 "Total" for aggregation over both Product and Sector (the default).}
 
 \item{net_aggregate_demand, gross_aggregate_demand}{See \code{Recca::aggregate_cols}.
-Net energy demand is calculated by \code{matsbyname::sumall_byname(Y_fd)}.
-Gross energy demand is calculated by \code{matsbyname::sumall_byname(Y_fd) + matsbyname::sumall_byname(U_EIOU)}.
 Defaults are \code{Recca::aggregate_cols$net_aggregate_demand} and
 \code{Recca::aggregate_cols$gross_aggregate_demand}.}
 }
@@ -57,10 +54,13 @@ A list or data frame containing \code{net_aggregate_demand} and \code{gross_aggr
 }
 \description{
 Calculates aggregate final demand energy from a data frame of Supply-Use matrices.
-The calculation includes non-energy uses if they are present in the final demand matrix.
-The calculation does not include balancing items (Losses and Statistical differences).
-If \code{.sutdata} is a data frame, \code{fd_sectors} should be the name of a column in the data frame.
+The calculation counts only \code{fd_sectors} in final demand aggregates.
 If \code{.sutdata} is \code{NULL}, \code{fd_sectors} can be a single vector of industry names.
+}
+\details{
+Net energy demand is calculated by \code{matsbyname::sum_byname(Y_fd)}, with sums across rows, columns, or total as needed.
+Gross energy demand is calculated by \code{matsbyname::sum_byname(Y_fd) + matsbyname::sum_byname(U_EIOU)},
+with sums across rows, columns, or total as needed.
 }
 \examples{
 library(matsbyname)

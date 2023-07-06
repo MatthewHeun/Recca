@@ -4,6 +4,13 @@ output: html_document
 ---
 
 
+* Breaking change: 
+  `U` and `U_feed` arguments removed from `finaldemand_aggregates()`, 
+  replaced by `U_eiou`, which was calculated from 
+  `U` and `U_feed` internally, and 
+  `U_eiou` is present in all energy conversion chain representations.
+* The `by` argument to `finaldemand_aggregates()` can now be "Industry",
+  which is treated as a synonym for "Sector".
 * Now returning an `S_units_prime` column when chopping matrices.
 * Wrapped some matrices in `as.matrix()` to guard against
   sparse matrices causing a failure in `calc_yqfgW()`.

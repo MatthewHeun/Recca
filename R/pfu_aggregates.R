@@ -80,8 +80,9 @@
 #'
 #' If `.sutdata` is a wide-by-matrices data frame
 #' but contains a `last_stage` column,
-#' `.sutdata` is pivoted wide to put data into the correct shape,
-#' forming columns for each ECC matrix.
+#' `.sutdata` is pivoted wide (as a convenience)
+#' to put data into the correct shape,
+#' forming columns for each combination of ECC matrix and last stage.
 #' The `last_stage` and `R` columns make `R_final` and `R_useful` columns.
 #' The `last_stage` and `V` columns make `V_final` and `V_useful` columns.
 #' Etc.
@@ -90,13 +91,13 @@
 #' See examples.
 #'
 #' Internally, this function uses
-#' [primary_aggregates()], [finaldemand_aggregates()], and
-#' [calc_eta_fu_Y_eiou()] to complete its work.
+#' [primary_aggregates()] and [finaldemand_aggregates()], and
+#' to complete its work.
 #'
 #' Primary aggregates can be computed when
-#' last stage is final and last stage is useful.
+#' last stage is final, useful, or services.
 #' Ostensibly, the primary aggregates should be the same
-#' in both cases when metadata are the same.
+#' in all cases when metadata are the same.
 #' An error is thrown if that is not true to within `tol`.
 #'
 #' @param .sutdata An optional data frame containing physical supply use table
@@ -270,7 +271,7 @@ pfu_aggregates <- function(.sutdata,
     if (!is.null(U_final_mat) & !is.null(U_feed_final_mat) & !is.null(Y_final_mat)) {
       res <- finaldemand_aggregates(fd_sectors = fd_sectors,
                                     piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
-                                    U = U_final_mat, U_feed = U_feed_final_mat, Y = Y_final_mat,
+                                    U_eiou = U_eiou_final_mat, Y = Y_final_mat,
                                     by = by,
                                     net_aggregate_demand = net_aggregate_final,
                                     gross_aggregate_demand = gross_aggregate_final)
@@ -300,7 +301,7 @@ pfu_aggregates <- function(.sutdata,
     if (!is.null(U_useful_mat) & !is.null(U_feed_useful_mat) & !is.null(Y_useful_mat)) {
       res <- finaldemand_aggregates(fd_sectors = fd_sectors,
                                     piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
-                                    U = U_useful_mat, U_feed = U_feed_useful_mat, Y = Y_useful_mat,
+                                    U_eiou = U_eiou_useful_mat, Y = Y_useful_mat,
                                     by = by,
                                     net_aggregate_demand = net_aggregate_useful,
                                     gross_aggregate_demand = gross_aggregate_useful)
@@ -321,7 +322,7 @@ pfu_aggregates <- function(.sutdata,
     if (!is.null(U_services_mat) & !is.null(U_feed_services_mat) & !is.null(Y_services_mat)) {
       res <- finaldemand_aggregates(fd_sectors = fd_sectors,
                                     piece = piece, notation = notation, pattern_type = pattern_type, prepositions = prepositions,
-                                    U = U_services_mat, U_feed = U_feed_services_mat, Y = Y_services_mat,
+                                    U_eiou = U_eiou_services_mat, Y = Y_services_mat,
                                     by = by,
                                     net_aggregate_demand = net_aggregate_services,
                                     gross_aggregate_demand = gross_aggregate_services)
@@ -330,7 +331,6 @@ pfu_aggregates <- function(.sutdata,
       out <- c(out, list(NULL, NULL) |>
                  magrittr::set_names(c(net_aggregate_services, gross_aggregate_services)))
     }
-
 
     return(out)
   }
@@ -377,7 +377,9 @@ pfu_aggregates <- function(.sutdata,
 
 
 
+calc_final_aggs_helper <- function() {
 
+}
 
 
 calc_primary_aggs_helper <- function(R_final_mat, V_final_mat, Y_final_mat,
