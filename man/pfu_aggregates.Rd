@@ -7,6 +7,7 @@
 pfu_aggregates(
   .sutdata,
   p_industries,
+  fd_sectors,
   by = c("Total", "Product", "Industry", "Flow"),
   add_net_gross_cols = FALSE,
   piece = "all",
@@ -28,6 +29,7 @@ pfu_aggregates(
   net_aggregate_finaldemand = Recca::aggregate_cols$net_aggregate_demand,
   gross_aggregate_finaldemand = Recca::aggregate_cols$gross_aggregate_demand,
   last_stage = Recca::psut_cols$last_stage,
+  primary = Recca::all_stages$primary,
   final = Recca::all_stages$final,
   useful = Recca::all_stages$useful,
   services = Recca::all_stages$services,
