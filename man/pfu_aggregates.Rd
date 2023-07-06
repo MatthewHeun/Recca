@@ -157,8 +157,9 @@ For example, two versions of the \strong{R} matrix should be present:
 
 If \code{.sutdata} is a wide-by-matrices data frame
 but contains a \code{last_stage} column,
-\code{.sutdata} is pivoted wide to put data into the correct shape,
-forming columns for each ECC matrix.
+\code{.sutdata} is pivoted wide (as a convenience)
+to put data into the correct shape,
+forming columns for each combination of ECC matrix and last stage.
 The \code{last_stage} and \code{R} columns make \code{R_final} and \code{R_useful} columns.
 The \code{last_stage} and \code{V} columns make \code{V_final} and \code{V_useful} columns.
 Etc.
@@ -167,12 +168,12 @@ is missing, an error is thrown.
 See examples.
 
 Internally, this function uses
-\code{\link[=primary_aggregates]{primary_aggregates()}}, \code{\link[=finaldemand_aggregates]{finaldemand_aggregates()}}, and
-\code{\link[=calc_eta_fu_Y_eiou]{calc_eta_fu_Y_eiou()}} to complete its work.
+\code{\link[=primary_aggregates]{primary_aggregates()}} and \code{\link[=finaldemand_aggregates]{finaldemand_aggregates()}}, and
+to complete its work.
 
 Primary aggregates can be computed when
-last stage is final and last stage is useful.
+last stage is final, useful, or services.
 Ostensibly, the primary aggregates should be the same
-in both cases when metadata are the same.
+in all cases when metadata are the same.
 An error is thrown if that is not true to within \code{tol}.
 }
