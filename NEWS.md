@@ -4,6 +4,7 @@ output: html_document
 ---
 
 
+* Completed the aggregations vignette.
 * Breaking change: 
   `U` and `U_feed` arguments removed from `finaldemand_aggregates()`, 
   replaced by `U_eiou`, which was calculated from 
