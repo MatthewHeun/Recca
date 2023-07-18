@@ -191,6 +191,8 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 #' allocations (`C_Y` and `C_eiou`),
 #' machine efficiencies (`eta_i`), and
 #' (for exergetic efficiencies) exergy-to-energy ratios (`phi`).
+#' The structure of the outgoing matrices is the same as
+#' the structure of **Y** and **U_EIOU** when last stage is final.
 #' This function performs those calculations.
 #'
 #' The matrix formula for calculating energy efficiencies
