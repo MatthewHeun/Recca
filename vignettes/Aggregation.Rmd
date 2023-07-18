@@ -30,7 +30,7 @@ The types of aggregation are shown in the following table.
 | Function                   | Meaning                                                                                     |
 |---------------------------:|:--------------------------------------------------------------------------------------------|
 | `primary_aggregates()`     | Aggregates primary energy                                                                   |
-| `finaldemand_aggregates()` | Aggregates final demand energy                                                              |
+| `finaldemand_aggregates()` | Aggregates final demand energy, the last stage in an energy conversion chain (ECC)          |
 | `region_aggregates()`      | Aggregates regions                                                                          |
 | `despecified_aggregates()` | Despecifies industries and products, then aggregates                                        |
 | `grouped_aggregates()`     | Groups industries and products, then aggregates                                             |
@@ -43,11 +43,11 @@ This vignette describes those functions and demonstrates their use.
 ## `primary_aggregates()`
 
 `primary_aggregates()` creates a column of primary energy sums coming from the industries 
-specified in the `p_industries` argument.
-These industries are often found in the **R**, **V**, and **Y** matrices 
+specified in the `p_industries` (primary industries) argument.
+These primary industries are often found in the **R**, **V**, and **Y** matrices 
 of the PSUT framework.
 Typical `p_industries` are Resources, Imports, and Exports.
-In the example below, 
+In the examples below, 
 primary aggregates are calculated 
 for the four rows of the `UKEnergy2000mats` data frame.
 
@@ -58,7 +58,7 @@ Net and gross primary aggregates are identical.
 
 ```{r}
 library(matsbyname)
-p_industries <- c("Resources - Crude", "Resources - NG")
+p_industries <- c("Resources [of Crude]", "Resources [of NG]")
 # Calculate primary total aggregates
 ECCs <- UKEnergy2000mats %>%
   tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix")
@@ -90,6 +90,9 @@ res2[[Recca::aggregate_cols$gross_aggregate_primary]]
 
 `finaldemand_aggregates()` is similar to `primary_aggregates()`, 
 except that it aggregates energy at the final demand stage in the **Y** matrix.
+Both net and gross aggregate final demand are calculated.
+Gross final demand includes energy industry own use (EIOU).
+Net final demand does not.
 
 ```{r}
 fd_sectors <- c("Residential", "Transport")
@@ -102,6 +105,47 @@ res[[Recca::aggregate_cols$gross_aggregate_demand]]
 
 
 ## `region_aggregates()`
+
+`region_aggregates()` sums regions according to `many_colname` and `few_colname`.
+To demonstrate this function, we need to modify the The example data frame 
+slightly. 
+It contains only one country ("GBR"), but it should contain
+different countries and a "few" column.
+Furthermore, the last stage and energy type columns should be the same
+where aggregation is required.
+The following code produces this modification to pretend that 
+rows of the data frame apply to different countries.
+
+```{r}
+ECCs_for_region_agg <- ECCs |> 
+  dplyr::mutate(
+    Country = c("USA", "GBR", "CAN", "FRA"), 
+    Continent = c("NoAmr", "Europe", "NoAmr", "Europe"), 
+    Energy.type = "E", 
+    Last.stage = c("Final", "Services", "Final", "Services")
+  )
+ECCs_for_region_agg |> 
+  dplyr::select(Country, Continent, Energy.type, Last.stage)
+```
+
+Given this modification, 
+we aggregate to continents with the following code.
+
+```{r}
+continent_aggregations <- ECCs_for_region_agg |> 
+  Recca::region_aggregates(many_colname = "Country", few_colname = "Continent")
+continent_aggregations
+```
+
+By default, `many_colname` is replaced by the common values in `few_colname`.
+A simple rename can override this default behaviour.
+
+```{r}
+continent_aggregations |> 
+  dplyr::rename(
+    Continent = Country
+  )
+```
 
 
 

@@ -472,6 +472,7 @@ calc_final_aggs_helper <- function(U_eiou_final_mat, Y_final_mat,
 
 
   # Calculate final stage aggregates when last_stage = "Useful"
+  # ********************** Fill this with real code ************************
   ex_f_lsuseful <- list(NULL, NULL) |>
     magrittr::set_names(c(net_aggregate_final_lsuseful, gross_aggregate_final_lsuseful))
 
@@ -501,6 +502,7 @@ calc_useful_aggs_helper <- function(U_eiou_final_mat, Y_final_mat,
                                     gross_aggregate_useful_lsservices = gross_aggregate_useful_lsservices) {
 
   # Calculate useful stage aggregations when last_stage = "Final"
+  # ********************** Fill this with real code ************************
   ex_u_lsfinal <- list(NULL, NULL) |>
     magrittr::set_names(c(net_aggregate_useful_lsfinal, gross_aggregate_useful_lsfinal))
 
