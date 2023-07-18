@@ -27,15 +27,15 @@ many functions useful for aggregating industries and products in energy conversi
 
 The types of aggregation are shown in the following table.
 
-| Function                   | Meaning                                                                                     |
-|---------------------------:|:--------------------------------------------------------------------------------------------|
-| `primary_aggregates()`     | Aggregates primary energy                                                                   |
-| `finaldemand_aggregates()` | Aggregates final demand energy, the last stage in an energy conversion chain (ECC)          |
-| `region_aggregates()`      | Aggregates regions                                                                          |
-| `despecified_aggregates()` | Despecifies industries and products, then aggregates                                        |
-| `grouped_aggregates()`     | Groups industries and products, then aggregates                                             |
-| `footprint_aggregates()`   | Isolates each final demand product and sector, then aggregates by primary and final demand  |
-| `effects_aggregates()`     | Isolates each product in the resources matrix, then aggregates by primary and final demand  |
+| Function                   | Meaning                                                                                                  |
+|---------------------------:|:---------------------------------------------------------------------------------------------------------|
+| `primary_aggregates()`     | Aggregates primary energy                                                                                |
+| `finaldemand_aggregates()` | Aggregates final demand energy, the last stage in an energy conversion chain (ECC)                       |
+| `region_aggregates()`      | Aggregates regions                                                                                       |
+| `despecified_aggregates()` | Despecifies industries and products, then aggregates                                                     |
+| `grouped_aggregates()`     | Groups industries and products, then aggregates                                                          |
+| `footprint_aggregates()`   | Isolates each final demand product and sector, then aggregates by primary and final demand               |
+| `effects_aggregates()`     | Isolates each product and industry in the resources matrix, then aggregates by primary and final demand  |
 
 This vignette describes those functions and demonstrates their use.
 
@@ -52,7 +52,7 @@ primary aggregates are calculated
 for the four rows of the `UKEnergy2000mats` data frame.
 
 In the first example,
-only 1 aggregate column is created ("EX.p"), because there is no
+only one aggregate column is created ("EX.p"), because there is no
 difference between net and gross aggregation for primary energy.
 Net and gross primary aggregates are identical.
 
@@ -212,6 +212,7 @@ in a calculation chain.
 
 
 ## `grouped_aggregates()`
+
 
 
 
