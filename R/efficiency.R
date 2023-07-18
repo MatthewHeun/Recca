@@ -229,7 +229,7 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 #'
 #' This function uses [matsbyname::vec_from_store_byname()]
 #' to construct the `eta_i` and `phi` vectors before multiplying, thereby
-#' eliminating unnecessary growth of the output vectors.
+#' eliminating unnecessary growth of the output matrices.
 #'
 #' @param .c_mats_eta_phi_vecs A data frame containing allocation matrices (`C_Y` and `C_eiou`),
 #'                             vectors of machine efficiencies (`eta_i`), and
