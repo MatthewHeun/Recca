@@ -9,7 +9,8 @@ output: html_document
   `U` and `U_feed` arguments removed from `finaldemand_aggregates()`, 
   replaced by `U_eiou`, which was calculated from 
   `U` and `U_feed` internally, and 
-  `U_eiou` is present in all energy conversion chain representations.
+  `U_eiou` is assumed to be present 
+  in all energy conversion chain representations.
 * The `by` argument to `finaldemand_aggregates()` can now be "Industry",
   which is treated as a synonym for "Sector".
 * Now returning an `S_units_prime` column when chopping matrices.
@@ -22,7 +23,7 @@ output: html_document
 * Fixed a bug where writing `Matrix` objects failed in
   `write_ecc_to_excel()`. 
   Thanks to Pierre Jacques for reporting this problem.
-* New function `calc_eta_fu()` calculates 
+* New function `calc_eta_fu_Y_eiou()` calculates 
   final-to-useful efficiencies for 
   every entry in **Y** and **U_EIOU** matrices, 
   responding to a feature request from Pierre Jacques.
