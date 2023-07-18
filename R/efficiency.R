@@ -187,9 +187,9 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 #' allocations (`C_Y` and `C_eiou`),
 #' machine efficiencies (`eta_i`), and
 #' (for exergetic efficiencies) exergy-to-energy ratios (`phi`).
-#' The structure of the outgoing matrices is the same as
-#' the structure of **Y** and **U_EIOU** when last stage is final.
 #' This function performs those calculations.
+#' By default, the output contains matrices in the same
+#' structure as **Y** and **U_EIOU** when last stage is final.
 #'
 #' The matrix formula for calculating energy efficiencies
 #' is **eta_fu_E** `=` **C** `*` **eta_i**,
@@ -250,7 +250,7 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 #'            Or a single **phi** vector.
 #'            Default is `Recca::psut_cols$phi`.
 #' @param matricize A boolean that tells whether to return matrices of the same
-#'                  structure as **Y** and **U_EIOU**.
+#'                  structure as **Y** and **U_EIOU** when last stage is final.
 #'                  Default is `TRUE`.
 #'                  `FALSE` returns a column vector with rows same as
 #'                  **C_Y** and **C_EIOU**.
