@@ -183,7 +183,7 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 }
 
 
-#' Calculate final-to-useful efficiencies for final demand and EIOU
+#' Calculate final-to-useful efficiencies for final demand and EIOU when last stage is final
 #'
 #' Final-to-useful efficiencies for energy carriers and sectors
 #' in final demand and energy industry own use
