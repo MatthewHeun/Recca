@@ -148,9 +148,67 @@ continent_aggregations |>
 ```
 
 
-
 ## `despecified_aggregates()`
 
+When the row and column names of the PSUT matrices
+are "specified," they will look like "Resources [of Crude]"
+or "NG [from Wells]".
+Many labels can have a "noun [preposition object]" structure,
+which we call "specified."
+`despecified_aggregates()` 
+eliminates the specification in the row and/or column names, 
+keeping the desired `piece` (by default the "noun"),
+and aggregates (sums) rows or columns 
+with resulting identical names.
+See the comments in the examples below.
+
+```{r}
+despecified_aggs <- ECCs |> 
+  # Accept the default "noun" aggregation
+  # and the default "_aggregated" suffix for 
+  # aggregated columns.
+  despecified_aggregates()
+
+# This is the original R matrix.
+# Its row names are specified.
+ECCs$R[[1]]
+
+# This is the despecified R matrix.
+# Note the single Resources row.
+despecified_aggs$R_aggregated[[1]]
+
+# Here is an original use matrix.
+# Many rows are specified.
+ECCs$U[[2]]
+
+# Here is the corresponding despecified use matrix. 
+# None of the rows are specified.
+despecified_aggs$U_aggregated[[2]]
+
+# Here is an original make matrix
+# with many specified columns.
+ECCs$V[[3]]
+
+# None of the columns are specified
+# in the despecified version.
+despecified_aggs$V_aggregated[[3]]
+
+# This original final demand matrix
+# has specified rownames
+# that provide units.
+ECCs$Y[[4]]
+
+# Despecifying this matrix eliminates the units,
+# resulting in information loss.
+despecified_aggs$Y_aggregated[[4]]
+```
+
+As the last example with the final demand (**Y**) matrix shows, 
+aggregating despecified row and column names
+can lead to information loss.
+Thus, `despecified_aggregates()`
+will normally be called only at the last step
+in a calculation chain.
 
 
 ## `grouped_aggregates()`
