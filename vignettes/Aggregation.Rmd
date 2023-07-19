@@ -252,8 +252,6 @@ ECCs_grouped_aggs$U_aggregated[[1]]
 ```
 
 
-
-
 ## `footprint_aggregates()`
 
 
