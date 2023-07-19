@@ -225,34 +225,41 @@ test_that("pfu_aggregates() works for useful aggregates", {
     pfu_aggregates(p_industries = p_industries, fd_sectors = fd_sectors,
                    by = "Product")
 
-  pfu_aggs_product |>
+  res <- pfu_aggs_product |>
     dplyr::filter(.data[[Recca::psut_cols$energy_type]] == "E") |>
     magrittr::extract2(paste0(Recca::aggregate_cols$net_aggregate_useful, sep, Recca::all_stages$useful)) |>
     magrittr::extract2(1) |>
-    expect_equal(matrix(c(1200,
-                          20000,
-                          3000.4,
-                          1714.9805), ncol = 1, dimnames = list(c("Light",
-                                                                  "LTH",
-                                                                  "MD [from Car engines]",
-                                                                  "MD [from Truck engines]"), "Industry")) |>
-                   matsbyname::setrowtype("Product") |> matsbyname::setcoltype("Industry"))
+    matsbyname::sort_rows_cols()
+  expected <- matrix(c(20000,
+                       1200,
+                       3000.4,
+                       1714.9805), ncol = 1, dimnames = list(c("LTH",
+                                                               "Light",
+                                                               "MD [from Car engines]",
+                                                               "MD [from Truck engines]"),
+                                                             "Industry")) |>
+    matsbyname::setrowtype("Product") |> matsbyname::setcoltype("Industry") |>
+    matsbyname::sort_rows_cols()
+  expect_equal(res, expected)
   pfu_aggs_product |>
     dplyr::filter(.data[[Recca::psut_cols$energy_type]] == "E") |>
     magrittr::extract2(paste0(Recca::aggregate_cols$gross_aggregate_useful, sep, Recca::all_stages$useful)) |>
     magrittr::extract2(1) |>
+    matsbyname::sort_rows_cols() |>
     expect_equal(matrix(c(50,
                           25,
                           1200,
                           20000,
                           3000.4,
                           1714.9805), ncol = 1, dimnames = list(c("Diesel [from Dist.]",
-                                                                "Elect [from Grid]",
-                                                                "Light",
-                                                                "LTH",
-                                                                "MD [from Car engines]",
-                                                                "MD [from Truck engines]"), "Industry")) |>
-                   matsbyname::setrowtype("Product") |> matsbyname::setcoltype("Industry"))
+                                                                  "Elect [from Grid]",
+                                                                  "Light",
+                                                                  "LTH",
+                                                                  "MD [from Car engines]",
+                                                                  "MD [from Truck engines]"),
+                                                                "Industry")) |>
+                   matsbyname::setrowtype("Product") |> matsbyname::setcoltype("Industry") |>
+                   matsbyname::sort_rows_cols())
 
   # Useful INDUSTRY aggregates
   pfu_aggs_industry <- UKEnergy2000mats |>

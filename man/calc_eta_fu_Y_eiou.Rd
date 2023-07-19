@@ -2,7 +2,7 @@
 % Please edit documentation in R/efficiency.R
 \name{calc_eta_fu_Y_eiou}
 \alias{calc_eta_fu_Y_eiou}
-\title{Calculate final-to-useful efficiencies for final demand and EIOU}
+\title{Calculate final-to-useful efficiencies for final demand and EIOU when last stage is final}
 \usage{
 calc_eta_fu_Y_eiou(
   .c_mats_eta_phi_vecs = NULL,
@@ -51,7 +51,7 @@ Or a single \strong{phi} vector.
 Default is \code{Recca::psut_cols$phi}.}
 
 \item{matricize}{A boolean that tells whether to return matrices of the same
-structure as \strong{Y} and \strong{U_EIOU}.
+structure as \strong{Y} and \strong{U_EIOU} when last stage is final.
 Default is \code{TRUE}.
 \code{FALSE} returns a column vector with rows same as
 \strong{C_Y} and \strong{C_EIOU}.}
@@ -91,6 +91,8 @@ allocations (\code{C_Y} and \code{C_eiou}),
 machine efficiencies (\code{eta_i}), and
 (for exergetic efficiencies) exergy-to-energy ratios (\code{phi}).
 This function performs those calculations.
+By default, the output contains matrices in the same
+structure as \strong{Y} and \strong{U_EIOU} when last stage is final.
 }
 \details{
 The matrix formula for calculating energy efficiencies
@@ -127,7 +129,7 @@ See examples.
 
 This function uses \code{\link[matsbyname:vec_from_store_byname]{matsbyname::vec_from_store_byname()}}
 to construct the \code{eta_i} and \code{phi} vectors before multiplying, thereby
-eliminating unnecessary growth of the output vectors.
+eliminating unnecessary growth of the output matrices.
 }
 \examples{
 C_Y <- matrix(c(0.7, 0.3, 0,   0,   0,
