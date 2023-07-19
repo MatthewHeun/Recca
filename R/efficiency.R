@@ -399,3 +399,22 @@ calc_eta_fu_Y_eiou <- function(.c_mats_eta_phi_vecs = NULL,
   matsindf::matsindf_apply(.c_mats_eta_phi_vecs, FUN = eta_func, C_Y_mat = C_Y, C_eiou_mat = C_eiou,
                            eta_i_vec = eta_i, phi_vec = phi)
 }
+
+
+#' Calculates final-to-useful efficiencies when last stage is useful
+#'
+#' There are times when it is helpful to know the
+#' final-to-useful efficiency of end uses at the useful stage of an energy conversion chain.
+#' This function calculates those efficiencies.
+#'
+#' The output of this function is matrices
+#' with same structure as **Y** and **U_EIOU** when
+#' last stage is useful.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+calc_eta_fu_Y_eiou_ls_useful <- function() {
+
+}

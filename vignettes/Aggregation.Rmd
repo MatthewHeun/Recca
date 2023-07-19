@@ -203,7 +203,7 @@ ECCs$Y[[4]]
 despecified_aggs$Y_aggregated[[4]]
 ```
 
-As the last example with the final demand (**Y**) matrix shows, 
+As the last example (with the final demand matrix, **Y**) shows, 
 aggregating despecified row and column names
 can lead to information loss.
 Thus, `despecified_aggregates()`
@@ -213,17 +213,51 @@ in a calculation chain.
 
 ## `grouped_aggregates()`
 
-```{r}
+Grouping provides the capability to aggregate 
+specific energy products to classes of energy
+and groupings of processing stages or final demand categories.
+For example, 
+Anthracite and Brown coal can be grouped to 
+Coal and coal products. 
+An aggregation map is required.
 
+To demonstrate grouped aggregation,
+we first establish an aggregation map.
+An aggregation map is 
+a named list where list members
+are aggregated to member names. 
+
+```{r}
+agg_map <- list(`Crude oil` = c("Crude", "Crude [from Dist.]", "Crude [from Fields]"), 
+                `Oil and oil products` = c("Diesel", "Diesel [from Dist.]", 
+                                           "Petrol", "Petrol [from Dist.]"), 
+                NG = c("NG", "NG [from Dist.]", "NG [from Wells]"),
+                Electricity = c("Elect", "Elect [from Grid]"))
 ```
 
+The aggregation map can be used with `grouped_aggregates()` 
+to do the desired aggregation.
+
+```{r}
+# Here is an original use matrix.
+ECCs$U[[1]]
+
+# Aggregate to the desired groups.
+ECCs_grouped_aggs <- ECCs |> 
+  grouped_aggregates(aggregation_map = agg_map)
+
+# Here is the aggregated use matrix.
+# Note that the rows are summed
+# and named according to the agg_map.
+ECCs_grouped_aggs$U_aggregated[[1]]
+```
 
 
 ## `footprint_aggregates()`
 
 
 
-## `effects_aggregages()`
+## `effects_aggregates()`
 
 
 ## `pfu_aggregates()`
