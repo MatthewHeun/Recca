@@ -253,13 +253,6 @@ ECCs_grouped_aggs$U_aggregated[[1]]
 ```
 
 
-## `footprint_aggregates()`
-
-
-
-## `effects_aggregates()`
-
-
 ## `pfu_aggregates()`
 
 
