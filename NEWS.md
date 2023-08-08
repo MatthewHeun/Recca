@@ -4,6 +4,10 @@ output: html_document
 ---
 
 
+Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zenodo.5226085), 
+which always resolves to the latest release.
+
+
 * Completed the aggregations vignette.
 * Breaking change: 
   `U` and `U_feed` arguments removed from `finaldemand_aggregates()`, 

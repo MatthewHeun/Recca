@@ -5,11 +5,11 @@ citEntry(entry = "Manual",
   author       = personList(as.person("Matthew Kuperus Heun"), as.person("Emmanuel Aramendia")),
   year         = "2023",
   note         = "R package version 0.1.42",
-  url          = "https://github.com/MatthewHeun/Recca",
+  url          = "https://doi.org/10.5281/zenodo.5226085",
 
   textVersion  =
   paste("Matthew Kuperus Heun, Emmanuel Aramendia (2023).",
         "Recca: R Energy Conversion Chain Analysis.",
         "R package version 0.1.42.",
-        "https://github.com/MatthewHeun/Recca")
+        "https://doi.org/10.5281/zenodo.5226085")
 )
