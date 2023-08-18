@@ -157,8 +157,8 @@ test_that("finaldemand_aggregates() of SUT data work as expected without units",
   final_demand_total_aggregates_sut <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
     Recca::finaldemand_aggregates(fd_sectors = fd_sectors, by = "Total",
-                           net_aggregate_demand = "EX_total_net_agg.ktoe",
-                           gross_aggregate_demand = "EX_total_gross_agg.ktoe") %>%
+                                  net_aggregate_demand = "EX_total_net_agg.ktoe",
+                                  gross_aggregate_demand = "EX_total_gross_agg.ktoe") %>%
     dplyr::select(Country, Year, Last.stage, Energy.type, EX_total_net_agg.ktoe, EX_total_gross_agg.ktoe)
   expect_equivalent(final_demand_total_aggregates_sut %>%
                       dplyr::filter(Last.stage == "Final", Energy.type == "E") %>%
@@ -454,12 +454,11 @@ test_that("grouped_aggregates() works as expected", {
 
 
 test_that("finaldemand_aggregates() works when there are no columns with fd_sectors", {
-  U <- matrix(1, dimnames = list("bogus_row", "bogus_col"))
-  U_feed <- matrix(1, dimnames = list("bogus_row", "bogus_col"))
+  U_eiou <- matrix(1, dimnames = list("bogus_row", "bogus_col"))
   Y <- matrix(1, dimnames = list("bogus_row", "bogus_col"))
   res <- finaldemand_aggregates(fd_sectors = "fd_sector", piece = "noun",
                                 notation = RCLabels::bracket_notation, pattern_type = "exact",
-                                U = U, U_feed = U_feed, Y = Y, by = "Sector")
+                                U_eiou = U_eiou, Y = Y, by = "Sector")
   expect_equal(res$EX.fd_net, 0)
   expect_false(is.matrix(res$EX.fd_net))
   expect_equal(res$EX.fd_gross, 0)

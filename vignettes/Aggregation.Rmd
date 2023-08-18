@@ -27,15 +27,15 @@ many functions useful for aggregating industries and products in energy conversi
 
 The types of aggregation are shown in the following table.
 
-| Function                   | Meaning                                                                                     |
-|---------------------------:|:--------------------------------------------------------------------------------------------|
-| `primary_aggregates()`     | Aggregates primary energy                                                                   |
-| `finaldemand_aggregates()` | Aggregates final demand energy                                                              |
-| `region_aggregates()`      | Aggregates regions                                                                          |
-| `despecified_aggregates()` | Despecifies industries and products, then aggregates                                        |
-| `grouped_aggregates()`     | Groups industries and products, then aggregates                                             |
-| `footprint_aggregates()`   | Isolates each final demand product and sector, then aggregates by primary and final demand  |
-| `effects_aggregates()`     | Isolates each product in the resources matrix, then aggregates by primary and final demand  |
+| Function                   | Meaning                                                                                                  |
+|---------------------------:|:---------------------------------------------------------------------------------------------------------|
+| `primary_aggregates()`     | Aggregates primary energy                                                                                |
+| `finaldemand_aggregates()` | Aggregates final demand energy, the last stage in an energy conversion chain (ECC)                       |
+| `region_aggregates()`      | Aggregates regions                                                                                       |
+| `despecified_aggregates()` | Despecifies industries and products, then aggregates                                                     |
+| `grouped_aggregates()`     | Groups industries and products, then aggregates                                                          |
+| `footprint_aggregates()`   | Isolates each final demand product and sector, then aggregates by primary and final demand               |
+| `effects_aggregates()`     | Isolates each product and industry in the resources matrix, then aggregates by primary and final demand  |
 
 This vignette describes those functions and demonstrates their use.
 
@@ -43,22 +43,22 @@ This vignette describes those functions and demonstrates their use.
 ## `primary_aggregates()`
 
 `primary_aggregates()` creates a column of primary energy sums coming from the industries 
-specified in the `p_industries` argument.
-These industries are often found in the **R**, **V**, and **Y** matrices 
+specified in the `p_industries` (primary industries) argument.
+These primary industries are often found in the **R**, **V**, and **Y** matrices 
 of the PSUT framework.
 Typical `p_industries` are Resources, Imports, and Exports.
-In the example below, 
+In the examples below, 
 primary aggregates are calculated 
 for the four rows of the `UKEnergy2000mats` data frame.
 
 In the first example,
-only 1 aggregate column is created ("EX.p"), because there is no
+only one aggregate column is created ("EX.p"), because there is no
 difference between net and gross aggregation for primary energy.
 Net and gross primary aggregates are identical.
 
 ```{r}
 library(matsbyname)
-p_industries <- c("Resources - Crude", "Resources - NG")
+p_industries <- c("Resources [of Crude]", "Resources [of NG]")
 # Calculate primary total aggregates
 ECCs <- UKEnergy2000mats %>%
   tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix")
@@ -90,6 +90,9 @@ res2[[Recca::aggregate_cols$gross_aggregate_primary]]
 
 `finaldemand_aggregates()` is similar to `primary_aggregates()`, 
 except that it aggregates energy at the final demand stage in the **Y** matrix.
+Both net and gross aggregate final demand are calculated.
+Gross final demand includes energy industry own use (EIOU).
+Net final demand does not.
 
 ```{r}
 fd_sectors <- c("Residential", "Transport")
@@ -103,24 +106,154 @@ res[[Recca::aggregate_cols$gross_aggregate_demand]]
 
 ## `region_aggregates()`
 
+`region_aggregates()` sums regions according to `many_colname` and `few_colname`.
+To demonstrate this function, we need to modify the The example data frame 
+slightly. 
+It contains only one country ("GBR"), but it should contain
+different countries and a "few" column.
+Furthermore, the last stage and energy type columns should be the same
+where aggregation is required.
+The following code produces this modification to pretend that 
+rows of the data frame apply to different countries.
+
+```{r}
+ECCs_for_region_agg <- ECCs |> 
+  dplyr::mutate(
+    Country = c("USA", "GBR", "CAN", "FRA"), 
+    Continent = c("NoAmr", "Europe", "NoAmr", "Europe"), 
+    Energy.type = "E", 
+    Last.stage = c("Final", "Services", "Final", "Services")
+  )
+ECCs_for_region_agg |> 
+  dplyr::select(Country, Continent, Energy.type, Last.stage)
+```
+
+Given this modification, 
+we aggregate to continents with the following code.
+
+```{r}
+continent_aggregations <- ECCs_for_region_agg |> 
+  Recca::region_aggregates(many_colname = "Country", few_colname = "Continent")
+continent_aggregations
+```
+
+By default, `many_colname` is replaced by the common values in `few_colname`.
+A simple rename can override this default behaviour.
+
+```{r}
+continent_aggregations |> 
+  dplyr::rename(
+    Continent = Country
+  )
+```
 
 
 ## `despecified_aggregates()`
 
+When the row and column names of the PSUT matrices
+are "specified," they will look like "Resources [of Crude]"
+or "NG [from Wells]".
+Many labels can have a "noun [preposition object]" structure,
+which we call "specified."
+`despecified_aggregates()` 
+eliminates the specification in the row and/or column names, 
+keeping the desired `piece` (by default the "noun"),
+and aggregates (sums) rows or columns 
+with resulting identical names.
+See the comments in the examples below.
+
+```{r}
+despecified_aggs <- ECCs |> 
+  # Accept the default "noun" aggregation
+  # and the default "_aggregated" suffix for 
+  # aggregated columns.
+  despecified_aggregates()
+
+# This is the original R matrix.
+# Its row names are specified.
+ECCs$R[[1]]
+
+# This is the despecified R matrix.
+# Note the single Resources row.
+despecified_aggs$R_aggregated[[1]]
+
+# Here is an original use matrix.
+# Many rows are specified.
+ECCs$U[[2]]
+
+# Here is the corresponding despecified use matrix. 
+# None of the rows are specified.
+despecified_aggs$U_aggregated[[2]]
+
+# Here is an original make matrix
+# with many specified columns.
+ECCs$V[[3]]
+
+# None of the columns are specified
+# in the despecified version.
+despecified_aggs$V_aggregated[[3]]
+
+# This original final demand matrix
+# has specified rownames
+# that provide units.
+ECCs$Y[[4]]
+
+# Despecifying this matrix eliminates the units,
+# resulting in information loss.
+despecified_aggs$Y_aggregated[[4]]
+```
+
+As the last example (with the final demand matrix, **Y**) shows, 
+aggregating despecified row and column names
+can lead to information loss.
+Thus, `despecified_aggregates()`
+will normally be called only at the last step
+in a calculation chain.
 
 
 ## `grouped_aggregates()`
 
+Grouping provides the capability to aggregate 
+specific energy products to classes of energy
+and groupings of processing stages or final demand categories.
+For example, 
+Anthracite and Brown coal can be grouped to 
+Coal and coal products. 
+An aggregation map is required.
+
+To demonstrate grouped aggregation,
+we first establish an aggregation map.
+An aggregation map is 
+a named list where list members
+are aggregated to member names. 
+
+```{r}
+agg_map <- list(`Crude oil` = c("Crude", "Crude [from Dist.]", "Crude [from Fields]"), 
+                `Oil and oil products` = c("Diesel", "Diesel [from Dist.]", 
+                                           "Petrol", "Petrol [from Dist.]"), 
+                NG = c("NG", "NG [from Dist.]", "NG [from Wells]"),
+                Electricity = c("Elect", "Elect [from Grid]"))
+```
+
+The aggregation map can be used with `grouped_aggregates()` 
+to do the desired aggregation.
+
+```{r}
+# Here is an original use matrix.
+ECCs$U[[1]]
+
+# Aggregate to the desired groups.
+ECCs_grouped_aggs <- ECCs |> 
+  grouped_aggregates(aggregation_map = agg_map)
+
+# Here is the aggregated use matrix.
+# Note that the rows are summed
+# and named according to the agg_map.
+ECCs_grouped_aggs$U_aggregated[[1]]
+```
 
 
-## `footprint_aggregates()`
-
-
-
-## `effects_aggregages()`
-
-
-
+## `pfu_aggregates()`
 
 
 ## Conclusion

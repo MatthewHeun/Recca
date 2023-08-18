@@ -45,7 +45,8 @@ chop_Y(
   U_eiou_prime_colname = paste0(U_eiou_colname, .prime),
   r_eiou_prime_colname = paste0(r_eiou_colname, .prime),
   V_prime_colname = paste0(V_colname, .prime),
-  Y_prime_colname = paste0(Y_colname, .prime)
+  Y_prime_colname = paste0(Y_colname, .prime),
+  S_units_prime_colname = paste0(S_units_colname, .prime)
 )
 
 chop_R(
@@ -87,7 +88,8 @@ chop_R(
   U_eiou_prime_colname = paste0(U_eiou_colname, .prime),
   r_eiou_prime_colname = paste0(r_eiou_colname, .prime),
   V_prime_colname = paste0(V_colname, .prime),
-  Y_prime_colname = paste0(Y_colname, .prime)
+  Y_prime_colname = paste0(Y_colname, .prime),
+  S_units_prime_colname = paste0(S_units_colname, .prime)
 )
 }
 \arguments{
@@ -159,7 +161,7 @@ Default is "_prime".}
 
 \item{R_colname, U_colname, U_feed_colname, U_eiou_colname, r_eiou_colname, V_colname, Y_colname, S_units_colname}{Names of input matrices in \code{.sut_data}. See \code{Recca::psut_cols} for default values.}
 
-\item{R_prime_colname, U_prime_colname, U_feed_prime_colname, U_eiou_prime_colname, r_eiou_prime_colname, V_prime_colname, Y_prime_colname}{Names of output matrices in the return value.
+\item{R_prime_colname, U_prime_colname, U_feed_prime_colname, U_eiou_prime_colname, r_eiou_prime_colname, V_prime_colname, Y_prime_colname, S_units_prime_colname}{Names of output matrices in the return value.
 Default values are constructed from
 \code{Recca::psut_cols} values suffixed with
 the value of the \code{.prime} argument.}

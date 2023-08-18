@@ -61,6 +61,9 @@
     <loc>/reference/aggregate_cols.html</loc>
   </url>
   <url>
+    <loc>/reference/all_stages.html</loc>
+  </url>
+  <url>
     <loc>/reference/alloc_cols.html</loc>
   </url>
   <url>
@@ -227,6 +230,9 @@
   </url>
   <url>
     <loc>/reference/outputs_unit_homogeneous.html</loc>
+  </url>
+  <url>
+    <loc>/reference/pfu_aggregates.html</loc>
   </url>
   <url>
     <loc>/reference/phi_vec.html</loc>

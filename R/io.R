@@ -276,7 +276,8 @@ calc_yqfgW <- function(.sutdata = NULL,
       # When we have an Industry whose inputs are not unit-homogeneous,
       # the value for that Industry in the f vector is nonsensical.
       # Replace with NA.
-      f_vec[which(!U_bar_units_OK)] <- NA_real_
+      # Use as.matrix() to guard against sparse matrices here.
+      f_vec[which(!as.matrix(U_bar_units_OK))] <- NA_real_
 
       RV_bar <- matsbyname::matrixproduct_byname(R_plus_V_mat, S_units_mat)
       RV_bar_units_OK <- matsbyname::count_vals_inrows_byname(RV_bar, "!=", 0) %>%
@@ -284,7 +285,8 @@ calc_yqfgW <- function(.sutdata = NULL,
       # When we have an Industry whose outputs are not unit-homogeneous,
       # the value for that Industry in the g vector is nonsensical.
       # Replace with NA.
-      g_vec[which(!RV_bar_units_OK)] <- NA_real_
+      # Use as.matrix() to guard against sparse matrices here.
+      g_vec[which(!as.matrix(RV_bar_units_OK))] <- NA_real_
     }
     # Put the values in a list and return the list
     list(y_vec, q_vec, f_vec, g_vec, h_vec, r_vec, W_mat) %>%

@@ -157,11 +157,7 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
   eta_pfd_func <- function(primary_val, gross_fd_val, net_fd_val, energy_type_val, last_stage_val) {
     eta_pfd_gross_val <- gross_fd_val / primary_val
     eta_pfd_net_val <- net_fd_val / primary_val
-    # eta_pfd_gross_name <- paste0("eta_", energy_type_val, "_p", substr(last_stage_val, 1, 1) %>% tolower(), "_gross")
-    # eta_pfd_net_name <- gsub(pattern = "_gross", replacement = "_net", x = eta_pfd_gross_name)
 
-    # c(eta_pfd_gross_val, eta_pfd_net_val, eta_pfd_gross_name, eta_pfd_net_name) %>%
-    #   magrittr::set_names(c(eta_pfd_gross, eta_pfd_net, eta_pfd_gross_colname, eta_pfd_net_colname))
     c(eta_pfd_gross_val, eta_pfd_net_val) %>%
       magrittr::set_names(c(eta_pfd_gross, eta_pfd_net))
   }
@@ -183,7 +179,7 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 }
 
 
-#' Calculate final-to-useful efficiencies for final demand and EIOU
+#' Calculate final-to-useful efficiencies for final demand and EIOU when last stage is final
 #'
 #' Final-to-useful efficiencies for energy carriers and sectors
 #' in final demand and energy industry own use
@@ -192,6 +188,8 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 #' machine efficiencies (`eta_i`), and
 #' (for exergetic efficiencies) exergy-to-energy ratios (`phi`).
 #' This function performs those calculations.
+#' By default, the output contains matrices in the same
+#' structure as **Y** and **U_EIOU** when last stage is final.
 #'
 #' The matrix formula for calculating energy efficiencies
 #' is **eta_fu_E** `=` **C** `*` **eta_i**,
@@ -227,7 +225,7 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 #'
 #' This function uses [matsbyname::vec_from_store_byname()]
 #' to construct the `eta_i` and `phi` vectors before multiplying, thereby
-#' eliminating unnecessary growth of the output vectors.
+#' eliminating unnecessary growth of the output matrices.
 #'
 #' @param .c_mats_eta_phi_vecs A data frame containing allocation matrices (`C_Y` and `C_eiou`),
 #'                             vectors of machine efficiencies (`eta_i`), and
@@ -252,7 +250,7 @@ calc_eta_pfd <- function(.aggregate_df = NULL,
 #'            Or a single **phi** vector.
 #'            Default is `Recca::psut_cols$phi`.
 #' @param matricize A boolean that tells whether to return matrices of the same
-#'                  structure as **Y** and **U_EIOU**.
+#'                  structure as **Y** and **U_EIOU** when last stage is final.
 #'                  Default is `TRUE`.
 #'                  `FALSE` returns a column vector with rows same as
 #'                  **C_Y** and **C_EIOU**.
@@ -401,3 +399,5 @@ calc_eta_fu_Y_eiou <- function(.c_mats_eta_phi_vecs = NULL,
   matsindf::matsindf_apply(.c_mats_eta_phi_vecs, FUN = eta_func, C_Y_mat = C_Y, C_eiou_mat = C_eiou,
                            eta_i_vec = eta_i, phi_vec = phi)
 }
+
+
