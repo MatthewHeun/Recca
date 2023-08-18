@@ -442,7 +442,6 @@ calc_primary_aggs_helper <- function(R_final_mat, V_final_mat, Y_final_mat,
   } else {
     ex_p_lsservices <- list(NULL, NULL) |>
       magrittr::set_names(c(net_aggregate_primary_lsservices, gross_aggregate_primary_lsservices))
-
   }
   # Ensure that final and useful versions of primary aggregates are same.
   # If they are not same, we probably don't have the same ECCs, and an error should be thrown.
@@ -612,7 +611,7 @@ calc_services_aggs_helper <- function(U_eiou_final_mat, Y_final_mat,
                                               gross_aggregate_demand = gross_aggregate_services_lsservices)
   } else {
     ex_s_lsservices <- list(NULL, NULL) |>
-      magrittr::set_names(c(net_aggregate_services_lsuseful, gross_aggregate_services_lsuseful))
+      magrittr::set_names(c(net_aggregate_services_lsservices, gross_aggregate_services_lsservices))
   }
 
   c(ex_s_lsfinal, ex_s_lsuseful, ex_s_lsservices)

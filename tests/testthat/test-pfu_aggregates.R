@@ -101,6 +101,115 @@ test_that("pfu_aggregates() works for primary aggregates", {
 })
 
 
+test_that("pfu_aggregates() works for primary aggregates when all data are not available", {
+  p_industries <- c("Resources [of Crude]", "Resources [of NG]")
+  fd_sectors <- c("Residential", "Transport", "Oil fields")
+
+  sep <- Recca::all_stages$last_stage_sep
+
+  # Primary TOTAL aggregates
+  pfu_aggs_total <- UKEnergy2000mats |>
+    dplyr::filter(!(matrix.name %in% c("R", "Y"))) |>
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
+    pfu_aggregates(p_industries = p_industries, fd_sectors = fd_sectors,
+                   by = "Total")
+
+  for (ls in c(Recca::all_stages$final, Recca::all_stages$useful, Recca::all_stages$services)) {
+    pfu_aggs_total |>
+      dplyr::filter(.data[[Recca::psut_cols$energy_type]] == "E") |>
+      magrittr::extract2(paste0(Recca::aggregate_cols$net_aggregate_primary, sep, ls)) |>
+      magrittr::extract2(1) |>
+      is.null() |>
+      expect_true()
+    pfu_aggs_total |>
+      dplyr::filter(.data[[Recca::psut_cols$energy_type]] == "E") |>
+      magrittr::extract2(paste0(Recca::aggregate_cols$gross_aggregate_primary, sep, ls)) |>
+      magrittr::extract2(1) |>
+      is.null() |>
+      expect_true()
+  }
+  pfu_aggs_total |>
+    dplyr::filter(.data[[Recca::psut_cols$energy_type]] == "X") |>
+    magrittr::extract2(paste0(Recca::aggregate_cols$net_aggregate_primary, sep, Recca::all_stages$services)) |>
+    magrittr::extract2(1) |>
+    is.null() |>
+    expect_true()
+  pfu_aggs_total |>
+    dplyr::filter(.data[[Recca::psut_cols$energy_type]] == "X") |>
+    magrittr::extract2(paste0(Recca::aggregate_cols$gross_aggregate_primary, sep, Recca::all_stages$services)) |>
+    magrittr::extract2(1) |>
+    is.null() |>
+    expect_true()
+
+  # Primary PRODUCT aggregates
+  pfu_aggs_product <- UKEnergy2000mats |>
+    dplyr::filter(!(matrix.name %in% c("R", "Y"))) |>
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
+    pfu_aggregates(p_industries = p_industries, fd_sectors = fd_sectors,
+                   by = "Product")
+  for (ls in c(Recca::all_stages$final, Recca::all_stages$useful, Recca::all_stages$services)) {
+    pfu_aggs_product |>
+      dplyr::filter(.data[[Recca::psut_cols$energy_type]] == "E") |>
+      magrittr::extract2(paste0(Recca::aggregate_cols$net_aggregate_primary, sep, ls)) |>
+      magrittr::extract2(1) |>
+      is.null() |>
+      expect_true()
+    pfu_aggs_product |>
+      dplyr::filter(.data[[Recca::psut_cols$energy_type]] == "E") |>
+      magrittr::extract2(paste0(Recca::aggregate_cols$gross_aggregate_primary, sep, ls)) |>
+      magrittr::extract2(1) |>
+      is.null() |>
+      expect_true()
+  }
+  pfu_aggs_product |>
+    dplyr::filter(.data[[Recca::psut_cols$energy_type]] == "X") |>
+    magrittr::extract2(paste0(Recca::aggregate_cols$net_aggregate_primary, sep, Recca::all_stages$services)) |>
+    magrittr::extract2(1) |>
+    is.null() |>
+    expect_true()
+  pfu_aggs_product |>
+    dplyr::filter(.data[[Recca::psut_cols$energy_type]] == "X") |>
+    magrittr::extract2(paste0(Recca::aggregate_cols$gross_aggregate_primary, sep, Recca::all_stages$services)) |>
+    magrittr::extract2(1) |>
+    is.null() |>
+    expect_true()
+
+  # Primary INDUSTRY aggregates
+  pfu_aggs_industry <- UKEnergy2000mats |>
+    dplyr::filter(!(matrix.name %in% c("R", "Y"))) |>
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
+    pfu_aggregates(p_industries = p_industries, fd_sectors = fd_sectors,
+                   by = "Industry")
+
+  for (ls in c(Recca::all_stages$final, Recca::all_stages$useful, Recca::all_stages$services)) {
+    pfu_aggs_industry |>
+      dplyr::filter(.data[[Recca::psut_cols$energy_type]] == "E") |>
+      magrittr::extract2(paste0(Recca::aggregate_cols$net_aggregate_primary, sep, ls)) |>
+      magrittr::extract2(1) |>
+      is.null() |>
+      expect_true()
+    pfu_aggs_industry |>
+      dplyr::filter(.data[[Recca::psut_cols$energy_type]] == "E") |>
+      magrittr::extract2(paste0(Recca::aggregate_cols$gross_aggregate_primary, sep, ls)) |>
+      magrittr::extract2(1) |>
+      is.null() |>
+      expect_true()
+  }
+  pfu_aggs_industry |>
+    dplyr::filter(.data[[Recca::psut_cols$energy_type]] == "X") |>
+    magrittr::extract2(paste0(Recca::aggregate_cols$net_aggregate_primary, sep, Recca::all_stages$services)) |>
+    magrittr::extract2(1) |>
+    is.null() |>
+    expect_true()
+  pfu_aggs_industry |>
+    dplyr::filter(.data[[Recca::psut_cols$energy_type]] == "X") |>
+    magrittr::extract2(paste0(Recca::aggregate_cols$gross_aggregate_primary, sep, Recca::all_stages$services)) |>
+    magrittr::extract2(1) |>
+    is.null() |>
+    expect_true()
+})
+
+
 test_that("pfu_aggregates() works when last_stage = 'Useful' is the only available option", {
   # This test hits one line of code where we create
   # the outgoing list if last_stage = "Final" is not available.
