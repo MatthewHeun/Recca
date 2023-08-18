@@ -23,6 +23,9 @@ which always resolves to the latest release.
 * Now returning an `S_units_prime` column when chopping matrices.
 * Wrapped some matrices in `as.matrix()` to guard against
   sparse matrices causing a failure in `calc_yqfgW()`.
+* New tests for new features.
+    * Now up to at 712 tests, all passing.
+    * Test coverage remains at 100 %.
 
 
 # Recca 0.1.42 (2023-06-02) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7998165.svg)](https://doi.org/10.5281/zenodo.7998165)
