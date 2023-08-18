@@ -8,6 +8,8 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+# Recca 0.1.43 (2023-08-18)
+
 * Completed the aggregations vignette.
 * New function `pfu_aggregates()` is a work in progress
   but should (eventually) make calculating primary, final, and useful
