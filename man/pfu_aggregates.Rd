@@ -68,6 +68,64 @@ pfu_aggregates(
 \arguments{
 \item{.sutdata}{An optional data frame containing physical supply use table
 descriptions of energy conversion chains.}
+
+\item{p_industries}{A string vector of primary industries.}
+
+\item{fd_sectors}{A string vector of final demand sectors.}
+
+\item{by}{Tells how to aggregate, one of "Total", "Product", "Industry", or "Flow".
+Default is "Total".}
+
+\item{add_net_gross_cols}{A boolean that tells whether to include net and gross columns
+for primary energy aggregation.
+Default is \code{FALSE}.}
+
+\item{piece}{Tells which piece of row and column labels to use for
+aggregation decision.
+Default is "all".}
+
+\item{notation}{Tells which notation is used for row and column labels.
+Default is \code{RCLabels::notations_list}.}
+
+\item{pattern_type}{Tells how to match row and column names.
+One of "exact", "leading", "trailing", "anywhere", or "literal".
+Default is "exact".}
+
+\item{prepositions}{The list of prepositions for row and column labels.
+Default is \code{RCLabels::prepositions_list}.}
+
+\item{net_aggregate_primary, gross_aggregate_primary, net_aggregate_final, gross_aggregate_final, net_aggregate_useful, gross_aggregate_useful, net_aggregate_services, gross_aggregate_services}{See \code{Recca::aggregate_cols}.}
+
+\item{last_stage}{Name of the last stage column. Default is \code{Recca::psut_cols$last_stage}.}
+
+\item{primary, final, useful, services}{String identifiers for ECC stages. See \code{Recca::all_stages}.}
+
+\item{sep}{The string separator identifying the last stage in the ECC.
+Default is \code{Recca::all_stages$last_stage_sep}.}
+
+\item{R, U, U_feed, U_eiou, r_eiou, V, Y, S_units}{Names for columns containing matrices.
+See \code{Recca::psut_cols}.}
+
+\item{R_lsfinal, U_lsfinal, U_feed_lsfinal, U_eiou_lsfinal, r_eiou_lsfinal, V_lsfinal, Y_lsfinal, S_units_lsfinal}{Names for columns when last stage is final energy.
+Defaults are unmodified column names concatenated with \code{sep}
+and \code{final}.}
+
+\item{R_lsuseful, U_lsuseful, U_feed_lsuseful, U_eiou_lsuseful, r_eiou_lsuseful, V_lsuseful, Y_lsuseful, S_units_lsuseful}{Names for columns when last stage is useful energy.
+Defaults are unmodified column names concatenated with \code{sep}
+and \code{useful}.}
+
+\item{R_lsservices, U_lsservices, U_feed_lsservices, U_eiou_lsservices, r_eiou_lsservices, V_lsservices, Y_lsservices, S_units_lsservices}{Names for columns when last stage is energy services.
+Defaults are unmodified column names concatenated with \code{sep}
+and \code{services}.}
+
+\item{.matnames, .matvals}{Names of columns used internally.
+Defaults are from \code{Recca::psut_cols}.}
+
+\item{tol}{The allowable energy imbalance in the units of energy flows.
+Default is \code{1e-6}.}
+}
+\value{
+A data frame of primary, final, and useful aggregates.
 }
 \description{
 Calculate aggregates at all possible ECC stages
@@ -170,4 +228,15 @@ last stage is final, useful, or services.
 Ostensibly, the primary aggregates should be the same
 in all cases when metadata are the same.
 An error is thrown if that is not true to within \code{tol}.
+}
+\examples{
+p_industries <- c("Resources [of Crude]", "Resources [of NG]")
+fd_sectors <- c("Residential", "Transport", "Oil fields")
+# Primary TOTAL aggregates
+UKEnergy2000mats |>
+  tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
+  # Eliminate the case when last_stage == "Final"
+  dplyr::filter(.data[[Recca::psut_cols$last_stage]] != "Final") |>
+  pfu_aggregates(p_industries = p_industries, fd_sectors = fd_sectors,
+  by = "Total")
 }

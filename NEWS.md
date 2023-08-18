@@ -9,6 +9,9 @@ which always resolves to the latest release.
 
 
 * Completed the aggregations vignette.
+* New function `pfu_aggregates()` is a work in progress
+  but should (eventually) make calculating primary, final, and useful
+  aggregates easier.
 * Breaking change: 
   `U` and `U_feed` arguments removed from `finaldemand_aggregates()`, 
   replaced by `U_eiou`, which was calculated from 
