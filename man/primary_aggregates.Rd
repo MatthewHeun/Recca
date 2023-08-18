@@ -92,7 +92,7 @@ res[[Recca::aggregate_cols$aggregate_primary]]
 # Above, only 1 aggregate column is created, because there is no
 # difference between net and gross aggregation for primary energy.
 # Below, both net and gross aggregation columns are created,
-# for compatibility with the `finaldemand_aggregates()` function.
+# for compatibility with the [finaldemand_aggregates()] function.
 # Net and gross primary aggregates are identical.
 res2 <- UKEnergy2000mats \%>\%
   tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") \%>\%

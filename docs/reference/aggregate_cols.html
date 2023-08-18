@@ -73,23 +73,55 @@ to aggregation functions throughout the <code>Recca</code> package.</p>
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>A string list with 10 entries.</p><dl><dt>aggregate_primary</dt>
+    <p>A string list with 19 entries.</p><dl><dt>aggregate_primary</dt>
 <dd><p>The name of a column in a wide-by-matrices data frame containing aggregates of primary energy.</p></dd>
 
 <dt>net_aggregate_primary</dt>
-<dd><p>The name of a column in a wide-by-matrices data frame containing aggregates of net primary energy.</p></dd>
+<dd><p>The name of a column in a wide-by-matrices data frame containing aggregates of net primary energy. Net and gross aggregates will be identical at the primary stage.</p></dd>
 
 <dt>gross_aggregate_primary</dt>
-<dd><p>The name of a column in a wide-by-matrices data frame containing aggregates of gross primary energy.</p></dd>
+<dd><p>The name of a column in a wide-by-matrices data frame containing aggregates of gross primary energy. Net and gross aggregates will be identical at the primary stage.</p></dd>
 
-<dt>net_aggregate_demand</dt>
-<dd><p>The name of a column in a wide-by-matrices data frame containing aggregates of net final demand energy (excluding energy industry own use), regardless of whether the last stage is final energy or useful energy.</p></dd>
 
-<dt>gross_aggregate_demand</dt>
-<dd><p>The name of a column in a wide-by-matrices data frame containing aggregates of gross final demand energy (including energy industry own use), regardless of whether the last stage is final energy or useful energy.</p></dd>
+<dt>aggregate_final</dt>
+<dd><p>The name of a column in a wide-by-matrices data frame containing aggregates of final energy.</p></dd>
+
+<dt>net_aggregate_final</dt>
+<dd><p>The name of a column in a wide-by-matrices data frame containing aggregates of net final energy, not including energy industry own use.</p></dd>
+
+<dt>gross_aggregate_final</dt>
+<dd><p>The name of a column in a wide-by-matrices data frame containing aggregates of gross final energy, including energy industry own use.</p></dd>
+
+
+<dt>aggregate_useful</dt>
+<dd><p>The name of a column in a wide-by-matrices data frame containing aggregates of useful energy.</p></dd>
+
+<dt>net_aggregate_useful</dt>
+<dd><p>The name of a column in a wide-by-matrices data frame containing aggregates of net useful energy, not including energy industry own use.</p></dd>
+
+<dt>gross_aggregate_useful</dt>
+<dd><p>The name of a column in a wide-by-matrices data frame containing aggregates of gross useful energy, ncluding energy industry own use.</p></dd>
+
+
+<dt>aggregate_services</dt>
+<dd><p>The name of a column in a wide-by-matrices data frame containing aggregates of energy services.</p></dd>
+
+<dt>net_aggregate_services</dt>
+<dd><p>The name of a column in a wide-by-matrices data frame containing aggregates of net energy services, not including energy industry own use.</p></dd>
+
+<dt>gross_aggregate_services</dt>
+<dd><p>The name of a column in a wide-by-matrices data frame containing aggregates of gross energy services, ncluding energy industry own use.</p></dd>
+
 
 <dt>aggregate_demand</dt>
-<dd><p>The name of a column in a wide-by-matrices data frame containing aggregates of final demand energy (including energy industry own use), regardless of whether the last stage is final energy or useful energy.</p></dd>
+<dd><p>The name of a column in a wide-by-matrices data frame containing aggregates of final demand energy (including energy industry own use), regardless of whether the last stage is final, useful, or services.</p></dd>
+
+<dt>net_aggregate_demand</dt>
+<dd><p>The name of a column in a wide-by-matrices data frame containing aggregates of net final demand energy (excluding energy industry own use), regardless of whether the last stage is final, useful, or services.</p></dd>
+
+<dt>gross_aggregate_demand</dt>
+<dd><p>The name of a column in a wide-by-matrices data frame containing aggregates of gross final demand energy (including energy industry own use), regardless of whether the last stage is final, useful, or services.</p></dd>
+
 
 <dt>region</dt>
 <dd><p>The name of a column in a wide-by-matrices data frame containing regions.</p></dd>
@@ -118,14 +150,41 @@ to aggregation functions throughout the <code>Recca</code> package.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $gross_aggregate_primary</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "EX.p_gross"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $aggregate_final</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "EX.f"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $net_aggregate_final</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "EX.f_net"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $gross_aggregate_final</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "EX.f_gross"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $aggregate_useful</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "EX.u"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $net_aggregate_useful</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "EX.u_net"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $gross_aggregate_useful</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "EX.u_gross"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $net_aggregate_services</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "EX.s_net"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $aggregate_servides</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "EX.s"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $gross_aggregate_services</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "EX.s_gross"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $aggregate_demand</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "EX.fd"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $net_aggregate_demand</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "EX.fd_net"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $gross_aggregate_demand</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "EX.fd_gross"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $aggregate_demand</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "EX.fd"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $region</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Region"</span>

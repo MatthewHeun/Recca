@@ -765,8 +765,7 @@ calc_aggregates_from_ecc_prime <- function(ecc_prime,
       sapply(simplify = FALSE, USE.NAMES = TRUE, FUN = function(this_new_ecc) {
         this_new_ecc %>%
           finaldemand_aggregates(fd_sectors = fd_sectors,
-                                 U = U_prime_colname,
-                                 U_feed = U_feed_prime_colname,
+                                 U_eiou = U_eiou_prime_colname,
                                  Y = Y_prime_colname,
                                  piece = piece,
                                  notation = notation,

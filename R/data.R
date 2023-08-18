@@ -44,11 +44,25 @@
 #' @format A string list with `r length(aggregate_cols)` entries.
 #' \describe{
 #' \item{aggregate_primary}{The name of a column in a wide-by-matrices data frame containing aggregates of primary energy.}
-#' \item{net_aggregate_primary}{The name of a column in a wide-by-matrices data frame containing aggregates of net primary energy.}
-#' \item{gross_aggregate_primary}{The name of a column in a wide-by-matrices data frame containing aggregates of gross primary energy.}
-#' \item{net_aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of net final demand energy (excluding energy industry own use), regardless of whether the last stage is final energy or useful energy.}
-#' \item{gross_aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of gross final demand energy (including energy industry own use), regardless of whether the last stage is final energy or useful energy.}
-#' \item{aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of final demand energy (including energy industry own use), regardless of whether the last stage is final energy or useful energy.}
+#' \item{net_aggregate_primary}{The name of a column in a wide-by-matrices data frame containing aggregates of net primary energy. Net and gross aggregates will be identical at the primary stage.}
+#' \item{gross_aggregate_primary}{The name of a column in a wide-by-matrices data frame containing aggregates of gross primary energy. Net and gross aggregates will be identical at the primary stage.}
+#'
+#' \item{aggregate_final}{The name of a column in a wide-by-matrices data frame containing aggregates of final energy.}
+#' \item{net_aggregate_final}{The name of a column in a wide-by-matrices data frame containing aggregates of net final energy, not including energy industry own use.}
+#' \item{gross_aggregate_final}{The name of a column in a wide-by-matrices data frame containing aggregates of gross final energy, including energy industry own use.}
+#'
+#' \item{aggregate_useful}{The name of a column in a wide-by-matrices data frame containing aggregates of useful energy.}
+#' \item{net_aggregate_useful}{The name of a column in a wide-by-matrices data frame containing aggregates of net useful energy, not including energy industry own use.}
+#' \item{gross_aggregate_useful}{The name of a column in a wide-by-matrices data frame containing aggregates of gross useful energy, including energy industry own use.}
+#'
+#' \item{aggregate_services}{The name of a column in a wide-by-matrices data frame containing aggregates of energy services.}
+#' \item{net_aggregate_services}{The name of a column in a wide-by-matrices data frame containing aggregates of net energy services, not including energy industry own use.}
+#' \item{gross_aggregate_services}{The name of a column in a wide-by-matrices data frame containing aggregates of gross energy services, including energy industry own use.}
+#'
+#' \item{aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of final demand energy (including energy industry own use), regardless of whether the last stage is final, useful, or services.}
+#' \item{net_aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of net final demand energy (excluding energy industry own use), regardless of whether the last stage is final, useful, or services.}
+#' \item{gross_aggregate_demand}{The name of a column in a wide-by-matrices data frame containing aggregates of gross final demand energy (including energy industry own use), regardless of whether the last stage is final, useful, or services.}
+#'
 #' \item{region}{The name of a column in a wide-by-matrices data frame containing regions.}
 #' \item{aggregated_suffix}{The suffix for column names containing aggregated matrices.}
 #' \item{product_sector}{The name of a column containing names of products, industries, or sectors. Default is "Product.Industry.Sector".}
@@ -453,5 +467,20 @@
 "row_col_types"
 
 
+#' All energy conversion chain stages
+#'
+#' A string list containing options for the all stages of energy conversion chain analysis.
+#'
+#' @format A string list with `r length(all_stages)`
+#' \describe{
+#' \item{primary}{The string identifier for the Primary stage of the energy conversion chain.}
+#' \item{final}{The string identifier for the Final stage of the energy conversion chain.}
+#' \item{useful}{The string identifier for the Useful stage of the energy conversion chain.}
+#' \item{services}{The string identifier for the Services stage of the energy conversion chain.}
+#' \item{last_stage_sep}{A string that separates last-stage identifiers in variable names.}
+#' }
+#' @examples
+#' all_stages
+"all_stages"
 
 

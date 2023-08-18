@@ -4,9 +4,28 @@ output: html_document
 ---
 
 
+Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zenodo.5226085), 
+which always resolves to the latest release.
+
+
+* Completed the aggregations vignette.
+* New function `pfu_aggregates()` is a work in progress
+  but should (eventually) make calculating primary, final, and useful
+  aggregates easier.
+* Breaking change: 
+  `U` and `U_feed` arguments removed from `finaldemand_aggregates()`, 
+  replaced by `U_eiou`, which was calculated from 
+  `U` and `U_feed` internally, and 
+  `U_eiou` is assumed to be present 
+  in all energy conversion chain representations.
+* The `by` argument to `finaldemand_aggregates()` can now be "Industry",
+  which is treated as a synonym for "Sector".
 * Now returning an `S_units_prime` column when chopping matrices.
 * Wrapped some matrices in `as.matrix()` to guard against
   sparse matrices causing a failure in `calc_yqfgW()`.
+* New tests for new features.
+    * Now up to at 712 tests, all passing.
+    * Test coverage remains at 100 %.
 
 
 # Recca 0.1.42 (2023-06-02) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7998165.svg)](https://doi.org/10.5281/zenodo.7998165)
@@ -14,7 +33,7 @@ output: html_document
 * Fixed a bug where writing `Matrix` objects failed in
   `write_ecc_to_excel()`. 
   Thanks to Pierre Jacques for reporting this problem.
-* New function `calc_eta_fu()` calculates 
+* New function `calc_eta_fu_Y_eiou()` calculates 
   final-to-useful efficiencies for 
   every entry in **Y** and **U_EIOU** matrices, 
   responding to a feature request from Pierre Jacques.
