@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.42</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.43</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -94,8 +94,8 @@ in energy conversion chains.</p>
 <p>The types of aggregation are shown in the following table.</p>
 <table class="table">
 <colgroup>
-<col width="23%">
-<col width="76%">
+<col width="20%">
+<col width="79%">
 </colgroup>
 <thead><tr class="header">
 <th align="right">Function</th>
@@ -108,7 +108,8 @@ in energy conversion chains.</p>
 </tr>
 <tr class="even">
 <td align="right"><code><a href="../reference/finaldemand_aggregates.html">finaldemand_aggregates()</a></code></td>
-<td align="left">Aggregates final demand energy</td>
+<td align="left">Aggregates final demand energy, the last stage in an
+energy conversion chain (ECC)</td>
 </tr>
 <tr class="odd">
 <td align="right"><code><a href="../reference/region_aggregates.html">region_aggregates()</a></code></td>
@@ -130,8 +131,8 @@ aggregates by primary and final demand</td>
 </tr>
 <tr class="odd">
 <td align="right"><code>effects_aggregates()</code></td>
-<td align="left">Isolates each product in the resources matrix, then
-aggregates by primary and final demand</td>
+<td align="left">Isolates each product and industry in the resources
+matrix, then aggregates by primary and final demand</td>
 </tr>
 </tbody>
 </table>
@@ -144,18 +145,18 @@ use.</p>
 </h2>
 <p><code><a href="../reference/primary_aggregates.html">primary_aggregates()</a></code> creates a column of primary energy
 sums coming from the industries specified in the
-<code>p_industries</code> argument. These industries are often found in
-the <strong>R</strong>, <strong>V</strong>, and <strong>Y</strong>
-matrices of the PSUT framework. Typical <code>p_industries</code> are
-Resources, Imports, and Exports. In the example below, primary
-aggregates are calculated for the four rows of the
-<code>UKEnergy2000mats</code> data frame.</p>
-<p>In the first example, only 1 aggregate column is created (“EX.p”),
+<code>p_industries</code> (primary industries) argument. These primary
+industries are often found in the <strong>R</strong>,
+<strong>V</strong>, and <strong>Y</strong> matrices of the PSUT
+framework. Typical <code>p_industries</code> are Resources, Imports, and
+Exports. In the examples below, primary aggregates are calculated for
+the four rows of the <code>UKEnergy2000mats</code> data frame.</p>
+<p>In the first example, only one aggregate column is created (“EX.p”),
 because there is no difference between net and gross aggregation for
 primary energy. Net and gross primary aggregates are identical.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/MatthewHeun/matsbyname" class="external-link">matsbyname</a></span><span class="op">)</span></span>
-<span><span class="va">p_industries</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Resources - Crude"</span>, <span class="st">"Resources - NG"</span><span class="op">)</span></span>
+<span><span class="va">p_industries</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Resources [of Crude]"</span>, <span class="st">"Resources [of NG]"</span><span class="op">)</span></span>
 <span><span class="co"># Calculate primary total aggregates</span></span>
 <span><span class="va">ECCs</span> <span class="op">&lt;-</span> <span class="va">UKEnergy2000mats</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="st">"matrix.name"</span>, values_from <span class="op">=</span> <span class="st">"matrix"</span><span class="op">)</span></span>
@@ -181,7 +182,7 @@ primary energy. Net and gross primary aggregates are identical.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 more variables: V &lt;list&gt;, Y &lt;list&gt;, r_EIOU &lt;list&gt;, S_units &lt;list&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   EX.p &lt;dbl&gt;</span></span></span>
 <span><span class="va">res</span><span class="op">[[</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="../reference/aggregate_cols.html">aggregate_cols</a></span><span class="op">$</span><span class="va">aggregate_primary</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="co">#&gt; [1] 0 0 0 0</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 93000 93000 93000 98220</span></span></code></pre></div>
 <p>In the next example, both net and gross aggregation columns are
 created (“EX.p_net” and “EX.p_gross”), for compatibility with the
 <code><a href="../reference/finaldemand_aggregates.html">finaldemand_aggregates()</a></code> function discussed below.</p>
@@ -201,9 +202,9 @@ created (“EX.p_net” and “EX.p_gross”), for compatibility with the
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 6 more variables: V &lt;list&gt;, Y &lt;list&gt;, r_EIOU &lt;list&gt;, S_units &lt;list&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   EX.p_net &lt;dbl&gt;, EX.p_gross &lt;dbl&gt;</span></span></span>
 <span><span class="va">res2</span><span class="op">[[</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="../reference/aggregate_cols.html">aggregate_cols</a></span><span class="op">$</span><span class="va">net_aggregate_primary</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="co">#&gt; [1] 0 0 0 0</span></span>
+<span><span class="co">#&gt; [1] 93000 93000 93000 98220</span></span>
 <span><span class="va">res2</span><span class="op">[[</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="../reference/aggregate_cols.html">aggregate_cols</a></span><span class="op">$</span><span class="va">gross_aggregate_primary</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="co">#&gt; [1] 0 0 0 0</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 93000 93000 93000 98220</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="finaldemand_aggregates">
@@ -211,7 +212,9 @@ created (“EX.p_net” and “EX.p_gross”), for compatibility with the
 </h2>
 <p><code><a href="../reference/finaldemand_aggregates.html">finaldemand_aggregates()</a></code> is similar to
 <code><a href="../reference/primary_aggregates.html">primary_aggregates()</a></code>, except that it aggregates energy at
-the final demand stage in the <strong>Y</strong> matrix.</p>
+the final demand stage in the <strong>Y</strong> matrix. Both net and
+gross aggregate final demand are calculated. Gross final demand includes
+energy industry own use (EIOU). Net final demand does not.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fd_sectors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Residential"</span>, <span class="st">"Transport"</span><span class="op">)</span></span>
 <span><span class="va">res</span> <span class="op">&lt;-</span> <span class="va">ECCs</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
@@ -303,26 +306,427 @@ the final demand stage in the <strong>Y</strong> matrix.</p>
 <h2 id="region_aggregates">
 <code>region_aggregates()</code><a class="anchor" aria-label="anchor" href="#region_aggregates"></a>
 </h2>
+<p><code><a href="../reference/region_aggregates.html">region_aggregates()</a></code> sums regions according to
+<code>many_colname</code> and <code>few_colname</code>. To demonstrate
+this function, we need to modify the The example data frame slightly. It
+contains only one country (“GBR”), but it should contain different
+countries and a “few” column. Furthermore, the last stage and energy
+type columns should be the same where aggregation is required. The
+following code produces this modification to pretend that rows of the
+data frame apply to different countries.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ECCs_for_region_agg</span> <span class="op">&lt;-</span> <span class="va">ECCs</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    Country <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"USA"</span>, <span class="st">"GBR"</span>, <span class="st">"CAN"</span>, <span class="st">"FRA"</span><span class="op">)</span>, </span>
+<span>    Continent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NoAmr"</span>, <span class="st">"Europe"</span>, <span class="st">"NoAmr"</span>, <span class="st">"Europe"</span><span class="op">)</span>, </span>
+<span>    Energy.type <span class="op">=</span> <span class="st">"E"</span>, </span>
+<span>    Last.stage <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Final"</span>, <span class="st">"Services"</span>, <span class="st">"Final"</span>, <span class="st">"Services"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="va">ECCs_for_region_agg</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Country</span>, <span class="va">Continent</span>, <span class="va">Energy.type</span>, <span class="va">Last.stage</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 4</span></span></span>
+<span><span class="co">#&gt;   Country Continent Energy.type Last.stage</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> USA     NoAmr     E           Final     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> GBR     Europe    E           Services  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> CAN     NoAmr     E           Final     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> FRA     Europe    E           Services</span></span></code></pre></div>
+<p>Given this modification, we aggregate to continents with the
+following code.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">continent_aggregations</span> <span class="op">&lt;-</span> <span class="va">ECCs_for_region_agg</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">Recca</span><span class="fu">::</span><span class="fu"><a href="../reference/region_aggregates.html">region_aggregates</a></span><span class="op">(</span>many_colname <span class="op">=</span> <span class="st">"Country"</span>, few_colname <span class="op">=</span> <span class="st">"Continent"</span><span class="op">)</span></span>
+<span><span class="va">continent_aggregations</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 12</span></span></span>
+<span><span class="co">#&gt;    Year Energy.type Last.stage Country R             S_units  U_EIOU   U_feed  </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>  <span style="text-decoration: underline;">2</span>000 E           Final      NoAmr   <span style="color: #949494;">&lt;dbl [2 × 2]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>  <span style="text-decoration: underline;">2</span>000 E           Services   Europe  <span style="color: #949494;">&lt;dbl [2 × 2]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 4 more variables: V &lt;list&gt;, Y &lt;list&gt;, U &lt;list&gt;, r_EIOU &lt;list&gt;</span></span></span></code></pre></div>
+<p>By default, <code>many_colname</code> is replaced by the common
+values in <code>few_colname</code>. A simple rename can override this
+default behaviour.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">continent_aggregations</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span></span>
+<span>    Continent <span class="op">=</span> <span class="va">Country</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 12</span></span></span>
+<span><span class="co">#&gt;    Year Energy.type Last.stage Continent R        S_units  U_EIOU   U_feed  </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>  <span style="text-decoration: underline;">2</span>000 E           Final      NoAmr     <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>  <span style="text-decoration: underline;">2</span>000 E           Services   Europe    <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 4 more variables: V &lt;list&gt;, Y &lt;list&gt;, U &lt;list&gt;, r_EIOU &lt;list&gt;</span></span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="despecified_aggregates">
 <code>despecified_aggregates()</code><a class="anchor" aria-label="anchor" href="#despecified_aggregates"></a>
 </h2>
+<p>When the row and column names of the PSUT matrices are “specified,”
+they will look like “Resources [of Crude]” or “NG [from Wells]”. Many
+labels can have a “noun [preposition object]” structure, which we call
+“specified.” <code><a href="../reference/despecified_aggregates.html">despecified_aggregates()</a></code> eliminates the
+specification in the row and/or column names, keeping the desired
+<code>piece</code> (by default the “noun”), and aggregates (sums) rows
+or columns with resulting identical names. See the comments in the
+examples below.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">despecified_aggs</span> <span class="op">&lt;-</span> <span class="va">ECCs</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="co"># Accept the default "noun" aggregation</span></span>
+<span>  <span class="co"># and the default "_aggregated" suffix for </span></span>
+<span>  <span class="co"># aggregated columns.</span></span>
+<span>  <span class="fu"><a href="../reference/despecified_aggregates.html">despecified_aggregates</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># This is the original R matrix.</span></span>
+<span><span class="co"># Its row names are specified.</span></span>
+<span><span class="va">ECCs</span><span class="op">$</span><span class="va">R</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="co">#&gt;                      Crude    NG</span></span>
+<span><span class="co">#&gt; Resources [of Crude] 50000     0</span></span>
+<span><span class="co">#&gt; Resources [of NG]        0 43000</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "Industry"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "Product"</span></span>
+<span></span>
+<span><span class="co"># This is the despecified R matrix.</span></span>
+<span><span class="co"># Note the single Resources row.</span></span>
+<span><span class="va">despecified_aggs</span><span class="op">$</span><span class="va">R_aggregated</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="co">#&gt;           Crude    NG</span></span>
+<span><span class="co">#&gt; Resources 50000 43000</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "Industry"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "Product"</span></span>
+<span></span>
+<span><span class="co"># Here is an original use matrix.</span></span>
+<span><span class="co"># Many rows are specified.</span></span>
+<span><span class="va">ECCs</span><span class="op">$</span><span class="va">U</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="co">#&gt;                         Car engines   Cars Crude dist. Diesel dist. Elect. grid</span></span>
+<span><span class="co">#&gt; Crude                             0    0.0           0     0.00e+00           0</span></span>
+<span><span class="co">#&gt; Crude [from Dist.]                0    0.0           0     0.00e+00           0</span></span>
+<span><span class="co">#&gt; Crude [from Fields]               0    0.0       47500     0.00e+00           0</span></span>
+<span><span class="co">#&gt; Diesel                            0    0.0           0     1.55e+04           0</span></span>
+<span><span class="co">#&gt; Diesel [from Dist.]               0    0.0           0     0.00e+00           0</span></span>
+<span><span class="co">#&gt; Elect                             0    0.0           0     0.00e+00        6400</span></span>
+<span><span class="co">#&gt; Elect [from Grid]                 0    0.0          25     0.00e+00           0</span></span>
+<span><span class="co">#&gt; Freight [tonne-km/year]           0    0.0  1666685185     1.50e+09           0</span></span>
+<span><span class="co">#&gt; Light                             0    0.0           0     0.00e+00           0</span></span>
+<span><span class="co">#&gt; LTH                               0    0.0           0     0.00e+00           0</span></span>
+<span><span class="co">#&gt; MD [from Car engines]             0 3000.4           0     0.00e+00           0</span></span>
+<span><span class="co">#&gt; MD [from Truck engines]           0    0.0           0     0.00e+00           0</span></span>
+<span><span class="co">#&gt; NG                                0    0.0           0     0.00e+00           0</span></span>
+<span><span class="co">#&gt; NG [from Dist.]                   0    0.0           0     0.00e+00           0</span></span>
+<span><span class="co">#&gt; NG [from Wells]                   0    0.0           0     0.00e+00           0</span></span>
+<span><span class="co">#&gt; Petrol                            0    0.0           0     0.00e+00           0</span></span>
+<span><span class="co">#&gt; Petrol [from Dist.]           26000    0.0           0     0.00e+00           0</span></span>
+<span><span class="co">#&gt;                         Furnaces Gas wells &amp; proc. Homes Light fixtures</span></span>
+<span><span class="co">#&gt; Crude                          0                 0     0              0</span></span>
+<span><span class="co">#&gt; Crude [from Dist.]             0                 0     0              0</span></span>
+<span><span class="co">#&gt; Crude [from Fields]            0                 0     0              0</span></span>
+<span><span class="co">#&gt; Diesel                         0                 0     0              0</span></span>
+<span><span class="co">#&gt; Diesel [from Dist.]            0                50     0              0</span></span>
+<span><span class="co">#&gt; Elect                          0                 0     0              0</span></span>
+<span><span class="co">#&gt; Elect [from Grid]              0                25     0           6000</span></span>
+<span><span class="co">#&gt; Freight [tonne-km/year]        0                 0     0              0</span></span>
+<span><span class="co">#&gt; Light                          0                 0     0              0</span></span>
+<span><span class="co">#&gt; LTH                            0                 0 20000              0</span></span>
+<span><span class="co">#&gt; MD [from Car engines]          0                 0     0              0</span></span>
+<span><span class="co">#&gt; MD [from Truck engines]        0                 0     0              0</span></span>
+<span><span class="co">#&gt; NG                             0             43000     0              0</span></span>
+<span><span class="co">#&gt; NG [from Dist.]            25000                 0     0              0</span></span>
+<span><span class="co">#&gt; NG [from Wells]                0                 0     0              0</span></span>
+<span><span class="co">#&gt; Petrol                         0                 0     0              0</span></span>
+<span><span class="co">#&gt; Petrol [from Dist.]            0                 0     0              0</span></span>
+<span><span class="co">#&gt;                           NG dist. Oil fields Oil refineries Petrol dist.</span></span>
+<span><span class="co">#&gt; Crude                            0      50000              0     0.00e+00</span></span>
+<span><span class="co">#&gt; Crude [from Dist.]               0          0          47000     0.00e+00</span></span>
+<span><span class="co">#&gt; Crude [from Fields]              0          0              0     0.00e+00</span></span>
+<span><span class="co">#&gt; Diesel                           0          0              0     0.00e+00</span></span>
+<span><span class="co">#&gt; Diesel [from Dist.]              0         50              0     0.00e+00</span></span>
+<span><span class="co">#&gt; Elect                            0          0              0     0.00e+00</span></span>
+<span><span class="co">#&gt; Elect [from Grid]               25         25             75     0.00e+00</span></span>
+<span><span class="co">#&gt; Freight [tonne-km/year] 1666685185          0              0     2.25e+09</span></span>
+<span><span class="co">#&gt; Light                            0          0              0     0.00e+00</span></span>
+<span><span class="co">#&gt; LTH                              0          0              0     0.00e+00</span></span>
+<span><span class="co">#&gt; MD [from Car engines]            0          0              0     0.00e+00</span></span>
+<span><span class="co">#&gt; MD [from Truck engines]          0          0              0     0.00e+00</span></span>
+<span><span class="co">#&gt; NG                               0          0              0     0.00e+00</span></span>
+<span><span class="co">#&gt; NG [from Dist.]                  0          0              0     0.00e+00</span></span>
+<span><span class="co">#&gt; NG [from Wells]              41000          0              0     0.00e+00</span></span>
+<span><span class="co">#&gt; Petrol                           0          0              0     2.65e+04</span></span>
+<span><span class="co">#&gt; Petrol [from Dist.]              0          0              0     0.00e+00</span></span>
+<span><span class="co">#&gt;                         Power plants Rooms Truck engines  Trucks</span></span>
+<span><span class="co">#&gt; Crude                              0     0             0    0.00</span></span>
+<span><span class="co">#&gt; Crude [from Dist.]                 0     0             0    0.00</span></span>
+<span><span class="co">#&gt; Crude [from Fields]                0     0             0    0.00</span></span>
+<span><span class="co">#&gt; Diesel                             0     0             0    0.00</span></span>
+<span><span class="co">#&gt; Diesel [from Dist.]                0     0         15050    0.00</span></span>
+<span><span class="co">#&gt; Elect                              0     0             0    0.00</span></span>
+<span><span class="co">#&gt; Elect [from Grid]                100     0             0    0.00</span></span>
+<span><span class="co">#&gt; Freight [tonne-km/year]            0     0             0    0.00</span></span>
+<span><span class="co">#&gt; Light                              0  1200             0    0.00</span></span>
+<span><span class="co">#&gt; LTH                                0     0             0    0.00</span></span>
+<span><span class="co">#&gt; MD [from Car engines]              0     0             0    0.00</span></span>
+<span><span class="co">#&gt; MD [from Truck engines]            0     0             0 1799.98</span></span>
+<span><span class="co">#&gt; NG                                 0     0             0    0.00</span></span>
+<span><span class="co">#&gt; NG [from Dist.]                16000     0             0    0.00</span></span>
+<span><span class="co">#&gt; NG [from Wells]                    0     0             0    0.00</span></span>
+<span><span class="co">#&gt; Petrol                             0     0             0    0.00</span></span>
+<span><span class="co">#&gt; Petrol [from Dist.]                0     0             0    0.00</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "Product"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "Industry"</span></span>
+<span></span>
+<span><span class="co"># Here is the corresponding despecified use matrix. </span></span>
+<span><span class="co"># None of the rows are specified.</span></span>
+<span><span class="va">despecified_aggs</span><span class="op">$</span><span class="va">U_aggregated</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="co">#&gt;         Car engines   Cars Crude dist Diesel dist Elect Furnaces</span></span>
+<span><span class="co">#&gt; Crude             0    0.0      47500    0.00e+00     0        0</span></span>
+<span><span class="co">#&gt; Diesel            0    0.0          0    1.55e+04     0        0</span></span>
+<span><span class="co">#&gt; Elect             0    0.0         25    0.00e+00  6400        0</span></span>
+<span><span class="co">#&gt; Freight           0    0.0 1666685185    1.50e+09     0        0</span></span>
+<span><span class="co">#&gt; Light             0    0.0          0    0.00e+00     0        0</span></span>
+<span><span class="co">#&gt; LTH               0    0.0          0    0.00e+00     0        0</span></span>
+<span><span class="co">#&gt; MD                0 3000.4          0    0.00e+00     0        0</span></span>
+<span><span class="co">#&gt; NG                0    0.0          0    0.00e+00     0    25000</span></span>
+<span><span class="co">#&gt; Petrol        26000    0.0          0    0.00e+00     0        0</span></span>
+<span><span class="co">#&gt;         Gas wells &amp; proc Homes Light fixtures    NG dist Oil fields</span></span>
+<span><span class="co">#&gt; Crude                  0     0              0          0      50000</span></span>
+<span><span class="co">#&gt; Diesel                50     0              0          0         50</span></span>
+<span><span class="co">#&gt; Elect                 25     0           6000         25         25</span></span>
+<span><span class="co">#&gt; Freight                0     0              0 1666685185          0</span></span>
+<span><span class="co">#&gt; Light                  0     0              0          0          0</span></span>
+<span><span class="co">#&gt; LTH                    0 20000              0          0          0</span></span>
+<span><span class="co">#&gt; MD                     0     0              0          0          0</span></span>
+<span><span class="co">#&gt; NG                 43000     0              0      41000          0</span></span>
+<span><span class="co">#&gt; Petrol                 0     0              0          0          0</span></span>
+<span><span class="co">#&gt;         Oil refineries Petrol dist Power plants Rooms Truck engines  Trucks</span></span>
+<span><span class="co">#&gt; Crude            47000    0.00e+00            0     0             0    0.00</span></span>
+<span><span class="co">#&gt; Diesel               0    0.00e+00            0     0         15050    0.00</span></span>
+<span><span class="co">#&gt; Elect               75    0.00e+00          100     0             0    0.00</span></span>
+<span><span class="co">#&gt; Freight              0    2.25e+09            0     0             0    0.00</span></span>
+<span><span class="co">#&gt; Light                0    0.00e+00            0  1200             0    0.00</span></span>
+<span><span class="co">#&gt; LTH                  0    0.00e+00            0     0             0    0.00</span></span>
+<span><span class="co">#&gt; MD                   0    0.00e+00            0     0             0 1799.98</span></span>
+<span><span class="co">#&gt; NG                   0    0.00e+00        16000     0             0    0.00</span></span>
+<span><span class="co">#&gt; Petrol               0    2.65e+04            0     0             0    0.00</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "Product"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "Industry"</span></span>
+<span></span>
+<span><span class="co"># Here is an original make matrix</span></span>
+<span><span class="co"># with many specified columns.</span></span>
+<span><span class="va">ECCs</span><span class="op">$</span><span class="va">V</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="co">#&gt;                   Crude [from Dist.] Crude [from Fields] Diesel</span></span>
+<span><span class="co">#&gt; Car engines                        0                   0      0</span></span>
+<span><span class="co">#&gt; Crude dist.                    47000                   0      0</span></span>
+<span><span class="co">#&gt; Diesel dist.                       0                   0      0</span></span>
+<span><span class="co">#&gt; Elect. grid                        0                   0      0</span></span>
+<span><span class="co">#&gt; Furnaces                           0                   0      0</span></span>
+<span><span class="co">#&gt; Gas wells &amp; proc.                  0                   0      0</span></span>
+<span><span class="co">#&gt; Light fixtures                     0                   0      0</span></span>
+<span><span class="co">#&gt; NG dist.                           0                   0      0</span></span>
+<span><span class="co">#&gt; Oil fields                         0               47500      0</span></span>
+<span><span class="co">#&gt; Oil refineries                     0                   0  15500</span></span>
+<span><span class="co">#&gt; Petrol dist.                       0                   0      0</span></span>
+<span><span class="co">#&gt; Power plants                       0                   0      0</span></span>
+<span><span class="co">#&gt; Truck engines                      0                   0      0</span></span>
+<span><span class="co">#&gt;                   Diesel [from Dist.] Elect Elect [from Grid] Light   LTH</span></span>
+<span><span class="co">#&gt; Car engines                         0     0                 0     0     0</span></span>
+<span><span class="co">#&gt; Crude dist.                         0     0                 0     0     0</span></span>
+<span><span class="co">#&gt; Diesel dist.                    15150     0                 0     0     0</span></span>
+<span><span class="co">#&gt; Elect. grid                         0     0              6275     0     0</span></span>
+<span><span class="co">#&gt; Furnaces                            0     0                 0     0 20000</span></span>
+<span><span class="co">#&gt; Gas wells &amp; proc.                   0     0                 0     0     0</span></span>
+<span><span class="co">#&gt; Light fixtures                      0     0                 0  1200     0</span></span>
+<span><span class="co">#&gt; NG dist.                            0     0                 0     0     0</span></span>
+<span><span class="co">#&gt; Oil fields                          0     0                 0     0     0</span></span>
+<span><span class="co">#&gt; Oil refineries                      0     0                 0     0     0</span></span>
+<span><span class="co">#&gt; Petrol dist.                        0     0                 0     0     0</span></span>
+<span><span class="co">#&gt; Power plants                        0  6400                 0     0     0</span></span>
+<span><span class="co">#&gt; Truck engines                       0     0                 0     0     0</span></span>
+<span><span class="co">#&gt;                   MD [from Car engines] MD [from Truck engines] NG [from Dist.]</span></span>
+<span><span class="co">#&gt; Car engines                      3000.4                    0.00               0</span></span>
+<span><span class="co">#&gt; Crude dist.                         0.0                    0.00               0</span></span>
+<span><span class="co">#&gt; Diesel dist.                        0.0                    0.00               0</span></span>
+<span><span class="co">#&gt; Elect. grid                         0.0                    0.00               0</span></span>
+<span><span class="co">#&gt; Furnaces                            0.0                    0.00               0</span></span>
+<span><span class="co">#&gt; Gas wells &amp; proc.                   0.0                    0.00               0</span></span>
+<span><span class="co">#&gt; Light fixtures                      0.0                    0.00               0</span></span>
+<span><span class="co">#&gt; NG dist.                            0.0                    0.00           41000</span></span>
+<span><span class="co">#&gt; Oil fields                          0.0                    0.00               0</span></span>
+<span><span class="co">#&gt; Oil refineries                      0.0                    0.00               0</span></span>
+<span><span class="co">#&gt; Petrol dist.                        0.0                    0.00               0</span></span>
+<span><span class="co">#&gt; Power plants                        0.0                    0.00               0</span></span>
+<span><span class="co">#&gt; Truck engines                       0.0                 1799.98               0</span></span>
+<span><span class="co">#&gt;                   NG [from Wells] Petrol Petrol [from Dist.]</span></span>
+<span><span class="co">#&gt; Car engines                     0      0                   0</span></span>
+<span><span class="co">#&gt; Crude dist.                     0      0                   0</span></span>
+<span><span class="co">#&gt; Diesel dist.                    0      0                   0</span></span>
+<span><span class="co">#&gt; Elect. grid                     0      0                   0</span></span>
+<span><span class="co">#&gt; Furnaces                        0      0                   0</span></span>
+<span><span class="co">#&gt; Gas wells &amp; proc.           41000      0                   0</span></span>
+<span><span class="co">#&gt; Light fixtures                  0      0                   0</span></span>
+<span><span class="co">#&gt; NG dist.                        0      0                   0</span></span>
+<span><span class="co">#&gt; Oil fields                      0      0                   0</span></span>
+<span><span class="co">#&gt; Oil refineries                  0  26500                   0</span></span>
+<span><span class="co">#&gt; Petrol dist.                    0      0               26000</span></span>
+<span><span class="co">#&gt; Power plants                    0      0                   0</span></span>
+<span><span class="co">#&gt; Truck engines                   0      0                   0</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "Industry"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "Product"</span></span>
+<span></span>
+<span><span class="co"># None of the columns are specified</span></span>
+<span><span class="co"># in the despecified version.</span></span>
+<span><span class="va">despecified_aggs</span><span class="op">$</span><span class="va">V_aggregated</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="co">#&gt;                  Crude Diesel Elect Light   LTH      MD    NG Petrol</span></span>
+<span><span class="co">#&gt; Car engines          0      0     0     0     0 3000.40     0      0</span></span>
+<span><span class="co">#&gt; Crude dist       47000      0     0     0     0    0.00     0      0</span></span>
+<span><span class="co">#&gt; Diesel dist          0  15150     0     0     0    0.00     0      0</span></span>
+<span><span class="co">#&gt; Elect                0      0  6275     0     0    0.00     0      0</span></span>
+<span><span class="co">#&gt; Furnaces             0      0     0     0 20000    0.00     0      0</span></span>
+<span><span class="co">#&gt; Gas wells &amp; proc     0      0     0     0     0    0.00 41000      0</span></span>
+<span><span class="co">#&gt; Light fixtures       0      0     0  1200     0    0.00     0      0</span></span>
+<span><span class="co">#&gt; NG dist              0      0     0     0     0    0.00 41000      0</span></span>
+<span><span class="co">#&gt; Oil fields       47500      0     0     0     0    0.00     0      0</span></span>
+<span><span class="co">#&gt; Oil refineries       0  15500     0     0     0    0.00     0  26500</span></span>
+<span><span class="co">#&gt; Petrol dist          0      0     0     0     0    0.00     0  26000</span></span>
+<span><span class="co">#&gt; Power plants         0      0  6400     0     0    0.00     0      0</span></span>
+<span><span class="co">#&gt; Truck engines        0      0     0     0     0 1799.98     0      0</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "Industry"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "Product"</span></span>
+<span></span>
+<span><span class="co"># This original final demand matrix</span></span>
+<span><span class="co"># has specified rownames</span></span>
+<span><span class="co"># that provide units.</span></span>
+<span><span class="va">ECCs</span><span class="op">$</span><span class="va">Y</span><span class="op">[[</span><span class="fl">4</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="co">#&gt;                             Residential    Transport</span></span>
+<span><span class="co">#&gt; Freight [tonne-km/year]         0.0e+00 142916629629</span></span>
+<span><span class="co">#&gt; Illumination [lumen-hrs/yr]     5.0e+14            0</span></span>
+<span><span class="co">#&gt; Passenger [passenger-km/yr]     0.0e+00 500000000000</span></span>
+<span><span class="co">#&gt; Space heating [m3-K]            7.5e+10            0</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "Product"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "Industry"</span></span>
+<span></span>
+<span><span class="co"># Despecifying this matrix eliminates the units,</span></span>
+<span><span class="co"># resulting in information loss.</span></span>
+<span><span class="va">despecified_aggs</span><span class="op">$</span><span class="va">Y_aggregated</span><span class="op">[[</span><span class="fl">4</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="co">#&gt;               Residential    Transport</span></span>
+<span><span class="co">#&gt; Freight           0.0e+00 142916629629</span></span>
+<span><span class="co">#&gt; Illumination      5.0e+14            0</span></span>
+<span><span class="co">#&gt; Passenger         0.0e+00 500000000000</span></span>
+<span><span class="co">#&gt; Space heating     7.5e+10            0</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "Product"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "Industry"</span></span></code></pre></div>
+<p>As the last example (with the final demand matrix,
+<strong>Y</strong>) shows, aggregating despecified row and column names
+can lead to information loss. Thus,
+<code><a href="../reference/despecified_aggregates.html">despecified_aggregates()</a></code> will normally be called only at
+the last step in a calculation chain.</p>
 </div>
 <div class="section level2">
 <h2 id="grouped_aggregates">
 <code>grouped_aggregates()</code><a class="anchor" aria-label="anchor" href="#grouped_aggregates"></a>
 </h2>
-</div>
-<div class="section level2">
-<h2 id="footprint_aggregates">
-<code>footprint_aggregates()</code><a class="anchor" aria-label="anchor" href="#footprint_aggregates"></a>
-</h2>
-</div>
-<div class="section level2">
-<h2 id="effects_aggregages">
-<code>effects_aggregages()</code><a class="anchor" aria-label="anchor" href="#effects_aggregages"></a>
-</h2>
+<p>Grouping provides the capability to aggregate specific energy
+products to classes of energy and groupings of processing stages or
+final demand categories. For example, Anthracite and Brown coal can be
+grouped to Coal and coal products. An aggregation map is required.</p>
+<p>To demonstrate grouped aggregation, we first establish an aggregation
+map. An aggregation map is a named list where list members are
+aggregated to member names.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">agg_map</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>`Crude oil` <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Crude"</span>, <span class="st">"Crude [from Dist.]"</span>, <span class="st">"Crude [from Fields]"</span><span class="op">)</span>, </span>
+<span>                `Oil and oil products` <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Diesel"</span>, <span class="st">"Diesel [from Dist.]"</span>, </span>
+<span>                                           <span class="st">"Petrol"</span>, <span class="st">"Petrol [from Dist.]"</span><span class="op">)</span>, </span>
+<span>                NG <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NG"</span>, <span class="st">"NG [from Dist.]"</span>, <span class="st">"NG [from Wells]"</span><span class="op">)</span>,</span>
+<span>                Electricity <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Elect"</span>, <span class="st">"Elect [from Grid]"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>The aggregation map can be used with
+<code><a href="../reference/grouped_aggregates.html">grouped_aggregates()</a></code> to do the desired aggregation.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Here is an original use matrix.</span></span>
+<span><span class="va">ECCs</span><span class="op">$</span><span class="va">U</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="co">#&gt;                     Crude dist. Diesel dist. Elect. grid Gas wells &amp; proc.</span></span>
+<span><span class="co">#&gt; Crude                         0            0           0                 0</span></span>
+<span><span class="co">#&gt; Crude [from Dist.]          500            0           0                 0</span></span>
+<span><span class="co">#&gt; Crude [from Fields]       47500            0           0                 0</span></span>
+<span><span class="co">#&gt; Diesel                        0        15500           0                 0</span></span>
+<span><span class="co">#&gt; Diesel [from Dist.]          25          350           0                50</span></span>
+<span><span class="co">#&gt; Elect                         0            0        6400                 0</span></span>
+<span><span class="co">#&gt; Elect [from Grid]            25            0           0                25</span></span>
+<span><span class="co">#&gt; NG                            0            0           0             43000</span></span>
+<span><span class="co">#&gt; NG [from Dist.]               0            0           0                 0</span></span>
+<span><span class="co">#&gt; NG [from Wells]               0            0           0              2000</span></span>
+<span><span class="co">#&gt; Petrol                        0            0           0                 0</span></span>
+<span><span class="co">#&gt; Petrol [from Dist.]           0            0           0                 0</span></span>
+<span><span class="co">#&gt;                     NG dist. Oil fields Oil refineries Petrol dist.</span></span>
+<span><span class="co">#&gt; Crude                      0      50000              0            0</span></span>
+<span><span class="co">#&gt; Crude [from Dist.]         0          0          47000            0</span></span>
+<span><span class="co">#&gt; Crude [from Fields]        0       2500              0            0</span></span>
+<span><span class="co">#&gt; Diesel                     0          0           5000            0</span></span>
+<span><span class="co">#&gt; Diesel [from Dist.]       25         50              0          250</span></span>
+<span><span class="co">#&gt; Elect                      0          0              0            0</span></span>
+<span><span class="co">#&gt; Elect [from Grid]         25         25             75            0</span></span>
+<span><span class="co">#&gt; NG                         0          0              0            0</span></span>
+<span><span class="co">#&gt; NG [from Dist.]            0          0              0            0</span></span>
+<span><span class="co">#&gt; NG [from Wells]        41000          0              0            0</span></span>
+<span><span class="co">#&gt; Petrol                     0          0              0        26500</span></span>
+<span><span class="co">#&gt; Petrol [from Dist.]        0          0              0          500</span></span>
+<span><span class="co">#&gt;                     Power plants</span></span>
+<span><span class="co">#&gt; Crude                          0</span></span>
+<span><span class="co">#&gt; Crude [from Dist.]             0</span></span>
+<span><span class="co">#&gt; Crude [from Fields]            0</span></span>
+<span><span class="co">#&gt; Diesel                         0</span></span>
+<span><span class="co">#&gt; Diesel [from Dist.]            0</span></span>
+<span><span class="co">#&gt; Elect                          0</span></span>
+<span><span class="co">#&gt; Elect [from Grid]            100</span></span>
+<span><span class="co">#&gt; NG                             0</span></span>
+<span><span class="co">#&gt; NG [from Dist.]            16000</span></span>
+<span><span class="co">#&gt; NG [from Wells]                0</span></span>
+<span><span class="co">#&gt; Petrol                         0</span></span>
+<span><span class="co">#&gt; Petrol [from Dist.]            0</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "Product"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "Industry"</span></span>
+<span></span>
+<span><span class="co"># Aggregate to the desired groups.</span></span>
+<span><span class="va">ECCs_grouped_aggs</span> <span class="op">&lt;-</span> <span class="va">ECCs</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/grouped_aggregates.html">grouped_aggregates</a></span><span class="op">(</span>aggregation_map <span class="op">=</span> <span class="va">agg_map</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Here is the aggregated use matrix.</span></span>
+<span><span class="co"># Note that the rows are summed</span></span>
+<span><span class="co"># and named according to the agg_map.</span></span>
+<span><span class="va">ECCs_grouped_aggs</span><span class="op">$</span><span class="va">U_aggregated</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="co">#&gt;                      Crude dist. Diesel dist. Elect. grid Gas wells &amp; proc.</span></span>
+<span><span class="co">#&gt; Crude oil                  48000            0           0                 0</span></span>
+<span><span class="co">#&gt; Electricity                   25            0        6400                25</span></span>
+<span><span class="co">#&gt; NG                             0            0           0             45000</span></span>
+<span><span class="co">#&gt; Oil and oil products          25        15850           0                50</span></span>
+<span><span class="co">#&gt;                      NG dist. Oil fields Oil refineries Petrol dist.</span></span>
+<span><span class="co">#&gt; Crude oil                   0      52500          47000            0</span></span>
+<span><span class="co">#&gt; Electricity                25         25             75            0</span></span>
+<span><span class="co">#&gt; NG                      41000          0              0            0</span></span>
+<span><span class="co">#&gt; Oil and oil products       25         50           5000        27250</span></span>
+<span><span class="co">#&gt;                      Power plants</span></span>
+<span><span class="co">#&gt; Crude oil                       0</span></span>
+<span><span class="co">#&gt; Electricity                   100</span></span>
+<span><span class="co">#&gt; NG                          16000</span></span>
+<span><span class="co">#&gt; Oil and oil products            0</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "Product"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "Industry"</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="pfu_aggregates">

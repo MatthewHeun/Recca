@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.42</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.43</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,10 +56,23 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.43" id="recca-0143-2023-08-18">Recca 0.1.43 (2023-08-18)<a class="anchor" aria-label="anchor" href="#recca-0143-2023-08-18"></a></h2>
+<ul><li>Completed the aggregations vignette.</li>
+<li>New function <code><a href="../reference/pfu_aggregates.html">pfu_aggregates()</a></code> is a work in progress but should (eventually) make calculating primary, final, and useful aggregates easier.</li>
+<li>Breaking change: <code>U</code> and <code>U_feed</code> arguments removed from <code><a href="../reference/finaldemand_aggregates.html">finaldemand_aggregates()</a></code>, replaced by <code>U_eiou</code>, which was calculated from <code>U</code> and <code>U_feed</code> internally, and <code>U_eiou</code> is assumed to be present in all energy conversion chain representations.</li>
+<li>The <code>by</code> argument to <code><a href="../reference/finaldemand_aggregates.html">finaldemand_aggregates()</a></code> can now be “Industry”, which is treated as a synonym for “Sector”.</li>
+<li>Now returning an <code>S_units_prime</code> column when chopping matrices.</li>
+<li>Wrapped some matrices in <code><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix()</a></code> to guard against sparse matrices causing a failure in <code><a href="../reference/calc_yqfgW.html">calc_yqfgW()</a></code>.</li>
+<li>New tests for new features.
+<ul><li>Now up to at 712 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul></li>
+</ul></div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.42" id="recca-0142-2023-06-02-doi">Recca 0.1.42 (2023-06-02) <a href="https://doi.org/10.5281/zenodo.7998165" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.7998165.svg" alt="DOI"></a>
 <a class="anchor" aria-label="anchor" href="#recca-0142-2023-06-02-doi"></a></h2>
 <ul><li>Fixed a bug where writing <code>Matrix</code> objects failed in <code><a href="../reference/write_ecc_to_excel.html">write_ecc_to_excel()</a></code>. Thanks to Pierre Jacques for reporting this problem.</li>
-<li>New function <code>calc_eta_fu()</code> calculates final-to-useful efficiencies for every entry in <strong>Y</strong> and <strong>U_EIOU</strong> matrices, responding to a feature request from Pierre Jacques.</li>
+<li>New function <code><a href="../reference/calc_eta_fu_Y_eiou.html">calc_eta_fu_Y_eiou()</a></code> calculates final-to-useful efficiencies for every entry in <strong>Y</strong> and <strong>U_EIOU</strong> matrices, responding to a feature request from Pierre Jacques.</li>
 <li>New tests for new features.
 <ul><li>Now up to at 641 tests, all passing.</li>
 <li>Test coverage remains at 100 %.</li>
