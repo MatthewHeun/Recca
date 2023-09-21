@@ -98,9 +98,12 @@ edge_list <- function(.sutdata = NULL, R = "R", U = "U", V = "V", Y = "Y",
       dplyr::mutate(
         !!as.name(product) := !!as.name(to)
       )
-    el <- dplyr::bind_rows(expandedUY, expandedRV) %>%
-      # dplyr::select(-rowtype, -coltype)
-      dplyr::select(-!!rowtypes, -!!coltypes)
+    el <- dplyr::bind_rows(expandedUY, expandedRV) |>
+      dplyr::mutate(
+        # Delete row and column types columns if they exist.
+        "{rowtypes}" := NULL,
+        "{coltypes}" := NULL
+      )
     if (!is.null(waste)) {
       el <- dplyr::bind_rows(el, waste_edges(U_mat = U_mat, V_mat = V_mat,
                                              from = from, to = to,

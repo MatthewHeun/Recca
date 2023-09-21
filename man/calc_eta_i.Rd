@@ -50,6 +50,6 @@ To calculate energy conversion final demand sector and product efficiencies, use
 \examples{
 library(tidyr)
 UKEnergy2000mats \%>\%
-  spread(key = "matrix.name", value = "matrix") \%>\%
+  tidyr::spread(key = "matrix.name", value = "matrix") \%>\%
   calc_eta_i()
 }

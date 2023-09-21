@@ -32,7 +32,7 @@
 #' @examples
 #' library(tidyr)
 #' UKEnergy2000mats %>%
-#'   spread(key = "matrix.name", value = "matrix") %>%
+#'   tidyr::spread(key = "matrix.name", value = "matrix") %>%
 #'   calc_eta_i()
 calc_eta_i <- function(.sutmats,
                        # Inputs
