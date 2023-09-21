@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.43</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.44</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,7 +56,12 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.43" id="recca-0143-2023-08-18">Recca 0.1.43 (2023-08-18)<a class="anchor" aria-label="anchor" href="#recca-0143-2023-08-18"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.44" id="recca-0144-2023-09-21">Recca 0.1.44 (2023-09-21)<a class="anchor" aria-label="anchor" href="#recca-0144-2023-09-21"></a></h2>
+<ul><li>Fixed a bug in <code>node_edge_list()</code> that caused failure when <code>rowtypes</code> or <code>coltypes</code> columns were not present.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.43" id="recca-0143-2023-08-18-doi">Recca 0.1.43 (2023-08-18) <a href="https://doi.org/10.5281/zenodo.8264412" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.8264412.svg" alt="DOI"></a>
+<a class="anchor" aria-label="anchor" href="#recca-0143-2023-08-18-doi"></a></h2>
 <ul><li>Completed the aggregations vignette.</li>
 <li>New function <code><a href="../reference/pfu_aggregates.html">pfu_aggregates()</a></code> is a work in progress but should (eventually) make calculating primary, final, and useful aggregates easier.</li>
 <li>Breaking change: <code>U</code> and <code>U_feed</code> arguments removed from <code><a href="../reference/finaldemand_aggregates.html">finaldemand_aggregates()</a></code>, replaced by <code>U_eiou</code>, which was calculated from <code>U</code> and <code>U_feed</code> internally, and <code>U_eiou</code> is assumed to be present in all energy conversion chain representations.</li>
