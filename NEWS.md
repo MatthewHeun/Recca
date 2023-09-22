@@ -8,7 +8,7 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
-# Recca 0.1.45 (2023-09-21)
+# Recca 0.1.45 (2023-09-21) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8368788.svg)](https://doi.org/10.5281/zenodo.8368788)
 
 * Complete aggregation vignette.
 * No new tests.
