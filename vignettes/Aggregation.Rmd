@@ -34,8 +34,7 @@ The types of aggregation are shown in the following table.
 | `region_aggregates()`      | Aggregates regions                                                                                       |
 | `despecified_aggregates()` | Despecifies industries and products, then aggregates                                                     |
 | `grouped_aggregates()`     | Groups industries and products, then aggregates                                                          |
-| `footprint_aggregates()`   | Isolates each final demand product and sector, then aggregates by primary and final demand               |
-| `effects_aggregates()`     | Isolates each product and industry in the resources matrix, then aggregates by primary and final demand  |
+| `pfu_aggregates()`         | Aggregates to primary, final, and useful stages of an ECC                                                |
 
 This vignette describes those functions and demonstrates their use.
 
@@ -237,6 +236,8 @@ agg_map <- list(`Crude oil` = c("Crude", "Crude [from Dist.]", "Crude [from Fiel
 
 The aggregation map can be used with `grouped_aggregates()` 
 to do the desired aggregation.
+Aggregation columns are added 
+to the right of the `.sut_data` data frame.
 
 ```{r}
 # Here is an original use matrix.
@@ -255,10 +256,106 @@ ECCs_grouped_aggs$U_aggregated[[1]]
 
 ## `pfu_aggregates()`
 
+Aggregating to primary, final, and useful stages
+of the energy conversion chain (ECC) can be accomplished
+with `pfu_aggregates()`.
+Aggregates are added in columns to the right of the `.sutdata` data frame.
+Primary industries and final demand sectors
+are specified as character vectors in the 
+`p_industries` and `fd_sectors` arguments.
+
+```{r}
+# Get the defaul separator for column names
+sep <- Recca::all_stages$last_stage_sep
+# Set primary industry names and final demand sector names
+p_industries <- c("Resources [of Crude]", "Resources [of NG]")
+fd_sectors <- c("Residential", "Transport", "Oil fields")
+# Calculate TOTAL aggregates
+pfu_aggs_total <- UKEnergy2000mats |>
+  tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
+  pfu_aggregates(p_industries = p_industries, fd_sectors = fd_sectors,
+                 by = "Total")
+# Look at the column names.
+# The naming scheme is 
+# EX.stage.gn___lsStage
+# EX = energy or exergy aggregate (depending on the value in the Energy.type column)
+# stage = the stage at which the aggregation is computed
+# gn = whether the aggregate is "gross" or "net"
+# ____ls = the separator (Recca::all_stages$last_stage_sep)
+# Stage = The last stage in the ECC for this column.
+names(pfu_aggs_total)
+# Check some aggregation values.
+# Note that not all aggregations are available, 
+# based on the structure of the ECC.
+
+# Net primary energy aggregation when last stage is Final
+pfu_aggs_total |>
+  dplyr::filter(Energy.type == "E") |>
+  magrittr::extract2("EX.p_net___lsFinal") |>
+  magrittr::extract2(1)
+# Net primary exergy aggregation when last stage is Services
+pfu_aggs_total |>
+  dplyr::filter(Energy.type == "X") |>
+  magrittr::extract2("EX.p_net___lsServices") |>
+  magrittr::extract2(1)
+# Gross final energy aggregation when last stage is Useful
+pfu_aggs_total |>
+  dplyr::filter(Energy.type == "E") |>
+  magrittr::extract2("EX.f_gross___lsFinal") |>
+  magrittr::extract2(1)
+# Gross useful energy aggregation when last stage is Useful
+pfu_aggs_total |>
+  dplyr::filter(Energy.type == "E") |>
+  magrittr::extract2("EX.u_gross___lsUseful") |>
+  magrittr::extract2(1)
+# Net useful energy aggregation when last stage is Useful
+pfu_aggs_total |>
+  dplyr::filter(Energy.type == "E") |>
+  magrittr::extract2("EX.u_net___lsUseful") |>
+  magrittr::extract2(1)
+# Calculate PRODUCT aggregates
+pfu_aggs_product <- UKEnergy2000mats |>
+  tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
+  pfu_aggregates(p_industries = p_industries, fd_sectors = fd_sectors,
+                 by = "Product")
+# Net primary energy aggregation when last stage is Final
+# Note that all results are now vectors which 
+# show aggregation by product
+pfu_aggs_product |>
+  dplyr::filter(Energy.type == "E") |>
+  magrittr::extract2("EX.p_net___lsFinal") |>
+  magrittr::extract2(1)
+pfu_aggs_product |>
+  dplyr::filter(Energy.type == "E") |>
+  magrittr::extract2("EX.u_net___lsUseful") |>
+  magrittr::extract2(1)
+# Calculate INDUSTRY aggregates
+# Note that all results are now vectors which 
+# show aggregation by industry
+pfu_aggs_industry <- UKEnergy2000mats |>
+  tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
+  pfu_aggregates(p_industries = p_industries, fd_sectors = fd_sectors,
+                 by = "Industry")
+pfu_aggs_industry |>
+  dplyr::filter(Energy.type == "E") |>
+  magrittr::extract2("EX.p_net___lsFinal") |>
+  magrittr::extract2(1)
+pfu_aggs_industry |>
+  dplyr::filter(Energy.type == "E") |>
+  magrittr::extract2("EX.u_net___lsUseful") |>
+  magrittr::extract2(1)
+```
+
 
 ## Conclusion
 
-
-
-
-
+Several functions in the `Recca` package assist with aggregations
+in energy conversion chains.
+`primary_aggregates()`,
+`finaldemand_aggregates()`,
+`region_aggregates()`,
+`despecified_aggregates()`,
+`grouped_aggregates()`, and
+`pfu_aggregates()`
+all assist with different types of aggregations.
+Please see help for these functions for more details.

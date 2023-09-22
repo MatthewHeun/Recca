@@ -153,7 +153,7 @@
 #'   # Eliminate the case when last_stage == "Final"
 #'   dplyr::filter(.data[[Recca::psut_cols$last_stage]] != "Final") |>
 #'   pfu_aggregates(p_industries = p_industries, fd_sectors = fd_sectors,
-#'   by = "Total")
+#'                 by = "Total")
 pfu_aggregates <- function(.sutdata,
                            # Vector of primary industries
                            p_industries,
