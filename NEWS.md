@@ -8,6 +8,14 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+# Recca 0.1.45 (2023-09-21)
+
+* Complete aggregation vignette.
+* No new tests.
+    * Still at 712 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
 # Recca 0.1.44 (2023-09-21) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8366750.svg)](https://doi.org/10.5281/zenodo.8366750)
 
 * Fixed a bug in `node_edge_list()` that caused failure when 

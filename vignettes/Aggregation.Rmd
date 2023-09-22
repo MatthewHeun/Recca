@@ -259,7 +259,7 @@ ECCs_grouped_aggs$U_aggregated[[1]]
 Aggregating to primary, final, and useful stages
 of the energy conversion chain (ECC) can be accomplished
 with `pfu_aggregates()`.
-Aggreagtes are added in columns to the right of the `.sutdata` data frame.
+Aggregates are added in columns to the right of the `.sutdata` data frame.
 Primary industries and final demand sectors
 are specified as character vectors in the 
 `p_industries` and `fd_sectors` arguments.
