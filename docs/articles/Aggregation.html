@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.44</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.45</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -125,14 +125,9 @@ aggregates</td>
 <td align="left">Groups industries and products, then aggregates</td>
 </tr>
 <tr class="even">
-<td align="right"><code>footprint_aggregates()</code></td>
-<td align="left">Isolates each final demand product and sector, then
-aggregates by primary and final demand</td>
-</tr>
-<tr class="odd">
-<td align="right"><code>effects_aggregates()</code></td>
-<td align="left">Isolates each product and industry in the resources
-matrix, then aggregates by primary and final demand</td>
+<td align="right"><code><a href="../reference/pfu_aggregates.html">pfu_aggregates()</a></code></td>
+<td align="left">Aggregates to primary, final, and useful stages of an
+ECC</td>
 </tr>
 </tbody>
 </table>
@@ -652,7 +647,9 @@ aggregated to member names.</p>
 <span>                NG <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NG"</span>, <span class="st">"NG [from Dist.]"</span>, <span class="st">"NG [from Wells]"</span><span class="op">)</span>,</span>
 <span>                Electricity <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Elect"</span>, <span class="st">"Elect [from Grid]"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>The aggregation map can be used with
-<code><a href="../reference/grouped_aggregates.html">grouped_aggregates()</a></code> to do the desired aggregation.</p>
+<code><a href="../reference/grouped_aggregates.html">grouped_aggregates()</a></code> to do the desired aggregation.
+Aggregation columns are added to the right of the <code>.sut_data</code>
+data frame.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Here is an original use matrix.</span></span>
 <span><span class="va">ECCs</span><span class="op">$</span><span class="va">U</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
@@ -732,10 +729,163 @@ aggregated to member names.</p>
 <h2 id="pfu_aggregates">
 <code>pfu_aggregates()</code><a class="anchor" aria-label="anchor" href="#pfu_aggregates"></a>
 </h2>
+<p>Aggregating to primary, final, and useful stages of the energy
+conversion chain (ECC) can be accomplished with
+<code><a href="../reference/pfu_aggregates.html">pfu_aggregates()</a></code>. Aggregates are added in columns to the
+right of the <code>.sutdata</code> data frame. Primary industries and
+final demand sectors are specified as character vectors in the
+<code>p_industries</code> and <code>fd_sectors</code> arguments.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Get the defaul separator for column names</span></span>
+<span><span class="va">sep</span> <span class="op">&lt;-</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="../reference/all_stages.html">all_stages</a></span><span class="op">$</span><span class="va">last_stage_sep</span></span>
+<span><span class="co"># Set primary industry names and final demand sector names</span></span>
+<span><span class="va">p_industries</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Resources [of Crude]"</span>, <span class="st">"Resources [of NG]"</span><span class="op">)</span></span>
+<span><span class="va">fd_sectors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Residential"</span>, <span class="st">"Transport"</span>, <span class="st">"Oil fields"</span><span class="op">)</span></span>
+<span><span class="co"># Calculate TOTAL aggregates</span></span>
+<span><span class="va">pfu_aggs_total</span> <span class="op">&lt;-</span> <span class="va">UKEnergy2000mats</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">matrix.name</span>, values_from <span class="op">=</span> <span class="va">matrix</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/pfu_aggregates.html">pfu_aggregates</a></span><span class="op">(</span>p_industries <span class="op">=</span> <span class="va">p_industries</span>, fd_sectors <span class="op">=</span> <span class="va">fd_sectors</span>,</span>
+<span>                 by <span class="op">=</span> <span class="st">"Total"</span><span class="op">)</span></span>
+<span><span class="co"># Look at the column names.</span></span>
+<span><span class="co"># The naming scheme is </span></span>
+<span><span class="co"># EX.stage.gn___lsStage</span></span>
+<span><span class="co"># EX = energy or exergy aggregate (depending on the value in the Energy.type column)</span></span>
+<span><span class="co"># stage = the stage at which the aggregation is computed</span></span>
+<span><span class="co"># gn = whether the aggregate is "gross" or "net"</span></span>
+<span><span class="co"># ____ls = the separator (Recca::all_stages$last_stage_sep)</span></span>
+<span><span class="co"># Stage = The last stage in the ECC for this column.</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">pfu_aggs_total</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  [1] "Country"                 "Year"                   </span></span>
+<span><span class="co">#&gt;  [3] "Energy.type"             "R___lsFinal"            </span></span>
+<span><span class="co">#&gt;  [5] "U___lsFinal"             "U_feed___lsFinal"       </span></span>
+<span><span class="co">#&gt;  [7] "U_EIOU___lsFinal"        "r_EIOU___lsFinal"       </span></span>
+<span><span class="co">#&gt;  [9] "V___lsFinal"             "Y___lsFinal"            </span></span>
+<span><span class="co">#&gt; [11] "S_units___lsFinal"       "R___lsUseful"           </span></span>
+<span><span class="co">#&gt; [13] "U___lsUseful"            "U_feed___lsUseful"      </span></span>
+<span><span class="co">#&gt; [15] "U_EIOU___lsUseful"       "r_EIOU___lsUseful"      </span></span>
+<span><span class="co">#&gt; [17] "V___lsUseful"            "Y___lsUseful"           </span></span>
+<span><span class="co">#&gt; [19] "S_units___lsUseful"      "R___lsServices"         </span></span>
+<span><span class="co">#&gt; [21] "U___lsServices"          "U_feed___lsServices"    </span></span>
+<span><span class="co">#&gt; [23] "U_EIOU___lsServices"     "r_EIOU___lsServices"    </span></span>
+<span><span class="co">#&gt; [25] "V___lsServices"          "Y___lsServices"         </span></span>
+<span><span class="co">#&gt; [27] "S_units___lsServices"    "EX.p_net___lsFinal"     </span></span>
+<span><span class="co">#&gt; [29] "EX.p_gross___lsFinal"    "EX.p_net___lsUseful"    </span></span>
+<span><span class="co">#&gt; [31] "EX.p_gross___lsUseful"   "EX.p_net___lsServices"  </span></span>
+<span><span class="co">#&gt; [33] "EX.p_gross___lsServices" "EX.f_net___lsFinal"     </span></span>
+<span><span class="co">#&gt; [35] "EX.f_gross___lsFinal"    "EX.f_net___lsUseful"    </span></span>
+<span><span class="co">#&gt; [37] "EX.f_gross___lsUseful"   "EX.f_net___lsServices"  </span></span>
+<span><span class="co">#&gt; [39] "EX.f_gross___lsServices" "EX.u_net___lsFinal"     </span></span>
+<span><span class="co">#&gt; [41] "EX.u_gross___lsFinal"    "EX.u_net___lsUseful"    </span></span>
+<span><span class="co">#&gt; [43] "EX.u_gross___lsUseful"   "EX.u_net___lsServices"  </span></span>
+<span><span class="co">#&gt; [45] "EX.u_gross___lsServices" "EX.s_net___lsFinal"     </span></span>
+<span><span class="co">#&gt; [47] "EX.s_gross___lsFinal"    "EX.s_net___lsUseful"    </span></span>
+<span><span class="co">#&gt; [49] "EX.s_gross___lsUseful"   "EX.s_net___lsServices"  </span></span>
+<span><span class="co">#&gt; [51] "EX.s_gross___lsServices"</span></span>
+<span><span class="co"># Check some aggregation values.</span></span>
+<span><span class="co"># Note that not all aggregations are available, </span></span>
+<span><span class="co"># based on the structure of the ECC.</span></span>
+<span></span>
+<span><span class="co"># Net primary energy aggregation when last stage is Final</span></span>
+<span><span class="va">pfu_aggs_total</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Energy.type</span> <span class="op">==</span> <span class="st">"E"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">magrittr</span><span class="fu">::</span><span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="st">"EX.p_net___lsFinal"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">magrittr</span><span class="fu">::</span><span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 93000</span></span>
+<span><span class="co"># Net primary exergy aggregation when last stage is Services</span></span>
+<span><span class="va">pfu_aggs_total</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Energy.type</span> <span class="op">==</span> <span class="st">"X"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">magrittr</span><span class="fu">::</span><span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="st">"EX.p_net___lsServices"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">magrittr</span><span class="fu">::</span><span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 98220</span></span>
+<span><span class="co"># Gross final energy aggregation when last stage is Useful</span></span>
+<span><span class="va">pfu_aggs_total</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Energy.type</span> <span class="op">==</span> <span class="st">"E"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">magrittr</span><span class="fu">::</span><span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="st">"EX.f_gross___lsFinal"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">magrittr</span><span class="fu">::</span><span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 74325</span></span>
+<span><span class="co"># Gross useful energy aggregation when last stage is Useful</span></span>
+<span><span class="va">pfu_aggs_total</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Energy.type</span> <span class="op">==</span> <span class="st">"E"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">magrittr</span><span class="fu">::</span><span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="st">"EX.u_gross___lsUseful"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">magrittr</span><span class="fu">::</span><span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 25990.38</span></span>
+<span><span class="co"># Net useful energy aggregation when last stage is Useful</span></span>
+<span><span class="va">pfu_aggs_total</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Energy.type</span> <span class="op">==</span> <span class="st">"E"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">magrittr</span><span class="fu">::</span><span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="st">"EX.u_net___lsUseful"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">magrittr</span><span class="fu">::</span><span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 25915.38</span></span>
+<span><span class="co"># Calculate PRODUCT aggregates</span></span>
+<span><span class="va">pfu_aggs_product</span> <span class="op">&lt;-</span> <span class="va">UKEnergy2000mats</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">matrix.name</span>, values_from <span class="op">=</span> <span class="va">matrix</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/pfu_aggregates.html">pfu_aggregates</a></span><span class="op">(</span>p_industries <span class="op">=</span> <span class="va">p_industries</span>, fd_sectors <span class="op">=</span> <span class="va">fd_sectors</span>,</span>
+<span>                 by <span class="op">=</span> <span class="st">"Product"</span><span class="op">)</span></span>
+<span><span class="co"># Net primary energy aggregation when last stage is Final</span></span>
+<span><span class="co"># Note that all results are now vectors which </span></span>
+<span><span class="co"># show aggregation by product</span></span>
+<span><span class="va">pfu_aggs_product</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Energy.type</span> <span class="op">==</span> <span class="st">"E"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">magrittr</span><span class="fu">::</span><span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="st">"EX.p_net___lsFinal"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">magrittr</span><span class="fu">::</span><span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="co">#&gt;       Industry</span></span>
+<span><span class="co">#&gt; Crude    50000</span></span>
+<span><span class="co">#&gt; NG       43000</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "Product"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "Industry"</span></span>
+<span><span class="va">pfu_aggs_product</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Energy.type</span> <span class="op">==</span> <span class="st">"E"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">magrittr</span><span class="fu">::</span><span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="st">"EX.u_net___lsUseful"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">magrittr</span><span class="fu">::</span><span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                         Industry</span></span>
+<span><span class="co">#&gt; Light                    1200.00</span></span>
+<span><span class="co">#&gt; LTH                     20000.00</span></span>
+<span><span class="co">#&gt; MD [from Car engines]    3000.40</span></span>
+<span><span class="co">#&gt; MD [from Truck engines]  1714.98</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "Product"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "Industry"</span></span>
+<span><span class="co"># Calculate INDUSTRY aggregates</span></span>
+<span><span class="co"># Note that all results are now vectors which </span></span>
+<span><span class="co"># show aggregation by industry</span></span>
+<span><span class="va">pfu_aggs_industry</span> <span class="op">&lt;-</span> <span class="va">UKEnergy2000mats</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">matrix.name</span>, values_from <span class="op">=</span> <span class="va">matrix</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/pfu_aggregates.html">pfu_aggregates</a></span><span class="op">(</span>p_industries <span class="op">=</span> <span class="va">p_industries</span>, fd_sectors <span class="op">=</span> <span class="va">fd_sectors</span>,</span>
+<span>                 by <span class="op">=</span> <span class="st">"Industry"</span><span class="op">)</span></span>
+<span><span class="va">pfu_aggs_industry</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Energy.type</span> <span class="op">==</span> <span class="st">"E"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">magrittr</span><span class="fu">::</span><span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="st">"EX.p_net___lsFinal"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">magrittr</span><span class="fu">::</span><span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="co">#&gt;         Resources [of Crude] Resources [of NG]</span></span>
+<span><span class="co">#&gt; Product                50000             43000</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "Product"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "Industry"</span></span>
+<span><span class="va">pfu_aggs_industry</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Energy.type</span> <span class="op">==</span> <span class="st">"E"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">magrittr</span><span class="fu">::</span><span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="st">"EX.u_net___lsUseful"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">magrittr</span><span class="fu">::</span><span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="co">#&gt;         Residential Transport</span></span>
+<span><span class="co">#&gt; Product      4200.4  21714.98</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "Product"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "Industry"</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>
 </h2>
+<p>Several functions in the <code>Recca</code> package assist with
+aggregations in energy conversion chains.
+<code><a href="../reference/primary_aggregates.html">primary_aggregates()</a></code>,
+<code><a href="../reference/finaldemand_aggregates.html">finaldemand_aggregates()</a></code>, <code><a href="../reference/region_aggregates.html">region_aggregates()</a></code>,
+<code><a href="../reference/despecified_aggregates.html">despecified_aggregates()</a></code>,
+<code><a href="../reference/grouped_aggregates.html">grouped_aggregates()</a></code>, and <code><a href="../reference/pfu_aggregates.html">pfu_aggregates()</a></code> all
+assist with different types of aggregations. Please see help for these
+functions for more details.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

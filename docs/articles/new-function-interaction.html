@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.44</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.45</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -159,8 +159,8 @@ that we must extract to insert the diagram into this vignette.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span><span class="op">(</span>R <span class="op">=</span> <span class="va">R</span>, U <span class="op">=</span> <span class="va">U</span>, V <span class="op">=</span> <span class="va">V</span>, Y <span class="op">=</span> <span class="va">Y</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="st">"Sankey"</span><span class="op">)</span></span></code></pre></div>
-<div class="sankeyNetwork html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-a5bc749fb8df5024aadc" style="width:700px;height:432.632880098888px;"></div>
-<script type="application/json" data-for="htmlwidget-a5bc749fb8df5024aadc">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[2,2,10,10]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script>
+<div class="sankeyNetwork html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-40f1e18c6f9c00b93ce3" style="width:700px;height:432.632880098888px;"></div>
+<script type="application/json" data-for="htmlwidget-40f1e18c6f9c00b93ce3">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[2,2,10,10]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div class="section level3">
 <h3 id="adjust-inputs-to-industry-i">Adjust inputs to industry I<a class="anchor" aria-label="anchor" href="#adjust-inputs-to-industry-i"></a>
@@ -191,8 +191,8 @@ instead of a 50/50 split between <code>R1</code> and
 <span>            V <span class="op">=</span> <span class="va">change_input_proportions</span><span class="op">$</span><span class="va">V_prime</span>, </span>
 <span>            Y <span class="op">=</span> <span class="va">Y</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="st">"Sankey"</span><span class="op">)</span></span></code></pre></div>
-<div class="sankeyNetwork html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-b18f7566d96b1a78bc8c" style="width:700px;height:432.632880098888px;"></div>
-<script type="application/json" data-for="htmlwidget-b18f7566d96b1a78bc8c">{"x":{"links":{"source":[0,0,1],"target":[2,3,0],"value":[2,2,20]},"nodes":{"name":["I","R1","Y1","Y2"],"group":["I","R1","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script>
+<div class="sankeyNetwork html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-4c0f8a60e8c006aa2196" style="width:700px;height:432.632880098888px;"></div>
+<script type="application/json" data-for="htmlwidget-4c0f8a60e8c006aa2196">{"x":{"links":{"source":[0,0,1],"target":[2,3,0],"value":[2,2,20]},"nodes":{"name":["I","R1","Y1","Y2"],"group":["I","R1","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div class="section level3">
 <h3 id="change-final-demand">Change final demand<a class="anchor" aria-label="anchor" href="#change-final-demand"></a>
@@ -222,8 +222,8 @@ structure of the ECC with the <code><a href="../reference/calc_io_mats.html">cal
 <span>            V <span class="op">=</span> <span class="va">change_final_demand</span><span class="op">$</span><span class="va">V_prime</span>, </span>
 <span>            Y <span class="op">=</span> <span class="va">change_final_demand</span><span class="op">$</span><span class="va">Y_prime</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="st">"Sankey"</span><span class="op">)</span></span></code></pre></div>
-<div class="sankeyNetwork html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-f7479e7fa641e977ba6b" style="width:700px;height:432.632880098888px;"></div>
-<script type="application/json" data-for="htmlwidget-f7479e7fa641e977ba6b">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[4,2,15,15]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>Industry I is back to using both R1p and R2p in a 50/50 split to make
+<div class="sankeyNetwork html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-54b87476a5997636992e" style="width:700px;height:432.632880098888px;"></div>
+<script type="application/json" data-for="htmlwidget-54b87476a5997636992e">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[4,2,15,15]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>Industry I is back to using both R1p and R2p in a 50/50 split to make
 its output. Both R1p and R2p now supply 15 quads to I to account for
 increased final demand.</p>
 <p>The <code><a href="../reference/new_Y.html">new_Y()</a></code> function is performing exactly as expected,
@@ -259,8 +259,8 @@ description of the input-output structure of the ECC to
 <span>            V <span class="op">=</span> <span class="va">change_final_demand2</span><span class="op">$</span><span class="va">V_prime</span>, </span>
 <span>            Y <span class="op">=</span> <span class="va">change_final_demand2</span><span class="op">$</span><span class="va">Y_prime</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="st">"Sankey"</span><span class="op">)</span></span></code></pre></div>
-<div class="sankeyNetwork html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-970afeef6b10f9e7e337" style="width:700px;height:432.632880098888px;"></div>
-<script type="application/json" data-for="htmlwidget-970afeef6b10f9e7e337">{"x":{"links":{"source":[0,0,1],"target":[2,3,0],"value":[4,2,30]},"nodes":{"name":["I","R1","Y1","Y2"],"group":["I","R1","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>The Sankey diagram above shows that we have successfully increased
+<div class="sankeyNetwork html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-bbcf018494bdb1c6ac6d" style="width:700px;height:432.632880098888px;"></div>
+<script type="application/json" data-for="htmlwidget-bbcf018494bdb1c6ac6d">{"x":{"links":{"source":[0,0,1],"target":[2,3,0],"value":[4,2,30]},"nodes":{"name":["I","R1","Y1","Y2"],"group":["I","R1","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>The Sankey diagram above shows that we have successfully increased
 the demand from <code>Y1</code> while ensuring that all inputs to
 industry I come from R1p. The “trick” is to recalculate the input-output
 structure of the ECC between the two steps.</p>
