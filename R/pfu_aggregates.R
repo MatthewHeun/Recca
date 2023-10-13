@@ -226,6 +226,8 @@ pfu_aggregates <- function(.sutdata,
                            .matvals = Recca::psut_cols$matvals,
                            tol = 1e-6) {
 
+  by <- match.arg(by)
+
   # If .sutdata is a data frame and it contains a last_stage column,
   # pivot wider before calling pfu_agg_func().
   if (is.data.frame(.sutdata) & (last_stage %in% names(.sutdata))) {
