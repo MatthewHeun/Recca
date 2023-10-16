@@ -136,7 +136,7 @@ Note that services aggregations are often inherently problematic,
 because energy services are often quantified in different units.
 This functions does not perform
 aggregation to services.
-Users are referred to \code{\link[=finaldemand_aggregates]{finaldemand_aggregates()}}
+Users are referred to \code{finaldemand_aggregates()}
 for aggregation to services, if desired and sensible.
 }
 \details{

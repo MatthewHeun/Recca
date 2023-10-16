@@ -8,6 +8,7 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+* Minor updates to documentation.
 * The `by` argument to `pfu_aggregates()` now correctly
   chooses the default value ("Total") if unspecified.
 
