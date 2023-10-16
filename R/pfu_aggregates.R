@@ -8,7 +8,7 @@
 #' because energy services are often quantified in different units.
 #' This functions does not perform
 #' aggregation to services.
-#' Users are referred to [finaldemand_aggregates()]
+#' Users are referred to `finaldemand_aggregates()`
 #' for aggregation to services, if desired and sensible.
 #'
 #' There are several ways to aggregate energy conversion chain (ECC) data
