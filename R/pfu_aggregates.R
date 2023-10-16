@@ -13,32 +13,32 @@
 #'
 #' There are several ways to aggregate energy conversion chain (ECC) data
 #' to primary, final, or useful stages of the ECC.
-#' [primary_aggregates()] aggregates primary energy using the
+#' `primary_aggregates()` aggregates primary energy using the
 #' resource (**R**), make (**V**), and final demand (**Y**) matrices.
-#' [primary_aggregates()] gives upstream (source) aggregations for an ECC.
-#' [finaldemand_aggregates()] aggregates to the last stage
+#' `primary_aggregates()` gives upstream (source) aggregations for an ECC.
+#' `finaldemand_aggregates()` aggregates to the last stage
 #' of an energy conversion chain using **R** and **Y** matrices,
 #' regardless of whether the last stage is final, useful, or services.
-#' [finaldemand_aggregates()] gives downstream (sink) aggregations.
+#' `finaldemand_aggregates()` gives downstream (sink) aggregations.
 #'
-#' However, applying [finaldemand_aggregates()] to an ECC
+#' However, applying `finaldemand_aggregates()` to an ECC
 #' whose last stage is final cannot produce useful stage aggregations.
-#' Similarly, applying [finaldemand_aggregates()] to an ECC whose last stage is useful
+#' Similarly, applying `finaldemand_aggregates()` to an ECC whose last stage is useful
 #' cannot provide final stage aggregations.
 #' See the following table.
 #'
 #' | ECC last stage -->        | Final                         | Useful                        |
 #' | :------------------------ | :---------------------------- | :---------------------------- |
 #' | Desired aggregation stage |                               |                               |
-#' | Primary                   | [primary_aggregates()] Note A | [primary_aggregates()] Note A |
-#' | Final                     | [finaldemand_aggregates()]    | Note B                        |
-#' | Useful                    | Note C                        | [finaldemand_aggregates()]    |
+#' | Primary                   | `primary_aggregates()` Note A | `primary_aggregates()` Note A |
+#' | Final                     | `finaldemand_aggregates()`    | Note B                        |
+#' | Useful                    | Note C                        | `finaldemand_aggregates()`    |
 #'
 #' For the off-axis aggregations, special considerations are employed in this function.
 #'
 #' Note A:
 #'
-#' The two results from [primary_aggregates()]
+#' The two results from `primary_aggregates()`
 #' should be equal to within `tol`.
 #' If agreement is not observed, an error is given.
 #'
@@ -46,7 +46,7 @@
 #'
 #' When last stage is useful but we want final stage aggregations
 #' and final-to-useful stage efficiencies,
-#' we can again employ [calc_eta_fu_Y_eiou()] in an inverse
+#' we can again employ `calc_eta_fu_Y_eiou()` in an inverse
 #' relationship to calculate final stage aggregates when
 #' useful stage information is known.
 #' The result is **Y** and **U_EIOU** matrices
@@ -59,7 +59,7 @@
 #'
 #' When last stage is final but we want useful energy aggregates
 #' and final-to-useful efficiencies,
-#' we can employ [calc_eta_fu_Y_eiou()] to calculate
+#' we can employ `calc_eta_fu_Y_eiou()` to calculate
 #' useful energy for each piece of final demand or EIOU
 #' when last stage is final, giving **Y** and **U_EIOU**
 #' matrices with same structure as **Y_Final** and **U_EIOU_Final**
@@ -67,7 +67,7 @@
 #' These useful-but-in-same-structure-as-final matrices
 #' can be used to calculate useful aggregations when last stage is final.
 #'
-#' Whereas [primary_aggregates()] and [finaldemand_aggregates()]
+#' Whereas `primary_aggregates()` and `finaldemand_aggregates()`
 #' work independently of the last stage of an ECC,
 #' this function requires both final and useful last stage ECCs
 #' to be present in `.sutdata`.
@@ -91,7 +91,7 @@
 #' See examples.
 #'
 #' Internally, this function uses
-#' [primary_aggregates()] and [finaldemand_aggregates()], and
+#' `primary_aggregates()` and `finaldemand_aggregates()`
 #' to complete its work.
 #'
 #' Primary aggregates can be computed when

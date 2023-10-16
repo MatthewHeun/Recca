@@ -142,24 +142,24 @@ for aggregation to services, if desired and sensible.
 \details{
 There are several ways to aggregate energy conversion chain (ECC) data
 to primary, final, or useful stages of the ECC.
-\code{\link[=primary_aggregates]{primary_aggregates()}} aggregates primary energy using the
+\code{primary_aggregates()} aggregates primary energy using the
 resource (\strong{R}), make (\strong{V}), and final demand (\strong{Y}) matrices.
-\code{\link[=primary_aggregates]{primary_aggregates()}} gives upstream (source) aggregations for an ECC.
-\code{\link[=finaldemand_aggregates]{finaldemand_aggregates()}} aggregates to the last stage
+\code{primary_aggregates()} gives upstream (source) aggregations for an ECC.
+\code{finaldemand_aggregates()} aggregates to the last stage
 of an energy conversion chain using \strong{R} and \strong{Y} matrices,
 regardless of whether the last stage is final, useful, or services.
-\code{\link[=finaldemand_aggregates]{finaldemand_aggregates()}} gives downstream (sink) aggregations.
+\code{finaldemand_aggregates()} gives downstream (sink) aggregations.
 
-However, applying \code{\link[=finaldemand_aggregates]{finaldemand_aggregates()}} to an ECC
+However, applying \code{finaldemand_aggregates()} to an ECC
 whose last stage is final cannot produce useful stage aggregations.
-Similarly, applying \code{\link[=finaldemand_aggregates]{finaldemand_aggregates()}} to an ECC whose last stage is useful
+Similarly, applying \code{finaldemand_aggregates()} to an ECC whose last stage is useful
 cannot provide final stage aggregations.
 See the following table.\tabular{lll}{
    ECC last stage --> \tab Final \tab Useful \cr
    Desired aggregation stage \tab  \tab  \cr
-   Primary \tab \code{\link[=primary_aggregates]{primary_aggregates()}} Note A \tab \code{\link[=primary_aggregates]{primary_aggregates()}} Note A \cr
-   Final \tab \code{\link[=finaldemand_aggregates]{finaldemand_aggregates()}} \tab Note B \cr
-   Useful \tab Note C \tab \code{\link[=finaldemand_aggregates]{finaldemand_aggregates()}} \cr
+   Primary \tab \code{primary_aggregates()} Note A \tab \code{primary_aggregates()} Note A \cr
+   Final \tab \code{finaldemand_aggregates()} \tab Note B \cr
+   Useful \tab Note C \tab \code{finaldemand_aggregates()} \cr
 }
 
 
@@ -167,7 +167,7 @@ For the off-axis aggregations, special considerations are employed in this funct
 
 Note A:
 
-The two results from \code{\link[=primary_aggregates]{primary_aggregates()}}
+The two results from \code{primary_aggregates()}
 should be equal to within \code{tol}.
 If agreement is not observed, an error is given.
 
@@ -175,7 +175,7 @@ Note B:
 
 When last stage is useful but we want final stage aggregations
 and final-to-useful stage efficiencies,
-we can again employ \code{\link[=calc_eta_fu_Y_eiou]{calc_eta_fu_Y_eiou()}} in an inverse
+we can again employ \code{calc_eta_fu_Y_eiou()} in an inverse
 relationship to calculate final stage aggregates when
 useful stage information is known.
 The result is \strong{Y} and \strong{U_EIOU} matrices
@@ -188,7 +188,7 @@ Note C:
 
 When last stage is final but we want useful energy aggregates
 and final-to-useful efficiencies,
-we can employ \code{\link[=calc_eta_fu_Y_eiou]{calc_eta_fu_Y_eiou()}} to calculate
+we can employ \code{calc_eta_fu_Y_eiou()} to calculate
 useful energy for each piece of final demand or EIOU
 when last stage is final, giving \strong{Y} and \strong{U_EIOU}
 matrices with same structure as \strong{Y_Final} and \strong{U_EIOU_Final}
@@ -196,7 +196,7 @@ except containing useful energy data.
 These useful-but-in-same-structure-as-final matrices
 can be used to calculate useful aggregations when last stage is final.
 
-Whereas \code{\link[=primary_aggregates]{primary_aggregates()}} and \code{\link[=finaldemand_aggregates]{finaldemand_aggregates()}}
+Whereas \code{primary_aggregates()} and \code{finaldemand_aggregates()}
 work independently of the last stage of an ECC,
 this function requires both final and useful last stage ECCs
 to be present in \code{.sutdata}.
@@ -220,7 +220,7 @@ is missing, an error is thrown.
 See examples.
 
 Internally, this function uses
-\code{\link[=primary_aggregates]{primary_aggregates()}} and \code{\link[=finaldemand_aggregates]{finaldemand_aggregates()}}, and
+\code{primary_aggregates()} and \code{finaldemand_aggregates()}
 to complete its work.
 
 Primary aggregates can be computed when
