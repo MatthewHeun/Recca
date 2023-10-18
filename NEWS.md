@@ -8,7 +8,7 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
-# Recca 0.1.46 (2023-10-16)
+# Recca 0.1.46 (2023-10-16) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10016873.svg)](https://doi.org/10.5281/zenodo.10016873)
 
 * Minor updates to documentation.
 * The `by` argument to `pfu_aggregates()` now correctly
