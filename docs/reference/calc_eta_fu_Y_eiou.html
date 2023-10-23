@@ -26,7 +26,7 @@ structure as Y and U_EIOU when last stage is final."><!-- mathjax --><script src
     
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.46</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.47</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -291,26 +291,18 @@ eliminating unnecessary growth of the output matrices.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             Non-ferrous metals Residential</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Electricity               0.69        0.00</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> PSB                       0.00        0.37</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"coltype")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> list()</span>
 <span class="r-in"><span><span class="va">res</span><span class="op">$</span><span class="va">eta_fu_EIOU_E</span> <span class="co"># Same because C_Y and C_EIOU are same</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             Non-ferrous metals Residential</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Electricity               0.69        0.00</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> PSB                       0.00        0.37</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"coltype")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> list()</span>
 <span class="r-in"><span><span class="va">res</span><span class="op">$</span><span class="va">eta_fu_Y_X</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             Non-ferrous metals Residential</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Electricity          0.4718772  0.00000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> PSB                  0.0000000  0.03173049</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"coltype")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> list()</span>
 <span class="r-in"><span><span class="va">res</span><span class="op">$</span><span class="va">eta_fu_EIOU_X</span> <span class="co"># Same because C_Y and C_EIOU are same</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             Non-ferrous metals Residential</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Electricity          0.4718772  0.00000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> PSB                  0.0000000  0.03173049</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"coltype")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> list()</span>
 <span class="r-in"><span><span class="va">res2</span> <span class="op">&lt;-</span> <span class="fu">calc_eta_fu_Y_eiou</span><span class="op">(</span>C_Y <span class="op">=</span> <span class="va">C_Y</span>, C_eiou <span class="op">=</span> <span class="va">C_Y</span>, eta_i <span class="op">=</span> <span class="va">eta_i</span>, phi <span class="op">=</span> <span class="va">phi</span>,</span></span>
 <span class="r-in"><span>                           matricize <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">res2</span><span class="op">$</span><span class="va">eta_fu_Y_E</span></span></span>

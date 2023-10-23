@@ -383,7 +383,7 @@ calc_eta_fu_Y_eiou <- function(.c_mats_eta_phi_vecs = NULL,
       matsbyname::matrixproduct_byname(phi_Y_num) |>
       matsbyname::setcolnames_byname(eta_fu_Y_x) |>
       matsbyname::setrowtype(matsbyname::rowtype(CYetaihat)) |> matsbyname::setcoltype(eta_fu_Y_x)
-    eta_fu_EIOU_X_vec <- matsbyname::matrixproduct_byname(phi_hat_inv_EIOU_denom, CYetaihat) |>
+    eta_fu_EIOU_X_vec <- matsbyname::matrixproduct_byname(phi_hat_inv_EIOU_denom, CEIOUetaihat) |>
       matsbyname::matrixproduct_byname(phi_EIOU_num) |>
       matsbyname::setcolnames_byname(eta_fu_eiou_x) |>
       matsbyname::setrowtype(matsbyname::rowtype(CEIOUetaihat)) |> matsbyname::setcoltype(eta_fu_eiou_x)

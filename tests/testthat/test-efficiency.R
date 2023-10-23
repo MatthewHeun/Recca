@@ -52,7 +52,7 @@ test_that("efficiency vectors are named correctly", {
 
 
 test_that("calc_eta_pfu() works correctly", {
-  wide <- primary_total_aggregates_sut <- UKEnergy2000mats %>%
+  wide <- UKEnergy2000mats %>%
     tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
 
   # Define primary industries
