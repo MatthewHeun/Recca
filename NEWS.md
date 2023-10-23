@@ -8,10 +8,14 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+# Recca 0.1.47 (2023-10-23) 
 
 * Fixed a bug where EIOU efficiency calculated by calc_eta_fu_Y_eiou()
   gave the **0** matrix.
   Hat-tip to Emmanuel Aramendia for spotting this issue and assisting the debugging.
+* No new tests.
+    * Still at 712 tests, all passing.
+    * Test coverage remains at 100 %.
 
 
 # Recca 0.1.46 (2023-10-16) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10016873.svg)](https://doi.org/10.5281/zenodo.10016873)
