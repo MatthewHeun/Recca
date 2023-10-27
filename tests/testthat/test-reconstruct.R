@@ -492,3 +492,38 @@ test_that("new_R_ps() works as expected", {
   # }
   # <<commenting ends>>
 })
+
+
+test_that("remove_neu() works correctly", {
+
+  without_residential_mats <- UKEnergy2000mats |>
+    tidyr::spread(key = matrix.name, value = matrix) |>
+    dplyr::filter(Last.stage != "Services") |>
+    Recca::remove_neu(neu_pattern = "^Residential")
+
+  # Verify that "Residential" names have been removed from the Y_prime matrices.
+  for (yprime in without_residential_mats$Y_prime) {
+    cnames <- yprime |>
+      matsbyname::getcolnames_byname()
+    expect_true(! ("Residential" %in% cnames))
+  }
+
+  # Verify that totals are smaller in the prime matrices
+  for (rnum in nrow(without_residential_mats)) {
+    orig_sum <- matsbyname::sumall_byname(without_residential_mats$R[[rnum]])
+    new_sum <- matsbyname::sumall_byname(without_residential_mats$R_prime[[rnum]])
+    expect_true(orig_sum > new_sum)
+  }
+
+  for (rnum in nrow(without_residential_mats)) {
+    orig_sum <- matsbyname::sumall_byname(without_residential_mats$U[[rnum]])
+    new_sum <- matsbyname::sumall_byname(without_residential_mats$U_prime[[rnum]])
+    expect_true(orig_sum > new_sum)
+  }
+
+  for (rnum in nrow(without_residential_mats)) {
+    orig_sum <- matsbyname::sumall_byname(without_residential_mats$V[[rnum]])
+    new_sum <- matsbyname::sumall_byname(without_residential_mats$V_prime[[rnum]])
+    expect_true(orig_sum > new_sum)
+  }
+})

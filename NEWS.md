@@ -8,6 +8,13 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+* New function `remove_neu()` eliminates "Non-energy useX"
+  (where "X" is any additional string such as " in Industry")
+  from the final demand matrix (**Y**)
+  and swims upstream with `new_Y()` to remove any primary stage or useful stage
+  energy associated with Non-enegy use.
+
+
 # Recca 0.1.47 (2023-10-23) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10034476.svg)](https://doi.org/10.5281/zenodo.10034476)
 
 * Fixed a bug where EIOU efficiency calculated by calc_eta_fu_Y_eiou()
