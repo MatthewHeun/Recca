@@ -475,7 +475,8 @@ new_R_ps <- function(.sutmats = NULL,
 #'                    is the leading part of a column name in the **Y** matrix.
 #'                    This approach allows all "Non-energy use in X" columns to be removed.
 #' @param method The method by which upstream swim will be conducted.
-#'               Default is "SVD" for singular value decomposition.
+#'               Default is "solve" for the usual `solve()` in `R`.
+#'               Passed to `matsbyname::invert_byname()`..
 #' @param R,U,U_feed,U_eiou,r_eiou,V,Y,S_units String names for matrix columns or list items in `.psut_mats`.
 #'                                             Alternatively, these arguments can be single matrices.
 #'                                             Default values are strings from `Recca::psut_cols`.
@@ -498,7 +499,7 @@ new_R_ps <- function(.sutmats = NULL,
 #'   Recca::remove_neu(neu_pattern = "^Residential")
 remove_neu <- function(.sutmats,
                        neu_pattern = "^Non-energy use",
-                       method = "SVD",
+                       method = "QR",
                        # Innput column names
                        R = Recca::psut_cols$R,
                        U = Recca::psut_cols$U,
