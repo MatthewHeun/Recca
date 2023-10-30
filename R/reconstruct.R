@@ -452,5 +452,91 @@ new_R_ps <- function(.sutmats = NULL,
 
 
 
+#' Remove Non-energy use from an energy conversion chain
+#'
+#' Frequently, Non-energy use should be removed from an energy conversion chain,
+#' in final demand, at the useful stage, at the final stage, and at the primary stage.
+#' This function removes Non-energy use via and "upstream swim" with `new_Y()`.
+#'
+#' Although this function is `remove_neu()`,
+#' it can be used to remove any column from the final demand matrix
+#' and calculate the remaining ECC
+#' by overriding the default value for the `neu_pattern` argument.
+#'
+#' Note that if a data frame or a list is passed in `.sutmats`,
+#' the original matrices will remain.
+#' Callers may wish to delete the original matrices
+#' in the return value.
+#'
+#' @param .sutmats A data frame or named list of PSUT matrices.
+#' @param neu_pattern A string regex pattern that identifies Non-energy use columns
+#'                    in the final demand (**Y**) matrix.
+#'                    Default is "^Non-energy use", which specifies that the string "Non-energy use"
+#'                    is the leading part of a column name in the **Y** matrix.
+#'                    This approach allows all "Non-energy use in X" columns to be removed.
+#' @param method The method by which upstream swim will be conducted.
+#'               Default is "solve" for the usual `solve()` in `R`.
+#'               This argument is passed to `matsbyname::invert_byname()`.
+#' @param R,U,U_feed,U_eiou,r_eiou,V,Y,S_units String names for matrix columns or list items in `.psut_mats`.
+#'                                             Alternatively, these arguments can be single matrices.
+#'                                             Default values are strings from `Recca::psut_cols`.
+#' @param prime_suffix The suffix for names of modified matrices.
+#'                     Default is "_prime".
+#' @param R_prime,U_prime,U_feed_prime,U_eiou_prime,r_eiou_prime,V_prime,Y_prime,S_units_prime Output names.
+#'                                                                                             Defaults are formed by appending "_prime" to
+#'                                                                                             default names.
+#'
+#' @return A version of the energy conversion chain with Non-energy use removed.
+#'
+#' @export
+#'
+#' @examples
+#' UKEnergy2000mats |>
+#'   tidyr::spread(key = matrix.name, value = matrix) |>
+#'   dplyr::filter(Last.stage != "Services") |>
+#'   # This data frame does not contain "Non-energy use",
+#'   # so remove "Residential" instead.
+#'   Recca::remove_neu(neu_pattern = "^Residential")
+remove_neu <- function(.sutmats,
+                       neu_pattern = "^Non-energy use",
+                       method = "solve",
+                       # Innput column names
+                       R = Recca::psut_cols$R,
+                       U = Recca::psut_cols$U,
+                       U_feed = Recca::psut_cols$U_feed,
+                       U_eiou = Recca::psut_cols$U_eiou,
+                       r_eiou = Recca::psut_cols$r_eiou,
+                       V = Recca::psut_cols$V,
+                       Y = Recca::psut_cols$Y,
+                       S_units = Recca::psut_cols$S_units,
+                       # Output column names
+                       prime_suffix = "_prime",
+                       R_prime = paste0(Recca::psut_cols$R, prime_suffix),
+                       U_prime = paste0(Recca::psut_cols$U, prime_suffix),
+                       U_feed_prime = paste0(Recca::psut_cols$U_feed, prime_suffix),
+                       U_eiou_prime = paste0(Recca::psut_cols$U_eiou, prime_suffix),
+                       r_eiou_prime = paste0(Recca::psut_cols$r_eiou, prime_suffix),
+                       V_prime = paste0(Recca::psut_cols$V, prime_suffix),
+                       Y_prime = paste0(Recca::psut_cols$Y, prime_suffix),
+                       S_units_prime = paste0(Recca::psut_cols$S_units, prime_suffix)) {
+
+  remove_neu_func <- function(R_mat, U_mat, U_feed_mat, U_eiou_mat, r_eiou_mat, V_mat, Y_mat, S_units_mat) {
+    # Calculate the IO matrices, accepting the default names so we can rely on the default names below.
+    io_mats <- Recca::calc_io_mats(method = method, R = R_mat, U = U_mat, U_feed = U_feed_mat, V = V_mat, Y = Y_mat, S_units = S_units_mat)
+    Y_prime_mat <- matsbyname::select_cols_byname(a = Y_mat, remove_pattern = neu_pattern)
+    # Calculate the new ECC given the Y_prime_mat, again accepting the default argument names.
+    new_ecc <- Recca::new_Y(Y_prime = Y_prime_mat, L_ixp = io_mats$L_ixp, L_pxp = io_mats$L_pxp, Z = io_mats$Z,
+                            Z_feed = io_mats$Z_feed, D = io_mats$D, O = io_mats$O)
+    # Create the outgoing list and return
+    list(new_ecc$R_prime, new_ecc$U_prime, new_ecc$U_feed_prime, new_ecc$U_EIOU_prime,
+         new_ecc$r_EIOU_prime, new_ecc$V_prime, Y_prime_mat, S_units_mat) |>
+      magrittr::set_names(c(R_prime, U_prime, U_feed_prime, U_eiou_prime,
+                            r_eiou_prime, V_prime, Y_prime, S_units_prime))
+  }
+
+  matsindf::matsindf_apply(.sutmats, FUN = remove_neu_func,
+                           R_mat = R, U_mat = U, U_feed_mat = U_feed, U_eiou_mat = U_eiou,
+                           r_eiou_mat = r_eiou, V_mat = V, Y_mat = Y, S_units_mat = S_units)
+}
 
 
