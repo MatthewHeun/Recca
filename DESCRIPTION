@@ -12,7 +12,7 @@ Authors@R: c(person(given = "Matthew",
                     family = "Aramendia", 
                     role = "aut", 
                     comment = c(ORCID = "0000-0002-5964-6776"), 
-                    email = "eeear@leeds.ac.uk"))
+                    email = "e.aramendia@leeds.ac.uk"))
 Author: Matthew Heun [aut, cre] (<https://orcid.org/0000-0002-7438-214X>), Emmanuel Aramendia [aut] (<https://orcid.org/0000-0002-5964-6776>)
 Maintainer: Matthew Heun <matthew.heun@me.com>
 Description: Provides functions to analyze energy conversion chains using a 
