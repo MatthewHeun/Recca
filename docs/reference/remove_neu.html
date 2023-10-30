@@ -71,7 +71,7 @@ This function removes Non-energy use via and "upstream swim" with <code><a href=
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">remove_neu</span><span class="op">(</span></span>
 <span>  <span class="va">.sutmats</span>,</span>
 <span>  neu_pattern <span class="op">=</span> <span class="st">"^Non-energy use"</span>,</span>
-<span>  method <span class="op">=</span> <span class="st">"QR"</span>,</span>
+<span>  method <span class="op">=</span> <span class="st">"solve"</span>,</span>
 <span>  R <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">R</span>,</span>
 <span>  U <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">U</span>,</span>
 <span>  U_feed <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">U_feed</span>,</span>
@@ -109,7 +109,7 @@ This approach allows all "Non-energy use in X" columns to be removed.</p></dd>
 <dt>method</dt>
 <dd><p>The method by which upstream swim will be conducted.
 Default is "solve" for the usual <code><a href="https://rdrr.io/r/base/solve.html" class="external-link">solve()</a></code> in <code>R</code>.
-Passed to <code><a href="https://rdrr.io/pkg/matsbyname/man/invert_byname.html" class="external-link">matsbyname::invert_byname()</a></code>..</p></dd>
+This argument is passed to <code><a href="https://rdrr.io/pkg/matsbyname/man/invert_byname.html" class="external-link">matsbyname::invert_byname()</a></code>.</p></dd>
 
 
 <dt>R, U, U_feed, U_eiou, r_eiou, V, Y, S_units</dt>

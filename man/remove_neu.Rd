@@ -7,7 +7,7 @@
 remove_neu(
   .sutmats,
   neu_pattern = "^Non-energy use",
-  method = "QR",
+  method = "solve",
   R = Recca::psut_cols$R,
   U = Recca::psut_cols$U,
   U_feed = Recca::psut_cols$U_feed,
@@ -38,7 +38,7 @@ This approach allows all "Non-energy use in X" columns to be removed.}
 
 \item{method}{The method by which upstream swim will be conducted.
 Default is "solve" for the usual \code{solve()} in \code{R}.
-Passed to \code{matsbyname::invert_byname()}..}
+This argument is passed to \code{matsbyname::invert_byname()}.}
 
 \item{R, U, U_feed, U_eiou, r_eiou, V, Y, S_units}{String names for matrix columns or list items in \code{.psut_mats}.
 Alternatively, these arguments can be single matrices.
