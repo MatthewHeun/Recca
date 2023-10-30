@@ -14,3 +14,4 @@ recca_workflow.blg
 ^\.github$
 ^_pkgdown\.yml$
 ^LICENSE\.md$
+CITATION.cff
