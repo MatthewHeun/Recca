@@ -8,11 +8,16 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+# Recca 0.1.48 (2023-10-27)
+
 * New function `remove_neu()` eliminates "Non-energy useX"
   (where "X" is any additional string such as " in Industry")
   from the final demand matrix (**Y**)
   and swims upstream with `new_Y()` to remove any primary stage or useful stage
-  energy associated with Non-enegy use.
+  energy associated with Non-energy use.
+* New tests for the new function.
+    * Now up to 717 tests, all passing.
+    * Test coverage remains at 100%.
 
 
 # Recca 0.1.47 (2023-10-23) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10034476.svg)](https://doi.org/10.5281/zenodo.10034476)
@@ -22,7 +27,7 @@ which always resolves to the latest release.
   Hat-tip to Emmanuel Aramendia for spotting this issue and assisting the debugging.
 * No new tests.
     * Still at 712 tests, all passing.
-    * Test coverage remains at 100 %.
+    * Test coverage remains at 100%.
 
 
 # Recca 0.1.46 (2023-10-16) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10016873.svg)](https://doi.org/10.5281/zenodo.10016873)
@@ -32,7 +37,7 @@ which always resolves to the latest release.
   chooses the default value ("Total") if unspecified.
 * No new tests.
     * Still at 712 tests, all passing.
-    * Test coverage remains at 100 %.
+    * Test coverage remains at 100%.
 
 
 # Recca 0.1.45 (2023-09-21) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8368788.svg)](https://doi.org/10.5281/zenodo.8368788)
@@ -40,7 +45,7 @@ which always resolves to the latest release.
 * Complete aggregation vignette.
 * No new tests.
     * Still at 712 tests, all passing.
-    * Test coverage remains at 100 %.
+    * Test coverage remains at 100%.
 
 
 # Recca 0.1.44 (2023-09-21) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8366750.svg)](https://doi.org/10.5281/zenodo.8366750)
@@ -49,7 +54,7 @@ which always resolves to the latest release.
   `rowtypes` or `coltypes` columns were not present.
 * No new tests.
     * Still at 712 tests, all passing.
-    * Test coverage remains at 100 %.
+    * Test coverage remains at 100%.
 
 
 # Recca 0.1.43 (2023-08-18) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8264412.svg)](https://doi.org/10.5281/zenodo.8264412)
@@ -71,7 +76,7 @@ which always resolves to the latest release.
   sparse matrices causing a failure in `calc_yqfgW()`.
 * New tests for new features.
     * Now up to 712 tests, all passing.
-    * Test coverage remains at 100 %.
+    * Test coverage remains at 100%.
 
 
 # Recca 0.1.42 (2023-06-02) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7998165.svg)](https://doi.org/10.5281/zenodo.7998165)
@@ -85,7 +90,7 @@ which always resolves to the latest release.
   responding to a feature request from Pierre Jacques.
 * New tests for new features.
     * Now up to at 641 tests, all passing.
-    * Test coverage remains at 100 %.
+    * Test coverage remains at 100%.
 
 
 # Recca 0.1.41 (2023-04-28) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7877495.svg)](https://doi.org/10.5281/zenodo.7877495)
@@ -111,7 +116,7 @@ which always resolves to the latest release.
 * Net EROI calculations removed, only gross values calculated.
 * Simplifications reduced number of tests.
     * Still at 632 tests, all passing.
-    * Test coverage remains at 100 %.
+    * Test coverage remains at 100%.
   
 
 # Recca 0.1.40 (2023-01-25) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7571202.svg)](https://doi.org/10.5281/zenodo.7571202)
@@ -126,7 +131,7 @@ which always resolves to the latest release.
   test coverage.
 * No new tests.
     * Still at 672 tests, all passing.
-    * Test coverage remains at 100 %.
+    * Test coverage remains at 100%.
 
 
 # Recca 0.1.39 (2023-01-24) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7566435.svg)](https://doi.org/10.5281/zenodo.7566435)
@@ -227,7 +232,7 @@ which always resolves to the latest release.
   has no rows.
 * Many new tests for new features.
     * Now up to 672 tests, all passing.
-    * Test coverage remains at 100 %.
+    * Test coverage remains at 100%.
 
 
 # Recca 0.1.38 (2022-04-02) [![DOI](https://zenodo.org/badge/116066838.svg)](https://zenodo.org/badge/latestdoi/116066838)
@@ -249,7 +254,7 @@ which always resolves to the latest release.
   internally to correctly handle hatized vector multiplication.
 * Many new tests for new features.
     * Now up to 556 tests, all passing.
-    * Test coverage remains at 100 %.
+    * Test coverage remains at 100%.
 
 
 # Recca 0.1.37 (2021-10-13) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5566713.svg)](https://doi.org/10.5281/zenodo.5566713)
@@ -260,7 +265,7 @@ which always resolves to the latest release.
   an energy representation of an energy conversion chain.
 * Many new tests for new features.
     * Now up to 530 tests, all passing.
-    * Test coverage remains at 100 %.
+    * Test coverage remains at 100%.
 
 
 # Recca 0.1.36 (2021-09-10)  [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5500310.svg)](https://doi.org/10.5281/zenodo.5500310)
@@ -270,7 +275,7 @@ which always resolves to the latest release.
 * Removed redundant IO matrices (**C_feed**, **D_feed**, and **O_feed**).
 * Tests
     * 512 tests
-    * Test coverage remains at 100 %
+    * Test coverage remains at 100%
 
 
 # Recca 0.1.35 (2021-08-20)  [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5226086.svg)](https://doi.org/10.5281/zenodo.5226086)
@@ -289,7 +294,7 @@ which always resolves to the latest release.
   for continuous integration testing. 
 * No new tests.
     * Still at 435 tests, all passing.
-    * Test coverage remains at 100 %.
+    * Test coverage remains at 100%.
 
 
 # Recca 0.1.33 (2021-04-11)
@@ -297,7 +302,7 @@ which always resolves to the latest release.
 * Move from Travis to GitHub Actions for continuous integration testing.
 * No new tests.
     * Still at 435 tests, all passing.
-    * Test coverage remains at 100 %.
+    * Test coverage remains at 100%.
 
 
 # Recca 0.1.32 (2021-03-16)
@@ -308,7 +313,7 @@ which always resolves to the latest release.
   from other packages.
 * New tests for new code paths.
     * Now at 435 tests, all passing.
-    * Test coverage remains at 100 %.
+    * Test coverage remains at 100%.
 
 
 # Recca 0.1.31 (2021-02-25)
@@ -317,7 +322,7 @@ which always resolves to the latest release.
   which tells how to match primary and final demand sector names for aggregation.
 * New tests for new feature.
     * Now 421 tests, all passing.
-    * Test coverage remains at 100 %.
+    * Test coverage remains at 100%.
 
 
 # Recca 0.1.30 (2021-02-22)
@@ -326,7 +331,7 @@ which always resolves to the latest release.
   where argument `fd_sectors` was not respected for gross energy aggregation.
 * New and revamped tests to guard against regression.
     * Now 417 tests, all passing.
-    * Test coverage remains at 100 %.
+    * Test coverage remains at 100%.
 
 
 # Recca 0.1.29 (2021-02-01)
@@ -345,7 +350,7 @@ which always resolves to the latest release.
   to identify primary industries.
 * New tests for new function.
     * Now 416 tests, all passing.
-    * Test coverage remains at 100 %.
+    * Test coverage remains at 100%.
 
 
 # Recca 0.1.27 (2020-12-08)
@@ -356,7 +361,7 @@ which always resolves to the latest release.
 * Now using better function-matching and -selecting code in `finaldemand_aggregates()`
 * Fewer tests due to moving some functions out of the package.
     * Now 411 tests, all passing.
-    * Test coverage remains at 100 %.
+    * Test coverage remains at 100%.
 
 
 # Recca 0.1.26 (2020-12-06)
@@ -373,7 +378,7 @@ which always resolves to the latest release.
       (`Recca::sankey_cols$sankey` instead of "Sankey").
 * New tests for the new feature.
     * Now up to 413 tests, all passing.
-    * Test coverage remains at 100 %.
+    * Test coverage remains at 100%.
 
 
 # Recca 0.1.25 (2020-09-17)
@@ -393,14 +398,14 @@ which always resolves to the latest release.
   `U_feed` instead of `U_excl_EIOU`.
 * Added tests for new features and old bugs.
     * Now up to 407 tests, all of which pass.
-    * Test coverage remains at 100 %.
+    * Test coverage remains at 100%.
 
 
 # Recca 0.1.24 (2020-03-17)
 
 * New tests for new features and old bugs.
     * Now up to 337 tests, all passing.
-    * Test coverage remains at 100 %.
+    * Test coverage remains at 100%.
 * Now using `U_feed` everywhere.
 * Calculate `Z_feed` and `A_feed` in `calc_io_mats()`.
 

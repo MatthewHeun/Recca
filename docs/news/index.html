@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.47</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.48</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,11 +56,20 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.47" id="recca-0147-2023-10-23">Recca 0.1.47 (2023-10-23)<a class="anchor" aria-label="anchor" href="#recca-0147-2023-10-23"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.48" id="recca-0148-2023-10-27">Recca 0.1.48 (2023-10-27)<a class="anchor" aria-label="anchor" href="#recca-0148-2023-10-27"></a></h2>
+<ul><li>New function <code><a href="../reference/remove_neu.html">remove_neu()</a></code> eliminates “Non-energy useX” (where “X” is any additional string such as ” in Industry”) from the final demand matrix (<strong>Y</strong>) and swims upstream with <code><a href="../reference/new_Y.html">new_Y()</a></code> to remove any primary stage or useful stage energy associated with Non-energy use.</li>
+<li>New tests for the new function.
+<ul><li>Now up to 717 tests, all passing.</li>
+<li>Test coverage remains at 100%.</li>
+</ul></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.47" id="recca-0147-2023-10-23-doi">Recca 0.1.47 (2023-10-23) <a href="https://doi.org/10.5281/zenodo.10034476" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.10034476.svg" alt="DOI"></a>
+<a class="anchor" aria-label="anchor" href="#recca-0147-2023-10-23-doi"></a></h2>
 <ul><li>Fixed a bug where EIOU efficiency calculated by calc_eta_fu_Y_eiou() gave the <strong>0</strong> matrix. Hat-tip to Emmanuel Aramendia for spotting this issue and assisting the debugging.</li>
 <li>No new tests.
 <ul><li>Still at 712 tests, all passing.</li>
-<li>Test coverage remains at 100 %.</li>
+<li>Test coverage remains at 100%.</li>
 </ul></li>
 </ul></div>
     <div class="section level2">
@@ -70,7 +79,7 @@
 <li>The <code>by</code> argument to <code><a href="../reference/pfu_aggregates.html">pfu_aggregates()</a></code> now correctly chooses the default value (“Total”) if unspecified.</li>
 <li>No new tests.
 <ul><li>Still at 712 tests, all passing.</li>
-<li>Test coverage remains at 100 %.</li>
+<li>Test coverage remains at 100%.</li>
 </ul></li>
 </ul></div>
     <div class="section level2">
@@ -79,7 +88,7 @@
 <ul><li>Complete aggregation vignette.</li>
 <li>No new tests.
 <ul><li>Still at 712 tests, all passing.</li>
-<li>Test coverage remains at 100 %.</li>
+<li>Test coverage remains at 100%.</li>
 </ul></li>
 </ul></div>
     <div class="section level2">
@@ -88,7 +97,7 @@
 <ul><li>Fixed a bug in <code>node_edge_list()</code> that caused failure when <code>rowtypes</code> or <code>coltypes</code> columns were not present.</li>
 <li>No new tests.
 <ul><li>Still at 712 tests, all passing.</li>
-<li>Test coverage remains at 100 %.</li>
+<li>Test coverage remains at 100%.</li>
 </ul></li>
 </ul></div>
     <div class="section level2">
@@ -102,7 +111,7 @@
 <li>Wrapped some matrices in <code><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix()</a></code> to guard against sparse matrices causing a failure in <code><a href="../reference/calc_yqfgW.html">calc_yqfgW()</a></code>.</li>
 <li>New tests for new features.
 <ul><li>Now up to 712 tests, all passing.</li>
-<li>Test coverage remains at 100 %.</li>
+<li>Test coverage remains at 100%.</li>
 </ul></li>
 </ul></div>
     <div class="section level2">
@@ -112,7 +121,7 @@
 <li>New function <code><a href="../reference/calc_eta_fu_Y_eiou.html">calc_eta_fu_Y_eiou()</a></code> calculates final-to-useful efficiencies for every entry in <strong>Y</strong> and <strong>U_EIOU</strong> matrices, responding to a feature request from Pierre Jacques.</li>
 <li>New tests for new features.
 <ul><li>Now up to at 641 tests, all passing.</li>
-<li>Test coverage remains at 100 %.</li>
+<li>Test coverage remains at 100%.</li>
 </ul></li>
 </ul></div>
     <div class="section level2">
@@ -132,7 +141,7 @@
 <li>Net EROI calculations removed, only gross values calculated.</li>
 <li>Simplifications reduced number of tests.
 <ul><li>Still at 632 tests, all passing.</li>
-<li>Test coverage remains at 100 %.</li>
+<li>Test coverage remains at 100%.</li>
 </ul></li>
 </ul></div>
     <div class="section level2">
@@ -143,7 +152,7 @@
 <li>Update to latest version of the GitHub action for test coverage.</li>
 <li>No new tests.
 <ul><li>Still at 672 tests, all passing.</li>
-<li>Test coverage remains at 100 %.</li>
+<li>Test coverage remains at 100%.</li>
 </ul></li>
 </ul></div>
     <div class="section level2">
@@ -193,7 +202,7 @@
 <code><a href="https://rdrr.io/pkg/IEATools/man/aggregate_regions.html" class="external-link">aggregate_regions()</a></code> now returns an empty data frame with the expected columns if the input data frame has no rows.</li>
 <li>Many new tests for new features.
 <ul><li>Now up to 672 tests, all passing.</li>
-<li>Test coverage remains at 100 %.</li>
+<li>Test coverage remains at 100%.</li>
 </ul></li>
 </ul></div>
     <div class="section level2">
@@ -208,7 +217,7 @@
 <code><a href="../reference/extend_to_exergy.html">extend_to_exergy()</a></code> gains new arguments <code>mat_piece</code>, <code>phi_piece</code>, <code>notation</code>, and <code>prepositions</code> to enable more flexible row and column name matching between the various matrices and phi vectors. In addition, <code><a href="../reference/extend_to_exergy.html">extend_to_exergy()</a></code> now uses <code><a href="https://rdrr.io/pkg/matsbyname/man/vec_from_store_byname.html" class="external-link">matsbyname::vec_from_store_byname()</a></code> internally to correctly handle hatized vector multiplication.</li>
 <li>Many new tests for new features.
 <ul><li>Now up to 556 tests, all passing.</li>
-<li>Test coverage remains at 100 %.</li>
+<li>Test coverage remains at 100%.</li>
 </ul></li>
 </ul></div>
     <div class="section level2">
@@ -218,7 +227,7 @@
 <li>New function <code><a href="../reference/extend_to_exergy.html">extend_to_exergy()</a></code> that calculates an exergy representation of an energy conversion chain given an energy representation of an energy conversion chain.</li>
 <li>Many new tests for new features.
 <ul><li>Now up to 530 tests, all passing.</li>
-<li>Test coverage remains at 100 %.</li>
+<li>Test coverage remains at 100%.</li>
 </ul></li>
 </ul></div>
     <div class="section level2">
@@ -228,7 +237,7 @@
 <li>Removed redundant IO matrices (<strong>C_feed</strong>, <strong>D_feed</strong>, and <strong>O_feed</strong>).</li>
 <li>Tests
 <ul><li>512 tests</li>
-<li>Test coverage remains at 100 %</li>
+<li>Test coverage remains at 100%</li>
 </ul></li>
 </ul></div>
     <div class="section level2">
@@ -243,7 +252,7 @@
 <ul><li>Fix lingering problems in R-CMD-check after the move to GitHub Actions for continuous integration testing.</li>
 <li>No new tests.
 <ul><li>Still at 435 tests, all passing.</li>
-<li>Test coverage remains at 100 %.</li>
+<li>Test coverage remains at 100%.</li>
 </ul></li>
 </ul></div>
     <div class="section level2">
@@ -251,7 +260,7 @@
 <ul><li>Move from Travis to GitHub Actions for continuous integration testing.</li>
 <li>No new tests.
 <ul><li>Still at 435 tests, all passing.</li>
-<li>Test coverage remains at 100 %.</li>
+<li>Test coverage remains at 100%.</li>
 </ul></li>
 </ul></div>
     <div class="section level2">
@@ -259,7 +268,7 @@
 <ul><li>Modified aggregation functions to use simpler (but verbose) <code>if</code> statements to choose aggregation functions. This change works around an error when calling the aggregation functions from other packages.</li>
 <li>New tests for new code paths.
 <ul><li>Now at 435 tests, all passing.</li>
-<li>Test coverage remains at 100 %.</li>
+<li>Test coverage remains at 100%.</li>
 </ul></li>
 </ul></div>
     <div class="section level2">
@@ -267,7 +276,7 @@
 <ul><li>New argument to aggregation functions: <code>pattern_type</code> which tells how to match primary and final demand sector names for aggregation.</li>
 <li>New tests for new feature.
 <ul><li>Now 421 tests, all passing.</li>
-<li>Test coverage remains at 100 %.</li>
+<li>Test coverage remains at 100%.</li>
 </ul></li>
 </ul></div>
     <div class="section level2">
@@ -275,7 +284,7 @@
 <ul><li>Fixed bugs in <code><a href="../reference/finaldemand_aggregates.html">finaldemand_aggregates()</a></code> and <code>finaldemand_aggregates_with_units()</code> where argument <code>fd_sectors</code> was not respected for gross energy aggregation.</li>
 <li>New and revamped tests to guard against regression.
 <ul><li>Now 417 tests, all passing.</li>
-<li>Test coverage remains at 100 %.</li>
+<li>Test coverage remains at 100%.</li>
 </ul></li>
 </ul></div>
     <div class="section level2">
@@ -287,7 +296,7 @@
 <ul><li>New function <code><a href="../reference/find_p_industry_names.html">find_p_industry_names()</a></code> looks at <strong>R</strong>, <strong>V</strong>, and <strong>Y</strong> matrices to find names of primary industries (industries that produce primary energy). The function looks for prefixes among row (<code>R</code> and <code>V</code>) and column (<code>Y</code>) names to identify primary industries.</li>
 <li>New tests for new function.
 <ul><li>Now 416 tests, all passing.</li>
-<li>Test coverage remains at 100 %.</li>
+<li>Test coverage remains at 100%.</li>
 </ul></li>
 </ul></div>
     <div class="section level2">
@@ -298,7 +307,7 @@
 </li>
 <li>Fewer tests due to moving some functions out of the package.
 <ul><li>Now 411 tests, all passing.</li>
-<li>Test coverage remains at 100 %.</li>
+<li>Test coverage remains at 100%.</li>
 </ul></li>
 </ul></div>
     <div class="section level2">
@@ -311,7 +320,7 @@
 </ul></li>
 <li>New tests for the new feature.
 <ul><li>Now up to 413 tests, all passing.</li>
-<li>Test coverage remains at 100 %.</li>
+<li>Test coverage remains at 100%.</li>
 </ul></li>
 </ul></div>
     <div class="section level2">
@@ -326,14 +335,14 @@
 <code>prep_UK2000.R</code> and <code>prep_perfectsub.R</code> scripts fixed to work with <code>IEATools</code>, which now uses <code>U_feed</code> instead of <code>U_excl_EIOU</code>.</li>
 <li>Added tests for new features and old bugs.
 <ul><li>Now up to 407 tests, all of which pass.</li>
-<li>Test coverage remains at 100 %.</li>
+<li>Test coverage remains at 100%.</li>
 </ul></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.24" id="recca-0124-2020-03-17">Recca 0.1.24 (2020-03-17)<a class="anchor" aria-label="anchor" href="#recca-0124-2020-03-17"></a></h2>
 <ul><li>New tests for new features and old bugs.
 <ul><li>Now up to 337 tests, all passing.</li>
-<li>Test coverage remains at 100 %.</li>
+<li>Test coverage remains at 100%.</li>
 </ul></li>
 <li>Now using <code>U_feed</code> everywhere.</li>
 <li>Calculate <code>Z_feed</code> and <code>A_feed</code> in <code><a href="../reference/calc_io_mats.html">calc_io_mats()</a></code>.</li>
