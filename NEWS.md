@@ -8,7 +8,7 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
-# Recca 0.1.48 (2023-10-27)
+# Recca 0.1.48 (2023-10-27) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10052140.svg)](https://doi.org/10.5281/zenodo.10052140)
 
 * New function `remove_neu()` eliminates "Non-energy useX"
   (where "X" is any additional string such as " in Industry")
