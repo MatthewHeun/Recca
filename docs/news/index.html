@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.48</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.49</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,7 +56,18 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.48" id="recca-0148-2023-10-27">Recca 0.1.48 (2023-10-27)<a class="anchor" aria-label="anchor" href="#recca-0148-2023-10-27"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.49" id="recca-0149-2023-11-03">Recca 0.1.49 (2023-11-03)<a class="anchor" aria-label="anchor" href="#recca-0149-2023-11-03"></a></h2>
+<ul><li>
+<code><a href="../reference/remove_neu.html">remove_neu()</a></code> now also removes non-energy use products in the rows of <strong>Y</strong>.</li>
+<li>Now re-exporting <code>IEATools::nonenergy_use</code>.</li>
+<li>New tests for new features.
+<ul><li>Now up to 727 tests, all passing.</li>
+<li>Test coverage remains at 100%.</li>
+</ul></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.48" id="recca-0148-2023-10-27-doi">Recca 0.1.48 (2023-10-27) <a href="https://doi.org/10.5281/zenodo.10052140" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.10052140.svg" alt="DOI"></a>
+<a class="anchor" aria-label="anchor" href="#recca-0148-2023-10-27-doi"></a></h2>
 <ul><li>New function <code><a href="../reference/remove_neu.html">remove_neu()</a></code> eliminates “Non-energy useX” (where “X” is any additional string such as ” in Industry”) from the final demand matrix (<strong>Y</strong>) and swims upstream with <code><a href="../reference/new_Y.html">new_Y()</a></code> to remove any primary stage or useful stage energy associated with Non-energy use.</li>
 <li>New tests for the new function.
 <ul><li>Now up to 717 tests, all passing.</li>
