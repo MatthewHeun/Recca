@@ -6,7 +6,9 @@
 \usage{
 remove_neu(
   .sutmats,
-  neu_pattern = "^Non-energy use",
+  neu_product_pattern = RCLabels::make_or_pattern(c("NEU", nonenergy_products)),
+  neu_industry_pattern = RCLabels::make_or_pattern("Non-energy use", pattern_type =
+    "leading"),
   method = "solve",
   R = Recca::psut_cols$R,
   U = Recca::psut_cols$U,
@@ -30,9 +32,16 @@ remove_neu(
 \arguments{
 \item{.sutmats}{A data frame or named list of PSUT matrices.}
 
-\item{neu_pattern}{A string regex pattern that identifies Non-energy use columns
+\item{neu_product_pattern}{A string regex pattern that identifies Non-energy use rows
 in the final demand (\strong{Y}) matrix.
-Default is "^Non-energy use", which specifies that the string "Non-energy use"
+Default is \code{RCLabels::make_or_pattern(c("NEU", nonenergy_products))},
+meaning that the "NEU" product and several other non-energy uses
+will be removed as product rows.}
+
+\item{neu_industry_pattern}{A string regex pattern that identifies Non-energy use columns
+in the final demand (\strong{Y}) matrix.
+Default is \code{RCLabels::make_or_pattern("Non-energy use", pattern_type = "leading")},
+which specifies that the string "Non-energy use"
 is the leading part of a column name in the \strong{Y} matrix.
 This approach allows all "Non-energy use in X" columns to be removed.}
 
@@ -52,23 +61,26 @@ Defaults are formed by appending "_prime" to
 default names.}
 }
 \value{
-A version of the energy conversion chain with Non-energy use removed.
+A version of the energy conversion chain with Non-energy use
+industries and products removed.
 }
 \description{
 Frequently, Non-energy use should be removed from an energy conversion chain,
 in final demand, at the useful stage, at the final stage, and at the primary stage.
-This function removes Non-energy use via and "upstream swim" with \code{new_Y()}.
+This function removes Non-energy use via an "upstream swim" with \code{new_Y()}.
 }
 \details{
 Although this function is \code{remove_neu()},
-it can be used to remove any column from the final demand matrix
+it can be used to remove any row or column from the final demand matrix
 and calculate the remaining ECC
-by overriding the default value for the \code{neu_pattern} argument.
+by overriding the default value for the \code{neu_industry_pattern}
+or \code{neu_product_pattern} arguments.
 
 Note that if a data frame or a list is passed in \code{.sutmats},
-the original matrices will remain.
+the original matrices will remain as columns, and
+new columns will be added with \verb{*_prime} matrices.
 Callers may wish to delete the original matrices
-in the return value.
+in the returned data frame.
 }
 \examples{
 UKEnergy2000mats |>
@@ -76,5 +88,6 @@ UKEnergy2000mats |>
   dplyr::filter(Last.stage != "Services") |>
   # This data frame does not contain "Non-energy use",
   # so remove "Residential" instead.
-  Recca::remove_neu(neu_pattern = "^Residential")
+  Recca::remove_neu(neu_product_pattern = "^NG|^MD",
+                    neu_industry_pattern = "^Residential")
 }

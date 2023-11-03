@@ -27,6 +27,7 @@ Depends: R (>= 2.10)
 Imports:
     assertthat,
     dplyr,
+    IEATools,
     magrittr,
     matsbyname,
     matsindf,
@@ -42,7 +43,6 @@ BugReports: https://github.com/MatthewHeun/Recca/issues
 Suggests: 
     covr,
     Hmisc,
-    IEATools,
     knitr,
     rmarkdown,
     testthat,

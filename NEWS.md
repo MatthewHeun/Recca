@@ -8,6 +8,10 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+* `remove_neu()` now also removes non-energy use products in the rows of **Y**.
+* Now re-exporting `IEATools::nonenergy_use`.
+
+
 # Recca 0.1.48 (2023-10-27) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10052140.svg)](https://doi.org/10.5281/zenodo.10052140)
 
 * New function `remove_neu()` eliminates "Non-energy useX"
