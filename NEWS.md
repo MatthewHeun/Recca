@@ -8,8 +8,13 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+# Recca 0.1.49 (2023-11-03) 
+
 * `remove_neu()` now also removes non-energy use products in the rows of **Y**.
 * Now re-exporting `IEATools::nonenergy_use`.
+* New tests for new features.
+    * Now up to 727 tests, all passing.
+    * Test coverage remains at 100%.
 
 
 # Recca 0.1.48 (2023-10-27) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10052140.svg)](https://doi.org/10.5281/zenodo.10052140)

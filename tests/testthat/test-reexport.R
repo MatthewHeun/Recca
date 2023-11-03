@@ -1,4 +1,10 @@
-test_that("re-exoprting works correctly", {
-  exists("nonenergy_products", where = "package:Recca", mode= "function")
-  Recca::nonenergy_products
+test_that("re-exporting works correctly", {
+  expect_equal(Recca::nonenergy_products,
+               list(additives_blending_components = "Additives/blending components",
+                    bitumen = "Bitumen",
+                    lubricants = "Lubricants",
+                    naphtha = "Naphtha",
+                    paraffin_waxes = "Paraffin waxes",
+                    refinery_feedstocks = "Refinery feedstocks",
+                    white_spirit_and_sbp = "White spirit & SBP"))
 })
