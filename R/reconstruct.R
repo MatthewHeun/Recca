@@ -456,24 +456,32 @@ new_R_ps <- function(.sutmats = NULL,
 #'
 #' Frequently, Non-energy use should be removed from an energy conversion chain,
 #' in final demand, at the useful stage, at the final stage, and at the primary stage.
-#' This function removes Non-energy use via and "upstream swim" with `new_Y()`.
+#' This function removes Non-energy use via an "upstream swim" with `new_Y()`.
 #'
 #' Although this function is `remove_neu()`,
-#' it can be used to remove any column from the final demand matrix
+#' it can be used to remove any row or column from the final demand matrix
 #' and calculate the remaining ECC
-#' by overriding the default value for the `neu_pattern` argument.
+#' by overriding the default value for the `neu_industry_pattern`
+#' or `neu_product_pattern` arguments.
 #'
 #' Note that if a data frame or a list is passed in `.sutmats`,
-#' the original matrices will remain.
+#' the original matrices will remain as columns, and
+#' new columns will be added with `*_prime` matrices.
 #' Callers may wish to delete the original matrices
-#' in the return value.
+#' in the returned data frame.
 #'
 #' @param .sutmats A data frame or named list of PSUT matrices.
-#' @param neu_pattern A string regex pattern that identifies Non-energy use columns
-#'                    in the final demand (**Y**) matrix.
-#'                    Default is "^Non-energy use", which specifies that the string "Non-energy use"
-#'                    is the leading part of a column name in the **Y** matrix.
-#'                    This approach allows all "Non-energy use in X" columns to be removed.
+#' @param neu_product_pattern A string regex pattern that identifies Non-energy use rows
+#'                            in the final demand (**Y**) matrix.
+#'                            Default is `RCLabels::make_or_pattern(c("NEU", nonenergy_products))`,
+#'                            meaning that the "NEU" product and several other non-energy uses
+#'                            will be removed as product rows.
+#' @param neu_industry_pattern A string regex pattern that identifies Non-energy use columns
+#'                             in the final demand (**Y**) matrix.
+#'                             Default is `RCLabels::make_or_pattern("Non-energy use", pattern_type = "leading")`,
+#'                             which specifies that the string "Non-energy use"
+#'                             is the leading part of a column name in the **Y** matrix.
+#'                             This approach allows all "Non-energy use in X" columns to be removed.
 #' @param method The method by which upstream swim will be conducted.
 #'               Default is "solve" for the usual `solve()` in `R`.
 #'               This argument is passed to `matsbyname::invert_byname()`.
@@ -486,7 +494,8 @@ new_R_ps <- function(.sutmats = NULL,
 #'                                                                                             Defaults are formed by appending "_prime" to
 #'                                                                                             default names.
 #'
-#' @return A version of the energy conversion chain with Non-energy use removed.
+#' @return A version of the energy conversion chain with Non-energy use
+#'         industries and products removed.
 #'
 #' @export
 #'
@@ -496,9 +505,11 @@ new_R_ps <- function(.sutmats = NULL,
 #'   dplyr::filter(Last.stage != "Services") |>
 #'   # This data frame does not contain "Non-energy use",
 #'   # so remove "Residential" instead.
-#'   Recca::remove_neu(neu_pattern = "^Residential")
+#'   Recca::remove_neu(neu_product_pattern = "^NG|^MD",
+#'                     neu_industry_pattern = "^Residential")
 remove_neu <- function(.sutmats,
-                       neu_pattern = "^Non-energy use",
+                       neu_product_pattern = RCLabels::make_or_pattern(c("NEU", nonenergy_products)),
+                       neu_industry_pattern = RCLabels::make_or_pattern("Non-energy use", pattern_type = "leading"),
                        method = "solve",
                        # Innput column names
                        R = Recca::psut_cols$R,
@@ -523,7 +534,9 @@ remove_neu <- function(.sutmats,
   remove_neu_func <- function(R_mat, U_mat, U_feed_mat, U_eiou_mat, r_eiou_mat, V_mat, Y_mat, S_units_mat) {
     # Calculate the IO matrices, accepting the default names so we can rely on the default names below.
     io_mats <- Recca::calc_io_mats(method = method, R = R_mat, U = U_mat, U_feed = U_feed_mat, V = V_mat, Y = Y_mat, S_units = S_units_mat)
-    Y_prime_mat <- matsbyname::select_cols_byname(a = Y_mat, remove_pattern = neu_pattern)
+    Y_prime_mat <- Y_mat |>
+      matsbyname::select_rows_byname(remove_pattern = neu_product_pattern) |>
+      matsbyname::select_cols_byname(remove_pattern = neu_industry_pattern)
     # Calculate the new ECC given the Y_prime_mat, again accepting the default argument names.
     new_ecc <- Recca::new_Y(Y_prime = Y_prime_mat, L_ixp = io_mats$L_ixp, L_pxp = io_mats$L_pxp, Z = io_mats$Z,
                             Z_feed = io_mats$Z_feed, D = io_mats$D, O = io_mats$O)

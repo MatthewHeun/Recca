@@ -494,12 +494,12 @@ test_that("new_R_ps() works as expected", {
 })
 
 
-test_that("remove_neu() works correctly", {
+test_that("remove_neu() works correctly for industries", {
 
   without_residential_mats <- UKEnergy2000mats |>
     tidyr::spread(key = matrix.name, value = matrix) |>
     dplyr::filter(Last.stage != "Services") |>
-    Recca::remove_neu(neu_pattern = "^Residential")
+    Recca::remove_neu(neu_industry_pattern = "^Residential")
 
   # Verify that "Residential" names have been removed from the Y_prime matrices.
   for (yprime in without_residential_mats$Y_prime) {
@@ -526,4 +526,46 @@ test_that("remove_neu() works correctly", {
     new_sum <- matsbyname::sumall_byname(without_residential_mats$V_prime[[rnum]])
     expect_true(orig_sum > new_sum)
   }
+})
+
+
+test_that("remove_neu() works correctly for products", {
+  # Pretend that NG is NEU.
+  # Before removing NEU
+  with_ng_mats <- UKEnergy2000mats |>
+    tidyr::spread(key = matrix.name, value = matrix) |>
+    dplyr::filter(Last.stage != "Services")
+  without_ng_mats <- with_ng_mats |>
+    # Eliminate natural gas and MD rows in the Y matrix
+    Recca::remove_neu(neu_product_pattern = RCLabels::make_or_pattern(c("NG", "MD"), pattern_type = "leading"))
+
+  # The NG rows should be in with_ng_mats
+  expect_true("NG [from Dist.]" %in% rownames(with_ng_mats$Y[[1]]))
+  expect_true("MD [from Car engines]" %in% rownames(with_ng_mats$Y[[2]]))
+  expect_true("MD [from Truck engines]" %in% rownames(with_ng_mats$Y[[2]]))
+
+  # Those same rows should be absent from the without_ng_mats object
+  expect_false("NG [from Dist.]" %in% rownames(without_ng_mats$Y_prime[[1]]))
+  expect_false("MD [from Car engines]" %in% rownames(without_ng_mats$Y_prime[[2]]))
+  expect_false("MD [from Truck engines]" %in% rownames(without_ng_mats$Y_prime[[2]]))
+
+  # Verify that totals are smaller in the prime matrices
+  for (rnum in nrow(without_ng_mats)) {
+    orig_sum <- matsbyname::sumall_byname(without_ng_mats$R[[rnum]])
+    new_sum <- matsbyname::sumall_byname(without_ng_mats$R_prime[[rnum]])
+    expect_true(orig_sum > new_sum)
+  }
+
+  for (rnum in nrow(without_ng_mats)) {
+    orig_sum <- matsbyname::sumall_byname(without_ng_mats$U[[rnum]])
+    new_sum <- matsbyname::sumall_byname(without_ng_mats$U_prime[[rnum]])
+    expect_true(orig_sum > new_sum)
+  }
+
+  for (rnum in nrow(without_ng_mats)) {
+    orig_sum <- matsbyname::sumall_byname(without_ng_mats$V[[rnum]])
+    new_sum <- matsbyname::sumall_byname(without_ng_mats$V_prime[[rnum]])
+    expect_true(orig_sum > new_sum)
+  }
+
 })

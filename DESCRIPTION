@@ -1,8 +1,8 @@
 Package: Recca
 Type: Package
 Title: R Energy Conversion Chain Analysis
-Version: 0.1.48
-Date: 2023-10-27
+Version: 0.1.49
+Date: 2023-11-03
 Authors@R: c(person(given = "Matthew", 
                     family = "Heun", 
                     role = c("aut", "cre"),
@@ -12,7 +12,7 @@ Authors@R: c(person(given = "Matthew",
                     family = "Aramendia", 
                     role = "aut", 
                     comment = c(ORCID = "0000-0002-5964-6776"), 
-                    email = "eeear@leeds.ac.uk"))
+                    email = "e.aramendia@leeds.ac.uk"))
 Author: Matthew Heun [aut, cre] (<https://orcid.org/0000-0002-7438-214X>), Emmanuel Aramendia [aut] (<https://orcid.org/0000-0002-5964-6776>)
 Maintainer: Matthew Heun <matthew.heun@me.com>
 Description: Provides functions to analyze energy conversion chains using a 
@@ -27,6 +27,7 @@ Depends: R (>= 2.10)
 Imports:
     assertthat,
     dplyr,
+    IEATools,
     magrittr,
     matsbyname,
     matsindf,
@@ -42,7 +43,6 @@ BugReports: https://github.com/MatthewHeun/Recca/issues
 Suggests: 
     covr,
     Hmisc,
-    IEATools,
     knitr,
     rmarkdown,
     testthat,

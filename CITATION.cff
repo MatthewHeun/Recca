@@ -1,0 +1,30 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: Recca
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Matthew
+    family-names: Heun
+    email: matthew.heun@me.com
+    affiliation: Calvin University
+    orcid: 'https://orcid.org/0000-0002-7438-214X'
+  - given-names: Emmanuel
+    family-names: Aramendia
+    email: e.aramendia@leeds.ac.uk
+    affiliation: University of Leeds
+    orcid: 'https://orcid.org/0000-0002-5964-6776'
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.5226085
+    description: DOI for all versions of the package
+repository-code: 'https://github.com/MatthewHeun/Recca'
+url: 'https://matthewheun.github.io/Recca/'
+abstract: >-
+  Provides functions to analyze energy conversion chains
+  using a physical supply use table (PSUT) approach.
+license: MIT
