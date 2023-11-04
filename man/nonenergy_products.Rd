@@ -5,7 +5,7 @@
 \alias{nonenergy_products}
 \title{Non-energy products}
 \format{
-An object of class \code{list} of length 7.
+An object of class \code{list} of length 14.
 }
 \usage{
 nonenergy_products
@@ -16,7 +16,9 @@ the package development team. This list include hydrocarbon-derived
 materials such as "Lubricants".
 This list also includes products classified as "Crude, NGL, refinery
 feedstocks" in the IEA World Extended Energy Balances 2021 documentation such
-as "Additives/blending components".
+as "Additives/blending components". These non-energy products occur in
+the "Non-energy use..." sectors of the IEA's extended energy balances
+correctly, and also TFC sectors such as "Residential" incorrectly.
 }
 \examples{
 Recca::nonenergy_products
