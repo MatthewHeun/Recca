@@ -34,10 +34,19 @@ Use this template to describe feature branches.
 #### Branch name
 
 * Purpose:
-  * Branched from:
-  * Next step:
-  * Author:
-  * Date:
+* Branched from:
+* Next step:
+* Author:
+* Date:
 
+
+
+#### eta_pfu
+
+* Purpose: Add functions to calculate eta_pf, eta_fu, eta_pu, etc.
+* Branched from: develop
+* Next step: Add the function then merge back into develop
+* Author: Matthew Kuperus Heun
+* Date: 14 Nov 2023
 
 
