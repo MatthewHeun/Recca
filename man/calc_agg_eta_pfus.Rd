@@ -45,6 +45,8 @@ calc_agg_eta_pfus(
 )
 }
 \arguments{
+\item{.psut_df}{A data frame of energy conversion chain data in PSUT format.}
+
 \item{p_industries}{A string vector of primary industries.}
 
 \item{fd_sectors}{A string vector of final demand sectors.}
@@ -65,22 +67,18 @@ Default is "exact".}
 \item{prepositions}{A list of prepositions for row and column labels.
 Default is \code{RCLabels::prepositions_list}.}
 
-\item{R, U, V, Y, r_eiou, U_eiou, U_feed, S_units, country, method, energy_type, year, last_stage}{String names of matrix columns in \code{.psut_df}.
+\item{R, U, V, Y, r_eiou, U_eiou, U_feed, S_units, last_stage}{String names of matrix columns in \code{.psut_df}.
 See \code{Recca::psut_cols}.}
 
 \item{gross, net, gross_net}{See \code{Recca::efficiency_cols}.}
 
-\item{primary, final, useful}{See \code{IEATools::all_stages}.}
+\item{primary, final, useful, services}{See \code{IEATools::all_stages}.}
 
 \item{ex_p, ex_fd_gross, ex_fd_net, ex_fd}{Names of aggregate columns. See \code{Recca::aggregate_cols}.}
 
 \item{ex_f, ex_u, ex_s}{See \code{IEATools::aggregate_cols}.}
 
-\item{eta_pf, eta_fu, eta_pu}{See \code{Recca::efficiency_cols}.}
-
-\item{.psut_data}{A data frame of energy conversion chain data in PSUT format.}
-
-\item{ieamw}{See \code{PFUDatabase::ieamw_cols}.}
+\item{eta_pf, eta_fu, eta_us, eta_pu, eta_ps, eta_fs}{See \code{Recca::efficiency_cols}.}
 }
 \value{
 A data frame of metadata columns;
@@ -109,4 +107,8 @@ is determined by the corresponding value in the \code{last_stage} column.
 
 Note that when an ECC stage is not present,
 its aggregation and efficiency columns will be removed from output.
+
+If a services stage is present, its efficiencies will have mixed units
+and might be meaningless.
+Proceed with caution.
 }
