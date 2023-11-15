@@ -569,7 +569,7 @@ calc_agg_eta_pfus <- function(.psut_df,
   # Join primary and final/useful/services, calculate efficiencies, and return,
   # being careful to preserve all metadata columns.
   out <- dplyr::full_join(gross_net_p, gross_net_fus, by = names(gross_net_p) |> setdiff(c(ex_p, last_stage)))
-  # Get the column names to do conditionals later
+  # Get the column names to do conditionals below.
   cnames <- names(out)
 
   # Calculate efficiencies,
