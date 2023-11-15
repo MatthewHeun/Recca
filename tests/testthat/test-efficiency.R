@@ -183,3 +183,13 @@ test_that("calc_eta_fu_Y_eiou() works as expected", {
                         0, 0.031730489), nrow = 2, ncol = 2, dimnames = list(c("Electricity", "PSB"), c("Non-ferrous metals", "Residential"))) |>
                  matsbyname::setrowtype("Product") |> matsbyname::setcoltype("Industry"))
 })
+
+
+test_that("calc_eta_pfus() works correctly", {
+  psut_df <- UKEnergy2000mats |>
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
+  p_industries <- c("Resources - Crude", "Resources - NG")
+  fd_sectors <- c("Residential", "Transport", "Oil fields")
+  res <- psut_df |>
+    calc_eta_pfus(p_industries = p_industries, fd_sectors = fd_sectors)
+})
