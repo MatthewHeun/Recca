@@ -1,7 +1,7 @@
 Package: Recca
 Type: Package
 Title: R Energy Conversion Chain Analysis
-Version: 0.1.50
+Version: 0.1.51
 Date: 2023-11-15
 Authors@R: c(person(given = "Matthew", 
                     family = "Heun", 
