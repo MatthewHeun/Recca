@@ -7,6 +7,7 @@ output: html_document
 Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zenodo.5226085), 
 which always resolves to the latest release.
 
+# Recca 0.1.50 (2023-11-15)
 
 * New function `calc_agg_eta_pfus()` calculates
   primary, final, useful, and services aggregates and
