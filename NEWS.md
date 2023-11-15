@@ -9,7 +9,7 @@ which always resolves to the latest release.
 
 
 
-# Recca 0.1.51 (2023-11-15)
+# Recca 0.1.51 (2023-11-15) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10137045.svg)](https://doi.org/10.5281/zenodo.10137045)
 
 * Fixed a bug in `calc_agg_eta_pfus()` where
   efficiencies were calculated incorrectly when 
