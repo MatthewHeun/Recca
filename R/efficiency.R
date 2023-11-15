@@ -569,26 +569,50 @@ calc_agg_eta_pfus <- function(.psut_df,
   # Join primary and final/useful/services, calculate efficiencies, and return,
   # being careful to preserve all metadata columns.
   out <- dplyr::full_join(gross_net_p, gross_net_fus, by = names(gross_net_p) |> setdiff(c(ex_p, last_stage)))
-  # Get the column names to do conditionals later
+  # Get the column names to do conditionals below.
   cnames <- names(out)
 
   # Calculate efficiencies,
   # being careful to only calculate those with meaning.
+  if (all(c(ex_p, ex_f) %in% cnames)) {
+    out <- out |>
+      dplyr::mutate(
+        "{eta_pf}" := .data[[ex_f]] / .data[[ex_p]]
+      )
+  }
+  if (all(c(ex_f, ex_u) %in% cnames)) {
+    out <- out |>
+      dplyr::mutate(
+        "{eta_fu}" := .data[[ex_u]] / .data[[ex_f]]
+      )
+  }
+  if (all(c(ex_p, ex_u) %in% cnames)) {
+    out <- out |>
+      dplyr::mutate(
+        "{eta_pu}" := .data[[ex_u]] / .data[[ex_p]]
+      )
+  }
+  if (all(c(ex_p, ex_s) %in% cnames)) {
+    out <- out |>
+      dplyr::mutate(
+        "{eta_ps}" := .data[[ex_s]] / .data[[ex_p]]
+      )
+  }
+  if (all(c(ex_f, ex_s) %in% cnames)) {
+    out <- out |>
+      dplyr::mutate(
+        "{eta_fs}" := .data[[ex_s]] / .data[[ex_f]]
+      )
+  }
+  if (all(c(ex_s, ex_u) %in% cnames)) {
+    out <- out |>
+      dplyr::mutate(
+        "{eta_us}" := .data[[ex_s]] / .data[[ex_u]]
+      )
+  }
+  # Reorder columns,
+  # using any_of() to avoid errors when columns don't exist.
   out |>
-    dplyr::mutate(
-      "{eta_pf}" := ifelse(all(c(ex_f, ex_p) %in% cnames), .data[[ex_f]] / .data[[ex_p]], NA_real_),
-      "{eta_fu}" := ifelse(all(c(ex_u, ex_f) %in% cnames), .data[[ex_u]] / .data[[ex_f]], NA_real_),
-      "{eta_pu}" := ifelse(all(c(ex_u, ex_p) %in% cnames), .data[[ex_u]] / .data[[ex_p]], NA_real_),
-      "{eta_ps}" := ifelse(all(c(ex_s, ex_p) %in% cnames), .data[[ex_s]] / .data[[ex_p]], NA_real_),
-      "{eta_fs}" := ifelse(all(c(ex_s, ex_f) %in% cnames), .data[[ex_s]] / .data[[ex_f]], NA_real_),
-      "{eta_us}" := ifelse(all(c(ex_s, ex_u) %in% cnames), .data[[ex_s]] / .data[[ex_u]], NA_real_)
-    ) |>
-    # Delete any all-NA columns
-    # that arise because the incoming data frame
-    # does not have some ECC stages.
-    dplyr::select(dplyr::where(not_all_na_func)) |>
-    # Reorder columns,
-    # using any_of() to avoid errors when columns don't exist.
     dplyr::select(-dplyr::any_of(c(ex_p, ex_f, ex_u, ex_s,
                                    eta_pf, eta_fu, eta_pu,
                                    eta_ps, eta_fs, eta_us)),
