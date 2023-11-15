@@ -407,6 +407,7 @@ calc_eta_fu_Y_eiou <- function(.c_mats_eta_phi_vecs = NULL,
 #' of energy conversion chains (ECCs),
 #' this function calculates primary, final, useful, and services
 #' (when available) aggregates and associated efficiencies.
+#' Columns containing PSUT matrices are not returned in the output.
 #'
 #' Final, useful, and services data are assumed to be
 #' contained in the final demand matrix (**Y**) on various rows of `.psut_df`,
@@ -517,10 +518,7 @@ calc_agg_eta_pfus <- function(.psut_df,
                                   piece = piece,
                                   notation = notation,
                                   pattern_type = pattern_type,
-                                  prepositions = prepositions)
-
-  if (remove_psut_cols) {
-    pfd_aggs <- pfd_aggs |>
+                                  prepositions = prepositions) |>
     dplyr::mutate(
       "{R}" := NULL,
       "{U}" := NULL,
@@ -531,7 +529,7 @@ calc_agg_eta_pfus <- function(.psut_df,
       "{Y}" := NULL,
       "{S_units}" := NULL
     )
-  }
+
   # Create a data frame of gross and net versions of
   # primary and final demand energy.
   gross_net_p_fd <- pfd_aggs |>

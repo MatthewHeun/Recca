@@ -233,3 +233,4 @@ test_that("calc_eta_pfus() works correctly when services are not present", {
     magrittr::extract2("EX.u") |>
     expect_equal(25990.3805)
 })
+

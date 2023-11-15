@@ -90,6 +90,7 @@ Given a \code{matsindf}-style data frame
 of energy conversion chains (ECCs),
 this function calculates primary, final, useful, and services
 (when available) aggregates and associated efficiencies.
+Columns containing PSUT matrices are not returned in the output.
 }
 \details{
 Final, useful, and services data are assumed to be
@@ -111,4 +112,11 @@ its aggregation and efficiency columns will be removed from output.
 If a services stage is present, its efficiencies will have mixed units
 and might be meaningless.
 Proceed with caution.
+}
+\examples{
+p_industries <- "Resources"
+fd_sectors <- c("Residential", "Transport", "Oil fields")
+UKEnergy2000mats |>
+  tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
+  calc_agg_eta_pfus(p_industries = p_industries, fd_sectors = fd_sectors)
 }
