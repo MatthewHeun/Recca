@@ -183,3 +183,54 @@ test_that("calc_eta_fu_Y_eiou() works as expected", {
                         0, 0.031730489), nrow = 2, ncol = 2, dimnames = list(c("Electricity", "PSB"), c("Non-ferrous metals", "Residential"))) |>
                  matsbyname::setrowtype("Product") |> matsbyname::setcoltype("Industry"))
 })
+
+
+test_that("calc_eta_pfus() works correctly", {
+  psut_df <- UKEnergy2000mats |>
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
+  p_industries <- "Resources"
+  fd_sectors <- c("Residential", "Transport", "Oil fields")
+  res <- psut_df |>
+    calc_agg_eta_pfus(p_industries = p_industries, fd_sectors = fd_sectors)
+  expect_equal(nrow(res), 8)
+  # Test a few values
+  res |>
+    dplyr::filter(Energy.type == "E", Last.stage == "Final", GrossNet == "Gross") |>
+    magrittr::extract2("eta_pf") |>
+    expect_equal(0.7991935, tolerance = 1e-7)
+  res |>
+    dplyr::filter(Energy.type == "E", Last.stage == "Services", GrossNet == "Net") |>
+    magrittr::extract2("eta_ps") |>
+    expect_equal(5384063620)
+  res |>
+    dplyr::filter(Energy.type == "X", Last.stage == "Services", GrossNet == "Net") |>
+    magrittr::extract2("EX.f") |>
+    is.na() |>
+    expect_true()
+})
+
+
+test_that("calc_eta_pfus() works correctly when services are not present", {
+  psut_df <- UKEnergy2000mats |>
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
+    dplyr::filter(Last.stage != "Services")
+  p_industries <- "Resources"
+  fd_sectors <- c("Residential", "Transport", "Oil fields")
+  res <- psut_df |>
+    calc_agg_eta_pfus(p_industries = p_industries, fd_sectors = fd_sectors)
+  expect_equal(nrow(res), 4)
+  # Test a few values
+  res |>
+    dplyr::filter(Energy.type == "E", Last.stage == "Final", GrossNet == "Gross") |>
+    magrittr::extract2("eta_pf") |>
+    expect_equal(0.7991935, tolerance = 1e-7)
+  res |>
+    dplyr::filter(Energy.type == "E", Last.stage == "Useful", GrossNet == "Net") |>
+    magrittr::extract2("eta_fu") |>
+    expect_equal(0.36119, tolerance = 1e-7)
+  res |>
+    dplyr::filter(Energy.type == "E", Last.stage == "Useful", GrossNet == "Gross") |>
+    magrittr::extract2("EX.u") |>
+    expect_equal(25990.3805)
+})
+

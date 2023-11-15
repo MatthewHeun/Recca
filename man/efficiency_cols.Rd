@@ -5,7 +5,7 @@
 \alias{efficiency_cols}
 \title{Efficiency data frame column names}
 \format{
-A string list with 15 entries.
+A string list with 14 entries.
 \describe{
 \item{eta_i}{The name of a column in a wide-by-matrices data frame containing industry efficiencies.}
 \item{eta_pfd_gross}{The name of a column in a wide-by-matrices data frame containing  efficiencies between the primary and gross final demand stages.}
@@ -15,9 +15,8 @@ A string list with 15 entries.
 \item{eta_fu}{The string name for final-to-useful efficiency.}
 \item{eta_pu}{The string name for primary-to-useful efficiency.}
 \item{eta_ps}{The string name for primary-to-services efficiency.}
+\item{eta_fs}{The string name for final-to-services efficiency.}
 \item{eta_us}{The string name for useful-to-services efficiency.}
-\item{eta_pw}{The string name for primary-to-well-being efficiency.}
-\item{eta_sw}{The string name for services-to-well-being efficiency.}
 \item{efficiency_name_suffix}{The suffix for names of columns containing efficiency names.}
 \item{gross_net}{The name of a column that contains "Gross" or "Net" for the type of efficiency.}
 \item{gross}{The entry in the \code{gross_net} column that identifies a gross efficiency.}
