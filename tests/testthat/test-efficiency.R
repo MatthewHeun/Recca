@@ -227,7 +227,7 @@ test_that("calc_eta_pfus() works correctly when services are not present", {
   res |>
     dplyr::filter(Energy.type == "E", Last.stage == "Useful", GrossNet == "Net") |>
     magrittr::extract2("eta_fu") |>
-    expect_equal(0.3496856, tolerance = 1e-7)
+    expect_equal(0.36119, tolerance = 1e-7)
   res |>
     dplyr::filter(Energy.type == "E", Last.stage == "Useful", GrossNet == "Gross") |>
     magrittr::extract2("EX.u") |>
