@@ -137,7 +137,7 @@ primary_aggregates <- function(.sutdata = NULL,
       out <- list(agg_primary) %>%
         magrittr::set_names(aggregate_primary)
     }
-  return(out)
+    return(out)
   }
   matsindf::matsindf_apply(.sutdata, FUN = prim_func, R_mat = R, V_mat = V, Y_mat = Y)
 }
