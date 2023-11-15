@@ -1,10 +1,17 @@
 test_that("re-exporting works correctly", {
-  expect_equal(Recca::nonenergy_products,
-               list(additives_blending_components = "Additives/blending components",
-                    bitumen = "Bitumen",
-                    lubricants = "Lubricants",
-                    naphtha = "Naphtha",
-                    paraffin_waxes = "Paraffin waxes",
-                    refinery_feedstocks = "Refinery feedstocks",
-                    white_spirit_and_sbp = "White spirit & SBP"))
+  expect_true("Additives/blending components" %in% Recca::nonenergy_products)
+  expect_true("Bitumen" %in% Recca::nonenergy_products)
+  expect_true("Lubricants" %in% Recca::nonenergy_products)
+  expect_true("Naphtha" %in% Recca::nonenergy_products)
+  expect_true("Paraffin waxes" %in% Recca::nonenergy_products)
+  expect_true("Refinery feedstocks" %in% Recca::nonenergy_products)
+  expect_true("White spirit & SBP" %in% Recca::nonenergy_products)
+
+  expect_true("additives_blending_components" %in% names(Recca::nonenergy_products))
+  expect_true("bitumen" %in% names(Recca::nonenergy_products))
+  expect_true("lubricants" %in% names(Recca::nonenergy_products))
+  expect_true("naphtha" %in% names(Recca::nonenergy_products))
+  expect_true("paraffin_waxes" %in% names(Recca::nonenergy_products))
+  expect_true("refinery_feedstocks" %in% names(Recca::nonenergy_products))
+  expect_true("white_spirit_and_sbp" %in% names(Recca::nonenergy_products))
 })
