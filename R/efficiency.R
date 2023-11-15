@@ -421,6 +421,9 @@ calc_eta_fu_Y_eiou <- function(.c_mats_eta_phi_vecs = NULL,
 #' The meaning of final demand aggregates for each row of `.psut_df`
 #' is determined by the corresponding value in the `last_stage` column.
 #'
+#' Note that when an ECC stage is not present,
+#' its aggregation and efficiency columns will be removed from output.
+#'
 #' @param .psut_data A data frame of energy conversion chain data in PSUT format.
 #' @param p_industries A string vector of primary industries.
 #' @param fd_sectors A string vector of final demand sectors.
@@ -443,62 +446,52 @@ calc_eta_fu_Y_eiou <- function(.c_mats_eta_phi_vecs = NULL,
 #' @param ex_p,ex_fd_gross,ex_fd_net,ex_fd Names of aggregate columns. See `Recca::aggregate_cols`.
 #' @param ex_f,ex_u,ex_s See `IEATools::aggregate_cols`.
 #' @param eta_pf,eta_fu,eta_pu See `Recca::efficiency_cols`.
-#' @param tol The amount by which aggregate primary, final, and useful values
-#'            can be different before an error is thrown.
-#'            Default is `1e-6`.
-#' @param .primary_aggs_ok,.final_aggs_ok,.useful_aggs_ok Names of columns used internally
-#'                                                        to assess whether primary, final, and useful
-#'                                                        aggregations are all same.
 #'
-#' @return A data frame of metadata columns and efficiencies.
+#' @return A data frame of metadata columns;
+#'         primary, final, useful, and services aggregations;
+#'         and efficiencies.
 #'
 #' @export
-calc_eta_pfus <- function(.psut_df,
-                          p_industries,
-                          fd_sectors,
-                          remove_psut_cols = TRUE,
-                          piece = "noun",
-                          notation = list(RCLabels::bracket_notation,
-                                          RCLabels::arrow_notation),
-                          pattern_type = "exact",
-                          prepositions = RCLabels::prepositions_list,
-                          # Names of original matrices in .psut_data
-                          R = Recca::psut_cols$R,
-                          U = Recca::psut_cols$U,
-                          U_feed = Recca::psut_cols$U_feed,
-                          U_eiou = Recca::psut_cols$U_eiou,
-                          r_eiou = Recca::psut_cols$r_eiou,
-                          V = Recca::psut_cols$V,
-                          Y = Recca::psut_cols$Y,
-                          S_units = Recca::psut_cols$S_units,
-                          # # Country and year columns
-                          # country = Recca::psut_cols$country,
-                          # method = Recca::psut_cols$method,
-                          # energy_type = Recca::psut_cols$energy_type,
-                          # ieamw = PFUDatabase::ieamw_cols$ieamw,
-                          # year = Recca::psut_cols$year,
-                          # Key names
-                          gross = Recca::efficiency_cols$gross,
-                          net = Recca::efficiency_cols$net,
-                          gross_net = Recca::efficiency_cols$gross_net,
-                          last_stage = Recca::psut_cols$last_stage,
-                          primary = Recca::all_stages$primary,
-                          final = Recca::all_stages$final,
-                          useful = Recca::all_stages$useful,
-                          services = Recca::all_stages$services,
-                          ex_p = Recca::aggregate_cols$aggregate_primary,
-                          ex_f = Recca::aggregate_cols$aggregate_final,
-                          ex_u = Recca::aggregate_cols$aggregate_useful,
-                          ex_s = Recca::aggregate_cols$aggregate_services,
-                          ex_fd_gross = Recca::aggregate_cols$gross_aggregate_demand,
-                          ex_fd_net = Recca::aggregate_cols$net_aggregate_demand,
-                          ex_fd = Recca::aggregate_cols$aggregate_demand,
-                          eta_pf = Recca::efficiency_cols$eta_pf,
-                          eta_fu = Recca::efficiency_cols$eta_fu,
-                          eta_us = Recca::efficiency_cols$eta_us,
-                          eta_pu = Recca::efficiency_cols$eta_pu,
-                          eta_ps = Recca::efficiency_cols$eta_ps,
-                          eta_fs = Recca::efficiency_cols$eta_fs) {
+calc_agg_eta_pfus <- function(.psut_df,
+                              p_industries,
+                              fd_sectors,
+                              remove_psut_cols = TRUE,
+                              piece = "noun",
+                              notation = list(RCLabels::bracket_notation,
+                                              RCLabels::arrow_notation),
+                              pattern_type = "exact",
+                              prepositions = RCLabels::prepositions_list,
+                              # Names of original matrices in .psut_data
+                              R = Recca::psut_cols$R,
+                              U = Recca::psut_cols$U,
+                              U_feed = Recca::psut_cols$U_feed,
+                              U_eiou = Recca::psut_cols$U_eiou,
+                              r_eiou = Recca::psut_cols$r_eiou,
+                              V = Recca::psut_cols$V,
+                              Y = Recca::psut_cols$Y,
+                              S_units = Recca::psut_cols$S_units,
+                              # Key names
+                              gross = Recca::efficiency_cols$gross,
+                              net = Recca::efficiency_cols$net,
+                              gross_net = Recca::efficiency_cols$gross_net,
+                              last_stage = Recca::psut_cols$last_stage,
+                              primary = Recca::all_stages$primary,
+                              final = Recca::all_stages$final,
+                              useful = Recca::all_stages$useful,
+                              services = Recca::all_stages$services,
+                              ex_p = Recca::aggregate_cols$aggregate_primary,
+                              ex_f = Recca::aggregate_cols$aggregate_final,
+                              ex_u = Recca::aggregate_cols$aggregate_useful,
+                              ex_s = Recca::aggregate_cols$aggregate_services,
+                              ex_fd_gross = Recca::aggregate_cols$gross_aggregate_demand,
+                              ex_fd_net = Recca::aggregate_cols$net_aggregate_demand,
+                              ex_fd = Recca::aggregate_cols$aggregate_demand,
+                              eta_pf = Recca::efficiency_cols$eta_pf,
+                              eta_fu = Recca::efficiency_cols$eta_fu,
+                              eta_us = Recca::efficiency_cols$eta_us,
+                              eta_pu = Recca::efficiency_cols$eta_pu,
+                              eta_ps = Recca::efficiency_cols$eta_ps,
+                              eta_fs = Recca::efficiency_cols$eta_fs) {
 
   # Calculate primary aggregates
   p_aggs <- .psut_df |>
@@ -534,21 +527,21 @@ calc_eta_pfus <- function(.psut_df,
   gross_net_p_fd <- pfd_aggs |>
     # Pivot to gross and net primary and final demand energy stages
     dplyr::rename(
-      "{gross}" := ex_fd_gross,
-      "{net}" := ex_fd_net
+      "{gross}" := dplyr::all_of(ex_fd_gross),
+      "{net}" := dplyr::all_of(ex_fd_net)
     ) |>
-    tidyr::pivot_longer(cols = c(gross, net), names_to = gross_net, values_to = ex_fd)
+    tidyr::pivot_longer(cols = dplyr::any_of(c(gross, net)), names_to = gross_net, values_to = ex_fd)
 
   # Isolate only the final demand energy to work on final and useful stages.
   gross_net_fus <- gross_net_p_fd |>
     dplyr::mutate(
       "{ex_p}" := NULL
     ) |>
-    tidyr::pivot_wider(names_from = last_stage, values_from = ex_fd) |>
+    tidyr::pivot_wider(names_from = dplyr::all_of(last_stage), values_from = dplyr::all_of(ex_fd)) |>
     dplyr::rename(
-      "{ex_f}" := .data[[final]],
-      "{ex_u}" := .data[[useful]],
-      "{ex_s}" := .data[[services]]
+      "{ex_f}" := dplyr::all_of(final),
+      "{ex_u}" := dplyr::all_of(useful),
+      "{ex_s}" := dplyr::all_of(services)
     )
 
   # Isolate only primary aggregatges.
@@ -557,17 +550,36 @@ calc_eta_pfus <- function(.psut_df,
       "{ex_fd}" := NULL
     )
 
+  # Define a helpful selector function for later.
+  # This function will be used to select columns where
+  # not all of the entries are NA.
+  # I.e., it will delete columns where all entries are NA.
+  not_all_na_func <- function(x) {
+    any(!is.na(x))
+  }
+
+
   # Join primary and final/useful/services, calculate efficiencies, and return,
   # being careful to preserve all metadata columns.
   dplyr::full_join(gross_net_p, gross_net_fus, by = names(gross_net_p) |> setdiff(c(ex_p, last_stage))) |>
     dplyr::mutate(
       "{eta_pf}" := .data[[ex_f]] / .data[[ex_p]],
       "{eta_fu}" := .data[[ex_u]] / .data[[ex_f]],
-      "{eta_pu}" := .data[[ex_u]] / .data[[ex_p]]
+      "{eta_pu}" := .data[[ex_u]] / .data[[ex_p]],
+      "{eta_ps}" := .data[[ex_s]] / .data[[ex_p]],
+      "{eta_fs}" := .data[[ex_s]] / .data[[ex_f]],
+      "{eta_us}" := .data[[ex_s]] / .data[[ex_u]]
     ) |>
+    # Delete any all-NA columns
+    # that arise because the incoming data frame
+    # does not have some ECC stages.
+    dplyr::select(dplyr::where(not_all_na_func)) |>
     # Reorder columns
-    dplyr::select(-ex_p, -ex_f, -ex_u,
-                  -eta_pf, -eta_fu, -eta_pu,
-                  dplyr::everything(), ex_p, ex_f, ex_u,
-                  eta_pf, eta_fu, eta_pu)
+    dplyr::select(-dplyr::any_of(c(ex_p, ex_f, ex_u, ex_s,
+                                   eta_pf, eta_fu, eta_pu,
+                                   eta_ps, eta_fs, eta_us)),
+                  dplyr::everything(),
+                  dplyr::any_of(c(ex_p, ex_f, ex_u, ex_s,
+                                  eta_pf, eta_fu, eta_pu,
+                                  eta_ps, eta_fs, eta_us)))
 }

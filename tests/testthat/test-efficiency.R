@@ -188,8 +188,9 @@ test_that("calc_eta_fu_Y_eiou() works as expected", {
 test_that("calc_eta_pfus() works correctly", {
   psut_df <- UKEnergy2000mats |>
     tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
-  p_industries <- c("Resources - Crude", "Resources - NG")
+  p_industries <- "Resources"
   fd_sectors <- c("Residential", "Transport", "Oil fields")
   res <- psut_df |>
-    calc_eta_pfus(p_industries = p_industries, fd_sectors = fd_sectors)
+    calc_agg_eta_pfus(p_industries = p_industries, fd_sectors = fd_sectors)
+  expect_equal(nrow(res), 8)
 })
