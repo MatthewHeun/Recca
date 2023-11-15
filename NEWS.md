@@ -8,6 +8,11 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+* New function `calc_agg_eta_pfus()` calculates
+  primary, final, useful, and services aggregates and
+  associated efficiencies.
+
+
 # Recca 0.1.49 (2023-11-03) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10070427.svg)](https://doi.org/10.5281/zenodo.10070427)
 
 * `remove_neu()` now also removes non-energy use products in the rows of **Y**.
