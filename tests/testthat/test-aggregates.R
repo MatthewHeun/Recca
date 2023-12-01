@@ -423,6 +423,7 @@ test_that("region_aggregates() works when no aggregated country is present and d
                            few_colname = "Region",
                            drop_na_few = TRUE)
   expect_equal(nrow(res), 0)
+  expect_equal(names(res), setdiff(names(mats), "Region"))
 })
 
 
