@@ -558,14 +558,6 @@ calc_agg_eta_pfus <- function(.psut_df,
       "{ex_fd}" := NULL
     )
 
-  # Define a helpful selector function for later.
-  # This function will be used to select columns where
-  # not all of the entries are NA.
-  # I.e., it will delete columns where all entries are NA.
-  not_all_na_func <- function(x) {
-    any(!is.na(x))
-  }
-
   # Join primary and final/useful/services, calculate efficiencies, and return,
   # being careful to preserve all metadata columns.
   out <- dplyr::full_join(gross_net_p, gross_net_fus, by = names(gross_net_p) |> setdiff(c(ex_p, last_stage)))
