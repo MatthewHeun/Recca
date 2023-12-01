@@ -8,8 +8,18 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+# Recca 0.1.52 (2023-12-01)
 
-# Recca 0.1.51 (2023-11-15)
+* Fixed a bug where `region_aggregates()` would fail when
+  no countries to be aggregated were available and
+  `drop_na_few` was `FALSE`.
+* Added code of conduct and contributing pages to documentation.
+* New tests for bug fixes.
+    * Now up to 750 tests, all passing.
+    * Test coverage remains at 100%.
+
+
+# Recca 0.1.51 (2023-11-15) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10137045.svg)](https://doi.org/10.5281/zenodo.10137045)
 
 * Fixed a bug in `calc_agg_eta_pfus()` where
   efficiencies were calculated incorrectly when 

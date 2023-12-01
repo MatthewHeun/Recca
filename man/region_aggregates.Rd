@@ -61,13 +61,18 @@ This condition can occur when, say, "WRLD" is a country.
 should not be aggregated to "World" (as a region in the \code{few_colname}).
 In those circumstances,
 a well-formed \code{aggregation_map} will leave \code{NA} in \code{few_colname}.
-Setting \code{drop_na_few} will eliminate rows with \code{NA} in \code{few_colname}
+Setting \code{drop_na_few} to \code{TRUE} (default is \code{FALSE})
+will eliminate rows with \code{NA} in \code{few_colname}
 before doing the aggregation so those \code{NA} rows do not end up as
 \code{NA} in the outgoing data frame.
 
 The default value for \code{drop_na_few} is \code{FALSE},
 because setting to \code{TRUE} will result in data loss.
 You need to opt in to this behavior when you know it's what you want.
+
+If all of \code{few_colname} entries are \code{NA} and
+\code{drop_na_few} is \code{TRUE},
+a zero-row data frame of the same structure as \code{.sut_data} is returned.
 }
 \examples{
 library(dplyr)

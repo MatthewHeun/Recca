@@ -8,8 +8,8 @@
 <meta name="description" content="Recca">
 <title>new_* function interactions • Recca</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="new_* function interactions">
 <meta property="og:description" content="Recca">
@@ -22,11 +22,11 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-dark navbar-expand-lg bg-primary"><div class="container">
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
     
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.51</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.52</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,13 +73,13 @@
 
 
 
-<script src="new-function-interaction_files/htmlwidgets-1.6.2/htmlwidgets.js"></script><script src="new-function-interaction_files/d3-4.5.0/d3.min.js"></script><script src="new-function-interaction_files/sankey-1/sankey.js"></script><script src="new-function-interaction_files/sankeyNetwork-binding-0.4/sankeyNetwork.js"></script><div class="row">
+<script src="new-function-interaction_files/htmlwidgets-1.6.3/htmlwidgets.js"></script><script src="new-function-interaction_files/d3-4.5.0/d3.min.js"></script><script src="new-function-interaction_files/sankey-1/sankey.js"></script><script src="new-function-interaction_files/sankeyNetwork-binding-0.4/sankeyNetwork.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>new_* function interactions</h1>
                         <h4 data-toc-skip class="author">Matthew Kuperus
 Heun</h4>
             
-            <h4 data-toc-skip class="date">2023-11-15</h4>
+            <h4 data-toc-skip class="date">2023-12-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/HEAD/vignettes/new-function-interaction.Rmd" class="external-link"><code>vignettes/new-function-interaction.Rmd</code></a></small>
       <div class="d-none name"><code>new-function-interaction.Rmd</code></div>
@@ -159,8 +159,8 @@ that we must extract to insert the diagram into this vignette.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span><span class="op">(</span>R <span class="op">=</span> <span class="va">R</span>, U <span class="op">=</span> <span class="va">U</span>, V <span class="op">=</span> <span class="va">V</span>, Y <span class="op">=</span> <span class="va">Y</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="st">"Sankey"</span><span class="op">)</span></span></code></pre></div>
-<div class="sankeyNetwork html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-bde1e1dbdc99797ffb83" style="width:700px;height:432.632880098888px;"></div>
-<script type="application/json" data-for="htmlwidget-bde1e1dbdc99797ffb83">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[2,2,10,10]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script>
+<div class="sankeyNetwork html-widget html-fill-item" id="htmlwidget-477f00e27083196c0f7b" style="width:700px;height:432.632880098888px;"></div>
+<script type="application/json" data-for="htmlwidget-477f00e27083196c0f7b">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[2,2,10,10]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div class="section level3">
 <h3 id="adjust-inputs-to-industry-i">Adjust inputs to industry I<a class="anchor" aria-label="anchor" href="#adjust-inputs-to-industry-i"></a>
@@ -191,8 +191,8 @@ instead of a 50/50 split between <code>R1</code> and
 <span>            V <span class="op">=</span> <span class="va">change_input_proportions</span><span class="op">$</span><span class="va">V_prime</span>, </span>
 <span>            Y <span class="op">=</span> <span class="va">Y</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="st">"Sankey"</span><span class="op">)</span></span></code></pre></div>
-<div class="sankeyNetwork html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-1018c96f04fba14eb561" style="width:700px;height:432.632880098888px;"></div>
-<script type="application/json" data-for="htmlwidget-1018c96f04fba14eb561">{"x":{"links":{"source":[0,0,1],"target":[2,3,0],"value":[2,2,20]},"nodes":{"name":["I","R1","Y1","Y2"],"group":["I","R1","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script>
+<div class="sankeyNetwork html-widget html-fill-item" id="htmlwidget-d51dc0d254563e76362e" style="width:700px;height:432.632880098888px;"></div>
+<script type="application/json" data-for="htmlwidget-d51dc0d254563e76362e">{"x":{"links":{"source":[0,0,1],"target":[2,3,0],"value":[2,2,20]},"nodes":{"name":["I","R1","Y1","Y2"],"group":["I","R1","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div class="section level3">
 <h3 id="change-final-demand">Change final demand<a class="anchor" aria-label="anchor" href="#change-final-demand"></a>
@@ -222,8 +222,8 @@ structure of the ECC with the <code><a href="../reference/calc_io_mats.html">cal
 <span>            V <span class="op">=</span> <span class="va">change_final_demand</span><span class="op">$</span><span class="va">V_prime</span>, </span>
 <span>            Y <span class="op">=</span> <span class="va">change_final_demand</span><span class="op">$</span><span class="va">Y_prime</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="st">"Sankey"</span><span class="op">)</span></span></code></pre></div>
-<div class="sankeyNetwork html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-fe80dd517d9951222df2" style="width:700px;height:432.632880098888px;"></div>
-<script type="application/json" data-for="htmlwidget-fe80dd517d9951222df2">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[4,2,15,15]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>Industry I is back to using both R1p and R2p in a 50/50 split to make
+<div class="sankeyNetwork html-widget html-fill-item" id="htmlwidget-8fa6cdffa4b17c528929" style="width:700px;height:432.632880098888px;"></div>
+<script type="application/json" data-for="htmlwidget-8fa6cdffa4b17c528929">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[4,2,15,15]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>Industry I is back to using both R1p and R2p in a 50/50 split to make
 its output. Both R1p and R2p now supply 15 quads to I to account for
 increased final demand.</p>
 <p>The <code><a href="../reference/new_Y.html">new_Y()</a></code> function is performing exactly as expected,
@@ -259,8 +259,8 @@ description of the input-output structure of the ECC to
 <span>            V <span class="op">=</span> <span class="va">change_final_demand2</span><span class="op">$</span><span class="va">V_prime</span>, </span>
 <span>            Y <span class="op">=</span> <span class="va">change_final_demand2</span><span class="op">$</span><span class="va">Y_prime</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="st">"Sankey"</span><span class="op">)</span></span></code></pre></div>
-<div class="sankeyNetwork html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-d2bd1d64a18f9403d590" style="width:700px;height:432.632880098888px;"></div>
-<script type="application/json" data-for="htmlwidget-d2bd1d64a18f9403d590">{"x":{"links":{"source":[0,0,1],"target":[2,3,0],"value":[4,2,30]},"nodes":{"name":["I","R1","Y1","Y2"],"group":["I","R1","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>The Sankey diagram above shows that we have successfully increased
+<div class="sankeyNetwork html-widget html-fill-item" id="htmlwidget-8f732f6e7a9131c52b2e" style="width:700px;height:432.632880098888px;"></div>
+<script type="application/json" data-for="htmlwidget-8f732f6e7a9131c52b2e">{"x":{"links":{"source":[0,0,1],"target":[2,3,0],"value":[4,2,30]},"nodes":{"name":["I","R1","Y1","Y2"],"group":["I","R1","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>The Sankey diagram above shows that we have successfully increased
 the demand from <code>Y1</code> while ensuring that all inputs to
 industry I come from R1p. The “trick” is to recalculate the input-output
 structure of the ECC between the two steps.</p>
