@@ -8,7 +8,7 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
-# Recca 0.1.52 (2023-12-01)
+# Recca 0.1.52 (2023-12-01) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10247084.svg)](https://doi.org/10.5281/zenodo.10247084)
 
 * Fixed a bug where `region_aggregates()` would fail when
   no countries to be aggregated were available and
