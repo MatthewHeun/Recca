@@ -405,6 +405,26 @@ test_that("region_aggregates() works with WRLD not in aggregation_map", {
 })
 
 
+test_that("region_aggregates() works when no aggregating country is present", {
+  mats_GBR <- UKEnergy2000mats |>
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
+  # Add another country, by duplicating GBR
+  mats <- dplyr::bind_rows(mats_GBR,
+                           mats_GBR |> dplyr::mutate(Country = "USA"),
+                           mats_GBR |> dplyr::mutate(Country = "FRA"))
+  agg_map <- list(FoSUN = c("SUN", "RUS"))
+  agg_df <- matsbyname::agg_map_to_agg_table(agg_map,
+                                             few_colname = "Region",
+                                             many_colname = IEATools::iea_cols$country)
+  # Results in NA values for every entry in the region column
+  mats <- dplyr::left_join(mats, agg_df, by = IEATools::iea_cols$country)
+  # Now try to aggregate
+  res <- region_aggregates(mats,
+                           many_colname = IEATools::iea_cols$country,
+                           few_colname = "Region")
+})
+
+
 test_that("despecified_aggregates() works as expected", {
   mats_GBR <- UKEnergy2000mats %>%
     tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
