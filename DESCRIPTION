@@ -38,7 +38,7 @@ Imports:
     rlang,
     tibble,
     tidyr
-URL: https://github.com/MatthewHeun/Recca
+URL: https://github.com/MatthewHeun/Recca, https://matthewheun.github.io/Recca/
 BugReports: https://github.com/MatthewHeun/Recca/issues
 Suggests: 
     covr,
