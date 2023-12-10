@@ -60,9 +60,9 @@ library(tidyr)
 enables energy and exergy analysis of energy conversion chains. `Recca`
 makes extensive use of a matrix-based Physical Supply Use Table (PSUT)
 analysis technique that first appeared in [Heun et al.
-[-\@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109). This
+[-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109). This
 vignette walks through many of the calculations from [Heun et al.
-[-\@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), guided
+[-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), guided
 by section numbers from the paper. We begin by discussing the design
 philosophy of the `Recca` package, followed by a discussion of the PSUT
 matrices that comprise an energy conversion chain (ECC). Thereafter,
@@ -95,7 +95,7 @@ thereby allowing cleaner code.
 ## PSUT matrices
 
 (Reference [Heun et al.
-[-\@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section
+[-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section
 2.2.2.)
 
 For the examples that follow, we'll use the `UKEnergy2000tidy` data
@@ -169,7 +169,7 @@ uses the `UKEnergy2000mats` data frame.
 ## I-O structure
 
 (Reference [Heun et al.
-[-\@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section
+[-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section
 2.2.4.)
 
 ### With individual matrices
@@ -270,7 +270,7 @@ functions can be called on named lists or individual matrices, as well.
 ## Changes in final demand
 
 (Reference [Heun et al.
-[-\@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section
+[-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section
 2.2.5.)
 
 One of the first applications of input-output analysis was estimating
@@ -301,7 +301,7 @@ more details.
 ## Net energy analysis
 
 (Reference [Heun et al.
-[-\@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section
+[-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section
 3.1.)
 
 The energy production system itself consumes energy, and important
@@ -309,7 +309,7 @@ metrics for energy conversion chain industries are energy return ratios
 (ERRs). `Recca` provides a function to calculate three ERRs, a gross
 energy ratio (GER), a net energy ratio (NER), and the ratio of NER to
 GER. GER is commonly called energy return on investment (EROI). (See
-[Brandt & Dale [-\@Brandt:2011]](https://doi.org/10.3390/en4081211).)
+[Brandt & Dale [-@Brandt:2011]](https://doi.org/10.3390/en4081211).)
 These ERRs can be calculated for a variety of system boundaries. ERRs
 for the $\gamma$ system boundary can be calculated readily using the
 `calc_ERRs_gamma()` function. All three ERRs are calculated at the same
@@ -318,7 +318,7 @@ unit-inhomogeneous. The ERRs are `Inf` for industries that make an
 energy product without consuming any energy from another processing
 chain (such as the Elect. grid). The results below are identical to Fig.
 6 in [Heun et al.
-[-\@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
+[-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
 
 ```{r}
 ERRs <- IO_df %>% 
@@ -331,7 +331,7 @@ ERRs$r_gamma[[1]]
 ## Efficiencies
 
 (Reference [Heun et al.
-[-\@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section
+[-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section
 3.2.)
 
 The efficiency of every industry in the ECC can be calculated quickly
@@ -340,7 +340,7 @@ with the `calc_eta_i()` function, which creates a column named `eta_i`
 industries whose inputs or outputs are unit inhomogeneous, the `eta_i`
 vector will have `NA` values in the appropriate places. The results
 below are identical to Fig. 9 in [Heun et al.
-[-\@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
+[-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
 
 ```{r}
 etas <- IO_df %>% 
@@ -353,7 +353,7 @@ etas[["eta_i"]][[3]] # NAs indicate inhomogeneous units on inputs or outputs.
 ## Energy footprints
 
 (Reference [Heun et al.
-[-\@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section
+[-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109), Section
 3.3.)
 
 Final demand for energy contains embodied primary energy, the sum of all
@@ -489,7 +489,7 @@ names(embodied_mats)
 ```
 
 Figure 15 in [Heun et al.
-[-\@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109) shows
+[-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109) shows
 primary-to-services energetic efficiencies for the ECC in the 3rd row of
 `IO_df`. The following code extracts those results. Rows of the vector
 give final demand services and their units. The column gives
@@ -504,6 +504,6 @@ embodied_mats$eta_p[[3]]
 This vignette demonstrated the use of the `Recca` package. `Recca`
 provides many useful functions for analyzing energy conversion chains
 within the PSUT framework first described in [Heun et al.
-[-\@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
+[-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
 
 ## References
