@@ -33,7 +33,7 @@ devtools::install_github("MatthewHeun/Recca", build_vignettes = TRUE)
 
 ## History
 
-The functions in this package were used in the paper [Heun et al.
+The functions in this package were first used in the paper [Heun et al.
 (2018)](https://doi.org/10.1016/j.apenergy.2018.05.109).
 
 ## More Information
