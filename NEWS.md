@@ -8,6 +8,7 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+* Change to now-standard `gh-pages` branch for pkgdown website.
 * Fixed a bug where `region_aggregates()` would fail when
   no countries to be aggregated were available and
   `drop_na_few` was `FALSE`.
