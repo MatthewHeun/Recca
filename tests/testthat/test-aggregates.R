@@ -321,9 +321,8 @@ test_that("region_aggregates() works as expected", {
     )
   expect_false(Recca::psut_cols$country %in% names(empty_no_country))
   expect_true("Continent" %in% names(empty_no_country))
-  empty_after_region_agg <- empty_no_country %>%
-    region_aggregates(empty_no_country,
-                      many_colname = IEATools::iea_cols$country,
+  empty_after_region_agg <- empty_no_country |>
+    region_aggregates(many_colname = IEATools::iea_cols$country,
                       few_colname = "Continent")
   expect_false("Continent" %in% names(empty_after_region_agg))
   expect_true(Recca::psut_cols$country %in% names(empty_after_region_agg))
@@ -405,7 +404,7 @@ test_that("region_aggregates() works with WRLD not in aggregation_map", {
 })
 
 
-test_that("region_aggregates() works when no aggregating country is present", {
+test_that("region_aggregates() works when no aggregated country is present and drop_na_few = TRUE", {
   mats_GBR <- UKEnergy2000mats |>
     tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
   # Add another country, by duplicating GBR
@@ -421,7 +420,10 @@ test_that("region_aggregates() works when no aggregating country is present", {
   # Now try to aggregate
   res <- region_aggregates(mats,
                            many_colname = IEATools::iea_cols$country,
-                           few_colname = "Region")
+                           few_colname = "Region",
+                           drop_na_few = TRUE)
+  expect_equal(nrow(res), 0)
+  expect_equal(names(res), setdiff(names(mats), "Region"))
 })
 
 

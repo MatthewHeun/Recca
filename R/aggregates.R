@@ -285,13 +285,18 @@ finaldemand_aggregates <- function(.sutdata = NULL,
 #' should not be aggregated to "World" (as a region in the `few_colname`).
 #' In those circumstances,
 #' a well-formed `aggregation_map` will leave `NA` in `few_colname`.
-#' Setting `drop_na_few` will eliminate rows with `NA` in `few_colname`
+#' Setting `drop_na_few` to `TRUE` (default is `FALSE`)
+#' will eliminate rows with `NA` in `few_colname`
 #' before doing the aggregation so those `NA` rows do not end up as
 #' `NA` in the outgoing data frame.
 #'
 #' The default value for `drop_na_few` is `FALSE`,
 #' because setting to `TRUE` will result in data loss.
 #' You need to opt in to this behavior when you know it's what you want.
+#'
+#' If all of `few_colname` entries are `NA` and
+#' `drop_na_few` is `TRUE`,
+#' a zero-row data frame of the same structure as `.sut_data` is returned.
 #'
 #' @param .sut_data A wide-by-matrices `matsindf`-style data frame of PSUT matrices.
 #' @param many_colname The name of the column in `.sut_data` that contains the "many" descriptions,
@@ -349,13 +354,19 @@ region_aggregates <- function(.sut_data,
                               matrix_names = Recca::psut_cols$matnames,
                               matrix_values = Recca::psut_cols$matvals) {
 
-  # Handle the case when .sut_data has no rows.
-  if (nrow(.sut_data) == 0) {
+  # Handle the cases when
+  # .sut_data has no rows
+  # or
+  # .sut_data has all NA values in few_colname AND drop_na_few is TRUE.
+  if (nrow(.sut_data) == 0 |
+      (all(.sut_data[[few_colname]] |> is.na()) & drop_na_few)) {
+    # Eliminate all rows
+    .sut_data <- .sut_data[0, ]
     # Return .sut_data unmodified,
     # except to eliminate the few_colname and ensure that the many_colname is present
-    # Eliminate many_colname.
     out <- .sut_data %>%
       dplyr::mutate(
+        # Eliminate many_colname.
         "{many_colname}" := NULL
       ) %>%
       dplyr::rename(
@@ -363,6 +374,11 @@ region_aggregates <- function(.sut_data,
       ) %>%
       dplyr::relocate(dplyr::all_of(many_colname)) # Relocates to left, where it belongs.
     return(out)
+  }
+
+  # Handle the case when .sut_data has all NA values in few_colname
+  if (all(is.na(.sut_data[[many_colname]]))) {
+    # Return
   }
 
   # Make the incoming data frame tidy.
