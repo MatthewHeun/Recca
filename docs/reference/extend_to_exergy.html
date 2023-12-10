@@ -16,7 +16,7 @@ phi (exergy-to-energy ratio) vectors."><!-- mathjax --><script src="https://cdnj
     
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.52</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.53</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -85,8 +85,8 @@ phi (exergy-to-energy ratio) vectors.</p>
 <span>  .exergy_suffix <span class="op">=</span> <span class="st">"_exergy"</span>,</span>
 <span>  mat_piece <span class="op">=</span> <span class="st">"all"</span>,</span>
 <span>  phi_piece <span class="op">=</span> <span class="st">"all"</span>,</span>
-<span>  notation <span class="op">=</span> <span class="fu">RCLabels</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/RCLabels/man/bracket_notation.html" class="external-link">bracket_notation</a></span>,</span>
-<span>  prepositions <span class="op">=</span> <span class="fu">RCLabels</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/RCLabels/man/prepositions_list.html" class="external-link">prepositions_list</a></span>,</span>
+<span>  notation <span class="op">=</span> <span class="fu">RCLabels</span><span class="fu">::</span><span class="va"><a href="https://matthewheun.github.io/RCLabels/reference/bracket_notation.html" class="external-link">bracket_notation</a></span>,</span>
+<span>  prepositions <span class="op">=</span> <span class="fu">RCLabels</span><span class="fu">::</span><span class="va"><a href="https://matthewheun.github.io/RCLabels/reference/prepositions_list.html" class="external-link">prepositions_list</a></span>,</span>
 <span>  R_name <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">R</span>,</span>
 <span>  U_name <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">U</span>,</span>
 <span>  U_feed_name <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">U_feed</span>,</span>
@@ -137,12 +137,12 @@ Default is "all", meaning that entire names are to be matched.</p></dd>
 
 
 <dt>notation</dt>
-<dd><p>The nomenclature for the row and column labels. Default is <code><a href="https://rdrr.io/pkg/RCLabels/man/bracket_notation.html" class="external-link">RCLabels::bracket_notation</a></code>.</p></dd>
+<dd><p>The nomenclature for the row and column labels. Default is <code><a href="https://matthewheun.github.io/RCLabels/reference/bracket_notation.html" class="external-link">RCLabels::bracket_notation</a></code>.</p></dd>
 
 
 <dt>prepositions</dt>
 <dd><p>The prepositions to be used row and column notation.
-Default is <code><a href="https://rdrr.io/pkg/RCLabels/man/prepositions_list.html" class="external-link">RCLabels::prepositions_list</a></code>.</p></dd>
+Default is <code><a href="https://matthewheun.github.io/RCLabels/reference/prepositions_list.html" class="external-link">RCLabels::prepositions_list</a></code>.</p></dd>
 
 
 <dt>R_name, U_name, U_feed_name, U_eiou_name, r_eiou_name, V_name, Y_name, phi_name, energy_type, S_units</dt>
@@ -184,7 +184,7 @@ To determine which entry in the <code>phi</code> vector  is matched against whic
 <span class="r-in"><span>  <span class="co"># Eliminate services ECCs.</span></span></span>
 <span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Last.stage</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Final"</span>, <span class="st">"Useful"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
 <span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>    phi <span class="op">=</span> <span class="fu">RCLabels</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/RCLabels/man/make_list.html" class="external-link">make_list</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="phi_vec.html">phi_vec</a></span>, n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span>, lenx <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    phi <span class="op">=</span> <span class="fu">RCLabels</span><span class="fu">::</span><span class="fu"><a href="https://matthewheun.github.io/RCLabels/reference/make_list.html" class="external-link">make_list</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="phi_vec.html">phi_vec</a></span>, n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span>, lenx <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">extend_to_exergy</span><span class="op">(</span><span class="va">sutmats</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Country Year Energy.type Last.stage                  R</span>

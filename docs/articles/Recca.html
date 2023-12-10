@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.52</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.53</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -80,7 +80,7 @@
                         <h4 data-toc-skip class="author">Matthew Kuperus
 Heun</h4>
             
-            <h4 data-toc-skip class="date">2023-12-01</h4>
+            <h4 data-toc-skip class="date">2023-12-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/HEAD/vignettes/Recca.Rmd" class="external-link"><code>vignettes/Recca.Rmd</code></a></small>
       <div class="d-none name"><code>Recca.Rmd</code></div>
@@ -96,16 +96,15 @@ Heun</h4>
 is an <code>R</code> package that enables energy and exergy analysis of
 energy conversion chains. <code>Recca</code> makes extensive use of a
 matrix-based Physical Supply Use Table (PSUT) analysis technique that
-first appeared in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="external-link">Heun et al.
-[-@Heun:2018]</a>. This vignette walks through many of the calculations
-from <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="external-link">Heun et
-al. [-@Heun:2018]</a>, guided by section numbers from the paper. We
-begin by discussing the design philosophy of the <code>Recca</code>
-package, followed by a discussion of the PSUT matrices that comprise an
-energy conversion chain (ECC). Thereafter, calculation of the
-input-output structure of an ECC is demonstrated. Finally, advanced
-calculations are shown, including changes in final demand, net energy
-analysis, industry efficiencies, and energy footprints.</p>
+first appeared in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="external-link">Heun et al. <span class="citation">(2018)</span></a>. This vignette walks through many of
+the calculations from <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="external-link">Heun et al. <span class="citation">(2018)</span></a>, guided by section numbers from the
+paper. We begin by discussing the design philosophy of the
+<code>Recca</code> package, followed by a discussion of the PSUT
+matrices that comprise an energy conversion chain (ECC). Thereafter,
+calculation of the input-output structure of an ECC is demonstrated.
+Finally, advanced calculations are shown, including changes in final
+demand, net energy analysis, industry efficiencies, and energy
+footprints.</p>
 </div>
 <div class="section level2">
 <h2 id="design-philosophy">Design philosophy<a class="anchor" aria-label="anchor" href="#design-philosophy"></a>
@@ -132,8 +131,7 @@ thereby allowing cleaner code.</p>
 <div class="section level2">
 <h2 id="psut-matrices">PSUT matrices<a class="anchor" aria-label="anchor" href="#psut-matrices"></a>
 </h2>
-<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="external-link">Heun et al.
-[-@Heun:2018]</a>, Section 2.2.2.)</p>
+<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="external-link">Heun et al. <span class="citation">(2018)</span></a>, Section 2.2.2.)</p>
 <p>For the examples that follow, we’ll use the
 <code>UKEnergy2000tidy</code> data frame. Each row of
 <code>UKEnergy2000tidy</code> data frame represents another datum for a
@@ -192,7 +190,7 @@ matrix (<code>S_units</code>).</p>
 <code class="sourceCode R"><span><span class="va">AsMats</span> <span class="op">&lt;-</span> <span class="va">WithNames</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="co"># Collapse to matrices using functions in the matsindf package</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">Country</span>, <span class="va">Year</span>, <span class="va">Energy.type</span>, <span class="va">Last.stage</span>, <span class="va">matnames</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu">matsindf</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/matsindf/man/collapse_to_matrices.html" class="external-link">collapse_to_matrices</a></span><span class="op">(</span>matnames <span class="op">=</span> <span class="st">"matnames"</span>, matvals <span class="op">=</span> <span class="st">"E.dot"</span>,</span>
+<span>  <span class="fu">matsindf</span><span class="fu">::</span><span class="fu"><a href="https://matthewheun.github.io/matsindf/reference/collapse_to_matrices.html" class="external-link">collapse_to_matrices</a></span><span class="op">(</span>matnames <span class="op">=</span> <span class="st">"matnames"</span>, matvals <span class="op">=</span> <span class="st">"E.dot"</span>,</span>
 <span>                       rownames <span class="op">=</span> <span class="st">"rownames"</span>, colnames <span class="op">=</span> <span class="st">"colnames"</span>,</span>
 <span>                       rowtypes <span class="op">=</span> <span class="st">"rowtypes"</span>, coltypes <span class="op">=</span> <span class="st">"coltypes"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>matrix.name <span class="op">=</span> <span class="va">matnames</span>, matrix <span class="op">=</span> <span class="va">E.dot</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
@@ -200,10 +198,10 @@ matrix (<code>S_units</code>).</p>
 <span>  <span class="co"># Do a little more cleanup</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    <span class="co"># Create full U matrix</span></span>
-<span>    U <span class="op">=</span> <span class="fu">matsbyname</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/sum_byname.html" class="external-link">sum_byname</a></span><span class="op">(</span><span class="va">U_feed</span>, <span class="va">U_EIOU</span><span class="op">)</span>,</span>
+<span>    U <span class="op">=</span> <span class="fu">matsbyname</span><span class="fu">::</span><span class="fu"><a href="https://matthewheun.github.io/matsbyname/reference/sum_byname.html" class="external-link">sum_byname</a></span><span class="op">(</span><span class="va">U_feed</span>, <span class="va">U_EIOU</span><span class="op">)</span>,</span>
 <span>    <span class="co"># Create r_EIOU, a matrix that identifies the ratio of EIOU to other energy consumed.</span></span>
-<span>    r_EIOU <span class="op">=</span> <span class="fu">matsbyname</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/quotient_byname.html" class="external-link">quotient_byname</a></span><span class="op">(</span><span class="va">U_EIOU</span>, <span class="va">U</span><span class="op">)</span>,</span>
-<span>    r_EIOU <span class="op">=</span> <span class="fu">matsbyname</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/replaceNaN_byname.html" class="external-link">replaceNaN_byname</a></span><span class="op">(</span><span class="va">r_EIOU</span>, val <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span>    r_EIOU <span class="op">=</span> <span class="fu">matsbyname</span><span class="fu">::</span><span class="fu"><a href="https://matthewheun.github.io/matsbyname/reference/quotient_byname.html" class="external-link">quotient_byname</a></span><span class="op">(</span><span class="va">U_EIOU</span>, <span class="va">U</span><span class="op">)</span>,</span>
+<span>    r_EIOU <span class="op">=</span> <span class="fu">matsbyname</span><span class="fu">::</span><span class="fu"><a href="https://matthewheun.github.io/matsbyname/reference/replaceNaN_byname.html" class="external-link">replaceNaN_byname</a></span><span class="op">(</span><span class="va">r_EIOU</span>, val <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">U_EIOU</span>, <span class="op">-</span><span class="va">U_feed</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="co"># Add S_units matrices</span></span>
@@ -225,8 +223,7 @@ vignette uses the <code>UKEnergy2000mats</code> data frame.</p>
 <div class="section level2">
 <h2 id="i-o-structure">I-O structure<a class="anchor" aria-label="anchor" href="#i-o-structure"></a>
 </h2>
-<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="external-link">Heun et al.
-[-@Heun:2018]</a>, Section 2.2.4.)</p>
+<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="external-link">Heun et al. <span class="citation">(2018)</span></a>, Section 2.2.4.)</p>
 <div class="section level3">
 <h3 id="with-individual-matrices">With individual matrices<a class="anchor" aria-label="anchor" href="#with-individual-matrices"></a>
 </h3>
@@ -409,8 +406,7 @@ matrices, as well.</p>
 <div class="section level2">
 <h2 id="changes-in-final-demand">Changes in final demand<a class="anchor" aria-label="anchor" href="#changes-in-final-demand"></a>
 </h2>
-<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="external-link">Heun et al.
-[-@Heun:2018]</a>, Section 2.2.5.)</p>
+<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="external-link">Heun et al. <span class="citation">(2018)</span></a>, Section 2.2.5.)</p>
 <p>One of the first applications of input-output analysis was estimating
 changes in industry outputs that would be required to meet new final
 demand. <code>Recca</code> allows similar calculations on energy
@@ -424,7 +420,7 @@ required to meet the new final demand represented by
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Double_demand</span> <span class="op">&lt;-</span> <span class="va">IO_df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>    Y_prime <span class="op">=</span> <span class="fu">matsbyname</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/hadamardproduct_byname.html" class="external-link">hadamardproduct_byname</a></span><span class="op">(</span><span class="fl">2</span>, <span class="va">Y</span><span class="op">)</span></span>
+<span>    Y_prime <span class="op">=</span> <span class="fu">matsbyname</span><span class="fu">::</span><span class="fu"><a href="https://matthewheun.github.io/matsbyname/reference/hadamardproduct_byname.html" class="external-link">hadamardproduct_byname</a></span><span class="op">(</span><span class="fl">2</span>, <span class="va">Y</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/new_Y.html">new_Y</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">Double_demand</span><span class="op">)</span></span>
@@ -486,23 +482,20 @@ details.</p>
 <div class="section level2">
 <h2 id="net-energy-analysis">Net energy analysis<a class="anchor" aria-label="anchor" href="#net-energy-analysis"></a>
 </h2>
-<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="external-link">Heun et al.
-[-@Heun:2018]</a>, Section 3.1.)</p>
+<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="external-link">Heun et al. <span class="citation">(2018)</span></a>, Section 3.1.)</p>
 <p>The energy production system itself consumes energy, and important
 metrics for energy conversion chain industries are energy return ratios
 (ERRs). <code>Recca</code> provides a function to calculate three ERRs,
 a gross energy ratio (GER), a net energy ratio (NER), and the ratio of
 NER to GER. GER is commonly called energy return on investment (EROI).
-(See <a href="https://doi.org/10.3390/en4081211" class="external-link">Brandt &amp; Dale
-[-@Brandt:2011]</a>.) These ERRs can be calculated for a variety of
-system boundaries. ERRs for the <span class="math inline">\(\gamma\)</span> system boundary can be calculated
+(See <a href="https://doi.org/10.3390/en4081211" class="external-link">Brandt &amp; Dale <span class="citation">(2011)</span></a>.) These ERRs can be calculated for a
+variety of system boundaries. ERRs for the <span class="math inline">\(\gamma\)</span> system boundary can be calculated
 readily using the <code><a href="../reference/calc_ERRs_gamma.html">calc_ERRs_gamma()</a></code> function. All three
 ERRs are calculated at the same time. The ERRs are <code>NA</code> for
 industries in which inputs or outputs are unit-inhomogeneous. The ERRs
 are <code>Inf</code> for industries that make an energy product without
 consuming any energy from another processing chain (such as the Elect.
-grid). The results below are identical to Fig. 6 in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="external-link">Heun et al.
-[-@Heun:2018]</a>.</p>
+grid). The results below are identical to Fig. 6 in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="external-link">Heun et al. <span class="citation">(2018)</span></a>.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ERRs</span> <span class="op">&lt;-</span> <span class="va">IO_df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/calc_ERRs_gamma.html">calc_ERRs_gamma</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -555,8 +548,7 @@ grid). The results below are identical to Fig. 6 in <a href="https://doi.org/10.
 <div class="section level2">
 <h2 id="efficiencies">Efficiencies<a class="anchor" aria-label="anchor" href="#efficiencies"></a>
 </h2>
-<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="external-link">Heun et al.
-[-@Heun:2018]</a>, Section 3.2.)</p>
+<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="external-link">Heun et al. <span class="citation">(2018)</span></a>, Section 3.2.)</p>
 <p>The efficiency of every industry in the ECC can be calculated quickly
 with the <code><a href="../reference/calc_eta_i.html">calc_eta_i()</a></code> function, which creates a column
 named <code>eta_i</code> (by default) at the right of the data frame. If
@@ -564,7 +556,7 @@ a particular ECC has industries whose inputs or outputs are unit
 inhomogeneous, the <code>eta_i</code> vector will have <code>NA</code>
 values in the appropriate places. The results below are identical to
 Fig. 9 in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="external-link">Heun
-et al. [-@Heun:2018]</a>.</p>
+et al. <span class="citation">(2018)</span></a>.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">etas</span> <span class="op">&lt;-</span> <span class="va">IO_df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/calc_eta_i.html">calc_eta_i</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -618,8 +610,7 @@ et al. [-@Heun:2018]</a>.</p>
 <div class="section level2">
 <h2 id="energy-footprints">Energy footprints<a class="anchor" aria-label="anchor" href="#energy-footprints"></a>
 </h2>
-<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="external-link">Heun et al.
-[-@Heun:2018]</a>, Section 3.3.)</p>
+<p>(Reference <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="external-link">Heun et al. <span class="citation">(2018)</span></a>, Section 3.3.)</p>
 <p>Final demand for energy contains embodied primary energy, the sum of
 all primary energy consumed and wasted throughout the ECC in the process
 of satisfying that final demand. <code>Recca</code> provides two
@@ -821,7 +812,7 @@ selection vector for resource industries.</p>
 <span></span>
 <span><span class="va">embodied_mats</span> <span class="op">&lt;-</span> <span class="va">IO_df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>    U_EIOU <span class="op">=</span> <span class="fu">matsbyname</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/hadamardproduct_byname.html" class="external-link">hadamardproduct_byname</a></span><span class="op">(</span><span class="va">r_EIOU</span>, <span class="va">U</span><span class="op">)</span></span>
+<span>    U_EIOU <span class="op">=</span> <span class="fu">matsbyname</span><span class="fu">::</span><span class="fu"><a href="https://matthewheun.github.io/matsbyname/reference/hadamardproduct_byname.html" class="external-link">hadamardproduct_byname</a></span><span class="op">(</span><span class="va">r_EIOU</span>, <span class="va">U</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/calc_embodied_mats.html">calc_embodied_mats</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/calc_embodied_etas.html">calc_embodied_etas</a></span><span class="op">(</span>primary_machine_names <span class="op">=</span> <span class="va">primary_machine_names</span><span class="op">)</span></span>
@@ -838,12 +829,11 @@ selection vector for resource industries.</p>
 <span><span class="co">#&gt; [37] "H_R"           "H"             "E"             "M_p"          </span></span>
 <span><span class="co">#&gt; [41] "M_s"           "F_footprint_p" "F_effects_p"   "F_footprint_s"</span></span>
 <span><span class="co">#&gt; [45] "F_effects_s"   "eta_p"         "eta_s"</span></span></code></pre></div>
-<p>Figure 15 in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="external-link">Heun et al.
-[-@Heun:2018]</a> shows primary-to-services energetic efficiencies for
-the ECC in the 3rd row of <code>IO_df</code>. The following code
-extracts those results. Rows of the vector give final demand services
-and their units. The column gives efficiencies in units of service per
-ktoe of energy.</p>
+<p>Figure 15 in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="external-link">Heun et al. <span class="citation">(2018)</span></a> shows primary-to-services energetic
+efficiencies for the ECC in the 3rd row of <code>IO_df</code>. The
+following code extracts those results. Rows of the vector give final
+demand services and their units. The column gives efficiencies in units
+of service per ktoe of energy.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">embodied_mats</span><span class="op">$</span><span class="va">eta_p</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="co">#&gt;                             Industry</span></span>
@@ -861,12 +851,25 @@ ktoe of energy.</p>
 </h2>
 <p>This vignette demonstrated the use of the <code>Recca</code> package.
 <code>Recca</code> provides many useful functions for analyzing energy
-conversion chains within the PSUT framework first described in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="external-link">Heun et al.
-[-@Heun:2018]</a>.</p>
+conversion chains within the PSUT framework first described in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="external-link">Heun et al. <span class="citation">(2018)</span></a>.</p>
 </div>
-<div class="section level2">
-<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+<div class="section level2 unnumbered">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Brandt:2011" class="csl-entry">
+Brandt, Adam R., and Michael Dale. 2011. <span>“A General Mathematical
+Framework for Calculating Systems-Scale Efficiency of Energy Extraction
+and Conversion: Energy Return on Investment (<span>EROI</span>) and
+Other Energy Return Ratios.”</span> <em>Energies</em> 4: 1211–45. <a href="https://doi.org/10.3390/en4081211" class="external-link">https://doi.org/10.3390/en4081211</a>.
+</div>
+<div id="ref-Heun:2018" class="csl-entry">
+Heun, Matthew Kuperus, Anne Owen, and Paul E. Brockway. 2018. <span>“A
+Physical Supply-Use Table Framework for Energy Analysis on the Energy
+Conversion Chain.”</span> <em>Applied Energy</em> 226 (September):
+1134–62. <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="external-link">https://doi.org/10.1016/j.apenergy.2018.05.109</a>.
+</div>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
