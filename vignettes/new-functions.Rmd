@@ -400,7 +400,7 @@ of changes to an ECC.
     industry.
 
 The first of these functions (`new_Y()`) was demonstrated in [Heun et
-al. [-\@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109). The
+al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109). The
 second and third functions (`new_R_ps()` and `new_k_ps()`) are shown
 here for the first time.
 
