@@ -14,7 +14,7 @@ in the physical supply-use table (PSUT) format for an energy conversion chain.">
     
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.52</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.53</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -161,7 +161,7 @@ The inverse of <code>eroi_g_p_feed</code> is calculated by <code>transpose(i) %*
 <li><p><code>eroi_g_i_feed</code>: vector of industry-level gross EROIs, including only EIOU required for feedstock inputs production.
 The inverse of <code>eroi_i_p</code> is calculated by <code>transpose(C) %*% eroi_g_p_feed_inv</code>.</p></li>
 </ul><p>Note: All matrix multiplication (<code>%*%</code>) is performed "by name" using
-<code><a href="https://rdrr.io/pkg/matsbyname/man/matrixproduct_byname.html" class="external-link">matsbyname::matrixproduct_byname()</a></code>.</p>
+<code><a href="https://matthewheun.github.io/matsbyname/reference/matrixproduct_byname.html" class="external-link">matsbyname::matrixproduct_byname()</a></code>.</p>
     </div>
 
     <div class="section level2">
