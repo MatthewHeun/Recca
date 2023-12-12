@@ -38,6 +38,8 @@ Imports:
     rlang,
     tibble,
     tidyr
+Remotes:
+    github::MatthewHeun/IEATools
 URL: https://github.com/MatthewHeun/Recca
 BugReports: https://github.com/MatthewHeun/Recca/issues
 Suggests: 
