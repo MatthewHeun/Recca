@@ -17,7 +17,25 @@ coverage](https://codecov.io/gh/MatthewHeun/Recca/branch/master/graph/badge.svg)
 
 # Recca
 
-The `R` package `Recca` provides R Energy Conversion Chain Analysis.
+## Statement of Need
+
+Societal energy analysis and societal exergy analysis (SEA) make
+extensive use of the energy conversion chain (ECC), a description of
+energy flows through society from the primary stage (resources extracted
+from the environment, such as coal, oil, natural gas, wind, and solar),
+to the final stage (energy purchased by consumers, such as refined
+petroleum and electricity), to the useful stage (energy desired by the
+end user, such as heat, motion, and light), and sometimes to energy
+services (such as thermal comfort, transport, and illumination). Such
+analyses are significantly easier when data are arranged in the **R**,
+**U**, **V**, and **Y** matrices of the PSUT framework described by
+[Heun et al. (2018)](https://doi.org/10.1016/j.apenergy.2018.05.109).
+
+To facilitate SEA with the PSUT framework, computational tools are
+needed. The computational tools should be amenable to use with
+[matsindf](https://MatthewHeun.github.io/matsindf/) data frames of ECC
+matrices and written with plain names for functions and data.. The
+`Recca` package provides such computational tools.
 
 ## Installation
 
