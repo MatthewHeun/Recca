@@ -8,6 +8,7 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+* Added statement of need to README file.
 * Added `Remotes:` field to `DESCRIPTION` file to assist 
   installation from the `CLPFUDatabase` metapackage.
 
