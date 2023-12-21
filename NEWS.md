@@ -11,6 +11,9 @@ which always resolves to the latest release.
 * Added statement of need to README file.
 * Added `Remotes:` field to `DESCRIPTION` file to assist 
   installation from the `CLPFUDatabase` metapackage.
+* No new tests.
+    * Still at 750 tests, all passing.
+    * Test coverage remains at 100%.
 
 
 # Recca 0.1.53 (2023-12-10) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10342426.svg)](https://doi.org/10.5281/zenodo.10342426)
