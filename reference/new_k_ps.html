@@ -20,7 +20,7 @@ The final demand matrix (Y) is unchanged."><!-- mathjax --><script src="https://
     
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.53</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.54</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -176,7 +176,7 @@ provided by products (in rows).
     <p>Note that inputs <code>K</code>, <code>L_ixp</code>, <code>L_pxp</code>,
 <code>Z</code>, <code>D</code>, and <code>f</code> can be
 conveniently calculated by the function <code><a href="calc_io_mats.html">calc_io_mats()</a></code>.</p>
-<p>Internally, this function uses <code><a href="https://rdrr.io/pkg/matsindf/man/matsindf_apply.html" class="external-link">matsindf::matsindf_apply()</a></code>,
+<p>Internally, this function uses <code><a href="https://matthewheun.github.io/matsindf/reference/matsindf_apply.html" class="external-link">matsindf::matsindf_apply()</a></code>,
 and documentation assumes that
 <code>.sutmats</code> is not <code>NULL</code> and is a data frame.
 If <code>.sutmats</code> is present, output is a data frame with columns named by string values of output arguments, and
@@ -213,9 +213,9 @@ and input arguments should be single matrices or vectors.</p>
 <span class="r-in"><span>    <span class="co"># Set up a new k_prime vector for Electric transport.</span></span></span>
 <span class="r-in"><span>    <span class="co"># That vector will be used for the infininte substitution calculation.</span></span></span>
 <span class="r-in"><span>    k_prime <span class="op">=</span> <span class="fu">matsbyname</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/select_cols_byname.html" class="external-link">select_cols_byname</a></span><span class="op">(</span><span class="va">K</span>,</span></span>
-<span class="r-in"><span>           retain_pattern <span class="op">=</span> <span class="fu">RCLabels</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/RCLabels/man/make_or_pattern.html" class="external-link">make_or_pattern</a></span><span class="op">(</span><span class="st">"Electric transport"</span>,</span></span>
+<span class="r-in"><span>           retain_pattern <span class="op">=</span> <span class="fu">RCLabels</span><span class="fu">::</span><span class="fu"><a href="https://matthewheun.github.io/RCLabels/reference/make_or_pattern.html" class="external-link">make_or_pattern</a></span><span class="op">(</span><span class="st">"Electric transport"</span>,</span></span>
 <span class="r-in"><span>                                                      pattern_type <span class="op">=</span> <span class="st">"exact"</span><span class="op">)</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    k_prime <span class="op">=</span> <span class="fu">RCLabels</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/RCLabels/man/make_list.html" class="external-link">make_list</a></span><span class="op">(</span><span class="va">k_prime_vec</span>, n <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    k_prime <span class="op">=</span> <span class="fu">RCLabels</span><span class="fu">::</span><span class="fu"><a href="https://matthewheun.github.io/RCLabels/reference/make_list.html" class="external-link">make_list</a></span><span class="op">(</span><span class="va">k_prime_vec</span>, n <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># Now do the calculation of U_prime and V_prime matrices.</span></span></span>
 <span class="r-in"><span><span class="va">new_UV</span> <span class="op">&lt;-</span> <span class="fu">new_k_ps</span><span class="op">(</span><span class="va">io_mats</span><span class="op">)</span></span></span>

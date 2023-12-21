@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.53</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.54</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -80,7 +80,7 @@
                         <h4 data-toc-skip class="author">Matthew Kuperus
 Heun</h4>
             
-            <h4 data-toc-skip class="date">2023-12-10</h4>
+            <h4 data-toc-skip class="date">2023-12-21</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/HEAD/vignettes/Recca.Rmd" class="external-link"><code>vignettes/Recca.Rmd</code></a></small>
       <div class="d-none name"><code>Recca.Rmd</code></div>
@@ -190,7 +190,7 @@ matrix (<code>S_units</code>).</p>
 <code class="sourceCode R"><span><span class="va">AsMats</span> <span class="op">&lt;-</span> <span class="va">WithNames</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="co"># Collapse to matrices using functions in the matsindf package</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">Country</span>, <span class="va">Year</span>, <span class="va">Energy.type</span>, <span class="va">Last.stage</span>, <span class="va">matnames</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu">matsindf</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/matsindf/man/collapse_to_matrices.html" class="external-link">collapse_to_matrices</a></span><span class="op">(</span>matnames <span class="op">=</span> <span class="st">"matnames"</span>, matvals <span class="op">=</span> <span class="st">"E.dot"</span>,</span>
+<span>  <span class="fu">matsindf</span><span class="fu">::</span><span class="fu"><a href="https://matthewheun.github.io/matsindf/reference/collapse_to_matrices.html" class="external-link">collapse_to_matrices</a></span><span class="op">(</span>matnames <span class="op">=</span> <span class="st">"matnames"</span>, matvals <span class="op">=</span> <span class="st">"E.dot"</span>,</span>
 <span>                       rownames <span class="op">=</span> <span class="st">"rownames"</span>, colnames <span class="op">=</span> <span class="st">"colnames"</span>,</span>
 <span>                       rowtypes <span class="op">=</span> <span class="st">"rowtypes"</span>, coltypes <span class="op">=</span> <span class="st">"coltypes"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>matrix.name <span class="op">=</span> <span class="va">matnames</span>, matrix <span class="op">=</span> <span class="va">E.dot</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>

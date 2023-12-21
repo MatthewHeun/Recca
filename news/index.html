@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.53</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.54</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,6 +55,15 @@
       <small>Source: <a href="https://github.com/MatthewHeun/Recca/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.54" id="recca-0154-2023-12-21">Recca 0.1.54 (2023-12-21)<a class="anchor" aria-label="anchor" href="#recca-0154-2023-12-21"></a></h2>
+<ul><li>Added statement of need to README file.</li>
+<li>Added <code>Remotes:</code> field to <code>DESCRIPTION</code> file to assist installation from the <code>CLPFUDatabase</code> metapackage.</li>
+<li>No new tests.
+<ul><li>Still at 750 tests, all passing.</li>
+<li>Test coverage remains at 100%.</li>
+</ul></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.53" id="recca-0153-2023-12-10-doi">Recca 0.1.53 (2023-12-10) <a href="https://doi.org/10.5281/zenodo.10342426" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.10342426.svg" alt="DOI"></a>
 <a class="anchor" aria-label="anchor" href="#recca-0153-2023-12-10-doi"></a></h2>
@@ -176,7 +185,7 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.41" id="recca-0141-2023-04-28-doi">Recca 0.1.41 (2023-04-28) <a href="https://doi.org/10.5281/zenodo.7877495" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.7877495.svg" alt="DOI"></a>
 <a class="anchor" aria-label="anchor" href="#recca-0141-2023-04-28-doi"></a></h2>
-<ul><li>Responded to policy changes in <code><a href="https://rdrr.io/pkg/matsindf/man/matsindf_apply.html" class="external-link">matsindf::matsindf_apply()</a></code> by setting default arguments to <code>NULL</code> for several internal functions.</li>
+<ul><li>Responded to policy changes in <code><a href="https://matthewheun.github.io/matsindf/reference/matsindf_apply.html" class="external-link">matsindf::matsindf_apply()</a></code> by setting default arguments to <code>NULL</code> for several internal functions.</li>
 <li>
 <code><a href="../reference/region_aggregates.html">region_aggregates()</a></code> gains <code>drop_na_few</code> argument that tells whether to eliminate rows with <code>NA</code> in <code>few_colname</code>.</li>
 <li>Adjusted example ECC names. Example changes include:
@@ -208,7 +217,7 @@
 <h2 class="pkg-version" data-toc-text="0.1.39" id="recca-0139-2023-01-24-doi">Recca 0.1.39 (2023-01-24) <a href="https://doi.org/10.5281/zenodo.7566435" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.7566435.svg" alt="DOI"></a>
 <a class="anchor" aria-label="anchor" href="#recca-0139-2023-01-24-doi"></a></h2>
 <ul><li>Tests once again all passing on all test rigs of GitHub Actions. Tests had been failing due to new code that correctly detects unit errors (inhomogeneity) for some upstream swim calculations with services as the last stage in an ECC.</li>
-<li>Move tests associated with <code><a href="https://rdrr.io/pkg/matsindf/man/verify_cols_missing.html" class="external-link">verify_cols_missing()</a></code> from the <code>Recca</code> package to <code>matsindf</code>. Those tests didn’t belong in <code>Recca</code>, because <code><a href="https://rdrr.io/pkg/matsindf/man/verify_cols_missing.html" class="external-link">verify_cols_missing()</a></code> is no longer in <code>Recca</code>.</li>
+<li>Move tests associated with <code><a href="https://matthewheun.github.io/matsindf/reference/verify_cols_missing.html" class="external-link">verify_cols_missing()</a></code> from the <code>Recca</code> package to <code>matsindf</code>. Those tests didn’t belong in <code>Recca</code>, because <code><a href="https://matthewheun.github.io/matsindf/reference/verify_cols_missing.html" class="external-link">verify_cols_missing()</a></code> is no longer in <code>Recca</code>.</li>
 <li>Eliminated data frame rows for a couple tests that were producing <code>NA</code> values due to unit inhomogeneity.</li>
 <li>Switched to simpler formulas derived by MKH for <code><a href="../reference/new_R_ps.html">new_R_ps()</a></code>.</li>
 <li>Eliminated <code>tidyselect</code> warnings.</li>
@@ -243,7 +252,7 @@
 <strong>W</strong> matrix no longer included in the output of <code><a href="../reference/new_Y.html">new_Y()</a></code>. <strong>W</strong> can always be calculated from <strong>V</strong>^T - <strong>U</strong>.</li>
 <li>New function <code><a href="../reference/write_ecc_to_excel.html">write_ecc_to_excel()</a></code> stores ECCs in spatial format in Excel. All ECC matrices are written to the Excel file: <strong>R</strong>, <strong>U</strong>, <strong>V</strong>, <strong>Y</strong>, <strong>U_feed</strong>, <strong>U_eiou</strong>, <strong>r_eiou</strong>, and <strong>S_units</strong>.</li>
 <li>
-<code><a href="../reference/primary_aggregates.html">primary_aggregates()</a></code> and <code><a href="../reference/finaldemand_aggregates.html">finaldemand_aggregates()</a></code> no longer require <code>p_industries</code> and <code>fd_sectors</code> to be present in the incoming list or data frame. Rather, <code>p_industries</code> and <code>fd_sectors</code> are treated as parameters that apply to all items in the incoming list or rows in the incoming data frame. This change brings consistency with other functions that use <code><a href="https://rdrr.io/pkg/matsindf/man/matsindf_apply.html" class="external-link">matsindf::matsindf_apply()</a></code> internally.</li>
+<code><a href="../reference/primary_aggregates.html">primary_aggregates()</a></code> and <code><a href="../reference/finaldemand_aggregates.html">finaldemand_aggregates()</a></code> no longer require <code>p_industries</code> and <code>fd_sectors</code> to be present in the incoming list or data frame. Rather, <code>p_industries</code> and <code>fd_sectors</code> are treated as parameters that apply to all items in the incoming list or rows in the incoming data frame. This change brings consistency with other functions that use <code><a href="https://matthewheun.github.io/matsindf/reference/matsindf_apply.html" class="external-link">matsindf::matsindf_apply()</a></code> internally.</li>
 <li>New function <code>group_aggregates()</code> that aggregates PSUT matrices according to an aggregation map.</li>
 <li>New function <code><a href="../reference/despecified_aggregates.html">despecified_aggregates()</a></code> that aggregates PSUT matrices to a piece of row and column labels.</li>
 <li>New argument <code>add_net_gross_cols</code> on <code><a href="../reference/primary_aggregates.html">primary_aggregates()</a></code> that tells whether to add both net and gross primary energy columns. (Net and gross primary energy aggregate columns will contain identical values, but the presence of both net and gross columns may make it easier to mesh with results from the <code><a href="../reference/finaldemand_aggregates.html">finaldemand_aggregates()</a></code> function, which produces net and gross columns that are different.)</li>
@@ -499,7 +508,7 @@ See <a href="https://github.com/awalker89/openxlsx/issues/393" class="external-l
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.6" id="recca-016-2018-07-09">Recca 0.1.6 (2018-07-09)<a class="anchor" aria-label="anchor" href="#recca-016-2018-07-09"></a></h2>
 <ul><li>Fixed a bug in <code>verify_IEATable_energy_balance</code>. <code>err</code> –&gt; <code>as.name(err)</code>.</li>
-<li>Fixed a bug in <code>S_units_from_tidy</code>. Needed to change an argument name for <code><a href="https://rdrr.io/pkg/matsindf/man/collapse_to_matrices.html" class="external-link">matsindf::collapse_to_matrices</a></code> from <code>values</code> –&gt; <code>matvals</code>.</li>
+<li>Fixed a bug in <code>S_units_from_tidy</code>. Needed to change an argument name for <code><a href="https://matthewheun.github.io/matsindf/reference/collapse_to_matrices.html" class="external-link">matsindf::collapse_to_matrices</a></code> from <code>values</code> –&gt; <code>matvals</code>.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.5" id="recca-015-2018-07-02">Recca 0.1.5 (2018-07-02)<a class="anchor" aria-label="anchor" href="#recca-015-2018-07-02"></a></h2>
@@ -515,7 +524,7 @@ See <a href="https://github.com/awalker89/openxlsx/issues/393" class="external-l
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.2" id="recca-012-2018-05-20">Recca 0.1.2 (2018-05-20)<a class="anchor" aria-label="anchor" href="#recca-012-2018-05-20"></a></h2>
-<ul><li>All functions now use <code><a href="https://rdrr.io/pkg/matsindf/man/matsindf_apply.html" class="external-link">matsindf::matsindf_apply()</a></code>.</li>
+<ul><li>All functions now use <code><a href="https://matthewheun.github.io/matsindf/reference/matsindf_apply.html" class="external-link">matsindf::matsindf_apply()</a></code>.</li>
 <li>
 <code>F</code> functions now do internal energy balance checks.</li>
 <li>Much code and API cleanup.</li>
