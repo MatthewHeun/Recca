@@ -14,7 +14,7 @@ If .sutdata is NULL, fd_sectors can be a single vector of industry names."><!-- 
     
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.53</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.54</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,7 +100,7 @@ to cover both net (in <code>Y</code>) and gross (in <code>Y</code> and <code>U_E
 is accomplished when selecting parts of the <strong>U_EIOU</strong> and <strong>Y</strong>
 matrices for final demand aggregation.
 These arguments are passed to
-<code><a href="https://matthewheun.github.io/matsbyname/reference/select_rowcol_piece_byname.html" class="external-link">matsbyname::select_rowcol_piece_byname()</a></code> and eventually
+<code><a href="https://rdrr.io/pkg/matsbyname/man/select_rowcol_piece_byname.html" class="external-link">matsbyname::select_rowcol_piece_byname()</a></code> and eventually
 <code><a href="https://matthewheun.github.io/RCLabels/reference/regex_funcs.html" class="external-link">RCLabels::match_by_pattern()</a></code> and
 <code><a href="https://matthewheun.github.io/RCLabels/reference/make_or_pattern.html" class="external-link">RCLabels::make_or_pattern()</a></code>.
 Default values are
@@ -148,8 +148,8 @@ with sums across rows, columns, or total as needed.</p>
 <span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    fd_sectors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Residential"</span>, <span class="st">"Transport"</span><span class="op">)</span><span class="op">)</span>, times <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
-<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Last.stage</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/last_stages.html" class="external-link">last_stages</a></span><span class="op">$</span><span class="va">final</span>,</span></span>
-<span class="r-in"><span>                                  <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/last_stages.html" class="external-link">last_stages</a></span><span class="op">$</span><span class="va">useful</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Last.stage</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://matthewheun.github.io/IEATools/reference/last_stages.html" class="external-link">last_stages</a></span><span class="op">$</span><span class="va">final</span>,</span></span>
+<span class="r-in"><span>                                  <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://matthewheun.github.io/IEATools/reference/last_stages.html" class="external-link">last_stages</a></span><span class="op">$</span><span class="va">useful</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
 <span class="r-in"><span>  <span class="fu">finaldemand_aggregates</span><span class="op">(</span>fd_sectors <span class="op">=</span> <span class="st">"fd_sectors"</span>, by <span class="op">=</span> <span class="st">"Sector"</span><span class="op">)</span></span></span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in finaldemand_aggregates(., fd_sectors = "fd_sectors", by = "Sector"):</span> unused arguments (fd_sectors = "fd_sectors", by = "Sector")</span>
 </code></pre></div>

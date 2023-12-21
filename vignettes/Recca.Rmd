@@ -54,6 +54,8 @@ library(tidyr)
 \newcommand{\Lpp}{\matwithdims{L}{p}{p}}
 \newcommand{\Lip}{\matwithdims{L}{i}{p}}
 ```
+
+
 ## Introduction
 
 `Recca` (`R` Energy Conversion Chain Analysis) is an `R` package that
