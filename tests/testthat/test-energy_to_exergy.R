@@ -216,4 +216,11 @@ test_that("extend_fu_details_to_exergy() works as expected", {
   expect_true(matsbyname::equal_byname(res$U_EIOU_fu_details_exergy, expected))
 
   # Make a data frame and do calculations within.
+  df <- tibble::tibble(Country = "USA",
+                       Energy.type = "E",
+                       Y_fu_details = list(details_mat, details_mat),
+                       U_EIOU_fu_details = list(details_mat, details_mat),
+                       phi = list(phi_vec, phi_vec))
+  df |>
+    extend_fu_details_to_exergy()
 })

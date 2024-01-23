@@ -312,7 +312,7 @@ extend_fu_details_to_exergy <- function(.fu_details_mats = NULL,
           # Remove matrix columns to leave only metadata columns
           # in preparation for creating an error message.
           "{Y_fu_details_colname}" := NULL,
-          "{U_eiou_details_colname}" := NULL,
+          "{U_eiou_fu_details_colname}" := NULL,
         )
       if (nrow(bad_rows) > 0) {
         err_msg <- paste0("In Recca::extend_fu_details_to_exergy(), non-energy rows were found: ",
@@ -383,7 +383,7 @@ extend_fu_details_to_exergy <- function(.fu_details_mats = NULL,
     out <- dplyr::bind_rows(.fu_details_mats, exergy_df) |>
       dplyr::mutate(
         # Eliminate the phi column that is still present in the energy rows
-        "{phi_name}" := NULL
+        "{phi_colname}" := NULL
       )
   }
 
