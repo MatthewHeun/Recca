@@ -5,10 +5,10 @@
 \title{Extend the final-to-useful details matrices from energy to exergy}
 \usage{
 extend_fu_details_to_exergy(
-  .fu_details_mats,
-  clean_up_df = TRUE,
+  .fu_details_mats = NULL,
   Y_fu_details = Recca::psut_cols$Y_fu_details,
-  U_eiou_details = Recca::psut_cols$U_eiou_fu_details,
+  U_eiou_fu_details = Recca::psut_cols$U_eiou_fu_details,
+  clean_up_df = TRUE,
   phi = Recca::psut_cols$phi,
   .exergy_suffix = "_exergy",
   mat_piece = "noun",

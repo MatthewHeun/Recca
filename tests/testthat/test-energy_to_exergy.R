@@ -188,3 +188,32 @@ test_that("extend_to_exergy() works correctly with specified products", {
   }
 
 })
+
+
+test_that("extend_fu_details_to_exergy() works as expected", {
+  details_mat <- Matrix::sparseMatrix(i = c(1, 2, 3),
+                                      j = c(1, 3, 2),
+                                      x = c(10, 20, 100),
+                                      dimnames = list(c("Electricity -> Households",
+                                                        "Electricity -> Industry",
+                                                        "Natural gas -> Households"),
+                                                      c("Light [from Electric lamps]",
+                                                        "MTH.100.C [from Furnaces]",
+                                                        "KE [from Fans]")))
+  phi_vec <- Matrix::sparseMatrix(i = c(1, 2, 3, 4),
+                                  j = c(1, 1, 1, 1),
+                                  x = c(1.0, 1-(25+273.15)/(100+273.15), 0.96, 1-(25+273.15)/(1000+273.15)),
+                                  dimnames = list(c("KE", "MTH.100.C", "Light", "HTH.1000.C"),
+                                                  "phi"))
+  expected <- details_mat
+  expected[1,1] <- 10*0.96 # Light
+  expected[2,3] <- 20 # No change for KE
+  expected[3,2] <- 100 * (1-(25+273.15)/(100+273.15))
+  res <- extend_fu_details_to_exergy(Y_fu_details = details_mat,
+                                     U_eiou_fu_details = details_mat,
+                                     phi = phi_vec)
+  expect_true(matsbyname::equal_byname(res$Y_fu_details_exergy, expected))
+  expect_true(matsbyname::equal_byname(res$U_EIOU_fu_details_exergy, expected))
+
+  # Make a data frame and do calculations within.
+})

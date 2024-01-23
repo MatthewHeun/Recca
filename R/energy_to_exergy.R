@@ -281,10 +281,10 @@ extend_to_exergy <- function(.sutmats = NULL,
 #' @export
 #'
 #' @examples
-extend_fu_details_to_exergy <- function(.fu_details_mats,
-                                        clean_up_df = TRUE,
+extend_fu_details_to_exergy <- function(.fu_details_mats = NULL,
                                         Y_fu_details = Recca::psut_cols$Y_fu_details,
-                                        U_eiou_details = Recca::psut_cols$U_eiou_fu_details,
+                                        U_eiou_fu_details = Recca::psut_cols$U_eiou_fu_details,
+                                        clean_up_df = TRUE,
                                         phi = Recca::psut_cols$phi,
                                         .exergy_suffix = "_exergy",
                                         mat_piece = "noun",
@@ -360,7 +360,7 @@ extend_fu_details_to_exergy <- function(.fu_details_mats,
 
   out <- matsindf::matsindf_apply(.fu_details_mats, FUN = extend_func,
                                   Y_fu_details_mat = Y_fu_details,
-                                  U_eiou_details_mat = U_eiou_details,
+                                  U_eiou_fu_details_mat = U_eiou_fu_details,
                                   phi_vec = phi)
 
   if (is.data.frame(out) & clean_up_df) {
