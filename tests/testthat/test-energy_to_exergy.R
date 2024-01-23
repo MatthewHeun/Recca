@@ -221,6 +221,21 @@ test_that("extend_fu_details_to_exergy() works as expected", {
                        Y_fu_details = list(details_mat, details_mat),
                        U_EIOU_fu_details = list(details_mat, details_mat),
                        phi = list(phi_vec, phi_vec))
-  df |>
+  res_df <- df |>
     extend_fu_details_to_exergy()
+  # Test that the results are as expected.
+  res_df |>
+    dplyr::filter(Energy.type == "X") |>
+    magrittr::extract2("Y_fu_details") |>
+    matsbyname::equal_byname(list(expected, expected)) |>
+    unlist() |>
+    all() |>
+    expect_true()
+  res_df |>
+    dplyr::filter(Energy.type == "X") |>
+    magrittr::extract2("U_EIOU_fu_details") |>
+    matsbyname::equal_byname(list(expected, expected)) |>
+    unlist() |>
+    all() |>
+    expect_true()
 })
