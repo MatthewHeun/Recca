@@ -281,48 +281,48 @@ extend_to_exergy <- function(.sutmats = NULL,
 #' @export
 #'
 #' @examples
-extend_fu_details_to_exergy <- function(.fu_details_mats = NULL,
-                                        Y_fu_details = Recca::psut_cols$Y_fu_details,
-                                        U_eiou_fu_details = Recca::psut_cols$U_eiou_fu_details,
-                                        clean_up_df = TRUE,
-                                        phi = Recca::psut_cols$phi,
-                                        .exergy_suffix = "_exergy",
-                                        mat_piece = "noun",
-                                        phi_piece = "all",
-                                        energy_type = Recca::psut_cols$energy_type,
-                                        mat_notation = RCLabels::bracket_notation,
-                                        mat_colname_preposition = RCLabels::prepositions_list[[which(RCLabels::prepositions_list == "from")]],
-                                        # Column names
-                                        Y_fu_details_colname = Recca::psut_cols$Y_fu_details,
-                                        U_eiou_fu_details_colname = Recca::psut_cols$U_eiou_fu_details,
-                                        phi_colname = Recca::psut_cols$phi,
-                                        energy = Recca::energy_types$e,
-                                        exergy = Recca::energy_types$x) {
+extend_fu_detailed_to_exergy <- function(.fu_detailed_mats = NULL,
+                                         Y_fu_detailed = Recca::psut_cols$Y_fu_detailed,
+                                         U_eiou_fu_detailed = Recca::psut_cols$U_eiou_fu_detailed,
+                                         clean_up_df = TRUE,
+                                         phi = Recca::psut_cols$phi,
+                                         .exergy_suffix = "_exergy",
+                                         mat_piece = "noun",
+                                         phi_piece = "all",
+                                         energy_type = Recca::psut_cols$energy_type,
+                                         mat_notation = RCLabels::bracket_notation,
+                                         mat_colname_preposition = RCLabels::prepositions_list[[which(RCLabels::prepositions_list == "from")]],
+                                         # Column names
+                                         Y_fu_detailed_colname = Recca::psut_cols$Y_fu_detailed,
+                                         U_eiou_fu_detailed_colname = Recca::psut_cols$U_eiou_fu_detailed,
+                                         phi_colname = Recca::psut_cols$phi,
+                                         energy = Recca::energy_types$e,
+                                         exergy = Recca::energy_types$x) {
 
-  Y_fu_details_X_name <- paste0(Y_fu_details_colname, .exergy_suffix)
-  U_EIOU_fu_details_X_name <- paste0(U_eiou_fu_details_colname, .exergy_suffix)
+  Y_fu_detailed_X_name <- paste0(Y_fu_detailed_colname, .exergy_suffix)
+  U_EIOU_fu_detailed_X_name <- paste0(U_eiou_fu_detailed_colname, .exergy_suffix)
 
   # Check that all columns in .fu_details_mats contain "E" for Energy.type, if the column exists.
-  if (is.data.frame(.fu_details_mats)) {
-    if (energy_type %in% names(.fu_details_mats)) {
+  if (is.data.frame(.fu_detailed_mats)) {
+    if (energy_type %in% names(.fu_detailed_mats)) {
       # Check that all energy types are "E".
-      bad_rows <- .fu_details_mats %>%
+      bad_rows <- .fu_detailed_mats %>%
         dplyr::filter(.data[[energy_type]] != energy) %>%
         dplyr::mutate(
           # Remove matrix columns to leave only metadata columns
           # in preparation for creating an error message.
-          "{Y_fu_details_colname}" := NULL,
-          "{U_eiou_fu_details_colname}" := NULL,
+          "{Y_fu_detailed_colname}" := NULL,
+          "{U_eiou_fu_detailed_colname}" := NULL,
         )
       if (nrow(bad_rows) > 0) {
-        err_msg <- paste0("In Recca::extend_fu_details_to_exergy(), non-energy rows were found: ",
+        err_msg <- paste0("In Recca::extend_fu_detailed_to_exergy(), non-energy rows were found: ",
                           matsindf::df_to_msg(bad_rows))
         stop(err_msg)
       }
     }
   }
 
-  extend_func <- function(Y_fu_details_mat, U_eiou_fu_details_mat, phi_vec) {
+  extend_func <- function(Y_fu_detailed_mat, U_eiou_fu_detailed_mat, phi_vec) {
 
     # When we get here, we should have single matrices
     # For each of these multiplications, we first trim phi_vec to contain only
@@ -331,42 +331,42 @@ extend_fu_details_to_exergy <- function(.fu_details_mats = NULL,
     # thereby reducing computational complexity and memory consumption.
 
     # Y_fu_details * phi_hat
-    Y_fu_details_X_mat <- matsbyname::matrixproduct_byname(Y_fu_details_mat,
-                                                           matsbyname::vec_from_store_byname(a = Y_fu_details_mat,
-                                                                                             v = matsbyname::transpose_byname(phi_vec),
-                                                                                             a_piece = mat_piece, v_piece = phi_piece,
-                                                                                             notation = mat_notation,
-                                                                                             prepositions = mat_colname_preposition,
-                                                                                             margin = 2) |>
-                                                             matsbyname::hatize_byname(keep = "rownames"))
+    Y_fu_detailed_X_mat <- matsbyname::matrixproduct_byname(Y_fu_detailed_mat,
+                                                            matsbyname::vec_from_store_byname(a = Y_fu_detailed_mat,
+                                                                                              v = matsbyname::transpose_byname(phi_vec),
+                                                                                              a_piece = mat_piece, v_piece = phi_piece,
+                                                                                              notation = mat_notation,
+                                                                                              prepositions = mat_colname_preposition,
+                                                                                              margin = 2) |>
+                                                              matsbyname::hatize_byname(keep = "rownames"))
 
     # U_eiou_fu_details * phi_hat
-    U_EIOU_fu_details_X_mat <- matsbyname::matrixproduct_byname(U_eiou_fu_details_mat,
-                                                                matsbyname::vec_from_store_byname(a = U_eiou_fu_details_mat,
-                                                                                                  v = matsbyname::transpose_byname(phi_vec),
-                                                                                                  a_piece = mat_piece, v_piece = phi_piece,
-                                                                                                  notation = mat_notation,
-                                                                                                  prepositions = mat_colname_preposition,
-                                                                                                  margin = 2) |>
-                                                                  matsbyname::hatize_byname(keep = "rownames"))
+    U_EIOU_fu_detailed_X_mat <- matsbyname::matrixproduct_byname(U_eiou_fu_detailed_mat,
+                                                                 matsbyname::vec_from_store_byname(a = U_eiou_fu_detailed_mat,
+                                                                                                   v = matsbyname::transpose_byname(phi_vec),
+                                                                                                   a_piece = mat_piece, v_piece = phi_piece,
+                                                                                                   notation = mat_notation,
+                                                                                                   prepositions = mat_colname_preposition,
+                                                                                                   margin = 2) |>
+                                                                   matsbyname::hatize_byname(keep = "rownames"))
 
     # Create the list of items to return
-    list(Y_fu_details_X_mat,
-         U_EIOU_fu_details_X_mat) |>
-      magrittr::set_names(c(Y_fu_details_X_name,
-                            U_EIOU_fu_details_X_name))
+    list(Y_fu_detailed_X_mat,
+         U_EIOU_fu_detailed_X_mat) |>
+      magrittr::set_names(c(Y_fu_detailed_X_name,
+                            U_EIOU_fu_detailed_X_name))
   }
 
 
-  out <- matsindf::matsindf_apply(.fu_details_mats, FUN = extend_func,
-                                  Y_fu_details_mat = Y_fu_details,
-                                  U_eiou_fu_details_mat = U_eiou_fu_details,
+  out <- matsindf::matsindf_apply(.fu_detailed_mats, FUN = extend_func,
+                                  Y_fu_detailed_mat = Y_fu_detailed,
+                                  U_eiou_fu_detailed_mat = U_eiou_fu_detailed,
                                   phi_vec = phi)
 
   if (is.data.frame(out) & clean_up_df) {
     cols_to_keep <- out |>
-      matsindf::everything_except(Y_fu_details_colname,
-                                  U_eiou_fu_details_colname,
+      matsindf::everything_except(Y_fu_detailed_colname,
+                                  U_eiou_fu_detailed_colname,
                                   phi_colname,
                                   .symbols = FALSE)
     # We'll need to strip suffixes off column names.
@@ -380,7 +380,7 @@ extend_fu_details_to_exergy <- function(.fu_details_mats = NULL,
       # Hint obtained from https://stackoverflow.com/questions/45960269/removing-suffix-from-column-names-using-rename-all
       dplyr::rename_with(~ gsub(paste0(.exergy_suffix, "$"), "", .x))
     # Bind the energy and exergy data frames together.
-    out <- dplyr::bind_rows(.fu_details_mats, exergy_df) |>
+    out <- dplyr::bind_rows(.fu_detailed_mats, exergy_df) |>
       dplyr::mutate(
         # Eliminate the phi column that is still present in the energy rows
         "{phi_colname}" := NULL
