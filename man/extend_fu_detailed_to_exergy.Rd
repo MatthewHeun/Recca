@@ -14,14 +14,16 @@ extend_fu_detailed_to_exergy(
   mat_piece = "noun",
   phi_piece = "all",
   energy_type = Recca::psut_cols$energy_type,
-  mat_notation = RCLabels::bracket_notation,
+  mat_col_notation = RCLabels::from_notation,
   mat_colname_preposition =
     RCLabels::prepositions_list[[which(RCLabels::prepositions_list == "from")]],
   Y_fu_detailed_colname = Recca::psut_cols$Y_fu_detailed,
   U_eiou_fu_detailed_colname = Recca::psut_cols$U_eiou_fu_detailed,
   phi_colname = Recca::psut_cols$phi,
   energy = Recca::energy_types$e,
-  exergy = Recca::energy_types$x
+  exergy = Recca::energy_types$x,
+  industry_type = IEATools::row_col_types$industry,
+  product_type = IEATools::row_col_types$product
 )
 }
 \arguments{

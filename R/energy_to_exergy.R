@@ -290,14 +290,16 @@ extend_fu_detailed_to_exergy <- function(.fu_detailed_mats = NULL,
                                          mat_piece = "noun",
                                          phi_piece = "all",
                                          energy_type = Recca::psut_cols$energy_type,
-                                         mat_notation = RCLabels::bracket_notation,
+                                         mat_col_notation = RCLabels::from_notation,
                                          mat_colname_preposition = RCLabels::prepositions_list[[which(RCLabels::prepositions_list == "from")]],
                                          # Column names
                                          Y_fu_detailed_colname = Recca::psut_cols$Y_fu_detailed,
                                          U_eiou_fu_detailed_colname = Recca::psut_cols$U_eiou_fu_detailed,
                                          phi_colname = Recca::psut_cols$phi,
                                          energy = Recca::energy_types$e,
-                                         exergy = Recca::energy_types$x) {
+                                         exergy = Recca::energy_types$x,
+                                         industry_type = IEATools::row_col_types$industry,
+                                         product_type = IEATools::row_col_types$product) {
 
   Y_fu_detailed_X_name <- paste0(Y_fu_detailed_colname, .exergy_suffix)
   U_EIOU_fu_detailed_X_name <- paste0(U_eiou_fu_detailed_colname, .exergy_suffix)
@@ -325,27 +327,70 @@ extend_fu_detailed_to_exergy <- function(.fu_detailed_mats = NULL,
   extend_func <- function(Y_fu_detailed_mat, U_eiou_fu_detailed_mat, phi_vec) {
 
     # When we get here, we should have single matrices
+    # For each of these matrices, ensure that rowtypes and coltypes match.
+    # The biggest problem is likely to be
+    # Y_fu_detailed_mat and U_eiou_fu_detailed_mat.
+    # They are likely to have
+    # rowtype: Product -> Industry
+    # coltype: Product [from Industry]
+    # However, phi_vec is likely to have
+    # rowtype: Product.
+    # If phi_vec has rowtype of Product and both detailed mats have
+    # rowtype of Product [from Industry],
+    # change phi_vec to have
+    # rowtype Product [from Industry]
+    # so that the multiplication will work.
+
+    rtp <- matsbyname::rowtype(phi_vec) # Probably "Product"
+    ctY <- matsbyname::coltype(Y_fu_detailed_mat) # Probably "Product [from Industry]"
+    ctU <- matsbyname::coltype(U_eiou_fu_detailed_mat) # Probably "Product [from Industry]"
+    expected_coltype_YU <- RCLabels::paste_pref_suff(pref = product_type,
+                                                     suff = industry_type,
+                                                     notation = mat_col_notation)
+
     # For each of these multiplications, we first trim phi_vec to contain only
     # the energy products needed for converting to exergy.
     # Doing this avoids expanding the Y_fu_details and U_eiou_details matrices to all energy products,
     # thereby reducing computational complexity and memory consumption.
 
     # Y_fu_details * phi_hat
+    phi_vec_Y <- phi_vec
+    if (!is.null(ctY) & !is.null(rtp)) {
+      if (ctY == expected_coltype_YU & rtp == product_type) {
+        # In this situation, we want to set rowtype
+        # and coltype of phi_vec_Y to expected_coltype
+        # so that multiplication can occur and so that the
+        # resulting matrix product maintains original coltype
+        # of "Product [from Industry]".
+        phi_vec_Y <- matsbyname::setrowtype(phi_vec_Y, expected_coltype_YU)
+      }
+    }
     Y_fu_detailed_X_mat <- matsbyname::matrixproduct_byname(Y_fu_detailed_mat,
                                                             matsbyname::vec_from_store_byname(a = Y_fu_detailed_mat,
-                                                                                              v = matsbyname::transpose_byname(phi_vec),
+                                                                                              v = phi_vec_Y,
                                                                                               a_piece = mat_piece, v_piece = phi_piece,
-                                                                                              notation = mat_notation,
+                                                                                              notation = mat_col_notation,
                                                                                               prepositions = mat_colname_preposition,
                                                                                               margin = 2) |>
                                                               matsbyname::hatize_byname(keep = "rownames"))
 
     # U_eiou_fu_details * phi_hat
+    phi_vec_U <- phi_vec
+    if (!is.null(ctU) & !is.null(rtp)) {
+      if (ctU == expected_coltype_YU & rtp == product_type) {
+        # In this situation, we want to set rowtype
+        # and coltype of phi_vec_Y to expected_coltype
+        # so that multiplication can occur and so that the
+        # resulting matrix product maintains original coltype
+        # of "Product [from Industry]".
+        phi_vec_U <- matsbyname::setrowtype(phi_vec_U, expected_coltype_YU)
+      }
+    }
     U_EIOU_fu_detailed_X_mat <- matsbyname::matrixproduct_byname(U_eiou_fu_detailed_mat,
                                                                  matsbyname::vec_from_store_byname(a = U_eiou_fu_detailed_mat,
-                                                                                                   v = matsbyname::transpose_byname(phi_vec),
+                                                                                                   v = phi_vec_U,
                                                                                                    a_piece = mat_piece, v_piece = phi_piece,
-                                                                                                   notation = mat_notation,
+                                                                                                   notation = mat_col_notation,
                                                                                                    prepositions = mat_colname_preposition,
                                                                                                    margin = 2) |>
                                                                    matsbyname::hatize_byname(keep = "rownames"))

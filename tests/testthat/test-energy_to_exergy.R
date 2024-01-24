@@ -199,16 +199,23 @@ test_that("extend_fu_detailed_to_exergy() works as expected", {
                                                          "Natural gas -> Households"),
                                                        c("Light [from Electric lamps]",
                                                          "MTH.100.C [from Furnaces]",
-                                                         "KE [from Fans]")))
+                                                         "KE [from Fans]"))) |>
+    matsbyname::setrowtype("Product -> Industry") |>
+    matsbyname::setcoltype("Product [from Industry]")
   phi_vec <- Matrix::sparseMatrix(i = c(1, 2, 3, 4),
                                   j = c(1, 1, 1, 1),
                                   x = c(1.0, 1-(25+273.15)/(100+273.15), 0.96, 1-(25+273.15)/(1000+273.15)),
                                   dimnames = list(c("KE", "MTH.100.C", "Light", "HTH.1000.C"),
-                                                  "phi"))
+                                                  "phi")) |>
+    matsbyname::setrowtype("Product") |>
+    matsbyname::setcoltype("phi")
   expected <- detailed_mat
   expected[1,1] <- 10*0.96 # Light
   expected[2,3] <- 20 # No change for KE
   expected[3,2] <- 100 * (1-(25+273.15)/(100+273.15))
+  expected <- expected |>
+    matsbyname::setrowtype("Product -> Industry") |>
+    matsbyname::setcoltype("Product [from Industry]")
   res <- extend_fu_detailed_to_exergy(Y_fu_detailed = detailed_mat,
                                       U_eiou_fu_detailed = detailed_mat,
                                       phi = phi_vec)
