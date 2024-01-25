@@ -390,7 +390,7 @@ test_that("calc_A() works as expected for downstream swim", {
   expect_equal(io_mats$D_s[[2]]["Furnaces", "NG [from Dist.]"], 0.6097560976)
   expect_equal(io_mats$D_feed_s[[3]]["Power plants", "NG [from Dist.]"], 0.3902439)
   expect_equal(io_mats$O_s[[4]]["Freight [tonne-km/year]", "Transport"], 0.9527775309)
-  expect_equal(io_mats$B[[3]]["Diesel [from Dist.]", "MD [from Truck engines]"], 0.009762856)
+  expect_equal(io_mats$B[[3]]["Diesel [from Dist.]", "MD [from Truck engines]"], 0.0097628561639755)
 
 # Try when one of the f vector entries is NA
   temp <- UKEnergy2000mats %>%
@@ -447,7 +447,7 @@ test_that("calc_L() works as expected for downstream swim", {
 
   # Check some values in the resulting matrices.
   expect_equal(io_mats$G_pxp[[1]]["Crude [from Dist.]", "Crude [from Fields]"], 0.9978994404)
-  expect_equal(io_mats$G_pxp[[2]]["Elect [from Grid]", "Crude [from Fields]"], 2.175612e-04)
+  expect_equal(io_mats$G_pxp[[2]]["Elect [from Grid]", "Crude [from Fields]"], 0.0002175612368146)
   expect_equal(io_mats$G_ixp[[1]]["Petrol dist.", "Petrol"], 1.0186915888)
   expect_equal(io_mats$G_ixp[[2]]["Light fixtures", "Elect [from Grid]"], 0.963300755)
 })
@@ -463,7 +463,7 @@ test_that("calc_io_mats() works for downstream swim", {
     dplyr::select(Country, Year, Energy.type, Last.stage, G_ixp, G_pxp)
   # Make sure these results match expected results by testing a few values.
   expect_equal(G_mats$G_pxp[[1]]["Crude [from Dist.]", "Crude [from Fields]"], 0.9978994404)
-  expect_equal(G_mats$G_pxp[[2]]["Elect [from Grid]", "Crude [from Fields]"], 2.175612e-04)
+  expect_equal(G_mats$G_pxp[[2]]["Elect [from Grid]", "Crude [from Fields]"], 0.0002175612368146)
   expect_equal(G_mats$G_ixp[[1]]["Petrol dist.", "Petrol"], 1.0186915888)
   expect_equal(G_mats$G_ixp[[2]]["Light fixtures", "Elect [from Grid]"], 0.963300755)
 })

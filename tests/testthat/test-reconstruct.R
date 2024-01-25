@@ -444,10 +444,10 @@ test_that("new_R_ps() works as expected", {
     calc_io_mats(direction = "downstream") %>%
     new_R_ps()
   expect_equal(unitaryR$U_prime[[1]]["Crude [from Dist.]", "Oil refineries"], 0.940157103)
-  expect_equal(unitaryR$U_prime[[1]]["Elect [from Grid]", "Crude dist."], 0.0005812516)
+  expect_equal(unitaryR$U_prime[[1]]["Elect [from Grid]", "Crude dist."], 0.0005812516177003)
   expect_equal(unitaryR$V_prime[[1]]["Petrol dist.", "Petrol [from Dist.]"], 0.53022566)
   expect_equal(unitaryR$V_prime[[1]]["Oil refineries", "Diesel"], 0.41017456)
-  expect_equal(unitaryR$Y_prime[[1]]["Elect [from Grid]", "Residential"], 0.1395004)
+  expect_equal(unitaryR$Y_prime[[1]]["Elect [from Grid]", "Residential"], 0.1395003882480729)
   expect_equal(unitaryR$Y_prime[[1]]["Petrol [from Dist.]", "Transport"], 0.5202214)
 
 
