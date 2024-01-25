@@ -17,14 +17,26 @@ test_that("primary_aggregates() works as expected", {
     Recca::primary_aggregates(p_industries = p_industries,
                               notation = RCLabels::dash_notation,
                               by = "Total", aggregate_primary = "EX_total_agg.ktoe")
-  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
-                      dplyr::select("EX_total_agg.ktoe"), 93000)
-  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$useful) %>%
-                      dplyr::select("EX_total_agg.ktoe"), 93000)
-  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Energy.type == "E", Last.stage == IEATools::last_stages$services) %>%
-                      dplyr::select("EX_total_agg.ktoe"), 93000)
-  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Energy.type == "X", Last.stage == IEATools::last_stages$services) %>%
-                      dplyr::select("EX_total_agg.ktoe"), 98220)
+  primary_total_aggregates_sut |>
+    dplyr::filter(Last.stage == IEATools::last_stages$final) |>
+    dplyr::select("EX_total_agg.ktoe") |>
+    magrittr::extract2(1) |>
+    expect_equal(93000)
+  primary_total_aggregates_sut |>
+    dplyr::filter(Last.stage == IEATools::last_stages$useful) |>
+    dplyr::select("EX_total_agg.ktoe") |>
+    magrittr::extract2(1) |>
+    expect_equal(93000)
+  primary_total_aggregates_sut |>
+    dplyr::filter(Energy.type == "E", Last.stage == IEATools::last_stages$services) |>
+    dplyr::select("EX_total_agg.ktoe") |>
+    magrittr::extract2(1) |>
+    expect_equal(93000)
+  primary_total_aggregates_sut |>
+    dplyr::filter(Energy.type == "X", Last.stage == IEATools::last_stages$services) |>
+    dplyr::select("EX_total_agg.ktoe") |>
+    magrittr::extract2(1) |>
+    expect_equal(98220)
 
   # Primary PRODUCT aggregates
   primary_product_aggregates_sut <- UKEnergy2000mats %>%
@@ -34,14 +46,36 @@ test_that("primary_aggregates() works as expected", {
     dplyr::select(Country, Year, Last.stage, Energy.type, EX_product_agg.ktoe) %>%
     tidyr::gather(key = "matnames", value = "matvals", EX_product_agg.ktoe) %>%
     matsindf::expand_to_tidy(drop = 0)
-  expect_equivalent(primary_product_aggregates_sut %>% dplyr::filter(Energy.type == "E" & rownames == "Crude") %>%
-                      dplyr::select(matvals) %>% unlist(), rep(50000, 3))
-  expect_equivalent(primary_product_aggregates_sut %>% dplyr::filter(Energy.type == "E" & rownames == "NG") %>%
-                      dplyr::select(matvals) %>% unlist(), rep(43000, 3))
-  expect_equivalent(primary_product_aggregates_sut %>% dplyr::filter(Energy.type == "X" & rownames == "Crude") %>%
-                      dplyr::select(matvals) %>% unlist(), 53500)
-  expect_equivalent(primary_product_aggregates_sut %>% dplyr::filter(Energy.type == "X" & rownames == "NG") %>%
-                      dplyr::select(matvals) %>% unlist(), 44720)
+  primary_product_aggregates_sut |>
+    dplyr::filter(Energy.type == "E" & rownames == "Crude") |>
+    dplyr::select(matvals) |>
+    unlist() |>
+    unname() |>
+    expect_equal(rep(50000, 3))
+  primary_product_aggregates_sut |>
+    dplyr::filter(Energy.type == "E" & rownames == "Crude") |>
+    dplyr::select(matvals) |>
+    unlist() |>
+    unname() |>
+    expect_equal(rep(50000, 3))
+  primary_product_aggregates_sut |>
+    dplyr::filter(Energy.type == "E" & rownames == "NG") |>
+    dplyr::select(matvals) |>
+    unlist() |>
+    unname() |>
+    expect_equal(rep(43000, 3))
+  primary_product_aggregates_sut |>
+    dplyr::filter(Energy.type == "X" & rownames == "Crude") |>
+    dplyr::select(matvals) |>
+    unlist() |>
+    unname() |>
+    expect_equal(53500)
+  primary_product_aggregates_sut |>
+    dplyr::filter(Energy.type == "X" & rownames == "NG") |>
+    dplyr::select(matvals) |>
+    unlist() |>
+    unname() |>
+    expect_equal(44720)
 
   # Primary FLOW aggregates
   primary_flow_aggregates_sut <- UKEnergy2000mats %>%
@@ -51,14 +85,30 @@ test_that("primary_aggregates() works as expected", {
     dplyr::select(Country, Year, Last.stage, Energy.type, EX_flow_agg.ktoe) %>%
     tidyr::gather(key = "matnames", value = "matvals", EX_flow_agg.ktoe) %>%
     matsindf::expand_to_tidy(drop = 0)
-  expect_equivalent(primary_flow_aggregates_sut %>% dplyr::filter(Energy.type == "E" & colnames == "Resources [of Crude]") %>%
-                      dplyr::select(matvals) %>% unlist(), rep(50000, 3))
-  expect_equivalent(primary_flow_aggregates_sut %>% dplyr::filter(Energy.type == "E" & colnames == "Resources [of NG]") %>%
-                      dplyr::select(matvals) %>% unlist(), rep(43000, 3))
-  expect_equivalent(primary_flow_aggregates_sut %>% dplyr::filter(Energy.type == "X" & colnames == "Resources [of Crude]") %>%
-                      dplyr::select(matvals) %>% unlist(), 53500)
-  expect_equivalent(primary_flow_aggregates_sut %>% dplyr::filter(Energy.type == "X" & colnames == "Resources [of NG]") %>%
-                      dplyr::select(matvals) %>% unlist(), 44720)
+  primary_flow_aggregates_sut |>
+    dplyr::filter(Energy.type == "E" & colnames == "Resources [of Crude]") |>
+    dplyr::select(matvals) |>
+    unlist() |>
+    unname() |>
+    expect_equal(rep(50000, 3))
+  primary_flow_aggregates_sut |>
+    dplyr::filter(Energy.type == "E" & colnames == "Resources [of NG]") |>
+    dplyr::select(matvals) |>
+    unlist() |>
+    unname() |>
+    expect_equal(rep(43000, 3))
+  primary_flow_aggregates_sut |>
+    dplyr::filter(Energy.type == "X" & colnames == "Resources [of Crude]") |>
+    dplyr::select(matvals) |>
+    unlist() |>
+    unname() |>
+    expect_equal(53500)
+  primary_flow_aggregates_sut |>
+    dplyr::filter(Energy.type == "X" & colnames == "Resources [of NG]") |>
+    dplyr::select(matvals) |>
+    unlist() |>
+    unname() |>
+    expect_equal(44720)
 })
 
 
