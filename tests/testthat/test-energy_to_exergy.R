@@ -246,3 +246,10 @@ test_that("extend_fu_details_to_exergy() works as expected", {
     all() |>
     expect_true()
 })
+
+
+test_that("extend_fu_details_to_exergy() works with NULL matrices", {
+  extend_fu_details_to_exergy(Y_fu_details = NULL,
+                              U_eiou_fu_details = NULL,
+                              phi = NULL)
+})

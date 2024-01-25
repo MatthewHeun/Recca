@@ -139,6 +139,9 @@ the row and column names.
 The energy stage of the entries in the details matrices are indicated
 by the entry in the \code{Energy.type} column,
 typically "Useful".
+
+If either of the energy details matrices are \code{NULL},
+the exergy matrix returned from this function is also \code{NULL}.
 }
 \examples{
 details_mat <- Matrix::sparseMatrix(

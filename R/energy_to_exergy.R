@@ -291,6 +291,9 @@ extend_to_exergy <- function(.sutmats = NULL,
 #' by the entry in the `Energy.type` column,
 #' typically "Useful".
 #'
+#' If either of the energy details matrices are `NULL`,
+#' the exergy matrix returned from this function is also `NULL`.
+#'
 #' @param .fu_details_mats A data frame containing details matrices.
 #' @param Y_fu_details The name of the column of `fu_details_mats` containing details matrices or a details matrix.
 #' @param U_eiou_fu_details The name of the column of `fu_details_mats` containing details matrices or a details matrix.
@@ -422,46 +425,54 @@ extend_fu_details_to_exergy <- function(.fu_details_mats = NULL,
     # thereby reducing computational complexity and memory consumption.
 
     # Y_fu_details * phi_hat
-    phi_vec_Y <- phi_vec
-    if (!is.null(ctY) & !is.null(rtp)) {
-      if (ctY == expected_coltype_YU & rtp == product_type) {
-        # In this situation, we want to set rowtype
-        # and coltype of phi_vec_Y to expected_coltype
-        # so that multiplication can occur and so that the
-        # resulting matrix product maintains original coltype
-        # of "Product [from Industry]".
-        phi_vec_Y <- matsbyname::setrowtype(phi_vec_Y, expected_coltype_YU)
+    if (is.null(Y_fu_details_mat)) {
+      Y_fu_details_X_mat <- NULL
+    } else {
+      phi_vec_Y <- phi_vec
+      if (!is.null(ctY) & !is.null(rtp)) {
+        if (ctY == expected_coltype_YU & rtp == product_type) {
+          # In this situation, we want to set rowtype
+          # and coltype of phi_vec_Y to expected_coltype
+          # so that multiplication can occur and so that the
+          # resulting matrix product maintains original coltype
+          # of "Product [from Industry]".
+          phi_vec_Y <- matsbyname::setrowtype(phi_vec_Y, expected_coltype_YU)
+        }
       }
+      Y_fu_details_X_mat <- matsbyname::matrixproduct_byname(Y_fu_details_mat,
+                                                             matsbyname::vec_from_store_byname(a = Y_fu_details_mat,
+                                                                                               v = phi_vec_Y,
+                                                                                               a_piece = mat_piece, v_piece = phi_piece,
+                                                                                               notation = mat_col_notation,
+                                                                                               prepositions = mat_colname_preposition,
+                                                                                               margin = 2) |>
+                                                               matsbyname::hatize_byname(keep = "rownames"))
     }
-    Y_fu_details_X_mat <- matsbyname::matrixproduct_byname(Y_fu_details_mat,
-                                                           matsbyname::vec_from_store_byname(a = Y_fu_details_mat,
-                                                                                             v = phi_vec_Y,
-                                                                                             a_piece = mat_piece, v_piece = phi_piece,
-                                                                                             notation = mat_col_notation,
-                                                                                             prepositions = mat_colname_preposition,
-                                                                                             margin = 2) |>
-                                                              matsbyname::hatize_byname(keep = "rownames"))
 
     # U_eiou_fu_details * phi_hat
-    phi_vec_U <- phi_vec
-    if (!is.null(ctU) & !is.null(rtp)) {
-      if (ctU == expected_coltype_YU & rtp == product_type) {
-        # In this situation, we want to set rowtype
-        # and coltype of phi_vec_Y to expected_coltype
-        # so that multiplication can occur and so that the
-        # resulting matrix product maintains original coltype
-        # of "Product [from Industry]".
-        phi_vec_U <- matsbyname::setrowtype(phi_vec_U, expected_coltype_YU)
+    if (is.null(U_eiou_fu_details_mat)) {
+      U_EIOU_fu_details_X_mat <- NULL
+    } else {
+      phi_vec_U <- phi_vec
+      if (!is.null(ctU) & !is.null(rtp)) {
+        if (ctU == expected_coltype_YU & rtp == product_type) {
+          # In this situation, we want to set rowtype
+          # and coltype of phi_vec_Y to expected_coltype
+          # so that multiplication can occur and so that the
+          # resulting matrix product maintains original coltype
+          # of "Product [from Industry]".
+          phi_vec_U <- matsbyname::setrowtype(phi_vec_U, expected_coltype_YU)
+        }
       }
+      U_EIOU_fu_details_X_mat <- matsbyname::matrixproduct_byname(U_eiou_fu_details_mat,
+                                                                  matsbyname::vec_from_store_byname(a = U_eiou_fu_details_mat,
+                                                                                                    v = phi_vec_U,
+                                                                                                    a_piece = mat_piece, v_piece = phi_piece,
+                                                                                                    notation = mat_col_notation,
+                                                                                                    prepositions = mat_colname_preposition,
+                                                                                                    margin = 2) |>
+                                                                    matsbyname::hatize_byname(keep = "rownames"))
     }
-    U_EIOU_fu_details_X_mat <- matsbyname::matrixproduct_byname(U_eiou_fu_details_mat,
-                                                                 matsbyname::vec_from_store_byname(a = U_eiou_fu_details_mat,
-                                                                                                   v = phi_vec_U,
-                                                                                                   a_piece = mat_piece, v_piece = phi_piece,
-                                                                                                   notation = mat_col_notation,
-                                                                                                   prepositions = mat_colname_preposition,
-                                                                                                   margin = 2) |>
-                                                                   matsbyname::hatize_byname(keep = "rownames"))
 
     # Create the list of items to return
     list(Y_fu_details_X_mat,
