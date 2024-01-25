@@ -123,14 +123,26 @@ test_that("primary_aggregates() works with leading pattern for names", {
                               piece = "noun",
                               notation = RCLabels::of_notation,
                               pattern_type = "leading", by = "Total", aggregate_primary = "EX_total_agg.ktoe")
-  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
-                      dplyr::select("EX_total_agg.ktoe"), 93000)
-  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$useful) %>%
-                      dplyr::select("EX_total_agg.ktoe"), 93000)
-  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Energy.type == "E", Last.stage == IEATools::last_stages$services) %>%
-                      dplyr::select("EX_total_agg.ktoe"), 93000)
-  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Energy.type == "X", Last.stage == IEATools::last_stages$services) %>%
-                      dplyr::select("EX_total_agg.ktoe"), 98220)
+  primary_total_aggregates_sut |>
+    dplyr::filter(Last.stage == IEATools::last_stages$final) |>
+    dplyr::select("EX_total_agg.ktoe") |>
+    magrittr::extract2(1) |>
+    expect_equal(93000)
+  primary_total_aggregates_sut |>
+    dplyr::filter(Last.stage == IEATools::last_stages$useful) |>
+    dplyr::select("EX_total_agg.ktoe") |>
+    magrittr::extract2(1) |>
+    expect_equal(93000)
+  primary_total_aggregates_sut |>
+    dplyr::filter(Energy.type == "E", Last.stage == IEATools::last_stages$services) |>
+    dplyr::select("EX_total_agg.ktoe") |>
+    magrittr::extract2(1) |>
+    expect_equal(93000)
+  primary_total_aggregates_sut |>
+  dplyr::filter(Energy.type == "X", Last.stage == IEATools::last_stages$services) |>
+    dplyr::select("EX_total_agg.ktoe") |>
+    magrittr::extract(1) |>
+    expect_equal(98220)
 })
 
 
