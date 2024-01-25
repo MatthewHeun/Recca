@@ -434,12 +434,12 @@ extend_fu_details_to_exergy <- function(.fu_details_mats = NULL,
       }
     }
     Y_fu_details_X_mat <- matsbyname::matrixproduct_byname(Y_fu_details_mat,
-                                                            matsbyname::vec_from_store_byname(a = Y_fu_details_mat,
-                                                                                              v = phi_vec_Y,
-                                                                                              a_piece = mat_piece, v_piece = phi_piece,
-                                                                                              notation = mat_col_notation,
-                                                                                              prepositions = mat_colname_preposition,
-                                                                                              margin = 2) |>
+                                                           matsbyname::vec_from_store_byname(a = Y_fu_details_mat,
+                                                                                             v = phi_vec_Y,
+                                                                                             a_piece = mat_piece, v_piece = phi_piece,
+                                                                                             notation = mat_col_notation,
+                                                                                             prepositions = mat_colname_preposition,
+                                                                                             margin = 2) |>
                                                               matsbyname::hatize_byname(keep = "rownames"))
 
     # U_eiou_fu_details * phi_hat
