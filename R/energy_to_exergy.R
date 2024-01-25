@@ -372,6 +372,16 @@ extend_fu_details_to_exergy <- function(.fu_details_mats = NULL,
                                          industry_type = IEATools::row_col_types$industry,
                                          product_type = IEATools::row_col_types$product) {
 
+  # Check if .fu_details_mats is a data frame and we don't have the required columns.
+  # This is probably a country without Y and without U_eiou (there are some).
+  # In this case, return NULL.
+  if (is.data.frame(.fu_details_mats)) {
+    if (! (Y_fu_details_colname %in% colnames(.fu_details_mats)) &
+        ! (U_eiou_fu_details_colname %in% colnames(.fu_details_mats))) {
+      return(NULL)
+    }
+  }
+
   Y_fu_details_X_name <- paste0(Y_fu_details_colname, .exergy_suffix)
   U_EIOU_fu_details_X_name <- paste0(U_eiou_fu_details_colname, .exergy_suffix)
 
