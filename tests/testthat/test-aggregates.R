@@ -139,11 +139,12 @@ test_that("primary_aggregates() works with leading pattern for names", {
     magrittr::extract2(1) |>
     expect_equal(93000)
   primary_total_aggregates_sut |>
-  dplyr::filter(Energy.type == "X", Last.stage == IEATools::last_stages$services) |>
+    dplyr::filter(Energy.type == "X", Last.stage == IEATools::last_stages$services) |>
     dplyr::select("EX_total_agg.ktoe") |>
-    magrittr::extract(1) |>
+    magrittr::extract2(1) |>
     expect_equal(98220)
 })
+
 
 
 test_that("primary_aggregates() works when R is folded into V", {
@@ -161,8 +162,11 @@ test_that("primary_aggregates() works when R is folded into V", {
                               notation = RCLabels::dash_notation,
                               by = "Total",
                               aggregate_primary = "EX_total_agg.ktoe")
-  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
-                      dplyr::select("EX_total_agg.ktoe"), 93000)
+  primary_total_aggregates_sut |>
+    dplyr::filter(Last.stage == IEATools::last_stages$final) |>
+    dplyr::select("EX_total_agg.ktoe") |>
+    magrittr::extract2(1) |>
+    expect_equal(93000)
 })
 
 
@@ -177,22 +181,46 @@ test_that("primary_aggregates() works for net and gross", {
                               notation = RCLabels::of_notation,
                               add_net_gross_cols = TRUE,
                               by = "Total")
-  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
-                      dplyr::select(Recca::aggregate_cols$net_aggregate_primary), 93000)
-  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
-                      dplyr::select(Recca::aggregate_cols$gross_aggregate_primary), 93000)
-  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$useful) %>%
-                      dplyr::select(Recca::aggregate_cols$net_aggregate_primary), 93000)
-  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Last.stage == IEATools::last_stages$useful) %>%
-                      dplyr::select(Recca::aggregate_cols$gross_aggregate_primary), 93000)
-  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Energy.type == "E", Last.stage == IEATools::last_stages$services) %>%
-                      dplyr::select(Recca::aggregate_cols$net_aggregate_primary), 93000)
-  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Energy.type == "E", Last.stage == IEATools::last_stages$services) %>%
-                      dplyr::select(Recca::aggregate_cols$gross_aggregate_primary), 93000)
-  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Energy.type == "X", Last.stage == IEATools::last_stages$services) %>%
-                      dplyr::select(Recca::aggregate_cols$net_aggregate_primary), 98220)
-  expect_equivalent(primary_total_aggregates_sut %>% dplyr::filter(Energy.type == "X", Last.stage == IEATools::last_stages$services) %>%
-                      dplyr::select(Recca::aggregate_cols$gross_aggregate_primary), 98220)
+  primary_total_aggregates_sut %>%
+    dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
+    dplyr::select(Recca::aggregate_cols$net_aggregate_primary) |>
+    magrittr::extract2(1) |>
+    expect_equal(93000)
+  primary_total_aggregates_sut %>%
+    dplyr::filter(Last.stage == IEATools::last_stages$final) %>%
+    dplyr::select(Recca::aggregate_cols$gross_aggregate_primary) |>
+    magrittr::extract2(1) |>
+    expect_equal(93000)
+  primary_total_aggregates_sut %>%
+    dplyr::filter(Last.stage == IEATools::last_stages$useful) %>%
+    dplyr::select(Recca::aggregate_cols$net_aggregate_primary) |>
+    magrittr::extract2(1) |>
+    expect_equal(93000)
+  primary_total_aggregates_sut %>%
+    dplyr::filter(Last.stage == IEATools::last_stages$useful) %>%
+    dplyr::select(Recca::aggregate_cols$gross_aggregate_primary) |>
+    magrittr::extract2(1) |>
+    expect_equal(93000)
+  primary_total_aggregates_sut %>%
+    dplyr::filter(Energy.type == "E", Last.stage == IEATools::last_stages$services) %>%
+    dplyr::select(Recca::aggregate_cols$net_aggregate_primary) |>
+    magrittr::extract2(1) |>
+    expect_equal(93000)
+  primary_total_aggregates_sut %>%
+    dplyr::filter(Energy.type == "E", Last.stage == IEATools::last_stages$services) %>%
+    dplyr::select(Recca::aggregate_cols$gross_aggregate_primary) |>
+    magrittr::extract2(1) |>
+    expect_equal(93000)
+  primary_total_aggregates_sut %>%
+    dplyr::filter(Energy.type == "X", Last.stage == IEATools::last_stages$services) %>%
+    dplyr::select(Recca::aggregate_cols$net_aggregate_primary) |>
+    magrittr::extract2(1) |>
+    expect_equal(98220)
+  primary_total_aggregates_sut %>%
+    dplyr::filter(Energy.type == "X", Last.stage == IEATools::last_stages$services) %>%
+    dplyr::select(Recca::aggregate_cols$gross_aggregate_primary) |>
+    magrittr::extract2(1) |>
+    expect_equal(98220)
 })
 
 
