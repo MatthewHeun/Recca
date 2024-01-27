@@ -5,14 +5,16 @@ test_that("edge_list() (unsimplified) works correctly", {
   # Verify a few of the data points
   el_final <- eldf$`Edge list`[[1]] %>%
     dplyr::mutate_if(is.factor, as.character)
-  expect_equivalent(el_final %>%
-                      dplyr::filter(From == "Crude [from Dist.]", To == "Crude dist.", Product == "Crude [from Dist.]") %>%
-                      dplyr::select(Value),
-                    500)
-  expect_equivalent(el_final %>%
-                      dplyr::filter(From == "Crude dist.", To == "Crude [from Dist.]", Product == "Crude [from Dist.]") %>%
-                      dplyr::select(Value),
-                    47500)
+  el_final %>%
+    dplyr::filter(From == "Crude [from Dist.]", To == "Crude dist.", Product == "Crude [from Dist.]") %>%
+    dplyr::select(Value) |>
+    magrittr::extract2(1) |>
+    expect_equal(500)
+  el_final %>%
+    dplyr::filter(From == "Crude dist.", To == "Crude [from Dist.]", Product == "Crude [from Dist.]") %>%
+    dplyr::select(Value) |>
+    magrittr::extract2(1) |>
+    expect_equal(47500)
 })
 
 
@@ -34,18 +36,21 @@ test_that("edge_list() (simplified) works correctly", {
   el_final_simplified <- eldf_simplified$`Edge list`[[1]] %>%
     dplyr::mutate_if(is.factor, as.character)
   # Verify a few of the data points
-  expect_equivalent(el_final_simplified %>%
-                      dplyr::filter(From == "Crude dist.", To == "Crude dist.", Product == "Crude [from Dist.]") %>%
-                      dplyr::select(Value),
-                    500)
-  expect_equivalent(el_final_simplified %>%
-                      dplyr::filter(From == "Elect. grid", To == "Residential", Product == "Elect [from Grid]") %>%
-                      dplyr::select(Value),
-                    6000)
-  expect_equivalent(el_final_simplified %>%
-                      dplyr::filter(From == "Oil refineries", To == "Oil refineries", Product == "Diesel") %>%
-                      dplyr::select(Value),
-                    5000)
+  el_final_simplified %>%
+    dplyr::filter(From == "Crude dist.", To == "Crude dist.", Product == "Crude [from Dist.]") %>%
+    dplyr::select(Value) |>
+    magrittr::extract2(1) |>
+    expect_equal(500)
+  el_final_simplified %>%
+    dplyr::filter(From == "Elect. grid", To == "Residential", Product == "Elect [from Grid]") %>%
+    dplyr::select(Value) |>
+    magrittr::extract2(1) |>
+    expect_equal(6000)
+  el_final_simplified %>%
+    dplyr::filter(From == "Oil refineries", To == "Oil refineries", Product == "Diesel") %>%
+    dplyr::select(Value) |>
+    magrittr::extract2(1) |>
+    expect_equal(5000)
 })
 
 
@@ -56,18 +61,21 @@ test_that("waste_edges() works as expected", {
   el_final <- eldf$`Edge list`[[1]] %>%
     dplyr::mutate_if(is.factor, as.character)
   # Verify that a few of the numbers are correct
-  expect_equivalent(el_final %>%
-                      dplyr::filter(From == "Crude dist.", To == "Waste", Product == "Waste") %>%
-                      dplyr::select(Value),
-                    550)
-  expect_equivalent(el_final %>%
-                      dplyr::filter(From == "Power plants", To == "Waste", Product == "Waste") %>%
-                      dplyr::select(Value),
-                    9700)
-  expect_equivalent(el_final %>%
-                      dplyr::filter(From == "Gas wells & proc.", To == "Waste", Product == "Waste") %>%
-                      dplyr::select(Value),
-                    2075)
+  el_final %>%
+    dplyr::filter(From == "Crude dist.", To == "Waste", Product == "Waste") %>%
+    dplyr::select(Value) |>
+    magrittr::extract2(1) |>
+    expect_equal(550)
+  el_final %>%
+    dplyr::filter(From == "Power plants", To == "Waste", Product == "Waste") %>%
+    dplyr::select(Value) |>
+    magrittr::extract2(1) |>
+    expect_equal(9700)
+  el_final %>%
+    dplyr::filter(From == "Gas wells & proc.", To == "Waste", Product == "Waste") %>%
+    dplyr::select(Value) |>
+    magrittr::extract2(1) |>
+    expect_equal(2075)
 
   # Test waste_edges when only matrices are specified
   R_mat <- sutmats$R[[1]]
@@ -75,31 +83,37 @@ test_that("waste_edges() works as expected", {
   V_mat <- sutmats$V[[1]]
   Y_mat <- sutmats$Y[[1]]
   el_final <- edge_list(R = R_mat, U = U_mat, V = V_mat, Y = Y_mat)[["Edge list"]]
-  expect_equivalent(el_final %>%
-                      dplyr::filter(From == "Crude dist.", To == "Crude dist.", Product == "Crude [from Dist.]") %>%
-                      dplyr::select(Value),
-                    500)
-  expect_equivalent(el_final %>%
-                      dplyr::filter(From == "Elect. grid", To == "Residential", Product == "Elect [from Grid]") %>%
-                      dplyr::select(Value),
-                    6000)
-  expect_equivalent(el_final %>%
-                      dplyr::filter(From == "Oil refineries", To == "Oil refineries", Product == "Diesel") %>%
-                      dplyr::select(Value),
-                    5000)
+  el_final %>%
+    dplyr::filter(From == "Crude dist.", To == "Crude dist.", Product == "Crude [from Dist.]") %>%
+    dplyr::select(Value) |>
+    magrittr::extract2(1) |>
+    expect_equal(500)
+  el_final %>%
+    dplyr::filter(From == "Elect. grid", To == "Residential", Product == "Elect [from Grid]") %>%
+    dplyr::select(Value) |>
+    magrittr::extract2(1) |>
+    expect_equal(6000)
+  el_final %>%
+    dplyr::filter(From == "Oil refineries", To == "Oil refineries", Product == "Diesel") %>%
+    dplyr::select(Value) |>
+    magrittr::extract2(1) |>
+    expect_equal(5000)
 
-  expect_equivalent(el_final %>%
-                      dplyr::filter(From == "Crude dist.", To == "Waste", Product == "Waste") %>%
-                      dplyr::select(Value),
-                    550)
-  expect_equivalent(el_final %>%
-                      dplyr::filter(From == "Power plants", To == "Waste", Product == "Waste") %>%
-                      dplyr::select(Value),
-                    9700)
-  expect_equivalent(el_final %>%
-                      dplyr::filter(From == "Gas wells & proc.", To == "Waste", Product == "Waste") %>%
-                      dplyr::select(Value),
-                    2075)
+  el_final %>%
+    dplyr::filter(From == "Crude dist.", To == "Waste", Product == "Waste") %>%
+    dplyr::select(Value) |>
+    magrittr::extract2(1) |>
+    expect_equal(550)
+  el_final %>%
+    dplyr::filter(From == "Power plants", To == "Waste", Product == "Waste") %>%
+    dplyr::select(Value) |>
+    magrittr::extract2(1) |>
+    expect_equal(9700)
+  el_final %>%
+    dplyr::filter(From == "Gas wells & proc.", To == "Waste", Product == "Waste") %>%
+    dplyr::select(Value) |>
+    magrittr::extract2(1) |>
+    expect_equal(2075)
 })
 
 
