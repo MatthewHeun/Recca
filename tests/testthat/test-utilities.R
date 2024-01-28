@@ -63,7 +63,12 @@ test_that("separate_RV() works correctly", {
 
   # If I try to separate R from V on the mats data frame, I should get nothing,
   # because R has already been separated from V.
-  expect_warning(mats %>% separate_RV(R_plus_V = "V"), "No R created in separate_RV")
+  mats %>% separate_RV(R_plus_V = "V") |>
+    expect_warning("No R created in separate_RV") |>
+    expect_warning("No R created in separate_RV") |>
+    expect_warning("No R created in separate_RV") |>
+    expect_warning("No R created in separate_RV") |>
+    expect_warning("Name collision in matsindf::matsindf_apply")
 })
 
 
