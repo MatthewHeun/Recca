@@ -43,19 +43,19 @@ test_that("verify_cols_missing works when either strings or names are provided",
   df <- data.frame(a = c(1,2), b = c(3,4))
   # Try with strings
   newcols <- c("a", "b")
-  expect_error(verify_cols_missing(df, newcols),
+  expect_error(matsindf::verify_cols_missing(df, newcols),
                Hmisc::escapeRegex("column(s) 'a', 'b' is (are) already column names in data frame 'df'"))
   # Try with names
   newcolnames <- lapply(newcols, as.name)
-  expect_error(verify_cols_missing(df, newcolnames),
+  expect_error(matsindf::verify_cols_missing(df, newcolnames),
                Hmisc::escapeRegex("column(s) 'a', 'b' is (are) already column names in data frame 'df'"))
 })
 
 
 test_that("verify_cols_missing works with a single value", {
   df <- data.frame(a = c(1,2), b = c(3,4))
-  expect_silent(verify_cols_missing(df, as.name("c")))
-  expect_error(verify_cols_missing(df, as.name("a")),
+  expect_silent(matsindf::verify_cols_missing(df, as.name("c")))
+  expect_error(matsindf::verify_cols_missing(df, as.name("a")),
                Hmisc::escapeRegex("column(s) 'a' is (are) already column names in data frame 'df'"))
 })
 
