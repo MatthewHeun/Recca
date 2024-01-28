@@ -76,37 +76,42 @@ test_that("new_Y() works as expected", {
     dplyr::select(Country, Year, Energy.type, Last.stage, R_prime, U_prime, V_prime) %>%
     tidyr::gather(key = "matnames", value = "matvals", R_prime, U_prime, V_prime) %>%
     matsindf::expand_to_tidy(drop = 0)
-
-  expect_equivalent(Reconstructed_Residential %>%
-                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "U_prime", rownames == "Crude [from Dist.]", colnames == "Crude dist.") %>%
-                      dplyr::select(matvals) %>%
-                      unlist(),
-                    0.3481179450)
-  expect_equivalent(Reconstructed_Residential %>%
-                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$useful, matnames == "V_prime", rownames == "Truck engines", colnames == "MD [from Truck engines]") %>%
-                      dplyr::select(matvals) %>%
-                      unlist(),
-                    7.748625)
-  expect_equivalent(Reconstructed_Residential %>%
-                      dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, matnames == "V_prime", rownames == "Gas wells & proc.", colnames == "NG [from Wells]") %>%
-                      dplyr::select(matvals) %>%
-                      unlist(),
-                    16220.3637987185)
-  expect_equivalent(Reconstructed_Residential %>%
-                      dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, matnames == "U_prime", rownames == "Elect", colnames == "Elect. grid") %>%
-                      dplyr::select(matvals) %>%
-                      unlist(),
-                    6238.6014610456)
-  expect_equivalent(Reconstructed_Residential %>%
-                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "R_prime", rownames == "Resources [of NG]", colnames == "NG") %>%
-                      dplyr::select(matvals) %>%
-                      unlist(),
-                    16356.84944)
-  expect_equivalent(Reconstructed_Residential %>%
-                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$useful, matnames == "R_prime", rownames == "Resources [of Crude]", colnames == "Crude") %>%
-                      dplyr::select(matvals) %>%
-                      unlist(),
-                    102.20081)
+  Reconstructed_Residential %>%
+    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "U_prime", rownames == "Crude [from Dist.]", colnames == "Crude dist.") %>%
+    dplyr::select(matvals) %>%
+    unlist()|>
+    unname() |>
+    expect_equal(0.3481179450)
+  Reconstructed_Residential %>%
+    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$useful, matnames == "V_prime", rownames == "Truck engines", colnames == "MD [from Truck engines]") %>%
+    dplyr::select(matvals) %>%
+    unlist()|>
+    unname() |>
+    expect_equal(7.748625)
+  Reconstructed_Residential %>%
+    dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, matnames == "V_prime", rownames == "Gas wells & proc.", colnames == "NG [from Wells]") %>%
+    dplyr::select(matvals) %>%
+    unlist()|>
+    unname() |>
+    expect_equal(16220.3637987185)
+  Reconstructed_Residential %>%
+    dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, matnames == "U_prime", rownames == "Elect", colnames == "Elect. grid") %>%
+    dplyr::select(matvals) %>%
+    unlist()|>
+    unname() |>
+    expect_equal(6238.6014610456)
+  Reconstructed_Residential %>%
+    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "R_prime", rownames == "Resources [of NG]", colnames == "NG") %>%
+    dplyr::select(matvals) %>%
+    unlist()|>
+    unname() |>
+    expect_equal(16356.84944)
+  Reconstructed_Residential %>%
+    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$useful, matnames == "R_prime", rownames == "Resources [of Crude]", colnames == "Crude") %>%
+    dplyr::select(matvals) %>%
+    unlist()|>
+    unname() |>
+    expect_equal(102.20081)
 
   # Double Y matrix
   Reconstructed_Double_Y <- UKEnergy2000mats %>%
@@ -233,16 +238,18 @@ test_that("new_k_ps() works as expected", {
     dplyr::select(Country, Year, Energy.type, Last.stage, U_prime, V_prime) %>%
     tidyr::gather(key = "matnames", value = "matvals", U_prime, V_prime) %>%
     matsindf::expand_to_tidy(drop = 0)
-  expect_equivalent(new_UV_noR %>%
-                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "U_prime", rownames == "FF elec", colnames == "Buildings") %>%
-                      dplyr::select(matvals) %>%
-                      unlist(),
-                    12.1)
-  expect_equivalent(new_UV_noR %>%
-                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "V_prime", rownames == "Buildings", colnames == "Bldg services") %>%
-                      dplyr::select(matvals) %>%
-                      unlist(),
-                    25.2)
+  new_UV_noR %>%
+    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "U_prime", rownames == "FF elec", colnames == "Buildings") %>%
+    dplyr::select(matvals) %>%
+    unlist()|>
+    unname() |>
+    expect_equal(12.1)
+  new_UV_noR %>%
+    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "V_prime", rownames == "Buildings", colnames == "Bldg services") %>%
+    dplyr::select(matvals) %>%
+    unlist()|>
+    unname() |>
+    expect_equal(25.2)
 
   # This test below is part of the R_prime matrix.
   # So we need to change the new_k_ps() matrix before implementing the test.
@@ -258,16 +265,18 @@ test_that("new_k_ps() works as expected", {
     dplyr::select(Country, Year, Energy.type, Last.stage, R_prime, U_prime, V_prime) %>%
     tidyr::gather(key = "matnames", value = "matvals", R_prime, U_prime, V_prime) %>%
     matsindf::expand_to_tidy(drop = 0)
-  expect_equivalent(new_UV_withR %>%
-                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "U_prime", rownames == "FF elec", colnames == "Buildings") %>%
-                      dplyr::select(matvals) %>%
-                      unlist(),
-                    12.1)
-  expect_equivalent(new_UV_withR %>%
-                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "V_prime", rownames == "Buildings", colnames == "Bldg services") %>%
-                      dplyr::select(matvals) %>%
-                      unlist(),
-                    25.2)
+  new_UV_withR %>%
+    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "U_prime", rownames == "FF elec", colnames == "Buildings") %>%
+    dplyr::select(matvals) %>%
+    unlist()|>
+    unname() |>
+    expect_equal(12.1)
+  new_UV_withR %>%
+    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "V_prime", rownames == "Buildings", colnames == "Bldg services") %>%
+    dplyr::select(matvals) %>%
+    unlist()|>
+    unname() |>
+    expect_equal(25.2)
   # This number is no longer found in the V_prime matrix.
   # It is found in the R_prime matrix.
   # So we should get an error with this one.
@@ -569,3 +578,4 @@ test_that("remove_neu() works correctly for products", {
   }
 
 })
+

@@ -1,7 +1,3 @@
-###########################################################
-context("EROI calculations")
-###########################################################
-
 
 test_that("calc_E_EIOU returns correct E_EIOU matrix and e_EIOU vector",{
   EIOU_mats <- UKEnergy2000mats %>%
