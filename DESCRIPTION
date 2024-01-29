@@ -47,7 +47,7 @@ Suggests:
     knitr,
     Matrix,
     rmarkdown,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
     spelling
 Remotes:
     github::MatthewHeun/IEATools
