@@ -17,7 +17,7 @@ region_aggregates(
     Recca::psut_cols$U_feed, U_eiou = Recca::psut_cols$U_eiou, r_eiou =
     Recca::psut_cols$r_eiou, V = Recca::psut_cols$V, Y = Recca::psut_cols$Y, S_units =
     Recca::psut_cols$S_units, Y_fu_details = Recca::psut_cols$Y_fu_details,
-    U_EIOU_fu_details = Recca::psut_cols$U_EIOU_fu_details),
+    U_eiou_fu_details = Recca::psut_cols$U_eiou_fu_details),
   matrix_names = Recca::psut_cols$matnames,
   matrix_values = Recca::psut_cols$matvals
 )
@@ -42,7 +42,7 @@ Default is \code{FALSE}.}
 \item{matrix_cols}{Names of columns in .sut_data containing matrices.
 Default is a vector of names from \code{Recca::psut_cols}:
 R, U, U_feed, U_eiou, r_eiou, V, Y, S_units,
-Y_fu_details, and U_EIOU_fu_details.}
+Y_fu_details, and U_eiou_fu_details.}
 
 \item{matrix_names, matrix_values}{Internal column names. See \code{Recca::psut_cols}.}
 }

@@ -315,7 +315,7 @@ finaldemand_aggregates <- function(.sutdata = NULL,
 #' @param matrix_cols Names of columns in .sut_data containing matrices.
 #'                    Default is a vector of names from `Recca::psut_cols`:
 #'                    R, U, U_feed, U_eiou, r_eiou, V, Y, S_units,
-#'                    Y_fu_details, and U_EIOU_fu_details.
+#'                    Y_fu_details, and U_eiou_fu_details.
 #' @param matrix_names,matrix_values Internal column names. See `Recca::psut_cols`.
 #'
 #' @return An aggregated version of `.sut_data` wherein the `many_colname` column is replaced
@@ -356,7 +356,7 @@ region_aggregates <- function(.sut_data,
                                               Y = Recca::psut_cols$Y,
                                               S_units = Recca::psut_cols$S_units,
                                               Y_fu_details = Recca::psut_cols$Y_fu_details,
-                                              U_EIOU_fu_details = Recca::psut_cols$U_EIOU_fu_details),
+                                              U_eiou_fu_details = Recca::psut_cols$U_eiou_fu_details),
                               matrix_names = Recca::psut_cols$matnames,
                               matrix_values = Recca::psut_cols$matvals) {
 
