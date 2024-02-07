@@ -1,6 +1,3 @@
-###########################################################
-context("Data prep utilities")
-###########################################################
 
 test_that("add_matnames works correctly with a prefixed Flow", {
   # Add an exports row to UKEnergy2000tidy
@@ -46,19 +43,19 @@ test_that("verify_cols_missing works when either strings or names are provided",
   df <- data.frame(a = c(1,2), b = c(3,4))
   # Try with strings
   newcols <- c("a", "b")
-  expect_error(verify_cols_missing(df, newcols),
+  expect_error(matsindf::verify_cols_missing(df, newcols),
                Hmisc::escapeRegex("column(s) 'a', 'b' is (are) already column names in data frame 'df'"))
   # Try with names
   newcolnames <- lapply(newcols, as.name)
-  expect_error(verify_cols_missing(df, newcolnames),
+  expect_error(matsindf::verify_cols_missing(df, newcolnames),
                Hmisc::escapeRegex("column(s) 'a', 'b' is (are) already column names in data frame 'df'"))
 })
 
 
 test_that("verify_cols_missing works with a single value", {
   df <- data.frame(a = c(1,2), b = c(3,4))
-  expect_silent(verify_cols_missing(df, as.name("c")))
-  expect_error(verify_cols_missing(df, as.name("a")),
+  expect_silent(matsindf::verify_cols_missing(df, as.name("c")))
+  expect_error(matsindf::verify_cols_missing(df, as.name("a")),
                Hmisc::escapeRegex("column(s) 'a' is (are) already column names in data frame 'df'"))
 })
 
@@ -70,29 +67,34 @@ test_that("S_units_from_tidy works as expected", {
     S_units_from_tidy() %>%
     tidyr::gather(key = "matnames", value = "matvals", S_units) %>%
     matsindf::expand_to_tidy()
-  expect_equivalent(S_units_expanded %>%
-                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, rownames == "Crude", colnames == "ktoe") %>%
-                      dplyr::select(matvals) %>%
-                      unlist(),
-                    1)
-  expect_equivalent(S_units_expanded %>%
-                      dplyr::filter(Energy.type ==IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, rownames == "Crude", colnames == "lumen-hrs/yr") %>%
-                      dplyr::select(matvals) %>%
-                      unlist(),
-                    0)
-  expect_equivalent(S_units_expanded %>%
-                      dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, rownames == "Freight [tonne-km/year]", colnames == "tonne-km/yr") %>%
-                      dplyr::select(matvals) %>%
-                      unlist(),
-                    1)
-  expect_equivalent(S_units_expanded %>%
-                      dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, rownames == "MD [from Car engines]", colnames == "passenger-km/yr") %>%
-                      dplyr::select(matvals) %>%
-                      unlist(),
-                    0)
-  expect_equivalent(S_units_expanded %>%
-                      dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, rownames == "Space heating [m3-K]", colnames == "tonne-km/yr") %>%
-                      dplyr::select(matvals) %>%
-                      unlist(),
-                    0)
+  S_units_expanded %>%
+    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, rownames == "Crude", colnames == "ktoe") %>%
+    dplyr::select(matvals) %>%
+    unlist()|>
+    unname() |>
+    expect_equal(1)
+  S_units_expanded %>%
+    dplyr::filter(Energy.type ==IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, rownames == "Crude", colnames == "lumen-hrs/yr") %>%
+    dplyr::select(matvals) %>%
+    unlist()|>
+    unname() |>
+    expect_equal(0)
+  S_units_expanded %>%
+    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, rownames == "Freight [tonne-km/year]", colnames == "tonne-km/yr") %>%
+    dplyr::select(matvals) %>%
+    unlist()|>
+    unname() |>
+    expect_equal(1)
+  S_units_expanded %>%
+    dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, rownames == "MD [from Car engines]", colnames == "passenger-km/yr") %>%
+    dplyr::select(matvals) %>%
+    unlist()|>
+    unname() |>
+    expect_equal(0)
+  S_units_expanded %>%
+    dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, rownames == "Space heating [m3-K]", colnames == "tonne-km/yr") %>%
+    dplyr::select(matvals) %>%
+    unlist()|>
+    unname() |>
+    expect_equal(0)
 })

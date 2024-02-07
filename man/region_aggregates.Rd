@@ -2,7 +2,7 @@
 % Please edit documentation in R/aggregates.R
 \name{region_aggregates}
 \alias{region_aggregates}
-\title{Aggregate into regions}
+\title{Aggregate PSUT matrices into regions}
 \usage{
 region_aggregates(
   .sut_data,
@@ -16,7 +16,8 @@ region_aggregates(
   matrix_cols = c(R = Recca::psut_cols$R, U = Recca::psut_cols$U, U_feed =
     Recca::psut_cols$U_feed, U_eiou = Recca::psut_cols$U_eiou, r_eiou =
     Recca::psut_cols$r_eiou, V = Recca::psut_cols$V, Y = Recca::psut_cols$Y, S_units =
-    Recca::psut_cols$S_units),
+    Recca::psut_cols$S_units, Y_fu_details = Recca::psut_cols$Y_fu_details,
+    U_eiou_fu_details = Recca::psut_cols$U_eiou_fu_details),
   matrix_names = Recca::psut_cols$matnames,
   matrix_values = Recca::psut_cols$matvals
 )
@@ -32,7 +33,7 @@ Default is \code{IEATools::iea_cols$country}.}
 for example continents into which countries are to be aggregated.
 Default is \code{Recca::aggregate_cols$region}.}
 
-\item{drop_na_few}{A boolean that tells whether to ignore (not aggregate) rows with  \code{NA} values in \code{few_colname}.
+\item{drop_na_few}{A boolean that tells whether to ignore (not aggregate) rows with \code{NA} values in \code{few_colname}.
 See details.
 Default is \code{FALSE}.}
 
@@ -40,7 +41,8 @@ Default is \code{FALSE}.}
 
 \item{matrix_cols}{Names of columns in .sut_data containing matrices.
 Default is a vector of names from \code{Recca::psut_cols}:
-R, U, U_feed, U_eiou, r_eiou, V, Y, and S_units.}
+R, U, U_feed, U_eiou, r_eiou, V, Y, S_units,
+Y_fu_details, and U_eiou_fu_details.}
 
 \item{matrix_names, matrix_values}{Internal column names. See \code{Recca::psut_cols}.}
 }
@@ -73,6 +75,9 @@ You need to opt in to this behavior when you know it's what you want.
 If all of \code{few_colname} entries are \code{NA} and
 \code{drop_na_few} is \code{TRUE},
 a zero-row data frame of the same structure as \code{.sut_data} is returned.
+
+This function works for both a data frame of PSUT matrices
+and a data frame of details matrices.
 }
 \examples{
 library(dplyr)

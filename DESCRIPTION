@@ -24,6 +24,9 @@ LazyData: true
 RoxygenNote: 7.3.1
 Roxygen: list(markdown = TRUE)
 Depends: R (>= 2.10)
+Config/testthat/edition: 3
+Config/testthat/parallel: true
+Config/testthat/start-first: chop, reconstruct, efficiency
 Imports:
     assertthat,
     dplyr,
@@ -42,8 +45,9 @@ Suggests:
     covr,
     Hmisc,
     knitr,
+    Matrix,
     rmarkdown,
-    testthat,
+    testthat (>= 3.0.0),
     spelling
 Remotes:
     github::MatthewHeun/IEATools

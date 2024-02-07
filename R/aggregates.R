@@ -272,7 +272,7 @@ finaldemand_aggregates <- function(.sutdata = NULL,
 }
 
 
-#' Aggregate into regions
+#' Aggregate PSUT matrices into regions
 #'
 #' Aggregates a data frame according to the regions given in a column of the data frame.
 #' The data frame (`.sut_data`) should contain metadata columns (including `many_colname` and `few_colname`)
@@ -298,6 +298,9 @@ finaldemand_aggregates <- function(.sutdata = NULL,
 #' `drop_na_few` is `TRUE`,
 #' a zero-row data frame of the same structure as `.sut_data` is returned.
 #'
+#' This function works for both a data frame of PSUT matrices
+#' and a data frame of details matrices.
+#'
 #' @param .sut_data A wide-by-matrices `matsindf`-style data frame of PSUT matrices.
 #' @param many_colname The name of the column in `.sut_data` that contains the "many" descriptions,
 #'                     for example countries that need to be aggregated to continents.
@@ -305,13 +308,14 @@ finaldemand_aggregates <- function(.sutdata = NULL,
 #' @param few_colname The of the column in `.sut_data` that contains the "few" descriptions,
 #'                    for example continents into which countries are to be aggregated.
 #'                    Default is `Recca::aggregate_cols$region`.
-#' @param drop_na_few A boolean that tells whether to ignore (not aggregate) rows with  `NA` values in `few_colname`.
+#' @param drop_na_few A boolean that tells whether to ignore (not aggregate) rows with `NA` values in `few_colname`.
 #'                    See details.
 #'                    Default is `FALSE`.
 #' @param year,method,energy_type,last_stage See `IEATools::iea_cols`.
 #' @param matrix_cols Names of columns in .sut_data containing matrices.
 #'                    Default is a vector of names from `Recca::psut_cols`:
-#'                    R, U, U_feed, U_eiou, r_eiou, V, Y, and S_units.
+#'                    R, U, U_feed, U_eiou, r_eiou, V, Y, S_units,
+#'                    Y_fu_details, and U_eiou_fu_details.
 #' @param matrix_names,matrix_values Internal column names. See `Recca::psut_cols`.
 #'
 #' @return An aggregated version of `.sut_data` wherein the `many_colname` column is replaced
@@ -350,7 +354,9 @@ region_aggregates <- function(.sut_data,
                                               r_eiou = Recca::psut_cols$r_eiou,
                                               V = Recca::psut_cols$V,
                                               Y = Recca::psut_cols$Y,
-                                              S_units = Recca::psut_cols$S_units),
+                                              S_units = Recca::psut_cols$S_units,
+                                              Y_fu_details = Recca::psut_cols$Y_fu_details,
+                                              U_eiou_fu_details = Recca::psut_cols$U_eiou_fu_details),
                               matrix_names = Recca::psut_cols$matnames,
                               matrix_values = Recca::psut_cols$matvals) {
 
@@ -362,7 +368,7 @@ region_aggregates <- function(.sut_data,
       (all(.sut_data[[few_colname]] |> is.na()) & drop_na_few)) {
     # Eliminate all rows
     .sut_data <- .sut_data[0, ]
-    # Return .sut_data unmodified,
+    # Return .dat unmodified,
     # except to eliminate the few_colname and ensure that the many_colname is present
     out <- .sut_data %>%
       dplyr::mutate(
@@ -376,17 +382,20 @@ region_aggregates <- function(.sut_data,
     return(out)
   }
 
-  # Handle the case when .sut_data has all NA values in few_colname
-  if (all(is.na(.sut_data[[many_colname]]))) {
-    # Return
-  }
-
-  # Make the incoming data frame tidy.
-  tidy_df <- .sut_data %>%
-    tidyr::pivot_longer(cols = unname(matrix_cols), names_to = matrix_names, values_to = matrix_values) %>%
-    # We need to re-calculate U ad r_EIOU matrices after aggregation.
-    # So get rid of them here.
-    dplyr::filter(! .data[[matrix_names]] == matrix_cols[["U"]], ! .data[[matrix_names]] == matrix_cols[["r_eiou"]])
+  U_present <- matrix_cols[["U"]] %in% colnames(.sut_data)
+  r_eiou_present <- matrix_cols[["r_eiou"]] %in% colnames(.sut_data)
+  tidy_df <- .sut_data |>
+    # Get rid of columns we don't need.
+    # We'll re-calculate later.
+    dplyr::mutate(
+      "{matrix_cols[['U']]}" := NULL,
+      "{matrix_cols[['r_eiou']]}" := NULL
+    ) |>
+    # Make the incoming data frame tidy.
+    tidyr::pivot_longer(cols = dplyr::any_of(unname(matrix_cols)),
+                        names_to = matrix_names,
+                        values_to = matrix_values)
+  # We need to re-calculate U and r_EIOU matrices after aggregation.
   if (drop_na_few) {
     # When drop_na_few is true, we eliminate
     # rows with NA in few_colname.
@@ -396,7 +405,7 @@ region_aggregates <- function(.sut_data,
   group_cols <- names(tidy_df) %>%
     setdiff(many_colname) %>%
     setdiff(matrix_values)
-  tidy_df %>%
+  out <- tidy_df |>
     dplyr::group_by(dplyr::across(dplyr::all_of(group_cols)), .add = TRUE) %>%
     # Summarise using the new .summarise argument to sum_byname.
     dplyr::summarise("{matrix_values}" := matsbyname::sum_byname(.data[[matrix_values]], .summarise = TRUE)) %>%
@@ -407,14 +416,25 @@ region_aggregates <- function(.sut_data,
     # And pivot wider again to give wide by matrices shape.
     tidyr::pivot_wider(names_from = dplyr::all_of(matrix_names), values_from = dplyr::all_of(matrix_values)) %>%
     # Remove the groupings we added.
-    dplyr::ungroup() %>%
-    # Recalculate U and r_EIOU matrices
+    dplyr::ungroup()
+  if (U_present) {
+    # Recalculate U matrix
+    out <- out |>
+      dplyr::mutate(
+        "{matrix_cols[['U']]}" := matsbyname::sum_byname(.data[[ matrix_cols[["U_feed"]] ]],
+                                                         .data[[ matrix_cols[["U_eiou"]] ]]))
+  }
+  if (r_eiou_present) {
+    # Recalculate r_eiou matrix
+    out <- out |>
+      dplyr::mutate(
+        "{matrix_cols[['r_eiou']]}" := matsbyname::quotient_byname(.data[[ matrix_cols[["U_eiou"]] ]],
+                                                                   .data[[ matrix_cols[["U"]] ]]) |>
+          matsbyname::replaceNaN_byname(val = 0))
+  }
+  out |>
     dplyr::mutate(
-      "{matrix_cols[['U']]}" := matsbyname::sum_byname(.data[[ matrix_cols[["U_feed"]] ]],
-                                                       .data[[ matrix_cols[["U_eiou"]] ]]),
-      "{matrix_cols[['r_eiou']]}" := matsbyname::quotient_byname(.data[[ matrix_cols[["U_eiou"]] ]],
-                                                                 .data[[ matrix_cols[["U"]] ]]) %>%
-        matsbyname::replaceNaN_byname(val = 0),
+      # Recalculate S_units matrices
       # S_units will be summed to give (possibly) non-unity values.
       # Divide by itself and replace NaN by 0 to
       # get back to unity values when non-zero.
@@ -423,6 +443,27 @@ region_aggregates <- function(.sut_data,
         matsbyname::replaceNaN_byname(val = 0)
     )
 }
+
+
+# no_rows_helper <- function(.dat, few_colname, many_colname) {
+#   # Handle the cases when
+#   # .dat has no rows
+#   # or
+#   # .dat has all NA values in few_colname AND drop_na_few is TRUE.
+#   # Eliminate all rows
+#   .dat <- .dat[0, ]
+#   # Return .dat unmodified,
+#   # except to eliminate the few_colname and ensure that the many_colname is present
+#   .dat %>%
+#     dplyr::mutate(
+#       # Eliminate many_colname.
+#       "{many_colname}" := NULL
+#     ) %>%
+#     dplyr::rename(
+#       "{many_colname}" := dplyr::all_of(few_colname)
+#     ) %>%
+#     dplyr::relocate(dplyr::all_of(many_colname)) # Relocates to left, where it belongs.
+# }
 
 
 #' Despecify and aggregate PSUT matrices
