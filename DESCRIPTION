@@ -1,8 +1,8 @@
 Package: Recca
 Type: Package
 Title: R Energy Conversion Chain Analysis
-Version: 0.1.54
-Date: 2023-12-21
+Version: 0.1.55
+Date: 2024-02-06
 Authors@R: c(person(given = "Matthew", 
                     family = "Heun", 
                     role = c("aut", "cre"),
@@ -21,9 +21,12 @@ License: MIT + file LICENSE
 Language: en-US
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Roxygen: list(markdown = TRUE)
 Depends: R (>= 2.10)
+Config/testthat/edition: 3
+Config/testthat/parallel: true
+Config/testthat/start-first: chop, reconstruct, efficiency
 Imports:
     assertthat,
     dplyr,
@@ -42,8 +45,9 @@ Suggests:
     covr,
     Hmisc,
     knitr,
+    Matrix,
     rmarkdown,
-    testthat,
+    testthat (>= 3.0.0),
     spelling
 Remotes:
     github::MatthewHeun/IEATools
