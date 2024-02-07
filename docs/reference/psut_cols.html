@@ -14,7 +14,7 @@ throughout the Recca package."><!-- mathjax --><script src="https://cdnjs.cloudf
     
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.54</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.55</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,7 +73,7 @@ throughout the <code>Recca</code> package.</p>
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>A string list with 23 entries.</p><dl><dt>resources,R</dt>
+    <p>A string list with 25 entries.</p><dl><dt>resources,R</dt>
 <dd><p>The name of a column in a wide-by-matrices data frame containing resource (<code>R</code>) matrices.</p></dd>
 
 <dt>U_feed</dt>
@@ -99,6 +99,12 @@ throughout the <code>Recca</code> package.</p>
 
 <dt>S_units</dt>
 <dd><p>The name of a column in a wide-by-matrices data frame containing unit summation (<code>S_units</code>) matrices.</p></dd>
+
+<dt>Y_fu_details</dt>
+<dd><p>The name of a column in a wide-by-matrices data frame containing details of the final-to-useful extension for final demand.</p></dd>
+
+<dt>U_eiou_fu_details</dt>
+<dd><p>The name of a column in a wide-by-matrices data frame containing details of the final-to-useful extension for energy industry own use.</p></dd>
 
 <dt>matvals</dt>
 <dd><p>The name of a column in a tidy data frame containing matrices.</p></dd>
@@ -177,6 +183,12 @@ E.g., both <code>resources</code> and <code>R</code> point to the "R" column nam
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $matvals</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "matvals"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Y_fu_details</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Y_fu_details"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $U_eiou_fu_details</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "U_EIOU_fu_details"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>

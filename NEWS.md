@@ -14,7 +14,8 @@ which always resolves to the latest release.
 * New function `extend_fu_details_to_exergy()` converts
   the final-to-useful details matrices from energy to exergy.
 * New tests for new features.
-    - Now up to 763 tests, all passing.
+    - Now up to 763
+    tests, all passing.
     - Test coverage remains at 100%.
 
 
