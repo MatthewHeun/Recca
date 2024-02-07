@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.54</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.55</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,7 +56,17 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.54" id="recca-0154-2023-12-21">Recca 0.1.54 (2023-12-21)<a class="anchor" aria-label="anchor" href="#recca-0154-2023-12-21"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.55" id="recca-0155-2024-02-06">Recca 0.1.55 (2024-02-06)<a class="anchor" aria-label="anchor" href="#recca-0155-2024-02-06"></a></h2>
+<ul><li>Testing now done in parallel.</li>
+<li>New function <code><a href="../reference/extend_fu_details_to_exergy.html">extend_fu_details_to_exergy()</a></code> converts the final-to-useful details matrices from energy to exergy.</li>
+<li>New tests for new features.
+<ul><li>Now up to 763 tests, all passing.</li>
+<li>Test coverage remains at 100%.</li>
+</ul></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.54" id="recca-0154-2023-12-21-doi">Recca 0.1.54 (2023-12-21) <a href="https://doi.org/10.5281/zenodo.10420370" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.10420370.svg" alt="DOI"></a>
+<a class="anchor" aria-label="anchor" href="#recca-0154-2023-12-21-doi"></a></h2>
 <ul><li>Added statement of need to README file.</li>
 <li>Added <code>Remotes:</code> field to <code>DESCRIPTION</code> file to assist installation from the <code>CLPFUDatabase</code> metapackage.</li>
 <li>No new tests.
@@ -272,7 +282,7 @@
 <li>New function <code><a href="../reference/region_aggregates.html">region_aggregates()</a></code> calculates regional aggregates according to columns in a data frame.</li>
 <li>New look for <code>pkgdown</code> website.</li>
 <li>
-<code><a href="../reference/extend_to_exergy.html">extend_to_exergy()</a></code> gains new arguments <code>mat_piece</code>, <code>phi_piece</code>, <code>notation</code>, and <code>prepositions</code> to enable more flexible row and column name matching between the various matrices and phi vectors. In addition, <code><a href="../reference/extend_to_exergy.html">extend_to_exergy()</a></code> now uses <code><a href="https://rdrr.io/pkg/matsbyname/man/vec_from_store_byname.html" class="external-link">matsbyname::vec_from_store_byname()</a></code> internally to correctly handle hatized vector multiplication.</li>
+<code><a href="../reference/extend_to_exergy.html">extend_to_exergy()</a></code> gains new arguments <code>mat_piece</code>, <code>phi_piece</code>, <code>notation</code>, and <code>prepositions</code> to enable more flexible row and column name matching between the various matrices and phi vectors. In addition, <code><a href="../reference/extend_to_exergy.html">extend_to_exergy()</a></code> now uses <code><a href="https://matthewheun.github.io/matsbyname/reference/vec_from_store_byname.html" class="external-link">matsbyname::vec_from_store_byname()</a></code> internally to correctly handle hatized vector multiplication.</li>
 <li>Many new tests for new features.
 <ul><li>Now up to 556 tests, all passing.</li>
 <li>Test coverage remains at 100%.</li>
@@ -472,7 +482,7 @@ See <a href="https://github.com/awalker89/openxlsx/issues/393" class="external-l
 <ul><li>
 <code><a href="../reference/calc_F_footprint_effects.html">calc_F_footprint_effects()</a></code> now cleans rows and columns (deletes rows and columns containing all 0s) before calculating row and column fractions.</li>
 <li>
-<code><a href="../reference/calc_F_footprint_effects.html">calc_F_footprint_effects()</a></code> now calculates row and column fractions using <code><a href="https://rdrr.io/pkg/matsbyname/man/fractionize_byname.html" class="external-link">matsbyname::fractionize_byname()</a></code>, providing a speed boost.</li>
+<code><a href="../reference/calc_F_footprint_effects.html">calc_F_footprint_effects()</a></code> now calculates row and column fractions using <code><a href="https://matthewheun.github.io/matsbyname/reference/fractionize_byname.html" class="external-link">matsbyname::fractionize_byname()</a></code>, providing a speed boost.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.12" id="recca-0112-2018-12-02">Recca 0.1.12 (2018-12-02)<a class="anchor" aria-label="anchor" href="#recca-0112-2018-12-02"></a></h2>
@@ -480,12 +490,12 @@ See <a href="https://github.com/awalker89/openxlsx/issues/393" class="external-l
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.11" id="recca-0111-2018-12-02">Recca 0.1.11 (2018-12-02)<a class="anchor" aria-label="anchor" href="#recca-0111-2018-12-02"></a></h2>
-<ul><li>Updates to embodied energy calculations to conform to updated <code><a href="https://rdrr.io/pkg/matsbyname/man/hatinv_byname.html" class="external-link">matsbyname::hatinv_byname()</a></code> which handles <code>0</code> values better.</li>
+<ul><li>Updates to embodied energy calculations to conform to updated <code><a href="https://matthewheun.github.io/matsbyname/reference/hatinv_byname.html" class="external-link">matsbyname::hatinv_byname()</a></code> which handles <code>0</code> values better.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.10" id="recca-0110-2018-11-29">Recca 0.1.10 (2018-11-29)<a class="anchor" aria-label="anchor" href="#recca-0110-2018-11-29"></a></h2>
 <ul><li>Now importing <code>magrittr</code> pipe at high level.</li>
-<li>Now using <code><a href="https://rdrr.io/pkg/matsbyname/man/hatinv_byname.html" class="external-link">matsbyname::hatinv_byname()</a></code> function instead of <code>matsbyname::hatize_byname() %&gt;% matsbyname::invert_byname()</code>.</li>
+<li>Now using <code><a href="https://matthewheun.github.io/matsbyname/reference/hatinv_byname.html" class="external-link">matsbyname::hatinv_byname()</a></code> function instead of <code>matsbyname::hatize_byname() %&gt;% matsbyname::invert_byname()</code>.</li>
 <li>Breaking change: arguments to <code>Recca</code> functions are no longer named <code>*_colname</code>. I’m standardizing argument names. The new approach yields better code when calling functions with individual matrices: every matrix needs to be named. And when using functions to operate on a data frame the default values for column names mean that data frames can be piped to functions that are called with no parameters. Furthermore, this change allows lists output from previous functions to be used in later function calls without name changes. For example, <code>f1</code> produces a list <code>l</code> with named item <code>z</code>, and <code>z</code> is an input to <code>f2</code>. The previous naming convention would require user mapping <code>z</code> to <code>z_colname</code>: <code>f2(z_colname = l$z)</code>. The new naming convention allows <code>f2(l)</code>, because <code>l</code> contains named item <code>z</code>, and <code>f2</code> has an argument new named <code>z</code> (where it had been named <code>z_colname</code> before). In all ways, the new argument naming convention is more elegant than the previous <code>*_colname</code> approach.</li>
 <li>Building a vignette that describes the package.</li>
 <li>New test for a simple, 1-industry ECC.</li>

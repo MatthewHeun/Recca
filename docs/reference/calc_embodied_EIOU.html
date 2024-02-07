@@ -12,7 +12,7 @@ and final demand, using a data frame of input-output matrices in the physical su
     
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.54</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.55</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -145,7 +145,7 @@ functions as described in the example.</p>
 <li><p>including only EIOU required for feedstock inputs production (subscript "_feed" appears in the name);</p></li>
 <li><p>including both EIOU required for feedstock and EIOU inputs production (no additional subscript).</p></li>
 </ul><p>Note: All matrix multiplication (<code>%*%</code>) is performed "by name" using
-<code><a href="https://rdrr.io/pkg/matsbyname/man/matrixproduct_byname.html" class="external-link">matsbyname::matrixproduct_byname()</a></code>.</p>
+<code><a href="https://matthewheun.github.io/matsbyname/reference/matrixproduct_byname.html" class="external-link">matsbyname::matrixproduct_byname()</a></code>.</p>
 <p>Output columns include:</p><ul><li><p><code>Q_EIOU_s</code>: matrix of embodied EIOU by final demand sectors, including both energy use for feedstock and EIOU production.
 <code>Q_EIOU_s</code> is calculated by <code>e_EIOU_hat %*% L_ixp %*% Y</code>.</p></li>
 <li><p><code>Q_EIOU_p</code>: matrix of embodied EIOU by final demand products, including both energy use for feedstock and EIOU production.

@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.54</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.55</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -80,7 +80,7 @@
                         <h4 data-toc-skip class="author">Matthew Kuperus
 Heun</h4>
             
-            <h4 data-toc-skip class="date">2023-12-21</h4>
+            <h4 data-toc-skip class="date">2024-02-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/HEAD/vignettes/Recca.Rmd" class="external-link"><code>vignettes/Recca.Rmd</code></a></small>
       <div class="d-none name"><code>Recca.Rmd</code></div>
@@ -198,10 +198,10 @@ matrix (<code>S_units</code>).</p>
 <span>  <span class="co"># Do a little more cleanup</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    <span class="co"># Create full U matrix</span></span>
-<span>    U <span class="op">=</span> <span class="fu">matsbyname</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/sum_byname.html" class="external-link">sum_byname</a></span><span class="op">(</span><span class="va">U_feed</span>, <span class="va">U_EIOU</span><span class="op">)</span>,</span>
+<span>    U <span class="op">=</span> <span class="fu">matsbyname</span><span class="fu">::</span><span class="fu"><a href="https://matthewheun.github.io/matsbyname/reference/sum_byname.html" class="external-link">sum_byname</a></span><span class="op">(</span><span class="va">U_feed</span>, <span class="va">U_EIOU</span><span class="op">)</span>,</span>
 <span>    <span class="co"># Create r_EIOU, a matrix that identifies the ratio of EIOU to other energy consumed.</span></span>
-<span>    r_EIOU <span class="op">=</span> <span class="fu">matsbyname</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/quotient_byname.html" class="external-link">quotient_byname</a></span><span class="op">(</span><span class="va">U_EIOU</span>, <span class="va">U</span><span class="op">)</span>,</span>
-<span>    r_EIOU <span class="op">=</span> <span class="fu">matsbyname</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/replaceNaN_byname.html" class="external-link">replaceNaN_byname</a></span><span class="op">(</span><span class="va">r_EIOU</span>, val <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span>    r_EIOU <span class="op">=</span> <span class="fu">matsbyname</span><span class="fu">::</span><span class="fu"><a href="https://matthewheun.github.io/matsbyname/reference/quotient_byname.html" class="external-link">quotient_byname</a></span><span class="op">(</span><span class="va">U_EIOU</span>, <span class="va">U</span><span class="op">)</span>,</span>
+<span>    r_EIOU <span class="op">=</span> <span class="fu">matsbyname</span><span class="fu">::</span><span class="fu"><a href="https://matthewheun.github.io/matsbyname/reference/replaceNaN_byname.html" class="external-link">replaceNaN_byname</a></span><span class="op">(</span><span class="va">r_EIOU</span>, val <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">U_EIOU</span>, <span class="op">-</span><span class="va">U_feed</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="co"># Add S_units matrices</span></span>
@@ -420,7 +420,7 @@ required to meet the new final demand represented by
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Double_demand</span> <span class="op">&lt;-</span> <span class="va">IO_df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>    Y_prime <span class="op">=</span> <span class="fu">matsbyname</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/hadamardproduct_byname.html" class="external-link">hadamardproduct_byname</a></span><span class="op">(</span><span class="fl">2</span>, <span class="va">Y</span><span class="op">)</span></span>
+<span>    Y_prime <span class="op">=</span> <span class="fu">matsbyname</span><span class="fu">::</span><span class="fu"><a href="https://matthewheun.github.io/matsbyname/reference/hadamardproduct_byname.html" class="external-link">hadamardproduct_byname</a></span><span class="op">(</span><span class="fl">2</span>, <span class="va">Y</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/new_Y.html">new_Y</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">Double_demand</span><span class="op">)</span></span>
@@ -812,7 +812,7 @@ selection vector for resource industries.</p>
 <span></span>
 <span><span class="va">embodied_mats</span> <span class="op">&lt;-</span> <span class="va">IO_df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>    U_EIOU <span class="op">=</span> <span class="fu">matsbyname</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/hadamardproduct_byname.html" class="external-link">hadamardproduct_byname</a></span><span class="op">(</span><span class="va">r_EIOU</span>, <span class="va">U</span><span class="op">)</span></span>
+<span>    U_EIOU <span class="op">=</span> <span class="fu">matsbyname</span><span class="fu">::</span><span class="fu"><a href="https://matthewheun.github.io/matsbyname/reference/hadamardproduct_byname.html" class="external-link">hadamardproduct_byname</a></span><span class="op">(</span><span class="va">r_EIOU</span>, <span class="va">U</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/calc_embodied_mats.html">calc_embodied_mats</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/calc_embodied_etas.html">calc_embodied_etas</a></span><span class="op">(</span>primary_machine_names <span class="op">=</span> <span class="va">primary_machine_names</span><span class="op">)</span></span>
