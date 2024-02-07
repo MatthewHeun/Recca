@@ -8,7 +8,7 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
-# Recca 0.1.55 (2024-02-06)
+# Recca 0.1.55 (2024-02-06) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10627746.svg)](https://doi.org/10.5281/zenodo.10627746)
 
 * Testing now done in parallel.
 * New function `extend_fu_details_to_exergy()` converts
