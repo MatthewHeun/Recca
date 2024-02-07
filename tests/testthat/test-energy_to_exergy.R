@@ -256,3 +256,62 @@ test_that("extend_fu_details_to_exergy() works with NULL matrices", {
                       U_eiou_fu_details_mat = list(),
                       phi_vec = list()))
 })
+
+
+test_that("extend_fu_details_to_exergy() works with a data frame without the details matrices", {
+  no_details_df <- tibble::tribble(~R, ~U, ~V, ~Y,
+                                   1,  2,  3,  4)
+  # A data frame without the details matrices should return NULL.
+  expect_null(extend_fu_details_to_exergy(no_details_df))
+})
+
+
+test_that("extend_fu_details_to_exergy() fails when not all Energy.type is 'E'", {
+  details_df <- tibble::tribble(~Energy.type, ~R, ~U, ~V, ~Y, ~Y_fu_details, ~U_EIOU_fu_details,
+                                "X",          1,  2,  3,  4,    5,             6)
+  # A data frame without the details matrices should return NULL.
+  extend_fu_details_to_exergy(details_df) |>
+    expect_error(regexp = "non-energy rows were found")
+})
+
+
+test_that("extend_fu_details_to_exergy() gives NULL when matrices are NULL", {
+  details_mat <- Matrix::sparseMatrix(i = c(1, 2, 3),
+                                      j = c(1, 3, 2),
+                                      x = c(10, 20, 100),
+                                      dimnames = list(c("Electricity -> Households",
+                                                        "Electricity -> Industry",
+                                                        "Natural gas -> Households"),
+                                                      c("Light [from Electric lamps]",
+                                                        "MTH.100.C [from Furnaces]",
+                                                        "KE [from Fans]"))) |>
+    matsbyname::setrowtype("Product -> Industry") |>
+    matsbyname::setcoltype("Product [from Industry]")
+  phi_vec <- Matrix::sparseMatrix(i = c(1, 2, 3, 4),
+                                  j = c(1, 1, 1, 1),
+                                  x = c(1.0, 1-(25+273.15)/(100+273.15), 0.96, 1-(25+273.15)/(1000+273.15)),
+                                  dimnames = list(c("KE", "MTH.100.C", "Light", "HTH.1000.C"),
+                                                  "phi")) |>
+    matsbyname::setrowtype("Product") |>
+    matsbyname::setcoltype("phi")
+
+  Y_fu_details <- details_mat
+  U_EIOU_fu_details <- details_mat
+  details_df <- tibble::tribble(~Energy.type, ~phi,    ~R, ~U, ~V, ~Y, ~Y_fu_details, ~U_EIOU_fu_details,
+                                "E",          phi_vec, 1,  1,  1,  1,  NULL,          U_EIOU_fu_details,
+                                "E",          phi_vec, 2,  2,  2,  2,  Y_fu_details,  NULL)
+  # A data frame without the details matrices should return NULL.
+  res <- extend_fu_details_to_exergy(details_df)
+
+  res |>
+    dplyr::filter(Energy.type == "X", R == 1) |>
+    magrittr::extract2("Y_fu_details") |>
+    magrittr::extract2(1) |>
+    expect_null()
+  res |>
+    dplyr::filter(Energy.type == "X", R == 2) |>
+    magrittr::extract2("U_EIOU_details") |>
+    magrittr::extract2(1) |>
+    expect_null()
+})
+
