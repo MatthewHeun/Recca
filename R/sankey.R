@@ -59,10 +59,13 @@ make_sankey <- function(.sutmats = NULL,
     }
     el <- edge_list(R = R_mat, U = U_mat, V = V_mat, Y = Y_mat, simplify_edges = simplify_edges)[["Edge list"]]
     nl <- node_list(el)
-    s <- networkD3::sankeyNetwork(Links = el, Nodes = nl,
-                       Source = "From_node_id", Target = "To_node_id", Value = "Value",
-                       NodeID = "Node",
-                       ...)
+    s <- networkD3::sankeyNetwork(Links = el,
+                                  Nodes = nl,
+                                  Source = "From_node_id",
+                                  Target = "To_node_id",
+                                  Value = "Value",
+                                  NodeID = "Node",
+                                  ...)
     list(s) %>% magrittr::set_names(sankey)
   }
   matsindf::matsindf_apply(.sutmats, FUN = sankey_func, R_mat = R, U_mat = U, V_mat = V, Y_mat = Y)
