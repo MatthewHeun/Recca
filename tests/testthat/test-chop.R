@@ -91,7 +91,7 @@ test_that("chop_Y() works with Losses", {
   fd_sectors <- c("Residential", "Transport")
   chop_Y_aggs <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
-    dplyr::filter(Last.stage %in% c(IEATools::last_stages$final)) %>%
+    dplyr::filter(LastStage %in% c(IEATools::last_stages$final)) %>%
     # Rename Residential to "Losses" to trigger the error
     dplyr::mutate(
       Y = matsbyname::setcolnames_byname(Y, c("Losses", "Transport"))

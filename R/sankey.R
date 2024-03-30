@@ -70,3 +70,66 @@ make_sankey <- function(.sutmats = NULL,
   }
   matsindf::matsindf_apply(.sutmats, FUN = sankey_func, R_mat = R, U_mat = U, V_mat = V, Y_mat = Y)
 }
+
+
+#' Create a Javascript colour string appropriate for networkD3 Sankey diagrams
+#'
+#' This package (`Recca`) uses [networkD3::sankeyNetwork()] to create
+#' Sankey diagrams in [make_sankey()].
+#' This function converts a data frame of colors
+#' into a correctly formatted javascript string
+#' for use with [networkD3::sankeyNetwork()].
+#'
+#' @param colour_df A data frame containing `name_col` and `colour_col`.
+#' @param name_col,colour_col Names of columns in `colour_df`.
+#'
+#' @return A Javascript string formatted for use as the `colourScale`
+#'         argument to [networkD3::sankeyNetwork()].
+#'
+#' @export
+#'
+#' @examples
+#' # See https://r-graph-gallery.com/322-custom-colours-in-sankey-diagram.html
+#' # for original examples.
+#' links <- data.frame(
+#'   source=c("group_A","group_A", "group_B", "group_C", "group_C", "group_E"),
+#'   target=c("group_C","group_D", "group_E", "group_F", "group_G", "group_H"),
+#'   value=c(2,3, 2, 3, 1, 3)
+#' )
+#' # From these flows we need to create a node data frame: it lists every entities involved in the flow
+#' nodes <- data.frame(
+#'   name = c(as.character(links$source), as.character(links$target)) |>
+#'     unique()
+#' )
+#'
+#' # With networkD3, connection must be provided using id, not using real name like in the links dataframe.. So we need to reformat it.
+#' links$IDsource <- match(links$source, nodes$name) - 1
+#' links$IDtarget <- match(links$target, nodes$name) - 1
+#'
+#' # Add color to the flows.
+#' links$group <- c("type_a","type_a","type_a","type_b","type_b","type_b")
+#' # Add a 'group' column to each node. Put all nodes in the same group to make them grey.
+#' nodes$group <- c("node_group")
+#'
+#' colour_df <- tibble::tribble(~name, ~colour,
+#'                              "type_a", "#69b3a2",
+#'                              "type_b", "steelblue",
+#'                              "node_group", "grey")
+#' colour_string <- create_colour_string(colour_df)
+#' cat(colour_string)
+#' networkD3::sankeyNetwork(Links = links,
+#'                          Nodes = nodes,
+#'                          Source = "IDsource",
+#'                          Target = "IDtarget",
+#'                          Value = "value",
+#'                          NodeID = "name",
+#'                          colourScale = colour_string,
+#'                          LinkGroup="group",
+#'                          NodeGroup="group")
+create_colour_string <- function(colour_df,
+                                 name_col = "name",
+                                 colour_col = "colour") {
+  name_string <- paste0(paste0('"', colour_df[[name_col]], '"'), collapse = ", ")
+  colour_string <- paste0(paste0('"', colour_df[[colour_col]], '"'), collapse = ", ")
+  paste0('d3.scaleOrdinal() .domain([', name_string, ']) .range([', colour_string, '])')
+}

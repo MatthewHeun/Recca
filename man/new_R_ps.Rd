@@ -124,9 +124,9 @@ Both \code{tol} and \code{method} should be a single values and apply to all mat
 \examples{
 UKEnergy2000mats \%>\%
   tidyr::spread(key = "matrix.name", value = "matrix") \%>\%
-  # When Last.stage is "services", we get units problems.
-  # Avoid by using only ECCs with "Final" and "Useful" as the Last.stage.
-  dplyr::filter(Last.stage != IEATools::last_stages$services) \%>\%
+  # When LastStage is "services", we get units problems.
+  # Avoid by using only ECCs with "Final" and "Useful" as the LastStage.
+  dplyr::filter(LastStage != IEATools::last_stages$services) \%>\%
   # Calculate the input-output matrices which are inputs to the new_R function.
   calc_io_mats(direction = "downstream") \%>\%
   # Make an R_prime matrix that gives twice the resource inputs to the economy.

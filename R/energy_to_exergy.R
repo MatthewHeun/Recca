@@ -50,7 +50,7 @@
 #'   # Put in wide-by-matrix format.
 #'   tidyr::spread(key = matrix.name, value = matrix) %>%
 #'   # Eliminate services ECCs.
-#'   dplyr::filter(Last.stage %in% c("Final", "Useful")) %>%
+#'   dplyr::filter(LastStage %in% c("Final", "Useful")) %>%
 #'   dplyr::mutate(
 #'     phi = RCLabels::make_list(Recca::phi_vec, n = nrow(.), lenx = 1)
 #'   )
@@ -94,7 +94,7 @@ extend_to_exergy <- function(.sutmats = NULL,
   Y_X_name <- paste0(Y_name, .exergy_suffix)
   r_eiou_X_name <- paste0(r_eiou_name, .exergy_suffix)
 
-  # Check that all columns in .sutmats contain "E" for Energy.type, if the column exists.
+  # Check that all columns in .sutmats contain "E" for EnergyType, if the column exists.
   if (is.data.frame(.sutmats)) {
     if (energy_type %in% names(.sutmats)) {
       # Check that all energy types are "E".
@@ -221,7 +221,7 @@ extend_to_exergy <- function(.sutmats = NULL,
     # We'll need to strip suffixes off column names.
     exergy_df <- out %>%
       dplyr::select(dplyr::any_of(cols_to_keep)) %>%
-      # Change the Energy.type column to Exergy
+      # Change the EnergyType column to Exergy
       dplyr::mutate(
         "{energy_type}" := exergy
       ) %>%
@@ -288,7 +288,7 @@ extend_to_exergy <- function(.sutmats = NULL,
 #'     - specifically: "Product \[from Industry\]"
 #'
 #' The energy stage of the entries in the details matrices are indicated
-#' by the entry in the `Energy.type` column,
+#' by the entry in the `EnergyType` column,
 #' typically "Useful".
 #'
 #' If either of the energy details matrices are `NULL`,
@@ -310,7 +310,7 @@ extend_to_exergy <- function(.sutmats = NULL,
 #'                  column names for the details matrices
 #'                  are to be matched.
 #'                  Default is "all", meaning that entire names are to be matched.
-#' @param energy_type The name of the Energy.type column in `.fu_details_mats`.
+#' @param energy_type The name of the EnergyType column in `.fu_details_mats`.
 #'                    Default is `Recca::psut_cols$energy_type`.
 #' @param mat_col_notation The notation for the column labels of the details matrices.
 #'                         Default is `RCLabels::from_notation`.
@@ -385,7 +385,7 @@ extend_fu_details_to_exergy <- function(.fu_details_mats = NULL,
   Y_fu_details_X_name <- paste0(Y_fu_details_colname, .exergy_suffix)
   U_EIOU_fu_details_X_name <- paste0(U_eiou_fu_details_colname, .exergy_suffix)
 
-  # Check that all columns in .fu_details_mats contain "E" for Energy.type, if the column exists.
+  # Check that all columns in .fu_details_mats contain "E" for EnergyType, if the column exists.
   if (is.data.frame(.fu_details_mats)) {
     if (energy_type %in% names(.fu_details_mats)) {
       # Check that all energy types are "E".
@@ -506,7 +506,7 @@ extend_fu_details_to_exergy <- function(.fu_details_mats = NULL,
     # We'll need to strip suffixes off column names.
     exergy_df <- out |>
       dplyr::select(dplyr::any_of(cols_to_keep)) |>
-      # Change the Energy.type column to Exergy
+      # Change the EnergyType column to Exergy
       dplyr::mutate(
         "{energy_type}" := exergy
       ) |>

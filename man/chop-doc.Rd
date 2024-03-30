@@ -265,7 +265,7 @@ psut_mats \%>\%
   chop_Y(p_industries = p_industries, fd_sectors = fd_sectors, unnest = TRUE)
 psut_mats_2 <- psut_mats \%>\%
   # Slice to avoid the services rows on which NA values are obtained due to unit homogeneity.
-  dplyr::filter(Last.stage != "Services")
+  dplyr::filter(LastStage != "Services")
 # Calculate aggregates
 psut_mats_2 \%>\%
   chop_R(p_industries = p_industries, fd_sectors = fd_sectors)

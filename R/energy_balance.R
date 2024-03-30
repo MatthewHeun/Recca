@@ -34,7 +34,7 @@
 #' library(dplyr)
 #' library(tidyr)
 #' verify_SUT_energy_balance(UKEnergy2000mats %>%
-#'                             dplyr::filter(Last.stage %in% c("Final", "Useful")) %>%
+#'                             dplyr::filter(LastStage %in% c("Final", "Useful")) %>%
 #'                             tidyr::spread(key = matrix.name, value = matrix),
 #'                           tol = 1e-4)
 verify_SUT_energy_balance <- function(.sutmats = NULL,
@@ -162,7 +162,7 @@ verify_SUT_energy_balance_with_units <- function(.sutmats = NULL,
 #' exhibit this problem.
 #'
 #' @param .sutmats an SUT-style data frame containing metadata columns
-#' (typically `Country`, `Year`, `Ledger.side`, `Product`, etc.)
+#' (typically `Country`, `Year`, `LedgerSide`, `Product`, etc.)
 #' and columns of SUT matrices, including `U` and `V`.
 #' @param R resources (**R**) matrix or name of the column in `.sutmats` that contains same. Default is "R".
 #' @param U use (**U**) matrix or name of the column in `.sutmats` that contains same. Default is "U".
@@ -225,16 +225,16 @@ verify_SUT_industry_production <- function(.sutmats = NULL,
 #'
 #' @param .ieatidydata an IEA-style data frame containing grouping columns
 #'        (typically \code{Country}, \code{Year}, \code{Product}, and others),
-#'        a \code{Ledger.side} column, and
+#'        a \code{LedgerSide} column, and
 #'        an energy column (\code{E.ktoe}).
 #'        \code{.ieatidydata} should be grouped prior to sending to this function.
-#' @param ledger.side the name of the column in \code{.ieatidydata}
-#'        that contains ledger side information (a string). Default is "\code{Ledger.side}".
+#' @param LedgerSide the name of the column in \code{.ieatidydata}
+#'        that contains ledger side information (a string). Default is "\code{LedgerSide}".
 #' @param energy the name of the column in \code{.ieatidydata}
 #'        that contains energy data (a string). Default is "\code{E.ktoe}".
-#' @param supply the identifier for supply data in the \code{ledger.side} column (a string).
+#' @param supply the identifier for supply data in the \code{LedgerSide} column (a string).
 #'        Default is "\code{Supply}".
-#' @param consumption the identifier for consumption data in the \code{ledger.side} column (a string).
+#' @param consumption the identifier for consumption data in the \code{LedgerSide} column (a string).
 #'        Default is "\code{Consumption}".
 #' @param err the name of the error column in the output. Default is "\code{.err}".
 #' @param tol the maximum amount by which Supply and Consumption can be out of balance
@@ -248,21 +248,21 @@ verify_SUT_industry_production <- function(.sutmats = NULL,
 #' @examples
 #' library(dplyr)
 #' UKEnergy2000tidy %>%
-#'   filter(Last.stage %in% c("Final", "Useful")) %>%
-#'   group_by(Country, Year, Energy.type, Last.stage) %>%
-#'   verify_IEATable_energy_balance(energy = "E.dot")
+#'   filter(LastStage %in% c("Final", "Useful")) %>%
+#'   group_by(Country, Year, EnergyType, LastStage) %>%
+#'   verify_IEATable_energy_balance(energy = "Edot")
 verify_IEATable_energy_balance <- function(.ieatidydata,
                                            # Input column names
-                                           ledger.side = "Ledger.side",
-                                           energy = "E.dot",
-                                           # ledger.side identifiers
+                                           LedgerSide = "LedgerSide",
+                                           energy = "Edot",
+                                           # LedgerSide identifiers
                                            supply = "Supply",
                                            consumption = "Consumption",
                                            # Output column names
                                            err = ".err",
                                            # Tolerance
                                            tol = 1e-6){
-  ledger.side <- as.name(ledger.side)
+  LedgerSide <- as.name(LedgerSide)
   energy <- as.name(energy)
   err <- as.name(err)
   esupply <- as.name("ESupply")
@@ -270,10 +270,10 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 
   EnergyCheck <- dplyr::full_join(
     .ieatidydata %>%
-      dplyr::filter(!!ledger.side == "Supply") %>%
+      dplyr::filter(!!LedgerSide == "Supply") %>%
       dplyr::summarise(!!esupply := sum(!!energy)),
     .ieatidydata %>%
-      dplyr::filter(!!ledger.side == "Consumption") %>%
+      dplyr::filter(!!LedgerSide == "Consumption") %>%
       dplyr::summarise(!!econsumption := sum(!!energy)),
     by = dplyr::group_vars(.ieatidydata)
   ) %>%

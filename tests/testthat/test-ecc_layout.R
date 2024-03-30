@@ -106,12 +106,12 @@
 #   # Use a subset of the UKEnergy2000mats data from this package as an example.
 #   bigmat <- UKEnergy2000mats %>%
 #     spread(key = matrix.name, value = matrix) %>%
-#     select(Country, Year, Energy.type, Last.stage, U, V, Y, r_EIOU, S_units) %>%
-#     filter(Country == "GBR", Year == 2000, Energy.type == "E", Last.stage == "Final") %>%
+#     select(Country, Year, EnergyType, LastStage, U, V, Y, r_EIOU, S_units) %>%
+#     filter(Country == "GBR", Year == 2000, EnergyType == "E", LastStage == "Final") %>%
 #     mutate(
 #       # Delete unneeded columns.
-#       Energy.type = NULL,
-#       Last.stage = NULL
+#       EnergyType = NULL,
+#       LastStage = NULL
 #     ) %>%
 #     # Sum all matrices to make one big matrix with "from" or "source" nodes in rows
 #     # and "to" or "destination" nodes in columns

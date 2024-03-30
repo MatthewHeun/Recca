@@ -45,7 +45,7 @@
 #' library(tidyr)
 #' UKEnergy2000mats %>%
 #'   spread(key = matrix.name, value = matrix) %>%
-#'   select(Country, Year, Energy.type, Last.stage, R, U, U_feed, V, Y, r_EIOU, S_units) %>%
+#'   select(Country, Year, EnergyType, LastStage, R, U, U_feed, V, Y, r_EIOU, S_units) %>%
 #'   calc_io_mats() %>%
 #'   mutate(
 #'     # Give new Y matrices that are double the existing Y matrices
@@ -364,9 +364,9 @@ new_k_ps <- function(.sutmats = NULL,
 #' @examples
 #' UKEnergy2000mats %>%
 #'   tidyr::spread(key = "matrix.name", value = "matrix") %>%
-#'   # When Last.stage is "services", we get units problems.
-#'   # Avoid by using only ECCs with "Final" and "Useful" as the Last.stage.
-#'   dplyr::filter(Last.stage != IEATools::last_stages$services) %>%
+#'   # When LastStage is "services", we get units problems.
+#'   # Avoid by using only ECCs with "Final" and "Useful" as the LastStage.
+#'   dplyr::filter(LastStage != IEATools::last_stages$services) %>%
 #'   # Calculate the input-output matrices which are inputs to the new_R function.
 #'   calc_io_mats(direction = "downstream") %>%
 #'   # Make an R_prime matrix that gives twice the resource inputs to the economy.
@@ -502,7 +502,7 @@ new_R_ps <- function(.sutmats = NULL,
 #' @examples
 #' UKEnergy2000mats |>
 #'   tidyr::spread(key = matrix.name, value = matrix) |>
-#'   dplyr::filter(Last.stage != "Services") |>
+#'   dplyr::filter(LastStage != "Services") |>
 #'   # This data frame does not contain "Non-energy use",
 #'   # so remove "Residential" instead.
 #'   Recca::remove_neu(neu_product_pattern = "^NG|^MD",

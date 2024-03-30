@@ -17,7 +17,7 @@
 #' library(matsindf)
 #' library(Recca)
 #' UKEnergy2000tidy %>%
-#'   group_by("Country", "Year", "Energy.type", "Last.stage") %>%
+#'   group_by("Country", "Year", "EnergyType", "LastStage") %>%
 #'   S_units_from_tidy()
 S_units_from_tidy <- function(.tidydf, Product = "Product", Unit = "Unit", S_units = "S_units"){
   # Establish names
@@ -65,11 +65,11 @@ S_units_from_tidy <- function(.tidydf, Product = "Product", Unit = "Unit", S_uni
 #' @param .DF a data frame with \code{ledger_side}, \code{energy}, \code{flow_aggregation_point},
 #'        and \code{flow} columns.
 #' @param ledger_side the name of the column in \code{.DF} that contains ledger side
-#'        (a string). Default is "\code{Ledger.side}".
+#'        (a string). Default is "\code{LedgerSide}".
 #' @param energy the name of the column in \code{.DF} that contains energy and exergy values
-#'        (a string). Default is "\code{E.dot}".
+#'        (a string). Default is "\code{Edot}".
 #' @param flow_aggregation_point the name of the column in \code{.DF} that contains flow aggregation point information.
-#'        Default is "\code{Flow.aggregation.point}".
+#'        Default is "\code{FlowAggregationPoint}".
 #' @param flow the name of the column in \code{.DF} that contains flow information.
 #'        Default is "\code{Flow}".
 #' @param supply_side the identifier for items on the supply side of the ledger (a string).
@@ -96,14 +96,14 @@ S_units_from_tidy <- function(.tidydf, Product = "Product", Unit = "Unit", S_uni
 #' @examples
 #' library(dplyr)
 #' UKEnergy2000tidy %>%
-#'   group_by(Country, Year, Energy.type, Last.stage) %>%
+#'   group_by(Country, Year, EnergyType, LastStage) %>%
 #'   add_matnames_iea() %>%
 #'   glimpse()
 # add_matnames_iea <- function(.DF,
 #                              # Input columns
-#                              ledger_side = "Ledger.side",
-#                              energy = "E.dot",
-#                              flow_aggregation_point = "Flow.aggregation.point",
+#                              ledger_side = "LedgerSide",
+#                              energy = "Edot",
+#                              flow_aggregation_point = "FlowAggregationPoint",
 #                              flow = "Flow",
 #                              # Input identifiers for supply, consumption, and EIOU
 #                              supply_side = "Supply",

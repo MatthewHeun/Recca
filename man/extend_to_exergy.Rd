@@ -94,7 +94,7 @@ sutmats <- UKEnergy2000mats \%>\%
   # Put in wide-by-matrix format.
   tidyr::spread(key = matrix.name, value = matrix) \%>\%
   # Eliminate services ECCs.
-  dplyr::filter(Last.stage \%in\% c("Final", "Useful")) \%>\%
+  dplyr::filter(LastStage \%in\% c("Final", "Useful")) \%>\%
   dplyr::mutate(
     phi = RCLabels::make_list(Recca::phi_vec, n = nrow(.), lenx = 1)
   )

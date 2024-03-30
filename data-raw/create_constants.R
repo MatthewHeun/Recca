@@ -33,8 +33,8 @@ psut_cols <- list(resources = "R",
                   country = "Country",
                   year = "Year",
                   method = "Method",
-                  energy_type = "Energy.type",
-                  last_stage = "Last.stage")
+                  energy_type = "EnergyType",
+                  last_stage = "LastStage")
 usethis::use_data(psut_cols, overwrite = TRUE)
 
 
@@ -119,7 +119,7 @@ usethis::use_data(industry_cols, overwrite = TRUE)
 # Energy types
 #
 
-energy_types <- list(energy_type = "Energy.type", # Column name
+energy_types <- list(energy_type = "EnergyType", # Column name
                      e = "E", # Energy
                      x = "X") # Exergy
 usethis::use_data(energy_types, overwrite = TRUE)

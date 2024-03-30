@@ -48,6 +48,77 @@ test_that("make_sankey() works as expected", {
 })
 
 
+test_that("a simple sankey works as expected", {
+  # Examples from
+  # https://r-graph-gallery.com/322-custom-colours-in-sankey-diagram.html
+  links <- data.frame(
+    source=c("group_A","group_A", "group_B", "group_C", "group_C", "group_E"),
+    target=c("group_C","group_D", "group_E", "group_F", "group_G", "group_H"),
+    value=c(2,3, 2, 3, 1, 3)
+  )
+
+  # From these flows we need to create a node data frame: it lists every entities involved in the flow
+  nodes <- data.frame(
+    name = c(as.character(links$source), as.character(links$target)) |>
+      unique()
+  )
+
+  # With networkD3, connection must be provided using id, not using real name like in the links dataframe.. So we need to reformat it.
+  links$IDsource <- match(links$source, nodes$name)-1
+  links$IDtarget <- match(links$target, nodes$name)-1
+
+  # prepare color scale: I give one specific color for each node.
+  my_color <- 'd3.scaleOrdinal() .domain(["group_A", "group_B","group_C", "group_D", "group_E", "group_F", "group_G", "group_H"]) .range(["blue", "green" , "chocolate", "orange", "red", "yellow", "aquamarine", "purple"])'
+
+  # Make the Network. I call my colour scale with the colourScale argument
+  p <- networkD3::sankeyNetwork(Links = links,
+                                Nodes = nodes,
+                                Source = "IDsource",
+                                Target = "IDtarget",
+                                Value = "value",
+                                NodeID = "name",
+                                colourScale = my_color)
+  expect_true(!is.null(p))
+
+  # Add color to the flows.
+  links$group <- c("type_a","type_a","type_a","type_b","type_b","type_b")
+
+  # Add a 'group' column to each node. Here I decide to put all of them in the same group to make them grey
+  nodes$group <- c("node_group")
+
+  # Give a color for each group:
+  my_color2 <- 'd3.scaleOrdinal() .domain(["type_a", "type_b", "node_group"]) .range(["#69b3a2", "steelblue", "grey"])'
+  # Make the Network
+  p2 <- networkD3::sankeyNetwork(Links = links,
+                                 Nodes = nodes,
+                                 Source = "IDsource",
+                                 Target = "IDtarget",
+                                 Value = "value",
+                                 NodeID = "name",
+                                 colourScale = my_color2,
+                                 LinkGroup="group",
+                                 NodeGroup="group")
+
+  my_color3 <- tibble::tribble(~name, ~colour,
+                               "type_a", "#69b3a2",
+                               "type_b", "steelblue",
+                               "node_group", "grey") |>
+    create_colour_string()
+
+  p3 <- networkD3::sankeyNetwork(Links = links,
+                                 Nodes = nodes,
+                                 Source = "IDsource",
+                                 Target = "IDtarget",
+                                 Value = "value",
+                                 NodeID = "name",
+                                 colourScale = my_color3,
+                                 LinkGroup="group",
+                                 NodeGroup="group")
+
+  expect_true(!is.null(p3))
+})
+
+
 test_that("make_sankey() works with height and width arguments", {
   # Mostly these are tests to show that the arguments can be passed through
   # to networkD3::sankeyNetwork().
