@@ -52,8 +52,8 @@ test_that("a simple sankey works as expected", {
   # Examples from
   # https://r-graph-gallery.com/322-custom-colours-in-sankey-diagram.html
   links <- data.frame(
-    source=c("group_A","group_A", "group_B", "group_C", "group_C", "group_E"),
-    target=c("group_C","group_D", "group_E", "group_F", "group_G", "group_H"),
+    source=c("node_A","node_A", "node_B", "node_C", "node_C", "node_E"),
+    target=c("node_C","node_D", "node_E", "node_F", "node_G", "node_H"),
     value=c(2,3, 2, 3, 1, 3)
   )
 
@@ -64,11 +64,22 @@ test_that("a simple sankey works as expected", {
   )
 
   # With networkD3, connection must be provided using id, not using real name like in the links dataframe.. So we need to reformat it.
-  links$IDsource <- match(links$source, nodes$name)-1
-  links$IDtarget <- match(links$target, nodes$name)-1
+  links$IDsource <- match(links$source, nodes$name) - 1
+  links$IDtarget <- match(links$target, nodes$name) - 1
 
   # prepare color scale: I give one specific color for each node.
-  my_color <- 'd3.scaleOrdinal() .domain(["group_A", "group_B","group_C", "group_D", "group_E", "group_F", "group_G", "group_H"]) .range(["blue", "green" , "chocolate", "orange", "red", "yellow", "aquamarine", "purple"])'
+  # my_color <- 'd3.scaleOrdinal() .domain(["node_A", "node_B","node_C", "node_D", "node_E", "node_F", "node_G", "node_H"]) .range(["blue", "green" , "chocolate", "orange", "red", "yellow", "aquamarine", "purple"])'
+
+  my_color <- tibble::tribble(~name, ~colour,
+                              "node_A", "blue",
+                              "node_B", "green",
+                              "node_C", "chocolate",
+                              "node_D", "orange",
+                              "node_E", "red",
+                              "node_F", "yellow",
+                              "node_G", "aquamarine",
+                              "node_H", "purple") |>
+    create_sankey_colour_string()
 
   # Make the Network. I call my colour scale with the colourScale argument
   p <- networkD3::sankeyNetwork(Links = links,
@@ -99,12 +110,12 @@ test_that("a simple sankey works as expected", {
                                  LinkGroup="group",
                                  NodeGroup="group")
 
+  # Now try using create_sankey_colour_string()
   my_color3 <- tibble::tribble(~name, ~colour,
-                               "type_a", "#69b3a2",
-                               "type_b", "steelblue",
+                               "type_a", "red",
+                               "type_b", "orange",
                                "node_group", "grey") |>
     create_sankey_colour_string()
-
   p3 <- networkD3::sankeyNetwork(Links = links,
                                  Nodes = nodes,
                                  Source = "IDsource",
@@ -112,10 +123,30 @@ test_that("a simple sankey works as expected", {
                                  Value = "value",
                                  NodeID = "name",
                                  colourScale = my_color3,
-                                 LinkGroup="group",
-                                 NodeGroup="group")
+                                 LinkGroup = "group",
+                                 NodeGroup = "group")
 
   expect_true(!is.null(p3))
+
+  # If we remove the node_group, we get green nodes
+  my_color4 <- tibble::tribble(~name, ~colour,
+                               "type_a", "#69b3a2",
+                               "type_b", "steelblue") |>
+    create_sankey_colour_string()
+  p4 <- networkD3::sankeyNetwork(Links = links,
+                                 Nodes = nodes,
+                                 Source = "IDsource",
+                                 Target = "IDtarget",
+                                 Value = "value",
+                                 NodeID = "name",
+                                 colourScale = my_color4,
+                                 LinkGroup = "group",
+                                 NodeGroup = "group")
+
+  # Try without the groups
+  links$group <- NULL
+
+
 })
 
 
@@ -144,52 +175,56 @@ test_that("make_sankey() works with colourScale argument", {
   # for information on how to control colours.
   # Make an initial colour list for the resources
   colour_df <- tibble::tribble(~name, ~colour,
-                               "Resources [of Crude]", "red",
-                               "Crude dist.",          "sienna3",
-                               "Oil fields",           "indianred",
-                               "Oil refineries",       "lightsalmon",
-                               "Diesel dist.",         "darkturquoise",
-                               "Power plants",         "green",
-                               "Elect. grid",          "deeppink",
-                               "Resources [of NG]",    "blue",
-                               "NG dist.",             "orange",
-                               "Gas wells & proc.",    "purple",
-                               "Petrol dist.",         "firebrick1",
-                               "Transport",            "dodgerblue",
-                               "Residential",          "lavenderblush",
-                               "Waste",                "yellow",
-                               "Crude",                "gray",
-                               "Crude [from Dist.]",   "gray",
-                               "Crude [from Fields]",  "gray",
-                               "Diesel",               "gray",
-                               "Diesel [from Dist.]",  "red",
-                               "Diesel [from Fields]", "gray",
-                               "Elect",                "gray",
-                               "Elect [from Grid]",    "gray",
-                               "NG",                   "gray",
-                               "NG [from Dist.]",      "gray",
-                               "NG [from Wells]",      "gray",
-                               "Petrol",               "gray",
-                               "Petrol [from Dist.]",  "gray")
-  # name_string <- paste0(paste0('"', colour_df[["name"]], '"'), collapse = ", ")
-  # colour_string <- paste0(paste0('"', colour_df[["colour"]], '"'), collapse = ", ")
-  # # colours <- paste0('d3.scaleOrdinal() .domain([', name_string, ']) .range([', colour_string, '])')
-  # colours <- paste0('d3.scaleOrdinal([', name_string, '], [', colour_string, ']);')
-
-  colours <- create_sankey_colour_string(colour_df)
+                               "Resources [of Crude]", "gray",
+                               "Crude dist.",          "gray",
+                               "Oil fields",           "gray",
+                               "Oil refineries",       "gray",
+                               "Diesel dist.",         "gray",
+                               "Power plants",         "gray",
+                               "Elect. grid",          "gray",
+                               "Resources [of NG]",    "gray",
+                               "NG dist.",             "gray",
+                               "Gas wells & proc.",    "gray",
+                               "Petrol dist.",         "gray",
+                               "Transport",            "gray",
+                               "Residential",          "gray",
+                               "Waste",                "gray",
+                               "Crude",                "black",
+                               "Crude [from Dist.]",   "black",
+                               "Crude [from Fields]",  "black",
+                               "Diesel",               "brown",
+                               "Diesel [from Dist.]",  "brown",
+                               "Diesel [from Fields]", "brown",
+                               "Elect",                "yellow",
+                               "Elect [from Grid]",    "yellow",
+                               "NG",                   "lightblue",
+                               "NG [from Dist.]",      "lightblue",
+                               "NG [from Wells]",      "lightblue",
+                               "Petrol",               "orange",
+                               "Petrol [from Dist.]",  "orange")
 
   s <- UKEnergy2000mats |>
     tidyr::spread(key = "matrix.name", value = "matrix") |>
-    make_sankey(colour_string = colours,
+    make_sankey(colour_string = colour_df,
                 fontSize = 10,
-                fontFamily = "Helvetica")
+                fontFamily = "Helvetica",
+                units = "ktoe")
 
   s$Sankey[[1]]
   expect_true(!any(is.null(s$Sankey)))
 })
 
 
+test_that("make_sankey() example works correctly", {
+  res <- UKEnergy2000mats |>
+    tidyr::pivot_wider(names_from = "matrix.name",
+                       values_from = "matrix") |>
+    make_sankey() |>
+    magrittr::extract2("Sankey") |>
+    magrittr::extract2(1)
 
-test_that("Simple sankey colours work", {
-
+  expect_false(is.null(res))
 })
+
+
+
