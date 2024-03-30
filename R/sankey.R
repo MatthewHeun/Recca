@@ -5,16 +5,28 @@
 #' Sankey diagrams are a helpful way to visualize energy flows in an energy conversion chain (ECC).
 #' This function takes a matrix description of an ECC and produces a Sankey diagram.
 #'
-#' At present, this function uses the `networkD3` package to draw the Sankey diagram.
+#' At present, this function uses [networkD3::sankeyNetwork()] to draw the Sankey diagram.
 #'
 #' If any of `R`, `U`, `V`, or `Y` is `NA`, `NA` is returned.
 #'
-#' @param .sutmats an optional wide-by-matrices data frame
+#' @param .sutmats An optional wide-by-matrices data frame
 #' @param R,U,V,Y See `Recca::psut_cols`.
-#' @param simplify_edges a boolean which tells whether edges should be simplified.
-#'        Applies to every row of `.sutmats` if `.sutmats` is specified.
+#' @param simplify_edges A boolean which tells whether edges should be simplified.
+#'                       Applies to every row of `.sutmats` if `.sutmats` is specified.
+#' @param colour_string An optional Javascript string that defines colours
+#'                      for the Sankey diagram,
+#'                      appropriate for use by [networkD3::sankeyNetwork()].
+#'                      Default is `create_sankey_colour_string(colour_df)`.
+#' @param colour_df An optional data frame of colours for the Sankey diagram.
+#'                  It must contain a `name_col` column (for nodes and flows)
+#'                  and a `colour_col` column (for corresponding colours).
+#' @param name_col,colour_col The names of columns in `colour_df` for
+#'                            names of nodes and flows (`name_col`) and
+#'                            colours of nodes and flows (`colour_col`).
+#'                            Defaults are "name" and "colour", respectively.
 #' @param sankey See `Recca::sankey_cols`.
-#' @param ... Arguments passed to `networkD3::sankeyNetwork()`, mostly for formatting purposes.
+#' @param ... Arguments passed to [networkD3::sankeyNetwork()],
+#'            mostly for formatting purposes.
 #'
 #' @return a Sankey diagram
 #'
@@ -36,6 +48,12 @@ make_sankey <- function(.sutmats = NULL,
                         V = Recca::psut_cols$V,
                         Y = Recca::psut_cols$Y,
                         simplify_edges = TRUE,
+                        colour_string = create_sankey_colour_string(colour_df,
+                                                             name_col = name_col,
+                                                             colour_col = colour_col),
+                        colour_df = NULL,
+                        name_col = "name",
+                        colour_col = "colour",
                         sankey = Recca::sankey_cols$sankey,
                         ...){
   sankey_func <- function(R_mat = NULL, U_mat, V_mat, Y_mat){
@@ -65,6 +83,7 @@ make_sankey <- function(.sutmats = NULL,
                                   Target = "To_node_id",
                                   Value = "Value",
                                   NodeID = "Node",
+                                  colourScale = colour_string,
                                   ...)
     list(s) %>% magrittr::set_names(sankey)
   }
@@ -115,7 +134,7 @@ make_sankey <- function(.sutmats = NULL,
 #'                              "type_a", "#69b3a2",
 #'                              "type_b", "steelblue",
 #'                              "node_group", "grey")
-#' colour_string <- create_colour_string(colour_df)
+#' colour_string <- create_sankey_colour_string(colour_df)
 #' cat(colour_string)
 #' networkD3::sankeyNetwork(Links = links,
 #'                          Nodes = nodes,
@@ -126,9 +145,12 @@ make_sankey <- function(.sutmats = NULL,
 #'                          colourScale = colour_string,
 #'                          LinkGroup="group",
 #'                          NodeGroup="group")
-create_colour_string <- function(colour_df,
+create_sankey_colour_string <- function(colour_df = NULL,
                                  name_col = "name",
                                  colour_col = "colour") {
+  if (is.null(colour_df)) {
+    return(NULL)
+  }
   name_string <- paste0(paste0('"', colour_df[[name_col]], '"'), collapse = ", ")
   colour_string <- paste0(paste0('"', colour_df[[colour_col]], '"'), collapse = ", ")
   paste0('d3.scaleOrdinal() .domain([', name_string, ']) .range([', colour_string, '])')

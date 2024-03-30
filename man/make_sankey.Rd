@@ -11,21 +11,41 @@ make_sankey(
   V = Recca::psut_cols$V,
   Y = Recca::psut_cols$Y,
   simplify_edges = TRUE,
+  colour_string = create_sankey_colour_string(colour_df, name_col = name_col, colour_col
+    = colour_col),
+  colour_df = NULL,
+  name_col = "name",
+  colour_col = "colour",
   sankey = Recca::sankey_cols$sankey,
   ...
 )
 }
 \arguments{
-\item{.sutmats}{an optional wide-by-matrices data frame}
+\item{.sutmats}{An optional wide-by-matrices data frame}
 
 \item{R, U, V, Y}{See \code{Recca::psut_cols}.}
 
-\item{simplify_edges}{a boolean which tells whether edges should be simplified.
+\item{simplify_edges}{A boolean which tells whether edges should be simplified.
 Applies to every row of \code{.sutmats} if \code{.sutmats} is specified.}
+
+\item{colour_string}{An optional Javascript string that defines colours
+for the Sankey diagram,
+appropriate for use by \code{\link[networkD3:sankeyNetwork]{networkD3::sankeyNetwork()}}.
+Default is \code{create_sankey_colour_string(colour_df)}.}
+
+\item{colour_df}{An optional data frame of colours for the Sankey diagram.
+It must contain a \code{name_col} column (for nodes and flows)
+and a \code{colour_col} column (for corresponding colours).}
+
+\item{name_col, colour_col}{The names of columns in \code{colour_df} for
+names of nodes and flows (\code{name_col}) and
+colours of nodes and flows (\code{colour_col}).
+Defaults are "name" and "colour", respectively.}
 
 \item{sankey}{See \code{Recca::sankey_cols}.}
 
-\item{...}{Arguments passed to \code{networkD3::sankeyNetwork()}, mostly for formatting purposes.}
+\item{...}{Arguments passed to \code{\link[networkD3:sankeyNetwork]{networkD3::sankeyNetwork()}},
+mostly for formatting purposes.}
 }
 \value{
 a Sankey diagram
@@ -37,7 +57,7 @@ Sankey diagrams are a helpful way to visualize energy flows in an energy convers
 This function takes a matrix description of an ECC and produces a Sankey diagram.
 }
 \details{
-At present, this function uses the \code{networkD3} package to draw the Sankey diagram.
+At present, this function uses \code{\link[networkD3:sankeyNetwork]{networkD3::sankeyNetwork()}} to draw the Sankey diagram.
 
 If any of \code{R}, \code{U}, \code{V}, or \code{Y} is \code{NA}, \code{NA} is returned.
 }

@@ -103,7 +103,7 @@ test_that("a simple sankey works as expected", {
                                "type_a", "#69b3a2",
                                "type_b", "steelblue",
                                "node_group", "grey") |>
-    create_colour_string()
+    create_sankey_colour_string()
 
   p3 <- networkD3::sankeyNetwork(Links = links,
                                  Nodes = nodes,
@@ -171,16 +171,16 @@ test_that("make_sankey() works with colourScale argument", {
                                "NG [from Wells]",      "gray",
                                "Petrol",               "gray",
                                "Petrol [from Dist.]",  "gray")
-  name_string <- paste0(paste0('"', colour_df[["name"]], '"'), collapse = ", ")
-  colour_string <- paste0(paste0('"', colour_df[["colour"]], '"'), collapse = ", ")
-  # colours <- paste0('d3.scaleOrdinal() .domain([', name_string, ']) .range([', colour_string, '])')
-  colours <- paste0('d3.scaleOrdinal([', name_string, '], [', colour_string, ']);')
+  # name_string <- paste0(paste0('"', colour_df[["name"]], '"'), collapse = ", ")
+  # colour_string <- paste0(paste0('"', colour_df[["colour"]], '"'), collapse = ", ")
+  # # colours <- paste0('d3.scaleOrdinal() .domain([', name_string, ']) .range([', colour_string, '])')
+  # colours <- paste0('d3.scaleOrdinal([', name_string, '], [', colour_string, ']);')
 
-
+  colours <- create_sankey_colour_string(colour_df)
 
   s <- UKEnergy2000mats |>
     tidyr::spread(key = "matrix.name", value = "matrix") |>
-    make_sankey(colourScale = networkD3::JS(colours),
+    make_sankey(colour_string = colours,
                 fontSize = 10,
                 fontFamily = "Helvetica")
 
