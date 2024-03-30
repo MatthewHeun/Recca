@@ -3,7 +3,7 @@ test_that("SUT matrix energy balance works with energy only", {
   expect_silent(
     UKEnergy2000mats %>%
       tidyr::spread(key = matrix.name, value = matrix) %>%
-      dplyr::filter(Last.stage %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
+      dplyr::filter(LastStage %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
       verify_SUT_energy_balance()
   )
   # Try with missing R matrix
@@ -14,7 +14,7 @@ test_that("SUT matrix energy balance works with energy only", {
         V = matsbyname::sum_byname(R, V),
         R = NULL
       ) %>%
-      dplyr::filter(Last.stage %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
+      dplyr::filter(LastStage %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
       verify_SUT_energy_balance()
   )
 })
@@ -23,7 +23,7 @@ test_that("SUT matrix energy balance works with energy only", {
 test_that("SUT matrix energy balance fails when a number has changed", {
   mats <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
-    dplyr::filter(Last.stage == IEATools::last_stages$final)
+    dplyr::filter(LastStage == IEATools::last_stages$final)
   R <- mats$R[[1]]
   U <- mats$U[[1]]
   V <- mats$V[[1]]
@@ -104,23 +104,23 @@ test_that("IEA energy balance works correctly", {
   # Make sure that it works.
   expect_silent(
     UKEnergy2000tidy %>%
-      dplyr::group_by(Country, Year, Energy.type, Last.stage) %>%
+      dplyr::group_by(Country, Year, EnergyType, LastStage) %>%
       # On Matt's new M1 Pro MacBook Pro, this test has small errors in energy differences.
       # Not sure if that is due to the processor being less precise?
       # Anyway, setting tol = 0.2 so that the results can slip under that level and prevent
       # errors in tests.
       # Note that is 0.2 out of 1e14.  So not a big deal.
-      verify_IEATable_energy_balance(energy = "E.dot", tol = 0.2)
+      verify_IEATable_energy_balance(energy = "Edot", tol = 0.2)
   )
 
   # Introduce something to make the energy balance fail.
   Unbalanced <- UKEnergy2000tidy
   # Change from 5e4 to 1e4
-  Unbalanced$E.dot[[1]] <- 1e4
+  Unbalanced$Edot[[1]] <- 1e4
   # Now try energy balance. It should fail.
   expect_error(Unbalanced %>%
-                 dplyr::group_by(Country, Year, Energy.type, Last.stage) %>%
-                 verify_IEATable_energy_balance(energy = "E.dot"),
+                 dplyr::group_by(Country, Year, EnergyType, LastStage) %>%
+                 verify_IEATable_energy_balance(energy = "Edot"),
                  "Energy not balanced in verify_IEATable_energy_balance.")
 
 })

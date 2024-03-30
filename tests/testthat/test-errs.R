@@ -9,24 +9,24 @@ test_that("ERRs are calculated correctly", {
     # separate_RV() %>%
     calc_io_mats() %>%
     calc_ERRs_gamma() %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, ger_gamma, ner_gamma, r_gamma) %>%
+    dplyr::select(Country, Year, EnergyType, LastStage, ger_gamma, ner_gamma, r_gamma) %>%
     tidyr::gather(key = matnames, value = matvals, ger_gamma, ner_gamma, r_gamma) %>%
     matsindf::expand_to_tidy()
 
   # Test some specific values
-  expect_equal(result %>% dplyr::filter(Last.stage == IEATools::last_stages$final, matnames == "ger_gamma", rownames == "Crude dist.") %>%
+  expect_equal(result %>% dplyr::filter(LastStage == IEATools::last_stages$final, matnames == "ger_gamma", rownames == "Crude dist.") %>%
                  magrittr::extract2("matvals"), 86.3636363636)
-  expect_equal(result %>% dplyr::filter(Last.stage == IEATools::last_stages$final, matnames == "ger_gamma", rownames == "Diesel dist.") %>%
+  expect_equal(result %>% dplyr::filter(LastStage == IEATools::last_stages$final, matnames == "ger_gamma", rownames == "Diesel dist.") %>%
                  magrittr::extract2("matvals"), 44.2857142857)
-  expect_true(result %>% dplyr::filter(Last.stage == IEATools::last_stages$final, matnames == "ger_gamma", rownames == "Elect. grid") %>%
+  expect_true(result %>% dplyr::filter(LastStage == IEATools::last_stages$final, matnames == "ger_gamma", rownames == "Elect. grid") %>%
                 magrittr::extract2("matvals") %>% is.infinite())
-  expect_equal(result %>% dplyr::filter(Last.stage == IEATools::last_stages$final, matnames == "ner_gamma", rownames == "NG dist.") %>%
+  expect_equal(result %>% dplyr::filter(LastStage == IEATools::last_stages$final, matnames == "ner_gamma", rownames == "NG dist.") %>%
                  magrittr::extract2("matvals"), 819)
-  expect_equal(result %>% dplyr::filter(Last.stage == IEATools::last_stages$final, matnames == "ner_gamma", rownames == "Power plants") %>%
+  expect_equal(result %>% dplyr::filter(LastStage == IEATools::last_stages$final, matnames == "ner_gamma", rownames == "Power plants") %>%
                  magrittr::extract2("matvals"), 63)
-  expect_equal(result %>% dplyr::filter(Last.stage == IEATools::last_stages$final, matnames == "r_gamma", rownames == "Oil fields") %>%
+  expect_equal(result %>% dplyr::filter(LastStage == IEATools::last_stages$final, matnames == "r_gamma", rownames == "Oil fields") %>%
                  magrittr::extract2("matvals"), 0.948500)
-  expect_equal(result %>% dplyr::filter(Last.stage == IEATools::last_stages$final, matnames == "r_gamma", rownames == "Oil refineries") %>%
+  expect_equal(result %>% dplyr::filter(LastStage == IEATools::last_stages$final, matnames == "r_gamma", rownames == "Oil refineries") %>%
                  magrittr::extract2("matvals"), 0.8920212766)
 
   # These industries have inhomogeneous units. Check for NAs where appropriate.
@@ -37,7 +37,7 @@ test_that("ERRs are calculated correctly", {
       coltypes = NULL,
       matnames = NULL,
       expected = dplyr::case_when(
-        Last.stage == IEATools::last_stages$services & rownames %in% c("Petrol dist.", "Crude dist.", "Diesel dist.", "NG dist.") ~ NA_real_,
+        LastStage == IEATools::last_stages$services & rownames %in% c("Petrol dist.", "Crude dist.", "Diesel dist.", "NG dist.") ~ NA_real_,
         rownames %in% inf_na_industries & colnames == "r_gamma" ~ 0/0,
         rownames %in% inf_na_industries ~ 1/0,
         TRUE ~ matvals

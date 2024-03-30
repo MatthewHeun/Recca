@@ -80,7 +80,7 @@ library(matsindf)
 library(Recca)
 library(tidyr)
 OurECC <- UKEnergy2000mats %>% 
-  dplyr::filter(Last.stage == "Final") %>% 
+  dplyr::filter(LastStage == "Final") %>% 
   tidyr::spread(key = "matrix.name", value = "matrix")
 dplyr::glimpse(OurECC)
 ```
@@ -276,7 +276,7 @@ Note that both ECCs are in complete energy balance.
 ```{r}
 OurECC %>% 
   verify_SUT_energy_balance_with_units() %>% 
-  select(Country, Year, Energy.type, Last.stage, 
+  select(Country, Year, EnergyType, LastStage, 
          .SUT_prod_energy_balance, .SUT_ind_energy_balance) %>% 
   glimpse()
 ```
@@ -288,7 +288,7 @@ HalfCrude %>%
   ) %>% 
   verify_SUT_energy_balance(R = "R_prime", U = "U_prime", V = "V_prime", 
                             Y = "Y_prime") %>% 
-  select(Country, Year, Energy.type, Last.stage,
+  select(Country, Year, EnergyType, LastStage,
          .SUT_energy_balance) %>% 
   glimpse()
 ```

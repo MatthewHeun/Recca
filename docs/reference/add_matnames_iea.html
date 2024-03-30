@@ -143,9 +143,9 @@ and terminology, although <code>.DF</code> does not necessarily need to contain 
 
     <pre class="usage"><span class='fu'>add_matnames_iea</span>(
   <span class='no'>.DF</span>,
-  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='st'>"Ledger.side"</span>,
-  <span class='kw'>energy</span> <span class='kw'>=</span> <span class='st'>"E.dot"</span>,
-  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='st'>"Flow.aggregation.point"</span>,
+  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='st'>"LedgerSide"</span>,
+  <span class='kw'>energy</span> <span class='kw'>=</span> <span class='st'>"Edot"</span>,
+  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='st'>"FlowAggregationPoint"</span>,
   <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
   <span class='kw'>supply_side</span> <span class='kw'>=</span> <span class='st'>"Supply"</span>,
   <span class='kw'>consumption_side</span> <span class='kw'>=</span> <span class='st'>"Consumption"</span>,
@@ -172,17 +172,17 @@ and <code>flow</code> columns.</p></td>
     <tr>
       <th>ledger_side</th>
       <td><p>the name of the column in <code>.DF</code> that contains ledger side
-(a string). Default is "<code>Ledger.side</code>".</p></td>
+(a string). Default is "<code>LedgerSide</code>".</p></td>
     </tr>
     <tr>
       <th>energy</th>
       <td><p>the name of the column in <code>.DF</code> that contains energy and exergy values
-(a string). Default is "<code>E.dot</code>".</p></td>
+(a string). Default is "<code>Edot</code>".</p></td>
     </tr>
     <tr>
       <th>flow_aggregation_point</th>
       <td><p>the name of the column in <code>.DF</code> that contains flow aggregation point information.
-Default is "<code>Flow.aggregation.point</code>".</p></td>
+Default is "<code>FlowAggregationPoint</code>".</p></td>
     </tr>
     <tr>
       <th>flow</th>
@@ -255,20 +255,20 @@ An error will occur if <code>.DF</code> already has a column named "<code>.R</co
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
 <span class='no'>UKEnergy2000tidy</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>Country</span>, <span class='no'>Year</span>, <span class='no'>Energy.type</span>, <span class='no'>Last.stage</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>Country</span>, <span class='no'>Year</span>, <span class='no'>EnergyType</span>, <span class='no'>LastStage</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'>add_matnames_iea</span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/reexports.html'>glimpse</a></span>()</div><div class='output co'>#&gt; Observations: 193
 #&gt; Variables: 11
-#&gt; Groups: Country, Year, Energy.type, Last.stage [4]
+#&gt; Groups: Country, Year, EnergyType, LastStage [4]
 #&gt; $ Country                <span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "GBR", "GBR", "GBR", "GBR", "GBR", "GBR", "GBR…
 #&gt; $ Year                   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000…
-#&gt; $ Ledger.side            </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "Supply", "Supply", "Supply", "Supply", "Suppl…
-#&gt; $ Flow.aggregation.point </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "Total primary energy supply", "Total primary …
-#&gt; $ Energy.type            </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "E", "E", "E", "E", "E", "E", "E", "E", "E", "…
-#&gt; $ Last.stage             </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "Final", "Final", "Final", "Final", "Final", "…
+#&gt; $ LedgerSide            </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "Supply", "Supply", "Supply", "Supply", "Suppl…
+#&gt; $ FlowAggregationPoint </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "Total primary energy supply", "Total primary …
+#&gt; $ EnergyType            </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "E", "E", "E", "E", "E", "E", "E", "E", "E", "…
+#&gt; $ LastStage             </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "Final", "Final", "Final", "Final", "Final", "…
 #&gt; $ Flow                   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "Resources - Crude", "Resources - NG", "Gas we…
 #&gt; $ Product                </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "Crude", "NG", "NG - Wells", "Crude - Fields",…
-#&gt; $ E.dot                  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> 50000, 43000, 43000, 50000, 47500, 41000, 2050…
+#&gt; $ Edot                  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> 50000, 43000, 43000, 50000, 47500, 41000, 2050…
 #&gt; $ Unit                   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe"…
 #&gt; $ matname                </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "V", "V", "V", "V", "V", "V", "V", "V", "V", "…</div></span></pre>
   </div>

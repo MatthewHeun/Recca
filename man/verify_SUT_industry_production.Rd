@@ -15,7 +15,7 @@ verify_SUT_industry_production(
 }
 \arguments{
 \item{.sutmats}{an SUT-style data frame containing metadata columns
-(typically \code{Country}, \code{Year}, \code{Ledger.side}, \code{Product}, etc.)
+(typically \code{Country}, \code{Year}, \code{LedgerSide}, \code{Product}, etc.)
 and columns of SUT matrices, including \code{U} and \code{V}.}
 
 \item{R}{resources (\strong{R}) matrix or name of the column in \code{.sutmats} that contains same. Default is "R".}

@@ -1,7 +1,7 @@
 
 test_that("calc_E_EIOU returns correct E_EIOU matrix and e_EIOU vector",{
   EIOU_mats <- UKEnergy2000mats %>%
-    dplyr::filter(Last.stage == "Final", Energy.type == "E") %>%
+    dplyr::filter(LastStage == "Final", EnergyType == "E") %>%
     tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") %>%
     calc_io_mats() %>%
     calc_E_EIOU()
@@ -34,7 +34,7 @@ test_that("calc_E_EIOU returns correct E_EIOU matrix and e_EIOU vector",{
 
 test_that("calc_erois() returns appropriate EROIs",{
   EIOU_mats <- UKEnergy2000mats %>%
-    dplyr::filter(Last.stage == "Final", Energy.type == "E") %>%
+    dplyr::filter(LastStage == "Final", EnergyType == "E") %>%
     tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") %>%
     calc_io_mats() %>%
     calc_E_EIOU()

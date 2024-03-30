@@ -189,6 +189,6 @@ library(dplyr)
 library(tidyr)
 UKEnergy2000mats \%>\%
   spread(key = matrix.name, value = matrix) \%>\%
-  select(Country, Year, Energy.type, Last.stage, U, U_feed, V, Y, r_EIOU, S_units) \%>\%
+  select(Country, Year, EnergyType, LastStage, U, U_feed, V, Y, r_EIOU, S_units) \%>\%
   calc_io_mats()
 }

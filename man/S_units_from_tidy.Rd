@@ -32,6 +32,6 @@ library(dplyr)
 library(matsindf)
 library(Recca)
 UKEnergy2000tidy \%>\%
-  group_by("Country", "Year", "Energy.type", "Last.stage") \%>\%
+  group_by("Country", "Year", "EnergyType", "LastStage") \%>\%
   S_units_from_tidy()
 }

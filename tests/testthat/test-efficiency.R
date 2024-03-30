@@ -3,7 +3,7 @@ test_that("industry efficiencies are calculated correctly", {
   result <- UKEnergy2000mats %>%
     tidyr::spread(key = "matrix.name", value = "matrix") %>%
     calc_eta_i() %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, eta_i) %>%
+    dplyr::select(Country, Year, EnergyType, LastStage, eta_i) %>%
     tidyr::gather(key = matnames, value = matvals, eta_i) %>%
     matsindf::expand_to_tidy() %>%
     dplyr::rename(eta_i = matvals) %>%
@@ -11,7 +11,7 @@ test_that("industry efficiencies are calculated correctly", {
       # Make expected values
       expected = dplyr::case_when(
         startsWith(rownames, "Resources - ") ~ Inf,
-        Last.stage == "services" & endsWith(rownames, " dist.") ~ NA_real_,
+        LastStage == "services" & endsWith(rownames, " dist.") ~ NA_real_,
         rownames %in% c("Cars", "Homes", "Rooms", "Trucks") ~ NA_real_,
         TRUE ~ eta_i
       )
@@ -21,19 +21,19 @@ test_that("industry efficiencies are calculated correctly", {
 
   # Test some specific values
   expect_equal(result %>%
-                 dplyr::filter(Last.stage == IEATools::last_stages$final, rownames == "Crude dist.") |>
+                 dplyr::filter(LastStage == IEATools::last_stages$final, rownames == "Crude dist.") |>
                  magrittr::extract2("eta_i"),
                0.98855359)
   expect_equal(result %>%
-                 dplyr::filter(Last.stage == IEATools::last_stages$useful, rownames == "Power plants") |>
+                 dplyr::filter(LastStage == IEATools::last_stages$useful, rownames == "Power plants") |>
                  magrittr::extract2("eta_i"),
                0.39751553)
   expect_equal(result |>
-                 dplyr::filter(Last.stage == IEATools::last_stages$services, Energy.type == IEATools::energy_types$e, rownames == "Oil fields") |>
+                 dplyr::filter(LastStage == IEATools::last_stages$services, EnergyType == IEATools::energy_types$e, rownames == "Oil fields") |>
                  magrittr::extract2("eta_i"),
                0.94857713)
   expect_equal(result |>
-                 dplyr::filter(Last.stage == IEATools::last_stages$services, Energy.type == IEATools::energy_types$x, rownames == "Oil fields") |>
+                 dplyr::filter(LastStage == IEATools::last_stages$services, EnergyType == IEATools::energy_types$x, rownames == "Oil fields") |>
                  magrittr::extract2("eta_i"), 0.94860812)
 })
 
@@ -195,15 +195,15 @@ test_that("calc_eta_pfus() works correctly", {
   expect_equal(nrow(res), 8)
   # Test a few values
   res |>
-    dplyr::filter(Energy.type == "E", Last.stage == "Final", GrossNet == "Gross") |>
+    dplyr::filter(EnergyType == "E", LastStage == "Final", GrossNet == "Gross") |>
     magrittr::extract2("eta_pf") |>
     expect_equal(0.7991935, tolerance = 1e-7)
   res |>
-    dplyr::filter(Energy.type == "E", Last.stage == "Services", GrossNet == "Net") |>
+    dplyr::filter(EnergyType == "E", LastStage == "Services", GrossNet == "Net") |>
     magrittr::extract2("eta_ps") |>
     expect_equal(5384063620)
   res |>
-    dplyr::filter(Energy.type == "X", Last.stage == "Services", GrossNet == "Net") |>
+    dplyr::filter(EnergyType == "X", LastStage == "Services", GrossNet == "Net") |>
     magrittr::extract2("EX.f") |>
     is.na() |>
     expect_true()
@@ -213,7 +213,7 @@ test_that("calc_eta_pfus() works correctly", {
 test_that("calc_eta_pfus() works correctly when services are not present", {
   psut_df <- UKEnergy2000mats |>
     tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
-    dplyr::filter(Last.stage != "Services")
+    dplyr::filter(LastStage != "Services")
   p_industries <- "Resources"
   fd_sectors <- c("Residential", "Transport", "Oil fields")
   res <- psut_df |>
@@ -221,15 +221,15 @@ test_that("calc_eta_pfus() works correctly when services are not present", {
   expect_equal(nrow(res), 4)
   # Test a few values
   res |>
-    dplyr::filter(Energy.type == "E", Last.stage == "Final", GrossNet == "Gross") |>
+    dplyr::filter(EnergyType == "E", LastStage == "Final", GrossNet == "Gross") |>
     magrittr::extract2("eta_pf") |>
     expect_equal(0.7991935, tolerance = 1e-7)
   res |>
-    dplyr::filter(Energy.type == "E", Last.stage == "Useful", GrossNet == "Net") |>
+    dplyr::filter(EnergyType == "E", LastStage == "Useful", GrossNet == "Net") |>
     magrittr::extract2("eta_fu") |>
     expect_equal(0.36119, tolerance = 1e-7)
   res |>
-    dplyr::filter(Energy.type == "E", Last.stage == "Useful", GrossNet == "Gross") |>
+    dplyr::filter(EnergyType == "E", LastStage == "Useful", GrossNet == "Gross") |>
     magrittr::extract2("EX.u") |>
     expect_equal(25990.3805)
 })

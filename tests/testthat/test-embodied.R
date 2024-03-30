@@ -11,7 +11,7 @@ test_that("embodied energy calculations works as expected", {
   # Calculate all embodied matrices
   emb_mats <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, R, U, U_feed, V, Y, r_EIOU, S_units) %>%
+    dplyr::select(Country, Year, EnergyType, LastStage, R, U, U_feed, V, Y, r_EIOU, S_units) %>%
     calc_io_mats() %>%
     dplyr::mutate(
       U_EIOU = matsbyname::hadamardproduct_byname(r_EIOU, U)
@@ -21,29 +21,29 @@ test_that("embodied energy calculations works as expected", {
 
   # Focus on G and H matrices
   GH <- emb_mats %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, G, H) %>%
+    dplyr::select(Country, Year, EnergyType, LastStage, G, H) %>%
     tidyr::gather(key = "matnames", value = "matvals", G, H) %>%
     matsindf::expand_to_tidy(drop = 0)
   GH %>%
-    dplyr::filter(Last.stage == IEATools::last_stages$final, Energy.type == IEATools::energy_types$e, matnames == "G", rownames == "Crude dist.", colnames == "Diesel [from Dist.]") %>%
+    dplyr::filter(LastStage == IEATools::last_stages$final, EnergyType == IEATools::energy_types$e, matnames == "G", rownames == "Crude dist.", colnames == "Diesel [from Dist.]") %>%
     dplyr::select(matvals) %>%
     unlist() |>
     unname() |>
     expect_equal(17098.4157270469)
   GH %>%
-    dplyr::filter(Last.stage == IEATools::last_stages$useful, Energy.type == IEATools::energy_types$e, matnames == "H", rownames == "Diesel dist.", colnames == "Residential") %>%
+    dplyr::filter(LastStage == IEATools::last_stages$useful, EnergyType == IEATools::energy_types$e, matnames == "H", rownames == "Diesel dist.", colnames == "Residential") %>%
     dplyr::select(matvals) %>%
     unlist() |>
     unname() |>
     expect_equal(453.4462184729)
   GH %>%
-    dplyr::filter(Last.stage == IEATools::last_stages$services, Energy.type == IEATools::energy_types$x, matnames == "G", rownames == "Gas wells & proc.", colnames == "Space heating [m3-K]") %>%
+    dplyr::filter(LastStage == IEATools::last_stages$services, EnergyType == IEATools::energy_types$x, matnames == "G", rownames == "Gas wells & proc.", colnames == "Space heating [m3-K]") %>%
     dplyr::select(matvals) %>%
     unlist() |>
     unname() |>
     expect_equal(26083.5277231996)
   GH %>%
-    dplyr::filter(Last.stage == IEATools::last_stages$services, Energy.type == IEATools::energy_types$x, matnames == "H", rownames == "NG dist.", colnames == "Residential") %>%
+    dplyr::filter(LastStage == IEATools::last_stages$services, EnergyType == IEATools::energy_types$x, matnames == "H", rownames == "NG dist.", colnames == "Residential") %>%
     dplyr::select(matvals) %>%
     unlist() |>
     unname() |>
@@ -51,23 +51,23 @@ test_that("embodied energy calculations works as expected", {
 
   # Focus on E matrices
   E <- emb_mats %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, E) %>%
+    dplyr::select(Country, Year, EnergyType, LastStage, E) %>%
     tidyr::gather(key = "matnames", value = "matvals", E) %>%
     matsindf::expand_to_tidy(drop = 0)
   E %>%
-    dplyr::filter(Last.stage == IEATools::last_stages$final, Energy.type == IEATools::energy_types$e, rownames == "Crude [from Dist.]", colnames == "Crude dist.") %>%
+    dplyr::filter(LastStage == IEATools::last_stages$final, EnergyType == IEATools::energy_types$e, rownames == "Crude [from Dist.]", colnames == "Crude dist.") %>%
     dplyr::select(matvals) %>%
     unlist() |>
     unname() |>
     expect_equal(1)
   E %>%
-    dplyr::filter(Last.stage == IEATools::last_stages$services, Energy.type == IEATools::energy_types$x, rownames == "NG", colnames == "Gas wells & proc.") %>%
+    dplyr::filter(LastStage == IEATools::last_stages$services, EnergyType == IEATools::energy_types$x, rownames == "NG", colnames == "Gas wells & proc.") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
     expect_equal(-1.0487804878)
   E %>%
-    dplyr::filter(Last.stage == IEATools::last_stages$services, Energy.type == IEATools::energy_types$e, rownames == "NG [from Dist.]", colnames == "Power plants") %>%
+    dplyr::filter(LastStage == IEATools::last_stages$services, EnergyType == IEATools::energy_types$e, rownames == "NG [from Dist.]", colnames == "Power plants") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
@@ -75,23 +75,23 @@ test_that("embodied energy calculations works as expected", {
 
   # Focus on M matrices
   M <- emb_mats %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, M_p, M_s) %>%
+    dplyr::select(Country, Year, EnergyType, LastStage, M_p, M_s) %>%
     tidyr::gather(key = "matnames", value = "matvals", M_p, M_s) %>%
     matsindf::expand_to_tidy(drop = 0)
   M %>%
-    dplyr::filter(Last.stage == IEATools::last_stages$services, matnames == "M_s", Energy.type == IEATools::energy_types$e, rownames == "Diesel [from Dist.]", colnames == "Residential") %>%
+    dplyr::filter(LastStage == IEATools::last_stages$services, matnames == "M_s", EnergyType == IEATools::energy_types$e, rownames == "Diesel [from Dist.]", colnames == "Residential") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
     expect_equal(218.8438205116)
   M %>%
-    dplyr::filter(Last.stage == IEATools::last_stages$useful, matnames == "M_p", Energy.type == IEATools::energy_types$e, rownames == "NG [from Wells]", colnames == "MD [from Car engines]") %>%
+    dplyr::filter(LastStage == IEATools::last_stages$useful, matnames == "M_p", EnergyType == IEATools::energy_types$e, rownames == "NG [from Wells]", colnames == "MD [from Car engines]") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
     expect_equal(207.9296211559)
   M %>%
-    dplyr::filter(Last.stage == IEATools::last_stages$services, matnames == "M_p", Energy.type == IEATools::energy_types$x, rownames == "Petrol", colnames == "Space heating [m3-K]") %>%
+    dplyr::filter(LastStage == IEATools::last_stages$services, matnames == "M_p", EnergyType == IEATools::energy_types$x, rownames == "Petrol", colnames == "Space heating [m3-K]") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
@@ -99,44 +99,44 @@ test_that("embodied energy calculations works as expected", {
 
   # Focus on footprint matrices
   F_fe <- emb_mats %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, F_footprint_p, F_effects_p, F_footprint_s, F_effects_s) %>%
+    dplyr::select(Country, Year, EnergyType, LastStage, F_footprint_p, F_effects_p, F_footprint_s, F_effects_s) %>%
     tidyr::gather(key = "matnames", value = "matvals", F_footprint_p, F_effects_p, F_footprint_s, F_effects_s) %>%
     matsindf::expand_to_tidy(drop = 0)
   F_fe %>%
-    dplyr::filter(Last.stage == IEATools::last_stages$final, Energy.type == IEATools::energy_types$e, matnames == "F_effects_p", rownames == "Crude", colnames == "Diesel [from Dist.]") %>%
+    dplyr::filter(LastStage == IEATools::last_stages$final, EnergyType == IEATools::energy_types$e, matnames == "F_effects_p", rownames == "Crude", colnames == "Diesel [from Dist.]") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
     expect_equal(0.3599666468)
   F_fe %>%
-    dplyr::filter(Last.stage == IEATools::last_stages$final, Energy.type == IEATools::energy_types$e, matnames == "F_footprint_p", rownames == "NG [from Wells]", colnames == "NG [from Dist.]") %>%
+    dplyr::filter(LastStage == IEATools::last_stages$final, EnergyType == IEATools::energy_types$e, matnames == "F_footprint_p", rownames == "NG [from Wells]", colnames == "NG [from Dist.]") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
     expect_equal(0.3371597830)
   F_fe %>%
-    dplyr::filter(Last.stage == IEATools::last_stages$services, Energy.type == IEATools::energy_types$e, matnames == "F_effects_s", rownames == "Diesel", colnames == "Residential") %>%
+    dplyr::filter(LastStage == IEATools::last_stages$services, EnergyType == IEATools::energy_types$e, matnames == "F_effects_s", rownames == "Diesel", colnames == "Residential") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
     expect_equal(0.0054217606)
   # Because this number is so small, divide by the expected value to generate a 1.
   F_fe %>%
-    dplyr::filter(Last.stage == IEATools::last_stages$services, Energy.type == IEATools::energy_types$e, matnames == "F_footprint_s", rownames == "LTH", colnames == "Residential") %>%
+    dplyr::filter(LastStage == IEATools::last_stages$services, EnergyType == IEATools::energy_types$e, matnames == "F_footprint_s", rownames == "LTH", colnames == "Residential") %>%
     dplyr::select(matvals) %>%
     unlist() |>
     unname() |>
     magrittr::divide_by(3.9993866199998427767e-11) |>
     expect_equal(1)
   F_fe %>%
-    dplyr::filter(Last.stage == IEATools::last_stages$services, Energy.type == IEATools::energy_types$x, matnames == "F_effects_p", rownames == "Crude [from Fields]", colnames == "Illumination [lumen-hrs/yr]") %>%
+    dplyr::filter(LastStage == IEATools::last_stages$services, EnergyType == IEATools::energy_types$x, matnames == "F_effects_p", rownames == "Crude [from Fields]", colnames == "Illumination [lumen-hrs/yr]") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
     expect_equal(0.0020440162005698)
   # Because this number is so small, divide by the expected value to generate a 1.
   F_fe %>%
-    dplyr::filter(Last.stage == IEATools::last_stages$services, Energy.type == IEATools::energy_types$x, matnames == "F_footprint_p", rownames == "MD [from Truck engines]", colnames == "Illumination [lumen-hrs/yr]") %>%
+    dplyr::filter(LastStage == IEATools::last_stages$services, EnergyType == IEATools::energy_types$x, matnames == "F_footprint_p", rownames == "MD [from Truck engines]", colnames == "Illumination [lumen-hrs/yr]") %>%
     dplyr::select(matvals) %>%
     unlist() |>
     unname() |>
@@ -144,7 +144,7 @@ test_that("embodied energy calculations works as expected", {
     expect_equal(1)
   # Because this number is so small, divide by the expected value to generate a 1.
   F_fe %>%
-    dplyr::filter(Last.stage == IEATools::last_stages$services, Energy.type == IEATools::energy_types$x, matnames == "F_footprint_s", rownames == "Petrol [from Dist.]", colnames == "Transport") %>%
+    dplyr::filter(LastStage == IEATools::last_stages$services, EnergyType == IEATools::energy_types$x, matnames == "F_footprint_s", rownames == "Petrol [from Dist.]", colnames == "Transport") %>%
     dplyr::select(matvals) %>%
     unlist() |>
     unname() |>
@@ -153,29 +153,29 @@ test_that("embodied energy calculations works as expected", {
 
   # Focus on efficiencies
   embodied_etas <- emb_mats %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, eta_p, eta_s) %>%
+    dplyr::select(Country, Year, EnergyType, LastStage, eta_p, eta_s) %>%
     tidyr::gather(key = "matnames", value = "matvals", eta_p, eta_s) %>%
     matsindf::expand_to_tidy(drop = 0)
   embodied_etas %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "eta_p", rownames == "Diesel [from Dist.]") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$e, LastStage == IEATools::last_stages$final, matnames == "eta_p", rownames == "Diesel [from Dist.]") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
     expect_equal(0.81397293779504)
   embodied_etas %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "eta_p", rownames == "Space heating [m3-K]") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$e, LastStage == IEATools::last_stages$services, matnames == "eta_p", rownames == "Space heating [m3-K]") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
     expect_equal(2833600.6039485)
   embodied_etas %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$useful, matnames == "eta_s", rownames == "Transport") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$e, LastStage == IEATools::last_stages$useful, matnames == "eta_s", rownames == "Transport") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
     expect_equal(0.48990686308539)
   embodied_etas %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, matnames == "eta_p", rownames == "Illumination [lumen-hrs/yr]") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$x, LastStage == IEATools::last_stages$services, matnames == "eta_p", rownames == "Illumination [lumen-hrs/yr]") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
