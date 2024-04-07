@@ -30,7 +30,7 @@ usethis::use_data(UKEnergy2000tidy, overwrite = TRUE)
 
 # Create S_units matrices from the UKEnergy2000tidy data frame
 S_units <- UKEnergy2000tidy %>%
-  dplyr::group_by(Country, Year, Energy.type, Last.stage) %>%
+  dplyr::group_by(Country, Year, EnergyType, LastStage) %>%
   S_units_from_tidy()
 
 UKEnergy2000mats <- UKEnergy2000tidy %>%
@@ -39,21 +39,21 @@ UKEnergy2000mats <- UKEnergy2000tidy %>%
   # Add metadata columns for row names, column names, row types, and column types.
   IEATools::add_row_col_meta() %>%
   # Eliminate columns we no longer need
-  dplyr::select(-Ledger.side,
-                -Flow.aggregation.point,
+  dplyr::select(-LedgerSide,
+                -FlowAggregationPoint,
                 -Flow,
                 -Product) %>%
   dplyr::mutate(
     # Ensure that all energy values are positive, as required for analysis.
-    E.dot = abs(E.dot)
+    Edot = abs(Edot)
   ) %>%
 
   # Collapse to matrices
-  dplyr::group_by(Country, Year, Energy.type, Last.stage, matnames) %>%
-  matsindf::collapse_to_matrices(matnames = "matnames", matvals = "E.dot",
+  dplyr::group_by(Country, Year, EnergyType, LastStage, matnames) %>%
+  matsindf::collapse_to_matrices(matnames = "matnames", matvals = "Edot",
                                  rownames = "rownames", colnames = "colnames",
                                  rowtypes = "rowtypes", coltypes = "coltypes") %>%
-  dplyr::rename(matrix.name = matnames, matrix = E.dot) %>%
+  dplyr::rename(matrix.name = matnames, matrix = Edot) %>%
   tidyr::spread(key = matrix.name, value = matrix) %>%
 
   dplyr::mutate(
@@ -63,7 +63,7 @@ UKEnergy2000mats <- UKEnergy2000tidy %>%
     r_EIOU = matsbyname::replaceNaN_byname(r_EIOU, val = 0)
   ) %>%
   # Add S_units matrices
-  dplyr::left_join(S_units, by = c("Country", "Year", "Energy.type", "Last.stage")) %>%
+  dplyr::left_join(S_units, by = c("Country", "Year", "EnergyType", "LastStage")) %>%
   tidyr::gather(key = matrix.name, value = matrix, R, U, U_EIOU, U_feed, V, Y, r_EIOU, S_units)
 
 usethis::use_data(UKEnergy2000mats, overwrite = TRUE)

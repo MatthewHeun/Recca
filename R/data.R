@@ -179,13 +179,13 @@
 #' \describe{
 #'   \item{Country}{country, GB (Great Britain, only one country)}
 #'   \item{Year}{year, 2000 (only one year)}
-#'   \item{Ledger.side}{Supply or Consumption}
-#'   \item{Flow.aggregation.point}{tells where each row should be aggregated}
-#'   \item{Energy.type}{E.ktoe (for energy) or X.ktoe (for exergy)}
-#'   \item{Last.stage}{tells the final stage of the energy conversion chain: final, useful, or services}
+#'   \item{LedgerSide}{Supply or Consumption}
+#'   \item{FlowAggregationPoint}{tells where each row should be aggregated}
+#'   \item{EnergyType}{E.ktoe (for energy) or X.ktoe (for exergy)}
+#'   \item{LastStage}{tells the final stage of the energy conversion chain: final, useful, or services}
 #'   \item{Flow}{the Industry or Sector involved in this flow}
 #'   \item{Product}{the energy product involved in this flow}
-#'   \item{E.dot}{value of the energy, exergy, or service flow in ktoe}
+#'   \item{Edot}{value of the energy, exergy, or service flow in ktoe}
 #'   \item{Unit}{unit in which quantity is expressed}
 #' }
 #' @source \doi{10.1016/j.apenergy.2018.05.109}
@@ -235,13 +235,13 @@
 #' \describe{
 #'   \item{Country}{country, (Example, only one country)}
 #'   \item{Year}{year, 2000 (only one year as an example)}
-#'   \item{Ledger.side}{Supply or Consumption}
-#'   \item{Flow.aggregation.point}{tells where each row should be aggregated}
-#'   \item{Energy.type}{E.ktoe (for energy) or X.ktoe (for exergy)}
-#'   \item{Last.stage}{tells the final stage of the energy conversion chain: services is the only entry here}
+#'   \item{LedgerSide}{Supply or Consumption}
+#'   \item{FlowAggregationPoint}{tells where each row should be aggregated}
+#'   \item{EnergyType}{E (for energy) or X (for exergy)}
+#'   \item{LastStage}{tells the final stage of the energy conversion chain: services is the only entry here}
 #'   \item{Flow}{the Industry or Sector involved in this flow}
 #'   \item{Product}{the energy product involved in this flow}
-#'   \item{E.dot}{value of the energy, exergy, or service flow in ktoe}
+#'   \item{Edot}{value of the energy, exergy, or service flow in ktoe}
 #'   \item{Unit}{unit in which quantity is expressed}
 #' }
 "PerfectSubtidy"

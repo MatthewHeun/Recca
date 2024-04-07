@@ -111,7 +111,7 @@ matrices for each grouping using the `S_units_from_tidy()` function.
 ```{r}
 library(tibble)
 S_units <- UKEnergy2000tidy %>%
-  dplyr::group_by(Country, Year, Energy.type, Last.stage) %>%
+  dplyr::group_by(Country, Year, EnergyType, LastStage) %>%
   S_units_from_tidy()
 tibble::glimpse(S_units)
 ```
@@ -128,10 +128,10 @@ WithNames <- UKEnergy2000tidy %>%
   # Add metadata columns for row names, column names, row types, and column types.
   IEATools::add_row_col_meta() %>% 
   # Eliminate columns we no longer need
-  dplyr::select(-Ledger.side, -Flow.aggregation.point, -Flow, -Product) %>%
+  dplyr::select(-LedgerSide, -FlowAggregationPoint, -Flow, -Product) %>%
   dplyr::mutate(
     # Ensure that all energy values are positive, as required for analysis.
-    E.dot = abs(E.dot)
+    Edot = abs(Edot)
   )
 head(WithNames)
 ```
@@ -143,11 +143,11 @@ matrix (`S_units`).
 ```{r}
 AsMats <- WithNames %>%
   # Collapse to matrices using functions in the matsindf package
-  dplyr::group_by(Country, Year, Energy.type, Last.stage, matnames) %>%
-  matsindf::collapse_to_matrices(matnames = "matnames", matvals = "E.dot",
+  dplyr::group_by(Country, Year, EnergyType, LastStage, matnames) %>%
+  matsindf::collapse_to_matrices(matnames = "matnames", matvals = "Edot",
                        rownames = "rownames", colnames = "colnames",
                        rowtypes = "rowtypes", coltypes = "coltypes") %>%
-  dplyr::rename(matrix.name = matnames, matrix = E.dot) %>%
+  dplyr::rename(matrix.name = matnames, matrix = Edot) %>%
   tidyr::spread(key = matrix.name, value = matrix) %>% 
   # Do a little more cleanup
   dplyr::mutate(
@@ -159,7 +159,7 @@ AsMats <- WithNames %>%
   ) %>% 
   dplyr::select(-U_EIOU, -U_feed) %>%
   # Add S_units matrices
-  dplyr::left_join(S_units, by = c("Country", "Year", "Energy.type", "Last.stage")) %>%
+  dplyr::left_join(S_units, by = c("Country", "Year", "EnergyType", "LastStage")) %>%
   tidyr::gather(key = matrix.name, value = matrix, R, U, V, Y, r_EIOU, S_units)
 tibble::glimpse(AsMats)
 ```
@@ -185,10 +185,10 @@ mats <- UKEnergy2000mats %>%
   tidyr::spread(key = matrix.name, value = matrix) %>% 
   # Put rows in a natural order
   dplyr::mutate(
-    Last.stage = factor(Last.stage, levels = c("Final", "Useful", "Services")),
-    Energy.type = factor(Energy.type, levels = c("E", "X"))
+    LastStage = factor(LastStage, levels = c("Final", "Useful", "Services")),
+    EnergyType = factor(EnergyType, levels = c("E", "X"))
   ) %>% 
-  dplyr::arrange(Last.stage, Energy.type)
+  dplyr::arrange(LastStage, EnergyType)
 # Use the calc_io_mats function with individual matrices, 
 # each taken from the first row of the UKEnergy2000mats data frame.
 R <- mats$R[[1]]

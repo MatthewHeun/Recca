@@ -127,13 +127,13 @@ test_that("inputs_unit_homogeneous() works correctly", {
     magrittr::extract2(".inputs_unit_homogeneous") %>%
     unlist()
   # The 2nd and 4th rows of UKEnergy2000mats have services inputs to industries, with different units, of course.
-  # Thus, we expect to have FALSE when services are the Last.stage.
+  # Thus, we expect to have FALSE when services are the LastStage.
   expected <- UKEnergy2000mats %>%
     tidyr::spread(key = "matrix.name", value = "matrix") %>%
     dplyr::mutate(
       expected = dplyr::case_when(
-        Last.stage == IEATools::last_stages$services ~ FALSE,
-        Last.stage != IEATools::last_stages$services ~ TRUE,
+        LastStage == IEATools::last_stages$services ~ FALSE,
+        LastStage != IEATools::last_stages$services ~ TRUE,
         TRUE ~ NA
         )
     ) %>%
@@ -142,18 +142,18 @@ test_that("inputs_unit_homogeneous() works correctly", {
   expect_equal(result, expected)
 
   # Now test when details are requested.
-  # When Last.stage is "services", we have mixed units on the inputs for *dist. industries,
+  # When LastStage is "services", we have mixed units on the inputs for *dist. industries,
   # because services (with funny units) are inputs to the industries.
   result_details <- UKEnergy2000mats %>%
     tidyr::spread(key = "matrix.name", value = "matrix") %>%
     inputs_unit_homogeneous(keep_details = TRUE) %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, .inputs_unit_homogeneous) %>%
+    dplyr::select(Country, Year, EnergyType, LastStage, .inputs_unit_homogeneous) %>%
     tidyr::gather(key = "matnames", value = "matvals", .inputs_unit_homogeneous) %>%
     matsindf::expand_to_tidy() %>%
     dplyr::mutate(
       expected = dplyr::case_when(
-        Last.stage == IEATools::last_stages$final ~ TRUE,
-        Last.stage == IEATools::last_stages$useful ~ TRUE,
+        LastStage == IEATools::last_stages$final ~ TRUE,
+        LastStage == IEATools::last_stages$useful ~ TRUE,
         endsWith(rownames, "dist.") ~ FALSE,
         !endsWith(rownames, "dist.") ~ TRUE,
         TRUE ~ NA
@@ -193,13 +193,13 @@ test_that("inputs_outputs_unit_homogeneous works as expected", {
     magrittr::extract2(".inputs_outputs_unit_homogeneous") %>%
     unlist()
   # The 2nd and 4th rows of UKEnergy2000mats have services inputs to industries, with different units, of course.
-  # Thus, we expect to have FALSE when services are the Last.stage.
+  # Thus, we expect to have FALSE when services are the LastStage.
   expected <- UKEnergy2000mats %>%
     tidyr::spread(key = "matrix.name", value = "matrix") %>%
     dplyr::mutate(
       expected = dplyr::case_when(
-        Last.stage == IEATools::last_stages$services ~ FALSE,
-        Last.stage != IEATools::last_stages$services ~ TRUE,
+        LastStage == IEATools::last_stages$services ~ FALSE,
+        LastStage != IEATools::last_stages$services ~ TRUE,
         TRUE ~ NA
       )
     ) %>%
@@ -210,13 +210,13 @@ test_that("inputs_outputs_unit_homogeneous works as expected", {
   result2 <- UKEnergy2000mats %>%
     tidyr::spread(key = "matrix.name", value = "matrix") %>%
     flows_unit_homogeneous(keep_details = TRUE) %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, .flows_unit_homogeneous) %>%
+    dplyr::select(Country, Year, EnergyType, LastStage, .flows_unit_homogeneous) %>%
     tidyr::gather(key = "matnames", value = "matvals", .flows_unit_homogeneous) %>%
     matsindf::expand_to_tidy() %>%
     dplyr::mutate(
       expected = dplyr::case_when(
-        Last.stage == IEATools::last_stages$final ~ TRUE,
-        Last.stage == IEATools::last_stages$useful ~ TRUE,
+        LastStage == IEATools::last_stages$final ~ TRUE,
+        LastStage == IEATools::last_stages$useful ~ TRUE,
         endsWith(rownames, "dist.") ~ FALSE,
         rownames %in% c("Cars", "Homes", "Rooms", "Trucks") ~ FALSE,
         TRUE ~ TRUE
@@ -233,13 +233,13 @@ test_that("flows_unit_homogeneous() works as expected", {
     magrittr::extract2(".flows_unit_homogeneous") %>%
     unlist()
   # The 2nd and 4th rows of UKEnergy2000mats have services inputs to industries, with different units, of course.
-  # Thus, we expect to have FALSE when services are the Last.stage.
+  # Thus, we expect to have FALSE when services are the LastStage.
   expected <- UKEnergy2000mats %>%
     tidyr::spread(key = "matrix.name", value = "matrix") %>%
     dplyr::mutate(
       expected = dplyr::case_when(
-        Last.stage == IEATools::last_stages$services ~ FALSE,
-        Last.stage != IEATools::last_stages$services ~ TRUE,
+        LastStage == IEATools::last_stages$services ~ FALSE,
+        LastStage != IEATools::last_stages$services ~ TRUE,
         TRUE ~ NA
       )
     ) %>%
@@ -250,13 +250,13 @@ test_that("flows_unit_homogeneous() works as expected", {
   result2 <- UKEnergy2000mats %>%
     tidyr::spread(key = "matrix.name", value = "matrix") %>%
     flows_unit_homogeneous(keep_details = TRUE) %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, .flows_unit_homogeneous) %>%
+    dplyr::select(Country, Year, EnergyType, LastStage, .flows_unit_homogeneous) %>%
     tidyr::gather(key = "matnames", value = "matvals", .flows_unit_homogeneous) %>%
     matsindf::expand_to_tidy() %>%
     dplyr::mutate(
       expected = dplyr::case_when(
-        Last.stage == IEATools::last_stages$final ~ TRUE,
-        Last.stage == IEATools::last_stages$useful ~ TRUE,
+        LastStage == IEATools::last_stages$final ~ TRUE,
+        LastStage == IEATools::last_stages$useful ~ TRUE,
         endsWith(rownames, "dist.") ~ FALSE,
         rownames %in% c("Cars", "Homes", "Rooms", "Trucks") ~ FALSE,
         TRUE ~ TRUE
@@ -450,7 +450,7 @@ test_that("get_all_products_and_industries() works with pieces", {
                c("Crude", "NG", "Diesel", "Elect", "Petrol"))
   expect_equal(res$Industry.names[[1]],
                c("Resources", "Crude dist.", "Diesel dist.", "Elect. grid", "Gas wells & proc.", "NG dist.", "Oil fields",
-                 "Oil refineries", "Petrol dist.", "Power plants", "Residential", "Transport"))
+                 "Oil refineries", "Petrol dist.", "Power plants", "Transport", "Residential"))
 })
 
 

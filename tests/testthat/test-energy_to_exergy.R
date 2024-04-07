@@ -8,7 +8,7 @@ test_that("extend_to_exergy() works as expected", {
     # Put in wide-by-matrix format.
     tidyr::spread(key = matrix.name, value = matrix) %>%
     # Eliminate services ECCs.
-    dplyr::filter(Last.stage %in% c("Final", "Useful")) %>%
+    dplyr::filter(LastStage %in% c("Final", "Useful")) %>%
     dplyr::mutate(
       phi = RCLabels::make_list(Recca::phi_vec, n = nrow(.), lenx = 1)
     )
@@ -232,14 +232,14 @@ test_that("extend_fu_details_to_exergy() works as expected", {
     extend_fu_details_to_exergy()
   # Test that the results are as expected.
   res_df |>
-    dplyr::filter(Energy.type == "X") |>
+    dplyr::filter(.data[[Recca::psut_cols$energy_type]] == "X") |>
     magrittr::extract2("Y_fu_details") |>
     matsbyname::equal_byname(list(expected, expected)) |>
     unlist() |>
     all() |>
     expect_true()
   res_df |>
-    dplyr::filter(Energy.type == "X") |>
+    dplyr::filter(.data[[Recca::psut_cols$energy_type]] == "X") |>
     magrittr::extract2("U_EIOU_fu_details") |>
     matsbyname::equal_byname(list(expected, expected)) |>
     unlist() |>
@@ -267,7 +267,7 @@ test_that("extend_fu_details_to_exergy() works with a data frame without the det
 
 
 test_that("extend_fu_details_to_exergy() fails when not all Energy.type is 'E'", {
-  details_df <- tibble::tribble(~Energy.type, ~R, ~U, ~V, ~Y, ~Y_fu_details, ~U_EIOU_fu_details,
+  details_df <- tibble::tribble(~EnergyType, ~R, ~U, ~V, ~Y, ~Y_fu_details, ~U_EIOU_fu_details,
                                 "X",          1,  2,  3,  4,    5,             6)
   # A data frame without the details matrices should return NULL.
   extend_fu_details_to_exergy(details_df) |>
@@ -304,12 +304,12 @@ test_that("extend_fu_details_to_exergy() gives NULL when matrices are NULL", {
   res <- extend_fu_details_to_exergy(details_df)
 
   res |>
-    dplyr::filter(Energy.type == "X", R == 1) |>
+    dplyr::filter(.data[[Recca::psut_cols$energy_type]] == "X", R == 1) |>
     magrittr::extract2("Y_fu_details") |>
     magrittr::extract2(1) |>
     expect_null()
   res |>
-    dplyr::filter(Energy.type == "X", R == 2) |>
+    dplyr::filter(.data[[Recca::psut_cols$energy_type]] == "X", R == 2) |>
     magrittr::extract2("U_EIOU_details") |>
     magrittr::extract2(1) |>
     expect_null()
