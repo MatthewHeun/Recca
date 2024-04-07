@@ -77,7 +77,7 @@ test_that("extend_to_exergy() works as expected", {
   expect_true((res[[Recca::psut_cols$Y]] %>% matsbyname::rowtype() == "Product") %>% all())
   expect_true((res[[Recca::psut_cols$Y]] %>% matsbyname::coltype() == "Industry") %>% all())
 
-  # Try an erroneous case, when the Energy.type column has something other than E
+  # Try an erroneous case, when the EnergyType column has something other than E
   sutmats %>%
     dplyr::mutate(
       "{Recca::energy_types$energy_type}" := c("W", "X")
@@ -224,7 +224,7 @@ test_that("extend_fu_details_to_exergy() works as expected", {
 
   # Make a data frame and do calculations within.
   df <- tibble::tibble(Country = "USA",
-                       Energy.type = "E",
+                       EnergyType = "E",
                        Y_fu_details = list(details_mat, details_mat),
                        U_EIOU_fu_details = list(details_mat, details_mat),
                        phi = list(phi_vec, phi_vec))
@@ -266,7 +266,7 @@ test_that("extend_fu_details_to_exergy() works with a data frame without the det
 })
 
 
-test_that("extend_fu_details_to_exergy() fails when not all Energy.type is 'E'", {
+test_that("extend_fu_details_to_exergy() fails when not all EnergyType is 'E'", {
   details_df <- tibble::tribble(~EnergyType, ~R, ~U, ~V, ~Y, ~Y_fu_details, ~U_EIOU_fu_details,
                                 "X",          1,  2,  3,  4,    5,             6)
   # A data frame without the details matrices should return NULL.
@@ -297,7 +297,7 @@ test_that("extend_fu_details_to_exergy() gives NULL when matrices are NULL", {
 
   Y_fu_details <- details_mat
   U_EIOU_fu_details <- details_mat
-  details_df <- tibble::tribble(~Energy.type, ~phi,    ~R, ~U, ~V, ~Y, ~Y_fu_details, ~U_EIOU_fu_details,
+  details_df <- tibble::tribble(~EnergyType, ~phi,    ~R, ~U, ~V, ~Y, ~Y_fu_details, ~U_EIOU_fu_details,
                                 "E",          phi_vec, 1,  1,  1,  1,  NULL,          U_EIOU_fu_details,
                                 "E",          phi_vec, 2,  2,  2,  2,  Y_fu_details,  NULL)
   # A data frame without the details matrices should return NULL.

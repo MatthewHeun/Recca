@@ -267,7 +267,7 @@ test_that("new_k_ps() works as expected", {
   # This test below is part of the R_prime matrix.
   # So we need to change the new_k_ps() matrix before implementing the test.
   # expect_equivalent(new_UV_noR %>%
-  #                     dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "V_prime", rownames == "Resources - Rens", colnames == "Rens") %>%
+  #                     dplyr::filter(EnergyType == IEATools::energy_types$e, LastStage == IEATools::last_stages$services, matnames == "V_prime", rownames == "Resources - Rens", colnames == "Rens") %>%
   #                     dplyr::select(matvals) %>%
   #                     unlist(),
   #                   49.75)
@@ -306,7 +306,7 @@ test_that("new_k_ps() works as expected", {
                  length(),
                0)
   # expect_equivalent(new_UV_withR %>%
-  #                     dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "R_prime", rownames == "Resources - Rens", colnames == "Rens") %>%
+  #                     dplyr::filter(EnergyType == IEATools::energy_types$e, LastStage == IEATools::last_stages$services, matnames == "R_prime", rownames == "Resources - Rens", colnames == "Rens") %>%
   #                     dplyr::select(matvals) %>%
   #                     unlist(),
   #                   49.75)
@@ -373,8 +373,8 @@ test_that("1-industry ECC works with new_k_ps()", {
 test_that("new_R_ps() works as expected", {
   setup <- UKEnergy2000mats %>%
     tidyr::spread(key = "matrix.name", value = "matrix") %>%
-    # When Last.stage is "services", we get units problems.
-    # Avoid by using only ECCs with "Final" and "Useful" as the Last.stage.
+    # When LastStage is "services", we get units problems.
+    # Avoid by using only ECCs with "Final" and "Useful" as the LastStage.
     dplyr::filter(.data[[Recca::psut_cols$last_stage]] != IEATools::last_stages$services) %>%
     # Calculate the input-output matrices which are inputs to the new_R function.
     calc_io_mats(direction = "downstream") %>%
@@ -416,8 +416,8 @@ test_that("new_R_ps() works as expected", {
 
   doubleR <- UKEnergy2000mats %>%
     tidyr::spread(key = "matrix.name", value = "matrix") %>%
-    # When Last.stage is "services", we get units problems.
-    # Avoid by using only ECCs with "Final" and "Useful" as the Last.stage.
+    # When LastStage is "services", we get units problems.
+    # Avoid by using only ECCs with "Final" and "Useful" as the LastStage.
     dplyr::filter(.data[[Recca::psut_cols$last_stage]] != IEATools::last_stages$services) %>%
     # Calculate the input-output matrices which are inputs to the new_R function.
     calc_io_mats(direction = "downstream") %>%
@@ -460,8 +460,8 @@ test_that("new_R_ps() works as expected", {
   # to use new calc_io_mats(direction =- "downstream").
   unitaryR <- UKEnergy2000mats %>%
     tidyr::spread(key = "matrix.name", value = "matrix") %>%
-    # When Last.stage is "services", we get units problems.
-    # Avoid by using only ECCs with "Final" and "Useful" as the Last.stage.
+    # When LastStage is "services", we get units problems.
+    # Avoid by using only ECCs with "Final" and "Useful" as the LastStage.
     dplyr::filter(.data[[Recca::psut_cols$last_stage]] != IEATools::last_stages$services) %>%
     dplyr::mutate(
       R_prime = matsbyname::hadamardproduct_byname(2, R)
@@ -494,7 +494,7 @@ test_that("new_R_ps() works as expected", {
 
   # Test when the units on Products in U are not all same.
   # Under those conditions, we expect that U_prime, V_prime, and Y_prime are all NA.
-  # Input units are not all same for the Last.stage = "services" cases.
+  # Input units are not all same for the LastStage = "services" cases.
   # So don't filter out the "services" rows.
 
   # <<commenting begins>>

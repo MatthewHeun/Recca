@@ -40,7 +40,7 @@ The output \code{e_EIOU} vector is sum of \code{E_EIOU} columns: \code{transpose
 \examples{
 library(IEATools)
 UKEnergy2000mats \%>\%
-   dplyr::filter(Last.stage == "Final", Energy.type == "E") \%>\%
+   dplyr::filter(LastStage == "Final", EnergyType == "E") \%>\%
    tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") \%>\%
    calc_io_mats() \%>\%
    calc_E_EIOU()

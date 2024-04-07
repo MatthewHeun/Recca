@@ -51,7 +51,7 @@ column names for the details matrices
 are to be matched.
 Default is "all", meaning that entire names are to be matched.}
 
-\item{energy_type}{The name of the Energy.type column in \code{.fu_details_mats}.
+\item{energy_type}{The name of the EnergyType column in \code{.fu_details_mats}.
 Default is \code{Recca::psut_cols$energy_type}.}
 
 \item{mat_col_notation}{The notation for the column labels of the details matrices.
@@ -137,7 +137,7 @@ the row and column names.
 }
 
 The energy stage of the entries in the details matrices are indicated
-by the entry in the \code{Energy.type} column,
+by the entry in the EnergyType column,
 typically "Useful".
 
 If either of the energy details matrices are \code{NULL},

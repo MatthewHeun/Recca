@@ -34,7 +34,7 @@
 #' library(dplyr)
 #' library(tidyr)
 #' verify_SUT_energy_balance(UKEnergy2000mats %>%
-#'                             dplyr::filter(Last.stage %in% c("Final", "Useful")) %>%
+#'                             dplyr::filter(LastStage %in% c("Final", "Useful")) %>%
 #'                             tidyr::spread(key = matrix.name, value = matrix),
 #'                           tol = 1e-4)
 verify_SUT_energy_balance <- function(.sutmats = NULL,
@@ -248,8 +248,8 @@ verify_SUT_industry_production <- function(.sutmats = NULL,
 #' @examples
 #' library(dplyr)
 #' UKEnergy2000tidy %>%
-#'   filter(Last.stage %in% c("Final", "Useful")) %>%
-#'   group_by(Country, Year, Energy.type, Last.stage) %>%
+#'   filter(LastStage %in% c("Final", "Useful")) %>%
+#'   group_by(Country, Year, EnergyType, LastStage) %>%
 #'   verify_IEATable_energy_balance(energy = IEATools::iea_cols$e_dot)
 verify_IEATable_energy_balance <- function(.ieatidydata,
                                            # Input column names

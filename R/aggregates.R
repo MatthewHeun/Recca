@@ -190,8 +190,8 @@ primary_aggregates <- function(.sutdata = NULL,
 #'   dplyr::mutate(
 #'     fd_sectors = rep(list(c("Residential", "Transport")), times = nrow(.))
 #'   ) %>%
-#'   dplyr::filter(Last.stage %in% c(IEATools::last_stages$final,
-#'                                   IEATools::last_stages$useful)) %>%
+#'   dplyr::filter(LastStage %in% c(IEATools::last_stages$final,
+#'                                  IEATools::last_stages$useful)) %>%
 #'   finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Sector")
 finaldemand_aggregates <- function(.sutdata = NULL,
                                    fd_sectors,

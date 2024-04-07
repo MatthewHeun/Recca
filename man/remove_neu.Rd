@@ -85,7 +85,7 @@ in the returned data frame.
 \examples{
 UKEnergy2000mats |>
   tidyr::spread(key = matrix.name, value = matrix) |>
-  dplyr::filter(Last.stage != "Services") |>
+  dplyr::filter(LastStage != "Services") |>
   # This data frame does not contain "Non-energy use",
   # so remove "Residential" instead.
   Recca::remove_neu(neu_product_pattern = "^NG|^MD",
