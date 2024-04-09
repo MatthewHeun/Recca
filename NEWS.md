@@ -8,6 +8,10 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+* Fixed a bug where missing U_EIOU matrix would cause an error
+  in `extend_to_exergy()`.
+  We create a U_EIOU matrix by multiplying U by 0,
+  thereby keeping the same rows and columns of U.
 * Change column names to remove "." characters
   that are incompatible with storage in PostgreSQL databases
   (and maybe others).
