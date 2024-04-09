@@ -121,9 +121,9 @@ extend_to_exergy <- function(.sutmats = NULL,
     }
   }
 
-  extend_func <- function(R_mat, U_mat, U_feed_mat, U_eiou_mat, V_mat, Y_mat, phi_vec) {
+  extend_func <- function(R_mat, U_mat, U_feed_mat, U_eiou_mat = NULL, V_mat, Y_mat, phi_vec) {
 
-    if (missing(U_eiou_mat)) {
+    if (is.null(U_eiou_mat)) {
       # There are some country, year combinations that do not
       # have any reported energy industry own use (EIOU).
       # So U_eiou_mat may be missing.
