@@ -8,6 +8,11 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+* Change column names to remove "." characters
+  that are incompatible with storage in PostgreSQL databases
+  (and maybe others).
+
+
 ## Recca 0.1.55 (2024-02-06) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10627746.svg)](https://doi.org/10.5281/zenodo.10627746)
 
 * Testing now done in parallel.

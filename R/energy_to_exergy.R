@@ -122,6 +122,18 @@ extend_to_exergy <- function(.sutmats = NULL,
   }
 
   extend_func <- function(R_mat, U_mat, U_feed_mat, U_eiou_mat, V_mat, Y_mat, phi_vec) {
+
+    if (missing(U_eiou_mat)) {
+      # There are some country, year combinations that do not
+      # have any reported energy industry own use (EIOU).
+      # So U_eiou_mat may be missing.
+      # This should only happen when U_mat and U_feed are equal.
+      # Verify this first.
+      assertthat::assert_that(matsbyname::equal_byname(U_mat, U_feed_mat))
+      # Create a usable U_eiou_mat by multiplying U_mat by 0.
+      U_eiou_mat <- matsbyname::hadamardproduct_byname(U_mat, 0)
+    }
+
     # When we get here, we should have single matrices
     # For each of these multiplications, we first trim phi_vec to contain only
     # the energy products needed for converting to exergy.
