@@ -73,7 +73,7 @@ usethis::use_data(aggregate_cols, overwrite = TRUE)
 # Default names for columns in efficiency data frames
 #
 
-efficiency_cols <- list(eta_i = "etai",
+efficiency_cols <- list(eta_i = "eta_i",
                         eta_pfd_gross = "eta_pfd_gross",
                         eta_pfd_net = "eta_pfd_net",
                         eta_pfd = "eta_pfd",

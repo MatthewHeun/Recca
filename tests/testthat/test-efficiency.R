@@ -3,38 +3,42 @@ test_that("industry efficiencies are calculated correctly", {
   result <- UKEnergy2000mats %>%
     tidyr::spread(key = "matrix.name", value = "matrix") %>%
     calc_eta_i() %>%
-    dplyr::select(Country, Year, EnergyType, LastStage, etai) %>%
-    tidyr::gather(key = matnames, value = matvals, etai) %>%
+    dplyr::select(Country, Year, EnergyType, LastStage, eta_i) %>%
+    tidyr::gather(key = matnames, value = matvals, eta_i) %>%
     matsindf::expand_to_tidy() %>%
-    dplyr::rename(etai = matvals) %>%
+    dplyr::rename(
+      eta_i = matvals
+    ) |>
     dplyr::mutate(
       # Make expected values
       expected = dplyr::case_when(
         startsWith(rownames, "Resources - ") ~ Inf,
         LastStage == "services" & endsWith(rownames, " dist.") ~ NA_real_,
         rownames %in% c("Cars", "Homes", "Rooms", "Trucks") ~ NA_real_,
-        TRUE ~ etai
+        TRUE ~ eta_i
       )
     )
   # Check that NAs appear in the right places.
-  expect_equal(result$etai, result$expected)
+  expect_equal(result[[Recca::efficiency_cols$eta_i]],
+               result$expected)
 
   # Test some specific values
   expect_equal(result %>%
                  dplyr::filter(LastStage == IEATools::last_stages$final, rownames == "Crude dist.") |>
-                 magrittr::extract2("etai"),
+                 magrittr::extract2(Recca::efficiency_cols$eta_i),
                0.98855359)
   expect_equal(result %>%
                  dplyr::filter(LastStage == IEATools::last_stages$useful, rownames == "Power plants") |>
-                 magrittr::extract2("etai"),
+                 magrittr::extract2(Recca::efficiency_cols$eta_i),
                0.39751553)
   expect_equal(result |>
                  dplyr::filter(LastStage == IEATools::last_stages$services, EnergyType == IEATools::energy_types$e, rownames == "Oil fields") |>
-                 magrittr::extract2("etai"),
+                 magrittr::extract2(Recca::efficiency_cols$eta_i),
                0.94857713)
   expect_equal(result |>
                  dplyr::filter(LastStage == IEATools::last_stages$services, EnergyType == IEATools::energy_types$x, rownames == "Oil fields") |>
-                 magrittr::extract2("etai"), 0.94860812)
+                 magrittr::extract2(Recca::efficiency_cols$eta_i),
+               0.94860812)
 })
 
 
@@ -45,8 +49,8 @@ test_that("efficiency vectors are named correctly", {
 
   # Ensure that efficiency column is named correctly.
   for (i in 1:nrow(result)) {
-    etai <- result$etai[[i]]
-    expect_equal(colnames(etai)[1], "etai")
+    etai <- result[[Recca::efficiency_cols$eta_i]][[i]]
+    expect_equal(colnames(etai)[1], Recca::efficiency_cols$eta_i)
   }
 })
 
