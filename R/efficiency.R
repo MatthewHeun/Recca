@@ -23,7 +23,7 @@
 #' @param U A string for the name of a column of **U** matrices in `.sutmats`. Default is `Recca::psut_cols$U`.
 #' @param V A string for the name of a column of **V** matrices in `.sutmats`. Default is `Recca::psut_cols$V`.
 #' @param S_units A string for the name of a column of **S_units** matrices in `.sutmats`. Default is `Recca::psut_cols$S_units`.)
-#' @param eta_i The name of the industry efficiency column in output. Default is `Recca::psut_cols$S_units`.
+#' @param eta_i The name of the industry efficiency column in output. Default is `Recca::efficiency_cols$eta_i`.
 #'
 #' @return `.sutmats` with an additional column `eta_i`
 #'

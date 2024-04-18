@@ -12,7 +12,7 @@ which always resolves to the latest release.
   in `extend_to_exergy()`.
   We create a U_EIOU matrix by multiplying U by 0,
   thereby keeping the same rows and columns of U.
-* Change column names to remove "." characters
+* Change column names to remove "." and "_" characters
   that are incompatible with storage in PostgreSQL databases
   (and maybe others).
 
