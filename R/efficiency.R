@@ -334,8 +334,11 @@ calc_eta_fu_Y_eiou <- function(.c_mats_eta_phi_vecs = NULL,
                                eta_fu_eiou_x = paste0(eta_fu, "_EIOU_", exergy),
                                notation = RCLabels::arrow_notation) {
 
-  eta_func <- function(C_Y_mat, C_eiou_mat, eta_i_vec, phi_vec) {
+  eta_func <- function(C_Y_mat = NULL, C_eiou_mat = NULL, eta_i_vec, phi_vec) {
     # At this point, all incoming matrices and vectors will be single matrices or vectors
+    # But the C matrices may be NULL, if there is no final demand consumption (Y)
+    # or energy industry own use (EIOU).
+    # Account for those possibilities below.
 
     # Calculate some preliminary information, namely C_Y * eta_i_hat.
     # This is used for both energy and exergy calculations.
