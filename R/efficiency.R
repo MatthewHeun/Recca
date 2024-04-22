@@ -340,69 +340,92 @@ calc_eta_fu_Y_eiou <- function(.c_mats_eta_phi_vecs = NULL,
     # or energy industry own use (EIOU).
     # Account for those possibilities below.
 
-    # Calculate some preliminary information, namely C_Y * eta_i_hat.
-    # This is used for both energy and exergy calculations.
+    # Create the output list
+    out <- list()
 
-    # Trim eta_i_vec to include only those machines included in C_Y_mat or C_EIOU_mat
-    eta_i_vec_trimmed_hat_Y_E <- matsbyname::trim_rows_cols(a = eta_i_vec, mat = matsbyname::transpose_byname(C_Y_mat),
-                                                            margin = 1, notation = notation) |>
-      matsbyname::hatize_byname(keep = "rownames")
-    eta_i_vec_trimmed_hat_eiou_E <- matsbyname::trim_rows_cols(a = eta_i_vec, mat = matsbyname::transpose_byname(C_eiou_mat),
-                                                               margin = 1, notation = notation) |>
-      matsbyname::hatize_byname(keep = "rownames")
+    if (!is.null(C_Y_mat)) {
+      # Calculate some preliminary information, namely C_Y * eta_i_hat.
+      # This is used for both energy and exergy calculations.
 
-    # Post-multiply C_Y and C_EIOU by hatized eta vectors.
-    CYetaihat <- matsbyname::matrixproduct_byname(C_Y_mat, eta_i_vec_trimmed_hat_Y_E)
-    CEIOUetaihat <- matsbyname::matrixproduct_byname(C_eiou_mat, eta_i_vec_trimmed_hat_eiou_E)
+      # Trim eta_i_vec to include only those machines included in C_Y_mat or C_EIOU_mat
+      eta_i_vec_trimmed_hat_Y_E <- matsbyname::trim_rows_cols(a = eta_i_vec, mat = matsbyname::transpose_byname(C_Y_mat),
+                                                              margin = 1, notation = notation) |>
+        matsbyname::hatize_byname(keep = "rownames")
+      # Post-multiply C_Y by hatized eta vectors.
+      CYetaihat <- matsbyname::matrixproduct_byname(C_Y_mat, eta_i_vec_trimmed_hat_Y_E)
 
+      # eta_fu for final demand (Y) and energy (E)
 
-    # eta_fu for final demand (Y) and energy (E)
+      eta_fu_Y_E_vec <- matsbyname::rowsums_byname(CYetaihat) |>
+        matsbyname::setcolnames_byname(eta_fu_Y_e) |>
+        matsbyname::setcoltype(eta_fu_Y_e)
 
-    # Do the multiplication required to get eta_fu values
-    eta_fu_Y_E_vec <- matsbyname::rowsums_byname(CYetaihat) |>
-      matsbyname::setcolnames_byname(eta_fu_Y_e) |>
-      matsbyname::setcoltype(eta_fu_Y_e)
-    eta_fu_eiou_E_vec <- matsbyname::rowsums_byname(CEIOUetaihat) |>
-      matsbyname::setcolnames_byname(eta_fu_eiou_e) |>
-      matsbyname::setcoltype(eta_fu_eiou_e)
+      # eta_fu for final demand (Y) and energy (X)
 
-    # eta_fu for final demand (Y) and energy (X)
+      # Build phi_hat_inv for the denominator with only rows that match prefixes of rows of the
+      # CYetaihat matrix.
+      # And change the coltype to enable multiplication.
+      phi_hat_inv_Y_denom <- matsbyname::vec_from_store_byname(a = CYetaihat, v = phi_vec, notation = RCLabels::arrow_notation, a_piece = "pref") |>
+        matsbyname::hatinv_byname(keep = "rownames") |>
+        matsbyname::setcoltype(matsbyname::rowtype(CYetaihat))
+      # Build phi vectors for the numerator by creating the vector from the suffixes of the columns of the
+      # CYetaihat matrix.
+      phi_Y_num <- matsbyname::vec_from_store_byname(a = CYetaihat, v = phi_vec, margin = 2, notation = RCLabels::arrow_notation, a_piece = "suff") |>
+        matsbyname::setrowtype(matsbyname::coltype(CYetaihat))
+      # Now do the exergy calculations
+      eta_fu_Y_X_vec <- matsbyname::matrixproduct_byname(phi_hat_inv_Y_denom, CYetaihat) |>
+        matsbyname::matrixproduct_byname(phi_Y_num) |>
+        matsbyname::setcolnames_byname(eta_fu_Y_x) |>
+        matsbyname::setrowtype(matsbyname::rowtype(CYetaihat)) |> matsbyname::setcoltype(eta_fu_Y_x)
+      # Start building the output list
+      outlist <- list(eta_fu_Y_E_vec, eta_fu_Y_X_vec) |>
+        magrittr::set_names(c(eta_fu_Y_e, eta_fu_Y_x))
+      out <- c(out, outlist)
+    }
 
-    # Build phi_hat_inv for the denominator with only rows that match prefixes of rows of the
-    # CYetaihat and CEIOUetaihat matrices.
-    # And change the coltype to enable multiplication.
-    phi_hat_inv_Y_denom <- matsbyname::vec_from_store_byname(a = CYetaihat, v = phi_vec, notation = RCLabels::arrow_notation, a_piece = "pref") |>
-      matsbyname::hatinv_byname(keep = "rownames") |>
-      matsbyname::setcoltype(matsbyname::rowtype(CYetaihat))
-    phi_hat_inv_EIOU_denom <- matsbyname::vec_from_store_byname(a = CEIOUetaihat, v = phi_vec, notation = RCLabels::arrow_notation, a_piece = "pref") |>
-      matsbyname::hatinv_byname(keep = "rownames") |>
-      matsbyname::setcoltype(matsbyname::rowtype(CEIOUetaihat))
+    if (!is.null(C_eiou_mat)) {
+      # Calculate some preliminary information, namely C_EIOU * eta_i_hat.
+      # This is used for both energy and exergy calculations.
 
+      # Trim eta_i_vec to include only those machines included in C_Y_mat or C_EIOU_mat
+      eta_i_vec_trimmed_hat_eiou_E <- matsbyname::trim_rows_cols(a = eta_i_vec, mat = matsbyname::transpose_byname(C_eiou_mat),
+                                                                 margin = 1, notation = notation) |>
+        matsbyname::hatize_byname(keep = "rownames")
+      # Post-multiply C_EIOU by hatized eta vectors.
+      CEIOUetaihat <- matsbyname::matrixproduct_byname(C_eiou_mat, eta_i_vec_trimmed_hat_eiou_E)
 
-    # Build phi vectors for the numerator by creating the vector from the suffixes of the columns of the
-    # CYetaihat and CEIOUetaihat matrices.
-    phi_Y_num <- matsbyname::vec_from_store_byname(a = CYetaihat, v = phi_vec, margin = 2, notation = RCLabels::arrow_notation, a_piece = "suff") |>
-      matsbyname::setrowtype(matsbyname::coltype(CYetaihat))
-    phi_EIOU_num <- matsbyname::vec_from_store_byname(a = CEIOUetaihat, v = phi_vec, margin = 2, notation = RCLabels::arrow_notation, a_piece = "suff") |>
-      matsbyname::setrowtype(matsbyname::coltype(CEIOUetaihat))
+      # eta_fu for EIOU and energy (E)
 
-    # Now do the exergy calculations
-    eta_fu_Y_X_vec <- matsbyname::matrixproduct_byname(phi_hat_inv_Y_denom, CYetaihat) |>
-      matsbyname::matrixproduct_byname(phi_Y_num) |>
-      matsbyname::setcolnames_byname(eta_fu_Y_x) |>
-      matsbyname::setrowtype(matsbyname::rowtype(CYetaihat)) |> matsbyname::setcoltype(eta_fu_Y_x)
-    eta_fu_EIOU_X_vec <- matsbyname::matrixproduct_byname(phi_hat_inv_EIOU_denom, CEIOUetaihat) |>
-      matsbyname::matrixproduct_byname(phi_EIOU_num) |>
-      matsbyname::setcolnames_byname(eta_fu_eiou_x) |>
-      matsbyname::setrowtype(matsbyname::rowtype(CEIOUetaihat)) |> matsbyname::setcoltype(eta_fu_eiou_x)
+      eta_fu_eiou_E_vec <- matsbyname::rowsums_byname(CEIOUetaihat) |>
+        matsbyname::setcolnames_byname(eta_fu_eiou_e) |>
+        matsbyname::setcoltype(eta_fu_eiou_e)
 
-    # Build an output list
-    out <- list(eta_fu_Y_E_vec, eta_fu_eiou_E_vec, eta_fu_Y_X_vec, eta_fu_EIOU_X_vec)
+      # eta_fu for final EIOU and energy (X)
+
+      # Build phi_hat_inv for the denominator with only rows that match prefixes of rows of the
+      # CEIOUetaihat matrix.
+      # And change the coltype to enable multiplication.
+      phi_hat_inv_EIOU_denom <- matsbyname::vec_from_store_byname(a = CEIOUetaihat, v = phi_vec, notation = RCLabels::arrow_notation, a_piece = "pref") |>
+        matsbyname::hatinv_byname(keep = "rownames") |>
+        matsbyname::setcoltype(matsbyname::rowtype(CEIOUetaihat))
+      # Build phi vectors for the numerator by creating the vector from the suffixes of the columns of the
+      # CEIOUetaihat matrix.
+      phi_EIOU_num <- matsbyname::vec_from_store_byname(a = CEIOUetaihat, v = phi_vec, margin = 2, notation = RCLabels::arrow_notation, a_piece = "suff") |>
+        matsbyname::setrowtype(matsbyname::coltype(CEIOUetaihat))
+      # Now do the exergy calculations
+      eta_fu_EIOU_X_vec <- matsbyname::matrixproduct_byname(phi_hat_inv_EIOU_denom, CEIOUetaihat) |>
+        matsbyname::matrixproduct_byname(phi_EIOU_num) |>
+        matsbyname::setcolnames_byname(eta_fu_eiou_x) |>
+        matsbyname::setrowtype(matsbyname::rowtype(CEIOUetaihat)) |> matsbyname::setcoltype(eta_fu_eiou_x)
+      # Build the output list
+      outlist <- list(eta_fu_eiou_E_vec, eta_fu_EIOU_X_vec) |>
+        magrittr::set_names(c(eta_fu_eiou_e, eta_fu_eiou_x))
+      out <- c(out, outlist)
+    }
     if (matricize) {
       out <- lapply(out, matsbyname::matricize_byname, notation = notation)
     }
-    out |>
-      magrittr::set_names(c(eta_fu_Y_e, eta_fu_eiou_e, eta_fu_Y_x, eta_fu_eiou_x))
+    return(out)
   }
   matsindf::matsindf_apply(.c_mats_eta_phi_vecs, FUN = eta_func, C_Y_mat = C_Y, C_eiou_mat = C_eiou,
                            eta_i_vec = eta_i, phi_vec = phi)
