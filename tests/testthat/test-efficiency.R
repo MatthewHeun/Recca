@@ -1,8 +1,9 @@
 
 test_that("industry efficiencies are calculated correctly", {
-  result <- UKEnergy2000mats %>%
+  result_mats <- UKEnergy2000mats %>%
     tidyr::spread(key = "matrix.name", value = "matrix") %>%
-    calc_eta_i() %>%
+    calc_eta_i()
+  result <- result_mats |>
     dplyr::select(Country, Year, EnergyType, LastStage, eta_i) %>%
     tidyr::gather(key = matnames, value = matvals, eta_i) %>%
     matsindf::expand_to_tidy() %>%
@@ -39,6 +40,19 @@ test_that("industry efficiencies are calculated correctly", {
                  dplyr::filter(LastStage == IEATools::last_stages$services, EnergyType == IEATools::energy_types$x, rownames == "Oil fields") |>
                  magrittr::extract2(Recca::efficiency_cols$eta_i),
                0.94860812)
+  # Check row and column types
+  expect_equal(result_mats |>
+                 dplyr::filter(LastStage == IEATools::last_stages$useful) |>
+                 magrittr::extract2(Recca::efficiency_cols$eta_i) |>
+                 magrittr::extract2(1) |>
+                 matsbyname::rowtype(),
+               "Industry")
+  expect_equal(result_mats |>
+                 dplyr::filter(LastStage == IEATools::last_stages$useful) |>
+                 magrittr::extract2(Recca::efficiency_cols$eta_i) |>
+                 magrittr::extract2(1) |>
+                 matsbyname::coltype(),
+               "eta_i")
 })
 
 

@@ -8,6 +8,7 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+* Added row and column types to the result of `calc_eta_i()`.
 * Fixed a bug where missing U_EIOU matrix would cause an error
   in `extend_to_exergy()`.
   We create a U_EIOU matrix by multiplying U by 0,

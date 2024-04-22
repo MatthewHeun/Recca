@@ -47,6 +47,11 @@ calc_eta_i <- function(.sutmats,
     eta_vec <- matsbyname::quotient_byname(g_vec, f_vec)
     # Set the name of the efficiency column to the value of the eta_i argument.
     dimnames(eta_vec) <- list(dimnames(eta_vec)[[1]], eta_i)
+    eta_vec <- eta_vec |>
+      # Set row type same as row type of V_mat
+      matsbyname::setrowtype(matsbyname::rowtype(V_mat)) |>
+      # Set column type to the value of eta_i.
+      matsbyname::setcoltype(eta_i)
 
     # Ensure that places where there are inhomogeneous units are replaced by NA.
     result_var <- "result"
