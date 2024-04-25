@@ -27,6 +27,7 @@ psut_cols <- list(resources = "R",
                   S_units = "S_units",
                   Y_fu_details = "Y_fu_details",
                   U_eiou_fu_details = "U_EIOU_fu_details",
+                  includes_neu = "IncludesNEU",
                   matnames = "matnames",
                   matvals = "matvals",
                   sector = "Sector",
@@ -64,7 +65,7 @@ aggregate_cols <- list(aggregate_primary = "EX.p",
 
                        region = "Region",
                        aggregated_suffix = "_aggregated",
-                       product_sector = "Product.Industry.Sector",
+                       product_sector = "ProductIndustrySector",
                        chop_df = "Chopped.ECCs")
 usethis::use_data(aggregate_cols, overwrite = TRUE)
 
