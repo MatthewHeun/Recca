@@ -117,8 +117,8 @@ test_that("calc_eta_pfu() works correctly", {
                                   IEATools::iea_cols$last_stage)) %>%
     calc_eta_pfd()
 
-  expect_equal(etas$eta_pfd_gross, c(0.799193548387097, 5384063619.67424, 0.279466456989247, 5097922181.12103))
-  expect_equal(etas$eta_pfd_net, c(0.771505376344086, 5384063619.67343, 0.278660005376344, 5097922181.12023))
+  expect_equal(etas$etapfdgross, c(0.799193548387097, 5384063619.67424, 0.279466456989247, 5097922181.12103))
+  expect_equal(etas$etapfdnet, c(0.771505376344086, 5384063619.67343, 0.278660005376344, 5097922181.12023))
 })
 
 
@@ -218,7 +218,7 @@ test_that("calc_eta_pfus() works correctly", {
     expect_equal(0.7991935, tolerance = 1e-7)
   res |>
     dplyr::filter(EnergyType == "E", LastStage == "Services", GrossNet == "Net") |>
-    magrittr::extract2("eta_ps") |>
+    magrittr::extract2(Recca::efficiency_cols$eta_ps) |>
     expect_equal(5384063620)
   res |>
     dplyr::filter(EnergyType == "X", LastStage == "Services", GrossNet == "Net") |>
