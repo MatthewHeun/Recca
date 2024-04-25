@@ -235,7 +235,7 @@ test_that("primary_aggregates() works with lists", {
   arg_list <- list(R = psut$R[[1]], V = psut$V[[1]], Y = psut$Y[[1]])
   # Calculate primary aggregates
   p_aggs <- Recca::primary_aggregates(.sutdata = arg_list, p_industries = p_industries)
-  expect_equal(p_aggs$EX.p, 93000)
+  expect_equal(p_aggs$EXp, 93000)
 })
 
 
@@ -552,21 +552,21 @@ test_that("despecified_aggregates() works as expected", {
     despecified_aggregates()
 
   # Check that S_units was aggregated
-  expect_true(all(res$S_units_aggregated[[1]] == 1))
+  expect_true(all(res$S_unitsaggregated[[1]] == 1))
 
   # Check a few numbers
   # Aggregated Crude
-  expect_equal(res$U_aggregated[[1]][1, 1], 48000)
+  expect_equal(res$Uaggregated[[1]][1, 1], 48000)
   # Aggregated Petrol
-  expect_equal(res$U_aggregated[[1]][5, 8], 27000)
+  expect_equal(res$Uaggregated[[1]][5, 8], 27000)
   # Aggregated Diesel
-  expect_equal(res$U_aggregated[[1]][2, 2], 15850)
+  expect_equal(res$Uaggregated[[1]][2, 2], 15850)
 
   expect_equal(rownames(mats_GBR$U[[1]]),
                c("Crude", "Crude [from Dist.]", "Crude [from Fields]", "Diesel", "Diesel [from Dist.]",
                  "Elect", "Elect [from Grid]", "NG", "NG [from Dist.]", "NG [from Wells]",
                  "Petrol", "Petrol [from Dist.]"))
-  expect_equal(rownames(res$U_aggregated[[1]]), c("Crude", "Diesel", "Elect", "NG", "Petrol"))
+  expect_equal(rownames(res$Uaggregated[[1]]), c("Crude", "Diesel", "Elect", "NG", "Petrol"))
 })
 
 
@@ -578,17 +578,17 @@ test_that("grouped_aggregates() works as expected", {
     grouped_aggregates(aggregation_map = list(`Oil and oil products` = c("Crude", "Diesel", "Petrol")),
                        pattern_type = "leading", margin = "Product")
 
-  expect_equal(colnames(res$R_aggregated[[1]]), c("NG", "Oil and oil products"))
-  expect_equal(rownames(res$U_aggregated[[1]]), c("Elect", "Elect [from Grid]", "NG", "NG [from Dist.]", "NG [from Wells]", "Oil and oil products"))
-  expect_equal(colnames(res$V_aggregated[[1]]), c("Elect", "Elect [from Grid]", "NG [from Dist.]", "NG [from Wells]", "Oil and oil products"))
-  expect_equal(rownames(res$Y_aggregated[[1]]), c("Elect [from Grid]", "NG [from Dist.]", "Oil and oil products"))
+  expect_equal(colnames(res$Raggregated[[1]]), c("NG", "Oil and oil products"))
+  expect_equal(rownames(res$Uaggregated[[1]]), c("Elect", "Elect [from Grid]", "NG", "NG [from Dist.]", "NG [from Wells]", "Oil and oil products"))
+  expect_equal(colnames(res$Vaggregated[[1]]), c("Elect", "Elect [from Grid]", "NG [from Dist.]", "NG [from Wells]", "Oil and oil products"))
+  expect_equal(rownames(res$Yaggregated[[1]]), c("Elect [from Grid]", "NG [from Dist.]", "Oil and oil products"))
 
   # Check some values
 
   # Oil and oil products for Crude dist.
-  expect_equal(res$U_aggregated[[1]][6, 1], 48025)
+  expect_equal(res$Uaggregated[[1]][6, 1], 48025)
   # Oil and oil products for Transport
-  expect_equal(res$Y_aggregated[[1]][3, 1], 40750)
+  expect_equal(res$Yaggregated[[1]][3, 1], 40750)
 })
 
 
@@ -598,8 +598,8 @@ test_that("finaldemand_aggregates() works when there are no columns with fd_sect
   res <- finaldemand_aggregates(fd_sectors = "fd_sector", piece = "noun",
                                 notation = RCLabels::bracket_notation, pattern_type = "exact",
                                 U_eiou = U_eiou, Y = Y, by = "Sector")
-  expect_equal(res$EX.fd_net, 0)
-  expect_false(is.matrix(res$EX.fd_net))
-  expect_equal(res$EX.fd_gross, 0)
-  expect_false(is.matrix(res$EX.fd_gross))
+  expect_equal(res$EXfdnet, 0)
+  expect_false(is.matrix(res$EXfdnet))
+  expect_equal(res$EXfdgross, 0)
+  expect_false(is.matrix(res$EXfdgross))
 })

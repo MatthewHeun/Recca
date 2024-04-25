@@ -222,7 +222,7 @@ test_that("calc_eta_pfus() works correctly", {
     expect_equal(5384063620)
   res |>
     dplyr::filter(EnergyType == "X", LastStage == "Services", GrossNet == "Net") |>
-    magrittr::extract2("EX.f") |>
+    magrittr::extract2(Recca::aggregate_cols$aggregate_final) |>
     is.na() |>
     expect_true()
 })
@@ -248,7 +248,7 @@ test_that("calc_eta_pfus() works correctly when services are not present", {
     expect_equal(0.36119, tolerance = 1e-7)
   res |>
     dplyr::filter(EnergyType == "E", LastStage == "Useful", GrossNet == "Gross") |>
-    magrittr::extract2("EX.u") |>
+    magrittr::extract2(Recca::aggregate_cols$aggregate_useful) |>
     expect_equal(25990.3805)
 })
 
