@@ -159,44 +159,44 @@ test_that("calc_eta_fu_Y_eiou() works as expected", {
   res <- calc_eta_fu_Y_eiou(C_Y = C_Y, C_eiou = C_Y, eta_i = eta_i, phi = phi, matricize = FALSE)
 
   # Check the energy results
-  expect_equal(res$eta_fu_Y_E,
+  expect_equal(res$etafu_Y_E,
                matrix(c(0.69, 0.37), ncol = 1, dimnames = list(c("Electricity -> Non-ferrous metals", "PSB -> Residential"),
-                                                               "eta_fu_Y_E")) |>
-                 matsbyname::setrowtype("Product -> Industry") |> matsbyname::setcoltype("eta_fu_Y_E"))
-  expect_equal(res$eta_fu_EIOU_E,
+                                                               "etafu_Y_E")) |>
+                 matsbyname::setrowtype("Product -> Industry") |> matsbyname::setcoltype("etafu_Y_E"))
+  expect_equal(res$etafu_EIOU_E,
                matrix(c(0.69, 0.37), ncol = 1, dimnames = list(c("Electricity -> Non-ferrous metals", "PSB -> Residential"),
-                                                               "eta_fu_EIOU_E")) |>
-                 matsbyname::setrowtype("Product -> Industry") |> matsbyname::setcoltype("eta_fu_EIOU_E"))
+                                                               "etafu_EIOU_E")) |>
+                 matsbyname::setrowtype("Product -> Industry") |> matsbyname::setcoltype("etafu_EIOU_E"))
 
   # Check the exergy results
-  expect_equal(res$eta_fu_Y_X,
+  expect_equal(res$etafu_Y_X,
                matrix(c(0.471877169, 0.031730489), ncol = 1, dimnames = list(c("Electricity -> Non-ferrous metals", "PSB -> Residential"),
-                                                                             "eta_fu_Y_X")) |>
-                 matsbyname::setrowtype("Product -> Industry") |> matsbyname::setcoltype("eta_fu_Y_X"))
-  expect_equal(res$eta_fu_EIOU_X,
+                                                                             "etafu_Y_X")) |>
+                 matsbyname::setrowtype("Product -> Industry") |> matsbyname::setcoltype("etafu_Y_X"))
+  expect_equal(res$etafu_EIOU_X,
                matrix(c(0.471877169, 0.031730489), ncol = 1, dimnames = list(c("Electricity -> Non-ferrous metals", "PSB -> Residential"),
-                                                                             "eta_fu_EIOU_X")) |>
-                 matsbyname::setrowtype("Product -> Industry") |> matsbyname::setcoltype("eta_fu_EIOU_X"))
+                                                                             "etafu_EIOU_X")) |>
+                 matsbyname::setrowtype("Product -> Industry") |> matsbyname::setcoltype("etafu_EIOU_X"))
 
   # Try with matrix output
   resm <- calc_eta_fu_Y_eiou(C_Y = C_Y, C_eiou = C_Y, eta_i = eta_i, phi = phi)
 
   # Check the energy results
-  expect_equal(resm$eta_fu_Y_E,
+  expect_equal(resm$etafu_Y_E,
                matrix(c(0.69, 0,
                         0, 0.37), nrow = 2, ncol = 2, dimnames = list(c("Electricity", "PSB"), c("Non-ferrous metals", "Residential"))) |>
                  matsbyname::setrowtype("Product") |> matsbyname::setcoltype("Industry"))
-  expect_equal(resm$eta_fu_EIOU_E,
+  expect_equal(resm$etafu_EIOU_E,
                matrix(c(0.69, 0,
                         0, 0.37), nrow = 2, ncol = 2, dimnames = list(c("Electricity", "PSB"), c("Non-ferrous metals", "Residential"))) |>
                  matsbyname::setrowtype("Product") |> matsbyname::setcoltype("Industry"))
 
   # Check the exergy results
-  expect_equal(resm$eta_fu_Y_X,
+  expect_equal(resm$etafu_Y_X,
                matrix(c(0.471877169, 0,
                         0, 0.031730489), nrow = 2, ncol = 2, dimnames = list(c("Electricity", "PSB"), c("Non-ferrous metals", "Residential"))) |>
                  matsbyname::setrowtype("Product") |> matsbyname::setcoltype("Industry"))
-  expect_equal(resm$eta_fu_EIOU_X,
+  expect_equal(resm$etafu_EIOU_X,
                matrix(c(0.471877169, 0,
                         0, 0.031730489), nrow = 2, ncol = 2, dimnames = list(c("Electricity", "PSB"), c("Non-ferrous metals", "Residential"))) |>
                  matsbyname::setrowtype("Product") |> matsbyname::setcoltype("Industry"))
@@ -214,7 +214,7 @@ test_that("calc_eta_pfus() works correctly", {
   # Test a few values
   res |>
     dplyr::filter(EnergyType == "E", LastStage == "Final", GrossNet == "Gross") |>
-    magrittr::extract2("eta_pf") |>
+    magrittr::extract2(Recca::efficiency_cols$eta_pf) |>
     expect_equal(0.7991935, tolerance = 1e-7)
   res |>
     dplyr::filter(EnergyType == "E", LastStage == "Services", GrossNet == "Net") |>
@@ -240,11 +240,11 @@ test_that("calc_eta_pfus() works correctly when services are not present", {
   # Test a few values
   res |>
     dplyr::filter(EnergyType == "E", LastStage == "Final", GrossNet == "Gross") |>
-    magrittr::extract2("eta_pf") |>
+    magrittr::extract2(Recca::efficiency_cols$eta_pf) |>
     expect_equal(0.7991935, tolerance = 1e-7)
   res |>
     dplyr::filter(EnergyType == "E", LastStage == "Useful", GrossNet == "Net") |>
-    magrittr::extract2("eta_fu") |>
+    magrittr::extract2(Recca::efficiency_cols$eta_fu) |>
     expect_equal(0.36119, tolerance = 1e-7)
   res |>
     dplyr::filter(EnergyType == "E", LastStage == "Useful", GrossNet == "Gross") |>
