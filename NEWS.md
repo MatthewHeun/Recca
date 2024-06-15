@@ -16,6 +16,10 @@ which always resolves to the latest release.
 * Change column names to remove "." characters
   that are incompatible with storage in PostgreSQL databases
   (and maybe others).
+* Fixed many tests and added a few new tests for new features.
+    - Now up to 774 tests, all passing.
+    - Test coverage remains at 100%.
+
 
 
 ## Recca 0.1.55 (2024-02-06) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10627746.svg)](https://doi.org/10.5281/zenodo.10627746)
@@ -24,8 +28,7 @@ which always resolves to the latest release.
 * New function `extend_fu_details_to_exergy()` converts
   the final-to-useful details matrices from energy to exergy.
 * New tests for new features.
-    - Now up to 763
-    tests, all passing.
+    - Now up to 763 tests, all passing.
     - Test coverage remains at 100%.
 
 
