@@ -8,14 +8,27 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+* Added row and column types to the result of `calc_eta_i()`.
+* Fixed a bug where missing U_EIOU matrix would cause an error
+  in `extend_to_exergy()`.
+  We create a U_EIOU matrix by multiplying U by 0,
+  thereby keeping the same rows and columns of U.
+* Change column names to remove "." characters
+  that are incompatible with storage in PostgreSQL databases
+  (and maybe others).
+* Fixed many tests and added a few new tests for new features.
+    - Now up to 774 tests, all passing.
+    - Test coverage remains at 100%.
+
+
+
 ## Recca 0.1.55 (2024-02-06) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10627746.svg)](https://doi.org/10.5281/zenodo.10627746)
 
 * Testing now done in parallel.
 * New function `extend_fu_details_to_exergy()` converts
   the final-to-useful details matrices from energy to exergy.
 * New tests for new features.
-    - Now up to 763
-    tests, all passing.
+    - Now up to 763 tests, all passing.
     - Test coverage remains at 100%.
 
 

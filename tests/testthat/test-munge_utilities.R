@@ -2,12 +2,12 @@
 test_that("add_matnames works correctly with a prefixed Flow", {
   # Add an exports row to UKEnergy2000tidy
   new_row <- list(Country = "ZA", Year = 2018, LedgerSide = "Supply",
-                  FlowAggregationPoint = "Total primary energy supply", EnergyType = "Edot",
+                  FlowAggregationPoint = "Total primary energy supply", EnergyType = IEATools::iea_cols$e_dot,
                   LastStage = "Final", Flow = "Exports", Product = "Crude", Edot = -42,
                   Unit = "ktoe")
-  with_export <- UKEnergy2000tidy %>%
+  with_export <- UKEnergy2000tidy |>
     dplyr::bind_rows(new_row)
-  UVY <- with_export %>% IEATools::add_psut_matnames(matnames = "UVY")
+  UVY <- with_export |>  IEATools::add_psut_matnames(matnames = "UVY")
   n_rows <- nrow(UVY)
   # This piece of exports data should be put in the Y matrix, not in the U matrix.
   expect_equal(UVY[["UVY"]][[n_rows]], "Y")

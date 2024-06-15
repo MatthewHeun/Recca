@@ -6,9 +6,9 @@
 \usage{
 S_units_from_tidy(
   .tidydf,
-  Product = "Product",
-  Unit = "Unit",
-  S_units = "S_units"
+  Product = IEATools::iea_cols$product,
+  Unit = IEATools::iea_cols$unit,
+  S_units = Recca::psut_cols$S_units
 )
 }
 \arguments{
@@ -31,7 +31,7 @@ The \code{.tidydf} should be grouped as needed.
 library(dplyr)
 library(matsindf)
 library(Recca)
-UKEnergy2000tidy \%>\%
-  group_by("Country", "Year", "EnergyType", "LastStage") \%>\%
+UKEnergy2000tidy |>
+  group_by(Country, Year, EnergyType, LastStage) |>
   S_units_from_tidy()
 }

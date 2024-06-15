@@ -27,6 +27,7 @@ psut_cols <- list(resources = "R",
                   S_units = "S_units",
                   Y_fu_details = "Y_fu_details",
                   U_eiou_fu_details = "U_EIOU_fu_details",
+                  includes_neu = "IncludesNEU",
                   matnames = "matnames",
                   matvals = "matvals",
                   sector = "Sector",
@@ -42,30 +43,30 @@ usethis::use_data(psut_cols, overwrite = TRUE)
 # Default names for columns in aggregate data frames
 #
 
-aggregate_cols <- list(aggregate_primary = "EX.p",
-                       net_aggregate_primary = "EX.p_net",
-                       gross_aggregate_primary = "EX.p_gross",
+aggregate_cols <- list(aggregate_primary = "EXp",
+                       net_aggregate_primary = "EXpnet",
+                       gross_aggregate_primary = "EXpgross",
 
-                       aggregate_final = "EX.f",
-                       net_aggregate_final = "EX.f_net",
-                       gross_aggregate_final = "EX.f_gross",
+                       aggregate_final = "EXf",
+                       net_aggregate_final = "EXfnet",
+                       gross_aggregate_final = "EXfgross",
 
-                       aggregate_useful = "EX.u",
-                       net_aggregate_useful = "EX.u_net",
-                       gross_aggregate_useful = "EX.u_gross",
+                       aggregate_useful = "EXu",
+                       net_aggregate_useful = "EXunet",
+                       gross_aggregate_useful = "EXugross",
 
-                       aggregate_services = "EX.s",
-                       net_aggregate_services = "EX.s_net",
-                       gross_aggregate_services = "EX.s_gross",
+                       aggregate_services = "EXs",
+                       net_aggregate_services = "EXsnet",
+                       gross_aggregate_services = "EXsgross",
 
-                       aggregate_demand = "EX.fd",
-                       net_aggregate_demand = "EX.fd_net",
-                       gross_aggregate_demand = "EX.fd_gross",
+                       aggregate_demand = "EXfd",
+                       net_aggregate_demand = "EXfdnet",
+                       gross_aggregate_demand = "EXfdgross",
 
                        region = "Region",
-                       aggregated_suffix = "_aggregated",
-                       product_sector = "Product.Industry.Sector",
-                       chop_df = "Chopped.ECCs")
+                       aggregated_suffix = "aggregated",
+                       product_sector = "ProductIndustrySector",
+                       chop_df = "ChoppedECCs")
 usethis::use_data(aggregate_cols, overwrite = TRUE)
 
 
@@ -74,15 +75,15 @@ usethis::use_data(aggregate_cols, overwrite = TRUE)
 #
 
 efficiency_cols <- list(eta_i = "eta_i",
-                        eta_pfd_gross = "eta_pfd_gross",
-                        eta_pfd_net = "eta_pfd_net",
-                        eta_pfd = "eta_pfd",
-                        eta_pf = "eta_pf",
-                        eta_fu = "eta_fu",
-                        eta_pu = "eta_pu",
-                        eta_ps = "eta_ps",
-                        eta_fs = "eta_fs",
-                        eta_us = "eta_us",
+                        eta_pfd_gross = "etapfdgross",
+                        eta_pfd_net = "etapfdnet",
+                        eta_pfd = "etapfd",
+                        eta_pf = "etapf",
+                        eta_fu = "etafu",
+                        eta_pu = "etapu",
+                        eta_ps = "etaps",
+                        eta_fs = "etafs",
+                        eta_us = "etaus",
                         efficiency_name_suffix = "_name",
                         gross_net = "GrossNet",
                         gross = "Gross",

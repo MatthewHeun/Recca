@@ -232,14 +232,14 @@ test_that("extend_fu_details_to_exergy() works as expected", {
     extend_fu_details_to_exergy()
   # Test that the results are as expected.
   res_df |>
-    dplyr::filter(EnergyType == "X") |>
+    dplyr::filter(.data[[Recca::psut_cols$energy_type]] == "X") |>
     magrittr::extract2("Y_fu_details") |>
     matsbyname::equal_byname(list(expected, expected)) |>
     unlist() |>
     all() |>
     expect_true()
   res_df |>
-    dplyr::filter(EnergyType == "X") |>
+    dplyr::filter(.data[[Recca::psut_cols$energy_type]] == "X") |>
     magrittr::extract2("U_EIOU_fu_details") |>
     matsbyname::equal_byname(list(expected, expected)) |>
     unlist() |>
@@ -304,14 +304,34 @@ test_that("extend_fu_details_to_exergy() gives NULL when matrices are NULL", {
   res <- extend_fu_details_to_exergy(details_df)
 
   res |>
-    dplyr::filter(EnergyType == "X", R == 1) |>
+    dplyr::filter(.data[[Recca::psut_cols$energy_type]] == "X", R == 1) |>
     magrittr::extract2("Y_fu_details") |>
     magrittr::extract2(1) |>
     expect_null()
   res |>
-    dplyr::filter(EnergyType == "X", R == 2) |>
+    dplyr::filter(.data[[Recca::psut_cols$energy_type]] == "X", R == 2) |>
     magrittr::extract2("U_EIOU_details") |>
     magrittr::extract2(1) |>
     expect_null()
 })
 
+
+test_that("extend_to_exergy() works with NULL U_EIOU_mat" , {
+  sutmats_with_null_U_EIOU <- UKEnergy2000mats %>%
+    # Put in wide-by-matrix format.
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    # Eliminate services ECCs.
+    dplyr::filter(LastStage %in% c("Final", "Useful")) %>%
+    dplyr::mutate(
+      phi = RCLabels::make_list(Recca::phi_vec, n = nrow(.), lenx = 1),
+      "{IEATools::psut_cols$U_eiou}" := list(NULL, NULL),
+      "{IEATools::psut_cols$U}" := .data[[IEATools::psut_cols$U_feed]]
+    )
+  expect_equal(sutmats_with_null_U_EIOU[[IEATools::psut_cols$U]],
+               sutmats_with_null_U_EIOU[[IEATools::psut_cols$U_feed]])
+  with_exergy <- sutmats_with_null_U_EIOU |>
+    extend_to_exergy() |>
+    dplyr::filter(.data[[IEATools::iea_cols$energy_type]] == IEATools::energy_types$x)
+  expect_equal(matsbyname::iszero_byname(with_exergy[[IEATools::psut_cols$U_eiou]]),
+               list(TRUE, TRUE))
+})

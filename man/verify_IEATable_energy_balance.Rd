@@ -6,8 +6,8 @@
 \usage{
 verify_IEATable_energy_balance(
   .ieatidydata,
-  LedgerSide = "LedgerSide",
-  energy = "Edot",
+  LedgerSide = IEATools::iea_cols$ledger_side,
+  energy = IEATools::iea_cols$e_dot,
   supply = "Supply",
   consumption = "Consumption",
   err = ".err",
@@ -60,5 +60,5 @@ library(dplyr)
 UKEnergy2000tidy \%>\%
   filter(LastStage \%in\% c("Final", "Useful")) \%>\%
   group_by(Country, Year, EnergyType, LastStage) \%>\%
-  verify_IEATable_energy_balance(energy = "Edot")
+  verify_IEATable_energy_balance(energy = IEATools::iea_cols$e_dot)
 }

@@ -47,7 +47,6 @@ UKEnergy2000mats <- UKEnergy2000tidy |>
     # Ensure that all energy values are positive, as required for analysis.
     Edot = abs(Edot)
   ) |>
-
   # Collapse to matrices
   dplyr::group_by(Country, Year, EnergyType, LastStage, matnames) |>
   matsindf::collapse_to_matrices(matnames = "matnames", matvals = "Edot",
@@ -55,7 +54,6 @@ UKEnergy2000mats <- UKEnergy2000tidy |>
                                  rowtypes = "rowtypes", coltypes = "coltypes") %>%
   dplyr::rename(matrix.name = matnames, matrix = Edot) |>
   tidyr::spread(key = matrix.name, value = matrix) |>
-
   dplyr::mutate(
     # Create full U matrix
     U = matsbyname::sum_byname(U_feed, U_EIOU),

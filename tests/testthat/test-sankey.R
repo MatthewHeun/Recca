@@ -227,4 +227,6 @@ test_that("make_sankey() example works correctly", {
 })
 
 
-
+test_that("create_sankey_colour_string() works will NULL", {
+  expect_null(create_sankey_colour_string(NULL))
+})

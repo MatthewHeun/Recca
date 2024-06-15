@@ -1,6 +1,3 @@
-# library(dplyr)
-# library(matsindf)
-# library(tidyr)
 
 test_that("ERRs are calculated correctly", {
   result <- UKEnergy2000mats %>%
