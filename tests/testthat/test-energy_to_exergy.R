@@ -315,3 +315,23 @@ test_that("extend_fu_details_to_exergy() gives NULL when matrices are NULL", {
     expect_null()
 })
 
+
+test_that("extend_to_exergy() works with NULL U_EIOU_mat" , {
+  sutmats_with_null_U_EIOU <- UKEnergy2000mats %>%
+    # Put in wide-by-matrix format.
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    # Eliminate services ECCs.
+    dplyr::filter(LastStage %in% c("Final", "Useful")) %>%
+    dplyr::mutate(
+      phi = RCLabels::make_list(Recca::phi_vec, n = nrow(.), lenx = 1),
+      "{IEATools::psut_cols$U_eiou}" := list(NULL, NULL),
+      "{IEATools::psut_cols$U}" := .data[[IEATools::psut_cols$U_feed]]
+    )
+  expect_equal(sutmats_with_null_U_EIOU[[IEATools::psut_cols$U]],
+               sutmats_with_null_U_EIOU[[IEATools::psut_cols$U_feed]])
+  with_exergy <- sutmats_with_null_U_EIOU |>
+    extend_to_exergy() |>
+    dplyr::filter(.data[[IEATools::iea_cols$energy_type]] == IEATools::energy_types$x)
+  expect_equal(matsbyname::iszero_byname(with_exergy[[IEATools::psut_cols$U_eiou]]),
+               list(TRUE, TRUE))
+})
