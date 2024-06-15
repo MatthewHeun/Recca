@@ -63,7 +63,7 @@ which always resolves to the latest release.
 * Fixed a bug in `calc_agg_eta_pfus()` where
   efficiencies were calculated incorrectly when 
   primary energy was different
-  depending on the value of the `Last.stage` column.
+  depending on the value of the `LastStage` column.
 * No new tests.
     * Still at 748 tests, all passing.
     * Test coverage remains at 100%.

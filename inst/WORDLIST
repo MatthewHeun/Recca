@@ -1,6 +1,7 @@
 Brockway
 CMD
 Codecov
+Colours
 DOI
 Despecifies
 Despecify
@@ -18,6 +19,7 @@ HPM
 HTH
 IEA
 Ip
+Javascript
 Kuperus
 LTC
 LTH
@@ -46,6 +48,8 @@ behaviour
 biofuels
 calc
 ces
+colour
+colours
 coltypes
 colvec
 colvecwithdims
@@ -81,6 +85,7 @@ inv
 inversetranspose
 io
 ixp
+javascript
 ktoe
 lifecycle
 linearities
@@ -90,6 +95,8 @@ mathrm
 matsindf
 matwithdims
 metapackage
+networkD
+networkD3
 newcommand
 pkgdown
 pps

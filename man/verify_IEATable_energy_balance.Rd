@@ -6,7 +6,7 @@
 \usage{
 verify_IEATable_energy_balance(
   .ieatidydata,
-  ledger.side = IEATools::iea_cols$ledger_side,
+  LedgerSide = IEATools::iea_cols$ledger_side,
   energy = IEATools::iea_cols$e_dot,
   supply = "Supply",
   consumption = "Consumption",
@@ -17,20 +17,20 @@ verify_IEATable_energy_balance(
 \arguments{
 \item{.ieatidydata}{an IEA-style data frame containing grouping columns
 (typically \code{Country}, \code{Year}, \code{Product}, and others),
-a \code{Ledger.side} column, and
+a \code{LedgerSide} column, and
 an energy column (\code{E.ktoe}).
 \code{.ieatidydata} should be grouped prior to sending to this function.}
 
-\item{ledger.side}{the name of the column in \code{.ieatidydata}
-that contains ledger side information (a string). Default is "\code{Ledger.side}".}
+\item{LedgerSide}{the name of the column in \code{.ieatidydata}
+that contains ledger side information (a string). Default is "\code{LedgerSide}".}
 
 \item{energy}{the name of the column in \code{.ieatidydata}
 that contains energy data (a string). Default is "\code{E.ktoe}".}
 
-\item{supply}{the identifier for supply data in the \code{ledger.side} column (a string).
+\item{supply}{the identifier for supply data in the \code{LedgerSide} column (a string).
 Default is "\code{Supply}".}
 
-\item{consumption}{the identifier for consumption data in the \code{ledger.side} column (a string).
+\item{consumption}{the identifier for consumption data in the \code{LedgerSide} column (a string).
 Default is "\code{Consumption}".}
 
 \item{err}{the name of the error column in the output. Default is "\code{.err}".}

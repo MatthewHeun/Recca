@@ -109,7 +109,7 @@ exhibit this problem.</p>
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>.sutmats</dt>
 <dd><p>an SUT-style data frame containing metadata columns
-(typically <code>Country</code>, <code>Year</code>, <code>Ledger.side</code>, <code>Product</code>, etc.)
+(typically <code>Country</code>, <code>Year</code>, <code>LedgerSide</code>, <code>Product</code>, etc.)
 and columns of SUT matrices, including <code>U</code> and <code>V</code>.</p></dd>
 
 
@@ -148,7 +148,7 @@ tells which transformation processes consume energy but do not produce anything.
 <span class="r-in"><span><span class="fu">verify_SUT_industry_production</span><span class="op">(</span><span class="va">UKEnergy2000mats</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
 <span class="r-in"><span>                                 <span class="fu"><a href="https://tidyr.tidyverse.org/reference/spread.html" class="external-link">spread</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">matrix.name</span>, value <span class="op">=</span> <span class="va">matrix</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 14</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Country  Year Energy.type Last.stage R             S_units  U        U_EIOU  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Country  Year EnergyType LastStage R             S_units  U        U_EIOU  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> GBR      <span style="text-decoration: underline;">2</span>000 E           Final      <span style="color: #949494;">&lt;dbl [2 × 2]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> GBR      <span style="text-decoration: underline;">2</span>000 E           Services   <span style="color: #949494;">&lt;dbl [2 × 2]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span></span>

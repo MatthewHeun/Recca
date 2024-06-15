@@ -300,7 +300,7 @@ extend_to_exergy <- function(.sutmats = NULL,
 #'     - specifically: "Product \[from Industry\]"
 #'
 #' The energy stage of the entries in the details matrices are indicated
-#' by the entry in the EnergyType column,
+#' by the entry in the `EnergyType` column,
 #' typically "Useful".
 #'
 #' If either of the energy details matrices are `NULL`,

@@ -137,7 +137,7 @@ the row and column names.
 }
 
 The energy stage of the entries in the details matrices are indicated
-by the entry in the EnergyType column,
+by the entry in the \code{EnergyType} column,
 typically "Useful".
 
 If either of the energy details matrices are \code{NULL},

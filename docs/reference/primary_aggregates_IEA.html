@@ -149,8 +149,8 @@ but it is meant to operate on tidy SUT-style data frames.</p>
     <pre class="usage"><span class='fu'>primary_aggregates_IEA</span><span class='op'>(</span>
   <span class='va'>.ieadata</span>,
   flow <span class='op'>=</span> <span class='st'>"Flow"</span>,
-  flow_aggregation_point <span class='op'>=</span> <span class='st'>"Flow.aggregation.point"</span>,
-  energy <span class='op'>=</span> <span class='st'>"E.dot"</span>,
+  flow_aggregation_point <span class='op'>=</span> <span class='st'>"FlowAggregationPoint"</span>,
+  energy <span class='op'>=</span> <span class='st'>"Edot"</span>,
   p_industries <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Production"</span>, <span class='st'>"Coal mines"</span>, <span class='st'>"Oil and gas extraction"</span>, <span class='st'>"Imports"</span>,
     <span class='st'>"Exports"</span>, <span class='st'>"International aviation bunkers"</span>, <span class='st'>"International marine bunkers"</span>,
     <span class='st'>"Stock changes"</span><span class='op'>)</span>,
@@ -172,11 +172,11 @@ but it is meant to operate on tidy SUT-style data frames.</p>
     <tr>
       <th>flow_aggregation_point</th>
       <td><p>the name of the column that identifies flow aggregation points.
-Default is "<code>Flow.aggregation.point</code>".</p></td>
+Default is "<code>FlowAggregationPoint</code>".</p></td>
     </tr>
     <tr>
       <th>energy</th>
-      <td><p>the name of the column that contains energy information. Default is "<code>E.dot</code>".</p></td>
+      <td><p>the name of the column that contains energy information. Default is "<code>Edot</code>".</p></td>
     </tr>
     <tr>
       <th>p_industries</th>
@@ -188,7 +188,7 @@ Default is "<code>Flow.aggregation.point</code>".</p></td>
     </tr>
     <tr>
       <th>eiou</th>
-      <td><p>the string that identifies energy industry own use in the <code>Flow.aggregation.point</code> column.
+      <td><p>the string that identifies energy industry own use in the <code>FlowAggregationPoint</code> column.
 Default is "<code>Energy industry own use</code>".</p></td>
     </tr>
     <tr>
@@ -217,11 +217,11 @@ Grouping columns are preserved on output.</p>
 <span class='va'>r_ind</span> <span class='op'>&lt;-</span> <span class='fu'><a href='resource_industries.html'>resource_industries</a></span><span class='op'>(</span><span class='va'>UKEnergy2000mats</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span><span class='op'>(</span>key <span class='op'>=</span> <span class='va'>matrix.name</span>, value <span class='op'>=</span> <span class='va'>matrix</span><span class='op'>)</span><span class='op'>)</span><span class='op'>[[</span><span class='st'>"r_industries"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>
 <span class='va'>UKEnergy2000tidy</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>Country</span>, <span class='va'>Year</span>, <span class='va'>Energy.type</span>, <span class='va'>Last.stage</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>Country</span>, <span class='va'>Year</span>, <span class='va'>EnergyType</span>, <span class='va'>LastStage</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>primary_aggregates_IEA</span><span class='op'>(</span>p_industries <span class='op'>=</span> <span class='va'>r_ind</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 4 x 5</span><span>
-#&gt; </span><span style='color: #949494;'># Groups:   Country, Year, Energy.type [2]</span><span>
-#&gt;   Country  Year Energy.type Last.stage EX_p_IEA.ktoe
+#&gt; </span><span style='color: #949494;'># Groups:   Country, Year, EnergyType [2]</span><span>
+#&gt;   Country  Year EnergyType LastStage EX_p_IEA.ktoe
 #&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>              </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
 #&gt; </span><span style='color: #BCBCBC;'>1</span><span> GBR      </span><span style='text-decoration: underline;'>2</span><span>000 E           Final              </span><span style='text-decoration: underline;'>93</span><span>000
 #&gt; </span><span style='color: #BCBCBC;'>2</span><span> GBR      </span><span style='text-decoration: underline;'>2</span><span>000 E           Services           </span><span style='text-decoration: underline;'>93</span><span>000
