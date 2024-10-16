@@ -21,7 +21,6 @@ which always resolves to the latest release.
     - Test coverage remains at 100%.
 
 
-
 ## Recca 0.1.55 (2024-02-06) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10627746.svg)](https://doi.org/10.5281/zenodo.10627746)
 
 * Testing now done in parallel.
