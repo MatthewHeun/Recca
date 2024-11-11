@@ -41,8 +41,8 @@ test_that("SUT matrix energy balance with units works as expected", {
     UKEnergy2000mats %>%
       tidyr::spread(key = matrix.name, value = matrix),
     tol = 1e-3)
-  expect_true(all(result$.SUT_prod_energy_balance %>% as.logical()))
-  expect_true(all(result$.SUT_ind_energy_balance %>% as.logical()))
+  expect_true(all(result$.SUT_prod_energy_balanced %>% as.logical()))
+  expect_true(all(result$.SUT_ind_energy_balanced %>% as.logical()))
 
   # Now try when R is gone.
   result_noR <- verify_SUT_energy_balance_with_units(
@@ -53,8 +53,17 @@ test_that("SUT matrix energy balance with units works as expected", {
         R = NULL
       ),
     tol = 1e-3)
-  expect_true(all(result_noR$.SUT_prod_energy_balance %>% as.logical()))
-  expect_true(all(result_noR$.SUT_ind_energy_balance %>% as.logical()))
+  expect_true(all(result_noR$.SUT_prod_energy_balanced %>% as.logical()))
+  expect_true(all(result_noR$.SUT_ind_energy_balanced %>% as.logical()))
+})
+
+
+test_that("SUT matrix energy balance fails as expected when out of balance", {
+  UKEnergy2000mats |>
+    tidyr::pivot_wider(names_from = "matrix.name",
+                       values_from = "matrix") |>
+    verify_SUT_energy_balance_with_units() |>
+    expect_error(regexp = "Energy not conserved by product in verify_SUT_energy_balance_with_units")
 })
 
 

@@ -97,8 +97,8 @@ verify_SUT_energy_balance <- function(.sutmats = NULL,
 #' @param Y final demand (`Y`) matrix or name of the column in `.sutmats` that contains same. Default is "Y".
 #' @param S_units `S_units` matrix or name of the column in `.sutmats` that contains same. Default is "S_units".
 #' @param tol the maximum amount by which energy can be out of balance. Default is `1e-6`.
-#' @param SUT_prod_energy_balance the name for booleans telling if product energy is in balance. Default is ".SUT_prod_energy_balance".
-#' @param SUT_ind_energy_balance the name for booleans telling if product energy is in balance. Default is ".SUT_inds_energy_balance".
+#' @param SUT_prod_energy_balanced the name for booleans telling if product energy is in balance. Default is ".SUT_prod_energy_balance".
+#' @param SUT_ind_energy_balanced the name for booleans telling if product energy is in balance. Default is ".SUT_inds_energy_balance".
 #'
 #' @return `.sutmats` with additional columns.
 #'
@@ -111,12 +111,22 @@ verify_SUT_energy_balance <- function(.sutmats = NULL,
 #'                                        tol = 1e-3)
 verify_SUT_energy_balance_with_units <- function(.sutmats = NULL,
                                                  # Input names
-                                                 R = "R", U = "U", V = "V", Y = "Y", S_units = "S_units",
+                                                 R = "R", U = "U", U_feed = "U_feed", U_eiou = "U_EIOU",
+                                                 r_eiou = "r_EIOU", V = "V", Y = "Y", S_units = "S_units",
                                                  # Tolerance
                                                  tol = 1e-6,
+                                                 # Column names
+                                                 matnames = "matnames",
+                                                 matvals = "matvals",
+                                                 rowtypes = "rowtypes",
+                                                 coltypes = "coltypes",
+                                                 colnames = "colnames",
                                                  # Output names
-                                                 SUT_prod_energy_balance = ".SUT_prod_energy_balance",
-                                                 SUT_ind_energy_balance = ".SUT_ind_energy_balance"){
+                                                 prod_diff = ".prod_diff",
+                                                 ind_diff = ".ind_diff",
+                                                 SUT_prod_energy_balanced = ".SUT_prod_energy_balanced",
+                                                 SUT_ind_energy_balanced = ".SUT_ind_energy_balanced",
+                                                 ebal_error = "ebal_error"){
   verify_func <- function(R = NULL, U, V, Y, S_units){
     y <- matsbyname::rowsums_byname(Y)
     if (is.null(R)) {
@@ -128,21 +138,76 @@ verify_SUT_energy_balance_with_units <- function(.sutmats = NULL,
     U_bar <- matsbyname::matrixproduct_byname(matsbyname::transpose_byname(S_units), U)
     RV_bar <- matsbyname::matrixproduct_byname(R_plus_V, S_units)
     W_bar <- matsbyname::matrixproduct_byname(matsbyname::transpose_byname(S_units), W)
-    prodOK <- matsbyname::difference_byname(matsbyname::rowsums_byname(W), y) %>% matsbyname::iszero_byname(tol = tol)
-    indOK <- matsbyname::difference_byname(RV_bar, matsbyname::transpose_byname(W_bar)) %>%
-      matsbyname::difference_byname(matsbyname::transpose_byname(U_bar)) %>% matsbyname::iszero_byname(tol = tol)
-    list(prodOK, indOK) %>% magrittr::set_names(c(SUT_prod_energy_balance, SUT_ind_energy_balance))
+    prod_diffs <- matsbyname::difference_byname(matsbyname::rowsums_byname(W), y)
+    ind_diffs <- matsbyname::difference_byname(RV_bar, matsbyname::transpose_byname(W_bar)) %>%
+      matsbyname::difference_byname(matsbyname::transpose_byname(U_bar))
+    prodOK <- prod_diffs %>%
+      matsbyname::iszero_byname(tol = tol)
+    indOK <- ind_diffs %>%
+      matsbyname::iszero_byname(tol = tol)
+    list(prod_diffs, ind_diffs, prodOK, indOK) %>%
+      magrittr::set_names(c(prod_diff, ind_diff,
+                            SUT_prod_energy_balanced, SUT_ind_energy_balanced))
   }
-  Out <- matsindf::matsindf_apply(.sutmats, FUN = verify_func, R = R, U = U, V = V, Y = Y, S_units = S_units)
-  assertthat::assert_that(all(Out[[SUT_prod_energy_balance]] %>% as.logical()),
-                          msg = paste("Energy not conserved by product in verify_SUT_energy_balance_with_units.",
-                                      "See column",
-                                      SUT_prod_energy_balance))
-  assertthat::assert_that(all(Out[[SUT_ind_energy_balance]] %>% as.logical()),
+  out <- matsindf::matsindf_apply(.sutmats, FUN = verify_func, R = R, U = U, V = V, Y = Y, S_units = S_units)
+  if (!all(out[[SUT_prod_energy_balanced]] %>% as.logical())) {
+    # Find out which products are out of balance.
+    unbalanced <- out |>
+      dplyr::filter(!.data[[SUT_prod_energy_balanced]])
+    errors_for_msg <- unbalanced |>
+      dplyr::mutate(
+        # Eliminate all matrix columns, leaving only metadata columns
+        "{R}" := NULL,
+        "{U}" := NULL,
+        "{U_feed}" := NULL,
+        "{U_eiou}" := NULL,
+        "{r_eiou}" := NULL,
+        "{V}" := NULL,
+        "{Y}" := NULL,
+        "{S_units}" := NULL,
+        # Eliminate other unneeded columns
+        "{ind_diff}" := NULL,
+        "{SUT_prod_energy_balanced}" := NULL,
+        "{SUT_ind_energy_balanced}" := NULL
+      ) |>
+      tidyr::pivot_longer(cols = dplyr::all_of(prod_diff),
+                          names_to = matnames,
+                          values_to = matvals) |>
+      # Expand the error vector to show all unbalances
+      matsindf::expand_to_tidy(matnames = matnames,
+                               matvals = matvals) |>
+      # Filter to only the non-zero error values
+      dplyr::filter(.data[[matvals]] != 0) |>
+      dplyr::mutate(
+        # Get rid of unneeded columns
+        "{matnames}" := NULL,
+        "{rowtypes}" := NULL,
+        "{coltypes}" := NULL,
+        "{colnames}" := NULL
+      ) |>
+      dplyr::rename(
+        ebal_error = dplyr::all_of(matvals)
+      ) |>
+      matsindf::df_to_msg()
+    msg <- paste0("Energy not conserved by product in verify_SUT_energy_balance_with_units().\n",
+                  errors_for_msg)
+    stop(msg)  }
+  # assertthat::assert_that(all(out[[SUT_prod_energy_balance]] %>% as.logical()),
+  #                         msg = paste("Energy not conserved by product in verify_SUT_energy_balance_with_units.",
+  #                                     "See column",
+  #                                     SUT_prod_energy_balance))
+  assertthat::assert_that(all(out[[SUT_ind_energy_balanced]] %>% as.logical()),
                           msg = paste("Energy not conserved by industry in verify_SUT_energy_balance_with_units",
                                       "See column",
-                                      SUT_ind_energy_balance))
-  return(Out)
+                                      SUT_ind_energy_balanced))
+  # All checks passed.
+  # Remove unneeded columns.
+  out <- out |>
+    dplyr::mutate(
+      "{prod_diff}" := NULL,
+      "{ind_diff}" := NULL
+    )
+  return(out)
 }
 
 
