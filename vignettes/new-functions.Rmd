@@ -277,7 +277,7 @@ Note that both ECCs are in complete energy balance.
 OurECC %>% 
   verify_SUT_energy_balance_with_units() %>% 
   select(Country, Year, EnergyType, LastStage, 
-         .SUT_prod_energy_balance, .SUT_ind_energy_balance) %>% 
+         .SUT_prod_energy_balanced, .SUT_ind_energy_balanced) %>% 
   glimpse()
 ```
 

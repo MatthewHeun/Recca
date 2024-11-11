@@ -89,16 +89,19 @@ verify_SUT_energy_balance <- function(.sutmats = NULL,
 #' Both product and industry energy balance are verified.
 #' Units (as supplied by the `S_units` matrix) are respected.
 #'
-#' @param .sutmats an SUT-style data frame containing columns
-#' `R` (optionally), `U`, `V`, `Y`, and `S_units`.
-#' @param R resource (`R`) matrix or name of the column in `.sutmats` that contains same. Default is "R".
-#' @param U use (`U`) matrix or name of the column in `.sutmats` that contains same. Default is "U".
-#' @param V make (`V`) matrix or name of the column in `.sutmats`that contains same. Default is "V".
-#' @param Y final demand (`Y`) matrix or name of the column in `.sutmats` that contains same. Default is "Y".
-#' @param S_units `S_units` matrix or name of the column in `.sutmats` that contains same. Default is "S_units".
-#' @param tol the maximum amount by which energy can be out of balance. Default is `1e-6`.
-#' @param SUT_prod_energy_balanced the name for booleans telling if product energy is in balance. Default is ".SUT_prod_energy_balance".
-#' @param SUT_ind_energy_balanced the name for booleans telling if product energy is in balance. Default is ".SUT_inds_energy_balance".
+#' @param .sutmats An SUT-style data frame containing columns
+#'                 `R` (optionally), `U`, `V`, `Y`, and `S_units`.
+#' @param R Resource (`R`) matrix or name of the column in `.sutmats` that contains same. Default is "R".
+#' @param U Use (`U`) matrix or name of the column in `.sutmats` that contains same. Default is "U".
+#' @param V Make (`V`) matrix or name of the column in `.sutmats`that contains same. Default is "V".
+#' @param Y Final demand (`Y`) matrix or name of the column in `.sutmats` that contains same. Default is "Y".
+#' @param S_units `S_units` A matrix or name of the column in `.sutmats` that contains same. Default is "S_units".
+#' @param U_feed,U_eiou,r_eiou Optional matrices or columns in `.sutmats`.
+#' @param tol The maximum amount by which energy can be out of balance. Default is `1e-6`.
+#' @param matnames,matvals,rowtypes,coltypes,colnames Column names used internally.
+#' @param prod_diff,ind_diff,ebal_error Column names for product and industry energy balance errors.
+#' @param SUT_prod_energy_balanced The name for booleans telling if product energy is in balance. Default is ".SUT_prod_energy_balance".
+#' @param SUT_ind_energy_balanced The name for booleans telling if product energy is in balance. Default is ".SUT_inds_energy_balance".
 #'
 #' @return `.sutmats` with additional columns.
 #'
@@ -186,16 +189,13 @@ verify_SUT_energy_balance_with_units <- function(.sutmats = NULL,
         "{colnames}" := NULL
       ) |>
       dplyr::rename(
-        ebal_error = dplyr::all_of(matvals)
+        "{ebal_error}" := dplyr::all_of(matvals)
       ) |>
       matsindf::df_to_msg()
     msg <- paste0("Energy not conserved by product in verify_SUT_energy_balance_with_units().\n",
                   errors_for_msg)
-    stop(msg)  }
-  # assertthat::assert_that(all(out[[SUT_prod_energy_balance]] %>% as.logical()),
-  #                         msg = paste("Energy not conserved by product in verify_SUT_energy_balance_with_units.",
-  #                                     "See column",
-  #                                     SUT_prod_energy_balance))
+    stop(msg)
+  }
   assertthat::assert_that(all(out[[SUT_ind_energy_balanced]] %>% as.logical()),
                           msg = paste("Energy not conserved by industry in verify_SUT_energy_balance_with_units",
                                       "See column",
