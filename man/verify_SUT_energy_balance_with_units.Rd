@@ -19,12 +19,14 @@ verify_SUT_energy_balance_with_units(
   matvals = "matvals",
   rowtypes = "rowtypes",
   coltypes = "coltypes",
+  rownames = "rownames",
   colnames = "colnames",
   prod_diff = ".prod_diff",
   ind_diff = ".ind_diff",
   SUT_prod_energy_balanced = ".SUT_prod_energy_balanced",
   SUT_ind_energy_balanced = ".SUT_ind_energy_balanced",
-  ebal_error = "ebal_error"
+  ebal_error = "ebal_error",
+  product = "Product"
 )
 }
 \arguments{
@@ -45,9 +47,9 @@ verify_SUT_energy_balance_with_units(
 
 \item{tol}{The maximum amount by which energy can be out of balance. Default is \code{1e-6}.}
 
-\item{matnames, matvals, rowtypes, coltypes, colnames}{Column names used internally.}
+\item{matnames, matvals, rowtypes, coltypes, rownames, colnames}{Column names used internally.}
 
-\item{prod_diff, ind_diff, ebal_error}{Column names for product and industry energy balance errors.}
+\item{prod_diff, ind_diff, ebal_error, product}{Column names for product and industry energy balance errors.}
 
 \item{SUT_prod_energy_balanced}{The name for booleans telling if product energy is in balance. Default is ".SUT_prod_energy_balance".}
 

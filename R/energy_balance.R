@@ -98,8 +98,8 @@ verify_SUT_energy_balance <- function(.sutmats = NULL,
 #' @param S_units `S_units` A matrix or name of the column in `.sutmats` that contains same. Default is "S_units".
 #' @param U_feed,U_eiou,r_eiou Optional matrices or columns in `.sutmats`.
 #' @param tol The maximum amount by which energy can be out of balance. Default is `1e-6`.
-#' @param matnames,matvals,rowtypes,coltypes,colnames Column names used internally.
-#' @param prod_diff,ind_diff,ebal_error Column names for product and industry energy balance errors.
+#' @param matnames,matvals,rowtypes,coltypes,rownames,colnames Column names used internally.
+#' @param prod_diff,ind_diff,ebal_error,product Column names for product and industry energy balance errors.
 #' @param SUT_prod_energy_balanced The name for booleans telling if product energy is in balance. Default is ".SUT_prod_energy_balance".
 #' @param SUT_ind_energy_balanced The name for booleans telling if product energy is in balance. Default is ".SUT_inds_energy_balance".
 #'
@@ -123,13 +123,15 @@ verify_SUT_energy_balance_with_units <- function(.sutmats = NULL,
                                                  matvals = "matvals",
                                                  rowtypes = "rowtypes",
                                                  coltypes = "coltypes",
+                                                 rownames = "rownames",
                                                  colnames = "colnames",
-                                                 # Output names
+                                                 # Output column names
                                                  prod_diff = ".prod_diff",
                                                  ind_diff = ".ind_diff",
                                                  SUT_prod_energy_balanced = ".SUT_prod_energy_balanced",
                                                  SUT_ind_energy_balanced = ".SUT_ind_energy_balanced",
-                                                 ebal_error = "ebal_error"){
+                                                 ebal_error = "ebal_error",
+                                                 product = "Product"){
   verify_func <- function(R = NULL, U, V, Y, S_units){
     y <- matsbyname::rowsums_byname(Y)
     if (is.null(R)) {
@@ -189,6 +191,7 @@ verify_SUT_energy_balance_with_units <- function(.sutmats = NULL,
         "{colnames}" := NULL
       ) |>
       dplyr::rename(
+        "{product}" := dplyr::all_of(rownames),
         "{ebal_error}" := dplyr::all_of(matvals)
       ) |>
       matsindf::df_to_msg()
