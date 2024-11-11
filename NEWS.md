@@ -8,6 +8,8 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+* Significantly improved some energy balance error messages.
+  The source of the error is now reported.
 * Added row and column types to the result of `calc_eta_i()`.
 * Fixed a bug where missing U_EIOU matrix would cause an error
   in `extend_to_exergy()`.
