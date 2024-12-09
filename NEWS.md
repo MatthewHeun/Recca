@@ -8,7 +8,7 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
-## Recca 0.1.56 (2024-12-09)
+## Recca 0.1.56 (2024-12-09) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14336025.svg)](https://doi.org/10.5281/zenodo.14336025)
 
 * Significantly improved some energy balance error messages.
   The source of the error is now reported.
