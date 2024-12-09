@@ -8,65 +8,65 @@ test_that("calculating y, q, f, g, h, W, A, and L works as expected", {
 
   # Focus on y, q, f, g, h, r, and W
   yqfgW <- io_mats %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, y, q, f, g, W, r, h) %>%
+    dplyr::select(Country, Year, EnergyType, LastStage, y, q, f, g, W, r, h) %>%
     tidyr::gather(key = "matnames", value = "matvals", y, q, f, g, W, r, h) %>%
     matsindf::expand_to_tidy(drop = 0)
   yqfgW %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "f", rownames == "Crude dist.", colnames == "Product") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$e, LastStage == IEATools::last_stages$final, matnames == "f", rownames == "Crude dist.", colnames == "Product") %>%
     dplyr::select(matvals) %>%
     unlist() |>
     unname() |>
     expect_equal(48050)
   yqfgW %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "W", rownames == "Crude [from Fields]", colnames == "Oil fields") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$e, LastStage == IEATools::last_stages$final, matnames == "W", rownames == "Crude [from Fields]", colnames == "Oil fields") %>%
     dplyr::select(matvals) %>%
     unlist() |>
     unname() |>
     expect_equal(47500)
   yqfgW %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "W", rownames == "Crude [from Fields]", colnames == "Oil fields") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$e, LastStage == IEATools::last_stages$final, matnames == "W", rownames == "Crude [from Fields]", colnames == "Oil fields") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
     expect_equal(47500)
   yqfgW %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "r", rownames == "Resources [of Crude]", colnames == "Product") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$e, LastStage == IEATools::last_stages$final, matnames == "r", rownames == "Resources [of Crude]", colnames == "Product") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
     expect_equal(50000)
   yqfgW %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "y", rownames == "Illumination [lumen-hrs/yr]", colnames == "Industry") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$e, LastStage == IEATools::last_stages$services, matnames == "y", rownames == "Illumination [lumen-hrs/yr]", colnames == "Industry") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
     expect_equal(5e14)
   yqfgW %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, matnames == "g", rownames == "Petrol dist.", colnames == "Product") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$x, LastStage == IEATools::last_stages$services, matnames == "g", rownames == "Petrol dist.", colnames == "Product") %>%
     dplyr::select(matvals) %>%
     unlist() |>
     unname() |>
     expect_equal(27820)
   yqfgW %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, matnames == "y", rownames == "Space heating [m3-K]", colnames == "Industry") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$x, LastStage == IEATools::last_stages$services, matnames == "y", rownames == "Space heating [m3-K]", colnames == "Industry") %>%
     dplyr::select(matvals) %>%
     unlist() |>
     unname() |>
     expect_equal(7.5e10)
   yqfgW %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "r", rownames == "Resources [of NG]", colnames == "Product") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$e, LastStage == IEATools::last_stages$final, matnames == "r", rownames == "Resources [of NG]", colnames == "Product") %>%
     dplyr::select(matvals) %>%
     unlist() |>
     unname() |>
     expect_equal(43000)
   yqfgW %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "h", rownames == "Crude", colnames == "Industry") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$e, LastStage == IEATools::last_stages$final, matnames == "h", rownames == "Crude", colnames == "Industry") %>%
     dplyr::select(matvals) %>%
     unlist() |>
     unname() |>
     expect_equal(50000)
   yqfgW %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "h", rownames == "NG", colnames == "Industry") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$e, LastStage == IEATools::last_stages$final, matnames == "h", rownames == "NG", colnames == "Industry") %>%
     dplyr::select(matvals) %>%
     unlist() |>
     unname() |>
@@ -74,39 +74,39 @@ test_that("calculating y, q, f, g, h, W, A, and L works as expected", {
 
   # Focus on C, D, O, and A
   CDAO <- io_mats %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, C, A, D, O) %>%
+    dplyr::select(Country, Year, EnergyType, LastStage, C, A, D, O) %>%
     tidyr::gather(key = "matnames", value = "matvals", C, A, D, O) %>%
     matsindf::expand_to_tidy(drop = 0)
 
   # A matrix:
   CDAO %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "A", rownames == "Crude [from Dist.]", colnames == "Crude [from Dist.]") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$e, LastStage == IEATools::last_stages$final, matnames == "A", rownames == "Crude [from Dist.]", colnames == "Crude [from Dist.]") %>%
     dplyr::select(matvals) %>%
     unlist() |>
     unname() |>
     expect_equal(0.0105263158)
   CDAO %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$useful, matnames == "A", rownames == "Elect [from Grid]", colnames == "Diesel") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$e, LastStage == IEATools::last_stages$useful, matnames == "A", rownames == "Elect [from Grid]", colnames == "Diesel") %>%
     dplyr::select(matvals) %>%
     unlist() |>
     unname() |>
     expect_equal(0.0017857142857143)
   # C matrix:
   CDAO %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, matnames == "C", rownames == "Light", colnames == "Light fixtures") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$x, LastStage == IEATools::last_stages$services, matnames == "C", rownames == "Light", colnames == "Light fixtures") %>%
     dplyr::select(matvals) %>%
     unlist() |>
     unname() |>
     expect_equal(1)
   CDAO %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, matnames == "C", rownames == "Petrol", colnames == "Oil refineries") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$x, LastStage == IEATools::last_stages$services, matnames == "C", rownames == "Petrol", colnames == "Oil refineries") %>%
     dplyr::select(matvals) %>%
     unlist() |>
     unname() |>
     expect_equal(0.63095238095238104)
   # D matrix:
   CDAO %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, matnames == "D", rownames == "Oil fields", colnames == "Crude [from Fields]") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$x, LastStage == IEATools::last_stages$services, matnames == "D", rownames == "Oil fields", colnames == "Crude [from Fields]") %>%
     dplyr::select(matvals) %>%
     unlist() |>
     unname() |>
@@ -132,25 +132,25 @@ test_that("calculating y, q, f, g, h, W, A, and L works as expected", {
 
   # O matrix:
   CDAO %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, matnames == "O", rownames == "Resources [of Crude]", colnames == "Crude") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$x, LastStage == IEATools::last_stages$services, matnames == "O", rownames == "Resources [of Crude]", colnames == "Crude") %>%
     dplyr::select(matvals) %>%
     unlist() |>
     unname() |>
     expect_equal(1)
   CDAO %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, matnames == "O", rownames == "Resources [of NG]", colnames == "NG") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$x, LastStage == IEATools::last_stages$services, matnames == "O", rownames == "Resources [of NG]", colnames == "NG") %>%
     dplyr::select(matvals) %>%
     unlist() |>
     unname() |>
     expect_equal(1)
   CDAO %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "O", rownames == "Resources [of Crude]", colnames == "Crude") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$e, LastStage == IEATools::last_stages$final, matnames == "O", rownames == "Resources [of Crude]", colnames == "Crude") %>%
     dplyr::select(matvals) %>%
     unlist() |>
     unname() |>
     expect_equal(1)
   CDAO %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "O", rownames == "Resources [of NG]", colnames == "NG") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$e, LastStage == IEATools::last_stages$services, matnames == "O", rownames == "Resources [of NG]", colnames == "NG") %>%
     dplyr::select(matvals) %>%
     unlist() |>
     unname() |>
@@ -173,35 +173,35 @@ test_that("calculating y, q, f, g, h, W, A, and L works as expected", {
 
   # Focus on L matrices (L_ixp and L_pxp)
   L <- io_mats %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, L_ixp, L_pxp) %>%
+    dplyr::select(Country, Year, EnergyType, LastStage, L_ixp, L_pxp) %>%
     tidyr::gather(key = "matnames", value = "matvals", L_ixp, L_pxp) %>%
     matsindf::expand_to_tidy(drop = 0)
   L %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "L_ixp", rownames == "Resources [of Crude]", colnames == "Crude") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$e, LastStage == IEATools::last_stages$final, matnames == "L_ixp", rownames == "Resources [of Crude]", colnames == "Crude") %>%
     dplyr::select(matvals) %>%
     dplyr::pull() %>%
     length() |>
     expect_equal(0)
   L %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "L_pxp", rownames == "Freight [tonne-km/year]", colnames == "Diesel [from Dist.]") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$e, LastStage == IEATools::last_stages$services, matnames == "L_pxp", rownames == "Freight [tonne-km/year]", colnames == "Diesel [from Dist.]") %>%
     dplyr::select(matvals) %>%
     unlist() |>
     unname() |>
     expect_equal(142100.9049224)
   L %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$useful, matnames == "L_pxp", rownames == "Crude [from Dist.]", colnames == "NG [from Dist.]") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$e, LastStage == IEATools::last_stages$useful, matnames == "L_pxp", rownames == "Crude [from Dist.]", colnames == "NG [from Dist.]") %>%
     dplyr::select(matvals) %>%
     unlist() |>
     unname() |>
     expect_equal(0.006179423)
   L %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, matnames == "L_pxp", rownames == "Crude [from Dist.]", colnames == "Petrol") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$x, LastStage == IEATools::last_stages$services, matnames == "L_pxp", rownames == "Crude [from Dist.]", colnames == "Petrol") %>%
     dplyr::select(matvals) %>%
     unlist() |>
     unname() |>
     expect_equal(1.1251085047589)
   L %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "L_pxp", rownames == "Freight [tonne-km/year]", colnames == "LTH") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$e, LastStage == IEATools::last_stages$services, matnames == "L_pxp", rownames == "Freight [tonne-km/year]", colnames == "LTH") %>%
     dplyr::select(matvals) %>%
     unlist() |>
     unname() |>
@@ -312,29 +312,29 @@ test_that("calculating IO matrices works as expected", {
     tidyr::spread(key = matrix.name, value = matrix) %>%
     calc_io_mats() %>%
     # Look at the L matrices, because they depend on everything else.
-    dplyr::select(Country, Year, Energy.type, Last.stage, L_ixp, L_pxp) %>%
+    dplyr::select(Country, Year, EnergyType, LastStage, L_ixp, L_pxp) %>%
     tidyr::gather(key = "matnames", value = "matvals", L_ixp, L_pxp) %>%
     matsindf::expand_to_tidy(drop = 0)
   L_mats %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "L_ixp", rownames == "Power plants", colnames == "Crude [from Fields]") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$e, LastStage == IEATools::last_stages$final, matnames == "L_ixp", rownames == "Power plants", colnames == "Crude [from Fields]") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
     expect_equal(0.0005505690518990)
   L_mats %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "L_pxp", rownames == "NG [from Wells]", colnames == "MD [from Truck engines]") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$e, LastStage == IEATools::last_stages$services, matnames == "L_pxp", rownames == "NG [from Wells]", colnames == "MD [from Truck engines]") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
     expect_equal(0.0672028677695680)
   L_mats %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$useful, matnames == "L_pxp", rownames == "Elect [from Grid]", colnames == "Light") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$e, LastStage == IEATools::last_stages$useful, matnames == "L_pxp", rownames == "Elect [from Grid]", colnames == "Light") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
     expect_equal(5.097294813549)
   L_mats %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, matnames == "L_ixp", rownames == "Oil fields", colnames == "MD [from Car engines]") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$x, LastStage == IEATools::last_stages$services, matnames == "L_ixp", rownames == "Oil fields", colnames == "MD [from Car engines]") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
@@ -460,7 +460,7 @@ test_that("calc_G() is an alias for calc_L()", {
 test_that("calc_L() works as expected for downstream swim", {
   io_mats <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
-    # Last.stage == "Services" has unit inhomogeniety and bad results.
+    # LastStage == "Services" has unit inhomogeniety and bad results.
     dplyr::filter(!(.data[[Recca::psut_cols$last_stage]] %in% "Services")) %>%
     calc_yqfgW() %>%
     calc_A(direction = "downstream") %>%
@@ -483,11 +483,11 @@ test_that("calc_L() works as expected for downstream swim", {
 test_that("calc_io_mats() works for downstream swim", {
   G_mats <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
-    # Last.stage == "Services" has unit inhomogeniety and bad results.
-    dplyr::filter(Last.stage != "Services") %>%
+    # LastStage == "Services" has unit inhomogeniety and bad results.
+    dplyr::filter(LastStage != "Services") %>%
     calc_io_mats(direction = "Ghosh") %>%
     # Look at the G matrices, because they depend on everything else.
-    dplyr::select(Country, Year, Energy.type, Last.stage, G_ixp, G_pxp)
+    dplyr::select(Country, Year, EnergyType, LastStage, G_ixp, G_pxp)
   # Make sure these results match expected results by testing a few values.
   expect_equal(G_mats$G_pxp[[1]]["Crude [from Dist.]", "Crude [from Fields]"], 0.9978994404)
   expect_equal(G_mats$G_pxp[[2]]["Elect [from Grid]", "Crude [from Fields]"], 0.0002175612368146)

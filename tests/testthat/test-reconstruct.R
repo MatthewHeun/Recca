@@ -28,7 +28,7 @@ test_that("new_Y() works as expected", {
   # Try with Y_prime <- Y, thereby simply trying to duplicate the original U and V matrices
   Reconstructed <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, R, U, U_feed, U_EIOU, r_EIOU, V, Y, S_units) %>%
+    dplyr::select(Country, Year, EnergyType, LastStage, R, U, U_feed, U_EIOU, r_EIOU, V, Y, S_units) %>%
     calc_io_mats() %>%
     dplyr::mutate(
       Y_prime = Y
@@ -73,41 +73,53 @@ test_that("new_Y() works as expected", {
       Y_prime = list(Y_prime_finalE, Y_prime_servicesE, Y_prime_usefulE, Y_prime_servicesX)
     ) %>%
     new_Y() %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, R_prime, U_prime, V_prime) %>%
+    dplyr::select(Country, Year, EnergyType, LastStage, R_prime, U_prime, V_prime) %>%
     tidyr::gather(key = "matnames", value = "matvals", R_prime, U_prime, V_prime) %>%
     matsindf::expand_to_tidy(drop = 0)
   Reconstructed_Residential %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "U_prime", rownames == "Crude [from Dist.]", colnames == "Crude dist.") %>%
+    dplyr::filter(.data[[Recca::psut_cols$energy_type]] == IEATools::energy_types$e,
+                  .data[[Recca::psut_cols$last_stage]] == IEATools::last_stages$final,
+                  matnames == "U_prime", rownames == "Crude [from Dist.]", colnames == "Crude dist.") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
     expect_equal(0.3481179450)
   Reconstructed_Residential %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$useful, matnames == "V_prime", rownames == "Truck engines", colnames == "MD [from Truck engines]") %>%
+    dplyr::filter(.data[[Recca::psut_cols$energy_type]] == IEATools::energy_types$e,
+                  .data[[Recca::psut_cols$last_stage]] == IEATools::last_stages$useful,
+                  matnames == "V_prime", rownames == "Truck engines", colnames == "MD [from Truck engines]") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
     expect_equal(7.748625)
   Reconstructed_Residential %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, matnames == "V_prime", rownames == "Gas wells & proc.", colnames == "NG [from Wells]") %>%
+    dplyr::filter(.data[[Recca::psut_cols$energy_type]] == IEATools::energy_types$x,
+                  .data[[Recca::psut_cols$last_stage]] == IEATools::last_stages$services,
+                  matnames == "V_prime", rownames == "Gas wells & proc.", colnames == "NG [from Wells]") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
     expect_equal(16220.3637987185)
   Reconstructed_Residential %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, matnames == "U_prime", rownames == "Elect", colnames == "Elect. grid") %>%
+    dplyr::filter(.data[[Recca::psut_cols$energy_type]] == IEATools::energy_types$x,
+                  .data[[Recca::psut_cols$last_stage]] == IEATools::last_stages$services,
+                  matnames == "U_prime", rownames == "Elect", colnames == "Elect. grid") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
     expect_equal(6238.6014610456)
   Reconstructed_Residential %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, matnames == "R_prime", rownames == "Resources [of NG]", colnames == "NG") %>%
+    dplyr::filter(.data[[Recca::psut_cols$energy_type]] == IEATools::energy_types$e,
+                  .data[[Recca::psut_cols$last_stage]] == IEATools::last_stages$final,
+                  matnames == "R_prime", rownames == "Resources [of NG]", colnames == "NG") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
     expect_equal(16356.84944)
   Reconstructed_Residential %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$useful, matnames == "R_prime", rownames == "Resources [of Crude]", colnames == "Crude") %>%
+    dplyr::filter(.data[[Recca::psut_cols$energy_type]] == IEATools::energy_types$e,
+                  .data[[Recca::psut_cols$last_stage]] == IEATools::last_stages$useful,
+                  matnames == "R_prime", rownames == "Resources [of Crude]", colnames == "Crude") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
@@ -116,7 +128,7 @@ test_that("new_Y() works as expected", {
   # Double Y matrix
   Reconstructed_Double_Y <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, R, U, U_feed, V, Y, r_EIOU, S_units) %>%
+    dplyr::select(Country, Year, EnergyType, LastStage, R, U, U_feed, V, Y, r_EIOU, S_units) %>%
     calc_io_mats() %>%
     dplyr::mutate(
       Y_prime = matsbyname::hadamardproduct_byname(Y, 2)
@@ -172,7 +184,7 @@ test_that("new_Y() works as expected", {
   # Test to define a NULL new Y matrix
   Reconstructed_NULL <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, R, U, U_feed, U_EIOU, r_EIOU, V, Y, S_units) %>%
+    dplyr::select(Country, Year, EnergyType, LastStage, R, U, U_feed, U_EIOU, r_EIOU, V, Y, S_units) %>%
     calc_io_mats() %>%
     dplyr::mutate(
       Y_prime = matsbyname::select_cols_byname(
@@ -183,9 +195,6 @@ test_that("new_Y() works as expected", {
     Recca::new_Y(
       Y_prime = "Y_prime"
     )
-
-  # Reconstructed_NULL %>%
-  #   dplyr::filter(! is.null(R_prime))
 
   expect_equal(Reconstructed_NULL$Y_prime[[1]], NULL)
   expect_equal(Reconstructed_NULL$R_prime[[1]], NULL)
@@ -235,17 +244,21 @@ test_that("new_k_ps() works as expected", {
 
 
   new_UV_noR %<>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, U_prime, V_prime) %>%
+    dplyr::select(Country, Year, EnergyType, LastStage, U_prime, V_prime) %>%
     tidyr::gather(key = "matnames", value = "matvals", U_prime, V_prime) %>%
     matsindf::expand_to_tidy(drop = 0)
   new_UV_noR %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "U_prime", rownames == "FF elec", colnames == "Buildings") %>%
+    dplyr::filter(.data[[Recca::psut_cols$energy_type]] == IEATools::energy_types$e,
+                  .data[[Recca::psut_cols$last_stage]] == IEATools::last_stages$services,
+                  matnames == "U_prime", rownames == "FF elec", colnames == "Buildings") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
     expect_equal(12.1)
   new_UV_noR %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "V_prime", rownames == "Buildings", colnames == "Bldg services") %>%
+    dplyr::filter(.data[[Recca::psut_cols$energy_type]] == IEATools::energy_types$e,
+                  .data[[Recca::psut_cols$last_stage]] == IEATools::last_stages$services,
+                  matnames == "V_prime", rownames == "Buildings", colnames == "Bldg services") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
@@ -254,7 +267,7 @@ test_that("new_k_ps() works as expected", {
   # This test below is part of the R_prime matrix.
   # So we need to change the new_k_ps() matrix before implementing the test.
   # expect_equivalent(new_UV_noR %>%
-  #                     dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "V_prime", rownames == "Resources - Rens", colnames == "Rens") %>%
+  #                     dplyr::filter(EnergyType == IEATools::energy_types$e, LastStage == IEATools::last_stages$services, matnames == "V_prime", rownames == "Resources - Rens", colnames == "Rens") %>%
   #                     dplyr::select(matvals) %>%
   #                     unlist(),
   #                   49.75)
@@ -262,17 +275,21 @@ test_that("new_k_ps() works as expected", {
   # Now test when an R matrix is present.
   new_UV_withR <- io_mats %>%
     new_k_ps() %>%
-    dplyr::select(Country, Year, Energy.type, Last.stage, R_prime, U_prime, V_prime) %>%
+    dplyr::select(Country, Year, EnergyType, LastStage, R_prime, U_prime, V_prime) %>%
     tidyr::gather(key = "matnames", value = "matvals", R_prime, U_prime, V_prime) %>%
     matsindf::expand_to_tidy(drop = 0)
   new_UV_withR %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "U_prime", rownames == "FF elec", colnames == "Buildings") %>%
+    dplyr::filter(.data[[Recca::psut_cols$energy_type]] == IEATools::energy_types$e,
+                  .data[[Recca::psut_cols$last_stage]] == IEATools::last_stages$services,
+                  matnames == "U_prime", rownames == "FF elec", colnames == "Buildings") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
     expect_equal(12.1)
   new_UV_withR %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "V_prime", rownames == "Buildings", colnames == "Bldg services") %>%
+    dplyr::filter(.data[[Recca::psut_cols$energy_type]] == IEATools::energy_types$e,
+                  .data[[Recca::psut_cols$last_stage]] == IEATools::last_stages$services,
+                  matnames == "V_prime", rownames == "Buildings", colnames == "Bldg services") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
@@ -281,13 +298,15 @@ test_that("new_k_ps() works as expected", {
   # It is found in the R_prime matrix.
   # So we should get an error with this one.
   expect_equal(new_UV_withR %>%
-                 dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "V_prime", rownames == "Resources - Rens", colnames == "Rens") %>%
+                 dplyr::filter(.data[[Recca::psut_cols$energy_type]] == IEATools::energy_types$e,
+                               .data[[Recca::psut_cols$last_stage]] == IEATools::last_stages$services,
+                               matnames == "V_prime", rownames == "Resources - Rens", colnames == "Rens") %>%
                  dplyr::select(matvals) %>%
                  unlist() %>%
                  length(),
                0)
   # expect_equivalent(new_UV_withR %>%
-  #                     dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, matnames == "R_prime", rownames == "Resources - Rens", colnames == "Rens") %>%
+  #                     dplyr::filter(EnergyType == IEATools::energy_types$e, LastStage == IEATools::last_stages$services, matnames == "R_prime", rownames == "Resources - Rens", colnames == "Rens") %>%
   #                     dplyr::select(matvals) %>%
   #                     unlist(),
   #                   49.75)
@@ -354,9 +373,9 @@ test_that("1-industry ECC works with new_k_ps()", {
 test_that("new_R_ps() works as expected", {
   setup <- UKEnergy2000mats %>%
     tidyr::spread(key = "matrix.name", value = "matrix") %>%
-    # When Last.stage is "services", we get units problems.
-    # Avoid by using only ECCs with "Final" and "Useful" as the Last.stage.
-    dplyr::filter(Last.stage != IEATools::last_stages$services) %>%
+    # When LastStage is "services", we get units problems.
+    # Avoid by using only ECCs with "Final" and "Useful" as the LastStage.
+    dplyr::filter(.data[[Recca::psut_cols$last_stage]] != IEATools::last_stages$services) %>%
     # Calculate the input-output matrices which are inputs to the new_R function.
     calc_io_mats(direction = "downstream") %>%
     # Make an R_prime matrix that gives the same the resource inputs to the economy.
@@ -397,9 +416,9 @@ test_that("new_R_ps() works as expected", {
 
   doubleR <- UKEnergy2000mats %>%
     tidyr::spread(key = "matrix.name", value = "matrix") %>%
-    # When Last.stage is "services", we get units problems.
-    # Avoid by using only ECCs with "Final" and "Useful" as the Last.stage.
-    dplyr::filter(Last.stage != IEATools::last_stages$services) %>%
+    # When LastStage is "services", we get units problems.
+    # Avoid by using only ECCs with "Final" and "Useful" as the LastStage.
+    dplyr::filter(.data[[Recca::psut_cols$last_stage]] != IEATools::last_stages$services) %>%
     # Calculate the input-output matrices which are inputs to the new_R function.
     calc_io_mats(direction = "downstream") %>%
     # Make an R_prime matrix that gives twice the resource inputs to the economy.
@@ -441,9 +460,9 @@ test_that("new_R_ps() works as expected", {
   # to use new calc_io_mats(direction =- "downstream").
   unitaryR <- UKEnergy2000mats %>%
     tidyr::spread(key = "matrix.name", value = "matrix") %>%
-    # When Last.stage is "services", we get units problems.
-    # Avoid by using only ECCs with "Final" and "Useful" as the Last.stage.
-    dplyr::filter(Last.stage != IEATools::last_stages$services) %>%
+    # When LastStage is "services", we get units problems.
+    # Avoid by using only ECCs with "Final" and "Useful" as the LastStage.
+    dplyr::filter(.data[[Recca::psut_cols$last_stage]] != IEATools::last_stages$services) %>%
     dplyr::mutate(
       R_prime = matsbyname::hadamardproduct_byname(2, R)
     )
@@ -475,7 +494,7 @@ test_that("new_R_ps() works as expected", {
 
   # Test when the units on Products in U are not all same.
   # Under those conditions, we expect that U_prime, V_prime, and Y_prime are all NA.
-  # Input units are not all same for the Last.stage = "services" cases.
+  # Input units are not all same for the LastStage = "services" cases.
   # So don't filter out the "services" rows.
 
   # <<commenting begins>>
@@ -507,7 +526,7 @@ test_that("remove_neu() works correctly for industries", {
 
   without_residential_mats <- UKEnergy2000mats |>
     tidyr::spread(key = matrix.name, value = matrix) |>
-    dplyr::filter(Last.stage != "Services") |>
+    dplyr::filter(.data[[Recca::psut_cols$last_stage]] != "Services") |>
     Recca::remove_neu(neu_industry_pattern = "^Residential")
 
   # Verify that "Residential" names have been removed from the Y_prime matrices.
@@ -543,7 +562,7 @@ test_that("remove_neu() works correctly for products", {
   # Before removing NEU
   with_ng_mats <- UKEnergy2000mats |>
     tidyr::spread(key = matrix.name, value = matrix) |>
-    dplyr::filter(Last.stage != "Services")
+    dplyr::filter(.data[[Recca::psut_cols$last_stage]] != "Services")
   without_ng_mats <- with_ng_mats |>
     # Eliminate natural gas and MD rows in the Y matrix
     Recca::remove_neu(neu_product_pattern = RCLabels::make_or_pattern(c("NG", "MD"), pattern_type = "leading"))

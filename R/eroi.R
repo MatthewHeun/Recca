@@ -26,7 +26,7 @@
 #' @examples
 #' library(IEATools)
 #' UKEnergy2000mats %>%
-#'    dplyr::filter(Last.stage == "Final", Energy.type == "E") %>%
+#'    dplyr::filter(LastStage == "Final", EnergyType == "E") %>%
 #'    tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") %>%
 #'    calc_io_mats() %>%
 #'    calc_E_EIOU()
@@ -112,7 +112,7 @@ calc_E_EIOU <- function(.iomats = NULL,
 #' @examples
 #' library(IEATools)
 #' UKEnergy2000mats %>%
-#'   dplyr::filter(Last.stage == "Final", Energy.type == "E") %>%
+#'   dplyr::filter(LastStage == "Final", EnergyType == "E") %>%
 #'   tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") %>%
 #'   calc_io_mats() %>%
 #'   calc_E_EIOU() %>%

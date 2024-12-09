@@ -21,8 +21,9 @@
 #' \item{S_units}{The name of a column in a wide-by-matrices data frame containing unit summation (`S_units`) matrices.}
 #' \item{Y_fu_details}{The name of a column in a wide-by-matrices data frame containing details of the final-to-useful extension for final demand.}
 #' \item{U_eiou_fu_details}{The name of a column in a wide-by-matrices data frame containing details of the final-to-useful extension for energy industry own use.}
-#' \item{matvals}{The name of a column in a tidy data frame containing matrices.}
+#' \item{IncludesNEU}{The name of a column containing `TRUE` or `FALSE` for whether non-energy use is include in the energy conversion chain for the associated row.}
 #' \item{matnames}{The name of a column in a tidy data frame containing matrix names.}
+#' \item{matvals}{The name of a column in a tidy data frame containing matrices.}
 #' \item{sector}{The name of a column in a tidy data frame containing sector names.}
 #' \item{country}{The name of a column in a tidy data frame containing names of countries.}
 #' \item{year}{The name of a column in a tidy data frame containing years.}
@@ -179,13 +180,13 @@
 #' \describe{
 #'   \item{Country}{country, GB (Great Britain, only one country)}
 #'   \item{Year}{year, 2000 (only one year)}
-#'   \item{Ledger.side}{Supply or Consumption}
-#'   \item{Flow.aggregation.point}{tells where each row should be aggregated}
-#'   \item{Energy.type}{E.ktoe (for energy) or X.ktoe (for exergy)}
-#'   \item{Last.stage}{tells the final stage of the energy conversion chain: final, useful, or services}
+#'   \item{LedgerSide}{Supply or Consumption}
+#'   \item{FlowAggregationPoint}{tells where each row should be aggregated}
+#'   \item{EnergyType}{E.ktoe (for energy) or X.ktoe (for exergy)}
+#'   \item{LastStage}{tells the final stage of the energy conversion chain: final, useful, or services}
 #'   \item{Flow}{the Industry or Sector involved in this flow}
 #'   \item{Product}{the energy product involved in this flow}
-#'   \item{E.dot}{value of the energy, exergy, or service flow in ktoe}
+#'   \item{Edot}{value of the energy, exergy, or service flow in ktoe}
 #'   \item{Unit}{unit in which quantity is expressed}
 #' }
 #' @source \doi{10.1016/j.apenergy.2018.05.109}
@@ -211,8 +212,8 @@
 #' \describe{
 #'   \item{Country}{country, GB (Great Britain, only one country)}
 #'   \item{Year}{year, 2000 (only one year)}
-#'   \item{Energy.type}{E.ktoe (for energy) or X.ktoe (for exergy)}
-#'   \item{Last.stage}{tells the final stage of the energy conversion chain: final, useful, or services}
+#'   \item{EnergyType}{E.ktoe (for energy) or X.ktoe (for exergy)}
+#'   \item{LastStage}{tells the final stage of the energy conversion chain: final, useful, or services}
 #'   \item{matrix.name}{gives the name of the matrix}
 #'   \item{matrix}{gives use (U), make (V), final demand (Y), r_EIOU, and S_units matrices}
 #' }
@@ -235,13 +236,13 @@
 #' \describe{
 #'   \item{Country}{country, (Example, only one country)}
 #'   \item{Year}{year, 2000 (only one year as an example)}
-#'   \item{Ledger.side}{Supply or Consumption}
-#'   \item{Flow.aggregation.point}{tells where each row should be aggregated}
-#'   \item{Energy.type}{E.ktoe (for energy) or X.ktoe (for exergy)}
-#'   \item{Last.stage}{tells the final stage of the energy conversion chain: services is the only entry here}
+#'   \item{LedgerSide}{Supply or Consumption}
+#'   \item{FlowAggregationPoint}{tells where each row should be aggregated}
+#'   \item{EnergyType}{E (for energy) or X (for exergy)}
+#'   \item{LastStage}{tells the final stage of the energy conversion chain: services is the only entry here}
 #'   \item{Flow}{the Industry or Sector involved in this flow}
 #'   \item{Product}{the energy product involved in this flow}
-#'   \item{E.dot}{value of the energy, exergy, or service flow in ktoe}
+#'   \item{Edot}{value of the energy, exergy, or service flow in ktoe}
 #'   \item{Unit}{unit in which quantity is expressed}
 #' }
 "PerfectSubtidy"
@@ -262,8 +263,8 @@
 #' \describe{
 #'   \item{Country}{country, (Example, only one country)}
 #'   \item{Year}{year, 2000 (only one year as an example)}
-#'   \item{Energy.type}{E.ktoe (for energy) or X.ktoe (for exergy)}
-#'   \item{Last.stage}{tells the final stage of the energy conversion chain: services is the only entry here}
+#'   \item{EnergyType}{E.ktoe (for energy) or X.ktoe (for exergy)}
+#'   \item{LastStage}{tells the final stage of the energy conversion chain: services is the only entry here}
 #'   \item{matrix.name}{gives the name of the matrix}
 #'   \item{matrix}{gives use (U), make (V), final demand (Y), r_EIOU, and S_units matrices}
 #' }
@@ -284,11 +285,11 @@
 
 #' A list of energy types
 #'
-#' A list of energy type options in the "Energy.type" column.
+#' A list of energy type options in the "EnergyType" column.
 #'
 #' @format A list with `r length(energy_types)` entries.
 #' \describe{
-#'   \item{energy_type}{The name of the energy type column, "Energy.type".}
+#'   \item{energy_type}{The name of the energy type column, "EnergyType".}
 #'   \item{e}{energy}
 #'   \item{x}{exergy}
 #' }

@@ -70,7 +70,7 @@ library(matsbyname)
 library(tidyr)
 UKEnergy2000mats \%>\%
   spread(key = matrix.name, value = matrix) \%>\%
-  select(Country, Year, Energy.type, Last.stage, R, U, U_feed, V, Y, r_EIOU, S_units) \%>\%
+  select(Country, Year, EnergyType, LastStage, R, U, U_feed, V, Y, r_EIOU, S_units) \%>\%
   calc_io_mats() \%>\%
   mutate(
     # Give new Y matrices that are double the existing Y matrices

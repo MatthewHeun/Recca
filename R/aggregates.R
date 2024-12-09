@@ -190,8 +190,8 @@ primary_aggregates <- function(.sutdata = NULL,
 #'   dplyr::mutate(
 #'     fd_sectors = rep(list(c("Residential", "Transport")), times = nrow(.))
 #'   ) %>%
-#'   dplyr::filter(Last.stage %in% c(IEATools::last_stages$final,
-#'                                   IEATools::last_stages$useful)) %>%
+#'   dplyr::filter(LastStage %in% c(IEATools::last_stages$final,
+#'                                  IEATools::last_stages$useful)) %>%
 #'   finaldemand_aggregates(fd_sectors = "fd_sectors", by = "Sector")
 finaldemand_aggregates <- function(.sutdata = NULL,
                                    fd_sectors,
@@ -384,6 +384,7 @@ region_aggregates <- function(.sut_data,
 
   U_present <- matrix_cols[["U"]] %in% colnames(.sut_data)
   r_eiou_present <- matrix_cols[["r_eiou"]] %in% colnames(.sut_data)
+  S_units_present <- matrix_cols[["S_units"]] %in% colnames(.sut_data)
   tidy_df <- .sut_data |>
     # Get rid of columns we don't need.
     # We'll re-calculate later.
@@ -432,16 +433,19 @@ region_aggregates <- function(.sut_data,
                                                                    .data[[ matrix_cols[["U"]] ]]) |>
           matsbyname::replaceNaN_byname(val = 0))
   }
-  out |>
-    dplyr::mutate(
-      # Recalculate S_units matrices
-      # S_units will be summed to give (possibly) non-unity values.
-      # Divide by itself and replace NaN by 0 to
-      # get back to unity values when non-zero.
-      "{matrix_cols[['S_units']]}" := matsbyname::quotient_byname(.data[[ matrix_cols[["S_units"]] ]],
-                                                                  .data[[ matrix_cols[["S_units"]] ]])  %>%
-        matsbyname::replaceNaN_byname(val = 0)
-    )
+  if (S_units_present) {
+    out <- out |>
+      dplyr::mutate(
+        # Recalculate S_units matrices
+        # S_units will be summed to give (possibly) non-unity values.
+        # Divide by itself and replace NaN by 0 to
+        # get back to unity values when non-zero.
+        "{matrix_cols[['S_units']]}" := matsbyname::quotient_byname(.data[[ matrix_cols[["S_units"]] ]],
+                                                                    .data[[ matrix_cols[["S_units"]] ]])  %>%
+          matsbyname::replaceNaN_byname(val = 0)
+      )
+  }
+  return(out)
 }
 
 

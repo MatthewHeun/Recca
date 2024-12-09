@@ -8,18 +8,34 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
-# Recca 0.1.55 (2024-02-06)
+## Recca 0.1.56 (2024-12-09)
+
+* Significantly improved some energy balance error messages.
+  The source of the error is now reported.
+* Added row and column types to the result of `calc_eta_i()`.
+* Fixed a bug where missing U_EIOU matrix would cause an error
+  in `extend_to_exergy()`.
+  We create a U_EIOU matrix by multiplying U by 0,
+  thereby keeping the same rows and columns of U.
+* Change column names to remove "." characters
+  that are incompatible with storage in PostgreSQL databases
+  (and maybe others).
+* Fixed many tests and added a few new tests for new features.
+    - Now up to 775 tests, all passing.
+    - Test coverage remains at 100%.
+
+
+## Recca 0.1.55 (2024-02-06) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10627746.svg)](https://doi.org/10.5281/zenodo.10627746)
 
 * Testing now done in parallel.
 * New function `extend_fu_details_to_exergy()` converts
   the final-to-useful details matrices from energy to exergy.
 * New tests for new features.
-    - Now up to 763
-    tests, all passing.
+    - Now up to 763 tests, all passing.
     - Test coverage remains at 100%.
 
 
-# Recca 0.1.54 (2023-12-21) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10420370.svg)](https://doi.org/10.5281/zenodo.10420370)
+## Recca 0.1.54 (2023-12-21) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10420370.svg)](https://doi.org/10.5281/zenodo.10420370)
 
 * Added statement of need to README file.
 * Added `Remotes:` field to `DESCRIPTION` file to assist 
@@ -29,7 +45,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
 
 
-# Recca 0.1.53 (2023-12-10) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10342426.svg)](https://doi.org/10.5281/zenodo.10342426)
+## Recca 0.1.53 (2023-12-10) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10342426.svg)](https://doi.org/10.5281/zenodo.10342426)
 
 * Change to now-standard `gh-pages` branch for pkgdown website.
 * No new tests.
@@ -37,7 +53,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
 
 
-# Recca 0.1.52 (2023-12-01) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10247084.svg)](https://doi.org/10.5281/zenodo.10247084)
+## Recca 0.1.52 (2023-12-01) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10247084.svg)](https://doi.org/10.5281/zenodo.10247084)
 
 * Fixed a bug where `region_aggregates()` would fail when
   no countries to be aggregated were available and
@@ -48,18 +64,18 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
 
 
-# Recca 0.1.51 (2023-11-15) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10137045.svg)](https://doi.org/10.5281/zenodo.10137045)
+## Recca 0.1.51 (2023-11-15) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10137045.svg)](https://doi.org/10.5281/zenodo.10137045)
 
 * Fixed a bug in `calc_agg_eta_pfus()` where
   efficiencies were calculated incorrectly when 
   primary energy was different
-  depending on the value of the `Last.stage` column.
+  depending on the value of the `LastStage` column.
 * No new tests.
     * Still at 748 tests, all passing.
     * Test coverage remains at 100%.
 
 
-# Recca 0.1.50 (2023-11-15) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10136470.svg)](https://doi.org/10.5281/zenodo.10136470)
+## Recca 0.1.50 (2023-11-15) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10136470.svg)](https://doi.org/10.5281/zenodo.10136470)
 
 * New function `calc_agg_eta_pfus()` calculates
   primary, final, useful, and services aggregates and
@@ -69,7 +85,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
 
 
-# Recca 0.1.49 (2023-11-03) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10070427.svg)](https://doi.org/10.5281/zenodo.10070427)
+## Recca 0.1.49 (2023-11-03) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10070427.svg)](https://doi.org/10.5281/zenodo.10070427)
 
 * `remove_neu()` now also removes non-energy use products in the rows of **Y**.
 * Now re-exporting `IEATools::nonenergy_use`.
@@ -78,7 +94,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
 
 
-# Recca 0.1.48 (2023-10-27) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10052140.svg)](https://doi.org/10.5281/zenodo.10052140)
+## Recca 0.1.48 (2023-10-27) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10052140.svg)](https://doi.org/10.5281/zenodo.10052140)
 
 * New function `remove_neu()` eliminates "Non-energy useX"
   (where "X" is any additional string such as " in Industry")
@@ -90,7 +106,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
 
 
-# Recca 0.1.47 (2023-10-23) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10034476.svg)](https://doi.org/10.5281/zenodo.10034476)
+## Recca 0.1.47 (2023-10-23) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10034476.svg)](https://doi.org/10.5281/zenodo.10034476)
 
 * Fixed a bug where EIOU efficiency calculated by calc_eta_fu_Y_eiou()
   gave the **0** matrix.
@@ -100,7 +116,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
 
 
-# Recca 0.1.46 (2023-10-16) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10016873.svg)](https://doi.org/10.5281/zenodo.10016873)
+## Recca 0.1.46 (2023-10-16) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10016873.svg)](https://doi.org/10.5281/zenodo.10016873)
 
 * Minor updates to documentation.
 * The `by` argument to `pfu_aggregates()` now correctly
@@ -110,7 +126,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
 
 
-# Recca 0.1.45 (2023-09-21) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8368788.svg)](https://doi.org/10.5281/zenodo.8368788)
+## Recca 0.1.45 (2023-09-21) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8368788.svg)](https://doi.org/10.5281/zenodo.8368788)
 
 * Complete aggregation vignette.
 * No new tests.
@@ -118,7 +134,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
 
 
-# Recca 0.1.44 (2023-09-21) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8366750.svg)](https://doi.org/10.5281/zenodo.8366750)
+## Recca 0.1.44 (2023-09-21) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8366750.svg)](https://doi.org/10.5281/zenodo.8366750)
 
 * Fixed a bug in `node_edge_list()` that caused failure when 
   `rowtypes` or `coltypes` columns were not present.
@@ -127,7 +143,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
 
 
-# Recca 0.1.43 (2023-08-18) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8264412.svg)](https://doi.org/10.5281/zenodo.8264412)
+## Recca 0.1.43 (2023-08-18) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8264412.svg)](https://doi.org/10.5281/zenodo.8264412)
 
 * Completed the aggregations vignette.
 * New function `pfu_aggregates()` is a work in progress
@@ -149,7 +165,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
 
 
-# Recca 0.1.42 (2023-06-02) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7998165.svg)](https://doi.org/10.5281/zenodo.7998165)
+## Recca 0.1.42 (2023-06-02) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7998165.svg)](https://doi.org/10.5281/zenodo.7998165)
 
 * Fixed a bug where writing `Matrix` objects failed in
   `write_ecc_to_excel()`. 
@@ -163,7 +179,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
 
 
-# Recca 0.1.41 (2023-04-28) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7877495.svg)](https://doi.org/10.5281/zenodo.7877495)
+## Recca 0.1.41 (2023-04-28) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7877495.svg)](https://doi.org/10.5281/zenodo.7877495)
 
 * Responded to policy changes in `matsindf::matsindf_apply()`
   by setting default arguments to `NULL` for several internal functions.
@@ -189,7 +205,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
   
 
-# Recca 0.1.40 (2023-01-25) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7571202.svg)](https://doi.org/10.5281/zenodo.7571202)
+## Recca 0.1.40 (2023-01-25) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7571202.svg)](https://doi.org/10.5281/zenodo.7571202)
 
 * This version contains only fixes to the continuous integration
   build system. 
@@ -204,7 +220,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
 
 
-# Recca 0.1.39 (2023-01-24) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7566435.svg)](https://doi.org/10.5281/zenodo.7566435)
+## Recca 0.1.39 (2023-01-24) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7566435.svg)](https://doi.org/10.5281/zenodo.7566435)
 
 * Tests once again all passing on 
   all test rigs of GitHub Actions.
@@ -305,7 +321,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
 
 
-# Recca 0.1.38 (2022-04-02) [![DOI](https://zenodo.org/badge/116066838.svg)](https://zenodo.org/badge/latestdoi/116066838)
+## Recca 0.1.38 (2022-04-02) [![DOI](https://zenodo.org/badge/116066838.svg)](https://zenodo.org/badge/latestdoi/116066838)
 
 * Removed unnecessary assertion that `matsbyname` is available
   in aggregation functions.
@@ -327,7 +343,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
 
 
-# Recca 0.1.37 (2021-10-13) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5566713.svg)](https://doi.org/10.5281/zenodo.5566713)
+## Recca 0.1.37 (2021-10-13) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5566713.svg)](https://doi.org/10.5281/zenodo.5566713)
 
 * Added details to `Recca` vignette, including additional equations for embodied matrices. 
 * New function `extend_to_exergy()` that calculates
@@ -338,7 +354,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
 
 
-# Recca 0.1.36 (2021-09-10)  [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5500310.svg)](https://doi.org/10.5281/zenodo.5500310)
+## Recca 0.1.36 (2021-09-10)  [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5500310.svg)](https://doi.org/10.5281/zenodo.5500310)
 
 * Get started file updated. Some matrices definitions (**G**, **H**, **E**)
   needed to be updated.
@@ -348,7 +364,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%
 
 
-# Recca 0.1.35 (2021-08-20)  [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5226086.svg)](https://doi.org/10.5281/zenodo.5226086)
+## Recca 0.1.35 (2021-08-20)  [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5226086.svg)](https://doi.org/10.5281/zenodo.5226086)
 
 * R matrix formulation now adopted for input output calculations,
   for upstream and downstream swims, as well as for embodied
@@ -358,7 +374,7 @@ which always resolves to the latest release.
 * Updated to stable and active status badges.
 
 
-# Recca 0.1.34 (2021-04-11)
+## Recca 0.1.34 (2021-04-11)
 
 * Fix lingering problems in R-CMD-check after the move to GitHub Actions
   for continuous integration testing. 
@@ -367,7 +383,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
 
 
-# Recca 0.1.33 (2021-04-11)
+## Recca 0.1.33 (2021-04-11)
 
 * Move from Travis to GitHub Actions for continuous integration testing.
 * No new tests.
@@ -375,7 +391,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
 
 
-# Recca 0.1.32 (2021-03-16)
+## Recca 0.1.32 (2021-03-16)
 
 * Modified aggregation functions to use simpler (but verbose)
   `if` statements to choose aggregation functions.
@@ -386,7 +402,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
 
 
-# Recca 0.1.31 (2021-02-25)
+## Recca 0.1.31 (2021-02-25)
 
 * New argument to aggregation functions: `pattern_type`
   which tells how to match primary and final demand sector names for aggregation.
@@ -395,7 +411,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
 
 
-# Recca 0.1.30 (2021-02-22)
+## Recca 0.1.30 (2021-02-22)
 
 * Fixed bugs in `finaldemand_aggregates()` and `finaldemand_aggregates_with_units()`
   where argument `fd_sectors` was not respected for gross energy aggregation.
@@ -404,7 +420,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
 
 
-# Recca 0.1.29 (2021-02-01)
+## Recca 0.1.29 (2021-02-01)
 
 * A `method_q_calculation` argument has been added to
   the `calc_io_mats()` function.
@@ -412,7 +428,7 @@ which always resolves to the latest release.
   a consumption-side or supply-side perspective.
 
 
-# Recca 0.1.28 (2020-12-23)
+## Recca 0.1.28 (2020-12-23)
 
 * New function `find_p_industry_names()` looks at **R**, **V**, and **Y** matrices 
   to find names of primary industries (industries that produce primary energy).
@@ -423,7 +439,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
 
 
-# Recca 0.1.27 (2020-12-08)
+## Recca 0.1.27 (2020-12-08)
 
 * Move IEA aggregation functions out of this package and into the `IEATools` package.
 * Now using package constants for names of aggregate columns.
@@ -434,7 +450,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
 
 
-# Recca 0.1.26 (2020-12-06)
+## Recca 0.1.26 (2020-12-06)
 
 * `primary_aggregates()`, `finaldemand_aggregates(), and `finaldemand_aggregates_with_units()`
   now require a column of `p_industries` or `fd_sectors` instead of a vector 
@@ -451,7 +467,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
 
 
-# Recca 0.1.25 (2020-09-17)
+## Recca 0.1.25 (2020-09-17)
 
 * New author Emmanuel Aramendia. Welcome!
 * Test coverage now up to 100%.
@@ -471,7 +487,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
 
 
-# Recca 0.1.24 (2020-03-17)
+## Recca 0.1.24 (2020-03-17)
 
 * New tests for new features and old bugs.
     * Now up to 337 tests, all passing.
@@ -480,12 +496,12 @@ which always resolves to the latest release.
 * Calculate `Z_feed` and `A_feed` in `calc_io_mats()`.
 
 
-# Recca 0.1.23 (2020-03-17)
+## Recca 0.1.23 (2020-03-17)
 
 * Added a `...` argument to `make_sankey()`, which passes arguments to `networkD3::sankeyNetwork()`.
 
 
-# Recca 0.1.22 (2020-05-02)
+## Recca 0.1.22 (2020-05-02)
 
 * Fixed a bug in `primary_aggregates()`.
   `primary_aggregates()` had been assuming that either the **R** or the **V** matrix (but not both) 
@@ -501,7 +517,7 @@ which always resolves to the latest release.
   Everything seems to be working now.
 
 
-# Recca 0.1.21 (2020-03-27)
+## Recca 0.1.21 (2020-03-27)
 
 * Now up to 332 tests, all of which pass.
 * Test coverage now up to 100%.
@@ -509,7 +525,7 @@ which always resolves to the latest release.
   with its own tolerance, by default `1e-6`.
 
 
-# Recca 0.1.20 (2020-03-27)
+## Recca 0.1.20 (2020-03-27)
 
 * Completed the conversion of the entire package
   to enable use of `R` matrices in the PSUT framework.
@@ -525,7 +541,7 @@ which always resolves to the latest release.
 * Fixed typos in `Recca.Rmd` vignette.
 
 
-# Recca 0.1.19 (2020-02-19)
+## Recca 0.1.19 (2020-02-19)
 
 * Removed dependency on package `qgraph`.
   `qgraph` depended upon `graph`, 
@@ -537,7 +553,7 @@ which always resolves to the latest release.
   at a later date.
 
 
-# Recca 0.1.18 (2020-01-17)
+## Recca 0.1.18 (2020-01-17)
 
 * Updates to synchronize with recent changes in other packages.
   In particular, there was one place where `group`ing on a column
@@ -547,13 +563,13 @@ which always resolves to the latest release.
   Grouping and sorting happens only for the rows without `NA` values.
 
 
-# Recca 0.1.17 (2019-02-25)
+## Recca 0.1.17 (2019-02-25)
 
 * First draft of completed vignette.
 * Removed ecc_layout(). It was not being used, and there is a `create_sankey()` function, anyway.
 
 
-# Recca 0.1.16 (2019-02-16)
+## Recca 0.1.16 (2019-02-16)
 
 * Now automatically building in Travis.
 * Added new `reverse()` function to change flow direction of an ECC.
@@ -565,13 +581,13 @@ which always resolves to the latest release.
 * Test coverage now up to 100%.
 
 
-# Recca 0.1.15 (2019-01-09)
+## Recca 0.1.15 (2019-01-09)
 
 * First draft of `new-functions` vignette now complete, including demonstrations of 
   `new_R_ps()` and `new_k_ps()` functions.
 
 
-# Recca 0.1.14 (2019-01-07)
+## Recca 0.1.14 (2019-01-07)
 
 * New function `make_sankey()` does what it says: makes a Sankey diagram.
   `make_sankey()` is the first function that optionally uses the resource (`R`) matrix.
@@ -579,7 +595,7 @@ which always resolves to the latest release.
 * The vignette describing the `new*()` functions now has a section on `new_R_ps()`.
 
 
-# Recca 0.1.13 (2018-12-21)
+## Recca 0.1.13 (2018-12-21)
 
 * `calc_F_footprint_effects()` now cleans rows and columns 
   (deletes rows and columns containing all 0s)
@@ -589,18 +605,18 @@ which always resolves to the latest release.
   providing a speed boost.
 
 
-# Recca 0.1.12 (2018-12-02)
+## Recca 0.1.12 (2018-12-02)
 
 * Added a vignette discussing interactions among `new_*` functions.
 
 
-# Recca 0.1.11 (2018-12-02)
+## Recca 0.1.11 (2018-12-02)
 
 * Updates to embodied energy calculations
   to conform to updated `matsbyname::hatinv_byname()` which handles `0` values better.
 
 
-# Recca 0.1.10 (2018-11-29)
+## Recca 0.1.10 (2018-11-29)
 
 * Now importing `magrittr` pipe at high level.
 * Now using `matsbyname::hatinv_byname()` function 
@@ -626,7 +642,7 @@ which always resolves to the latest release.
 * Now up to 316 tests.
 
 
-# Recca 0.1.9 (2018-11-08)
+## Recca 0.1.9 (2018-11-08)
 
 * Breaking change: `reconstruct_UV()` --> `new_Y()`.
   This change allows for several `new_*()` functions that assess changes to the ECC
@@ -638,17 +654,17 @@ which always resolves to the latest release.
   test whether products, inputs to all industries, and outputs from all industries are unit-homogeneous.
 
 
-# Recca 0.1.8 (2018-07-27)
+## Recca 0.1.8 (2018-07-27)
 
 * Added new function `node_list` which creates a node list from an edge list.
 
 
-# Recca 0.1.7 (2018-07-26)
+## Recca 0.1.7 (2018-07-26)
 
 * Added new function `edge_list` which creates an edge list from U, V, and Y matrices.
 
 
-# Recca 0.1.6 (2018-07-09)
+## Recca 0.1.6 (2018-07-09)
 
 * Fixed a bug in `verify_IEATable_energy_balance`. 
   `err` --> `as.name(err)`.
@@ -657,23 +673,23 @@ which always resolves to the latest release.
   from `values` --> `matvals`.
 
 
-# Recca 0.1.5 (2018-07-02)
+## Recca 0.1.5 (2018-07-02)
 
 * Added a column in the output of `verify_SUT_industry_production` that 
   indicates which industries are problematic.
 
 
-# Recca 0.1.4 (2018-06-28)
+## Recca 0.1.4 (2018-06-28)
 
 * Fixed a bug in the `verify_IEATable_energy_balance` function: !!err --> !!as.name(err)
 
 
-# Recca 0.1.3 (2018-06-27)
+## Recca 0.1.3 (2018-06-27)
 
 * Added `verify_IEATable_energy_balance` function
 
 
-# Recca 0.1.2 (2018-05-20)
+## Recca 0.1.2 (2018-05-20)
 
 * All functions now use `matsindf::matsindf_apply()`.
 * `F` functions now do internal energy balance checks.
@@ -682,7 +698,7 @@ which always resolves to the latest release.
   particularly name changes for `*_colname` arguments.
   
 
-# Recca 0.1.1 (2018-04-16)
+## Recca 0.1.1 (2018-04-16)
 
 * New function `calc_io_mats`: 
   calculate input-output (PSUT version) matrices, including **y**, **q**, **g**, **W**, 
@@ -691,7 +707,7 @@ which always resolves to the latest release.
   Reconstruct the energy conversion chain (new `U` and `V` matrices) from a new final demand matrix (`Y`)
 
 
-# Recca 0.1.0 (2018-04-12)
+## Recca 0.1.0 (2018-04-12)
 
 * Initial version
 * Includes:

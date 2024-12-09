@@ -7,7 +7,7 @@
 \format{
 A list with 3 entries.
 \describe{
-\item{energy_type}{The name of the energy type column, "Energy.type".}
+\item{energy_type}{The name of the energy type column, "EnergyType".}
 \item{e}{energy}
 \item{x}{exergy}
 }
@@ -16,6 +16,6 @@ A list with 3 entries.
 energy_types
 }
 \description{
-A list of energy type options in the "Energy.type" column.
+A list of energy type options in the "EnergyType" column.
 }
 \keyword{datasets}

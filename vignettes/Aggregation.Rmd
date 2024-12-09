@@ -120,11 +120,11 @@ ECCs_for_region_agg <- ECCs |>
   dplyr::mutate(
     Country = c("USA", "GBR", "CAN", "FRA"), 
     Continent = c("NoAmr", "Europe", "NoAmr", "Europe"), 
-    Energy.type = "E", 
-    Last.stage = c("Final", "Services", "Final", "Services")
+    EnergyType = "E", 
+    LastStage = c("Final", "Services", "Final", "Services")
   )
 ECCs_for_region_agg |> 
-  dplyr::select(Country, Continent, Energy.type, Last.stage)
+  dplyr::select(Country, Continent, EnergyType, LastStage)
 ```
 
 Given this modification, 
@@ -278,7 +278,7 @@ pfu_aggs_total <- UKEnergy2000mats |>
 # Look at the column names.
 # The naming scheme is 
 # EX.stage.gn___lsStage
-# EX = energy or exergy aggregate (depending on the value in the Energy.type column)
+# EX = energy or exergy aggregate (depending on the value in the EnergyType column)
 # stage = the stage at which the aggregation is computed
 # gn = whether the aggregate is "gross" or "net"
 # ____ls = the separator (Recca::all_stages$last_stage_sep)
@@ -290,27 +290,27 @@ names(pfu_aggs_total)
 
 # Net primary energy aggregation when last stage is Final
 pfu_aggs_total |>
-  dplyr::filter(Energy.type == "E") |>
+  dplyr::filter(EnergyType == "E") |>
   magrittr::extract2("EX.p_net___lsFinal") |>
   magrittr::extract2(1)
 # Net primary exergy aggregation when last stage is Services
 pfu_aggs_total |>
-  dplyr::filter(Energy.type == "X") |>
+  dplyr::filter(EnergyType == "X") |>
   magrittr::extract2("EX.p_net___lsServices") |>
   magrittr::extract2(1)
 # Gross final energy aggregation when last stage is Useful
 pfu_aggs_total |>
-  dplyr::filter(Energy.type == "E") |>
+  dplyr::filter(EnergyType == "E") |>
   magrittr::extract2("EX.f_gross___lsFinal") |>
   magrittr::extract2(1)
 # Gross useful energy aggregation when last stage is Useful
 pfu_aggs_total |>
-  dplyr::filter(Energy.type == "E") |>
+  dplyr::filter(EnergyType == "E") |>
   magrittr::extract2("EX.u_gross___lsUseful") |>
   magrittr::extract2(1)
 # Net useful energy aggregation when last stage is Useful
 pfu_aggs_total |>
-  dplyr::filter(Energy.type == "E") |>
+  dplyr::filter(EnergyType == "E") |>
   magrittr::extract2("EX.u_net___lsUseful") |>
   magrittr::extract2(1)
 # Calculate PRODUCT aggregates
@@ -322,11 +322,11 @@ pfu_aggs_product <- UKEnergy2000mats |>
 # Note that all results are now vectors which 
 # show aggregation by product
 pfu_aggs_product |>
-  dplyr::filter(Energy.type == "E") |>
+  dplyr::filter(EnergyType == "E") |>
   magrittr::extract2("EX.p_net___lsFinal") |>
   magrittr::extract2(1)
 pfu_aggs_product |>
-  dplyr::filter(Energy.type == "E") |>
+  dplyr::filter(EnergyType == "E") |>
   magrittr::extract2("EX.u_net___lsUseful") |>
   magrittr::extract2(1)
 # Calculate INDUSTRY aggregates
@@ -337,11 +337,11 @@ pfu_aggs_industry <- UKEnergy2000mats |>
   pfu_aggregates(p_industries = p_industries, fd_sectors = fd_sectors,
                  by = "Industry")
 pfu_aggs_industry |>
-  dplyr::filter(Energy.type == "E") |>
+  dplyr::filter(EnergyType == "E") |>
   magrittr::extract2("EX.p_net___lsFinal") |>
   magrittr::extract2(1)
 pfu_aggs_industry |>
-  dplyr::filter(Energy.type == "E") |>
+  dplyr::filter(EnergyType == "E") |>
   magrittr::extract2("EX.u_net___lsUseful") |>
   magrittr::extract2(1)
 ```

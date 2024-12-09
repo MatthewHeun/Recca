@@ -34,7 +34,7 @@
 #' library(dplyr)
 #' library(tidyr)
 #' verify_SUT_energy_balance(UKEnergy2000mats %>%
-#'                             dplyr::filter(Last.stage %in% c("Final", "Useful")) %>%
+#'                             dplyr::filter(LastStage %in% c("Final", "Useful")) %>%
 #'                             tidyr::spread(key = matrix.name, value = matrix),
 #'                           tol = 1e-4)
 verify_SUT_energy_balance <- function(.sutmats = NULL,
@@ -89,16 +89,19 @@ verify_SUT_energy_balance <- function(.sutmats = NULL,
 #' Both product and industry energy balance are verified.
 #' Units (as supplied by the `S_units` matrix) are respected.
 #'
-#' @param .sutmats an SUT-style data frame containing columns
-#' `R` (optionally), `U`, `V`, `Y`, and `S_units`.
-#' @param R resource (`R`) matrix or name of the column in `.sutmats` that contains same. Default is "R".
-#' @param U use (`U`) matrix or name of the column in `.sutmats` that contains same. Default is "U".
-#' @param V make (`V`) matrix or name of the column in `.sutmats`that contains same. Default is "V".
-#' @param Y final demand (`Y`) matrix or name of the column in `.sutmats` that contains same. Default is "Y".
-#' @param S_units `S_units` matrix or name of the column in `.sutmats` that contains same. Default is "S_units".
-#' @param tol the maximum amount by which energy can be out of balance. Default is `1e-6`.
-#' @param SUT_prod_energy_balance the name for booleans telling if product energy is in balance. Default is ".SUT_prod_energy_balance".
-#' @param SUT_ind_energy_balance the name for booleans telling if product energy is in balance. Default is ".SUT_inds_energy_balance".
+#' @param .sutmats An SUT-style data frame containing columns
+#'                 `R` (optionally), `U`, `V`, `Y`, and `S_units`.
+#' @param R Resource (`R`) matrix or name of the column in `.sutmats` that contains same. Default is "R".
+#' @param U Use (`U`) matrix or name of the column in `.sutmats` that contains same. Default is "U".
+#' @param V Make (`V`) matrix or name of the column in `.sutmats`that contains same. Default is "V".
+#' @param Y Final demand (`Y`) matrix or name of the column in `.sutmats` that contains same. Default is "Y".
+#' @param S_units `S_units` A matrix or name of the column in `.sutmats` that contains same. Default is "S_units".
+#' @param U_feed,U_eiou,r_eiou Optional matrices or columns in `.sutmats`.
+#' @param tol The maximum amount by which energy can be out of balance. Default is `1e-6`.
+#' @param matnames,matvals,rowtypes,coltypes,rownames,colnames Column names used internally.
+#' @param prod_diff,ind_diff,ebal_error,product Column names for product and industry energy balance errors.
+#' @param SUT_prod_energy_balanced The name for booleans telling if product energy is in balance. Default is ".SUT_prod_energy_balance".
+#' @param SUT_ind_energy_balanced The name for booleans telling if product energy is in balance. Default is ".SUT_inds_energy_balance".
 #'
 #' @return `.sutmats` with additional columns.
 #'
@@ -111,12 +114,24 @@ verify_SUT_energy_balance <- function(.sutmats = NULL,
 #'                                        tol = 1e-3)
 verify_SUT_energy_balance_with_units <- function(.sutmats = NULL,
                                                  # Input names
-                                                 R = "R", U = "U", V = "V", Y = "Y", S_units = "S_units",
+                                                 R = "R", U = "U", U_feed = "U_feed", U_eiou = "U_EIOU",
+                                                 r_eiou = "r_EIOU", V = "V", Y = "Y", S_units = "S_units",
                                                  # Tolerance
                                                  tol = 1e-6,
-                                                 # Output names
-                                                 SUT_prod_energy_balance = ".SUT_prod_energy_balance",
-                                                 SUT_ind_energy_balance = ".SUT_ind_energy_balance"){
+                                                 # Column names
+                                                 matnames = "matnames",
+                                                 matvals = "matvals",
+                                                 rowtypes = "rowtypes",
+                                                 coltypes = "coltypes",
+                                                 rownames = "rownames",
+                                                 colnames = "colnames",
+                                                 # Output column names
+                                                 prod_diff = ".prod_diff",
+                                                 ind_diff = ".ind_diff",
+                                                 SUT_prod_energy_balanced = ".SUT_prod_energy_balanced",
+                                                 SUT_ind_energy_balanced = ".SUT_ind_energy_balanced",
+                                                 ebal_error = "ebal_error",
+                                                 product = "Product"){
   verify_func <- function(R = NULL, U, V, Y, S_units){
     y <- matsbyname::rowsums_byname(Y)
     if (is.null(R)) {
@@ -128,21 +143,74 @@ verify_SUT_energy_balance_with_units <- function(.sutmats = NULL,
     U_bar <- matsbyname::matrixproduct_byname(matsbyname::transpose_byname(S_units), U)
     RV_bar <- matsbyname::matrixproduct_byname(R_plus_V, S_units)
     W_bar <- matsbyname::matrixproduct_byname(matsbyname::transpose_byname(S_units), W)
-    prodOK <- matsbyname::difference_byname(matsbyname::rowsums_byname(W), y) %>% matsbyname::iszero_byname(tol = tol)
-    indOK <- matsbyname::difference_byname(RV_bar, matsbyname::transpose_byname(W_bar)) %>%
-      matsbyname::difference_byname(matsbyname::transpose_byname(U_bar)) %>% matsbyname::iszero_byname(tol = tol)
-    list(prodOK, indOK) %>% magrittr::set_names(c(SUT_prod_energy_balance, SUT_ind_energy_balance))
+    prod_diffs <- matsbyname::difference_byname(matsbyname::rowsums_byname(W), y)
+    ind_diffs <- matsbyname::difference_byname(RV_bar, matsbyname::transpose_byname(W_bar)) %>%
+      matsbyname::difference_byname(matsbyname::transpose_byname(U_bar))
+    prodOK <- prod_diffs %>%
+      matsbyname::iszero_byname(tol = tol)
+    indOK <- ind_diffs %>%
+      matsbyname::iszero_byname(tol = tol)
+    list(prod_diffs, ind_diffs, prodOK, indOK) %>%
+      magrittr::set_names(c(prod_diff, ind_diff,
+                            SUT_prod_energy_balanced, SUT_ind_energy_balanced))
   }
-  Out <- matsindf::matsindf_apply(.sutmats, FUN = verify_func, R = R, U = U, V = V, Y = Y, S_units = S_units)
-  assertthat::assert_that(all(Out[[SUT_prod_energy_balance]] %>% as.logical()),
-                          msg = paste("Energy not conserved by product in verify_SUT_energy_balance_with_units.",
-                                      "See column",
-                                      SUT_prod_energy_balance))
-  assertthat::assert_that(all(Out[[SUT_ind_energy_balance]] %>% as.logical()),
+  out <- matsindf::matsindf_apply(.sutmats, FUN = verify_func, R = R, U = U, V = V, Y = Y, S_units = S_units)
+  if (!all(out[[SUT_prod_energy_balanced]] %>% as.logical())) {
+    # Find out which products are out of balance.
+    unbalanced <- out |>
+      dplyr::filter(!.data[[SUT_prod_energy_balanced]])
+    errors_for_msg <- unbalanced |>
+      dplyr::mutate(
+        # Eliminate all matrix columns, leaving only metadata columns
+        "{R}" := NULL,
+        "{U}" := NULL,
+        "{U_feed}" := NULL,
+        "{U_eiou}" := NULL,
+        "{r_eiou}" := NULL,
+        "{V}" := NULL,
+        "{Y}" := NULL,
+        "{S_units}" := NULL,
+        # Eliminate other unneeded columns
+        "{ind_diff}" := NULL,
+        "{SUT_prod_energy_balanced}" := NULL,
+        "{SUT_ind_energy_balanced}" := NULL
+      ) |>
+      tidyr::pivot_longer(cols = dplyr::all_of(prod_diff),
+                          names_to = matnames,
+                          values_to = matvals) |>
+      # Expand the error vector to show all unbalances
+      matsindf::expand_to_tidy(matnames = matnames,
+                               matvals = matvals) |>
+      # Filter to only the non-zero error values
+      dplyr::filter(.data[[matvals]] != 0) |>
+      dplyr::mutate(
+        # Get rid of unneeded columns
+        "{matnames}" := NULL,
+        "{rowtypes}" := NULL,
+        "{coltypes}" := NULL,
+        "{colnames}" := NULL
+      ) |>
+      dplyr::rename(
+        "{product}" := dplyr::all_of(rownames),
+        "{ebal_error}" := dplyr::all_of(matvals)
+      ) |>
+      matsindf::df_to_msg()
+    msg <- paste0("Energy not conserved by product in verify_SUT_energy_balance_with_units().\n",
+                  errors_for_msg)
+    stop(msg)
+  }
+  assertthat::assert_that(all(out[[SUT_ind_energy_balanced]] %>% as.logical()),
                           msg = paste("Energy not conserved by industry in verify_SUT_energy_balance_with_units",
                                       "See column",
-                                      SUT_ind_energy_balance))
-  return(Out)
+                                      SUT_ind_energy_balanced))
+  # All checks passed.
+  # Remove unneeded columns.
+  out <- out |>
+    dplyr::mutate(
+      "{prod_diff}" := NULL,
+      "{ind_diff}" := NULL
+    )
+  return(out)
 }
 
 
@@ -162,7 +230,7 @@ verify_SUT_energy_balance_with_units <- function(.sutmats = NULL,
 #' exhibit this problem.
 #'
 #' @param .sutmats an SUT-style data frame containing metadata columns
-#' (typically `Country`, `Year`, `Ledger.side`, `Product`, etc.)
+#' (typically `Country`, `Year`, `LedgerSide`, `Product`, etc.)
 #' and columns of SUT matrices, including `U` and `V`.
 #' @param R resources (**R**) matrix or name of the column in `.sutmats` that contains same. Default is "R".
 #' @param U use (**U**) matrix or name of the column in `.sutmats` that contains same. Default is "U".
@@ -225,16 +293,16 @@ verify_SUT_industry_production <- function(.sutmats = NULL,
 #'
 #' @param .ieatidydata an IEA-style data frame containing grouping columns
 #'        (typically \code{Country}, \code{Year}, \code{Product}, and others),
-#'        a \code{Ledger.side} column, and
+#'        a \code{LedgerSide} column, and
 #'        an energy column (\code{E.ktoe}).
 #'        \code{.ieatidydata} should be grouped prior to sending to this function.
-#' @param ledger.side the name of the column in \code{.ieatidydata}
-#'        that contains ledger side information (a string). Default is "\code{Ledger.side}".
+#' @param LedgerSide the name of the column in \code{.ieatidydata}
+#'        that contains ledger side information (a string). Default is "\code{LedgerSide}".
 #' @param energy the name of the column in \code{.ieatidydata}
 #'        that contains energy data (a string). Default is "\code{E.ktoe}".
-#' @param supply the identifier for supply data in the \code{ledger.side} column (a string).
+#' @param supply the identifier for supply data in the \code{LedgerSide} column (a string).
 #'        Default is "\code{Supply}".
-#' @param consumption the identifier for consumption data in the \code{ledger.side} column (a string).
+#' @param consumption the identifier for consumption data in the \code{LedgerSide} column (a string).
 #'        Default is "\code{Consumption}".
 #' @param err the name of the error column in the output. Default is "\code{.err}".
 #' @param tol the maximum amount by which Supply and Consumption can be out of balance
@@ -248,21 +316,21 @@ verify_SUT_industry_production <- function(.sutmats = NULL,
 #' @examples
 #' library(dplyr)
 #' UKEnergy2000tidy %>%
-#'   filter(Last.stage %in% c("Final", "Useful")) %>%
-#'   group_by(Country, Year, Energy.type, Last.stage) %>%
-#'   verify_IEATable_energy_balance(energy = "E.dot")
+#'   filter(LastStage %in% c("Final", "Useful")) %>%
+#'   group_by(Country, Year, EnergyType, LastStage) %>%
+#'   verify_IEATable_energy_balance(energy = IEATools::iea_cols$e_dot)
 verify_IEATable_energy_balance <- function(.ieatidydata,
                                            # Input column names
-                                           ledger.side = "Ledger.side",
-                                           energy = "E.dot",
-                                           # ledger.side identifiers
+                                           LedgerSide = IEATools::iea_cols$ledger_side,
+                                           energy = IEATools::iea_cols$e_dot,
+                                           # ledger side identifiers
                                            supply = "Supply",
                                            consumption = "Consumption",
                                            # Output column names
                                            err = ".err",
                                            # Tolerance
                                            tol = 1e-6){
-  ledger.side <- as.name(ledger.side)
+  LedgerSide <- as.name(LedgerSide)
   energy <- as.name(energy)
   err <- as.name(err)
   esupply <- as.name("ESupply")
@@ -270,10 +338,10 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 
   EnergyCheck <- dplyr::full_join(
     .ieatidydata %>%
-      dplyr::filter(!!ledger.side == "Supply") %>%
+      dplyr::filter(!!LedgerSide == "Supply") %>%
       dplyr::summarise(!!esupply := sum(!!energy)),
     .ieatidydata %>%
-      dplyr::filter(!!ledger.side == "Consumption") %>%
+      dplyr::filter(!!LedgerSide == "Consumption") %>%
       dplyr::summarise(!!econsumption := sum(!!energy)),
     by = dplyr::group_vars(.ieatidydata)
   ) %>%

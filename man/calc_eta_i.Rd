@@ -21,7 +21,7 @@ calc_eta_i(
 
 \item{S_units}{A string for the name of a column of \strong{S_units} matrices in \code{.sutmats}. Default is \code{Recca::psut_cols$S_units}.)}
 
-\item{eta_i}{The name of the industry efficiency column in output. Default is \code{Recca::psut_cols$S_units}.}
+\item{eta_i}{The name of the industry efficiency column in output. Default is \code{Recca::efficiency_cols$eta_i}.}
 }
 \value{
 \code{.sutmats} with an additional column \code{eta_i}

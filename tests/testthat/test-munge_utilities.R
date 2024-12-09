@@ -1,13 +1,13 @@
 
 test_that("add_matnames works correctly with a prefixed Flow", {
   # Add an exports row to UKEnergy2000tidy
-  new_row <- list(Country = "ZA", Year = 2018, Ledger.side = "Supply",
-                  Flow.aggregation.point = "Total primary energy supply", Energy.type = "E.dot",
-                  Last.stage = "Final", Flow = "Exports", Product = "Crude", E.dot = -42,
+  new_row <- list(Country = "ZA", Year = 2018, LedgerSide = "Supply",
+                  FlowAggregationPoint = "Total primary energy supply", EnergyType = IEATools::iea_cols$e_dot,
+                  LastStage = "Final", Flow = "Exports", Product = "Crude", Edot = -42,
                   Unit = "ktoe")
-  with_export <- UKEnergy2000tidy %>%
+  with_export <- UKEnergy2000tidy |>
     dplyr::bind_rows(new_row)
-  UVY <- with_export %>% IEATools::add_psut_matnames(matnames = "UVY")
+  UVY <- with_export |>  IEATools::add_psut_matnames(matnames = "UVY")
   n_rows <- nrow(UVY)
   # This piece of exports data should be put in the Y matrix, not in the U matrix.
   expect_equal(UVY[["UVY"]][[n_rows]], "Y")
@@ -16,7 +16,7 @@ test_that("add_matnames works correctly with a prefixed Flow", {
 
 test_that("add_matnames identifies resource industries correctly", {
   WithR <- UKEnergy2000tidy %>%
-    dplyr::group_by(Country, Year, Energy.type, Last.stage) %>%
+    dplyr::group_by(Country, Year, EnergyType, LastStage) %>%
     IEATools::add_psut_matnames() %>%
     dplyr::filter(matnames == "R") %>%
     as.data.frame()
@@ -63,36 +63,36 @@ test_that("verify_cols_missing works with a single value", {
 test_that("S_units_from_tidy works as expected", {
 
   S_units_expanded <- UKEnergy2000tidy %>%
-    dplyr::group_by(Country, Year, Energy.type, Last.stage) %>%
+    dplyr::group_by(Country, Year, EnergyType, LastStage) %>%
     S_units_from_tidy() %>%
     tidyr::gather(key = "matnames", value = "matvals", S_units) %>%
     matsindf::expand_to_tidy()
   S_units_expanded %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$final, rownames == "Crude", colnames == "ktoe") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$e, LastStage == IEATools::last_stages$final, rownames == "Crude", colnames == "ktoe") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
     expect_equal(1)
   S_units_expanded %>%
-    dplyr::filter(Energy.type ==IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, rownames == "Crude", colnames == "lumen-hrs/yr") %>%
+    dplyr::filter(EnergyType ==IEATools::energy_types$e, LastStage == IEATools::last_stages$services, rownames == "Crude", colnames == "lumen-hrs/yr") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
     expect_equal(0)
   S_units_expanded %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$e, Last.stage == IEATools::last_stages$services, rownames == "Freight [tonne-km/year]", colnames == "tonne-km/yr") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$e, LastStage == IEATools::last_stages$services, rownames == "Freight [tonne-km/year]", colnames == "tonne-km/yr") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
     expect_equal(1)
   S_units_expanded %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, rownames == "MD [from Car engines]", colnames == "passenger-km/yr") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$x, LastStage == IEATools::last_stages$services, rownames == "MD [from Car engines]", colnames == "passenger-km/yr") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
     expect_equal(0)
   S_units_expanded %>%
-    dplyr::filter(Energy.type == IEATools::energy_types$x, Last.stage == IEATools::last_stages$services, rownames == "Space heating [m3-K]", colnames == "tonne-km/yr") %>%
+    dplyr::filter(EnergyType == IEATools::energy_types$x, LastStage == IEATools::last_stages$services, rownames == "Space heating [m3-K]", colnames == "tonne-km/yr") %>%
     dplyr::select(matvals) %>%
     unlist()|>
     unname() |>
