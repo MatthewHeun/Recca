@@ -8,6 +8,8 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+## Recca 0.1.56 (2024-12-09)
+
 * Significantly improved some energy balance error messages.
   The source of the error is now reported.
 * Added row and column types to the result of `calc_eta_i()`.
@@ -19,7 +21,7 @@ which always resolves to the latest release.
   that are incompatible with storage in PostgreSQL databases
   (and maybe others).
 * Fixed many tests and added a few new tests for new features.
-    - Now up to 774 tests, all passing.
+    - Now up to 775 tests, all passing.
     - Test coverage remains at 100%.
 
 
