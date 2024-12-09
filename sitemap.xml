@@ -1,318 +1,109 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://matthewheun.github.io/Recca/404.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/CODE_OF_CONDUCT.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/CONTRIBUTING.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/articles/Aggregation.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/articles/Recca.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/articles/new-function-interaction.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/articles/new-functions.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/index.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/PerfectSubmats.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/PerfectSubtidy.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/S_units_from_tidy.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/UKEnergy2000mats.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/UKEnergy2000tidy.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/add_edge_ids.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/add_node_ids.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/aggregate_cols.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/all_stages.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/alloc_cols.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/any_start_with.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/calc_A.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/calc_E.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/calc_ERRs_gamma.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/calc_E_EIOU.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/calc_F_footprint_effects.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/calc_GH.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/calc_L.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/calc_M.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/calc_agg_eta_pfus.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/calc_aggregates_from_ecc_prime.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/calc_embodied_EIOU.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/calc_embodied_etas.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/calc_embodied_mats.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/calc_erois.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/calc_eta_fu_Y_eiou.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/calc_eta_i.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/calc_eta_pfd.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/calc_io_mats.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/calc_mats_locations_excel.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/calc_yqfgW.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/chop-doc.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/combine_RV.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/cooling_eu.products.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/data.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/despecified_aggregates.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/edge_list.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/efficiency_cols.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/energy_types.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/euproduct_aggregation_map.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/extend_fu_details_to_exergy.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/extend_to_exergy.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/finaldemand_aggregates.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/find_p_industry_names.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/flows_unit_homogeneous.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/get_all_products_and_industries.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/grouped_aggregates.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/hpm_eu.products.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/hth_eu.products.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/industry_cols.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/inputs_outputs_unit_homogeneous.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/inputs_unit_homogeneous.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/ip_eu.products.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/l_eu.products.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/lth_eu.products.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/make_sankey.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/mechanical_eu.products.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/mth_eu.products.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/neu_eu.products.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/new_R_ps.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/new_Y.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/new_k_ps.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/node_list.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/nonenergy_products.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/outputs_unit_homogeneous.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/pfu_aggregates.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/phi_vec.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/pipe.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/primary_aggregates.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/prod_ind_names_colnames.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/products_unit_homogeneous.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/propulsion_eu.products.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/psut_cols.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/quasi-quote-assign.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/region_aggregates.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/remove_neu.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/replace_html_codes.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/resource_industries.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/reverse.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/row_col_types.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/sankey_cols.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/separate_RV.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/simplify_edge_list.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/startsWith_any_of.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/verify_IEATable_energy_balance.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/verify_SUT_energy_balance.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/verify_SUT_energy_balance_with_units.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/verify_SUT_industry_production.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/verify_chop_energy_sum.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/waste_edges.html</loc>
-  </url>
-  <url>
-    <loc>https://matthewheun.github.io/Recca/reference/write_ecc_to_excel.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://matthewheun.github.io/Recca/404.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/CODE_OF_CONDUCT.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/CONTRIBUTING.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/LICENSE-text.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/LICENSE.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/articles/Aggregation.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/articles/Recca.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/articles/index.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/articles/new-function-interaction.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/articles/new-functions.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/authors.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/index.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/news/index.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/PerfectSubmats.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/PerfectSubtidy.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/S_units_from_tidy.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/UKEnergy2000mats.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/UKEnergy2000tidy.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/add_edge_ids.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/add_node_ids.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/aggregate_cols.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/all_stages.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/alloc_cols.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/any_start_with.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/calc_A.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/calc_E.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/calc_ERRs_gamma.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/calc_E_EIOU.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/calc_F_footprint_effects.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/calc_GH.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/calc_L.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/calc_M.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/calc_agg_eta_pfus.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/calc_aggregates_from_ecc_prime.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/calc_embodied_EIOU.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/calc_embodied_etas.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/calc_embodied_mats.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/calc_erois.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/calc_eta_fu_Y_eiou.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/calc_eta_i.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/calc_eta_pfd.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/calc_io_mats.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/calc_mats_locations_excel.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/calc_yqfgW.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/chop-doc.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/combine_RV.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/cooling_eu.products.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/create_sankey_colour_string.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/data.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/despecified_aggregates.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/edge_list.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/efficiency_cols.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/energy_types.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/euproduct_aggregation_map.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/extend_fu_details_to_exergy.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/extend_to_exergy.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/finaldemand_aggregates.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/find_p_industry_names.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/flows_unit_homogeneous.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/get_all_products_and_industries.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/grouped_aggregates.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/hpm_eu.products.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/hth_eu.products.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/index.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/industry_cols.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/inputs_outputs_unit_homogeneous.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/inputs_unit_homogeneous.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/ip_eu.products.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/l_eu.products.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/lth_eu.products.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/make_sankey.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/mechanical_eu.products.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/mth_eu.products.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/neu_eu.products.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/new_R_ps.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/new_Y.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/new_k_ps.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/node_list.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/nonenergy_products.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/outputs_unit_homogeneous.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/pfu_aggregates.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/phi_vec.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/pipe.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/primary_aggregates.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/prod_ind_names_colnames.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/products_unit_homogeneous.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/propulsion_eu.products.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/psut_cols.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/quasi-quote-assign.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/region_aggregates.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/remove_neu.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/replace_html_codes.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/resource_industries.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/reverse.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/row_col_types.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/sankey_cols.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/separate_RV.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/simplify_edge_list.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/startsWith_any_of.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/verify_IEATable_energy_balance.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/verify_SUT_energy_balance.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/verify_SUT_energy_balance_with_units.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/verify_SUT_industry_production.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/verify_chop_energy_sum.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/waste_edges.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/write_ecc_to_excel.html</loc></url>
 </urlset>
+

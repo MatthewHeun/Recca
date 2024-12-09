@@ -5,83 +5,67 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="Recca">
 <title>new_* functions • Recca</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="new_* functions">
-<meta property="og:description" content="Recca">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="new_* functions">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
-    
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
-    
+
+    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.55</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.56</small>
 
-    
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="../articles/Recca.html">Get started</a>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="../reference/index.html">Reference</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../articles/Recca.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/Aggregation.html">Aggregation</a>
-    <a class="dropdown-item" href="../articles/new-function-interaction.html">new_* function interactions</a>
-    <a class="dropdown-item" href="../articles/new-functions.html">new_* functions</a>
-  </div>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="../articles/Aggregation.html">Aggregation</a></li>
+    <li><a class="dropdown-item" href="../articles/new-function-interaction.html">new_* function interactions</a></li>
+    <li><a class="dropdown-item" href="../articles/new-functions.html">new_* functions</a></li>
+  </ul>
 </li>
-<li class="nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
-<form class="form-inline my-2 my-lg-0" role="search">
-        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
-</form>
-
-      <ul class="navbar-nav">
-<li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/MatthewHeun/Recca/" aria-label="github">
-    <span class="fab fa fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
+</form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/MatthewHeun/Recca/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
-    
+
   </div>
 </nav><div class="container template-article">
 
 
 
+<link href="new-functions_files/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
 <script src="new-functions_files/htmlwidgets-1.6.4/htmlwidgets.js"></script><script src="new-functions_files/d3-4.5.0/d3.min.js"></script><script src="new-functions_files/sankey-1/sankey.js"></script><script src="new-functions_files/sankeyNetwork-binding-0.4/sankeyNetwork.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="" class="logo" alt=""><h1>new_* functions</h1>
+
+      <h1>new_* functions</h1>
                         <h4 data-toc-skip class="author">Matthew Kuperus
 Heun</h4>
             
-            <h4 data-toc-skip class="date">2024-02-07</h4>
+            <h4 data-toc-skip class="date">2024-12-09</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/HEAD/vignettes/new-functions.Rmd" class="external-link"><code>vignettes/new-functions.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/master/vignettes/new-functions.Rmd" class="external-link"><code>vignettes/new-functions.Rmd</code></a></small>
       <div class="d-none name"><code>new-functions.Rmd</code></div>
     </div>
 
@@ -97,26 +81,40 @@ through economies, to analyze energy conversion chains (ECCs).
 Historically, input-output (I-O) analysis has been used to analyze
 “what-if” scenarios involving changes to the production structure of an
 economy. A common scenario asks “how will the structure of intermediate
-industries (represented by <span class="math inline">\(\mathbf{U}\)</span> and <span class="math inline">\(\mathbf{V}\)</span> matrices) change when final
-demand (represented by the <span class="math inline">\(\mathbf{Y}\)</span> matrix) changes?” In the
-economic arena, Leontief’s early work answered this question via a
-matrix inversion that now bears his name, the “Leontief inverse (<span class="math inline">\(\mathbf{L}\)</span>)” <span class="citation">(Leontief 1941)</span>. Analysts with an I-O background
-will know the famous equation <span class="math inline">\(\mathbf{L} =
-(\mathbf{I} - \mathbf{A})^{-1}\)</span>.</p>
+industries (represented by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐔</mi><annotation encoding="application/x-tex">\mathbf{U}</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐕</mi><annotation encoding="application/x-tex">\mathbf{V}</annotation></semantics></math>
+matrices) change when final demand (represented by the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐘</mi><annotation encoding="application/x-tex">\mathbf{Y}</annotation></semantics></math>
+matrix) changes?” In the economic arena, Leontief’s early work answered
+this question via a matrix inversion that now bears his name, the
+“Leontief inverse
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐋</mi><annotation encoding="application/x-tex">\mathbf{L}</annotation></semantics></math>)”
+<span class="citation">(Leontief 1941)</span>. Analysts with an I-O
+background will know the famous equation
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐋</mi><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>𝐈</mi><mo>−</mo><mi>𝐀</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">\mathbf{L} = (\mathbf{I} - \mathbf{A})^{-1}</annotation></semantics></math>.</p>
 <p>The <code>Recca</code> package provides functions that perform
 several “what if” analyses for the analyst. Each function has the name
 <code>new_*</code>, where <code>*</code> indicates the changed matrix or
 portion of the ECC. Some functions have the suffix <code>_ps</code> to
 indicate the functions assume perfect substitution (<code>ps</code>) of
 industry inputs throughout the ECC. The <code>new_*</code> functions
-return the resource (<span class="math inline">\(\mathbf{R}\)</span>),
-use (<span class="math inline">\(\mathbf{U}\)</span>), make (<span class="math inline">\(\mathbf{V}\)</span>), and final demand (<span class="math inline">\(\mathbf{Y}\)</span>) matrices that would be
-present under the conditions given by arguments to the
-<code>new_*</code> functions. Arguments for new or changed versions of
-vectors or matrices are given the suffix <code>_prime</code> in the
-<code>new_*</code> functions. For example, the changed version of the
-use matrix (<span class="math inline">\(\mathbf{U}\)</span>) is called
-<code>U_prime</code>.</p>
+return the resource
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐑</mi><annotation encoding="application/x-tex">\mathbf{R}</annotation></semantics></math>),
+use
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐔</mi><annotation encoding="application/x-tex">\mathbf{U}</annotation></semantics></math>),
+make
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐕</mi><annotation encoding="application/x-tex">\mathbf{V}</annotation></semantics></math>),
+and final demand
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐘</mi><annotation encoding="application/x-tex">\mathbf{Y}</annotation></semantics></math>)
+matrices that would be present under the conditions given by arguments
+to the <code>new_*</code> functions. Arguments for new or changed
+versions of vectors or matrices are given the suffix <code>_prime</code>
+in the <code>new_*</code> functions. For example, the changed version of
+the use matrix
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐔</mi><annotation encoding="application/x-tex">\mathbf{U}</annotation></semantics></math>)
+is called <code>U_prime</code>.</p>
 <p>For the examples that follow, we’ll use one ECC from the
 <code>UKEnergy2000mats</code> data frame which represents a portion of
 the primary and final energy flows through the UK in the year 2000.</p>
@@ -128,23 +126,23 @@ the primary and final energy flows through the UK in the year 2000.</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/MatthewHeun/Recca" class="external-link">Recca</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
 <span><span class="va">OurECC</span> <span class="op">&lt;-</span> <span class="va">UKEnergy2000mats</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Last.stage</span> <span class="op">==</span> <span class="st">"Final"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">LastStage</span> <span class="op">==</span> <span class="st">"Final"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/spread.html" class="external-link">spread</a></span><span class="op">(</span>key <span class="op">=</span> <span class="st">"matrix.name"</span>, value <span class="op">=</span> <span class="st">"matrix"</span><span class="op">)</span></span>
 <span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">OurECC</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 1</span></span>
 <span><span class="co">#&gt; Columns: 12</span></span>
-<span><span class="co">#&gt; $ Country     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "GBR"</span></span>
-<span><span class="co">#&gt; $ Year        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2000</span></span>
-<span><span class="co">#&gt; $ Energy.type <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E"</span></span>
-<span><span class="co">#&gt; $ Last.stage  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final"</span></span>
-<span><span class="co">#&gt; $ R           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[2 x 2]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ r_EIOU      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 9]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ S_units     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 1]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ U           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 9]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ U_EIOU      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[7 x 8]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ U_feed      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 9]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ V           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 10]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ Y           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[4 x 2]&gt;&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt; $ Country    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "GBR"</span></span>
+<span><span class="co">#&gt; $ Year       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2000</span></span>
+<span><span class="co">#&gt; $ EnergyType <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E"</span></span>
+<span><span class="co">#&gt; $ LastStage  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final"</span></span>
+<span><span class="co">#&gt; $ R          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[2 x 2]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ r_EIOU     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 9]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ S_units    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 1]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ U          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 9]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ U_EIOU     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[7 x 8]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ U_feed     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 9]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ V          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 10]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ Y          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[4 x 2]&gt;&gt;</span></span></code></pre></div>
 <p>After a short discussion of the inputs to the <code>new_*</code>
 functions, each type of analysis is described in turn.</p>
 </div>
@@ -157,8 +155,15 @@ of the ECC.</p>
 <div class="section level3">
 <h3 id="matrices-that-describe-the-ecc">Matrices that describe the ECC<a class="anchor" aria-label="anchor" href="#matrices-that-describe-the-ecc"></a>
 </h3>
-<p>The <code>new_*</code> functions take as inputs resource (<span class="math inline">\(\mathbf{R}\)</span>), use (<span class="math inline">\(\mathbf{U}\)</span>), make (<span class="math inline">\(\mathbf{V}\)</span>), and final demand (<span class="math inline">\(\mathbf{Y}\)</span>) matrices that describe the
-ECC.</p>
+<p>The <code>new_*</code> functions take as inputs resource
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐑</mi><annotation encoding="application/x-tex">\mathbf{R}</annotation></semantics></math>),
+use
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐔</mi><annotation encoding="application/x-tex">\mathbf{U}</annotation></semantics></math>),
+make
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐕</mi><annotation encoding="application/x-tex">\mathbf{V}</annotation></semantics></math>),
+and final demand
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐘</mi><annotation encoding="application/x-tex">\mathbf{Y}</annotation></semantics></math>)
+matrices that describe the ECC.</p>
 <p>To look at the ECC, we can draw a Sankey diagram. A Sankey diagram
 for the first row of the <code>UKEnergyMatsWithR</code> data frame is
 given below.</p>
@@ -166,8 +171,8 @@ given below.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span><span class="op">(</span><span class="va">OurECC</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">magrittr</span><span class="fu">::</span><span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="st">"Sankey"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co"># Extracts the "Sankey" column</span></span>
 <span>  <span class="fu">magrittr</span><span class="fu">::</span><span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="co"># Extracts the first row of the "Sankey" column</span></span></code></pre></div>
-<div class="sankeyNetwork html-widget html-fill-item" id="htmlwidget-5b6239fc4c9b31bd8b16" style="width:672px;height:384px;"></div>
-<script type="application/json" data-for="htmlwidget-5b6239fc4c9b31bd8b16">{"x":{"links":{"source":[0,1,1,2,2,3,3,4,4,4,4,4,4,4,5,6,6,6,6,6,6,6,7,8,8,9,9,3,10,10,1,4,6,9,8,2,3,10,5],"target":[2,1,3,1,2,4,3,1,4,9,8,2,10,11,6,1,9,8,2,3,5,12,9,5,12,9,8,10,10,11,13,13,13,13,13,13,13,13,13],"value":[50000,500,47000,47500,2500,15500,5000,25,350,50,25,50,250,14750,6400,25,25,25,25,75,100,6000,43000,16000,25000,2000,41000,26500,500,26000,550,350,125,2075,50,2575,5075,750,9700]},"nodes":{"name":["Resources [of Crude]","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources [of NG]","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"],"group":["Resources [of Crude]","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources [of NG]","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script>
+<div class="sankeyNetwork html-widget html-fill-item" id="htmlwidget-ac96cb3ee4656e2e9ec3" style="width:672px;height:384px;"></div>
+<script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"links":{"source":[0,1,1,2,2,3,3,4,4,4,4,4,4,4,5,6,6,6,6,6,6,6,7,8,8,9,9,3,10,10,1,4,6,9,8,2,3,10,5],"target":[2,1,3,1,2,4,3,1,4,9,8,2,10,11,6,1,9,8,2,3,5,12,9,5,12,9,8,10,10,11,13,13,13,13,13,13,13,13,13],"value":[50000,500,47000,47500,2500,15500,5000,25,350,50,25,50,250,14750,6400,25,25,25,25,75,100,6000,43000,16000,25000,2000,41000,26500,500,26000,550,350,125,2075,50,2575,5075,750,9700],"group":["Crude","Crude [from Dist.]","Crude [from Dist.]","Crude [from Fields]","Crude [from Fields]","Diesel","Diesel","Diesel [from Dist.]","Diesel [from Dist.]","Diesel [from Dist.]","Diesel [from Dist.]","Diesel [from Dist.]","Diesel [from Dist.]","Diesel [from Dist.]","Elect","Elect [from Grid]","Elect [from Grid]","Elect [from Grid]","Elect [from Grid]","Elect [from Grid]","Elect [from Grid]","Elect [from Grid]","NG","NG [from Dist.]","NG [from Dist.]","NG [from Wells]","NG [from Wells]","Petrol","Petrol [from Dist.]","Petrol [from Dist.]","Waste","Waste","Waste","Waste","Waste","Waste","Waste","Waste","Waste"]},"nodes":{"name":["Resources [of Crude]","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources [of NG]","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"],"group":["Resources [of Crude]","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources [of NG]","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":"Product","colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div class="section level3">
 <h3 id="matrices-that-describe-the-input-output-structure-of-the-ecc">Matrices that describe the input-output structure of the ECC<a class="anchor" aria-label="anchor" href="#matrices-that-describe-the-input-output-structure-of-the-ecc"></a>
@@ -189,52 +194,70 @@ names of the additional columns are given by arguments to the
 <span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">IO_mats</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 1</span></span>
 <span><span class="co">#&gt; Columns: 32</span></span>
-<span><span class="co">#&gt; $ Country     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "GBR"</span></span>
-<span><span class="co">#&gt; $ Year        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2000</span></span>
-<span><span class="co">#&gt; $ Energy.type <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E"</span></span>
-<span><span class="co">#&gt; $ Last.stage  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final"</span></span>
-<span><span class="co">#&gt; $ R           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[2 x 2]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ r_EIOU      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 9]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ S_units     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 1]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ U           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 9]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ U_EIOU      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[7 x 8]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ U_feed      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 9]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ V           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 10]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ Y           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[4 x 2]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ y           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[4 x 1]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ q           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 1]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ f           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 1]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ g           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 1]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ h           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[2 x 1]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ r           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[2 x 1]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ W           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 9]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ Z           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 9]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ K           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 9]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ C           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[10 x 9]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ D           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 12]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ A           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 12]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ O           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[2 x 2]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ L_pxp       <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 12]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ L_ixp       <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 12]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ Z_feed      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 9]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ K_feed      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 9]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ A_feed      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 12]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ L_pxp_feed  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 12]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ L_ixp_feed  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 12]&gt;&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt; $ Country    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "GBR"</span></span>
+<span><span class="co">#&gt; $ Year       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2000</span></span>
+<span><span class="co">#&gt; $ EnergyType <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E"</span></span>
+<span><span class="co">#&gt; $ LastStage  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final"</span></span>
+<span><span class="co">#&gt; $ R          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[2 x 2]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ r_EIOU     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 9]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ S_units    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 1]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ U          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 9]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ U_EIOU     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[7 x 8]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ U_feed     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 9]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ V          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 10]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ Y          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[4 x 2]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ y          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[4 x 1]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ q          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 1]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ f          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 1]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ g          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 1]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ h          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[2 x 1]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ r          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[2 x 1]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ W          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 9]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ Z          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 9]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ K          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 9]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ C          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[10 x 9]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ D          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 12]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ A          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 12]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ O          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[2 x 2]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ L_pxp      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 12]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ L_ixp      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 12]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ Z_feed     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 9]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ K_feed     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 9]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ A_feed     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 12]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ L_pxp_feed <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 12]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ L_ixp_feed <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 12]&gt;&gt;</span></span></code></pre></div>
 <p>With the I-O structure of the ECC determined (and represented by the
-<span class="math inline">\(\mathbf{q}\)</span>, <span class="math inline">\(\mathbf{f}\)</span>, <span class="math inline">\(\mathbf{h}\)</span>, <span class="math inline">\(\mathbf{r}\)</span> and <span class="math inline">\(\mathbf{g}\)</span> vectors and the <span class="math inline">\(\mathbf{W}\)</span>, <span class="math inline">\(\mathbf{Z}\)</span>, <span class="math inline">\(\mathbf{K}\)</span>, <span class="math inline">\(\mathbf{C}\)</span>, <span class="math inline">\(\mathbf{D}\)</span>, , <span class="math inline">\(\mathbf{A}\)</span>, <span class="math inline">\(\mathbf{L_{pxp}}\)</span>, and <span class="math inline">\(\mathbf{L_{ixp}}\)</span> matrices), we can use
-the <code>new_*</code> functions to ask “what if” questions.</p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐪</mi><annotation encoding="application/x-tex">\mathbf{q}</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐟</mi><annotation encoding="application/x-tex">\mathbf{f}</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐡</mi><annotation encoding="application/x-tex">\mathbf{h}</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐫</mi><annotation encoding="application/x-tex">\mathbf{r}</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐠</mi><annotation encoding="application/x-tex">\mathbf{g}</annotation></semantics></math>
+vectors and the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐖</mi><annotation encoding="application/x-tex">\mathbf{W}</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐙</mi><annotation encoding="application/x-tex">\mathbf{Z}</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐊</mi><annotation encoding="application/x-tex">\mathbf{K}</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐂</mi><annotation encoding="application/x-tex">\mathbf{C}</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐃</mi><annotation encoding="application/x-tex">\mathbf{D}</annotation></semantics></math>,
+,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐀</mi><annotation encoding="application/x-tex">\mathbf{A}</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐋</mi><mrow><mi>𝐩</mi><mi>𝐱</mi><mi>𝐩</mi></mrow></msub><annotation encoding="application/x-tex">\mathbf{L_{pxp}}</annotation></semantics></math>,
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐋</mi><mrow><mi>𝐢</mi><mi>𝐱</mi><mi>𝐩</mi></mrow></msub><annotation encoding="application/x-tex">\mathbf{L_{ixp}}</annotation></semantics></math>
+matrices), we can use the <code>new_*</code> functions to ask “what if”
+questions.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="what-if-final-demand-changes-function-new_y">What if final demand changes? Function new_Y()<a class="anchor" aria-label="anchor" href="#what-if-final-demand-changes-function-new_y"></a>
 </h2>
-<p>The classic I-O question is “what if final demand (<span class="math inline">\(\mathbf{Y}\)</span>) changes?” <code>Recca</code>
-has a function for that: <code><a href="../reference/new_Y.html">new_Y()</a></code>. The <code><a href="../reference/new_Y.html">new_Y()</a></code>
-function looks upstream in the ECC to determine the effects of a change
-in final demand. To demonstrate, we’ll double the
-<code>Residential</code> final demand for electricity from the grid
-(<code>Elect - Grid</code>) in our ECC.</p>
+<p>The classic I-O question is “what if final demand
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐘</mi><annotation encoding="application/x-tex">\mathbf{Y}</annotation></semantics></math>)
+changes?” <code>Recca</code> has a function for that:
+<code><a href="../reference/new_Y.html">new_Y()</a></code>. The <code><a href="../reference/new_Y.html">new_Y()</a></code> function looks upstream
+in the ECC to determine the effects of a change in final demand. To
+demonstrate, we’ll double the <code>Residential</code> final demand for
+electricity from the grid (<code>Elect - Grid</code>) in our ECC.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">double</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fl">2</span><span class="op">*</span><span class="va">x</span></span>
@@ -245,21 +268,21 @@ in final demand. To demonstrate, we’ll double the
 <span>    Y_prime <span class="op">=</span> <span class="fu">matsbyname</span><span class="fu">::</span><span class="fu"><a href="https://matthewheun.github.io/matsbyname/reference/elementapply_byname.html" class="external-link">elementapply_byname</a></span><span class="op">(</span><span class="va">double</span>, a <span class="op">=</span> <span class="va">Y</span>, row <span class="op">=</span> <span class="st">"Elect [from Grid]"</span>, col <span class="op">=</span> <span class="st">"Residential"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="va">DoubleRes</span><span class="op">$</span><span class="va">Y</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="co">#&gt;                     Residential Transport</span></span>
-<span><span class="co">#&gt; Diesel [from Dist.]           0     14750</span></span>
-<span><span class="co">#&gt; Elect [from Grid]          6000         0</span></span>
-<span><span class="co">#&gt; NG [from Dist.]           25000         0</span></span>
-<span><span class="co">#&gt; Petrol [from Dist.]           0     26000</span></span>
+<span><span class="co">#&gt;                     Transport Residential</span></span>
+<span><span class="co">#&gt; Diesel [from Dist.]     14750           0</span></span>
+<span><span class="co">#&gt; Elect [from Grid]           0        6000</span></span>
+<span><span class="co">#&gt; NG [from Dist.]             0       25000</span></span>
+<span><span class="co">#&gt; Petrol [from Dist.]     26000           0</span></span>
 <span><span class="co">#&gt; attr(,"rowtype")</span></span>
 <span><span class="co">#&gt; [1] "Product"</span></span>
 <span><span class="co">#&gt; attr(,"coltype")</span></span>
 <span><span class="co">#&gt; [1] "Industry"</span></span>
 <span><span class="va">DoubleRes</span><span class="op">$</span><span class="va">Y_prime</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="co">#&gt;                     Residential Transport</span></span>
-<span><span class="co">#&gt; Diesel [from Dist.]           0     14750</span></span>
-<span><span class="co">#&gt; Elect [from Grid]         12000         0</span></span>
-<span><span class="co">#&gt; NG [from Dist.]           25000         0</span></span>
-<span><span class="co">#&gt; Petrol [from Dist.]           0     26000</span></span>
+<span><span class="co">#&gt;                     Transport Residential</span></span>
+<span><span class="co">#&gt; Diesel [from Dist.]     14750           0</span></span>
+<span><span class="co">#&gt; Elect [from Grid]           0       12000</span></span>
+<span><span class="co">#&gt; NG [from Dist.]             0       25000</span></span>
+<span><span class="co">#&gt; Petrol [from Dist.]     26000           0</span></span>
 <span><span class="co">#&gt; attr(,"rowtype")</span></span>
 <span><span class="co">#&gt; [1] "Product"</span></span>
 <span><span class="co">#&gt; attr(,"coltype")</span></span>
@@ -271,16 +294,16 @@ Sankey diagram is:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span><span class="op">(</span><span class="va">OurECC</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="st">"Sankey"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co"># Extracts the "Sankey" column</span></span>
 <span>  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>            <span class="co"># Extracts the first row of the "Sankey" column</span></span></code></pre></div>
-<div class="sankeyNetwork html-widget html-fill-item" id="htmlwidget-a447178915cfd858add3" style="width:672px;height:384px;"></div>
-<script type="application/json" data-for="htmlwidget-a447178915cfd858add3">{"x":{"links":{"source":[0,1,1,2,2,3,3,4,4,4,4,4,4,4,5,6,6,6,6,6,6,6,7,8,8,9,9,3,10,10,1,4,6,9,8,2,3,10,5],"target":[2,1,3,1,2,4,3,1,4,9,8,2,10,11,6,1,9,8,2,3,5,12,9,5,12,9,8,10,10,11,13,13,13,13,13,13,13,13,13],"value":[50000,500,47000,47500,2500,15500,5000,25,350,50,25,50,250,14750,6400,25,25,25,25,75,100,6000,43000,16000,25000,2000,41000,26500,500,26000,550,350,125,2075,50,2575,5075,750,9700]},"nodes":{"name":["Resources [of Crude]","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources [of NG]","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"],"group":["Resources [of Crude]","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources [of NG]","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>The new Sankey diagram is:</p>
+<div class="sankeyNetwork html-widget html-fill-item" id="htmlwidget-e5c8c404fe174e4c81bd" style="width:672px;height:384px;"></div>
+<script type="application/json" data-for="htmlwidget-e5c8c404fe174e4c81bd">{"x":{"links":{"source":[0,1,1,2,2,3,3,4,4,4,4,4,4,4,5,6,6,6,6,6,6,6,7,8,8,9,9,3,10,10,1,4,6,9,8,2,3,10,5],"target":[2,1,3,1,2,4,3,1,4,9,8,2,10,11,6,1,9,8,2,3,5,12,9,5,12,9,8,10,10,11,13,13,13,13,13,13,13,13,13],"value":[50000,500,47000,47500,2500,15500,5000,25,350,50,25,50,250,14750,6400,25,25,25,25,75,100,6000,43000,16000,25000,2000,41000,26500,500,26000,550,350,125,2075,50,2575,5075,750,9700],"group":["Crude","Crude [from Dist.]","Crude [from Dist.]","Crude [from Fields]","Crude [from Fields]","Diesel","Diesel","Diesel [from Dist.]","Diesel [from Dist.]","Diesel [from Dist.]","Diesel [from Dist.]","Diesel [from Dist.]","Diesel [from Dist.]","Diesel [from Dist.]","Elect","Elect [from Grid]","Elect [from Grid]","Elect [from Grid]","Elect [from Grid]","Elect [from Grid]","Elect [from Grid]","Elect [from Grid]","NG","NG [from Dist.]","NG [from Dist.]","NG [from Wells]","NG [from Wells]","Petrol","Petrol [from Dist.]","Petrol [from Dist.]","Waste","Waste","Waste","Waste","Waste","Waste","Waste","Waste","Waste"]},"nodes":{"name":["Resources [of Crude]","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources [of NG]","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"],"group":["Resources [of Crude]","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources [of NG]","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":"Product","colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>The new Sankey diagram is:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">DoubleRes</span> <span class="op">&lt;-</span> <span class="va">DoubleRes</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/new_Y.html">new_Y</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span><span class="op">(</span><span class="va">DoubleRes</span>, R <span class="op">=</span> <span class="st">"R_prime"</span>, U <span class="op">=</span> <span class="st">"U_prime"</span>, V <span class="op">=</span> <span class="st">"V_prime"</span>, Y <span class="op">=</span> <span class="st">"Y_prime"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="st">"Sankey"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<div class="sankeyNetwork html-widget html-fill-item" id="htmlwidget-56652a64195918b0e5eb" style="width:672px;height:384px;"></div>
-<script type="application/json" data-for="htmlwidget-56652a64195918b0e5eb">{"x":{"links":{"source":[0,1,1,2,2,3,3,4,4,4,4,4,4,4,5,6,6,6,6,6,6,6,7,8,8,9,9,3,10,10,1,4,6,9,8,2,3,10,5],"target":[2,1,3,1,2,4,3,1,4,9,8,2,10,11,6,1,9,8,2,3,5,12,9,5,12,9,8,10,10,11,13,13,13,13,13,13,13,13,13],"value":[50034.81179449565,500.3481179449565,47032.72308682592,47533.07120477087,2501.740589724783,15529.24190737635,5003.481179449566,25.01740589724782,350.6603011343047,69.01959236687067,34.50979618343535,50.03481179449565,250,14750,12638.42629633359,25.01740589724782,34.50979618343533,34.50979618343535,25.01740589724782,75.05221769174349,197.4754108802123,12000,59356.84943550877,31596.06574083396,25000,2760.783694674827,56596.06574083397,26500,500.0000000000001,26000,550.3829297394548,350.660301134305,246.8442636002655,2864.31308322512,69.0195923668707,2576.792807416524,5078.533397141313,750,19155.11485538059]},"nodes":{"name":["Resources [of Crude]","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources [of NG]","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"],"group":["Resources [of Crude]","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources [of NG]","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>Output from the electricity grid is clearly larger now than before.
+<div class="sankeyNetwork html-widget html-fill-item" id="htmlwidget-36aa3d2a04d42bbc2145" style="width:672px;height:384px;"></div>
+<script type="application/json" data-for="htmlwidget-36aa3d2a04d42bbc2145">{"x":{"links":{"source":[0,1,1,2,2,3,3,4,4,4,4,4,4,4,5,6,6,6,6,6,6,6,7,8,8,9,9,3,10,10,1,4,6,9,8,2,3,10,5],"target":[2,1,3,1,2,4,3,1,4,9,8,2,10,11,6,1,9,8,2,3,5,12,9,5,12,9,8,10,10,11,13,13,13,13,13,13,13,13,13],"value":[50034.81179449565,500.3481179449565,47032.72308682592,47533.07120477087,2501.740589724783,15529.24190737635,5003.481179449566,25.01740589724782,350.6603011343047,69.01959236687067,34.50979618343535,50.03481179449565,250,14750,12638.42629633359,25.01740589724782,34.50979618343533,34.50979618343535,25.01740589724782,75.05221769174349,197.4754108802123,12000,59356.84943550877,31596.06574083396,25000,2760.783694674827,56596.06574083397,26500,500.0000000000001,26000,550.3829297394548,350.660301134305,246.8442636002655,2864.31308322512,69.0195923668707,2576.792807416524,5078.533397141313,750,19155.11485538059],"group":["Crude","Crude [from Dist.]","Crude [from Dist.]","Crude [from Fields]","Crude [from Fields]","Diesel","Diesel","Diesel [from Dist.]","Diesel [from Dist.]","Diesel [from Dist.]","Diesel [from Dist.]","Diesel [from Dist.]","Diesel [from Dist.]","Diesel [from Dist.]","Elect","Elect [from Grid]","Elect [from Grid]","Elect [from Grid]","Elect [from Grid]","Elect [from Grid]","Elect [from Grid]","Elect [from Grid]","NG","NG [from Dist.]","NG [from Dist.]","NG [from Wells]","NG [from Wells]","Petrol","Petrol [from Dist.]","Petrol [from Dist.]","Waste","Waste","Waste","Waste","Waste","Waste","Waste","Waste","Waste"]},"nodes":{"name":["Resources [of Crude]","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources [of NG]","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"],"group":["Resources [of Crude]","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources [of NG]","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":"Product","colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>Output from the electricity grid is clearly larger now than before.
 Also, upstream demand for natural gas is now larger than the upstream
 demand for crude, whereas in the original Sankey diagram, demand for
 crude was larger than the demand for natural gas.</p>
@@ -299,9 +322,16 @@ demonstrated.</p>
 <div class="section level3">
 <h3 id="resource-matrices-and-vectors">Resource matrices and vectors<a class="anchor" aria-label="anchor" href="#resource-matrices-and-vectors"></a>
 </h3>
-<p>The rate of resource extraction is given by the <span class="math inline">\(\mathbf{R}\)</span> matrix or by the <span class="math inline">\(\mathbf{r}\)</span> vector. The resource matrix
-(<span class="math inline">\(\mathbf{R}\)</span>) is Industry<span class="math inline">\(\times\)</span>Product. Its industries are usually
-named <code>Resources - &lt;Product&gt;</code>, where
+<p>The rate of resource extraction is given by the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐑</mi><annotation encoding="application/x-tex">\mathbf{R}</annotation></semantics></math>
+matrix or by the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐫</mi><annotation encoding="application/x-tex">\mathbf{r}</annotation></semantics></math>
+vector. The resource matrix
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐑</mi><annotation encoding="application/x-tex">\mathbf{R}</annotation></semantics></math>)
+is
+Industry<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>×</mo><annotation encoding="application/x-tex">\times</annotation></semantics></math>Product.
+Its industries are usually named
+<code>Resources - &lt;Product&gt;</code>, where
 <code>&lt;Product&gt;</code> is the name of the Product produced by that
 industry. (<code><a href="https://matthewheun.github.io/matsbyname/reference/clean_byname.html" class="external-link">clean_byname()</a></code> removes <code>0</code> rows and
 columns for clarity.)</p>
@@ -315,7 +345,8 @@ columns for clarity.)</p>
 <span><span class="co">#&gt; [1] "Industry"</span></span>
 <span><span class="co">#&gt; attr(,"coltype")</span></span>
 <span><span class="co">#&gt; [1] "Product"</span></span></code></pre></div>
-<p>The resource vector (<span class="math inline">\(\mathbf{r}\)</span>)
+<p>The resource vector
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐫</mi><annotation encoding="application/x-tex">\mathbf{r}</annotation></semantics></math>)
 is a Product column vector containing Products that are resources.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rvecs</span> <span class="op">&lt;-</span> <span class="va">OurECC</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
@@ -336,9 +367,10 @@ is a Product column vector containing Products that are resources.</p>
 <div class="section level3">
 <h3 id="industry-efficiencies-and-a-new-resource-matrix">Industry efficiencies and a new resource matrix<a class="anchor" aria-label="anchor" href="#industry-efficiencies-and-a-new-resource-matrix"></a>
 </h3>
-<p>The baseline <span class="math inline">\(\mathbf{R}\)</span> matrix
-is shown above. Let’s say we want to estimate the effect of a 50 %
-reduction in the production rate of crude oil. So, we cut
+<p>The baseline
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐑</mi><annotation encoding="application/x-tex">\mathbf{R}</annotation></semantics></math>
+matrix is shown above. Let’s say we want to estimate the effect of a 50
+% reduction in the production rate of crude oil. So, we cut
 <code>Resources - Crude</code> in half. To execute this reduction, we’ll
 use the <code><a href="https://matthewheun.github.io/matsbyname/reference/elementapply_byname.html" class="external-link">matsbyname::elementapply_byname()</a></code> function.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -371,8 +403,8 @@ in the ECC using the <code><a href="../reference/calc_eta_i.html">calc_eta_i()</
 <span><span class="co">#&gt; Columns: 35</span></span>
 <span><span class="co">#&gt; $ Country      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "GBR"</span></span>
 <span><span class="co">#&gt; $ Year         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2000</span></span>
-<span><span class="co">#&gt; $ Energy.type  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E"</span></span>
-<span><span class="co">#&gt; $ Last.stage   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final"</span></span>
+<span><span class="co">#&gt; $ EnergyType   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E"</span></span>
+<span><span class="co">#&gt; $ LastStage    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final"</span></span>
 <span><span class="co">#&gt; $ R            <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[2 x 2]&gt;&gt;</span></span>
 <span><span class="co">#&gt; $ r_EIOU       <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 9]&gt;&gt;</span></span>
 <span><span class="co">#&gt; $ S_units      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 1]&gt;&gt;</span></span>
@@ -413,32 +445,32 @@ availability with a modified Sankey diagram.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span><span class="op">(</span><span class="va">OurECC</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="st">"Sankey"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co"># Extracts the "Sankey" column</span></span>
 <span>  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="co"># Extracts the first row of the "Sankey" column</span></span></code></pre></div>
-<div class="sankeyNetwork html-widget html-fill-item" id="htmlwidget-4ffe077138097459ca59" style="width:672px;height:384px;"></div>
-<script type="application/json" data-for="htmlwidget-4ffe077138097459ca59">{"x":{"links":{"source":[0,1,1,2,2,3,3,4,4,4,4,4,4,4,5,6,6,6,6,6,6,6,7,8,8,9,9,3,10,10,1,4,6,9,8,2,3,10,5],"target":[2,1,3,1,2,4,3,1,4,9,8,2,10,11,6,1,9,8,2,3,5,12,9,5,12,9,8,10,10,11,13,13,13,13,13,13,13,13,13],"value":[50000,500,47000,47500,2500,15500,5000,25,350,50,25,50,250,14750,6400,25,25,25,25,75,100,6000,43000,16000,25000,2000,41000,26500,500,26000,550,350,125,2075,50,2575,5075,750,9700]},"nodes":{"name":["Resources [of Crude]","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources [of NG]","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"],"group":["Resources [of Crude]","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources [of NG]","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>And here is the modified Sankey diagram showing the much smaller
+<div class="sankeyNetwork html-widget html-fill-item" id="htmlwidget-febe03efa1a2d8d52a86" style="width:672px;height:384px;"></div>
+<script type="application/json" data-for="htmlwidget-febe03efa1a2d8d52a86">{"x":{"links":{"source":[0,1,1,2,2,3,3,4,4,4,4,4,4,4,5,6,6,6,6,6,6,6,7,8,8,9,9,3,10,10,1,4,6,9,8,2,3,10,5],"target":[2,1,3,1,2,4,3,1,4,9,8,2,10,11,6,1,9,8,2,3,5,12,9,5,12,9,8,10,10,11,13,13,13,13,13,13,13,13,13],"value":[50000,500,47000,47500,2500,15500,5000,25,350,50,25,50,250,14750,6400,25,25,25,25,75,100,6000,43000,16000,25000,2000,41000,26500,500,26000,550,350,125,2075,50,2575,5075,750,9700],"group":["Crude","Crude [from Dist.]","Crude [from Dist.]","Crude [from Fields]","Crude [from Fields]","Diesel","Diesel","Diesel [from Dist.]","Diesel [from Dist.]","Diesel [from Dist.]","Diesel [from Dist.]","Diesel [from Dist.]","Diesel [from Dist.]","Diesel [from Dist.]","Elect","Elect [from Grid]","Elect [from Grid]","Elect [from Grid]","Elect [from Grid]","Elect [from Grid]","Elect [from Grid]","Elect [from Grid]","NG","NG [from Dist.]","NG [from Dist.]","NG [from Wells]","NG [from Wells]","Petrol","Petrol [from Dist.]","Petrol [from Dist.]","Waste","Waste","Waste","Waste","Waste","Waste","Waste","Waste","Waste"]},"nodes":{"name":["Resources [of Crude]","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources [of NG]","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"],"group":["Resources [of Crude]","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources [of NG]","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":"Product","colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>And here is the modified Sankey diagram showing the much smaller
 <code>Resources - Crude</code> extraction rate.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span><span class="op">(</span><span class="va">HalfCrude</span>, R <span class="op">=</span> <span class="st">"R_prime"</span>, U <span class="op">=</span> <span class="st">"U_prime"</span>, V <span class="op">=</span> <span class="st">"V_prime"</span>, Y <span class="op">=</span> <span class="st">"Y_prime"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="st">"Sankey"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co"># Extracts the "Sankey" column</span></span>
 <span>  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="co"># Extracts the first row of the "Sankey" column</span></span></code></pre></div>
-<div class="sankeyNetwork html-widget html-fill-item" id="htmlwidget-662fbf206c239fcbd9f0" style="width:672px;height:384px;"></div>
-<script type="application/json" data-for="htmlwidget-662fbf206c239fcbd9f0">{"x":{"links":{"source":[0,1,1,2,2,3,3,4,4,4,4,4,4,4,5,6,6,6,6,6,6,6,7,8,8,9,9,3,10,10,1,4,6,9,8,2,3,10,5],"target":[2,1,3,1,2,4,3,1,4,9,8,2,10,11,6,1,9,8,2,3,5,12,9,5,12,9,8,10,10,11,13,13,13,13,13,13,13,13,13],"value":[25000,250.2566658155587,23524.12658666252,23761.89829934845,1250.626226281497,7770.269478469545,2506.538541441789,12.53269270720894,175.4576979009252,25.06538541441789,12.53269270720894,25.06538541441789,125.3269270720894,7394.288697253278,6394.349313017656,24.97792700397521,24.97792700397521,24.97792700397521,24.97792700397521,74.93378101192565,99.91170801590086,5994.702480954052,42999.99999999999,15985.87328254413,24977.92700397521,1998.841244917859,40976.2455208161,13284.65426964149,250.6538541441791,13034.00041549731,275.2823323971121,175.4576979009253,124.8896350198756,2073.797791602281,49.95585400794754,1288.14501306994,2544.136619563413,375.9807812162682,9691.43567754238]},"nodes":{"name":["Resources [of Crude]","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources [of NG]","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"],"group":["Resources [of Crude]","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources [of NG]","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>The Sankey diagrams clearly show that reducing the availability of
+<div class="sankeyNetwork html-widget html-fill-item" id="htmlwidget-1fb4450895fe099f74a1" style="width:672px;height:384px;"></div>
+<script type="application/json" data-for="htmlwidget-1fb4450895fe099f74a1">{"x":{"links":{"source":[0,1,1,2,2,3,3,4,4,4,4,4,4,4,5,6,6,6,6,6,6,6,7,8,8,9,9,3,10,10,1,4,6,9,8,2,3,10,5],"target":[2,1,3,1,2,4,3,1,4,9,8,2,10,11,6,1,9,8,2,3,5,12,9,5,12,9,8,10,10,11,13,13,13,13,13,13,13,13,13],"value":[25000,250.2566658155587,23524.12658666252,23761.89829934845,1250.626226281497,7770.269478469545,2506.538541441789,12.53269270720894,175.4576979009252,25.06538541441789,12.53269270720894,25.06538541441789,125.3269270720894,7394.288697253278,6394.349313017656,24.97792700397521,24.97792700397521,24.97792700397521,24.97792700397521,74.93378101192565,99.91170801590086,5994.702480954052,42999.99999999999,15985.87328254413,24977.92700397521,1998.841244917859,40976.2455208161,13284.65426964149,250.6538541441791,13034.00041549731,275.2823323971121,175.4576979009253,124.8896350198756,2073.797791602281,49.95585400794754,1288.14501306994,2544.136619563413,375.9807812162682,9691.43567754238],"group":["Crude","Crude [from Dist.]","Crude [from Dist.]","Crude [from Fields]","Crude [from Fields]","Diesel","Diesel","Diesel [from Dist.]","Diesel [from Dist.]","Diesel [from Dist.]","Diesel [from Dist.]","Diesel [from Dist.]","Diesel [from Dist.]","Diesel [from Dist.]","Elect","Elect [from Grid]","Elect [from Grid]","Elect [from Grid]","Elect [from Grid]","Elect [from Grid]","Elect [from Grid]","Elect [from Grid]","NG","NG [from Dist.]","NG [from Dist.]","NG [from Wells]","NG [from Wells]","Petrol","Petrol [from Dist.]","Petrol [from Dist.]","Waste","Waste","Waste","Waste","Waste","Waste","Waste","Waste","Waste"]},"nodes":{"name":["Resources [of Crude]","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources [of NG]","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"],"group":["Resources [of Crude]","Crude dist.","Oil fields","Oil refineries","Diesel dist.","Power plants","Elect. grid","Resources [of NG]","NG dist.","Gas wells & proc.","Petrol dist.","Transport","Residential","Waste"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":"Product","colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>The Sankey diagrams clearly show that reducing the availability of
 crude oil (<code>Resources - crude</code>) means that less
 <code>Transport</code> final demand can be satisfied.</p>
 <p>Note that both ECCs are in complete energy balance.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">OurECC</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/verify_SUT_energy_balance_with_units.html">verify_SUT_energy_balance_with_units</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Country</span>, <span class="va">Year</span>, <span class="va">Energy.type</span>, <span class="va">Last.stage</span>, </span>
-<span>         <span class="va">.SUT_prod_energy_balance</span>, <span class="va">.SUT_ind_energy_balance</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Country</span>, <span class="va">Year</span>, <span class="va">EnergyType</span>, <span class="va">LastStage</span>, </span>
+<span>         <span class="va">.SUT_prod_energy_balanced</span>, <span class="va">.SUT_ind_energy_balanced</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 1</span></span>
 <span><span class="co">#&gt; Columns: 6</span></span>
-<span><span class="co">#&gt; $ Country                  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "GBR"</span></span>
-<span><span class="co">#&gt; $ Year                     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2000</span></span>
-<span><span class="co">#&gt; $ Energy.type              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E"</span></span>
-<span><span class="co">#&gt; $ Last.stage               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final"</span></span>
-<span><span class="co">#&gt; $ .SUT_prod_energy_balance <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> TRUE</span></span>
-<span><span class="co">#&gt; $ .SUT_ind_energy_balance  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> TRUE</span></span></code></pre></div>
+<span><span class="co">#&gt; $ Country                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "GBR"</span></span>
+<span><span class="co">#&gt; $ Year                      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2000</span></span>
+<span><span class="co">#&gt; $ EnergyType                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E"</span></span>
+<span><span class="co">#&gt; $ LastStage                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final"</span></span>
+<span><span class="co">#&gt; $ .SUT_prod_energy_balanced <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> TRUE</span></span>
+<span><span class="co">#&gt; $ .SUT_ind_energy_balanced  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> TRUE</span></span></code></pre></div>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">HalfCrude</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
@@ -446,15 +478,15 @@ crude oil (<code>Resources - crude</code>) means that less
 <span>  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/verify_SUT_energy_balance.html">verify_SUT_energy_balance</a></span><span class="op">(</span>R <span class="op">=</span> <span class="st">"R_prime"</span>, U <span class="op">=</span> <span class="st">"U_prime"</span>, V <span class="op">=</span> <span class="st">"V_prime"</span>, </span>
 <span>                            Y <span class="op">=</span> <span class="st">"Y_prime"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Country</span>, <span class="va">Year</span>, <span class="va">Energy.type</span>, <span class="va">Last.stage</span>,</span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Country</span>, <span class="va">Year</span>, <span class="va">EnergyType</span>, <span class="va">LastStage</span>,</span>
 <span>         <span class="va">.SUT_energy_balance</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 1</span></span>
 <span><span class="co">#&gt; Columns: 5</span></span>
 <span><span class="co">#&gt; $ Country             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "GBR"</span></span>
 <span><span class="co">#&gt; $ Year                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2000</span></span>
-<span><span class="co">#&gt; $ Energy.type         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E"</span></span>
-<span><span class="co">#&gt; $ Last.stage          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final"</span></span>
+<span><span class="co">#&gt; $ EnergyType          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E"</span></span>
+<span><span class="co">#&gt; $ LastStage           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final"</span></span>
 <span><span class="co">#&gt; $ .SUT_energy_balance <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> TRUE</span></span></code></pre></div>
 </div>
 </div>
@@ -477,9 +509,15 @@ industry (I), and two final demand sectors (Y1 and Y2). The R1 industry
 makes product R1p.<br>
 The R2 industry makes product R2p. Industry I makes product Ip. Product
 Ip is consumed by final demand sectors Y1 and Y2.</p>
-<p>The use (<span class="math inline">\(\mathbf{U}\)</span>), make
-(<span class="math inline">\(\mathbf{V}\)</span>), final demand (<span class="math inline">\(\mathbf{Y}\)</span>), and unit summation (<span class="math inline">\(\mathbf{S}_{units}\)</span>) matrices are given
-below.</p>
+<p>The use
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐔</mi><annotation encoding="application/x-tex">\mathbf{U}</annotation></semantics></math>),
+make
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐕</mi><annotation encoding="application/x-tex">\mathbf{V}</annotation></semantics></math>),
+final demand
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐘</mi><annotation encoding="application/x-tex">\mathbf{Y}</annotation></semantics></math>),
+and unit summation
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐒</mi><mrow><mi>u</mi><mi>n</mi><mi>i</mi><mi>t</mi><mi>s</mi></mrow></msub><annotation encoding="application/x-tex">\mathbf{S}_{units}</annotation></semantics></math>)
+matrices are given below.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">U</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">10</span>,</span>
 <span>              <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">10</span>,</span>
@@ -519,8 +557,8 @@ below.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/make_sankey.html">make_sankey</a></span><span class="op">(</span>R <span class="op">=</span> <span class="va">R</span>, U <span class="op">=</span> <span class="va">U</span>, V <span class="op">=</span> <span class="va">V</span>, Y <span class="op">=</span> <span class="va">Y</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="st">"Sankey"</span><span class="op">)</span></span></code></pre></div>
-<div class="sankeyNetwork html-widget html-fill-item" id="htmlwidget-682b2bfa6aeba55cb5c2" style="width:672px;height:384px;"></div>
-<script type="application/json" data-for="htmlwidget-682b2bfa6aeba55cb5c2">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[2,2,10,10]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>We can change the proportion of inputs to industry I using
+<div class="sankeyNetwork html-widget html-fill-item" id="htmlwidget-10b3b7155e8045a1b2ad" style="width:672px;height:384px;"></div>
+<script type="application/json" data-for="htmlwidget-10b3b7155e8045a1b2ad">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[2,2,10,10],"group":["Ip","Ip","R1p","R2p"]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":"Product","colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>We can change the proportion of inputs to industry I using
 <code><a href="../reference/new_k_ps.html">new_k_ps()</a></code>. To do so, we must first calculate the
 input-output structure of the ECC using the <code><a href="../reference/calc_io_mats.html">calc_io_mats()</a></code>
 function. Then, we call the <code><a href="../reference/new_k_ps.html">new_k_ps()</a></code> function with a new
@@ -543,8 +581,8 @@ k vector that indicates industry I now uses 75/25 mixture of
 <span>            V <span class="op">=</span> <span class="va">change_input_proportions</span><span class="op">$</span><span class="va">V_prime</span>, </span>
 <span>            Y <span class="op">=</span> <span class="va">Y</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="st">"Sankey"</span><span class="op">)</span></span></code></pre></div>
-<div class="sankeyNetwork html-widget html-fill-item" id="htmlwidget-d04feacabc1555e45ff4" style="width:672px;height:384px;"></div>
-<script type="application/json" data-for="htmlwidget-d04feacabc1555e45ff4">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[2,2,15,5]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>In response to the different demands from industry <code>I</code>,
+<div class="sankeyNetwork html-widget html-fill-item" id="htmlwidget-4018eef1a407a0df6b52" style="width:672px;height:384px;"></div>
+<script type="application/json" data-for="htmlwidget-4018eef1a407a0df6b52">{"x":{"links":{"source":[0,0,1,2],"target":[3,4,0,0],"value":[2,2,15,5],"group":["Ip","Ip","R1p","R2p"]},"nodes":{"name":["I","R1","R2","Y1","Y2"],"group":["I","R1","R2","Y1","Y2"]},"options":{"NodeID":"Node","NodeGroup":"Node","LinkGroup":"Product","colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script><p>In response to the different demands from industry <code>I</code>,
 the rate of resource extraction from <code>R1</code> would need to grow,
 and the rate of resource extraction from supply <code>R2</code> would
 need to shrink. If there were additional upstream industries, they would
@@ -576,7 +614,7 @@ the first time.</p>
 <div class="section level2 unnumbered">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-Heun:2018" class="csl-entry">
 Heun, Matthew Kuperus, Anne Owen, and Paul E. Brockway. 2018. <span>“A
 Physical Supply-Use Table Framework for Energy Analysis on the Energy
@@ -590,28 +628,26 @@ Analysis</em>. Cambridge, Massachusetts: Harvard University Press.
 </div>
 </div>
 </div>
-  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
 
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p>
-<p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>
 </div>
 
-  
 
-  
+
+
 
   </body>
 </html>
