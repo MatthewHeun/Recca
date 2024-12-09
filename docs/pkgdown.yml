@@ -1,13 +1,12 @@
-pandoc: 3.1.1
-pkgdown: 2.0.7
+pandoc: '3.2'
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   Aggregation: Aggregation.html
-  Recca: Recca.html
   new-function-interaction: new-function-interaction.html
   new-functions: new-functions.html
-last_built: 2024-02-07T02:19Z
+  Recca: Recca.html
+last_built: 2024-12-09T14:36Z
 urls:
   reference: https://matthewheun.github.io/Recca/reference
   article: https://matthewheun.github.io/Recca/articles
-
