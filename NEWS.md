@@ -8,6 +8,14 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+* `extend_to_exergy()` now ignores the `phi` vector
+  when computing the exergy version of the **U_EIOU** matrix 
+  when the the energy version of the **U_EIOU** matrix is 
+  the **0** matrix.
+  `extend_to_exergy()` simply returns the **0** matrix, 
+  same as the energy version of the **U_EIOU** matrix.
+
+
 ## Recca 0.1.56 (2024-12-09) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14336025.svg)](https://doi.org/10.5281/zenodo.14336025)
 
 * Significantly improved some energy balance error messages.

@@ -167,14 +167,24 @@ extend_to_exergy <- function(.sutmats = NULL,
                                                        matsbyname::hatize_byname(keep = "rownames"),
                                                      U_feed_mat)
 
-    # U_eiou_X = phi_hat * U_eiou_E
-    U_eiou_X_mat <- matsbyname::matrixproduct_byname(matsbyname::vec_from_store_byname(a = U_eiou_mat,
-                                                                                       v = phi_vec,
-                                                                                       a_piece = mat_piece, v_piece = phi_piece,
-                                                                                       notation = notation, prepositions = prepositions,
-                                                                                       margin = 1) %>%
-                                                       matsbyname::hatize_byname(keep = "rownames"),
-                                                     U_eiou_mat)
+    if (matsbyname::iszero_byname(U_eiou_mat)) {
+      # Some countries have no EIOU, so we get a zero matrix here
+      # that may or may not have energy carriers that are present
+      # in phi_vec.
+      # In this case, we should simply return the existing U_eiou_mat,
+      # as the exergy version will be the same as the
+      # energy version, all zeroes.
+      U_eiou_X_mat <- U_eiou_mat
+    } else {
+      # U_eiou_X = phi_hat * U_eiou_E
+      U_eiou_X_mat <- matsbyname::matrixproduct_byname(matsbyname::vec_from_store_byname(a = U_eiou_mat,
+                                                                                         v = phi_vec,
+                                                                                         a_piece = mat_piece, v_piece = phi_piece,
+                                                                                         notation = notation, prepositions = prepositions,
+                                                                                         margin = 1) %>%
+                                                         matsbyname::hatize_byname(keep = "rownames"),
+                                                       U_eiou_mat)
+    }
 
     # V_X = V_E * phi_hat
     V_X_mat <- matsbyname::matrixproduct_byname(V_mat,
