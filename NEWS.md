@@ -10,7 +10,7 @@ which always resolves to the latest release.
 
 * `extend_to_exergy()` now ignores the `phi` vector
   when computing the exergy version of the **U_EIOU** matrix 
-  when the the energy version of the **U_EIOU** matrix is 
+  if the the energy version of the **U_EIOU** matrix is 
   the **0** matrix.
   `extend_to_exergy()` simply returns the **0** matrix, 
   same as the energy version of the **U_EIOU** matrix.
