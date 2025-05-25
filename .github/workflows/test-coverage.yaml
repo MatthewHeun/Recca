@@ -14,7 +14,7 @@ on:
   push:
     branches: [master, develop]
   pull_request:
-    branches: [master, master]
+    branches: [master, develop]
   schedule:
     # Build main daily at 8 AM UTC, 3 AM EST, 4 AM EDT, one hour after nightly builds.
     - cron: "0 8 * * *"
