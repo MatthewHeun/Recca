@@ -8,7 +8,7 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
-## Recca 0.1.57 (2025-05-26)
+## Recca 0.1.57 (2025-05-26) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15520936.svg)](https://doi.org/10.5281/zenodo.15520936)
 
 * Update R-CMD-check GitHub action.
 * `extend_to_exergy()` now ignores the `phi` vector
@@ -17,7 +17,7 @@ which always resolves to the latest release.
   the **0** matrix.
   `extend_to_exergy()` simply returns the **0** matrix, 
   same as the energy version of the **U_EIOU** matrix.
-* Fixed many tests and added a few new tests for new features.
+* No new tests.
     - Still at 775 tests, all passing.
     - Test coverage remains at 100%.
 
