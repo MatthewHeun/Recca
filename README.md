@@ -1,7 +1,10 @@
 
 <!-- *********** -->
+
 <!-- Note: README.md is generated from README.Rmd.   -->
+
 <!-- Be sure to edit README.Rmd and generate the README.md file by Cmd/Ctl-shift-K -->
+
 <!-- *********** -->
 
 [![CRAN
@@ -12,7 +15,7 @@ state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![R-CMD-check](https://github.com/MatthewHeun/Recca/workflows/R-CMD-check/badge.svg)](https://github.com/MatthewHeun/Recca/actions)
 [![Codecov test
-coverage](https://codecov.io/gh/MatthewHeun/Recca/branch/master/graph/badge.svg)](https://app.codecov.io/gh/MatthewHeun/Recca?branch=master)
+coverage](https://codecov.io/gh/MatthewHeun/Recca/graph/badge.svg)](https://app.codecov.io/gh/MatthewHeun/Recca)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5226085.svg)](https://doi.org/10.5281/zenodo.5226085)
 
 # Recca
@@ -61,7 +64,8 @@ at <https://MatthewHeun.github.io/Recca/>.
 
 ## References
 
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
 
 <div id="ref-Heun:2018" class="csl-entry">
 
