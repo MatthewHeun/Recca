@@ -8,6 +8,7 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+* Update R-CMD-check GitHub action.
 * `extend_to_exergy()` now ignores the `phi` vector
   when computing the exergy version of the **U_EIOU** matrix 
   if the the energy version of the **U_EIOU** matrix is 
