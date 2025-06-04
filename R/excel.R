@@ -7,16 +7,26 @@
 #' If `.psut_data` is a PSUT data frame,
 #' each row is written to a different tab in the output file at `path`.
 #'
+#' When `include_named_regions` is `TRUE` (the default),
+#' named regions for matrices are added to Excel sheets.
+#' The format for the names is <<matrix>>_<<sheet name>>.
+#' For example, "R_4" for the **R** matrix on the sheet named "4".
+#' The names help to identify matrices in high-level views of the Excel file.
+#'
 #' @param .psut_data A list or data frame of energy conversion chains.
+#'                   Default is `NULL`, in which case
+#'                   single matrices can be supplied in the
+#'                   `R`, `U`, `V`, `Y`, `r_eiou`, `U_eiou`, `U_feed`, and `S_units`
+#'                   arguments.
 #' @param path The path of the Excel file to be created.
 #' @param overwrite_file A boolean that tells whether you want to overwrite
 #'                       the file at `path`, if it already exists.
+#'                       Default is `FALSE`.
 #' @param pad The number of rows and columns between adjacent matrices in the Excel sheet.
 #'            Default is `2`.
-#' @param include_io_mats A boolean that tells whether to include input-output matrices
-#'                        in the worksheets written by this function.
-#'                        Input-output matrices are obtained from `calc_io_mats()`.
-#'                        Default is `FALSE`.
+#' @param include_named_regions A boolean that tells whether to name regions of
+#'                              the Excel tabs according to matrices.
+#'                              Default is `TRUE`.
 #' @param R,U,U_feed,U_eiou,r_eiou,V,Y,S_units Names of ECC matrices or actual matrices.
 #'                                             See `Recca::psut_cols`.
 #' @param .wrote_mats_colname The name of the outgoing column
@@ -47,7 +57,8 @@ write_ecc_to_excel <- function(.psut_data = NULL,
                                path,
                                overwrite_file = FALSE,
                                pad = 2,
-                               include_io_mats = FALSE,
+                               # include_io_mats = FALSE,
+                               include_named_regions = TRUE,
                                R = Recca::psut_cols$R,
                                U = Recca::psut_cols$U,
                                V = Recca::psut_cols$V,
@@ -146,13 +157,16 @@ write_ecc_to_excel <- function(.psut_data = NULL,
           } else {
             this_bg_color <- calculated_bg_color
           }
-          # Set the name of this range for this matrix
-          openxlsx::createNamedRegion(wb = ecc_wb,
-                                      sheet = sheet_name,
-                                      rows = mat_origin[["y"]]:mat_extent[["y"]],
-                                      cols = mat_origin[["x"]]:mat_extent[["x"]],
-                                      name = paste(this_mat_name, sheet_name, sep = "_"),
-                                      overwrite = TRUE)
+          if (include_named_regions) {
+            # Set the name of this range for this matrix
+            openxlsx::createNamedRegion(wb = ecc_wb,
+                                        sheet = sheet_name,
+                                        rows = mat_origin[["y"]]:mat_extent[["y"]],
+                                        cols = mat_origin[["x"]]:mat_extent[["x"]],
+                                        name = paste(this_mat_name, sheet_name, sep = "_"),
+                                        # Set false to flag any problems.
+                                        overwrite = FALSE)
+          }
           # Create the style for this matrix.
           mat_num_style <- openxlsx::createStyle(fgFill = this_bg_color,
                                                  halign = "center",

@@ -9,7 +9,7 @@ write_ecc_to_excel(
   path,
   overwrite_file = FALSE,
   pad = 2,
-  include_io_mats = FALSE,
+  include_named_regions = TRUE,
   R = Recca::psut_cols$R,
   U = Recca::psut_cols$U,
   V = Recca::psut_cols$V,
@@ -26,20 +26,24 @@ write_ecc_to_excel(
 )
 }
 \arguments{
-\item{.psut_data}{A list or data frame of energy conversion chains.}
+\item{.psut_data}{A list or data frame of energy conversion chains.
+Default is \code{NULL}, in which case
+single matrices can be supplied in the
+\code{R}, \code{U}, \code{V}, \code{Y}, \code{r_eiou}, \code{U_eiou}, \code{U_feed}, and \code{S_units}
+arguments.}
 
 \item{path}{The path of the Excel file to be created.}
 
 \item{overwrite_file}{A boolean that tells whether you want to overwrite
-the file at \code{path}, if it already exists.}
+the file at \code{path}, if it already exists.
+Default is \code{FALSE}.}
 
 \item{pad}{The number of rows and columns between adjacent matrices in the Excel sheet.
 Default is \code{2}.}
 
-\item{include_io_mats}{A boolean that tells whether to include input-output matrices
-in the worksheets written by this function.
-Input-output matrices are obtained from \code{calc_io_mats()}.
-Default is \code{FALSE}.}
+\item{include_named_regions}{A boolean that tells whether to name regions of
+the Excel tabs according to matrices.
+Default is \code{TRUE}.}
 
 \item{R, U, U_feed, U_eiou, r_eiou, V, Y, S_units}{Names of ECC matrices or actual matrices.
 See \code{Recca::psut_cols}.}
@@ -72,6 +76,12 @@ This function takes ECC matrices and writes them to an Excel file.
 \details{
 If \code{.psut_data} is a PSUT data frame,
 each row is written to a different tab in the output file at \code{path}.
+
+When \code{include_named_regions} is \code{TRUE} (the default),
+named regions for matrices are added to Excel sheets.
+The format for the names is <\if{html}{\out{<matrix>}}>_<\if{html}{\out{<sheet name>}}>.
+For example, "R_4" for the \strong{R} matrix on the sheet named "4".
+The names help to identify matrices in high-level views of the Excel file.
 }
 \examples{
 \dontrun{
