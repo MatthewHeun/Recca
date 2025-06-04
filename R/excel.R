@@ -158,12 +158,20 @@ write_ecc_to_excel <- function(.psut_data = NULL,
             this_bg_color <- calculated_bg_color
           }
           if (include_named_regions) {
-            # Set the name of this range for this matrix
+            # Set the name of the region for this matrix.
+            # Note that the name of a region can be at most 255 characters long.
+            # Excel sheet names can be at most 31 characters long.
+            # I'm creating names from the matrix name (max 7 characters)
+            # plus the sheet name (max 31 characters)
+            # plus the "_" character, for a maximum of 39 characters,
+            # well below the maximum name size (255 characters).
+            # So this approach should work fine.
+            region_name <- paste(this_mat_name, sheet_name, sep = "_")
             openxlsx::createNamedRegion(wb = ecc_wb,
                                         sheet = sheet_name,
                                         rows = mat_origin[["y"]]:mat_extent[["y"]],
                                         cols = mat_origin[["x"]]:mat_extent[["x"]],
-                                        name = paste(this_mat_name, sheet_name, sep = "_"),
+                                        name = region_name,
                                         # Set false to flag any problems.
                                         overwrite = FALSE)
           }
