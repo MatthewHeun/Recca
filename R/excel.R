@@ -151,7 +151,7 @@ write_ecc_to_excel <- function(.psut_data = NULL,
                                       sheet = sheet_name,
                                       rows = mat_origin[["y"]]:mat_extent[["y"]],
                                       cols = mat_origin[["x"]]:mat_extent[["x"]],
-                                      name = paste(sheet_name, this_mat_name, sep = "_"),
+                                      name = paste(this_mat_name, sheet_name, sep = "_"),
                                       overwrite = TRUE)
           # Create the style for this matrix.
           mat_num_style <- openxlsx::createStyle(fgFill = this_bg_color,
