@@ -12,6 +12,9 @@ which always resolves to the latest release.
   due to use of the new pipe.
 * `write_ecc_to_excel()` now adds a region name 
   for each matrix in the Excel sheet.
+* New tests for new features.
+    - Now up to 776 tests, all passing.
+    - Test coverage remains at 100%.
 
 
 ## Recca 0.1.57 (2025-05-26) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15520936.svg)](https://doi.org/10.5281/zenodo.15520936)
