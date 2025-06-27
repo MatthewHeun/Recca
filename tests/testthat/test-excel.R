@@ -76,3 +76,44 @@ test_that("calc_mats_locations_excel() fails correctly", {
 })
 
 
+
+
+test_that("write_ecc_to_excel() sets sheet names", {
+  ecc_temp_path <- tempfile(pattern = "write_excel_ecc_test_file",
+                            fileext = ".xlsx")
+
+  ecc <- UKEnergy2000mats |>
+    tidyr::pivot_wider(names_from = "matrix.name",
+                       values_from = "matrix")
+  res_no_names <- write_ecc_to_excel(ecc,
+                                     path = ecc_temp_path,
+                                     overwrite = TRUE)
+  expect_true(file.exists(ecc_temp_path))
+  # Read the workbook
+  openxlsx::loadWorkbook(file = ecc_temp_path) |>
+    names() |>
+    expect_equal(c("1", "2", "3", "4"))
+
+
+  # Now try with tab names
+  ecc_with_names <- ecc |>
+    dplyr::mutate(
+      worksheet_names = paste0(EnergyType, "-", LastStage)
+    )
+  res_with_names <- write_ecc_to_excel(ecc_with_names,
+                                       worksheet_names = "worksheet_names",
+                                       path = ecc_temp_path,
+                                       overwrite = TRUE)
+  expect_true(file.exists(ecc_temp_path))
+  # Read the workbook
+  openxlsx::loadWorkbook(file = ecc_temp_path) |>
+    names() |>
+    expect_equal(c("E-Final",
+                   "E-Services",
+                   "E-Useful",
+                   "X-Services"))
+
+  if (file.exists(ecc_temp_path)) {
+    file.remove(ecc_temp_path)
+  }
+})

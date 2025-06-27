@@ -18,6 +18,7 @@ write_ecc_to_excel(
   U_eiou = Recca::psut_cols$U_eiou,
   U_feed = Recca::psut_cols$U_feed,
   S_units = Recca::psut_cols$S_units,
+  worksheet_names = NULL,
   .wrote_mats_colname = "Wrote mats",
   UV_bg_color = "#FDF2D0",
   RY_bg_color = "#D3712D",
@@ -47,6 +48,14 @@ Default is \code{TRUE}.}
 
 \item{R, U, U_feed, U_eiou, r_eiou, V, Y, S_units}{Names of ECC matrices or actual matrices.
 See \code{Recca::psut_cols}.}
+
+\item{worksheet_names}{A string or string vector identifying
+the names for the tabs in the workbook.
+Alternatively, when \code{.psut_data} is a data frame,
+the string name of a column in the data frame
+containing the names of the columns.
+When \code{NULL}, the default, tabs are
+numbered sequentially.}
 
 \item{.wrote_mats_colname}{The name of the outgoing column
 that tells whether a worksheet was written successfully.
@@ -79,15 +88,33 @@ each row is written to a different tab in the output file at \code{path}.
 
 When \code{include_named_regions} is \code{TRUE} (the default),
 named regions for matrices are added to Excel sheets.
-The format for the names is <\if{html}{\out{<matrix>}}>_<\if{html}{\out{<sheet name>}}>.
+The format for the names is \verb{<<matrix>>_<<sheet name>>}.
 For example, "R_4" for the \strong{R} matrix on the sheet named "4".
 The names help to identify matrices in high-level views of the Excel file.
+The region names apply to the numbers only.
+Row names are one column left of the named region.
+Column names are one row above the named region.
+
+When \code{tab_names} are not \code{NULL} (the default),
+be sure that tab names are unique.
+Also, be aware that worksheet (tab) names
+are limited to 31 characters maximum.
+Furthermore, the worksheet names
+may not contain any of the following characters:
+\\  /  ?  *  [  ].
 }
 \examples{
 \dontrun{
 ecc <- UKEnergy2000mats \%>\%
-  tidyr::spread(key = "matrix.name", value = "matrix")
+  tidyr::pivot_wider(names_from = "matrix.name",
+                     values_from = "matrix") |>
+dplyr::mutate(
+  tab_names = paste0(EnergyType, "-", LastStage)
+)
 ecc_temp_path <- tempfile(pattern = "write_excel_ecc_test_file", fileext = ".xlsx")
-write_ecc_to_excel(ecc, path = ecc_temp_path, overwrite = TRUE)
+write_ecc_to_excel(ecc,
+                   path = ecc_temp_path,
+                   tab_names = "tab_names",
+                   overwrite = TRUE)
 }
 }
