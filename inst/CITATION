@@ -4,12 +4,12 @@ citEntry(entry = "Manual",
   title        = "Recca: R Energy Conversion Chain Analysis",
   author       = personList(as.person("Matthew Kuperus Heun"), as.person("Emmanuel Aramendia")),
   year         = "2025",
-  note         = "R package version 0.1.58",
+  note         = "R package version 0.1.59",
   url          = "https://doi.org/10.5281/zenodo.5226085",
 
   textVersion  =
   paste("Matthew Kuperus Heun, Emmanuel Aramendia (2025).",
         "Recca: R Energy Conversion Chain Analysis.",
-        "R package version 0.1.58.",
+        "R package version 0.1.59.",
         "https://doi.org/10.5281/zenodo.5226085")
 )

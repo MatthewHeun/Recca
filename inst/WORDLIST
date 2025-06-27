@@ -2,7 +2,6 @@ Brockway
 CMD
 Codecov
 Colours
-DOI
 Despecifies
 Despecify
 ECC
@@ -90,13 +89,13 @@ ktoe
 lifecycle
 linearities
 magrittr
+mal
 mathbf
 mathrm
 matsindf
 matwithdims
 metapackage
 networkD
-networkD3
 newcommand
 pkgdown
 pps
@@ -116,6 +115,5 @@ underset
 unencoded
 unnest
 useX
-vectorized
 widehat
 zenodo

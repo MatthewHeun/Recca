@@ -2,7 +2,7 @@
 % Please edit documentation in R/excel.R
 \name{write_ecc_to_excel}
 \alias{write_ecc_to_excel}
-\title{Write energy conversion chain matrices in an Excel file}
+\title{Write energy conversion chain matrices to an Excel file}
 \usage{
 write_ecc_to_excel(
   .psut_data = NULL,
@@ -86,22 +86,39 @@ This function takes ECC matrices and writes them to an Excel file.
 If \code{.psut_data} is a PSUT data frame,
 each row is written to a different tab in the output file at \code{path}.
 
-When \code{include_named_regions} is \code{TRUE} (the default),
-named regions for matrices are added to Excel sheets.
-The format for the names is \verb{<<matrix>>_<<sheet name>>}.
-For example, "R_4" for the \strong{R} matrix on the sheet named "4".
-The names help to identify matrices in high-level views of the Excel file.
-The region names apply to the numbers only.
-Row names are one column left of the named region.
-Column names are one row above the named region.
-
 When \code{worksheet_names} is not \code{NULL} (the default),
 be sure that worksheet names are unique.
 Also, be aware that worksheet names
 must have 31 characters or fewer.
 Furthermore, the worksheet names
 may not contain any of the following characters:
-\\  /  ?  *  [  ]
+\verb{\\  /  ?  *  [  ]}.
+
+When \code{include_named_regions} is \code{TRUE} (the default),
+named regions for matrices are added to Excel sheets.
+The format for the names is \verb{<<matrix symbol>>_<<worksheet name>>}.
+For example, "R_4" for the \strong{R} matrix on the sheet named "4".
+The names help to identify matrices in high-level overviews of the Excel file
+and can also be used for later reading matrices from Excel files.
+The region names apply to the numbers in a matrix only,
+not to the row and column labels.
+Row names are one column left of the named region.
+Column names are one row above the named region.
+
+Note that region names are more restricted than worksheet names and
+may not contain any of the following characters:
+\verb{! @ # $ \% ^ & * ( ) + - / = \{ \} [ ] | \\ : ; " ' < > , . ? spaces}.
+Best to stick with letters, numbers, and underscores.
+
+Finally, note that because region names include the worksheet name,
+worksheet names should avoid illegal characters for region names.
+Again, best to stick with letters, numbers, and underscores.
+
+A warning is given when any worksheet names or region names
+contain illegal characters.
+
+[  ]: R:\%20\%20
+[ ]: R:\%20
 }
 \examples{
 \dontrun{
@@ -110,7 +127,7 @@ ecc <- UKEnergy2000mats \%>\%
                      values_from = "matrix") |>
 dplyr::mutate(
   # Specify worksheet names using metadata guaranteed to be unique.
-  worksheet_names = paste(EnergyType, LastStage)
+  worksheet_names = paste(EnergyType, LastStage, sep = "_")
 )
 ecc_temp_path <- tempfile(pattern = "write_excel_ecc_test_file", fileext = ".xlsx")
 write_ecc_to_excel(ecc,
