@@ -16,13 +16,13 @@
 #' Row names are one column left of the named region.
 #' Column names are one row above the named region.
 #'
-#' When `tab_names` are not `NULL` (the default),
-#' be sure that tab names are unique.
-#' Also, be aware that worksheet (tab) names
-#' are limited to 31 characters maximum.
+#' When `worksheet_names` is not `NULL` (the default),
+#' be sure that worksheet names are unique.
+#' Also, be aware that worksheet names
+#' must have 31 characters or fewer.
 #' Furthermore, the worksheet names
 #' may not contain any of the following characters:
-#' \\  /  ?  *  \[  \].
+#' \\  /  ?  *  \[  \]
 #'
 #' @param .psut_data A list or data frame of energy conversion chains.
 #'                   Default is `NULL`, in which case
@@ -33,6 +33,13 @@
 #' @param overwrite_file A boolean that tells whether you want to overwrite
 #'                       the file at `path`, if it already exists.
 #'                       Default is `FALSE`.
+#' @param worksheet_names A string or string vector identifying
+#'                        the names for the worksheets in the workbook.
+#'                        Alternatively, when `.psut_data` is a data frame,
+#'                        the string name of a column in the data frame
+#'                        containing the names of the worksheets.
+#'                        When `NULL`, the default, tabs are
+#'                        numbered sequentially.
 #' @param pad The number of rows and columns between adjacent matrices in the Excel sheet.
 #'            Default is `2`.
 #' @param include_named_regions A boolean that tells whether to name regions of
@@ -40,13 +47,6 @@
 #'                              Default is `TRUE`.
 #' @param R,U,U_feed,U_eiou,r_eiou,V,Y,S_units Names of ECC matrices or actual matrices.
 #'                                             See `Recca::psut_cols`.
-#' @param worksheet_names A string or string vector identifying
-#'                        the names for the tabs in the workbook.
-#'                        Alternatively, when `.psut_data` is a data frame,
-#'                        the string name of a column in the data frame
-#'                        containing the names of the columns.
-#'                        When `NULL`, the default, tabs are
-#'                        numbered sequentially.
 #' @param .wrote_mats_colname The name of the outgoing column
 #'                            that tells whether a worksheet was written successfully.
 #'                            Default is "Wrote mats".
@@ -81,6 +81,7 @@
 write_ecc_to_excel <- function(.psut_data = NULL,
                                path,
                                overwrite_file = FALSE,
+                               worksheet_names = NULL,
                                pad = 2,
                                # include_io_mats = FALSE,
                                include_named_regions = TRUE,
@@ -92,7 +93,6 @@ write_ecc_to_excel <- function(.psut_data = NULL,
                                U_eiou = Recca::psut_cols$U_eiou,
                                U_feed = Recca::psut_cols$U_feed,
                                S_units = Recca::psut_cols$S_units,
-                               worksheet_names = NULL,
                                .wrote_mats_colname = "Wrote mats",
                                UV_bg_color = "#FDF2D0",
                                RY_bg_color = "#D3712D",

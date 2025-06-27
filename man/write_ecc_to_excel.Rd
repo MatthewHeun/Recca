@@ -50,10 +50,10 @@ Default is \code{TRUE}.}
 See \code{Recca::psut_cols}.}
 
 \item{worksheet_names}{A string or string vector identifying
-the names for the tabs in the workbook.
+the names for the worksheets in the workbook.
 Alternatively, when \code{.psut_data} is a data frame,
 the string name of a column in the data frame
-containing the names of the columns.
+containing the names of the worksheets.
 When \code{NULL}, the default, tabs are
 numbered sequentially.}
 
@@ -95,13 +95,13 @@ The region names apply to the numbers only.
 Row names are one column left of the named region.
 Column names are one row above the named region.
 
-When \code{tab_names} are not \code{NULL} (the default),
-be sure that tab names are unique.
-Also, be aware that worksheet (tab) names
-are limited to 31 characters maximum.
+When \code{worksheet_names} is not \code{NULL} (the default),
+be sure that worksheet names are unique.
+Also, be aware that worksheet names
+must have 31 characters or fewer.
 Furthermore, the worksheet names
 may not contain any of the following characters:
-\\  /  ?  *  [  ].
+\\  /  ?  *  [  ]
 }
 \examples{
 \dontrun{
