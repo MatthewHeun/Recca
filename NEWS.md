@@ -8,6 +8,8 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+* New argument `worksheet_names` on `write_ecc_to_excel()` 
+  enables setting worksheet names in the resulting Excel file.
 * Now claiming dependence on R >= 4.1.0
   due to use of the new pipe.
 * `write_ecc_to_excel()` now adds a region name 

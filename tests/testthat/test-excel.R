@@ -1,23 +1,37 @@
 test_that("write_ecc_to_excel() works as expected", {
   ecc <- UKEnergy2000mats |>
-    tidyr::spread(key = "matrix.name", value = "matrix")
+    tidyr::spread(key = "matrix.name", value = "matrix") |>
+    dplyr::mutate(
+      worksheet_names = paste0(EnergyType, "-", LastStage)
+    )
   ecc_temp_path <- tempfile(pattern = "write_excel_ecc_test_file", fileext = ".xlsx")
 
-  res <- write_ecc_to_excel(ecc, path = ecc_temp_path, overwrite = TRUE)
+  res <- write_ecc_to_excel(ecc,
+                            path = ecc_temp_path,
+                            worksheet_names = "worksheet_names",
+                            overwrite = TRUE)
 
   expect_true(file.exists(ecc_temp_path))
 
   # Test that named matrix regions exist in the file
   regions <- openxlsx::getNamedRegions(ecc_temp_path)
   expect_equal(regions,
-               c("R_1", "U_1", "V_1", "Y_1", "r_eiou_1",
-                 "U_eiou_1", "U_feed_1", "S_units_1",
-                 "R_2", "U_2", "V_2", "Y_2", "r_eiou_2",
-                 "U_eiou_2", "U_feed_2", "S_units_2",
-                 "R_3", "U_3", "V_3", "Y_3", "r_eiou_3",
-                 "U_eiou_3", "U_feed_3", "S_units_3",
-                 "R_4", "U_4", "V_4", "Y_4", "r_eiou_4",
-                 "U_eiou_4", "U_feed_4", "S_units_4"),
+               c("R_E-Final", "U_E-Final", "V_E-Final",
+                 "Y_E-Final", "r_eiou_E-Final",
+                 "U_eiou_E-Final", "U_feed_E-Final",
+                 "S_units_E-Final",
+                 "R_E-Services", "U_E-Services", "V_E-Services",
+                 "Y_E-Services", "r_eiou_E-Services",
+                 "U_eiou_E-Services", "U_feed_E-Services",
+                 "S_units_E-Services",
+                 "R_E-Useful", "U_E-Useful", "V_E-Useful",
+                 "Y_E-Useful", "r_eiou_E-Useful",
+                 "U_eiou_E-Useful", "U_feed_E-Useful",
+                 "S_units_E-Useful",
+                 "R_X-Services", "U_X-Services", "V_X-Services",
+                 "Y_X-Services", "r_eiou_X-Services",
+                 "U_eiou_X-Services", "U_feed_X-Services",
+                 "S_units_X-Services"),
                ignore_attr = TRUE)
 
   if (file.exists(ecc_temp_path)) {
@@ -76,3 +90,44 @@ test_that("calc_mats_locations_excel() fails correctly", {
 })
 
 
+
+
+test_that("write_ecc_to_excel() sets sheet names", {
+  ecc_temp_path <- tempfile(pattern = "write_excel_ecc_test_file",
+                            fileext = ".xlsx")
+
+  ecc <- UKEnergy2000mats |>
+    tidyr::pivot_wider(names_from = "matrix.name",
+                       values_from = "matrix")
+  res_no_names <- write_ecc_to_excel(ecc,
+                                     path = ecc_temp_path,
+                                     overwrite = TRUE)
+  expect_true(file.exists(ecc_temp_path))
+  # Read the workbook
+  openxlsx::loadWorkbook(file = ecc_temp_path) |>
+    names() |>
+    expect_equal(c("1", "2", "3", "4"))
+
+
+  # Now try with tab names
+  ecc_with_names <- ecc |>
+    dplyr::mutate(
+      worksheet_names = paste0(EnergyType, "-", LastStage)
+    )
+  res_with_names <- write_ecc_to_excel(ecc_with_names,
+                                       worksheet_names = "worksheet_names",
+                                       path = ecc_temp_path,
+                                       overwrite = TRUE)
+  expect_true(file.exists(ecc_temp_path))
+  # Read the workbook
+  openxlsx::loadWorkbook(file = ecc_temp_path) |>
+    names() |>
+    expect_equal(c("E-Final",
+                   "E-Services",
+                   "E-Useful",
+                   "X-Services"))
+
+  if (file.exists(ecc_temp_path)) {
+    file.remove(ecc_temp_path)
+  }
+})
