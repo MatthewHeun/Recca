@@ -219,7 +219,7 @@ write_ecc_to_excel <- function(.psut_data = NULL,
             # So this approach should work fine.
             region_name <- paste(this_mat_name, sheet_name, sep = "_")
             # Check for malformed region names. Emit a warning if problem found.
-            check_named_region_violations(sheet_name)
+            check_named_region_violations(region_name)
             openxlsx::createNamedRegion(wb = ecc_wb,
                                         sheet = sheet_name,
                                         rows = mat_origin[["y"]]:mat_extent[["y"]],
