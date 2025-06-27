@@ -413,8 +413,9 @@ calc_mats_locations_excel <- function(R, U, V, Y, r_eiou, U_eiou, U_feed, S_unit
 #'
 #' @examples
 #' # No warning
-#' check_named_region_violations(c("test1", "test2))
+#' check_named_region_violations(c("test1", "test2"))
 #' \dontrun{
+#'   # Warnings
 #'   # Illegal character
 #'   check_named_region_violations("\\")
 #'   check_named_region_violations("a\\")
@@ -481,10 +482,23 @@ check_named_region_violations <- function(candidate_region_names) {
 #' @export
 #'
 #' @examples
-check_worksheet_name_violations <- function(candidate_sheet_names) {
+#' # No warning
+#' check_worksheet_name_violations(c("abc", "123"))
+#' \dontrun{
+#'   # Warnings
+#'   # Illegal characters
+#'   check_worksheet_name_violations(c("abc", "["))
+#'   # Empty name
+#'   check_worksheet_name_violations(c("", "abc"))
+#'   # Too long
+#'   check_worksheet_name_violations(strrep("x", 32))
+#'   # Duplicates
+#'   check_worksheet_name_violations(c("abc123", "abc123"))
+#' }
+check_worksheet_name_violations <- function(candidate_worksheet_names) {
   seen <- character(0)
 
-  for (name in candidate_sheet_names) {
+  for (name in candidate_worksheet_names) {
     problems <- character(0)
 
     # 1. Check for illegal characters: \ / * ? [ ]

@@ -4,7 +4,7 @@
 \alias{check_worksheet_name_violations}
 \title{Develop a warning message for malformed Excel worksheet names}
 \usage{
-check_worksheet_name_violations(candidate_sheet_names)
+check_worksheet_name_violations(candidate_worksheet_names)
 }
 \arguments{
 \item{candidate_worksheet_names}{Worksheet names to be checked.}
@@ -17,4 +17,19 @@ check_worksheet_name_violations(candidate_sheet_names)
 it is important that they are legal names.
 This function emits a warning when \code{candidate_worksheet_names}
 is mal-formed.
+}
+\examples{
+# No warning
+check_worksheet_name_violations(c("abc", "123"))
+\dontrun{
+  # Warnings
+  # Illegal characters
+  check_worksheet_name_violations(c("abc", "["))
+  # Empty name
+  check_worksheet_name_violations(c("", "abc"))
+  # Too long
+  check_worksheet_name_violations(strrep("x", 32))
+  # Duplicates
+  check_worksheet_name_violations(c("abc123", "abc123"))
+}
 }

@@ -20,3 +20,19 @@ start with an illegal character,
 resemble a cell reference, or
 are too long.
 }
+\examples{
+# No warning
+check_named_region_violations(c("test1", "test2"))
+\dontrun{
+  # Warnings
+  # Illegal character
+  check_named_region_violations("\\\\")
+  check_named_region_violations("a\\\\")
+  # Starts with illegal character
+  check_named_region_violations(" ")
+  # Resembles cell reference
+  check_named_region_violations("B12")
+  # Too long
+  check_named_region_violations(strrep("x", 256))
+}
+}

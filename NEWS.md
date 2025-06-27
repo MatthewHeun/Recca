@@ -9,7 +9,7 @@ which always resolves to the latest release.
 
 
 
-* Now includes much better error reporting for 
+* Now provides much better error reporting for 
   illegal named region and worksheet names in 
   `write_ecc_to_excel()`.
   
