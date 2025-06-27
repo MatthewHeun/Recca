@@ -101,7 +101,7 @@ write_ecc_to_excel <- function(.psut_data = NULL,
 
   # Check if path exists. If so, throw an error.
   if (file.exists(path) & !overwrite_file) {
-    stop(paste("File", path, "already exists. Call write_ecc_to_excel with overwrite = TRUE to overwrite."))
+    stop(paste("File", path, "already exists. Call write_ecc_to_excel() with overwrite = TRUE to overwrite."))
   }
   # Create the workbook
   ecc_wb <- openxlsx::createWorkbook()
