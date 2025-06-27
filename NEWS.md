@@ -15,7 +15,7 @@ which always resolves to the latest release.
 * `write_ecc_to_excel()` now adds a region name 
   for each matrix in the Excel sheet.
 * New tests for new features.
-    - Now up to 776 tests, all passing.
+    - Now up to 780 tests, all passing.
     - Test coverage remains at 100%.
 
 
