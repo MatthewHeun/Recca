@@ -2,20 +2,20 @@
 % Please edit documentation in R/excel.R
 \name{check_named_region_violations}
 \alias{check_named_region_violations}
-\title{Develop a warning message for malformed worksheet names.}
+\title{Develop a warning message for malformed Excel region names}
 \usage{
 check_named_region_violations(candidate_region_names)
 }
 \arguments{
-\item{strings}{A character vector of candidate worksheet names.}
+\item{candidate_region_names}{A character vector of candidate region names.}
 }
 \value{
-\code{NULL} invisibly
+\code{NULL} invisibly and a warning if any problems are detected.
 }
 \description{
-Well-formed worksheet names are important for named regions
+Well-formed Excel region names are important for named regions
 in the Excel workbooks created by \code{write_ecc_to_excel()}.
-This function warns if the worksheet names contain illegal characters,
+This function warns if the region names contain illegal characters,
 start with an illegal character,
 resemble a cell reference, or
 are too long.

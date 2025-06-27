@@ -138,6 +138,9 @@ write_ecc_to_excel <- function(.psut_data = NULL,
       }
     }
 
+    # Check for malformed sheet and region names.
+    # Emit a warning if there is a problem.
+    check_named_region_violations(sheet_name)
 
     # Add the worksheet to the workbook
     openxlsx::addWorksheet(ecc_wb, sheet_name)
@@ -393,16 +396,16 @@ calc_mats_locations_excel <- function(R, U, V, Y, r_eiou, U_eiou, U_feed, S_unit
 }
 
 
-#' Develop a warning message for malformed worksheet names.
+#' Develop a warning message for malformed Excel region names
 #'
-#' Well-formed worksheet names are important for named regions
+#' Well-formed Excel region names are important for named regions
 #' in the Excel workbooks created by `write_ecc_to_excel()`.
-#' This function warns if the worksheet names contain illegal characters,
+#' This function warns if the region names contain illegal characters,
 #' start with an illegal character,
 #' resemble a cell reference, or
 #' are too long.
 #'
-#' @param strings A character vector of candidate worksheet names.
+#' @param candidate_region_names A character vector of candidate region names.
 #'
 #' @returns `NULL` invisibly and a warning if any problems are detected.
 #'
@@ -453,6 +456,68 @@ check_named_region_violations <- function(candidate_region_names) {
     if (length(problems) > 0) {
       warning(
         sprintf("Invalid Excel region name: '%s'\n  Problem(s): %s",
+                name, paste(problems, collapse = "; ")
+        ),
+        call. = FALSE
+      )
+    }
+  }
+
+  invisible(NULL)
+}
+
+
+#' Develop a warning message for malformed Excel worksheet names
+#'
+#' `write_ecc_to_excel()` can include worksheet names, but
+#' it is important that they are legal names.
+#' This function emits a warning when `candidate_worksheet_names`
+#' is mal-formed.
+#'
+#' @param candidate_worksheet_names Worksheet names to be checked.
+#'
+#' @returns `NULL` invisibly and a warning if any problems are detected.
+#'
+#' @export
+#'
+#' @examples
+check_worksheet_name_violations <- function(candidate_sheet_names) {
+  seen <- character(0)
+
+  for (name in candidate_sheet_names) {
+    problems <- character(0)
+
+    # 1. Check for illegal characters: \ / * ? [ ]
+    matches <- gregexpr("(\\\\|/|\\*|\\?|\\[|\\])", name)[[1]]
+    if (any(matches > 0)) {
+      illegal_chars <- substring(name, matches, matches)
+      problems <- c(problems,
+                    paste0("contains illegal character(s): ",
+                           paste(unique(illegal_chars), collapse = " "))
+      )
+    }
+
+    # 2. Check for empty names
+    if (nchar(name) == 0) {
+      problems <- c(problems, "is blank (worksheet names cannot be empty)")
+    }
+
+    # 3. Check for length
+    if (nchar(name) > 31) {
+      problems <- c(problems, "exceeds Excel's 31-character limit")
+    }
+
+    # 4. Check for duplicates
+    if (name %in% seen) {
+      problems <- c(problems, "is a duplicate (worksheet names must be unique)")
+    } else {
+      seen <- c(seen, name)
+    }
+
+    # Report problems
+    if (length(problems) > 0) {
+      warning(
+        sprintf("Invalid Excel worksheet name: '%s'\n  Problem(s): %s",
                 name, paste(problems, collapse = "; ")
         ),
         call. = FALSE

@@ -159,6 +159,25 @@ test_that("check_named_region_violations() works as expected", {
 })
 
 
+test_that("check_worksheet_name_violations() works as expected", {
+  # Is OK
+  check_worksheet_name_violations(c("test1", "test2")) |>
+    expect_null()
+  # Illegal characters
+  check_worksheet_name_violations(c("abc", "[")) |>
+    expect_warning()
+  # Empty name
+  check_worksheet_name_violations(c("", "abc")) |>
+    expect_warning()
+  # Too long
+  check_worksheet_name_violations(strrep("x", 32)) |>
+    expect_warning()
+  # Duplicates
+  check_worksheet_name_violations(c("abc123", "abc123")) |>
+    expect_warning()
+})
+
+
 
 
 
