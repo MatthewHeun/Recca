@@ -10,7 +10,8 @@ which always resolves to the latest release.
 
 
 * Now includes much better error reporting for 
-  illegal region and worksheet names.
+  illegal named region and worksheet names in 
+  `write_ecc_to_excel()`.
   
 
 ## Recca 0.1.58 (2025-06-27) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15755313.svg)](https://doi.org/10.5281/zenodo.15755313)
