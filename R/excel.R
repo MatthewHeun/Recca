@@ -7,22 +7,35 @@
 #' If `.psut_data` is a PSUT data frame,
 #' each row is written to a different tab in the output file at `path`.
 #'
-#' When `include_named_regions` is `TRUE` (the default),
-#' named regions for matrices are added to Excel sheets.
-#' The format for the names is `<<matrix>>_<<sheet name>>`.
-#' For example, "R_4" for the **R** matrix on the sheet named "4".
-#' The names help to identify matrices in high-level views of the Excel file.
-#' The region names apply to the numbers only.
-#' Row names are one column left of the named region.
-#' Column names are one row above the named region.
-#'
 #' When `worksheet_names` is not `NULL` (the default),
 #' be sure that worksheet names are unique.
 #' Also, be aware that worksheet names
 #' must have 31 characters or fewer.
 #' Furthermore, the worksheet names
 #' may not contain any of the following characters:
-#' \\  /  ?  *  \[  \]
+#' `\  /  ?  *  [  ]`.
+#'
+#' When `include_named_regions` is `TRUE` (the default),
+#' named regions for matrices are added to Excel sheets.
+#' The format for the names is `<<matrix symbol>>_<<worksheet name>>`.
+#' For example, "R_4" for the **R** matrix on the sheet named "4".
+#' The names help to identify matrices in high-level overviews of the Excel file
+#' and can also be used for reading matrices from Excel files.
+#' The region names apply to the numbers in a matrix only,
+#' not to the row and column labels.
+#' Row names are one column left of the named region.
+#' Column names are one row above the named region.
+#'
+#' Note that region names are more restricted than worksheet names and
+#' may not contain any of the following characters:
+#' `! @ # $ % ^ & * ( ) + - / = { } [ ] | \ : ; " ' < > , . ? spaces`.
+#' Best to stick with letters, numbers, and underscores.
+#'
+#' Finally, note that because region names include the worksheet name,
+#' worksheet names should avoid illegal characters for region names.
+#' Again, best to stick with letters, numbers, and underscores.
+#' A warning is given when any worksheet names or region names
+#' contain illegal characters.
 #'
 #' @param .psut_data A list or data frame of energy conversion chains.
 #'                   Default is `NULL`, in which case
@@ -124,6 +137,7 @@ write_ecc_to_excel <- function(.psut_data = NULL,
         sheet_name <- (as.integer(existing_sheets) %>% max()) + 1
       }
     }
+
 
     # Add the worksheet to the workbook
     openxlsx::addWorksheet(ecc_wb, sheet_name)
@@ -379,3 +393,72 @@ calc_mats_locations_excel <- function(R, U, V, Y, r_eiou, U_eiou, U_feed, S_unit
 }
 
 
+#' Develop a warning message for malformed worksheet names.
+#'
+#' Well-formed worksheet names are important for named regions
+#' in the Excel workbooks created by `write_ecc_to_excel()`.
+#' This function warns if the worksheet names contain illegal characters,
+#' start with an illegal character,
+#' resemble a cell reference, or
+#' are too long.
+#'
+#' @param strings A character vector of candidate worksheet names.
+#'
+#' @returns `NULL` invisibly and a warning if any problems are detected.
+#'
+#' @export
+#'
+#' @examples
+#' # No warning
+#' check_named_region_violations(c("test1", "test2))
+#' \dontrun{
+#'   # Illegal character
+#'   check_named_region_violations("\\")
+#'   check_named_region_violations("a\\")
+#'   # Starts with illegal character
+#'   check_named_region_violations(" ")
+#'   # Resembles cell reference
+#'   check_named_region_violations("B12")
+#'   # Too long
+#'   check_named_region_violations(strrep("x", 256))
+#' }
+check_named_region_violations <- function(candidate_region_names) {
+  for (name in candidate_region_names) {
+    problems <- character(0)
+
+    # 1. Check for illegal characters
+    illegal_chars <- unlist(regmatches(name, gregexpr("[^A-Za-z0-9_.]", name)))
+    if (length(illegal_chars) > 0) {
+      problems <- c(problems,
+                    paste0("contains illegal character(s): ", paste(unique(illegal_chars), collapse = " "))
+      )
+    }
+
+    # 2. Check for illegal starting character
+    if (grepl("^[^A-Za-z_\\\\]", name)) {
+      problems <- c(problems, "starts with an invalid character (must begin with a letter, underscore, or backslash)")
+    }
+
+    # 3. Check if name resembles a cell reference (e.g., A1, Z100)
+    if (grepl("^[A-Za-z]{1,3}[1-9][0-9]{0,6}$", name)) {
+      problems <- c(problems, "resembles a cell reference (e.g., A1), which is not allowed")
+    }
+
+    # 4. Check for length violation
+    if (nchar(name) > 255) {
+      problems <- c(problems, "exceeds Excel's 255-character limit")
+    }
+
+    # 5. Report any problems
+    if (length(problems) > 0) {
+      warning(
+        sprintf("Invalid Excel region name: '%s'\n  Problem(s): %s",
+                name, paste(problems, collapse = "; ")
+        ),
+        call. = FALSE
+      )
+    }
+  }
+
+  invisible(NULL)
+}

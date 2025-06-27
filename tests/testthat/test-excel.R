@@ -131,3 +131,35 @@ test_that("write_ecc_to_excel() sets sheet names", {
     file.remove(ecc_temp_path)
   }
 })
+
+
+test_that("check_named_region_violations() works as expected", {
+  # Is OK
+  check_named_region_violations(c("test1", "test2")) |>
+    expect_null()
+  # Contains illegal character
+  check_named_region_violations("\\") |>
+    expect_warning()
+  check_named_region_violations("a\\") |>
+    expect_warning()
+  # Three warnings here
+  check_named_region_violations(c("a", "c12", " ", ",")) |>
+    expect_warning() |>
+    expect_warning() |>
+    expect_warning()
+  # Starts with illegal character
+  check_named_region_violations(" ") |>
+    expect_warning()
+  # Resembles cell reference
+  check_named_region_violations("B12") |>
+    expect_warning()
+  # Too long
+  check_named_region_violations(strrep("x", 256)) |>
+    expect_warning()
+})
+
+
+
+
+
+
