@@ -108,8 +108,11 @@ write_ecc_to_excel <- function(.psut_data = NULL,
   # Create the workbook
   ecc_wb <- openxlsx::createWorkbook()
 
-  create_one_tab <- function(R_mat, U_mat, V_mat, Y_mat, U_eiou_mat, U_feed_mat, r_eiou_mat, S_units_mat, worksheet_name) {
+  create_one_tab <- function(R_mat, U_mat, V_mat, Y_mat,
+                             U_eiou_mat, U_feed_mat, r_eiou_mat,
+                             S_units_mat, worksheet_name) {
 
+    # Figure out the worksheet name
     if (!is.null(worksheet_name)) {
       sheet_name <- worksheet_name
     } else {
@@ -121,6 +124,7 @@ write_ecc_to_excel <- function(.psut_data = NULL,
         sheet_name <- (as.integer(existing_sheets) %>% max()) + 1
       }
     }
+
     # Add the worksheet to the workbook
     openxlsx::addWorksheet(ecc_wb, sheet_name)
 
