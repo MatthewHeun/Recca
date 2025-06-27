@@ -8,7 +8,7 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
-## Recca 0.1.58 (2025-06-27) 
+## Recca 0.1.58 (2025-06-27) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15755313.svg)](https://doi.org/10.5281/zenodo.15755313)
 
 * New argument `worksheet_names` on `write_ecc_to_excel()` 
   enables setting worksheet names in the resulting Excel file.
