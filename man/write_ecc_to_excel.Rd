@@ -109,7 +109,8 @@ ecc <- UKEnergy2000mats \%>\%
   tidyr::pivot_wider(names_from = "matrix.name",
                      values_from = "matrix") |>
 dplyr::mutate(
-  worksheet_names = paste0(EnergyType, "-", LastStage)
+  # Specify worksheet names using metadata guaranteed to be unique.
+  worksheet_names = paste(EnergyType, LastStage)
 )
 ecc_temp_path <- tempfile(pattern = "write_excel_ecc_test_file", fileext = ".xlsx")
 write_ecc_to_excel(ecc,
