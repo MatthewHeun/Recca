@@ -9,7 +9,7 @@ which always resolves to the latest release.
 
 
 
-## Recca 0.1.59 (2025-06-27) 
+## Recca 0.1.59 (2025-06-27) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15756610.svg)](https://doi.org/10.5281/zenodo.15756610)
 
 * Now provides much better error reporting for 
   illegal named region and worksheet names in 
