@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.57</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.58</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,15 +36,27 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/MatthewHeun/Recca/blob/v0.1.57/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/MatthewHeun/Recca/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.57" id="recca-0157-2025-05-26">Recca 0.1.57 (2025-05-26)<a class="anchor" aria-label="anchor" href="#recca-0157-2025-05-26"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.58" id="recca-0158-2025-06-27">Recca 0.1.58 (2025-06-27)<a class="anchor" aria-label="anchor" href="#recca-0158-2025-06-27"></a></h2>
+<ul><li>New argument <code>worksheet_names</code> on <code><a href="../reference/write_ecc_to_excel.html">write_ecc_to_excel()</a></code> enables setting worksheet names in the resulting Excel file.</li>
+<li>Now claiming dependence on R &gt;= 4.1.0 due to use of the new pipe.</li>
+<li>
+<code><a href="../reference/write_ecc_to_excel.html">write_ecc_to_excel()</a></code> now adds a region name for each matrix in the Excel sheet.</li>
+<li>New tests for new features.
+<ul><li>Now up to 780 tests, all passing.</li>
+<li>Test coverage remains at 100%.</li>
+</ul></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.57" id="recca-0157-2025-05-26-doi">Recca 0.1.57 (2025-05-26) <a href="https://doi.org/10.5281/zenodo.15520936" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.15520936.svg" alt="DOI"></a>
+<a class="anchor" aria-label="anchor" href="#recca-0157-2025-05-26-doi"></a></h2>
 <ul><li>Update R-CMD-check GitHub action.</li>
 <li>
 <code><a href="../reference/extend_to_exergy.html">extend_to_exergy()</a></code> now ignores the <code>phi</code> vector when computing the exergy version of the <strong>U_EIOU</strong> matrix if the the energy version of the <strong>U_EIOU</strong> matrix is the <strong>0</strong> matrix. <code><a href="../reference/extend_to_exergy.html">extend_to_exergy()</a></code> simply returns the <strong>0</strong> matrix, same as the energy version of the <strong>U_EIOU</strong> matrix.</li>
-<li>Fixed many tests and added a few new tests for new features.
+<li>No new tests.
 <ul><li>Still at 775 tests, all passing.</li>
 <li>Test coverage remains at 100%.</li>
 </ul></li>
