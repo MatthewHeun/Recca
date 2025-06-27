@@ -137,10 +137,8 @@ write_ecc_to_excel <- function(.psut_data = NULL,
         sheet_name <- (as.integer(existing_sheets) %>% max()) + 1
       }
     }
-
-    # Check for malformed sheet and region names.
-    # Emit a warning if there is a problem.
-    check_named_region_violations(sheet_name)
+    # Check for malformed sheet names. Emit a warning if problem found.
+    check_worksheet_name_violations(sheet_name)
 
     # Add the worksheet to the workbook
     openxlsx::addWorksheet(ecc_wb, sheet_name)
@@ -220,6 +218,8 @@ write_ecc_to_excel <- function(.psut_data = NULL,
             # well below the maximum name size (255 characters).
             # So this approach should work fine.
             region_name <- paste(this_mat_name, sheet_name, sep = "_")
+            # Check for malformed region names. Emit a warning if problem found.
+            check_named_region_violations(sheet_name)
             openxlsx::createNamedRegion(wb = ecc_wb,
                                         sheet = sheet_name,
                                         rows = mat_origin[["y"]]:mat_extent[["y"]],
