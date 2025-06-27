@@ -70,12 +70,12 @@
 #'   tidyr::pivot_wider(names_from = "matrix.name",
 #'                      values_from = "matrix") |>
 #' dplyr::mutate(
-#'   tab_names = paste0(EnergyType, "-", LastStage)
+#'   worksheet_names = paste0(EnergyType, "-", LastStage)
 #' )
 #' ecc_temp_path <- tempfile(pattern = "write_excel_ecc_test_file", fileext = ".xlsx")
 #' write_ecc_to_excel(ecc,
 #'                    path = ecc_temp_path,
-#'                    tab_names = "tab_names",
+#'                    worksheet_names = "worksheet_names",
 #'                    overwrite = TRUE)
 #' }
 write_ecc_to_excel <- function(.psut_data = NULL,

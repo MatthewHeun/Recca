@@ -8,6 +8,7 @@ write_ecc_to_excel(
   .psut_data = NULL,
   path,
   overwrite_file = FALSE,
+  worksheet_names = NULL,
   pad = 2,
   include_named_regions = TRUE,
   R = Recca::psut_cols$R,
@@ -18,7 +19,6 @@ write_ecc_to_excel(
   U_eiou = Recca::psut_cols$U_eiou,
   U_feed = Recca::psut_cols$U_feed,
   S_units = Recca::psut_cols$S_units,
-  worksheet_names = NULL,
   .wrote_mats_colname = "Wrote mats",
   UV_bg_color = "#FDF2D0",
   RY_bg_color = "#D3712D",
@@ -39,6 +39,14 @@ arguments.}
 the file at \code{path}, if it already exists.
 Default is \code{FALSE}.}
 
+\item{worksheet_names}{A string or string vector identifying
+the names for the worksheets in the workbook.
+Alternatively, when \code{.psut_data} is a data frame,
+the string name of a column in the data frame
+containing the names of the worksheets.
+When \code{NULL}, the default, tabs are
+numbered sequentially.}
+
 \item{pad}{The number of rows and columns between adjacent matrices in the Excel sheet.
 Default is \code{2}.}
 
@@ -48,14 +56,6 @@ Default is \code{TRUE}.}
 
 \item{R, U, U_feed, U_eiou, r_eiou, V, Y, S_units}{Names of ECC matrices or actual matrices.
 See \code{Recca::psut_cols}.}
-
-\item{worksheet_names}{A string or string vector identifying
-the names for the worksheets in the workbook.
-Alternatively, when \code{.psut_data} is a data frame,
-the string name of a column in the data frame
-containing the names of the worksheets.
-When \code{NULL}, the default, tabs are
-numbered sequentially.}
 
 \item{.wrote_mats_colname}{The name of the outgoing column
 that tells whether a worksheet was written successfully.
@@ -109,12 +109,12 @@ ecc <- UKEnergy2000mats \%>\%
   tidyr::pivot_wider(names_from = "matrix.name",
                      values_from = "matrix") |>
 dplyr::mutate(
-  tab_names = paste0(EnergyType, "-", LastStage)
+  worksheet_names = paste0(EnergyType, "-", LastStage)
 )
 ecc_temp_path <- tempfile(pattern = "write_excel_ecc_test_file", fileext = ".xlsx")
 write_ecc_to_excel(ecc,
                    path = ecc_temp_path,
-                   tab_names = "tab_names",
+                   worksheet_names = "worksheet_names",
                    overwrite = TRUE)
 }
 }
