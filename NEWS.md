@@ -9,9 +9,14 @@ which always resolves to the latest release.
 
 
 
+## Recca 0.1.59 (2025-06-27) 
+
 * Now provides much better error reporting for 
   illegal named region and worksheet names in 
   `write_ecc_to_excel()`.
+* New tests for new features.
+    - Now up to 794 tests, all passing.
+    - Test coverage remains at 100%.
   
 
 ## Recca 0.1.58 (2025-06-27) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15755313.svg)](https://doi.org/10.5281/zenodo.15755313)

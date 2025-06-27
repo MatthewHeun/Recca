@@ -2,7 +2,7 @@
 % Please edit documentation in R/excel.R
 \name{write_ecc_to_excel}
 \alias{write_ecc_to_excel}
-\title{Write energy conversion chain matrices in an Excel file}
+\title{Write energy conversion chain matrices to an Excel file}
 \usage{
 write_ecc_to_excel(
   .psut_data = NULL,
@@ -99,7 +99,7 @@ named regions for matrices are added to Excel sheets.
 The format for the names is \verb{<<matrix symbol>>_<<worksheet name>>}.
 For example, "R_4" for the \strong{R} matrix on the sheet named "4".
 The names help to identify matrices in high-level overviews of the Excel file
-and can also be used for reading matrices from Excel files.
+and can also be used for later reading matrices from Excel files.
 The region names apply to the numbers in a matrix only,
 not to the row and column labels.
 Row names are one column left of the named region.
@@ -113,6 +113,7 @@ Best to stick with letters, numbers, and underscores.
 Finally, note that because region names include the worksheet name,
 worksheet names should avoid illegal characters for region names.
 Again, best to stick with letters, numbers, and underscores.
+
 A warning is given when any worksheet names or region names
 contain illegal characters.
 
@@ -126,7 +127,7 @@ ecc <- UKEnergy2000mats \%>\%
                      values_from = "matrix") |>
 dplyr::mutate(
   # Specify worksheet names using metadata guaranteed to be unique.
-  worksheet_names = paste(EnergyType, LastStage)
+  worksheet_names = paste(EnergyType, LastStage, sep = "_")
 )
 ecc_temp_path <- tempfile(pattern = "write_excel_ecc_test_file", fileext = ".xlsx")
 write_ecc_to_excel(ecc,
