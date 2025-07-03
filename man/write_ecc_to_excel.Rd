@@ -117,8 +117,11 @@ Again, best to stick with letters, numbers, and underscores.
 A warning is given when any worksheet names or region names
 contain illegal characters.
 
+This function is an inverse of [read_ecc_from_excel()].
+
 [  ]: R:\%20\%20
 [ ]: R:\%20
+[read_ecc_from_excel()]: R:read_ecc_from_excel()
 }
 \examples{
 \dontrun{
@@ -135,4 +138,7 @@ write_ecc_to_excel(ecc,
                    worksheet_names = "worksheet_names",
                    overwrite = TRUE)
 }
+}
+\seealso{
+\code{\link[=read_ecc_from_excel]{read_ecc_from_excel()}}
 }

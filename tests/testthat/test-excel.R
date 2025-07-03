@@ -178,7 +178,30 @@ test_that("check_worksheet_name_violations() works as expected", {
 })
 
 
+test_that("read_ecc_from_excel() works as expected", {
+  ecc <- UKEnergy2000mats |>
+    tidyr::spread(key = "matrix.name", value = "matrix") |>
+    dplyr::mutate(
+      worksheet_names = paste0(EnergyType, "_", LastStage)
+    )
+  ecc_temp_path <- tempfile(pattern = "write_excel_ecc_test_file", fileext = ".xlsx")
 
+  res <- write_ecc_to_excel(ecc,
+                            path = ecc_temp_path,
+                            worksheet_names = "worksheet_names",
+                            overwrite = TRUE)
+
+  expect_true(file.exists(ecc_temp_path))
+
+  # Now read the regions
+  #
+
+
+
+  if (file.exists(ecc_temp_path)) {
+    file.remove(ecc_temp_path)
+  }
+})
 
 
 

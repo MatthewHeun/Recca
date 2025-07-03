@@ -38,6 +38,8 @@
 #' A warning is given when any worksheet names or region names
 #' contain illegal characters.
 #'
+#' This function is an inverse of [read_ecc_from_excel()].
+#'
 #' @param .psut_data A list or data frame of energy conversion chains.
 #'                   Default is `NULL`, in which case
 #'                   single matrices can be supplied in the
@@ -60,7 +62,7 @@
 #'                              the Excel tabs according to matrices.
 #'                              Default is `TRUE`.
 #' @param R,U,U_feed,U_eiou,r_eiou,V,Y,S_units Names of ECC matrices or actual matrices.
-#'                                             See `Recca::psut_cols`.
+#'                                             See `Recca::psut_cols` for defaults.
 #' @param .wrote_mats_colname The name of the outgoing column
 #'                            that tells whether a worksheet was written successfully.
 #'                            Default is "Wrote mats".
@@ -77,6 +79,8 @@
 #'         the incoming matrices.
 #'
 #' @export
+#'
+#' @seealso [read_ecc_from_excel()]
 #'
 #' @examples
 #' \dontrun{
@@ -117,7 +121,7 @@ write_ecc_to_excel <- function(.psut_data = NULL,
   # Check if path exists. If so, throw an error.
   if (file.exists(path) & !overwrite_file) {
     stop(paste("File", path,
-               "already exists. Call `write_ecc_to_excel()` with `overwrite = TRUE`?"))
+               "already exists. Call `Recca::write_ecc_to_excel()` with `overwrite = TRUE`?"))
   }
   # Create the workbook
   ecc_wb <- openxlsx::createWorkbook()
@@ -541,4 +545,64 @@ check_worksheet_name_violations <- function(candidate_worksheet_names) {
   }
 
   invisible(NULL)
+}
+
+
+#' Read an energy conversion chain from a Excel file
+#'
+#' Reads matrices from named regions in an Excel file
+#' into `matsindf` format.
+#'
+#' When `worksheets` is `NULL` (the default),
+#' the named regions are assumed to be global.
+#'
+#' Regions are assumed to include row and column names
+#' in addition to numerical values.
+#'
+#' This function is an inverse of [write_ecc_to_excel()].
+#'
+#' @param path The path to the Excel file.
+#' @param R,U,V,Y,r_eiou,U_eiou,U_feed,S_units String names for regions in the file at `path`
+#'                                             containing matrices.
+#'                                             See `Recca::psut_cols` for defaults.
+#'
+#' @returns A data frame in `matsindf` format containing
+#'          the matrices from named regions in `path`.
+#'
+#' @export
+#'
+#' @seealso [write_ecc_to_excel()]
+#'
+#' @examples
+read_ecc_from_excel <- function(path,
+                                worksheets = NULL,
+                                R = Recca::psut_cols$R,
+                                U = Recca::psut_cols$U,
+                                V = Recca::psut_cols$V,
+                                Y = Recca::psut_cols$Y,
+                                r_eiou = Recca::psut_cols$r_eiou,
+                                U_eiou = Recca::psut_cols$U_eiou,
+                                U_feed = Recca::psut_cols$U_feed,
+                                S_units = Recca::psut_cols$S_units) {
+
+  mcc <- sapply(X = c(R, U, U_feed, U_eiou,
+                      r_eiou, V, Y, S_units),
+                FUN = function(this_matrix_name) {
+                  df <- openxlsx2::read_xlsx(file = file.path("data",
+                                                              "Paper Examples 4.xlsx"),
+                                             named_region = this_matrix_name,
+                                             row_names = TRUE)
+                  # Convert all NA values to 0
+                  df[is.na(df)] <- 0
+                  this_matrix <- df |>
+                    # Convert the data frame to a matrix
+                    as.matrix() |>
+                    # Then to a Matrix
+                    Matrix::Matrix(sparse = TRUE)
+                  # Bundle in a vector for easier conversion to a tibble
+                  c(this_matrix)
+                },
+                simplify = FALSE,
+                USE.NAMES = TRUE) |>
+    tibble::as_tibble_row()
 }
