@@ -194,7 +194,8 @@ test_that("read_ecc_from_excel() works as expected", {
   expect_true(file.exists(ecc_temp_path))
 
   # Now read the regions
-  #
+  ecc_temp_path |>
+    read_ecc_from_excel()
 
 
 
