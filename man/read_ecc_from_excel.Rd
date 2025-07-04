@@ -7,21 +7,34 @@
 read_ecc_from_excel(
   path,
   worksheets = NULL,
-  R_region_name = Recca::psut_cols$R,
-  U_region_name = Recca::psut_cols$U,
-  V_region_name = Recca::psut_cols$V,
-  Y_region_name = Recca::psut_cols$Y,
-  r_eiou_region_name = Recca::psut_cols$r_eiou,
-  U_eiou_region_name = Recca::psut_cols$U_eiou,
-  U_feed_region_name = Recca::psut_cols$U_feed,
-  S_units_region_name = Recca::psut_cols$S_units
+  R = Recca::psut_cols$R,
+  U = Recca::psut_cols$U,
+  V = Recca::psut_cols$V,
+  Y = Recca::psut_cols$Y,
+  r_eiou = Recca::psut_cols$r_eiou,
+  U_eiou = Recca::psut_cols$U_eiou,
+  U_feed = Recca::psut_cols$U_feed,
+  S_units = Recca::psut_cols$S_units,
+  sep = "_"
 )
 }
 \arguments{
 \item{path}{The path to the Excel file.}
 
-\item{R_region_name, U_region_name, V_region_name, Y_region_name, r_eiou_region_name, U_eiou_region_name, U_feed_region_name, S_units_region_name}{Named regions in the file at \code{path}.
-See \code{Recca::psut_cols} for defaults.}
+\item{worksheets}{Names of worksheets from which matrices
+are to be read.
+Default is \code{NULL}, meaning that all
+worksheets are read.}
+
+\item{R, U, V, Y, r_eiou, U_eiou, U_feed, S_units}{String names for matrices
+in the file at \code{path}
+containing matrices.
+See \code{Recca::psut_cols}
+for defaults.}
+
+\item{sep}{The separator between matrix name and worksheet name
+for named regions.
+Default is "_".}
 }
 \value{
 A data frame in \code{matsindf} format containing
@@ -30,13 +43,20 @@ the matrices from named regions in \code{path}.
 \description{
 Reads matrices from named regions in an Excel file
 into \code{matsindf} format.
+The named regions are assumed to be global
+to the workbook.
+The format for the region names is assumed to be
+\verb{<<matrix symbol>><<sep>><<worksheet name>>},
+as written by \code{\link[=write_ecc_to_excel]{write_ecc_to_excel()}}.
+For example, "R_4" for the \strong{R} matrix on the sheet named "4".
 }
 \details{
-When \code{worksheets} is \code{NULL} (the default),
-the named regions are assumed to be global.
-
-Regions are assumed to include row and column names
-in addition to numerical values.
+Named regions are assumed to include
+the rectangle of numerical values,
+row names (to the left of the rectangle of numbers), and
+column names (above the rectangle of numbers),
+the same format
+as written by \code{\link[=write_ecc_to_excel]{write_ecc_to_excel()}}.
 
 This function is an inverse of \code{\link[=write_ecc_to_excel]{write_ecc_to_excel()}}.
 }

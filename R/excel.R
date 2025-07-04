@@ -17,14 +17,14 @@
 #'
 #' When `include_named_regions` is `TRUE` (the default),
 #' named regions for matrices are added to Excel sheets.
-#' The format for the names is `<<matrix symbol>>_<<worksheet name>>`.
+#' The format for the region names is
+#' `<<matrix symbol>><<sep>><<worksheet name>>`.
 #' For example, "R_4" for the **R** matrix on the sheet named "4".
 #' The names help to identify matrices in high-level overviews of the Excel file
 #' and can also be used for later reading matrices from Excel files.
-#' The region names apply to the numbers in a matrix only,
-#' not to the row and column labels.
-#' Row names are one column left of the named region.
-#' Column names are one row above the named region.
+#' (See [read_ecc_from_excel()].)
+#' The region names apply to the numbers _and_
+#' the row and column names for the matrix.
 #'
 #' Note that region names are more restricted than worksheet names and
 #' may not contain any of the following characters:
@@ -63,6 +63,9 @@
 #'                              Default is `TRUE`.
 #' @param R,U,U_feed,U_eiou,r_eiou,V,Y,S_units Names of ECC matrices or actual matrices.
 #'                                             See `Recca::psut_cols` for defaults.
+#' @param sep The separator between matrix name and worksheet name
+#'            for named regions.
+#'            Default is "_".
 #' @param .wrote_mats_colname The name of the outgoing column
 #'                            that tells whether a worksheet was written successfully.
 #'                            Default is "Wrote mats".
@@ -102,7 +105,6 @@ write_ecc_to_excel <- function(.psut_data = NULL,
                                overwrite_file = FALSE,
                                worksheet_names = NULL,
                                pad = 2,
-                               # include_io_mats = FALSE,
                                include_named_regions = TRUE,
                                R = Recca::psut_cols$R,
                                U = Recca::psut_cols$U,
@@ -112,6 +114,7 @@ write_ecc_to_excel <- function(.psut_data = NULL,
                                U_eiou = Recca::psut_cols$U_eiou,
                                U_feed = Recca::psut_cols$U_feed,
                                S_units = Recca::psut_cols$S_units,
+                               sep = "_",
                                .wrote_mats_colname = "Wrote mats",
                                UV_bg_color = "#FDF2D0",
                                RY_bg_color = "#D3712D",
@@ -227,8 +230,8 @@ write_ecc_to_excel <- function(.psut_data = NULL,
             check_named_region_violations(region_name)
             openxlsx::createNamedRegion(wb = ecc_wb,
                                         sheet = sheet_name,
-                                        rows = mat_origin[["y"]]:mat_extent[["y"]],
-                                        cols = mat_origin[["x"]]:mat_extent[["x"]],
+                                        rows = (mat_origin[["y"]]-1):mat_extent[["y"]],
+                                        cols = (mat_origin[["x"]]-1):mat_extent[["x"]],
                                         name = region_name,
                                         # Set false to flag any problems.
                                         overwrite = FALSE)
@@ -552,19 +555,35 @@ check_worksheet_name_violations <- function(candidate_worksheet_names) {
 #'
 #' Reads matrices from named regions in an Excel file
 #' into `matsindf` format.
+#' The named regions are assumed to be global
+#' to the workbook.
+#' The format for the region names is assumed to be
+#' `<<matrix symbol>><<sep>><<worksheet name>>`,
+#' as written by [write_ecc_to_excel()].
+#' For example, "R_4" for the **R** matrix on the sheet named "4".
 #'
-#' When `worksheets` is `NULL` (the default),
-#' the named regions are assumed to be global.
-#'
-#' Regions are assumed to include row and column names
-#' in addition to numerical values.
+#' Named regions are assumed to include
+#' the rectangle of numerical values,
+#' row names (to the left of the rectangle of numbers), and
+#' column names (above the rectangle of numbers),
+#' the same format
+#' as written by [write_ecc_to_excel()].
 #'
 #' This function is an inverse of [write_ecc_to_excel()].
 #'
 #' @param path The path to the Excel file.
-#' @param R,U,V,Y,r_eiou,U_eiou,U_feed,S_units String names for regions in the file at `path`
+#' @param worksheets Names of worksheets from which matrices
+#'                   are to be read.
+#'                   Default is `NULL`, meaning that all
+#'                   worksheets are read.
+#' @param R,U,V,Y,r_eiou,U_eiou,U_feed,S_units String names for matrices
+#'                                             in the file at `path`
 #'                                             containing matrices.
-#'                                             See `Recca::psut_cols` for defaults.
+#'                                             See `Recca::psut_cols`
+#'                                             for defaults.
+#' @param sep The separator between matrix name and worksheet name
+#'            for named regions.
+#'            Default is "_".
 #'
 #' @returns A data frame in `matsindf` format containing
 #'          the matrices from named regions in `path`.
@@ -583,26 +602,41 @@ read_ecc_from_excel <- function(path,
                                 r_eiou = Recca::psut_cols$r_eiou,
                                 U_eiou = Recca::psut_cols$U_eiou,
                                 U_feed = Recca::psut_cols$U_feed,
-                                S_units = Recca::psut_cols$S_units) {
+                                S_units = Recca::psut_cols$S_units,
+                                sep = "_") {
 
-  mcc <- sapply(X = c(R, U, U_feed, U_eiou,
-                      r_eiou, V, Y, S_units),
-                FUN = function(this_matrix_name) {
-                  df <- openxlsx2::read_xlsx(file = file.path("data",
-                                                              "Paper Examples 4.xlsx"),
-                                             named_region = this_matrix_name,
-                                             row_names = TRUE)
-                  # Convert all NA values to 0
-                  df[is.na(df)] <- 0
-                  this_matrix <- df |>
-                    # Convert the data frame to a matrix
-                    as.matrix() |>
-                    # Then to a Matrix
-                    Matrix::Matrix(sparse = TRUE)
-                  # Bundle in a vector for easier conversion to a tibble
-                  c(this_matrix)
-                },
-                simplify = FALSE,
-                USE.NAMES = TRUE) |>
-    tibble::as_tibble_row()
+  workbook <- openxlsx2::wb_load(path)
+
+  if (is.null(worksheets)) {
+    worksheets <- workbook |>
+      openxlsx2::wb_get_sheet_names()
+  }
+
+  worksheets |>
+    lapply(FUN = function(this_worksheet) {
+      # Figure out region names
+      paste0(c(R, U, V, Y, r_eiou, U_eiou, U_feed, S_units),
+             sep,
+             this_worksheet) |>
+
+        sapply(simplify = FALSE,
+               USE.NAMES = TRUE,
+               FUN = function(this_region) {
+                 # Read the region as a data frame
+                 df <- openxlsx2::wb_to_df(workbook,
+                                           named_region = this_region,
+                                           row_names = TRUE)
+                 # Convert all NA values to 0
+                 df[is.na(df)] <- 0
+                 this_matrix <- df |>
+                   # Convert the data frame to a matrix
+                   as.matrix() |>
+                   # Then to a Matrix
+                   Matrix::Matrix(sparse = TRUE)
+                 # Bundle in a vector for easier conversion to a tibble
+                 c(this_matrix)
+               }) |>
+        tibble::as_tibble_row()
+    }) |>
+    dplyr::bind_rows()
 }
