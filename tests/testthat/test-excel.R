@@ -217,7 +217,8 @@ print(paste("row =", i_row, "mat =", j_matname))
       #               "and matrix =",
       #               j_matname))
       # }
-      expect_true(matsbyname::equal_byname(orig_mat, roundtrip_mat,
+      expect_true(matsbyname::equal_byname(roundtrip_mat,
+                                           orig_mat,
                                            tol = 1e-4))
     }
   }
