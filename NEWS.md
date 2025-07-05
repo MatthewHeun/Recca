@@ -13,6 +13,9 @@ which always resolves to the latest release.
   taking advantage of named regions in Excel spreadsheets.
   Both functions now name regions as
   `<<matrix name>>__<<worksheet name>>` by default.
+* New tests for new features.
+    - Now up to 827 tests, all passing.
+    - Test coverage remains at 100%.
 
 
 ## Recca 0.1.59 (2025-06-27) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15756610.svg)](https://doi.org/10.5281/zenodo.15756610)
