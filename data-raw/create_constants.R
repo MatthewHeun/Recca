@@ -244,7 +244,8 @@ usethis::use_data(prod_ind_names_colnames, overwrite = TRUE)
 #
 
 row_col_types <- list(product_type = "Product",
-                      industry_type = "Industry")
+                      industry_type = "Industry",
+                      unit_type = "Unit")
 usethis::use_data(row_col_types, overwrite = TRUE)
 
 

@@ -7,6 +7,8 @@
 read_ecc_from_excel(
   path,
   worksheets = NULL,
+  add_row_col_types = TRUE,
+  worksheet_names_colname = "worksheet_names",
   R = Recca::psut_cols$R,
   U = Recca::psut_cols$U,
   V = Recca::psut_cols$V,
@@ -15,7 +17,10 @@ read_ecc_from_excel(
   U_eiou = Recca::psut_cols$U_eiou,
   U_feed = Recca::psut_cols$U_feed,
   S_units = Recca::psut_cols$S_units,
-  sep = "_"
+  industry_type = Recca::row_col_types$industry_type,
+  product_type = Recca::row_col_types$product_type,
+  unit_type = Recca::row_col_types$unit_type,
+  sep = "__"
 )
 }
 \arguments{
@@ -26,7 +31,7 @@ are to be read.
 Default is \code{NULL}, meaning that all
 worksheets are read.}
 
-\item{R, U, V, Y, r_eiou, U_eiou, U_feed, S_units}{String names for matrices
+\item{R, U, V, Y, r_eiou, U_eiou, U_feed, S_units}{String names for regions
 in the file at \code{path}
 containing matrices.
 See \code{Recca::psut_cols}
@@ -34,7 +39,7 @@ for defaults.}
 
 \item{sep}{The separator between matrix name and worksheet name
 for named regions.
-Default is "_".}
+Default is "__".}
 }
 \value{
 A data frame in \code{matsindf} format containing

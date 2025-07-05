@@ -19,7 +19,7 @@ write_ecc_to_excel(
   U_eiou = Recca::psut_cols$U_eiou,
   U_feed = Recca::psut_cols$U_feed,
   S_units = Recca::psut_cols$S_units,
-  sep = "_",
+  sep = "__",
   .wrote_mats_colname = "Wrote mats",
   UV_bg_color = "#FDF2D0",
   RY_bg_color = "#D3712D",
@@ -60,7 +60,7 @@ See \code{Recca::psut_cols} for defaults.}
 
 \item{sep}{The separator between matrix name and worksheet name
 for named regions.
-Default is "_".}
+Default is "__".}
 
 \item{.wrote_mats_colname}{The name of the outgoing column
 that tells whether a worksheet was written successfully.

@@ -65,7 +65,7 @@
 #'                                             See `Recca::psut_cols` for defaults.
 #' @param sep The separator between matrix name and worksheet name
 #'            for named regions.
-#'            Default is "_".
+#'            Default is "__".
 #' @param .wrote_mats_colname The name of the outgoing column
 #'                            that tells whether a worksheet was written successfully.
 #'                            Default is "Wrote mats".
@@ -114,7 +114,7 @@ write_ecc_to_excel <- function(.psut_data = NULL,
                                U_eiou = Recca::psut_cols$U_eiou,
                                U_feed = Recca::psut_cols$U_feed,
                                S_units = Recca::psut_cols$S_units,
-                               sep = "_",
+                               sep = "__",
                                .wrote_mats_colname = "Wrote mats",
                                UV_bg_color = "#FDF2D0",
                                RY_bg_color = "#D3712D",
@@ -190,8 +190,16 @@ write_ecc_to_excel <- function(.psut_data = NULL,
                                            S_units = S_units_mat,
                                            pad = pad)
     # Write each matrix to the worksheet
-    Map(list("R", "U", "V", "Y", "r_eiou", "U_eiou", "U_feed", "S_units"),
-        list(R_mat, U_mat, V_mat, Y_mat, r_eiou_mat, U_eiou_mat, U_feed_mat, S_units_mat),
+    Map(list(Recca::psut_cols$R,
+             Recca::psut_cols$U,
+             Recca::psut_cols$V,
+             Recca::psut_cols$Y,
+             Recca::psut_cols$r_eiou,
+             Recca::psut_cols$U_eiou,
+             Recca::psut_cols$U_feed,
+             Recca::psut_cols$S_units),
+        list(R_mat, U_mat, V_mat, Y_mat,
+             r_eiou_mat, U_eiou_mat, U_feed_mat, S_units_mat),
         locations,
         f = function(this_mat_name, this_mat, this_loc) {
           # Find the locations of the matrix origin and matrix extent
@@ -225,7 +233,7 @@ write_ecc_to_excel <- function(.psut_data = NULL,
             # plus the "_" character, for a maximum of 39 characters,
             # well below the maximum name size (255 characters).
             # So this approach should work fine.
-            region_name <- paste(this_mat_name, sheet_name, sep = "_")
+            region_name <- paste(this_mat_name, sheet_name, sep = sep)
             # Check for malformed region names. Emit a warning if problem found.
             check_named_region_violations(region_name)
             openxlsx::createNamedRegion(wb = ecc_wb,
@@ -576,14 +584,14 @@ check_worksheet_name_violations <- function(candidate_worksheet_names) {
 #'                   are to be read.
 #'                   Default is `NULL`, meaning that all
 #'                   worksheets are read.
-#' @param R,U,V,Y,r_eiou,U_eiou,U_feed,S_units String names for matrices
+#' @param R,U,V,Y,r_eiou,U_eiou,U_feed,S_units String names for regions
 #'                                             in the file at `path`
 #'                                             containing matrices.
 #'                                             See `Recca::psut_cols`
 #'                                             for defaults.
 #' @param sep The separator between matrix name and worksheet name
 #'            for named regions.
-#'            Default is "_".
+#'            Default is "__".
 #'
 #' @returns A data frame in `matsindf` format containing
 #'          the matrices from named regions in `path`.
@@ -595,6 +603,8 @@ check_worksheet_name_violations <- function(candidate_worksheet_names) {
 #' @examples
 read_ecc_from_excel <- function(path,
                                 worksheets = NULL,
+                                add_row_col_types = TRUE,
+                                worksheet_names_colname = "worksheet_names",
                                 R = Recca::psut_cols$R,
                                 U = Recca::psut_cols$U,
                                 V = Recca::psut_cols$V,
@@ -603,7 +613,10 @@ read_ecc_from_excel <- function(path,
                                 U_eiou = Recca::psut_cols$U_eiou,
                                 U_feed = Recca::psut_cols$U_feed,
                                 S_units = Recca::psut_cols$S_units,
-                                sep = "_") {
+                                industry_type = Recca::row_col_types$industry_type,
+                                product_type = Recca::row_col_types$product_type,
+                                unit_type = Recca::row_col_types$unit_type,
+                                sep = "__") {
 
   workbook <- openxlsx2::wb_load(path)
 
@@ -612,31 +625,66 @@ read_ecc_from_excel <- function(path,
       openxlsx2::wb_get_sheet_names()
   }
 
+  matrix_names <- c(R, U, V, Y,
+                    r_eiou, U_eiou, U_feed, S_units)
+
+  # Read all of the worksheets
   worksheets |>
     lapply(FUN = function(this_worksheet) {
-      # Figure out region names
-      paste0(c(R, U, V, Y, r_eiou, U_eiou, U_feed, S_units),
-             sep,
-             this_worksheet) |>
-
+      # Set the region names: <<matrix symbol>><<sep>><<worksheet name>>
+      region_names <- paste(matrix_names, this_worksheet, sep = sep)
+      # Look at all regions
+      region_names |>
         sapply(simplify = FALSE,
-               USE.NAMES = TRUE,
+               USE.NAMES = FALSE,
                FUN = function(this_region) {
                  # Read the region as a data frame
                  df <- openxlsx2::wb_to_df(workbook,
                                            named_region = this_region,
                                            row_names = TRUE)
-                 # Convert all NA values to 0
+                 # Convert all NA values (blanks) to 0s
                  df[is.na(df)] <- 0
                  this_matrix <- df |>
                    # Convert the data frame to a matrix
                    as.matrix() |>
-                   # Then to a Matrix
+                   # Then to a Matrix so it is amenable to
+                   # storage in a 1-row column of a tibble.
                    Matrix::Matrix(sparse = TRUE)
-                 # Bundle in a vector for easier conversion to a tibble
+                 # If desired, add row and column types.
+                 if (add_row_col_types) {
+                   if (startsWith_any_of(x = this_region,
+                                         prefixes = c(R, V))) {
+                     this_matrix <- this_matrix |>
+                       matsbyname::setrowtype(industry_type) |>
+                       matsbyname::setcoltype(product_type)
+                   } else if (startsWith_any_of(x = this_region,
+                                                prefixes = c(U, Y, r_eiou,
+                                                             U_eiou, U_feed))) {
+                     this_matrix <- this_matrix |>
+                       matsbyname::setrowtype(product_type) |>
+                       matsbyname::setcoltype(industry_type)
+                   } else if (startsWith_any_of(x = this_region,
+                                                prefixes = S_units)) {
+                     this_matrix <- this_matrix |>
+                       matsbyname::setrowtype(product_type) |>
+                       matsbyname::setcoltype(unit_type)
+                   }
+                 }
+
+                 # Bundle in a vector for easier conversion to a tibble and return
                  c(this_matrix)
                }) |>
-        tibble::as_tibble_row()
+        # Set the names (which will later become column names)
+        magrittr::set_names(matrix_names) |>
+        # Convert to to a row of a data frame
+        tibble::as_tibble_row() |>
+        # Set the name of the column that contains the worksheets
+        dplyr::mutate(
+          "{worksheet_names_colname}" := this_worksheet
+        ) |>
+        # Put the worksheet name column first (leftmost) in the data frame
+        dplyr::relocate(tidyselect::all_of(worksheet_names_colname))
     }) |>
+    # Bind each row into a data frame
     dplyr::bind_rows()
 }
