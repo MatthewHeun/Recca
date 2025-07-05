@@ -210,6 +210,7 @@ print(paste("row =", i_row, "mat =", j_matname))
       orig_mat <- all_mats[i_row, j_orig_mat_name][[1]]
       roundtrip_mat <- all_mats[i_row, j_roundtrip_mat_name][[1]]
       should_be_zero <- matsbyname::difference_byname(roundtrip_mat, orig_mat)
+      # This code can be uncommented to pinpoint any failures.
       # if (!matsbyname::iszero_byname(should_be_zero, tol = 1e-4)) {
       #   print(paste("Not zero for row =",
       #               i_row,
