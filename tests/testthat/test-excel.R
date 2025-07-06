@@ -182,13 +182,13 @@ test_that("read_ecc_from_excel() works as expected", {
   ecc <- UKEnergy2000mats |>
     tidyr::spread(key = "matrix.name", value = "matrix") |>
     dplyr::mutate(
-      worksheet_names = paste0(EnergyType, "_", LastStage)
+      WorksheetNames = paste0(EnergyType, "_", LastStage)
     )
   ecc_temp_path <- tempfile(pattern = "write_excel_ecc_test_file", fileext = ".xlsx")
 
   res <- write_ecc_to_excel(ecc,
                             path = ecc_temp_path,
-                            worksheet_names = "worksheet_names",
+                            worksheet_names = "WorksheetNames",
                             overwrite = TRUE)
 
   expect_true(file.exists(ecc_temp_path))
@@ -198,13 +198,13 @@ test_that("read_ecc_from_excel() works as expected", {
     read_ecc_from_excel()
 
   all_mats <- dplyr::left_join(ecc, ecc_round_trip,
-                               by = "worksheet_names",
+                               by = "WorksheetNames",
                                suffix = c(".orig", ".roundtrip"))
 
   for (i_row in 1:nrow(all_mats)) {
     for (j_matname in c("R", "U", "V", "Y",
                         "r_EIOU", "U_EIOU", "U_feed", "S_units")) {
-print(paste("row =", i_row, "mat =", j_matname))
+      # print(paste("row =", i_row, "mat =", j_matname))
       j_orig_mat_name <- paste(j_matname, "orig", sep = ".")
       j_roundtrip_mat_name <- paste(j_matname, "roundtrip", sep = ".")
       orig_mat <- all_mats[i_row, j_orig_mat_name][[1]]

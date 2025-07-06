@@ -7,8 +7,8 @@
 read_ecc_from_excel(
   path,
   worksheets = NULL,
-  add_row_col_types = TRUE,
-  worksheet_names_colname = "worksheet_names",
+  add_rc_types = TRUE,
+  worksheet_names_colname = "WorksheetNames",
   R = Recca::psut_cols$R,
   U = Recca::psut_cols$U,
   V = Recca::psut_cols$V,
@@ -30,6 +30,19 @@ read_ecc_from_excel(
 are to be read.
 Default is \code{NULL}, meaning that all
 worksheets are read.}
+
+\item{add_rc_types}{A boolean that tells whether to
+add row and column types
+to the outgoing matrices.
+Matrix names are determined by
+\code{\link[=add_row_col_types]{add_row_col_types()}}.
+Default is \code{TRUE}.}
+
+\item{worksheet_names_colname}{The name of a column in
+the outgoing data frame that
+contains the names of worksheets
+on which the matrices were found.
+Default is "WorksheetNames".}
 
 \item{R, U, V, Y, r_eiou, U_eiou, U_feed, S_units}{String names for regions
 in the file at \code{path}

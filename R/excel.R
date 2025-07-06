@@ -307,7 +307,6 @@ write_ecc_to_excel <- function(.psut_data = NULL,
       magrittr::set_names(.wrote_mats_colname)
   }
 
-
   out <- matsindf::matsindf_apply(.psut_data,
                                   FUN = create_one_tab,
                                   R_mat = R,
@@ -584,6 +583,17 @@ check_worksheet_name_violations <- function(candidate_worksheet_names) {
 #'                   are to be read.
 #'                   Default is `NULL`, meaning that all
 #'                   worksheets are read.
+#' @param add_rc_types A boolean that tells whether to
+#'                     add row and column types
+#'                     to the outgoing matrices.
+#'                     Matrix names are determined by
+#'                     [add_row_col_types()].
+#'                     Default is `TRUE`.
+#' @param worksheet_names_colname The name of a column in
+#'                                the outgoing data frame that
+#'                                contains the names of worksheets
+#'                                on which the matrices were found.
+#'                                Default is "WorksheetNames".
 #' @param R,U,V,Y,r_eiou,U_eiou,U_feed,S_units String names for regions
 #'                                             in the file at `path`
 #'                                             containing matrices.
@@ -603,8 +613,8 @@ check_worksheet_name_violations <- function(candidate_worksheet_names) {
 #' @examples
 read_ecc_from_excel <- function(path,
                                 worksheets = NULL,
-                                add_row_col_types = TRUE,
-                                worksheet_names_colname = "worksheet_names",
+                                add_rc_types = TRUE,
+                                worksheet_names_colname = "WorksheetNames",
                                 R = Recca::psut_cols$R,
                                 U = Recca::psut_cols$U,
                                 V = Recca::psut_cols$V,
@@ -634,7 +644,7 @@ read_ecc_from_excel <- function(path,
       # Set the region names: <<matrix symbol>><<sep>><<worksheet name>>
       region_names <- paste(matrix_names, this_worksheet, sep = sep)
       # Look at all regions
-      region_names |>
+      result <- region_names |>
         sapply(simplify = FALSE,
                USE.NAMES = FALSE,
                FUN = function(this_region) {
@@ -650,32 +660,24 @@ read_ecc_from_excel <- function(path,
                    # Then to a Matrix so it is amenable to
                    # storage in a 1-row column of a tibble.
                    Matrix::Matrix(sparse = TRUE)
-                 # If desired, add row and column types.
-                 if (add_row_col_types) {
-                   if (startsWith_any_of(x = this_region,
-                                         prefixes = c(R, V))) {
-                     this_matrix <- this_matrix |>
-                       matsbyname::setrowtype(industry_type) |>
-                       matsbyname::setcoltype(product_type)
-                   } else if (startsWith_any_of(x = this_region,
-                                                prefixes = c(U, Y, r_eiou,
-                                                             U_eiou, U_feed))) {
-                     this_matrix <- this_matrix |>
-                       matsbyname::setrowtype(product_type) |>
-                       matsbyname::setcoltype(industry_type)
-                   } else if (startsWith_any_of(x = this_region,
-                                                prefixes = S_units)) {
-                     this_matrix <- this_matrix |>
-                       matsbyname::setrowtype(product_type) |>
-                       matsbyname::setcoltype(unit_type)
-                   }
-                 }
-
-                 # Bundle in a vector for easier conversion to a tibble and return
+                 # Bundle in a vector for easier conversion to a tibble
                  c(this_matrix)
                }) |>
         # Set the names (which will later become column names)
-        magrittr::set_names(matrix_names) |>
+        magrittr::set_names(matrix_names)
+      if (add_rc_types) {
+        result <- add_row_col_types(matvals = result,
+                                    matnames = names(result),
+                                    R = R, U = U, V = V, Y = Y,
+                                    U_feed = U_feed, U_eiou = U_eiou,
+                                    r_eiou = r_eiou, S_units = S_units,
+                                    industry_type = industry_type,
+                                    product_type = product_type,
+                                    unit_type = unit_type) |>
+          unlist(recursive = FALSE) |>
+          magrittr::set_names(matrix_names)
+      }
+      result |>
         # Convert to to a row of a data frame
         tibble::as_tibble_row() |>
         # Set the name of the column that contains the worksheets
