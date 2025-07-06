@@ -390,15 +390,116 @@ test_that("get_all_products_and_industries() works with pieces", {
 })
 
 
+test_that("add_row_col_types() works as expected", {
+  mats <- list(R = matrix(1), U = matrix(2),
+               V = matrix(3), Y = matrix(4),
+               U_feed = matrix(5), U_EIOU = matrix(6),
+               r_EIOU = matrix(7), S_units = matrix(8))
+  res <- add_row_col_types(matnames = names(mats),
+                           matvals = mats)
+
+  # R
+  res[[1]][[1]] |>
+    matsbyname::rowtype() |>
+    expect_equal(Recca::row_col_types$industry_type)
+  res[[1]][[1]] |>
+    matsbyname::coltype() |>
+    expect_equal(Recca::row_col_types$product_type)
+
+  # U
+  res[[1]][[2]] |>
+    matsbyname::rowtype() |>
+    expect_equal(Recca::row_col_types$product_type)
+  res[[1]][[2]] |>
+    matsbyname::coltype() |>
+    expect_equal(Recca::row_col_types$industry_type)
+
+  # V
+  res[[1]][[3]] |>
+    matsbyname::rowtype() |>
+    expect_equal(Recca::row_col_types$industry_type)
+  res[[1]][[3]] |>
+    matsbyname::coltype() |>
+    expect_equal(Recca::row_col_types$product_type)
+
+  # Y
+  res[[1]][[4]] |>
+    matsbyname::rowtype() |>
+    expect_equal(Recca::row_col_types$product_type)
+  res[[1]][[4]] |>
+    matsbyname::coltype() |>
+    expect_equal(Recca::row_col_types$industry_type)
+
+  # U_feed
+  res[[1]][[5]] |>
+    matsbyname::rowtype() |>
+    expect_equal(Recca::row_col_types$product_type)
+  res[[1]][[5]] |>
+    matsbyname::coltype() |>
+    expect_equal(Recca::row_col_types$industry_type)
+
+  # U_eiou
+  res[[1]][[6]] |>
+    matsbyname::rowtype() |>
+    expect_equal(Recca::row_col_types$product_type)
+  res[[1]][[6]] |>
+    matsbyname::coltype() |>
+    expect_equal(Recca::row_col_types$industry_type)
+
+  # r_eiou
+  res[[1]][[7]] |>
+    matsbyname::rowtype() |>
+    expect_equal(Recca::row_col_types$product_type)
+  res[[1]][[7]] |>
+    matsbyname::coltype() |>
+    expect_equal(Recca::row_col_types$industry_type)
+
+  # S_units
+  res[[1]][[8]] |>
+    matsbyname::rowtype() |>
+    expect_equal(Recca::row_col_types$product_type)
+  res[[1]][[8]] |>
+    matsbyname::coltype() |>
+    expect_equal(Recca::row_col_types$unit_type)
+
+  # Check that it works in a data frame
+  # and with a more complicated name.
+  df <- tibble::tibble(matnames = c("R", "S_units__E_Final"),
+                       matvals = list(matrix(1),
+                                      matrix(2)))
+  res2 <- df |>
+    add_row_col_types(matnames = df$matnames,
+                      matvals = df$matvals)
+  res2$WithRCTypes[[1]] |>
+    matsbyname::rowtype() |>
+    expect_equal(Recca::row_col_types$industry_type)
+  res2$WithRCTypes[[1]] |>
+    matsbyname::coltype() |>
+    expect_equal(Recca::row_col_types$product_type)
+  res2$WithRCTypes[[2]] |>
+    matsbyname::rowtype() |>
+    expect_equal(Recca::row_col_types$product_type)
+  res2$WithRCTypes[[2]] |>
+    matsbyname::coltype() |>
+    expect_equal(Recca::row_col_types$unit_type)
+
+  # Try passing the data frame and column names.
+  res4 <- df |>
+    add_row_col_types()
+  expect_equal(matsbyname::rowtype(res4$WithRCTypes[[1]]),
+               Recca::row_col_types$industry_type)
+  expect_equal(matsbyname::coltype(res4$WithRCTypes[[1]]),
+               Recca::row_col_types$product_type)
+  expect_equal(matsbyname::rowtype(res4$WithRCTypes[[2]]),
+               Recca::row_col_types$product_type)
+  expect_equal(matsbyname::coltype(res4$WithRCTypes[[2]]),
+               Recca::row_col_types$unit_type)
+})
 
 
-
-
-
-
-
-
-
-
-
+test_that("add_row_col_types() fails when expected", {
+  mats <- list(bogus = matrix(1), S_units = matrix(2))
+  add_row_col_types(matnames = names(mats), matvals = mats) |>
+    expect_error(regexp = "Unknown matrix name `bogus`")
+})
 
