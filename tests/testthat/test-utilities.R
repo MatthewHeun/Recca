@@ -391,8 +391,10 @@ test_that("get_all_products_and_industries() works with pieces", {
 
 
 test_that("add_row_col_types() works as expected", {
-  mats <- list(R = 1, U = 2, V = 3, Y = 4,
-               U_feed = 5, U_EIOU = 6, r_EIOU = 7, S_units = 8)
+  mats <- list(R = matrix(1), U = matrix(2),
+               V = matrix(3), Y = matrix(4),
+               U_feed = matrix(5), U_EIOU = matrix(6),
+               r_EIOU = matrix(7), S_units = matrix(8))
   res <- add_row_col_types(matvals = mats)
 
   # R
@@ -429,7 +431,8 @@ test_that("add_row_col_types() works as expected", {
 
   # Check that it works in a data frame
   df <- tibble::tibble(matnames = c("R", "S_units"),
-                       matvals = c(1, 2))
+                       matvals = c(matrix(1, dimnames = list("row", "col")),
+                                   matrix(2)))
   res2 <- df |>
     add_row_col_types(matnames = df$matname,
                       matvals = df$matval)
