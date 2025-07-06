@@ -567,7 +567,7 @@ check_worksheet_name_violations <- function(candidate_worksheet_names) {
 #' The format for the region names is assumed to be
 #' `<<matrix symbol>><<sep>><<worksheet name>>`,
 #' as written by [write_ecc_to_excel()].
-#' For example, "R_4" for the **R** matrix on the sheet named "4".
+#' For example, "R__4" for the **R** matrix on the sheet named "4".
 #'
 #' Named regions are assumed to include
 #' the rectangle of numerical values,
@@ -586,7 +586,7 @@ check_worksheet_name_violations <- function(candidate_worksheet_names) {
 #' @param add_rc_types A boolean that tells whether to
 #'                     add row and column types
 #'                     to the outgoing matrices.
-#'                     Matrix names are determined by
+#'                     When `TRUE`, matrix names are determined by
 #'                     [add_row_col_types()].
 #'                     Default is `TRUE`.
 #' @param worksheet_names_colname The name of a column in
@@ -611,7 +611,8 @@ check_worksheet_name_violations <- function(candidate_worksheet_names) {
 #'            Default is "__".
 #'
 #' @returns A data frame in `matsindf` format containing
-#'          the matrices from named regions in `path`.
+#'          the matrices from named regions in
+#'          the file at `path`.
 #'
 #' @export
 #'

@@ -8,6 +8,11 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+* New function `add_row_col_types()` 
+  adds row and column types to matrices
+  based on default matrix names and 
+  structure of the PSUT framework.
+  First use is inside `read_ecc_from_excel()`.
 * New function `read_ecc_from_excel()` serves
   as the inverse of `write_ecc_to_excel()`, 
   taking advantage of named regions in Excel spreadsheets.

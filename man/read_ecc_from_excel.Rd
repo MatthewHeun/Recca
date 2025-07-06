@@ -34,7 +34,7 @@ worksheets are read.}
 \item{add_rc_types}{A boolean that tells whether to
 add row and column types
 to the outgoing matrices.
-Matrix names are determined by
+When \code{TRUE}, matrix names are determined by
 \code{\link[=add_row_col_types]{add_row_col_types()}}.
 Default is \code{TRUE}.}
 
@@ -64,7 +64,8 @@ Default is "__".}
 }
 \value{
 A data frame in \code{matsindf} format containing
-the matrices from named regions in \code{path}.
+the matrices from named regions in
+the file at \code{path}.
 }
 \description{
 Reads matrices from named regions in an Excel file
@@ -74,7 +75,7 @@ to the workbook.
 The format for the region names is assumed to be
 \verb{<<matrix symbol>><<sep>><<worksheet name>>},
 as written by \code{\link[=write_ecc_to_excel]{write_ecc_to_excel()}}.
-For example, "R_4" for the \strong{R} matrix on the sheet named "4".
+For example, "R__4" for the \strong{R} matrix on the sheet named "4".
 }
 \details{
 Named regions are assumed to include
