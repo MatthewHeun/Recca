@@ -19,7 +19,7 @@ which always resolves to the latest release.
   Both functions now name regions as
   `<<matrix name>>__<<worksheet name>>` by default.
 * New tests for new features.
-    - Now up to 827 tests, all passing.
+    - Now up to 852 tests, all passing.
     - Test coverage remains at 100%.
 
 
