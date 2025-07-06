@@ -599,6 +599,13 @@ check_worksheet_name_violations <- function(candidate_worksheet_names) {
 #'                                             containing matrices.
 #'                                             See `Recca::psut_cols`
 #'                                             for defaults.
+#' @param industry_type,product_type,unit_type String names of row and
+#'                                             column types optionally
+#'                                             applied to matrices
+#'                                             read from the file at
+#'                                             `path`.
+#'                                             Defaults are taken from
+#'                                             `Recca::row_col_types`.
 #' @param sep The separator between matrix name and worksheet name
 #'            for named regions.
 #'            Default is "__".
@@ -611,6 +618,25 @@ check_worksheet_name_violations <- function(candidate_worksheet_names) {
 #' @seealso [write_ecc_to_excel()]
 #'
 #' @examples
+#' \dontrun{
+#'   ecc <- UKEnergy2000mats |>
+#'     tidyr::spread(key = "matrix.name", value = "matrix") |>
+#'     dplyr::mutate(
+#'       WorksheetNames = paste0(EnergyType, "_", LastStage)
+#'     )
+#'   ecc_temp_path <- tempfile(pattern = "write_excel_ecc_test_file",
+#'                             fileext = ".xlsx")
+#'   write_ecc_to_excel(ecc,
+#'                      path = ecc_temp_path,
+#'                      worksheet_names = "WorksheetNames",
+#'                      overwrite = TRUE)
+#'   # Now read the regions
+#'   ecc_temp_path |>
+#'     read_ecc_from_excel()
+#'   if (file.exists(ecc_temp_path)) {
+#'     file.remove(ecc_temp_path)
+#'   }
+#' }
 read_ecc_from_excel <- function(path,
                                 worksheets = NULL,
                                 add_rc_types = TRUE,
