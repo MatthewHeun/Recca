@@ -463,7 +463,8 @@ test_that("add_row_col_types() works as expected", {
     expect_equal(Recca::row_col_types$unit_type)
 
   # Check that it works in a data frame
-  df <- tibble::tibble(matnames = c("R", "S_units"),
+  # and with a more complicated name.
+  df <- tibble::tibble(matnames = c("R", "S_units__E_Final"),
                        matvals = list(matrix(1),
                                       matrix(2)))
   res2 <- df |>
@@ -496,12 +497,9 @@ test_that("add_row_col_types() works as expected", {
 })
 
 
-
-
-
-
-
-
-
-
+test_that("add_row_col_types() fails when expected", {
+  mats <- list(bogus = matrix(1), S_units = matrix(2))
+  add_row_col_types(matnames = names(mats), matvals = mats) |>
+    expect_error(regexp = "Unknown matrix name `bogus`")
+})
 

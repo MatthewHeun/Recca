@@ -23,15 +23,36 @@ add_row_col_types(
 )
 }
 \arguments{
-\item{matvals}{Matrices to have their row and column types set.}
+\item{.df}{A data frame containing columns of matrix
+names and matrices.
+Default is \code{NULL}.}
 
-\item{matnames}{Names for the matrices. Default is \code{names(matvals)}.}
+\item{matvals}{A list of matrices
+to have their row and column types set
+or the name of a column of matrices in \code{.df}
+whose row and column types are to be set.
+Default is \code{psut_cols$matvals}.}
+
+\item{matnames}{A list of names of the matrices
+in \code{matvals} or the name of a column
+of matrix names in \code{.df}.
+Default is \code{psut_cols$matnames}.}
+
+\item{with_row_col_types_colname}{The name of a column
+in the output data frame
+whose matrices have
+row and column types set.
+Default is
+"WithRCTypes".}
 
 \item{R, U, V, Y, U_feed, U_eiou, r_eiou, S_units}{Names of matrices.
-Defaults from \code{Recca::psut_cols}.}
+Defaults are from
+\code{Recca::psut_cols}.}
 
-\item{industry_type, product_type, unit_type}{Names of row and column types.
-Defaults from \code{Recca::row_col_types}.}
+\item{industry_type, product_type, unit_type}{String names
+of row and column types.
+Defaults are from
+\code{Recca::row_col_types}.}
 }
 \value{
 \code{.mats} with row and product types set.
@@ -41,14 +62,33 @@ Given a list of matrices and their names,
 this function sets the row and column types
 according to the following algorithm:
 \itemize{
-\item \strong{R} and \strong{V}: Rows are \code{industry_type}; Columns are \code{product_type}.
-\item \strong{U}, \strong{Y}, \strong{U_feed}, \strong{U_EIOU}, \strong{r_EIOU}: Rows are \code{product_type}; Colums are \code{industry_type}.
-\item \strong{S_units}: Rows are \code{product_type}; Columns are \code{unit_type}.
+\item \strong{R} and \strong{V}: Row types are \code{industry_type}; Column types are \code{product_type}.
+\item \strong{U}, \strong{Y}, \strong{U_feed}, \strong{U_EIOU}, \strong{r_EIOU}: Row types are \code{product_type}; Column types are \code{industry_type}.
+\item \strong{S_units}: Row types are \code{product_type}; Column types are \code{unit_type}.
 }
 }
 \details{
 Note that matrix names are matched via \code{\link[=startsWith_any_of]{startsWith_any_of()}}.
 
-This function is vectorized, so
-\code{matvals} and \code{matnames} can be lists.
+This function uses \code{\link[matsindf:matsindf_apply]{matsindf::matsindf_apply()}}
+internally, so
+\code{matnames} and \code{matvals} can be lists (\code{.df} should be \code{NULL}) or
+string names of columns in \code{.df}.
+}
+\examples{
+mats <- list(R = matrix(1), U = matrix(2),
+             V = matrix(3), Y = matrix(4),
+             U_feed = matrix(5), U_EIOU = matrix(6),
+             r_EIOU = matrix(7), S_units = matrix(8))
+add_row_col_types(matnames = names(mats),
+                  matvals = mats)
+df <- tibble::tibble(matnames = c("R", "S_units"),
+                     matvals = list(matrix(1), matrix(2)))
+df
+res <- df |>
+  add_row_col_types(matnames = df$matnames,
+                    matvals = df$matvals)
+res
+res$WithRCTypes[[1]]
+res$WithRCTypes[[2]]
 }
