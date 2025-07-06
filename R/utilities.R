@@ -811,3 +811,104 @@ get_all_products_and_industries <- function(.sutdata,
 
 }
 
+
+#' Infer and set row and column types
+#'
+#' Given a list of matrices and their names,
+#' this function sets the row and column types
+#' according to the following algorithm:
+#' * **R** and **V**: Rows are `industry_type`; Columns are `product_type`.
+#' * **U**, **Y**, **U_feed**, **U_EIOU**, **r_EIOU**: Rows are `product_type`; Colums are `industry_type`.
+#' * **S_units**: Rows are `product_type`; Columns are `unit_type`.
+#'
+#' Note that matrix names are matched via [startsWith_any_of()].
+#'
+#' This function is vectorized, so
+#' `matvals` and `matnames` can be lists.
+#'
+#' @param matvals Matrices to have their row and column types set.
+#' @param matnames Names for the matrices. Default is `names(matvals)`.
+#' @param R,U,V,Y,U_feed,U_eiou,r_eiou,S_units Names of matrices.
+#'                                             Defaults from `Recca::psut_cols`.
+#' @param industry_type,product_type,unit_type Names of row and column types.
+#'                                             Defaults from `Recca::row_col_types`.
+#'
+#' @returns `.mats` with row and product types set.
+#'
+#' @export
+#'
+#' @examples
+add_row_col_types <- function(.df = NULL,
+                              # Input column names
+                              matvals = Recca::psut_cols$matvals,
+                              matnames = Recca::psut_cols$matnames,
+                              # Output column name
+                              with_row_col_types_colname = "WithRCTypes",
+                              R = Recca::psut_cols$R,
+                              U = Recca::psut_cols$U,
+                              V = Recca::psut_cols$V,
+                              Y = Recca::psut_cols$Y,
+                              U_feed = Recca::psut_cols$U_feed,
+                              U_eiou = Recca::psut_cols$U_eiou,
+                              r_eiou = Recca::psut_cols$r_eiou,
+                              S_units = Recca::psut_cols$S_units,
+                              industry_type = Recca::row_col_types$industry_type,
+                              product_type = Recca::row_col_types$product_type,
+                              unit_type = Recca::row_col_types$unit_type) {
+
+  # Map(matvals, matnames, f = function(this_mat, this_name) {
+  #   if (startsWith_any_of(x = this_name,
+  #                         prefixes = c(R, V))) {
+  #     this_mat <- this_mat |>
+  #       matsbyname::setrowtype(industry_type) |>
+  #       matsbyname::setcoltype(product_type)
+  #   } else if (startsWith_any_of(x = this_name,
+  #                                prefixes = c(U, Y, r_eiou,
+  #                                             U_eiou, U_feed))) {
+  #     this_mat <- this_mat |>
+  #       matsbyname::setrowtype(product_type) |>
+  #       matsbyname::setcoltype(industry_type)
+  #   } else if (startsWith_any_of(x = this_name,
+  #                                prefixes = S_units)) {
+  #     this_matrix <- this_mat |>
+  #       matsbyname::setrowtype(product_type) |>
+  #       matsbyname::setcoltype(unit_type)
+  #   } else {
+  #     stop(paste0("Unknown matrix name `",
+  #                 this_name,
+  #                 "` in Recca::add_row_col_types()"))
+  #   }
+  # })
+
+
+  add_rc_types_func <- function(this_mat, this_name) {
+    if (startsWith_any_of(x = this_name,
+                          prefixes = c(R, V))) {
+      out <- this_mat |>
+        matsbyname::setrowtype(industry_type) |>
+        matsbyname::setcoltype(product_type)
+    } else if (startsWith_any_of(x = this_name,
+                                 prefixes = c(U, Y, r_eiou,
+                                              U_eiou, U_feed))) {
+      out <- this_mat |>
+        matsbyname::setrowtype(product_type) |>
+        matsbyname::setcoltype(industry_type)
+    } else if (startsWith_any_of(x = this_name,
+                                 prefixes = S_units)) {
+      out <- this_mat |>
+        matsbyname::setrowtype(product_type) |>
+        matsbyname::setcoltype(unit_type)
+    } else {
+      stop(paste0("Unknown matrix name `",
+                  this_name,
+                  "` in Recca::add_row_col_types()"))
+    }
+    list(out) |>
+      magrittr::set_names(with_row_col_types_colname)
+  }
+
+  matsindf::matsindf_apply(.df,
+                           FUN = add_rc_types_func,
+                           this_mat = matvals,
+                           this_name = matnames)
+}
