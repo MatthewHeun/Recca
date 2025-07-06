@@ -465,6 +465,7 @@
 #' \describe{
 #'   \item{product_type}{The name of the product row and column type. Default is "Product".}
 #'   \item{industry_type}{The name of the industry row and column type. Default is "Industry".}
+#'   \item{unit_type}{The name of the unit row and column type. Default is "Unit".}
 #' }
 "row_col_types"
 

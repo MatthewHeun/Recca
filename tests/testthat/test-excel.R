@@ -16,22 +16,22 @@ test_that("write_ecc_to_excel() works as expected", {
   # Test that named matrix regions exist in the file
   regions <- openxlsx::getNamedRegions(ecc_temp_path)
   expect_equal(regions,
-               c("R_E_Final", "U_E_Final", "V_E_Final",
-                 "Y_E_Final", "r_eiou_E_Final",
-                 "U_eiou_E_Final", "U_feed_E_Final",
-                 "S_units_E_Final",
-                 "R_E_Services", "U_E_Services", "V_E_Services",
-                 "Y_E_Services", "r_eiou_E_Services",
-                 "U_eiou_E_Services", "U_feed_E_Services",
-                 "S_units_E_Services",
-                 "R_E_Useful", "U_E_Useful", "V_E_Useful",
-                 "Y_E_Useful", "r_eiou_E_Useful",
-                 "U_eiou_E_Useful", "U_feed_E_Useful",
-                 "S_units_E_Useful",
-                 "R_X_Services", "U_X_Services", "V_X_Services",
-                 "Y_X_Services", "r_eiou_X_Services",
-                 "U_eiou_X_Services", "U_feed_X_Services",
-                 "S_units_X_Services"),
+               c("R__E_Final", "U__E_Final", "V__E_Final",
+                 "Y__E_Final", "r_EIOU__E_Final",
+                 "U_EIOU__E_Final", "U_feed__E_Final",
+                 "S_units__E_Final",
+                 "R__E_Services", "U__E_Services", "V__E_Services",
+                 "Y__E_Services", "r_EIOU__E_Services",
+                 "U_EIOU__E_Services", "U_feed__E_Services",
+                 "S_units__E_Services",
+                 "R__E_Useful", "U__E_Useful", "V__E_Useful",
+                 "Y__E_Useful", "r_EIOU__E_Useful",
+                 "U_EIOU__E_Useful", "U_feed__E_Useful",
+                 "S_units__E_Useful",
+                 "R__X_Services", "U__X_Services", "V__X_Services",
+                 "Y__X_Services", "r_EIOU__X_Services",
+                 "U_EIOU__X_Services", "U_feed__X_Services",
+                 "S_units__X_Services"),
                ignore_attr = TRUE)
 
   if (file.exists(ecc_temp_path)) {
@@ -178,7 +178,55 @@ test_that("check_worksheet_name_violations() works as expected", {
 })
 
 
+test_that("read_ecc_from_excel() works as expected", {
+  ecc <- UKEnergy2000mats |>
+    tidyr::spread(key = "matrix.name", value = "matrix") |>
+    dplyr::mutate(
+      WorksheetNames = paste0(EnergyType, "_", LastStage)
+    )
+  ecc_temp_path <- tempfile(pattern = "write_excel_ecc_test_file", fileext = ".xlsx")
 
+  res <- write_ecc_to_excel(ecc,
+                            path = ecc_temp_path,
+                            worksheet_names = "WorksheetNames",
+                            overwrite = TRUE)
+
+  expect_true(file.exists(ecc_temp_path))
+
+  # Now read the regions
+  ecc_round_trip <- ecc_temp_path |>
+    read_ecc_from_excel()
+
+  all_mats <- dplyr::left_join(ecc, ecc_round_trip,
+                               by = "WorksheetNames",
+                               suffix = c(".orig", ".roundtrip"))
+
+  for (i_row in 1:nrow(all_mats)) {
+    for (j_matname in c("R", "U", "V", "Y",
+                        "r_EIOU", "U_EIOU", "U_feed", "S_units")) {
+      # print(paste("row =", i_row, "mat =", j_matname))
+      j_orig_mat_name <- paste(j_matname, "orig", sep = ".")
+      j_roundtrip_mat_name <- paste(j_matname, "roundtrip", sep = ".")
+      orig_mat <- all_mats[i_row, j_orig_mat_name][[1]]
+      roundtrip_mat <- all_mats[i_row, j_roundtrip_mat_name][[1]]
+      should_be_zero <- matsbyname::difference_byname(roundtrip_mat, orig_mat)
+      # This code can be uncommented to pinpoint any failures.
+      # if (!matsbyname::iszero_byname(should_be_zero, tol = 1e-4)) {
+      #   print(paste("Not zero for row =",
+      #               i_row,
+      #               "and matrix =",
+      #               j_matname))
+      # }
+      expect_true(matsbyname::equal_byname(roundtrip_mat,
+                                           orig_mat,
+                                           tol = 1e-4))
+    }
+  }
+
+  if (file.exists(ecc_temp_path)) {
+    file.remove(ecc_temp_path)
+  }
+})
 
 
 

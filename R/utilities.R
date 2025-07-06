@@ -811,3 +811,115 @@ get_all_products_and_industries <- function(.sutdata,
 
 }
 
+
+#' Infer and set row and column types
+#'
+#' Given a list of matrices and their names,
+#' this function sets the row and column types
+#' according to the following algorithm:
+#' * **R** and **V**: Row types are `industry_type`; Column types are `product_type`.
+#' * **U**, **Y**, **U_feed**, **U_EIOU**, **r_EIOU**: Row types are `product_type`; Column types are `industry_type`.
+#' * **S_units**: Row types are `product_type`; Column types are `unit_type`.
+#'
+#' Note that matrix names are matched via [startsWith_any_of()].
+#'
+#' This function uses [matsindf::matsindf_apply()]
+#' internally, so
+#' `matnames` and `matvals` can be lists (`.df` should be `NULL`) or
+#' string names of columns in `.df`.
+#'
+#' @param .df A data frame containing columns of matrix
+#'            names and matrices.
+#'            Default is `NULL`.
+#' @param matvals A list of matrices
+#'                to have their row and column types set
+#'                or the name of a column of matrices in `.df`
+#'                whose row and column types are to be set.
+#'                Default is `psut_cols$matvals`.
+#' @param matnames A list of names of the matrices
+#'                 in `matvals` or the name of a column
+#'                 of matrix names in `.df`.
+#'                 Default is `psut_cols$matnames`.
+#' @param with_row_col_types_colname The name of a column
+#'                                   in the output data frame
+#'                                   whose matrices have
+#'                                   row and column types set.
+#'                                   Default is
+#'                                   "WithRCTypes".
+#' @param R,U,V,Y,U_feed,U_eiou,r_eiou,S_units Names of matrices.
+#'                                             Defaults are from
+#'                                             `Recca::psut_cols`.
+#' @param industry_type,product_type,unit_type String names
+#'                                             of row and column types.
+#'                                             Defaults are from
+#'                                             `Recca::row_col_types`.
+#'
+#' @returns `.mats` with row and product types set.
+#'
+#' @export
+#'
+#' @examples
+#' mats <- list(R = matrix(1), U = matrix(2),
+#'              V = matrix(3), Y = matrix(4),
+#'              U_feed = matrix(5), U_EIOU = matrix(6),
+#'              r_EIOU = matrix(7), S_units = matrix(8))
+#' add_row_col_types(matnames = names(mats),
+#'                   matvals = mats)
+#' df <- tibble::tibble(matnames = c("R", "S_units"),
+#'                      matvals = list(matrix(1), matrix(2)))
+#' df
+#' res <- df |>
+#'   add_row_col_types(matnames = df$matnames,
+#'                     matvals = df$matvals)
+#' res
+#' res$WithRCTypes[[1]]
+#' res$WithRCTypes[[2]]
+add_row_col_types <- function(.df = NULL,
+                              # Input column names
+                              matvals = Recca::psut_cols$matvals,
+                              matnames = Recca::psut_cols$matnames,
+                              # Output column name
+                              with_row_col_types_colname = "WithRCTypes",
+                              R = Recca::psut_cols$R,
+                              U = Recca::psut_cols$U,
+                              V = Recca::psut_cols$V,
+                              Y = Recca::psut_cols$Y,
+                              U_feed = Recca::psut_cols$U_feed,
+                              U_eiou = Recca::psut_cols$U_eiou,
+                              r_eiou = Recca::psut_cols$r_eiou,
+                              S_units = Recca::psut_cols$S_units,
+                              industry_type = Recca::row_col_types$industry_type,
+                              product_type = Recca::row_col_types$product_type,
+                              unit_type = Recca::row_col_types$unit_type) {
+
+  add_rc_types_func <- function(this_mat, this_name) {
+    if (startsWith_any_of(x = this_name,
+                          prefixes = c(R, V))) {
+      out <- this_mat |>
+        matsbyname::setrowtype(industry_type) |>
+        matsbyname::setcoltype(product_type)
+    } else if (startsWith_any_of(x = this_name,
+                                 prefixes = c(U, Y, r_eiou,
+                                              U_eiou, U_feed))) {
+      out <- this_mat |>
+        matsbyname::setrowtype(product_type) |>
+        matsbyname::setcoltype(industry_type)
+    } else if (startsWith_any_of(x = this_name,
+                                 prefixes = S_units)) {
+      out <- this_mat |>
+        matsbyname::setrowtype(product_type) |>
+        matsbyname::setcoltype(unit_type)
+    } else {
+      stop(paste0("Unknown matrix name `",
+                  this_name,
+                  "` in Recca::add_row_col_types()"))
+    }
+    list(out) |>
+      magrittr::set_names(with_row_col_types_colname)
+  }
+
+  matsindf::matsindf_apply(.df,
+                           FUN = add_rc_types_func,
+                           this_mat = matvals,
+                           this_name = matnames)
+}
