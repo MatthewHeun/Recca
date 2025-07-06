@@ -8,7 +8,7 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
-## Recca 0.1.60 (2025-07-06)
+## Recca 0.1.60 (2025-07-06) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15825137.svg)](https://doi.org/10.5281/zenodo.15825137)
 
 * New function `add_row_col_types()` 
   adds row and column types to matrices
