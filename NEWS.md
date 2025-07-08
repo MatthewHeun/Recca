@@ -10,7 +10,7 @@ which always resolves to the latest release.
 
 * `write_ecc_to_excel()` now completes the **U** and **V** 
   matrices relative to each other on both margins,
-  thereby enabling easier energy balances
+  thereby enabling easier energy balance checks
   via (**iR**)^T^ + (**iV**)^T^ - **Ui** - **y** = **0**.
 
 
