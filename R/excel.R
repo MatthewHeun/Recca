@@ -20,11 +20,11 @@
 #' The format for the region names is
 #' `<<matrix symbol>><<sep>><<worksheet name>>`.
 #' For example, "R_4" for the **R** matrix on the sheet named "4".
-#' The names help to identify matrices in high-level overviews of the Excel file
+#' The names help to identify matrices in high-level views of an Excel sheet
 #' and can also be used for later reading matrices from Excel files.
 #' (See [read_ecc_from_excel()].)
-#' The region names apply to the numbers _and_
-#' the row and column names for the matrix.
+#' The region names apply to the rectangle of numbers _and_
+#' the row and column names for the matrices.
 #'
 #' Note that region names are more restricted than worksheet names and
 #' may not contain any of the following characters:
@@ -155,7 +155,7 @@ write_ecc_to_excel <- function(.psut_data = NULL,
     # of rows or columns, as appropriate
     # Ensure same columns of U and rows of V
     U_mat_T <- matsbyname::transpose_byname(U_mat)
-    completedUV <- matsbyname::complete_and_sort(U_mat_T, V_mat, margin = 1)
+    completedUV <- matsbyname::complete_and_sort(U_mat_T, V_mat, margin = c(1,2))
     U_mat <- matsbyname::transpose_byname(completedUV[[1]])
     V_mat <- completedUV[[2]]
     # Ensure same columns for R and V
