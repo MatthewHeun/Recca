@@ -210,3 +210,65 @@ testthat::test_that("reallocate_statistical_differences() works when there are n
   expect_equal(res$U_feed_prime, U_feed)
   expect_equal(res$U_EIOU_prime, U_EIOU)
 })
+
+
+testthat::test_that("reallocate_statistical_differences() works with stat diffs in Y only", {
+  R <- matrix(c(100, 0,
+                0, 50),
+              byrow = TRUE, nrow = 2, ncol = 2,
+              dimnames = list(c("Resources [of Coal]", "Resources [of Prod C]"),
+                              c("Coal [from Resources]", "Prod C"))) |>
+    matsbyname::setrowtype("Industry") |> matsbyname::setcoltype("Product")
+
+  U <- matrix(c(100,
+                2),
+              byrow = TRUE, nrow = 2, ncol = 1,
+              dimnames = list(c("Coal [from Resources]", "Electricity"),
+                              c("Mapep"))) |>
+    matsbyname::setrowtype("Product") |> matsbyname::setcoltype("Industry")
+
+  V <- matrix(32,
+              byrow = TRUE, nrow = 1, ncol = 1,
+              dimnames = list(c("Mapep"), c("Electricity"))) |>
+    matsbyname::setrowtype("Industry") |> matsbyname::setcoltype("Product")
+
+  Y <- matrix(c(20, 10, 0,
+                0, 48, 2),
+              byrow = TRUE, nrow = 2, ncol = 3,
+              dimnames = list(c("Electricity", "Prod C"),
+                              c("Industry 1", "Industry 2", "Statistical differences"))) |>
+    matsbyname::setrowtype("Product") |> matsbyname::setcoltype("Industry")
+
+  r_eiou <- matrix(1,
+                   byrow = TRUE, nrow = 1, ncol = 1,
+                   dimnames = list(c("Electricity"),
+                                   c("Mapep"))) |>
+    matsbyname::setrowtype("Product") |> matsbyname::setcoltype("Industry")
+
+  U_EIOU <- matsbyname::hadamardproduct_byname(U, r_eiou)
+  U_feed <- matsbyname::difference_byname(U, U_EIOU)
+
+  res <- reallocate_statistical_differences(R = R,
+                                            U = U,
+                                            U_feed = U_feed,
+                                            U_eiou = U_EIOU,
+                                            r_eiou = r_eiou,
+                                            V = V, Y = Y)
+
+  expectedY <- matrix(c(20, 10,
+                        0, 50), byrow = TRUE, nrow = 2, ncol = 2,
+                      dimnames = list(c("Electricity", "Prod C"),
+                                      c("Industry 1", "Industry 2"))) |>
+    matsbyname::setrowtype("Product") |> matsbyname::setcoltype("Industry")
+
+  # Most matrices should be unchanged
+  expect_equal(res$R_prime, R)
+  expect_equal(res$U_prime, U)
+  expect_equal(res$V_prime, V)
+  expect_equal(res$Y_prime, expectedY)
+  expect_equal(res$U_feed_prime, U_feed |> matsbyname::clean_byname())
+  expect_equal(res$U_EIOU_prime, U_EIOU |> matsbyname::clean_byname())
+})
+
+
+

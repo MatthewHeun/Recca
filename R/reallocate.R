@@ -316,6 +316,11 @@ reallocate_statistical_differences <- function(.sutmats = NULL,
         matsbyname::clean_byname()
       UY_mat <- matsbyname::difference_byname(UY_mat,
                                               matsbyname::transpose_byname(R_stat_diffs))
+    }
+
+    # Reallocate any statdiffs columns in Y to other columns in U and Y
+
+    if (stat_diffs %in% colnames(UY_mat)) {
       ## Reallocate Stat diffs in UY_mat
       UY_mat <- UY_mat |>
         matsbyname::reallocate_byname(colnames = stat_diffs, margin = 2)
@@ -349,6 +354,7 @@ reallocate_statistical_differences <- function(.sutmats = NULL,
       matsbyname::iszero_byname(tol = tol) |>
       assertthat::assert_that(msg = "Energy not conserved after reallocating statistical differences in Recca::reallocate_statistical_differences().")
 
+    # Return all the _prime matrices
     list(R_mat_prime, U_mat_prime, U_feed_mat_prime, U_eiou_mat_prime,
          V_mat_prime, Y_mat_prime) |>
       magrittr::set_names(c(R_prime, U_prime, U_feed_prime, U_eiou_prime,
