@@ -8,11 +8,19 @@ Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+* Move `reallocate_statistical_differences()` and its tests
+  from `IEATools` to `Recca`. 
+  The purpose of `IEATools` is to move from the IEA format 
+  to the PSUT format. 
+  The purpose of `Recca` is to manipulate data already in the
+  PSUT format. 
+  `reallocate_statistical_differences()` requires
+  that data are in the PSUT format and therefore
+  `reallocate_statistical_differences()` is better suited to `Recca`.
 * `write_ecc_to_excel()` now completes the **U** and **V** 
   matrices relative to each other on both margins,
   thereby enabling easier energy balance checks
   via (**iR**)^T^ + (**iV**)^T^ - **Ui** - **y** = **0**.
-
 
 
 ## Recca 0.1.60 (2025-07-06) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15825137.svg)](https://doi.org/10.5281/zenodo.15825137)
