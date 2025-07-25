@@ -196,11 +196,17 @@ testthat::test_that("reallocate_statistical_differences() works when there are n
   U_EIOU <- matsbyname::hadamardproduct_byname(U, r_eiou)
   U_feed <- matsbyname::difference_byname(U, U_EIOU)
 
-  reallocate_statistical_differences(R = R,
-                                     U = U,
-                                     U_feed = U_feed,
-                                     U_eiou = U_EIOU,
-                                     r_eiou = r_eiou,
-                                     V = V, Y = Y)
-
+  res <- reallocate_statistical_differences(R = R,
+                                            U = U,
+                                            U_feed = U_feed,
+                                            U_eiou = U_EIOU,
+                                            r_eiou = r_eiou,
+                                            V = V, Y = Y)
+  # Matrices should be unchanged
+  expect_equal(res$R_prime, R)
+  expect_equal(res$U_prime, U)
+  expect_equal(res$V_prime, V)
+  expect_equal(res$Y_prime, Y)
+  expect_equal(res$U_feed_prime, U_feed)
+  expect_equal(res$U_EIOU_prime, U_EIOU)
 })

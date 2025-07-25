@@ -153,64 +153,81 @@ reallocate_statistical_differences <- function(.sutmats = NULL,
       matsbyname::iszero_byname(tol = tol) |>
       assertthat::assert_that(msg = "Energy not conserved at the top of Recca::reallocate_statistical_differences()")
 
-    # Check if Statistical differences are more than all other consumption combined.
-    # The algorithm uses matsbyname::fractionize_by_name() and column sums to compare
-    # Statistical differences to all other data.
-    # If the Statistical differences value is greater than 0.5,
-    # Statistical differences are more than all other consumption combined.
-    col_fracs <- Y_mat |>
-      matsbyname::fractionize_byname(margin = c(1,2)) |>
-      matsbyname::colsums_byname()
-    if (col_fracs[ , stat_diffs] >= 0.5) {
-      err_msg <- "Statistical differences account for more than half of all consumption."
-      if (!is.null(.sutmats)) {
-        if (country %in% colnames(.sutmats)) {
-          # Find the country name(s)
-          coun_names <- .sutmats[[country]] |> unique()
-          err_msg <- paste0(err_msg,
-                            " Superset of countries: ",
-                            paste(coun_names, collapse = ", "),
-                            ".")
+    if (stat_diffs %in% colnames(Y_mat)) {
+      # Check if Statistical differences are more than all other consumption combined.
+      # The algorithm uses matsbyname::fractionize_by_name() and column sums to compare
+      # Statistical differences to all other data.
+      # If the Statistical differences value is greater than 0.5,
+      # Statistical differences are more than all other consumption combined.
+      col_fracs <- Y_mat |>
+        matsbyname::fractionize_byname(margin = c(1,2)) |>
+        matsbyname::colsums_byname()
+      if (col_fracs[ , stat_diffs] >= 0.5) {
+        err_msg <- "Statistical differences account for more than half of all consumption."
+        if (!is.null(.sutmats)) {
+          if (country %in% colnames(.sutmats)) {
+            # Find the country name(s)
+            coun_names <- .sutmats[[country]] |> unique()
+            err_msg <- paste0(err_msg,
+                              " Superset of countries: ",
+                              paste(coun_names, collapse = ", "),
+                              ".")
 
-        }
-        if (year %in% colnames(.sutmats)) {
-          yrs <- .sutmats[[year]] |> unique()
-          err_msg <- paste0(err_msg,
-                            " Superset of years: ", paste(yrs, collapse = ", "),
-                            ".")
+          }
+          if (year %in% colnames(.sutmats)) {
+            yrs <- .sutmats[[year]] |> unique()
+            err_msg <- paste0(err_msg,
+                              " Superset of years: ", paste(yrs, collapse = ", "),
+                              ".")
 
+          }
         }
+        warning(err_msg)
       }
-      warning(err_msg)
     }
 
-    # Check if Statistical differences are more than all other exogeneous inputs combined
-    # using the same algorithm as for Y_mat.
-    row_fracs <- R_mat |>
-      matsbyname::fractionize_byname(margin = c(1,2)) |>
-      matsbyname::rowsums_byname()
-    if (row_fracs[stat_diffs, ] >= 0.5) {
-      err_msg <- "Statistical differences account for more than half of all exogeneous inputs."
-      if (!is.null(.sutmats)) {
-        if (country %in% colnames(.sutmats)) {
-          # Find the country name(s)
-          coun_names <- .sutmats[[country]] |> unique()
-          err_msg <- paste0(err_msg,
-                            " Superset of countries: ",
-                            paste(coun_names, collapse = ", "),
-                            ".")
+    if (stat_diffs %in% rownames(R_mat)) {
+      # Check if Statistical differences are more than all other exogeneous inputs combined
+      # using the same algorithm as for Y_mat.
+      row_fracs <- R_mat |>
+        matsbyname::fractionize_byname(margin = c(1,2)) |>
+        matsbyname::rowsums_byname()
+      if (row_fracs[stat_diffs, ] >= 0.5) {
+        err_msg <- "Statistical differences account for more than half of all exogeneous inputs."
+        if (!is.null(.sutmats)) {
+          if (country %in% colnames(.sutmats)) {
+            # Find the country name(s)
+            coun_names <- .sutmats[[country]] |> unique()
+            err_msg <- paste0(err_msg,
+                              " Superset of countries: ",
+                              paste(coun_names, collapse = ", "),
+                              ".")
 
-        }
-        if (year %in% colnames(.sutmats)) {
-          yrs <- .sutmats[[year]] |> unique()
-          err_msg <- paste0(err_msg,
-                            " Superset of years: ", paste(yrs, collapse = ", "),
-                            ".")
+          }
+          if (year %in% colnames(.sutmats)) {
+            yrs <- .sutmats[[year]] |> unique()
+            err_msg <- paste0(err_msg,
+                              " Superset of years: ", paste(yrs, collapse = ", "),
+                              ".")
 
+          }
         }
+        warning(err_msg)
       }
-      warning(err_msg)
     }
+
+    # In the event we do not have statistical differences,
+    # set the _prime versions of matrices to the original matrices
+    # at the start.
+    # If stat diffs are found, these _prime variables
+    # will be redefined.
+    R_mat_prime <- R_mat
+    U_mat_prime <- U_mat
+    V_mat_prime <- V_mat
+    Y_mat_prime <- Y_mat
+    U_feed_mat_prime <- U_feed_mat
+    U_eiou_mat_prime <- U_eiou_mat
+    r_eiou_mat_prime <- r_eiou_mat
 
     # Store rownames of R and V (industries)
     # But be sure we eliminate all zero rows first
@@ -262,30 +279,38 @@ reallocate_statistical_differences <- function(.sutmats = NULL,
                                               matsbyname::transpose_byname(UY_statdiffs_subtract)) |>
         matsbyname::clean_byname()
       ## Now reallocate only the negative statdiffs that we just moved.
-      RV_mat <- RV_mat |>
+      RV_mat_prime <- RV_mat |>
         matsbyname::reallocate_byname(rownames = stat_diffs,
                                       colnames = statdiffs_rows_to_move_to_R,
                                       margin = 1)
       ## Split R and V again
-      R_mat_prime <- RV_mat |>
+      R_mat_prime <- RV_mat_prime |>
         matsbyname::select_rows_byname(retain_pattern = RCLabels::make_or_pattern(rownames_R_mat,
                                                                                   pattern_type = "exact")) |>
         matsbyname::clean_byname()
-      V_mat_prime <- RV_mat |>
+      V_mat_prime <- RV_mat_prime |>
         matsbyname::select_rows_byname(retain_pattern = RCLabels::make_or_pattern(rownames_V_mat, pattern_type = "exact")) |>
         matsbyname::clean_byname()
-      ## No longer need RV_mat, so NULL it
-      RV_mat <- NULL
+      # We no longer need this matrix.
+      RV_mat_prime <- NULL
+    } else {
+      # This is the degenerate case.
+      # We didn't find any stat diffs in R,
+      # so we would not have created an R_prime matrix
+      # or a V_prime matrix.
+      # To ensure that the rest of this algorithm works,
+      # we need to assign R_mat to R_prime and V_mat to V_mat_prime.
+      R_mat_prime <- R_mat
+      V_mat_prime <- V_mat
     }
 
     # Move remaining R statdiffs to Y by subtraction.
 
-    ## Find R statdiffs rows.
-    R_stat_diffs <- R_mat_prime |>
-      matsbyname::select_rows_byname(retain_pattern = stat_diffs, fixed = TRUE) |>
-      matsbyname::clean_byname(margin = 2)
-
-    if (ncol(R_stat_diffs) > 0) {
+    if (stat_diffs %in% rownames(R_mat_prime)) {
+      ## Find R statdiffs rows.
+      R_stat_diffs <- R_mat_prime |>
+        matsbyname::select_rows_byname(retain_pattern = stat_diffs, fixed = TRUE) |>
+        matsbyname::clean_byname(margin = 2)
       ## Subtract the R_stat_diffs from both R_mat and UY_mat
       R_mat_prime <- matsbyname::difference_byname(R_mat_prime, R_stat_diffs) |>
         matsbyname::clean_byname()
