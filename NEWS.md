@@ -4,10 +4,15 @@ output: html_document
 ---
 
 
-Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zenodo.5226085), 
+Cite all releases of `Recca` with doi
+[10.5281/zenodo.5226085](https://doi.org/10.5281/zenodo.5226085), 
 which always resolves to the latest release.
 
 
+* `reallocate_statistical_differences()` is now 
+  robust to ECCs with no Statistical differences, 
+  with Statistical differences in only **R**, and 
+  with Statistical differences in only **Y**.
 * Move `reallocate_statistical_differences()` and its tests
   from `IEATools` to `Recca`. 
   The purpose of `IEATools` is to move from the IEA format 
