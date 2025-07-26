@@ -104,11 +104,11 @@ named regions for matrices are added to Excel sheets.
 The format for the region names is
 \verb{<<matrix symbol>><<sep>><<worksheet name>>}.
 For example, "R_4" for the \strong{R} matrix on the sheet named "4".
-The names help to identify matrices in high-level overviews of the Excel file
+The names help to identify matrices in high-level views of an Excel sheet
 and can also be used for later reading matrices from Excel files.
 (See [read_ecc_from_excel()].)
-The region names apply to the numbers \emph{and}
-the row and column names for the matrix.
+The region names apply to the rectangle of numbers \emph{and}
+the row and column names for the matrices.
 
 Note that region names are more restricted than worksheet names and
 may not contain any of the following characters:

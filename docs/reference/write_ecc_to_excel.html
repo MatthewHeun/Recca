@@ -11,7 +11,7 @@ This function takes ECC matrices and writes them to an Excel file."></head><body
 
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.60</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.61</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -177,11 +177,11 @@ named regions for matrices are added to Excel sheets.
 The format for the region names is
 <code>&lt;&lt;matrix symbol&gt;&gt;&lt;&lt;sep&gt;&gt;&lt;&lt;worksheet name&gt;&gt;</code>.
 For example, "R_4" for the <strong>R</strong> matrix on the sheet named "4".
-The names help to identify matrices in high-level overviews of the Excel file
+The names help to identify matrices in high-level views of an Excel sheet
 and can also be used for later reading matrices from Excel files.
 (See [read_ecc_from_excel()].)
-The region names apply to the numbers <em>and</em>
-the row and column names for the matrix.</p>
+The region names apply to the rectangle of numbers <em>and</em>
+the row and column names for the matrices.</p>
 <p>Note that region names are more restricted than worksheet names and
 may not contain any of the following characters:
 <code>! @ # $ % ^ &amp; * ( ) + - / = { } [ ] | \ : ; " ' &lt; &gt; , . ? spaces</code>.
