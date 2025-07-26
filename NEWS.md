@@ -9,6 +9,8 @@ Cite all releases of `Recca` with doi
 which always resolves to the latest release.
 
 
+## Recca 0.1.60 (2025-07-06)
+
 * `reallocate_statistical_differences()` is now 
   robust to ECCs with no Statistical differences, 
   with Statistical differences in only **R**, and 
