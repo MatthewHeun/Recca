@@ -9,7 +9,7 @@ Cite all releases of `Recca` with doi
 which always resolves to the latest release.
 
 
-## Recca 0.1.61 (2025-07-25)
+## Recca 0.1.61 (2025-07-25) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16429022.svg)](https://doi.org/10.5281/zenodo.16429022)
 
 * `reallocate_statistical_differences()` is now 
   robust to ECCs with no Statistical differences, 
