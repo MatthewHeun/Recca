@@ -9,6 +9,8 @@ Cite all releases of `Recca` with doi
 which always resolves to the latest release.
 
 
+## Recca 0.1.61 (2025-07-25)
+
 * `reallocate_statistical_differences()` is now 
   robust to ECCs with no Statistical differences, 
   with Statistical differences in only **R**, and 
@@ -20,7 +22,7 @@ which always resolves to the latest release.
   The purpose of `Recca` is to manipulate data already in the
   PSUT format. 
   `reallocate_statistical_differences()` requires
-  that data are in the PSUT format and therefore
+  data in the PSUT format and therefore
   `reallocate_statistical_differences()` is better suited to `Recca`.
 * `write_ecc_to_excel()` now completes the **U** and **V** 
   matrices relative to each other on both margins,
