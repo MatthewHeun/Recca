@@ -28,6 +28,9 @@ which always resolves to the latest release.
   matrices relative to each other on both margins,
   thereby enabling easier energy balance checks
   via (**iR**)^T^ + (**iV**)^T^ - **Ui** - **y** = **0**.
+* New tests for new features.
+    - Now up to 893 tests, all passing.
+    - Test coverage remains at 100%.
 
 
 ## Recca 0.1.60 (2025-07-06) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15825137.svg)](https://doi.org/10.5281/zenodo.15825137)
