@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.60</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.61</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,11 +36,20 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/MatthewHeun/Recca/blob/v0.1.60/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/MatthewHeun/Recca/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.60" id="recca-0160-2025-07-06">Recca 0.1.60 (2025-07-06)<a class="anchor" aria-label="anchor" href="#recca-0160-2025-07-06"></a></h2>
+<ul><li>
+<code><a href="../reference/reallocate_statistical_differences.html">reallocate_statistical_differences()</a></code> is now robust to ECCs with no Statistical differences, with Statistical differences in only <strong>R</strong>, and with Statistical differences in only <strong>Y</strong>.</li>
+<li>Move <code><a href="../reference/reallocate_statistical_differences.html">reallocate_statistical_differences()</a></code> and its tests from <code>IEATools</code> to <code>Recca</code>. The purpose of <code>IEATools</code> is to move from the IEA format to the PSUT format. The purpose of <code>Recca</code> is to manipulate data already in the PSUT format. <code><a href="../reference/reallocate_statistical_differences.html">reallocate_statistical_differences()</a></code> requires data in the PSUT format and therefore <code><a href="../reference/reallocate_statistical_differences.html">reallocate_statistical_differences()</a></code> is better suited to <code>Recca</code>.</li>
+<li>
+<code><a href="../reference/write_ecc_to_excel.html">write_ecc_to_excel()</a></code> now completes the <strong>U</strong> and <strong>V</strong> matrices relative to each other on both margins, thereby enabling easier energy balance checks via (<strong>iR</strong>)<sup>T</sup> + (<strong>iV</strong>)<sup>T</sup> - <strong>Ui</strong> - <strong>y</strong> = <strong>0</strong>.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.60" id="recca-0160-2025-07-06-doi">Recca 0.1.60 (2025-07-06) <a href="https://doi.org/10.5281/zenodo.15825137" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.15825137.svg" alt="DOI"></a>
+<a class="anchor" aria-label="anchor" href="#recca-0160-2025-07-06-doi"></a></h2>
 <ul><li>New function <code><a href="../reference/add_row_col_types.html">add_row_col_types()</a></code> adds row and column types to matrices based on default matrix names and structure of the PSUT framework. First use is inside <code><a href="../reference/read_ecc_from_excel.html">read_ecc_from_excel()</a></code>.</li>
 <li>New function <code><a href="../reference/read_ecc_from_excel.html">read_ecc_from_excel()</a></code> serves as the inverse of <code><a href="../reference/write_ecc_to_excel.html">write_ecc_to_excel()</a></code>, taking advantage of named regions in Excel spreadsheets. Both functions now name regions as <code>&lt;&lt;matrix name&gt;&gt;__&lt;&lt;worksheet name&gt;&gt;</code> by default.</li>
 <li>New tests for new features.
