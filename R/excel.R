@@ -38,7 +38,10 @@
 #' A warning is given when any worksheet names or region names
 #' contain illegal characters.
 #'
-#' When `path` already exists, it may have pre-existing worksheets
+#' When `path` already exists,
+#' the worksheets are added to the file when
+#' `overwrite_file` is `TRUE`.
+#' The file at `path` may have pre-existing worksheets
 #' with the same names as worksheets to be written.
 #' `overwrite_worksheets` controls whether the pre-existing
 #' worksheets will be deleted before writing the new worksheets.

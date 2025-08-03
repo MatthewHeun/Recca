@@ -127,7 +127,10 @@ Again, best to stick with letters, numbers, and underscores.
 A warning is given when any worksheet names or region names
 contain illegal characters.
 
-When \code{path} already exists, it may have pre-existing worksheets
+When \code{path} already exists,
+the worksheets are added to the file when
+\code{overwrite_file} is \code{TRUE}.
+The file at \code{path} may have pre-existing worksheets
 with the same names as worksheets to be written.
 \code{overwrite_worksheets} controls whether the pre-existing
 worksheets will be deleted before writing the new worksheets.
