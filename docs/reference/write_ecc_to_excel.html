@@ -11,7 +11,7 @@ This function takes ECC matrices and writes them to an Excel file."></head><body
 
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.61</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.62</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,6 +57,7 @@ This function takes ECC matrices and writes them to an Excel file.</p>
 <span>  <span class="va">path</span>,</span>
 <span>  overwrite_file <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  worksheet_names <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  overwrite_worksheets <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  pad <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  include_named_regions <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  R <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">R</span>,</span>
@@ -106,6 +107,12 @@ the string name of a column in the data frame
 containing the names of the worksheets.
 When <code>NULL</code>, the default, tabs are
 numbered sequentially.</p></dd>
+
+
+<dt id="arg-overwrite-worksheets">overwrite_worksheets<a class="anchor" aria-label="anchor" href="#arg-overwrite-worksheets"></a></dt>
+<dd><p>A boolean that tells whether to overwrite
+existing worksheets of the same name
+when <code>path</code> already exists.</p></dd>
 
 
 <dt id="arg-pad">pad<a class="anchor" aria-label="anchor" href="#arg-pad"></a></dt>
@@ -176,7 +183,8 @@ may not contain any of the following characters:
 named regions for matrices are added to Excel sheets.
 The format for the region names is
 <code>&lt;&lt;matrix symbol&gt;&gt;&lt;&lt;sep&gt;&gt;&lt;&lt;worksheet name&gt;&gt;</code>.
-For example, "R_4" for the <strong>R</strong> matrix on the sheet named "4".
+For example, "R_4" is the name for the region of the
+<strong>R</strong> matrix on the sheet named "4".
 The names help to identify matrices in high-level views of an Excel sheet
 and can also be used for later reading matrices from Excel files.
 (See [read_ecc_from_excel()].)
@@ -191,6 +199,13 @@ worksheet names should avoid illegal characters for region names.
 Again, best to stick with letters, numbers, and underscores.</p>
 <p>A warning is given when any worksheet names or region names
 contain illegal characters.</p>
+<p>When <code>path</code> already exists,
+the worksheets are added to the file when
+<code>overwrite_file</code> is <code>TRUE</code>.
+The file at <code>path</code> may have pre-existing worksheets
+with the same names as worksheets to be written.
+<code>overwrite_worksheets</code> controls whether the pre-existing
+worksheets will be deleted before writing the new worksheets.</p>
 <p>This function is an inverse of [read_ecc_from_excel()].</p>
 <p>[  ]: R:%20%20
 [read_ecc_from_excel()]: R:read_ecc_from_excel()
