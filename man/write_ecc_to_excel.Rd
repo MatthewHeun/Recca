@@ -9,6 +9,7 @@ write_ecc_to_excel(
   path,
   overwrite_file = FALSE,
   worksheet_names = NULL,
+  overwrite_worksheets = FALSE,
   pad = 2,
   include_named_regions = TRUE,
   R = Recca::psut_cols$R,
@@ -47,6 +48,10 @@ the string name of a column in the data frame
 containing the names of the worksheets.
 When \code{NULL}, the default, tabs are
 numbered sequentially.}
+
+\item{overwrite_worksheets}{A boolean that tells whether to overwrite
+existing worksheets of the same name
+when \code{path} already exists.}
 
 \item{pad}{The number of rows and columns between adjacent matrices in the Excel sheet.
 Default is \code{2}.}
@@ -121,6 +126,11 @@ Again, best to stick with letters, numbers, and underscores.
 
 A warning is given when any worksheet names or region names
 contain illegal characters.
+
+When \code{path} already exists, it may have pre-existing worksheets
+with the same names as worksheets to be written.
+\code{overwrite_worksheets} controls whether the pre-existing
+worksheets will be deleted before writing the new worksheets.
 
 This function is an inverse of [read_ecc_from_excel()].
 
