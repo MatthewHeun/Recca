@@ -19,7 +19,8 @@
 #' named regions for matrices are added to Excel sheets.
 #' The format for the region names is
 #' `<<matrix symbol>><<sep>><<worksheet name>>`.
-#' For example, "R_4" for the **R** matrix on the sheet named "4".
+#' For example, "R_4" is the name for the region of the
+#' **R** matrix on the sheet named "4".
 #' The names help to identify matrices in high-level views of an Excel sheet
 #' and can also be used for later reading matrices from Excel files.
 #' (See [read_ecc_from_excel()].)
