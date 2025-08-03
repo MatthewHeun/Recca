@@ -13,6 +13,9 @@ which always resolves to the latest release.
   into pre-existing files. 
   New argument `overwrite_worksheets` controls whether
   existing worksheets can be overwritten.
+* New tests for new features.
+    - Now up to 893 tests, all passing.
+    - Test coverage remains at 100%.
 
 
 ## Recca 0.1.61 (2025-07-25) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16429022.svg)](https://doi.org/10.5281/zenodo.16429022)
