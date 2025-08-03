@@ -4,6 +4,8 @@ output: html_document
 ---
 
 
+## All releases
+
 Cite all releases of `Recca` with doi
 [10.5281/zenodo.5226085](https://doi.org/10.5281/zenodo.5226085), 
 which always resolves to the latest release.
