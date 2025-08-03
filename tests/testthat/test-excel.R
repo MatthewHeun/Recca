@@ -9,7 +9,7 @@ test_that("write_ecc_to_excel() works as expected", {
   res <- write_ecc_to_excel(ecc,
                             path = ecc_temp_path,
                             worksheet_names = "worksheet_names",
-                            overwrite = TRUE)
+                            overwrite_file = TRUE)
 
   expect_true(file.exists(ecc_temp_path))
 
@@ -45,7 +45,9 @@ test_that("write_ecc_to_excel() fails when the file already exists", {
     tidyr::spread(key = "matrix.name", value = "matrix")
   ecc_temp_path <- tempfile(pattern = "write_excel_ecc_test_file", fileext = ".xlsx")
   file.create(ecc_temp_path)
-  expect_error(write_ecc_to_excel(ecc, path = ecc_temp_path, overwrite = FALSE))
+  expect_error(write_ecc_to_excel(ecc,
+                                  path = ecc_temp_path,
+                                  overwrite_file = FALSE))
   # Formerly tested against a specific error message, but
   # regex matching is seemingly different and problematic on various platforms,
   # especially windows, where backslash ("\") is the file separator
@@ -65,7 +67,9 @@ test_that("write_ecc_to_excel() works with Matrix objects", {
       R = matsbyname::Matrix(R)
     )
   ecc_temp_path <- tempfile(pattern = "write_excel_ecc_test_file", fileext = ".xlsx")
-  res <- write_ecc_to_excel(ecc, path = ecc_temp_path, overwrite = TRUE)
+  res <- write_ecc_to_excel(ecc,
+                            path = ecc_temp_path,
+                            overwrite_file = TRUE)
 
   expect_true(file.exists(ecc_temp_path))
   if (file.exists(ecc_temp_path)) {
@@ -101,7 +105,7 @@ test_that("write_ecc_to_excel() sets sheet names", {
                        values_from = "matrix")
   res_no_names <- write_ecc_to_excel(ecc,
                                      path = ecc_temp_path,
-                                     overwrite = TRUE)
+                                     overwrite_file = TRUE)
   expect_true(file.exists(ecc_temp_path))
   # Read the workbook
   openxlsx::loadWorkbook(file = ecc_temp_path) |>
@@ -117,12 +121,16 @@ test_that("write_ecc_to_excel() sets sheet names", {
   res_with_names <- write_ecc_to_excel(ecc_with_names,
                                        worksheet_names = "worksheet_names",
                                        path = ecc_temp_path,
-                                       overwrite = TRUE)
+                                       overwrite_file = TRUE)
   expect_true(file.exists(ecc_temp_path))
   # Read the workbook
   openxlsx::loadWorkbook(file = ecc_temp_path) |>
     names() |>
-    expect_equal(c("E_Final",
+    # We opened an existing workbook with tabs names 1, 2, 3, 4.
+    # We are not overwriting the existing tabs,
+    # we are adding new ones.
+    expect_equal(c("1", "2", "3", "4",
+                   "E_Final",
                    "E_Services",
                    "E_Useful",
                    "X_Services"))
@@ -189,7 +197,7 @@ test_that("read_ecc_from_excel() works as expected", {
   res <- write_ecc_to_excel(ecc,
                             path = ecc_temp_path,
                             worksheet_names = "WorksheetNames",
-                            overwrite = TRUE)
+                            overwrite_file = TRUE)
 
   expect_true(file.exists(ecc_temp_path))
 
@@ -229,4 +237,76 @@ test_that("read_ecc_from_excel() works as expected", {
 })
 
 
+testthat::test_that("write_ecc_to_excel() works with pre-existing file", {
+  ecc <- UKEnergy2000mats |>
+    tidyr::spread(key = "matrix.name", value = "matrix") |>
+    dplyr::mutate(
+      WorksheetNames = paste0(EnergyType, "_", LastStage)
+    )
+  ecc_temp_path <- tempfile(pattern = "write_excel_ecc_test_file", fileext = ".xlsx")
 
+  res <- write_ecc_to_excel(ecc,
+                            path = ecc_temp_path,
+                            worksheet_names = "WorksheetNames",
+                            overwrite_file = TRUE)
+
+  expect_true(file.exists(ecc_temp_path))
+  # Check worksheet names
+  openxlsx2::wb_load(ecc_temp_path) |>
+    openxlsx2::wb_get_sheet_names() |>
+    expect_equal(c(E_Final = "E_Final", E_Services = "E_Services",
+                   E_Useful = "E_Useful", X_Services = "X_Services"))
+
+  # Now add four more rows into the file
+  ecc2 <- ecc |>
+    dplyr::mutate(
+      EnergyType = c("B", "B", "B", "BX"),
+      WorksheetNames = paste0(EnergyType, "_", LastStage)
+    )
+  write_ecc_to_excel(ecc2,
+                     path = ecc_temp_path,
+                     worksheet_names = "WorksheetNames",
+                     overwrite_file = TRUE)
+  # We should have 8 tabs now.
+  openxlsx2::wb_load(ecc_temp_path) |>
+    openxlsx2::wb_get_sheet_names() |>
+    expect_equal(c(E_Final = "E_Final", E_Services = "E_Services",
+                   E_Useful = "E_Useful", X_Services = "X_Services",
+                   B_Final = "B_Final", B_Services = "B_Services",
+                   B_Useful = "B_Useful", BX_Services = "BX_Services"))
+
+  # Now add when all tabs have same name
+  ecc3 <- ecc |>
+    dplyr::bind_rows(ecc |>
+                       dplyr::mutate(
+                         EnergyType = c("B", "B", "B", "BX"),
+                         WorksheetNames = paste0(EnergyType, "_", LastStage)
+                       ))
+  # And write to the same file without enabling overwriting of sheets.
+  # This should fail.
+  write_ecc_to_excel(ecc3,
+                     path = ecc_temp_path,
+                     worksheet_names = "WorksheetNames",
+                     overwrite_file = TRUE) |>
+    expect_error("A worksheet by the name 'E_Final' already exists!")
+
+  # Now try after enabling overwriting of sheets
+  write_ecc_to_excel(ecc3,
+                     path = ecc_temp_path,
+                     worksheet_names = "WorksheetNames",
+                     overwrite_file = TRUE,
+                     overwrite_worksheets = TRUE)
+
+  # Check worksheet names
+  openxlsx2::wb_load(ecc_temp_path) |>
+    openxlsx2::wb_get_sheet_names() |>
+    expect_equal(c(E_Final = "E_Final", E_Services = "E_Services",
+                   E_Useful = "E_Useful", X_Services = "X_Services",
+                   B_Final = "B_Final", B_Services = "B_Services",
+                   B_Useful = "B_Useful", BX_Services = "BX_Services"))
+
+  # Clean up after ourselves
+  if (file.exists(ecc_temp_path)) {
+    file.remove(ecc_temp_path)
+  }
+})

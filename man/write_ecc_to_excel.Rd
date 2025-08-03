@@ -9,6 +9,7 @@ write_ecc_to_excel(
   path,
   overwrite_file = FALSE,
   worksheet_names = NULL,
+  overwrite_worksheets = FALSE,
   pad = 2,
   include_named_regions = TRUE,
   R = Recca::psut_cols$R,
@@ -47,6 +48,10 @@ the string name of a column in the data frame
 containing the names of the worksheets.
 When \code{NULL}, the default, tabs are
 numbered sequentially.}
+
+\item{overwrite_worksheets}{A boolean that tells whether to overwrite
+existing worksheets of the same name
+when \code{path} already exists.}
 
 \item{pad}{The number of rows and columns between adjacent matrices in the Excel sheet.
 Default is \code{2}.}
@@ -103,7 +108,8 @@ When \code{include_named_regions} is \code{TRUE} (the default),
 named regions for matrices are added to Excel sheets.
 The format for the region names is
 \verb{<<matrix symbol>><<sep>><<worksheet name>>}.
-For example, "R_4" for the \strong{R} matrix on the sheet named "4".
+For example, "R_4" is the name for the region of the
+\strong{R} matrix on the sheet named "4".
 The names help to identify matrices in high-level views of an Excel sheet
 and can also be used for later reading matrices from Excel files.
 (See [read_ecc_from_excel()].)
@@ -121,6 +127,14 @@ Again, best to stick with letters, numbers, and underscores.
 
 A warning is given when any worksheet names or region names
 contain illegal characters.
+
+When \code{path} already exists,
+the worksheets are added to the file when
+\code{overwrite_file} is \code{TRUE}.
+The file at \code{path} may have pre-existing worksheets
+with the same names as worksheets to be written.
+\code{overwrite_worksheets} controls whether the pre-existing
+worksheets will be deleted before writing the new worksheets.
 
 This function is an inverse of [read_ecc_from_excel()].
 

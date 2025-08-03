@@ -4,12 +4,25 @@ output: html_document
 ---
 
 
+## All releases
+
 Cite all releases of `Recca` with doi
 [10.5281/zenodo.5226085](https://doi.org/10.5281/zenodo.5226085), 
 which always resolves to the latest release.
 
 
-## Recca 0.1.61 (2025-07-25)
+## Recca 0.1.62 (2025-08-03) 
+
+* `write_ecc_to_excel()` now allows writing worksheets 
+  into pre-existing files. 
+  New boolean argument `overwrite_worksheets` controls whether
+  existing worksheets can be overwritten.
+* New tests for new features.
+    - Now up to 898 tests, all passing.
+    - Test coverage remains at 100%.
+
+
+## Recca 0.1.61 (2025-07-25) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16429022.svg)](https://doi.org/10.5281/zenodo.16429022)
 
 * `reallocate_statistical_differences()` is now 
   robust to ECCs with no Statistical differences, 
@@ -28,6 +41,9 @@ which always resolves to the latest release.
   matrices relative to each other on both margins,
   thereby enabling easier energy balance checks
   via (**iR**)^T^ + (**iV**)^T^ - **Ui** - **y** = **0**.
+* New tests for new features.
+    - Now up to 893 tests, all passing.
+    - Test coverage remains at 100%.
 
 
 ## Recca 0.1.60 (2025-07-06) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15825137.svg)](https://doi.org/10.5281/zenodo.15825137)
