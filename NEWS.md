@@ -11,9 +11,11 @@ Cite all releases of `Recca` with doi
 which always resolves to the latest release.
 
 
+## Recca 0.1.62 (2025-08-03) 
+
 * `write_ecc_to_excel()` now allows writing worksheets 
   into pre-existing files. 
-  New argument `overwrite_worksheets` controls whether
+  New boolean argument `overwrite_worksheets` controls whether
   existing worksheets can be overwritten.
 * New tests for new features.
     - Now up to 898 tests, all passing.
