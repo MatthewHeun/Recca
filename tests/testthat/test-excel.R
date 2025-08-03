@@ -257,8 +257,26 @@ testthat::test_that("write_ecc_to_excel() works with pre-existing file", {
     expect_equal(c(E_Final = "E_Final", E_Services = "E_Services",
                    E_Useful = "E_Useful", X_Services = "X_Services"))
 
-  # Now add a couple more rows
+  # Now add four more rows into the file
   ecc2 <- ecc |>
+    dplyr::mutate(
+      EnergyType = c("B", "B", "B", "BX"),
+      WorksheetNames = paste0(EnergyType, "_", LastStage)
+    )
+  write_ecc_to_excel(ecc2,
+                     path = ecc_temp_path,
+                     worksheet_names = "WorksheetNames",
+                     overwrite_file = TRUE)
+  # We should have 8 tabs now.
+  openxlsx2::wb_load(ecc_temp_path) |>
+    openxlsx2::wb_get_sheet_names() |>
+    expect_equal(c(E_Final = "E_Final", E_Services = "E_Services",
+                   E_Useful = "E_Useful", X_Services = "X_Services",
+                   B_Final = "B_Final", B_Services = "B_Services",
+                   B_Useful = "B_Useful", BX_Services = "BX_Services"))
+
+  # Now add when all tabs have same name
+  ecc3 <- ecc |>
     dplyr::bind_rows(ecc |>
                        dplyr::mutate(
                          EnergyType = c("B", "B", "B", "BX"),
@@ -266,14 +284,14 @@ testthat::test_that("write_ecc_to_excel() works with pre-existing file", {
                        ))
   # And write to the same file without enabling overwriting of sheets.
   # This should fail.
-  write_ecc_to_excel(ecc2,
+  write_ecc_to_excel(ecc3,
                      path = ecc_temp_path,
                      worksheet_names = "WorksheetNames",
                      overwrite_file = TRUE) |>
     expect_error("A worksheet by the name 'E_Final' already exists!")
 
   # Now try after enabling overwriting of sheets
-  write_ecc_to_excel(ecc2,
+  write_ecc_to_excel(ecc3,
                      path = ecc_temp_path,
                      worksheet_names = "WorksheetNames",
                      overwrite_file = TRUE,
