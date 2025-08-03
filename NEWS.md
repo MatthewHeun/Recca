@@ -14,7 +14,7 @@ which always resolves to the latest release.
   New argument `overwrite_worksheets` controls whether
   existing worksheets can be overwritten.
 * New tests for new features.
-    - Now up to 893 tests, all passing.
+    - Now up to 898 tests, all passing.
     - Test coverage remains at 100%.
 
 
