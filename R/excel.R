@@ -39,6 +39,14 @@
 #' A warning is given when any worksheet names or region names
 #' contain illegal characters.
 #'
+#' When `path` already exists,
+#' the worksheets are added to the file when
+#' `overwrite_file` is `TRUE`.
+#' The file at `path` may have pre-existing worksheets
+#' with the same names as worksheets to be written.
+#' `overwrite_worksheets` controls whether the pre-existing
+#' worksheets will be deleted before writing the new worksheets.
+#'
 #' This function is an inverse of [read_ecc_from_excel()].
 #'
 #' @param .psut_data A list or data frame of energy conversion chains.
@@ -57,6 +65,9 @@
 #'                        containing the names of the worksheets.
 #'                        When `NULL`, the default, tabs are
 #'                        numbered sequentially.
+#' @param overwrite_worksheets A boolean that tells whether to overwrite
+#'                             existing worksheets of the same name
+#'                             when `path` already exists.
 #' @param pad The number of rows and columns between adjacent matrices in the Excel sheet.
 #'            Default is `2`.
 #' @param include_named_regions A boolean that tells whether to name regions of
@@ -105,6 +116,7 @@ write_ecc_to_excel <- function(.psut_data = NULL,
                                path,
                                overwrite_file = FALSE,
                                worksheet_names = NULL,
+                               overwrite_worksheets = FALSE,
                                pad = 2,
                                include_named_regions = TRUE,
                                R = Recca::psut_cols$R,
@@ -127,8 +139,14 @@ write_ecc_to_excel <- function(.psut_data = NULL,
     stop(paste("File", path,
                "already exists. Call `Recca::write_ecc_to_excel()` with `overwrite = TRUE`?"))
   }
-  # Create the workbook
-  ecc_wb <- openxlsx::createWorkbook()
+  if (file.exists(path)) {
+    # The file already exists, and
+    # the caller is OK with overwriting it
+    ecc_wb <- openxlsx::loadWorkbook(file = path)
+  } else {
+    # Create the workbook from scratch
+    ecc_wb <- openxlsx::createWorkbook()
+  }
 
   create_one_tab <- function(R_mat, U_mat, V_mat, Y_mat,
                              U_eiou_mat, U_feed_mat, r_eiou_mat,
@@ -140,16 +158,34 @@ write_ecc_to_excel <- function(.psut_data = NULL,
     } else {
       # Get existing sheet names
       existing_sheets <- openxlsx::sheets(ecc_wb)
+      # Create a new name by incrementing the integer
       if (length(existing_sheets) == 0) {
         sheet_name <- "1"
       } else {
-        sheet_name <- (as.integer(existing_sheets) %>% max()) + 1
+        sheet_name <- (as.integer(existing_sheets) |> max()) + 1
       }
     }
     # Check for malformed sheet names. Emit a warning if problem found.
     check_worksheet_name_violations(sheet_name)
 
-    # Add the worksheet to the workbook
+    # If the file already exists,
+    # check if the sheet already exists.
+    # If overwrite_file is TRUE and the sheet exists,
+    # remove it before writing a new sheet.
+    # If overwrite_file is FALSE and the sheet exists,
+    # allow it to error.
+    if (file.exists(path) & overwrite_worksheets) {
+      # Check for the existence of a sheet with the same name and delete it
+      existing_sheet_names <- names(ecc_wb)
+      if (!is.null(existing_sheet_names)) {
+        if (sheet_name %in% existing_sheet_names) {
+          # Delete the existing sheet before writing the new sheet
+          openxlsx::removeWorksheet(ecc_wb, sheet = sheet_name)
+        }
+      }
+    }
+
+    # Add the new worksheet to the workbook
     openxlsx::addWorksheet(ecc_wb, sheet_name)
 
     # Complete matrices relative to one another to make sure we have same number

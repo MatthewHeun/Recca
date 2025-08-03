@@ -4,9 +4,20 @@ output: html_document
 ---
 
 
+## All releases
+
 Cite all releases of `Recca` with doi
 [10.5281/zenodo.5226085](https://doi.org/10.5281/zenodo.5226085), 
 which always resolves to the latest release.
+
+
+* `write_ecc_to_excel()` now allows writing worksheets 
+  into pre-existing files. 
+  New argument `overwrite_worksheets` controls whether
+  existing worksheets can be overwritten.
+* New tests for new features.
+    - Now up to 898 tests, all passing.
+    - Test coverage remains at 100%.
 
 
 ## Recca 0.1.61 (2025-07-25) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16429022.svg)](https://doi.org/10.5281/zenodo.16429022)
