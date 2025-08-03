@@ -11,7 +11,7 @@ Cite all releases of `Recca` with doi
 which always resolves to the latest release.
 
 
-## Recca 0.1.62 (2025-08-03) 
+## Recca 0.1.62 (2025-08-03) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16734290.svg)](https://doi.org/10.5281/zenodo.16734290)
 
 * `write_ecc_to_excel()` now allows writing worksheets 
   into pre-existing files. 
