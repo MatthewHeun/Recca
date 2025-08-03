@@ -9,7 +9,8 @@ Cite all releases of `Recca` with doi
 which always resolves to the latest release.
 
 
-* `write_ecc_to_excel()` now allows writing to pre-existing files. 
+* `write_ecc_to_excel()` now allows writing worksheets 
+  into pre-existing files. 
   New argument `overwrite_worksheets` controls whether
   existing worksheets can be overwritten.
 
