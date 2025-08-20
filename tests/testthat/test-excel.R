@@ -94,8 +94,6 @@ test_that("calc_mats_locations_excel() fails correctly", {
 })
 
 
-
-
 test_that("write_ecc_to_excel() sets sheet names", {
   ecc_temp_path <- tempfile(pattern = "write_excel_ecc_test_file",
                             fileext = ".xlsx")

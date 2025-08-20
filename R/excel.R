@@ -134,7 +134,7 @@ write_ecc_to_excel <- function(.psut_data = NULL,
                                calculated_bg_color = "#D9D9D9",
                                col_widths = 7) {
 
-  # Check if path exists. If so, throw an error.
+  # Check if path exists. Throw an error if overwrite_file is FALSE.
   if (file.exists(path) & !overwrite_file) {
     stop(paste("File", path,
                "already exists. Call `Recca::write_ecc_to_excel()` with `overwrite = TRUE`?"))
@@ -142,10 +142,12 @@ write_ecc_to_excel <- function(.psut_data = NULL,
   if (file.exists(path)) {
     # The file already exists, and
     # the caller is OK with overwriting it
-    ecc_wb <- openxlsx::loadWorkbook(file = path)
+    # ecc_wb <- openxlsx::loadWorkbook(file = path)
+    ecc_wb <- openxlsx2::wb_load(file = path)
   } else {
     # Create the workbook from scratch
-    ecc_wb <- openxlsx::createWorkbook()
+    # ecc_wb <- openxlsx::createWorkbook()
+    ecc_wb <- openxlsx2::wb_workbook()
   }
 
   create_one_tab <- function(R_mat, U_mat, V_mat, Y_mat,
@@ -157,7 +159,9 @@ write_ecc_to_excel <- function(.psut_data = NULL,
       sheet_name <- worksheet_name
     } else {
       # Get existing sheet names
-      existing_sheets <- openxlsx::sheets(ecc_wb)
+      # existing_sheets <- openxlsx::sheets(ecc_wb)
+      existing_sheets <- openxlsx2::wb_get_sheet_names(ecc_wb)
+
       # Create a new name by incrementing the integer
       if (length(existing_sheets) == 0) {
         sheet_name <- "1"
@@ -176,17 +180,20 @@ write_ecc_to_excel <- function(.psut_data = NULL,
     # allow it to error.
     if (file.exists(path) & overwrite_worksheets) {
       # Check for the existence of a sheet with the same name and delete it
-      existing_sheet_names <- names(ecc_wb)
+      # existing_sheet_names <- names(ecc_wb)
+      existing_sheet_names <- openxlsx2::wb_get_sheet_names(ecc_wb)
       if (!is.null(existing_sheet_names)) {
         if (sheet_name %in% existing_sheet_names) {
           # Delete the existing sheet before writing the new sheet
-          openxlsx::removeWorksheet(ecc_wb, sheet = sheet_name)
+          # openxlsx::removeWorksheet(ecc_wb, sheet = sheet_name)
+          ecc_wb <- openxlsx2::wb_remove_worksheet(ecc_wb, sheet = sheet_name)
         }
       }
     }
 
     # Add the new worksheet to the workbook
-    openxlsx::addWorksheet(ecc_wb, sheet_name)
+    # openxlsx::addWorksheet(ecc_wb, sheet_name)
+    ecc_wb <- openxlsx2::wb_add_worksheet(ecc_wb, sheet_name)
 
     # Complete matrices relative to one another to make sure we have same number
     # of rows or columns, as appropriate
@@ -245,22 +252,23 @@ write_ecc_to_excel <- function(.psut_data = NULL,
           mat_origin <- this_loc[["origin"]] + c(x = 1, y = 1)  # Offset for the row and column names
           mat_extent <- this_loc[["extent"]] + c(x = 0, y = -1) # Offset for the matrix label
           # Write the data
-          openxlsx::writeData(wb = ecc_wb,
-                              sheet = sheet_name,
-                              # Account for the fact that this_mat could be a
-                              # non-native matrix class (such as Matrix)
-                              x = as.matrix(this_mat),
-                              xy = this_loc[["origin"]],
-                              array = TRUE, colNames = TRUE, rowNames = TRUE)
-          # Set the background color to matrix_bg_color for the numbers in the matrix
-          # Define the matrix numbers style
-          if (this_mat_name %in% c("R", "Y")) {
-            this_bg_color <- RY_bg_color
-          } else if (this_mat_name %in% c("U", "V")) {
-            this_bg_color <- UV_bg_color
-          } else {
-            this_bg_color <- calculated_bg_color
-          }
+          # openxlsx::writeData(wb = ecc_wb,
+          #                     sheet = sheet_name,
+          #                     # Account for the fact that this_mat could be a
+          #                     # non-native matrix class (such as Matrix)
+          #                     x = as.matrix(this_mat),
+          #                     xy = this_loc[["origin"]],
+          #                     array = TRUE, colNames = TRUE, rowNames = TRUE)
+          ecc_wb <- openxlsx2::wb_add_data(wb = ecc_wb,
+                                           sheet = sheet_name,
+                                           # Account for the fact that this_mat could be a
+                                           # non-native matrix class (such as Matrix)
+                                           x = as.matrix(this_mat),
+                                           start_row = this_loc[["origin"]][["x"]],
+                                           start_col = this_loc[["origin"]][["y"]],
+                                           array = TRUE,
+                                           col_names = TRUE,
+                                           row_names = TRUE)
           if (include_named_regions) {
             # Set the name of the region for this matrix.
             # Note that the name of a region can be at most 255 characters long.
@@ -273,14 +281,43 @@ write_ecc_to_excel <- function(.psut_data = NULL,
             region_name <- paste(this_mat_name, sheet_name, sep = sep)
             # Check for malformed region names. Emit a warning if problem found.
             check_named_region_violations(region_name)
-            openxlsx::createNamedRegion(wb = ecc_wb,
-                                        sheet = sheet_name,
-                                        rows = (mat_origin[["y"]]-1):mat_extent[["y"]],
-                                        cols = (mat_origin[["x"]]-1):mat_extent[["x"]],
-                                        name = region_name,
-                                        # Set false to flag any problems.
-                                        overwrite = FALSE)
+            # openxlsx::createNamedRegion(wb = ecc_wb,
+            #                             sheet = sheet_name,
+            #                             rows = (mat_origin[["y"]]-1):mat_extent[["y"]],
+            #                             cols = (mat_origin[["x"]]-1):mat_extent[["x"]],
+            #                             name = region_name,
+            #                             # Set false to flag any problems.
+            #                             overwrite = FALSE)
+            ecc_wb <- openxlsx2::wb_add_named_region(wb = ecc_wb,
+                                                     sheet = sheet_name,
+                                                     dims = openxlsx2::wb_dims(
+                                                       rows = (mat_origin[["y"]]-1):mat_extent[["y"]],
+                                                       cols = (mat_origin[["x"]]-1):mat_extent[["x"]]),
+                                                     name = region_name,
+                                                     local_sheet = TRUE,
+                                                     # Set false to flag any problems.
+                                                     overwrite = FALSE)
           }
+          # Set the background color to matrix_bg_color for the numbers in the matrix
+          # Define the matrix numbers style
+          if (this_mat_name %in% c("R", "Y")) {
+            this_bg_color <- RY_bg_color
+          } else if (this_mat_name %in% c("U", "V")) {
+            this_bg_color <- UV_bg_color
+          } else {
+            this_bg_color <- calculated_bg_color
+          }
+
+
+
+
+          ##########################
+          # Got to here with changing openxlsx --> opensxls2
+          ##########################
+
+
+
+
           # Create the style for this matrix.
           mat_num_style <- openxlsx::createStyle(fgFill = this_bg_color,
                                                  halign = "center",
