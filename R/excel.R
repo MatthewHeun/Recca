@@ -266,15 +266,23 @@ write_ecc_to_excel <- function(.psut_data = NULL,
           mat_region_dims <- openxlsx2::wb_dims(
             rows = (mat_origin[["y"]]-1):mat_extent[["y"]],
             cols = (mat_origin[["x"]]-1):mat_extent[["x"]])
-          ecc_wb <- ecc_wb |>
-            openxlsx2::wb_add_data(sheet = sheet_name,
-                                   # Account for the fact that this_mat could be a
-                                   # non-native matrix class (such as Matrix)
-                                   x = as.matrix(this_mat),
-                                   dims = mat_region_dims,
-                                   array = TRUE,
-                                   col_names = TRUE,
-                                   row_names = TRUE)
+          # ecc_wb <- ecc_wb |>
+          #   openxlsx2::wb_add_data(sheet = sheet_name,
+          #                          # Account for the fact that this_mat could be a
+          #                          # non-native matrix class (such as Matrix)
+          #                          x = as.matrix(this_mat),
+          #                          dims = mat_region_dims,
+          #                          array = TRUE,
+          #                          col_names = TRUE,
+          #                          row_names = TRUE)
+          ecc_wb$add_data(sheet = sheet_name,
+                          # Account for the fact that this_mat could be a
+                          # non-native matrix class (such as Matrix)
+                          x = as.matrix(this_mat),
+                          dims = mat_region_dims,
+                          array = TRUE,
+                          col_names = TRUE,
+                          row_names = TRUE)
           if (include_named_regions) {
             # Set the name of the region for this matrix.
             # Note that the name of a region can be at most 255 characters long.
