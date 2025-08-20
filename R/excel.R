@@ -398,6 +398,10 @@ write_ecc_to_excel <- function(.psut_data = NULL,
   dir.create(dirname(path), showWarnings = FALSE, recursive = TRUE)
   # Write the workbook
   # openxlsx::saveWorkbook(ecc_wb, file = path, overwrite = overwrite_file)
+
+  # This version of ecc_wb is still the original version.
+  # Do I need to change to chaining ($) rather than pipe (|>)
+  # when making changes to the workbook in the code above?
   ecc_wb |>
     openxlsx2::wb_save(file = path, overwrite = overwrite_file)
 }
