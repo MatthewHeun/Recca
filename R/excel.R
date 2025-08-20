@@ -186,15 +186,17 @@ write_ecc_to_excel <- function(.psut_data = NULL,
         if (sheet_name %in% existing_sheet_names) {
           # Delete the existing sheet before writing the new sheet
           # openxlsx::removeWorksheet(ecc_wb, sheet = sheet_name)
-          ecc_wb <- openxlsx2::wb_remove_worksheet(ecc_wb, sheet = sheet_name)
+          # ecc_wb <- openxlsx2::wb_remove_worksheet(ecc_wb, sheet = sheet_name)
+          ecc_wb$remove_worksheet(sheet = sheet_name)
         }
       }
     }
 
     # Add the new worksheet to the workbook
     # openxlsx::addWorksheet(ecc_wb, sheet_name)
-    ecc_wb <- ecc_wb |>
-      openxlsx2::wb_add_worksheet(sheet_name)
+    # ecc_wb <- ecc_wb |>
+    #   openxlsx2::wb_add_worksheet(sheet_name)
+    ecc_wb$add_worksheet(sheet_name)
 
     # Complete matrices relative to one another to make sure we have same number
     # of rows or columns, as appropriate
