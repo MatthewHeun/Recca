@@ -186,7 +186,11 @@ write_ecc_to_excel <- function(.psut_data = NULL,
         if (sheet_name %in% existing_sheet_names) {
           # Delete the existing sheet before writing the new sheet
           # openxlsx::removeWorksheet(ecc_wb, sheet = sheet_name)
-          # ecc_wb <- openxlsx2::wb_remove_worksheet(ecc_wb, sheet = sheet_name)
+          # Note that I'm using chaining ($) throughout.
+          # As discussed in the openxlsx2 documentation,
+          # chaining modifies the workbook in place in memory,
+          # which is crucial for writing the modified workbook
+          # at the end of this function.
           ecc_wb$remove_worksheet(sheet = sheet_name)
         }
       }
@@ -194,8 +198,6 @@ write_ecc_to_excel <- function(.psut_data = NULL,
 
     # Add the new worksheet to the workbook
     # openxlsx::addWorksheet(ecc_wb, sheet_name)
-    # ecc_wb <- ecc_wb |>
-    #   openxlsx2::wb_add_worksheet(sheet_name)
     ecc_wb$add_worksheet(sheet_name)
 
     # Complete matrices relative to one another to make sure we have same number
@@ -266,15 +268,6 @@ write_ecc_to_excel <- function(.psut_data = NULL,
           mat_region_dims <- openxlsx2::wb_dims(
             rows = (mat_origin[["y"]]-1):mat_extent[["y"]],
             cols = (mat_origin[["x"]]-1):mat_extent[["x"]])
-          # ecc_wb <- ecc_wb |>
-          #   openxlsx2::wb_add_data(sheet = sheet_name,
-          #                          # Account for the fact that this_mat could be a
-          #                          # non-native matrix class (such as Matrix)
-          #                          x = as.matrix(this_mat),
-          #                          dims = mat_region_dims,
-          #                          array = TRUE,
-          #                          col_names = TRUE,
-          #                          row_names = TRUE)
           ecc_wb$add_data(sheet = sheet_name,
                           # Account for the fact that this_mat could be a
                           # non-native matrix class (such as Matrix)
