@@ -288,11 +288,12 @@ write_ecc_to_excel <- function(.psut_data = NULL,
             #                             name = region_name,
             #                             # Set false to flag any problems.
             #                             overwrite = FALSE)
+            region_dims <- openxlsx2::wb_dims(
+              rows = (mat_origin[["y"]]-1):mat_extent[["y"]],
+              cols = (mat_origin[["x"]]-1):mat_extent[["x"]])
             ecc_wb <- openxlsx2::wb_add_named_region(wb = ecc_wb,
                                                      sheet = sheet_name,
-                                                     dims = openxlsx2::wb_dims(
-                                                       rows = (mat_origin[["y"]]-1):mat_extent[["y"]],
-                                                       cols = (mat_origin[["x"]]-1):mat_extent[["x"]]),
+                                                     dims = region_dims,
                                                      name = region_name,
                                                      local_sheet = TRUE,
                                                      # Set false to flag any problems.
