@@ -99,9 +99,9 @@ test_that("write_ecc_to_excel() sets sheet names", {
                                      overwrite_file = TRUE)
   expect_true(file.exists(ecc_temp_path))
   # Read the workbook
-  openxlsx::loadWorkbook(file = ecc_temp_path) |>
-    names() |>
-    expect_equal(c("1", "2", "3", "4"))
+  openxlsx2::wb_load(file = ecc_temp_path) |>
+    openxlsx2::wb_get_sheet_names() |>
+    expect_equal(c(`1` = "1", `2` = "2", `3` = "3", `4` = "4"))
 
 
   # Now try with tab names
@@ -115,16 +115,16 @@ test_that("write_ecc_to_excel() sets sheet names", {
                                        overwrite_file = TRUE)
   expect_true(file.exists(ecc_temp_path))
   # Read the workbook
-  openxlsx::loadWorkbook(file = ecc_temp_path) |>
-    names() |>
+  openxlsx2::wb_load(file = ecc_temp_path) |>
+    openxlsx2::wb_get_sheet_names() |>
     # We opened an existing workbook with tabs names 1, 2, 3, 4.
     # We are not overwriting the existing tabs,
     # we are adding new ones.
-    expect_equal(c("1", "2", "3", "4",
-                   "E_Final",
-                   "E_Services",
-                   "E_Useful",
-                   "X_Services"))
+    expect_equal(c(`1` = "1", `2` = "2", `3` = "3", `4` = "4",
+                   `E_Final` = "E_Final",
+                   `E_Services` = "E_Services",
+                   `E_Useful` = "E_Useful",
+                   `X_Services` = "X_Services"))
 
   if (file.exists(ecc_temp_path)) {
     file.remove(ecc_temp_path)
