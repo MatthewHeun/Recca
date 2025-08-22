@@ -259,14 +259,8 @@ write_ecc_to_excel <- function(.psut_data = NULL,
           # We'll use this in many places below.
           mat_origin <- this_loc[["origin"]] + c(x = 1, y = 1)  # Offset for the row and column names
           mat_extent <- this_loc[["extent"]] + c(x = 0, y = -1) # Offset for the matrix label
-          # Write the data
-          # openxlsx::writeData(wb = ecc_wb,
-          #                     sheet = sheet_name,
-          #                     # Account for the fact that this_mat could be a
-          #                     # non-native matrix class (such as Matrix)
-          #                     x = as.matrix(this_mat),
-          #                     xy = this_loc[["origin"]],
-          #                     array = TRUE, colNames = TRUE, rowNames = TRUE)
+          # Calculate some regions for this matrix
+
           # Gives the region for the numbers AND the row and column labels
           mat_region_dims <- openxlsx2::wb_dims(
             rows = (mat_origin[["y"]]-1):mat_extent[["y"]],
@@ -275,14 +269,28 @@ write_ecc_to_excel <- function(.psut_data = NULL,
           mat_region_nums <- openxlsx2::wb_dims(
             rows = mat_origin[["y"]]:mat_extent[["y"]],
             cols = mat_origin[["x"]]:mat_extent[["x"]])
+          # Region for the rownames
           mat_region_rownames <- openxlsx2::wb_dims(
             rows = mat_origin[["y"]]:mat_extent[["y"]],
             cols = mat_origin[["x"]]-1
           )
+          # Region for the colnames
           mat_region_colnames <- openxlsx2::wb_dims(
             rows = mat_origin[["y"]]-1,
             cols = mat_origin[["x"]]:mat_extent[["x"]]
           )
+          # Region for the matrix name (left)
+          mat_region_matname_left <- openxlsx2::wb_dims(
+            rows = mat_extent[["y"]]+1,
+            cols = mat_origin[["x"]]
+          )
+          # Region for the matrix name (merged cells)
+          mat_region_matname_merged <- openxlsx2::wb_dims(
+            rows = mat_extent[["y"]]+1,
+            cols = mat_origin[["x"]]:mat_extent[["x"]]
+          )
+
+          # Write the data
           ecc_wb$add_data(sheet = sheet_name,
                           # Account for the fact that this_mat could be a
                           # non-native matrix class (such as Matrix)
@@ -327,18 +335,16 @@ write_ecc_to_excel <- function(.psut_data = NULL,
             this_bg_color <- calculated_bg_color
           }
 
+          # Style cells
 
-
-
-          ##########################
-          # Got to here with changing openxlsx --> opensxls2
-          ##########################
-
-
-          # Set auto width for rownames so all rownames are visible
+          # Set auto width for rownames
           ecc_wb$set_col_widths(sheet = sheet_name,
                                 cols = mat_origin[["x"]]-1,
                                 widths = "auto")
+          # Center all numbers in the cells
+          ecc_wb$add_cell_style(sheet = sheet_name,
+                                dims = mat_region_nums,
+                                horizontal = "center")
           # Fill the background
           ecc_wb$add_fill(sheet = sheet_name,
                           dims = mat_region_nums,
@@ -353,36 +359,21 @@ write_ecc_to_excel <- function(.psut_data = NULL,
                                 text_rotation = 90,
                                 horizontal = "center",
                                 vertical = "bottom")
-
-
-
-
-          # # Add matrix label
-          # openxlsx::writeData(wb = ecc_wb,
-          #                     sheet = sheet_name,
-          #                     x = this_mat_name,
-          #                     startRow = this_loc[["extent"]][["y"]],
-          #                     startCol = mat_origin[["x"]])
-          # # Format matrix label
-          # mat_name_style <- openxlsx::createStyle(halign = "center",
-          #                                         textDecoration = "Bold")
-          # openxlsx::addStyle(wb = ecc_wb,
-          #                    sheet = sheet_name,
-          #                    style = mat_name_style,
-          #                    rows = this_loc[["extent"]][["y"]],
-          #                    cols = mat_origin[["x"]],
-          #                    gridExpand = TRUE,
-          #                    stack = TRUE)
-          # openxlsx::mergeCells(wb = ecc_wb,
-          #                      sheet = sheet_name,
-          #                      rows = this_loc[["extent"]][["y"]],
-          #                      cols = mat_origin[["x"]]:mat_extent[["x"]])
-          # # Set column widths to "auto" to save space.
-          # openxlsx::setColWidths(wb = ecc_wb,
-          #                        sheet = sheet_name,
-          #                        cols = mat_origin[["x"]]:mat_extent[["x"]],
-          #                        widths = col_widths,
-          #                        ignoreMergedCells = TRUE)
+          # Merge matrix label cells
+          ecc_wb$merge_cells(sheet = sheet_name,
+                             dims = mat_region_matname_merged)
+          # Add matrix label
+          ecc_wb$add_data(sheet = sheet_name,
+                          x = this_mat_name,
+                          dims = mat_region_matname_left)
+          # Make it bold
+          ecc_wb$add_font(sheet = sheet_name,
+                          dims = mat_region_matname_left,
+                          bold = TRUE)
+          # Make it centered
+          ecc_wb$add_cell_style(sheet = sheet_name,
+                                dims = mat_region_matname_left,
+                                horizontal = "center")
         })
     list(TRUE) %>%
       magrittr::set_names(.wrote_mats_colname)
