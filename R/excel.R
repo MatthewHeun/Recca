@@ -295,13 +295,12 @@ write_ecc_to_excel <- function(.psut_data = NULL,
             #                             name = region_name,
             #                             # Set false to flag any problems.
             #                             overwrite = FALSE)
-            ecc_wb <- ecc_wb |>
-              openxlsx2::wb_add_named_region(sheet = sheet_name,
-                                             dims = mat_region_dims,
-                                             name = mat_region_name,
-                                             # local_sheet = TRUE,
-                                             # Set false to flag any problems.
-                                             overwrite = FALSE)
+            ecc_wb$add_named_region(sheet = sheet_name,
+                                    dims = mat_region_dims,
+                                    name = mat_region_name,
+                                    # local_sheet = TRUE,
+                                    # Set false to flag any problems.
+                                    overwrite = FALSE)
           }
           # Set the background color to matrix_bg_color for the numbers in the matrix
           # Define the matrix numbers style
