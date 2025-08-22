@@ -14,16 +14,18 @@ test_that("write_ecc_to_excel() works as expected", {
   expect_true(file.exists(ecc_temp_path))
 
   # Test that named matrix regions exist in the file
-  regions <- openxlsx::getNamedRegions(ecc_temp_path)
-  expect_equal(regions,
-               rep(c("R", "U", "V", "Y",
-                     "r_EIOU", "U_EIOU", "U_feed", "S_units"), 4),
-               ignore_attr = TRUE)
-  expect_equal(attr(regions, which = "sheet"),
-               c(rep("E_Final", 8),
-                 rep("E_Services", 8),
-                 rep("E_Useful", 8),
-                 rep("X_Services", 8)))
+  regions <- openxlsx2::wb_get_named_regions(ecc_temp_path)
+  expect_equal(regions$name,
+               c(rep("R", 4),
+                 rep("S_units", 4),
+                 rep("U", 4),
+                 rep("U_EIOU", 4),
+                 rep("U_feed", 4),
+                 rep("V", 4),
+                 rep("Y", 4),
+                 rep("r_EIOU", 4)))
+  expect_equal(regions$sheets,
+               rep(c("E_Final", "E_Services", "E_Useful", "X_Services"), 8))
 
   if (file.exists(ecc_temp_path)) {
     file.remove(ecc_temp_path)
