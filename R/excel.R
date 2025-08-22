@@ -129,9 +129,12 @@ write_ecc_to_excel <- function(.psut_data = NULL,
                                S_units = Recca::psut_cols$S_units,
                                sep = "__",
                                .wrote_mats_colname = "Wrote mats",
-                               UV_bg_color = "#FDF2D0",
-                               RY_bg_color = "#D3712D",
-                               calculated_bg_color = "#D9D9D9",
+                               # UV_bg_color = "#FDF2D0",
+                               # RY_bg_color = "#D3712D",
+                               # calculated_bg_color = "#D9D9D9",
+                               UV_bg_color = openxlsx2::wb_color(hex = "FDF2D0"), # Cream
+                               RY_bg_color = openxlsx2::wb_color(hex = "D3712D"), # Brown
+                               calculated_bg_color = openxlsx2::wb_color(hex = "D9D9D9"), # Gray
                                col_widths = 7) {
 
   # Check if path exists. Throw an error if overwrite_file is FALSE.
@@ -268,6 +271,18 @@ write_ecc_to_excel <- function(.psut_data = NULL,
           mat_region_dims <- openxlsx2::wb_dims(
             rows = (mat_origin[["y"]]-1):mat_extent[["y"]],
             cols = (mat_origin[["x"]]-1):mat_extent[["x"]])
+          # Gives the region for the numbers only
+          mat_region_nums <- openxlsx2::wb_dims(
+            rows = mat_origin[["y"]]:mat_extent[["y"]],
+            cols = mat_origin[["x"]]:mat_extent[["x"]])
+          mat_region_rownames <- openxlsx2::wb_dims(
+            rows = mat_origin[["y"]]:mat_extent[["y"]],
+            cols = mat_origin[["x"]]-1
+          )
+          mat_region_colnames <- openxlsx2::wb_dims(
+            rows = mat_origin[["y"]]-1,
+            cols = mat_origin[["x"]]:mat_extent[["x"]]
+          )
           ecc_wb$add_data(sheet = sheet_name,
                           # Account for the fact that this_mat could be a
                           # non-native matrix class (such as Matrix)
@@ -298,9 +313,9 @@ write_ecc_to_excel <- function(.psut_data = NULL,
             ecc_wb$add_named_region(sheet = sheet_name,
                                     dims = mat_region_dims,
                                     name = mat_region_name,
-                                    # local_sheet = TRUE,
+                                    local_sheet = TRUE,
                                     # Set false to flag any problems.
-                                    overwrite = FALSE)
+                                    overwrite = TRUE)
           }
           # Set the background color to matrix_bg_color for the numbers in the matrix
           # Define the matrix numbers style
@@ -320,40 +335,28 @@ write_ecc_to_excel <- function(.psut_data = NULL,
           ##########################
 
 
+          # Set auto width for rownames so all rownames are visible
+          ecc_wb$set_col_widths(sheet = sheet_name,
+                                cols = mat_origin[["x"]]-1,
+                                widths = "auto")
+          # Fill the background
+          ecc_wb$add_fill(sheet = sheet_name,
+                          dims = mat_region_nums,
+                          color = this_bg_color)
+          # Right align row labels
+          ecc_wb$add_cell_style(sheet = sheet_name,
+                                dims = mat_region_rownames,
+                                horizontal = "right")
+          # Rotate and center column labels
+          ecc_wb$add_cell_style(sheet = sheet_name,
+                                dims = mat_region_colnames,
+                                text_rotation = 90,
+                                horizontal = "center",
+                                vertical = "bottom")
 
 
-          # # Create the style for this matrix.
-          # mat_num_style <- openxlsx::createStyle(fgFill = this_bg_color,
-          #                                        halign = "center",
-          #                                        valign = "center")
-          # openxlsx::addStyle(wb = ecc_wb,
-          #                    sheet = sheet_name,
-          #                    style = mat_num_style,
-          #                    rows = mat_origin[["y"]]:mat_extent[["y"]],
-          #                    cols = mat_origin[["x"]]:mat_extent[["x"]],
-          #                    gridExpand = TRUE,
-          #                    stack = TRUE)
-          # # Rotate and center column labels
-          # col_label_style <- openxlsx::createStyle(textRotation = 90,
-          #                                          halign = "center",
-          #                                          valign = "bottom")
-          # openxlsx::addStyle(wb = ecc_wb,
-          #                    sheet = sheet_name,
-          #                    style = col_label_style,
-          #                    rows = this_loc[["origin"]][["y"]],
-          #                    cols = this_loc[["origin"]][["x"]]:this_loc[["extent"]][["x"]],
-          #                    gridExpand = TRUE,
-          #                    stack = TRUE)
-          # # Right align row labels
-          # row_label_style <- openxlsx::createStyle(halign = "right",
-          #                                          valign = "center")
-          # openxlsx::addStyle(wb = ecc_wb,
-          #                    sheet = sheet_name,
-          #                    style = row_label_style,
-          #                    rows = this_loc[["origin"]][["y"]]:this_loc[["extent"]][["y"]],
-          #                    cols = this_loc[["origin"]][["x"]],
-          #                    gridExpand = TRUE,
-          #                    stack = TRUE)
+
+
           # # Add matrix label
           # openxlsx::writeData(wb = ecc_wb,
           #                     sheet = sheet_name,
