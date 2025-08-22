@@ -308,3 +308,4 @@ testthat::test_that("write_ecc_to_excel() works with pre-existing file", {
     file.remove(ecc_temp_path)
   }
 })
+

@@ -145,11 +145,9 @@ write_ecc_to_excel <- function(.psut_data = NULL,
   if (file.exists(path)) {
     # The file already exists, and
     # the caller is OK with overwriting it
-    # ecc_wb <- openxlsx::loadWorkbook(file = path)
     ecc_wb <- openxlsx2::wb_load(file = path)
   } else {
     # Create the workbook from scratch
-    # ecc_wb <- openxlsx::createWorkbook()
     ecc_wb <- openxlsx2::wb_workbook()
   }
 
@@ -162,45 +160,53 @@ write_ecc_to_excel <- function(.psut_data = NULL,
       sheet_name <- worksheet_name
     } else {
       # Get existing sheet names
-      # existing_sheets <- openxlsx::sheets(ecc_wb)
       existing_sheets <- openxlsx2::wb_get_sheet_names(ecc_wb)
 
       # Create a new name by incrementing the integer
       if (length(existing_sheets) == 0) {
         sheet_name <- "1"
       } else {
-        sheet_name <- (as.integer(existing_sheets) |> max()) + 1
+        # Set the sheet name to 1 plus the larger of
+        # number of sheets or
+        # the largest number in the existing sheet names.
+        sheet_name <- max(length(existing_sheets),
+                          max(as.integer(existing_sheets)), na.rm = TRUE) + 1
       }
     }
     # Check for malformed sheet names. Emit a warning if problem found.
     check_worksheet_name_violations(sheet_name)
 
-    # If the file already exists,
-    # check if the sheet already exists.
-    # If overwrite_file is TRUE and the sheet exists,
-    # remove it before writing a new sheet.
-    # If overwrite_file is FALSE and the sheet exists,
-    # allow it to error.
-    if (file.exists(path) & overwrite_worksheets) {
-      # Check for the existence of a sheet with the same name and delete it
-      # existing_sheet_names <- names(ecc_wb)
-      existing_sheet_names <- openxlsx2::wb_get_sheet_names(ecc_wb)
-      if (!is.null(existing_sheet_names)) {
-        if (sheet_name %in% existing_sheet_names) {
-          # Delete the existing sheet before writing the new sheet
-          # openxlsx::removeWorksheet(ecc_wb, sheet = sheet_name)
-          # Note that I'm using chaining ($) throughout.
-          # As discussed in the openxlsx2 documentation,
-          # chaining modifies the workbook in place in memory,
-          # which is crucial for writing the modified workbook
-          # at the end of this function.
-          ecc_wb$remove_worksheet(sheet = sheet_name)
-        }
+    # Get the worksheet names in the file we are building.
+    # The existing_sheet_names can come
+    # from a disk file to which we are adding or
+    # from a the object in memory we are building (ecc_wb).
+    # ecc_wb is both.
+    existing_sheet_names <- openxlsx2::wb_get_sheet_names(ecc_wb)
+
+    if (!is.null(existing_sheet_names)) {
+      if ((sheet_name %in% existing_sheet_names) & !overwrite_worksheets) {
+        # If overwrite_worksheets is FALSE and the sheet exists,
+        # give an error.
+        stop(paste0("A worksheet by the name '", worksheet_name, "' already exists!"))
+      }
+      if ((sheet_name %in% existing_sheet_names) & overwrite_worksheets) {
+        # If overwrite_worksheets is TRUE and the sheet exists,
+        # remove it before writing a new sheet.
+
+        # Note that I'm using chaining ($) throughout.
+        # As discussed in the openxlsx2 documentation,
+        # chaining modifies the workbook in place in memory,
+        # which is crucial for writing the modified workbook
+        # at the end of this function.
+        # The alternative is piping (|>) which
+        # creates a copy of the worksheet at a new memory location.
+        # We don't want piping, because we want to access the modified
+        # object after this function exits.
+        ecc_wb$remove_worksheet(sheet = sheet_name)
       }
     }
 
     # Add the new worksheet to the workbook
-    # openxlsx::addWorksheet(ecc_wb, sheet_name)
     ecc_wb$add_worksheet(sheet_name)
 
     # Complete matrices relative to one another to make sure we have same number
@@ -257,8 +263,11 @@ write_ecc_to_excel <- function(.psut_data = NULL,
           # Find the locations of the matrix origin and matrix extent
           # from this_loc.
           # We'll use this in many places below.
-          mat_origin <- this_loc[["origin"]] + c(x = 1, y = 1)  # Offset for the row and column names
-          mat_extent <- this_loc[["extent"]] + c(x = 0, y = -1) # Offset for the matrix label
+          # Offset for the row and column names
+          mat_origin <- this_loc[["origin"]] + c(x = 1, y = 1)
+          # Offset for the matrix label
+          mat_extent <- this_loc[["extent"]] + c(x = 0, y = -1)
+
           # Calculate some regions for this matrix
 
           # Gives the region for the numbers AND the row and column labels
@@ -311,13 +320,6 @@ write_ecc_to_excel <- function(.psut_data = NULL,
             mat_region_name <- paste(this_mat_name, sheet_name, sep = sep)
             # Check for malformed region names. Emit a warning if problem found.
             check_named_region_violations(mat_region_name)
-            # openxlsx::createNamedRegion(wb = ecc_wb,
-            #                             sheet = sheet_name,
-            #                             rows = (mat_origin[["y"]]-1):mat_extent[["y"]],
-            #                             cols = (mat_origin[["x"]]-1):mat_extent[["x"]],
-            #                             name = region_name,
-            #                             # Set false to flag any problems.
-            #                             overwrite = FALSE)
             ecc_wb$add_named_region(sheet = sheet_name,
                                     dims = mat_region_dims,
                                     name = mat_region_name,
@@ -393,11 +395,6 @@ write_ecc_to_excel <- function(.psut_data = NULL,
   # Make sure the directory exists
   dir.create(dirname(path), showWarnings = FALSE, recursive = TRUE)
   # Write the workbook
-  # openxlsx::saveWorkbook(ecc_wb, file = path, overwrite = overwrite_file)
-
-  # This version of ecc_wb is still the original version.
-  # Do I need to change to chaining ($) rather than pipe (|>)
-  # when making changes to the workbook in the code above?
   ecc_wb |>
     openxlsx2::wb_save(file = path, overwrite = overwrite_file)
 }
