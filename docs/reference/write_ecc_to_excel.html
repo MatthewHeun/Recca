@@ -11,7 +11,7 @@ This function takes ECC matrices and writes them to an Excel file."></head><body
 
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.62</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.63</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -68,11 +68,10 @@ This function takes ECC matrices and writes them to an Excel file.</p>
 <span>  U_eiou <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">U_eiou</span>,</span>
 <span>  U_feed <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">U_feed</span>,</span>
 <span>  S_units <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">S_units</span>,</span>
-<span>  sep <span class="op">=</span> <span class="st">"__"</span>,</span>
 <span>  .wrote_mats_colname <span class="op">=</span> <span class="st">"Wrote mats"</span>,</span>
-<span>  UV_bg_color <span class="op">=</span> <span class="st">"#FDF2D0"</span>,</span>
-<span>  RY_bg_color <span class="op">=</span> <span class="st">"#D3712D"</span>,</span>
-<span>  calculated_bg_color <span class="op">=</span> <span class="st">"#D9D9D9"</span>,</span>
+<span>  UV_bg_color <span class="op">=</span> <span class="fu">openxlsx2</span><span class="fu">::</span><span class="fu"><a href="https://janmarvin.github.io/openxlsx2/reference/wb_color.html" class="external-link">wb_color</a></span><span class="op">(</span>hex <span class="op">=</span> <span class="st">"FDF2D0"</span><span class="op">)</span>,</span>
+<span>  RY_bg_color <span class="op">=</span> <span class="fu">openxlsx2</span><span class="fu">::</span><span class="fu"><a href="https://janmarvin.github.io/openxlsx2/reference/wb_color.html" class="external-link">wb_color</a></span><span class="op">(</span>hex <span class="op">=</span> <span class="st">"D3712D"</span><span class="op">)</span>,</span>
+<span>  calculated_bg_color <span class="op">=</span> <span class="fu">openxlsx2</span><span class="fu">::</span><span class="fu"><a href="https://janmarvin.github.io/openxlsx2/reference/wb_color.html" class="external-link">wb_color</a></span><span class="op">(</span>hex <span class="op">=</span> <span class="st">"D9D9D9"</span><span class="op">)</span>,</span>
 <span>  col_widths <span class="op">=</span> <span class="fl">7</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -131,12 +130,6 @@ Default is <code>TRUE</code>.</p></dd>
 See <code><a href="psut_cols.html">Recca::psut_cols</a></code> for defaults.</p></dd>
 
 
-<dt id="arg-sep">sep<a class="anchor" aria-label="anchor" href="#arg-sep"></a></dt>
-<dd><p>The separator between matrix name and worksheet name
-for named regions.
-Default is "__".</p></dd>
-
-
 <dt id="arg--wrote-mats-colname">.wrote_mats_colname<a class="anchor" aria-label="anchor" href="#arg--wrote-mats-colname"></a></dt>
 <dd><p>The name of the outgoing column
 that tells whether a worksheet was written successfully.
@@ -181,22 +174,22 @@ may not contain any of the following characters:
 <code>\  /  ?  *  [  ]</code>.</p>
 <p>When <code>include_named_regions</code> is <code>TRUE</code> (the default),
 named regions for matrices are added to Excel sheets.
-The format for the region names is
-<code>&lt;&lt;matrix symbol&gt;&gt;&lt;&lt;sep&gt;&gt;&lt;&lt;worksheet name&gt;&gt;</code>.
-For example, "R_4" is the name for the region of the
+The region names are the same of the matrix names,
+and the regions have worksheet-scope.
+For example, "R" is the name for the region of the
 <strong>R</strong> matrix on the sheet named "4".
+In Excel, refer to that region with "4!R".
 The names help to identify matrices in high-level views of an Excel sheet
 and can also be used for later reading matrices from Excel files.
 (See [read_ecc_from_excel()].)
 The region names apply to the rectangle of numbers <em>and</em>
-the row and column names for the matrices.</p>
+the row and column names for the matrices,
+thereby enabling [read_ecc_from_excel()] to easily
+load row and column names for the matrices.</p>
 <p>Note that region names are more restricted than worksheet names and
 may not contain any of the following characters:
-<code>! @ # $ % ^ &amp; * ( ) + - / = { } [ ] | \ : ; " ' &lt; &gt; , . ? spaces</code>.
+<code>! @ # $ % ^ &amp; * ( ) + - / = { } [ ] | \ : ; " ' &lt; &gt; , . ? space</code>.
 Best to stick with letters, numbers, and underscores.</p>
-<p>Finally, note that because region names include the worksheet name,
-worksheet names should avoid illegal characters for region names.
-Again, best to stick with letters, numbers, and underscores.</p>
 <p>A warning is given when any worksheet names or region names
 contain illegal characters.</p>
 <p>When <code>path</code> already exists,
@@ -208,6 +201,7 @@ with the same names as worksheets to be written.
 worksheets will be deleted before writing the new worksheets.</p>
 <p>This function is an inverse of [read_ecc_from_excel()].</p>
 <p>[  ]: R:%20%20
+[read_ecc_from_excel()]: R:read_ecc_from_excel()
 [read_ecc_from_excel()]: R:read_ecc_from_excel()
 [ ]: R:%20
 [read_ecc_from_excel()]: R:read_ecc_from_excel()</p>

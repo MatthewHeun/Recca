@@ -14,25 +14,18 @@ test_that("write_ecc_to_excel() works as expected", {
   expect_true(file.exists(ecc_temp_path))
 
   # Test that named matrix regions exist in the file
-  regions <- openxlsx::getNamedRegions(ecc_temp_path)
-  expect_equal(regions,
-               c("R__E_Final", "U__E_Final", "V__E_Final",
-                 "Y__E_Final", "r_EIOU__E_Final",
-                 "U_EIOU__E_Final", "U_feed__E_Final",
-                 "S_units__E_Final",
-                 "R__E_Services", "U__E_Services", "V__E_Services",
-                 "Y__E_Services", "r_EIOU__E_Services",
-                 "U_EIOU__E_Services", "U_feed__E_Services",
-                 "S_units__E_Services",
-                 "R__E_Useful", "U__E_Useful", "V__E_Useful",
-                 "Y__E_Useful", "r_EIOU__E_Useful",
-                 "U_EIOU__E_Useful", "U_feed__E_Useful",
-                 "S_units__E_Useful",
-                 "R__X_Services", "U__X_Services", "V__X_Services",
-                 "Y__X_Services", "r_EIOU__X_Services",
-                 "U_EIOU__X_Services", "U_feed__X_Services",
-                 "S_units__X_Services"),
-               ignore_attr = TRUE)
+  regions <- openxlsx2::wb_get_named_regions(ecc_temp_path)
+  expect_equal(regions$name,
+               c(rep("R", 4),
+                 rep("S_units", 4),
+                 rep("U", 4),
+                 rep("U_EIOU", 4),
+                 rep("U_feed", 4),
+                 rep("V", 4),
+                 rep("Y", 4),
+                 rep("r_EIOU", 4)))
+  expect_equal(regions$sheets,
+               rep(c("E_Final", "E_Services", "E_Useful", "X_Services"), 8))
 
   if (file.exists(ecc_temp_path)) {
     file.remove(ecc_temp_path)
@@ -94,8 +87,6 @@ test_that("calc_mats_locations_excel() fails correctly", {
 })
 
 
-
-
 test_that("write_ecc_to_excel() sets sheet names", {
   ecc_temp_path <- tempfile(pattern = "write_excel_ecc_test_file",
                             fileext = ".xlsx")
@@ -108,9 +99,9 @@ test_that("write_ecc_to_excel() sets sheet names", {
                                      overwrite_file = TRUE)
   expect_true(file.exists(ecc_temp_path))
   # Read the workbook
-  openxlsx::loadWorkbook(file = ecc_temp_path) |>
-    names() |>
-    expect_equal(c("1", "2", "3", "4"))
+  openxlsx2::wb_load(file = ecc_temp_path) |>
+    openxlsx2::wb_get_sheet_names() |>
+    expect_equal(c(`1` = "1", `2` = "2", `3` = "3", `4` = "4"))
 
 
   # Now try with tab names
@@ -124,16 +115,16 @@ test_that("write_ecc_to_excel() sets sheet names", {
                                        overwrite_file = TRUE)
   expect_true(file.exists(ecc_temp_path))
   # Read the workbook
-  openxlsx::loadWorkbook(file = ecc_temp_path) |>
-    names() |>
+  openxlsx2::wb_load(file = ecc_temp_path) |>
+    openxlsx2::wb_get_sheet_names() |>
     # We opened an existing workbook with tabs names 1, 2, 3, 4.
     # We are not overwriting the existing tabs,
     # we are adding new ones.
-    expect_equal(c("1", "2", "3", "4",
-                   "E_Final",
-                   "E_Services",
-                   "E_Useful",
-                   "X_Services"))
+    expect_equal(c(`1` = "1", `2` = "2", `3` = "3", `4` = "4",
+                   `E_Final` = "E_Final",
+                   `E_Services` = "E_Services",
+                   `E_Useful` = "E_Useful",
+                   `X_Services` = "X_Services"))
 
   if (file.exists(ecc_temp_path)) {
     file.remove(ecc_temp_path)
@@ -310,3 +301,4 @@ testthat::test_that("write_ecc_to_excel() works with pre-existing file", {
     file.remove(ecc_temp_path)
   }
 })
+

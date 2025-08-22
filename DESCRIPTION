@@ -1,8 +1,8 @@
 Package: Recca
 Type: Package
 Title: R Energy Conversion Chain Analysis
-Version: 0.1.62
-Date: 2025-08-03
+Version: 0.1.63
+Date: 2025-08-22
 Authors@R: c(person(given = "Matthew", 
                     family = "Heun", 
                     role = c("aut", "cre"),
@@ -25,7 +25,7 @@ Roxygen: list(markdown = TRUE)
 Depends: R (>= 4.1.0)
 Config/testthat/edition: 3
 Config/testthat/parallel: true
-Config/testthat/start-first: chop, reconstruct, efficiency
+Config/testthat/start-first: excel, chop, reconstruct, efficiency
 Imports:
     assertthat,
     dplyr,
@@ -34,7 +34,6 @@ Imports:
     matsbyname,
     matsindf,
     networkD3,
-    openxlsx,
     openxlsx2,
     purrr,
     RCLabels,
