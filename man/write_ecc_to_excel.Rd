@@ -20,11 +20,10 @@ write_ecc_to_excel(
   U_eiou = Recca::psut_cols$U_eiou,
   U_feed = Recca::psut_cols$U_feed,
   S_units = Recca::psut_cols$S_units,
-  sep = "__",
   .wrote_mats_colname = "Wrote mats",
-  UV_bg_color = "#FDF2D0",
-  RY_bg_color = "#D3712D",
-  calculated_bg_color = "#D9D9D9",
+  UV_bg_color = openxlsx2::wb_color(hex = "FDF2D0"),
+  RY_bg_color = openxlsx2::wb_color(hex = "D3712D"),
+  calculated_bg_color = openxlsx2::wb_color(hex = "D9D9D9"),
   col_widths = 7
 )
 }
@@ -62,10 +61,6 @@ Default is \code{TRUE}.}
 
 \item{R, U, U_feed, U_eiou, r_eiou, V, Y, S_units}{Names of ECC matrices or actual matrices.
 See \code{Recca::psut_cols} for defaults.}
-
-\item{sep}{The separator between matrix name and worksheet name
-for named regions.
-Default is "__".}
 
 \item{.wrote_mats_colname}{The name of the outgoing column
 that tells whether a worksheet was written successfully.
@@ -106,24 +101,23 @@ may not contain any of the following characters:
 
 When \code{include_named_regions} is \code{TRUE} (the default),
 named regions for matrices are added to Excel sheets.
-The format for the region names is
-\verb{<<matrix symbol>><<sep>><<worksheet name>>}.
-For example, "R_4" is the name for the region of the
+The region names are the same of the matrix names,
+and the regions have worksheet-scope.
+For example, "R" is the name for the region of the
 \strong{R} matrix on the sheet named "4".
+In Excel, refer to that region with "4!R".
 The names help to identify matrices in high-level views of an Excel sheet
 and can also be used for later reading matrices from Excel files.
 (See [read_ecc_from_excel()].)
 The region names apply to the rectangle of numbers \emph{and}
-the row and column names for the matrices.
+the row and column names for the matrices,
+thereby enabling [read_ecc_from_excel()] to easily
+load row and column names for the matrices.
 
 Note that region names are more restricted than worksheet names and
 may not contain any of the following characters:
-\verb{! @ # $ \% ^ & * ( ) + - / = \{ \} [ ] | \\ : ; " ' < > , . ? spaces}.
+\verb{! @ # $ \% ^ & * ( ) + - / = \{ \} [ ] | \\ : ; " ' < > , . ? space}.
 Best to stick with letters, numbers, and underscores.
-
-Finally, note that because region names include the worksheet name,
-worksheet names should avoid illegal characters for region names.
-Again, best to stick with letters, numbers, and underscores.
 
 A warning is given when any worksheet names or region names
 contain illegal characters.
@@ -139,6 +133,7 @@ worksheets will be deleted before writing the new worksheets.
 This function is an inverse of [read_ecc_from_excel()].
 
 [  ]: R:\%20\%20
+[read_ecc_from_excel()]: R:read_ecc_from_excel()
 [read_ecc_from_excel()]: R:read_ecc_from_excel()
 [ ]: R:\%20
 [read_ecc_from_excel()]: R:read_ecc_from_excel()

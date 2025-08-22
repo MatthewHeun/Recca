@@ -11,6 +11,18 @@ Cite all releases of `Recca` with doi
 which always resolves to the latest release.
 
 
+* Breaking change: 
+  `write_ecc_to_excel()` and `read_ecc_from_excel()`
+  now provide and read, respectively
+  worksheet-scoped region names for matrices. 
+  This change creates more robust 
+  Excel workbooks where matrix names are now 
+  referred by <<worksheet name>>!<<matrix name>>.
+* New tests for new features.
+    - Now up to 899 tests, all passing.
+    - Test coverage remains at 100%.
+
+
 ## Recca 0.1.62 (2025-08-03) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16734290.svg)](https://doi.org/10.5281/zenodo.16734290)
 
 * `write_ecc_to_excel()` now allows writing worksheets 

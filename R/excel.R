@@ -17,24 +17,23 @@
 #'
 #' When `include_named_regions` is `TRUE` (the default),
 #' named regions for matrices are added to Excel sheets.
-#' The format for the region names is
-#' `<<matrix symbol>><<sep>><<worksheet name>>`.
-#' For example, "R_4" is the name for the region of the
+#' The region names are the same of the matrix names,
+#' and the regions have worksheet-scope.
+#' For example, "R" is the name for the region of the
 #' **R** matrix on the sheet named "4".
+#' In Excel, refer to that region with "4!R".
 #' The names help to identify matrices in high-level views of an Excel sheet
 #' and can also be used for later reading matrices from Excel files.
 #' (See [read_ecc_from_excel()].)
 #' The region names apply to the rectangle of numbers _and_
-#' the row and column names for the matrices.
+#' the row and column names for the matrices,
+#' thereby enabling [read_ecc_from_excel()] to easily
+#' load row and column names for the matrices.
 #'
 #' Note that region names are more restricted than worksheet names and
 #' may not contain any of the following characters:
-#' `! @ # $ % ^ & * ( ) + - / = { } [ ] | \ : ; " ' < > , . ? spaces`.
+#' `! @ # $ % ^ & * ( ) + - / = { } [ ] | \ : ; " ' < > , . ? space`.
 #' Best to stick with letters, numbers, and underscores.
-#'
-#' Finally, note that because region names include the worksheet name,
-#' worksheet names should avoid illegal characters for region names.
-#' Again, best to stick with letters, numbers, and underscores.
 #'
 #' A warning is given when any worksheet names or region names
 #' contain illegal characters.
@@ -75,9 +74,6 @@
 #'                              Default is `TRUE`.
 #' @param R,U,U_feed,U_eiou,r_eiou,V,Y,S_units Names of ECC matrices or actual matrices.
 #'                                             See `Recca::psut_cols` for defaults.
-#' @param sep The separator between matrix name and worksheet name
-#'            for named regions.
-#'            Default is "__".
 #' @param .wrote_mats_colname The name of the outgoing column
 #'                            that tells whether a worksheet was written successfully.
 #'                            Default is "Wrote mats".
@@ -127,14 +123,16 @@ write_ecc_to_excel <- function(.psut_data = NULL,
                                U_eiou = Recca::psut_cols$U_eiou,
                                U_feed = Recca::psut_cols$U_feed,
                                S_units = Recca::psut_cols$S_units,
-                               sep = "__",
                                .wrote_mats_colname = "Wrote mats",
-                               UV_bg_color = "#FDF2D0",
-                               RY_bg_color = "#D3712D",
-                               calculated_bg_color = "#D9D9D9",
+                               # UV_bg_color = "#FDF2D0",
+                               # RY_bg_color = "#D3712D",
+                               # calculated_bg_color = "#D9D9D9",
+                               UV_bg_color = openxlsx2::wb_color(hex = "FDF2D0"), # Cream
+                               RY_bg_color = openxlsx2::wb_color(hex = "D3712D"), # Brown
+                               calculated_bg_color = openxlsx2::wb_color(hex = "D9D9D9"), # Gray
                                col_widths = 7) {
 
-  # Check if path exists. If so, throw an error.
+  # Check if path exists. Throw an error if overwrite_file is FALSE.
   if (file.exists(path) & !overwrite_file) {
     stop(paste("File", path,
                "already exists. Call `Recca::write_ecc_to_excel()` with `overwrite = TRUE`?"))
@@ -142,10 +140,10 @@ write_ecc_to_excel <- function(.psut_data = NULL,
   if (file.exists(path)) {
     # The file already exists, and
     # the caller is OK with overwriting it
-    ecc_wb <- openxlsx::loadWorkbook(file = path)
+    ecc_wb <- openxlsx2::wb_load(file = path)
   } else {
     # Create the workbook from scratch
-    ecc_wb <- openxlsx::createWorkbook()
+    ecc_wb <- openxlsx2::wb_workbook()
   }
 
   create_one_tab <- function(R_mat, U_mat, V_mat, Y_mat,
@@ -157,36 +155,54 @@ write_ecc_to_excel <- function(.psut_data = NULL,
       sheet_name <- worksheet_name
     } else {
       # Get existing sheet names
-      existing_sheets <- openxlsx::sheets(ecc_wb)
+      existing_sheets <- openxlsx2::wb_get_sheet_names(ecc_wb)
+
       # Create a new name by incrementing the integer
       if (length(existing_sheets) == 0) {
         sheet_name <- "1"
       } else {
-        sheet_name <- (as.integer(existing_sheets) |> max()) + 1
+        # Set the sheet name to 1 plus the larger of
+        # number of sheets or
+        # the largest number in the existing sheet names.
+        sheet_name <- max(length(existing_sheets),
+                          max(as.integer(existing_sheets)), na.rm = TRUE) + 1
       }
     }
     # Check for malformed sheet names. Emit a warning if problem found.
     check_worksheet_name_violations(sheet_name)
 
-    # If the file already exists,
-    # check if the sheet already exists.
-    # If overwrite_file is TRUE and the sheet exists,
-    # remove it before writing a new sheet.
-    # If overwrite_file is FALSE and the sheet exists,
-    # allow it to error.
-    if (file.exists(path) & overwrite_worksheets) {
-      # Check for the existence of a sheet with the same name and delete it
-      existing_sheet_names <- names(ecc_wb)
-      if (!is.null(existing_sheet_names)) {
-        if (sheet_name %in% existing_sheet_names) {
-          # Delete the existing sheet before writing the new sheet
-          openxlsx::removeWorksheet(ecc_wb, sheet = sheet_name)
-        }
+    # Get the worksheet names in the file we are building.
+    # The existing_sheet_names can come
+    # from a disk file to which we are adding or
+    # from a the object in memory we are building (ecc_wb).
+    # ecc_wb is both.
+    existing_sheet_names <- openxlsx2::wb_get_sheet_names(ecc_wb)
+
+    if (!is.null(existing_sheet_names)) {
+      if ((sheet_name %in% existing_sheet_names) & !overwrite_worksheets) {
+        # If overwrite_worksheets is FALSE and the sheet exists,
+        # give an error.
+        stop(paste0("A worksheet by the name '", worksheet_name, "' already exists!"))
+      }
+      if ((sheet_name %in% existing_sheet_names) & overwrite_worksheets) {
+        # If overwrite_worksheets is TRUE and the sheet exists,
+        # remove it before writing a new sheet.
+
+        # Note that I'm using chaining ($) throughout.
+        # As discussed in the openxlsx2 documentation,
+        # chaining modifies the workbook in place in memory,
+        # which is crucial for writing the modified workbook
+        # at the end of this function.
+        # The alternative is piping (|>) which
+        # creates a copy of the worksheet at a new memory location.
+        # We don't want piping, because we want to access the modified
+        # object after this function exits.
+        ecc_wb$remove_worksheet(sheet = sheet_name)
       }
     }
 
     # Add the new worksheet to the workbook
-    openxlsx::addWorksheet(ecc_wb, sheet_name)
+    ecc_wb$add_worksheet(sheet_name)
 
     # Complete matrices relative to one another to make sure we have same number
     # of rows or columns, as appropriate
@@ -242,16 +258,64 @@ write_ecc_to_excel <- function(.psut_data = NULL,
           # Find the locations of the matrix origin and matrix extent
           # from this_loc.
           # We'll use this in many places below.
-          mat_origin <- this_loc[["origin"]] + c(x = 1, y = 1)  # Offset for the row and column names
-          mat_extent <- this_loc[["extent"]] + c(x = 0, y = -1) # Offset for the matrix label
+          # Offset for the row and column names
+          mat_origin <- this_loc[["origin"]] + c(x = 1, y = 1)
+          # Offset for the matrix label
+          mat_extent <- this_loc[["extent"]] + c(x = 0, y = -1)
+
+          # Calculate some regions for this matrix
+
+          # Gives the region for the numbers AND the row and column labels
+          mat_region_dims <- openxlsx2::wb_dims(
+            rows = (mat_origin[["y"]]-1):mat_extent[["y"]],
+            cols = (mat_origin[["x"]]-1):mat_extent[["x"]])
+          # Gives the region for the numbers only
+          mat_region_nums <- openxlsx2::wb_dims(
+            rows = mat_origin[["y"]]:mat_extent[["y"]],
+            cols = mat_origin[["x"]]:mat_extent[["x"]])
+          # Region for the rownames
+          mat_region_rownames <- openxlsx2::wb_dims(
+            rows = mat_origin[["y"]]:mat_extent[["y"]],
+            cols = mat_origin[["x"]]-1
+          )
+          # Region for the colnames
+          mat_region_colnames <- openxlsx2::wb_dims(
+            rows = mat_origin[["y"]]-1,
+            cols = mat_origin[["x"]]:mat_extent[["x"]]
+          )
+          # Region for the matrix name (left)
+          mat_region_matname_left <- openxlsx2::wb_dims(
+            rows = mat_extent[["y"]]+1,
+            cols = mat_origin[["x"]]
+          )
+          # Region for the matrix name (merged cells)
+          mat_region_matname_merged <- openxlsx2::wb_dims(
+            rows = mat_extent[["y"]]+1,
+            cols = mat_origin[["x"]]:mat_extent[["x"]]
+          )
+
           # Write the data
-          openxlsx::writeData(wb = ecc_wb,
-                              sheet = sheet_name,
-                              # Account for the fact that this_mat could be a
-                              # non-native matrix class (such as Matrix)
-                              x = as.matrix(this_mat),
-                              xy = this_loc[["origin"]],
-                              array = TRUE, colNames = TRUE, rowNames = TRUE)
+          ecc_wb$add_data(sheet = sheet_name,
+                          # Account for the fact that this_mat could be a
+                          # non-native matrix class (such as Matrix)
+                          x = as.matrix(this_mat),
+                          dims = mat_region_dims,
+                          array = TRUE,
+                          col_names = TRUE,
+                          row_names = TRUE)
+          if (include_named_regions) {
+            # Set the name of the region for this matrix.
+            # Note that the name of a region can be at most 255 characters long.
+            mat_region_name <- this_mat_name
+            # Check for malformed region names. Emit a warning if problem found.
+            check_named_region_violations(mat_region_name)
+            ecc_wb$add_named_region(sheet = sheet_name,
+                                    dims = mat_region_dims,
+                                    name = mat_region_name,
+                                    local_sheet = TRUE,
+                                    # Set false to flag any problems.
+                                    overwrite = TRUE)
+          }
           # Set the background color to matrix_bg_color for the numbers in the matrix
           # Define the matrix numbers style
           if (this_mat_name %in% c("R", "Y")) {
@@ -261,84 +325,46 @@ write_ecc_to_excel <- function(.psut_data = NULL,
           } else {
             this_bg_color <- calculated_bg_color
           }
-          if (include_named_regions) {
-            # Set the name of the region for this matrix.
-            # Note that the name of a region can be at most 255 characters long.
-            # Excel sheet names can be at most 31 characters long.
-            # I'm creating names from the matrix name (max 7 characters)
-            # plus the sheet name (max 31 characters)
-            # plus the "_" character, for a maximum of 39 characters,
-            # well below the maximum name size (255 characters).
-            # So this approach should work fine.
-            region_name <- paste(this_mat_name, sheet_name, sep = sep)
-            # Check for malformed region names. Emit a warning if problem found.
-            check_named_region_violations(region_name)
-            openxlsx::createNamedRegion(wb = ecc_wb,
-                                        sheet = sheet_name,
-                                        rows = (mat_origin[["y"]]-1):mat_extent[["y"]],
-                                        cols = (mat_origin[["x"]]-1):mat_extent[["x"]],
-                                        name = region_name,
-                                        # Set false to flag any problems.
-                                        overwrite = FALSE)
-          }
-          # Create the style for this matrix.
-          mat_num_style <- openxlsx::createStyle(fgFill = this_bg_color,
-                                                 halign = "center",
-                                                 valign = "center")
-          openxlsx::addStyle(wb = ecc_wb,
-                             sheet = sheet_name,
-                             style = mat_num_style,
-                             rows = mat_origin[["y"]]:mat_extent[["y"]],
-                             cols = mat_origin[["x"]]:mat_extent[["x"]],
-                             gridExpand = TRUE,
-                             stack = TRUE)
-          # Rotate and center column labels
-          col_label_style <- openxlsx::createStyle(textRotation = 90,
-                                                   halign = "center",
-                                                   valign = "bottom")
-          openxlsx::addStyle(wb = ecc_wb,
-                             sheet = sheet_name,
-                             style = col_label_style,
-                             rows = this_loc[["origin"]][["y"]],
-                             cols = this_loc[["origin"]][["x"]]:this_loc[["extent"]][["x"]],
-                             gridExpand = TRUE,
-                             stack = TRUE)
+
+          # Style cells
+
+          # Set auto width for rownames
+          ecc_wb$set_col_widths(sheet = sheet_name,
+                                cols = mat_origin[["x"]]-1,
+                                widths = "auto")
+          # Center all numbers in the cells
+          ecc_wb$add_cell_style(sheet = sheet_name,
+                                dims = mat_region_nums,
+                                horizontal = "center")
+          # Fill the background
+          ecc_wb$add_fill(sheet = sheet_name,
+                          dims = mat_region_nums,
+                          color = this_bg_color)
           # Right align row labels
-          row_label_style <- openxlsx::createStyle(halign = "right",
-                                                   valign = "center")
-          openxlsx::addStyle(wb = ecc_wb,
-                             sheet = sheet_name,
-                             style = row_label_style,
-                             rows = this_loc[["origin"]][["y"]]:this_loc[["extent"]][["y"]],
-                             cols = this_loc[["origin"]][["x"]],
-                             gridExpand = TRUE,
-                             stack = TRUE)
+          ecc_wb$add_cell_style(sheet = sheet_name,
+                                dims = mat_region_rownames,
+                                horizontal = "right")
+          # Rotate and center column labels
+          ecc_wb$add_cell_style(sheet = sheet_name,
+                                dims = mat_region_colnames,
+                                text_rotation = 90,
+                                horizontal = "center",
+                                vertical = "bottom")
+          # Merge matrix label cells
+          ecc_wb$merge_cells(sheet = sheet_name,
+                             dims = mat_region_matname_merged)
           # Add matrix label
-          openxlsx::writeData(wb = ecc_wb,
-                              sheet = sheet_name,
-                              x = this_mat_name,
-                              startRow = this_loc[["extent"]][["y"]],
-                              startCol = mat_origin[["x"]])
-          # Format matrix label
-          mat_name_style <- openxlsx::createStyle(halign = "center",
-                                                  textDecoration = "Bold")
-          openxlsx::addStyle(wb = ecc_wb,
-                             sheet = sheet_name,
-                             style = mat_name_style,
-                             rows = this_loc[["extent"]][["y"]],
-                             cols = mat_origin[["x"]],
-                             gridExpand = TRUE,
-                             stack = TRUE)
-          openxlsx::mergeCells(wb = ecc_wb,
-                               sheet = sheet_name,
-                               rows = this_loc[["extent"]][["y"]],
-                               cols = mat_origin[["x"]]:mat_extent[["x"]])
-          # Set column widths to "auto" to save space.
-          openxlsx::setColWidths(wb = ecc_wb,
-                                 sheet = sheet_name,
-                                 cols = mat_origin[["x"]]:mat_extent[["x"]],
-                                 widths = col_widths,
-                                 ignoreMergedCells = TRUE)
+          ecc_wb$add_data(sheet = sheet_name,
+                          x = this_mat_name,
+                          dims = mat_region_matname_left)
+          # Make it bold
+          ecc_wb$add_font(sheet = sheet_name,
+                          dims = mat_region_matname_left,
+                          bold = TRUE)
+          # Make it centered
+          ecc_wb$add_cell_style(sheet = sheet_name,
+                                dims = mat_region_matname_left,
+                                horizontal = "center")
         })
     list(TRUE) %>%
       magrittr::set_names(.wrote_mats_colname)
@@ -358,7 +384,8 @@ write_ecc_to_excel <- function(.psut_data = NULL,
   # Make sure the directory exists
   dir.create(dirname(path), showWarnings = FALSE, recursive = TRUE)
   # Write the workbook
-  openxlsx::saveWorkbook(ecc_wb, file = path, overwrite = overwrite_file)
+  ecc_wb |>
+    openxlsx2::wb_save(file = path, overwrite = overwrite_file)
 }
 
 
@@ -706,7 +733,8 @@ read_ecc_from_excel <- function(path,
   worksheets |>
     lapply(FUN = function(this_worksheet) {
       # Set the region names: <<matrix symbol>><<sep>><<worksheet name>>
-      region_names <- paste(matrix_names, this_worksheet, sep = sep)
+      # region_names <- paste(matrix_names, this_worksheet, sep = sep)
+      region_names <- matrix_names
       # Look at all regions
       result <- region_names |>
         sapply(simplify = FALSE,
@@ -714,6 +742,7 @@ read_ecc_from_excel <- function(path,
                FUN = function(this_region) {
                  # Read the region as a data frame
                  df <- openxlsx2::wb_to_df(workbook,
+                                           sheet = this_worksheet,
                                            named_region = this_region,
                                            row_names = TRUE)
                  # Convert all NA values (blanks) to 0s
