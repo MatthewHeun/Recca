@@ -11,6 +11,8 @@ Cite all releases of `Recca` with doi
 which always resolves to the latest release.
 
 
+## Recca 0.1.63 (2025-08-22)
+
 * Breaking change: 
   `write_ecc_to_excel()` and `read_ecc_from_excel()`
   now provide and read, respectively
