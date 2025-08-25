@@ -11,7 +11,7 @@ Cite all releases of `Recca` with doi
 which always resolves to the latest release.
 
 
-## Recca 0.1.64 (2025-08-24)
+## Recca 0.1.64 (2025-08-24) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16938397.svg)](https://doi.org/10.5281/zenodo.16938397)
 
 * Working around a restriction in Excel where 
   a region cannot be named "R".
