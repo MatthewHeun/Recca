@@ -20,11 +20,11 @@ write_ecc_to_excel(
   U_eiou = Recca::psut_cols$U_eiou,
   U_feed = Recca::psut_cols$U_feed,
   S_units = Recca::psut_cols$S_units,
-  .wrote_mats_colname = "Wrote mats",
+  .wrote_mats_colname = "WroteMats",
   UV_bg_color = openxlsx2::wb_color(hex = "FDF2D0"),
   RY_bg_color = openxlsx2::wb_color(hex = "D3712D"),
   calculated_bg_color = openxlsx2::wb_color(hex = "D9D9D9"),
-  col_widths = 7
+  alt_R_region_name = "R_"
 )
 }
 \arguments{
@@ -75,8 +75,11 @@ Default is a rust color.}
 \item{calculated_bg_color}{The color of cells containing calculated matrices.
 Default is gray.}
 
-\item{col_widths}{The widths of columns of matrices.
-Default is \code{7} to save space.}
+\item{alt_R_region_name}{An alternative name for R matrix regions to
+work around an undocumented behaviour of Excel
+in which the string "R" is rejected
+for region names.
+Default is "R_".}
 }
 \value{
 An unmodified version of \code{.psut_data} (if not \code{NULL}) or a list of

@@ -83,8 +83,11 @@
 #'                    Default is a rust color.
 #' @param calculated_bg_color The color of cells containing calculated matrices.
 #'                            Default is gray.
-#' @param col_widths The widths of columns of matrices.
-#'                   Default is `7` to save space.
+#' @param alt_R_region_name An alternative name for R matrix regions to
+#'                          work around an undocumented behaviour of Excel
+#'                          in which the string "R" is rejected
+#'                          for region names.
+#'                          Default is "R_".
 #'
 #' @return An unmodified version of `.psut_data` (if not `NULL`) or a list of
 #'         the incoming matrices.
@@ -123,14 +126,14 @@ write_ecc_to_excel <- function(.psut_data = NULL,
                                U_eiou = Recca::psut_cols$U_eiou,
                                U_feed = Recca::psut_cols$U_feed,
                                S_units = Recca::psut_cols$S_units,
-                               .wrote_mats_colname = "Wrote mats",
-                               # UV_bg_color = "#FDF2D0",
-                               # RY_bg_color = "#D3712D",
-                               # calculated_bg_color = "#D9D9D9",
-                               UV_bg_color = openxlsx2::wb_color(hex = "FDF2D0"), # Cream
-                               RY_bg_color = openxlsx2::wb_color(hex = "D3712D"), # Brown
-                               calculated_bg_color = openxlsx2::wb_color(hex = "D9D9D9"), # Gray
-                               col_widths = 7) {
+                               .wrote_mats_colname = "WroteMats",
+                               # Cream
+                               UV_bg_color = openxlsx2::wb_color(hex = "FDF2D0"),
+                               # Brown
+                               RY_bg_color = openxlsx2::wb_color(hex = "D3712D"),
+                               # Gray
+                               calculated_bg_color = openxlsx2::wb_color(hex = "D9D9D9"),
+                               alt_R_region_name = "R_") {
 
   # Check if path exists. Throw an error if overwrite_file is FALSE.
   if (file.exists(path) & !overwrite_file) {
@@ -243,14 +246,7 @@ write_ecc_to_excel <- function(.psut_data = NULL,
                                            S_units = S_units_mat,
                                            pad = pad)
     # Write each matrix to the worksheet
-    Map(list(Recca::psut_cols$R,
-             Recca::psut_cols$U,
-             Recca::psut_cols$V,
-             Recca::psut_cols$Y,
-             Recca::psut_cols$r_eiou,
-             Recca::psut_cols$U_eiou,
-             Recca::psut_cols$U_feed,
-             Recca::psut_cols$S_units),
+    Map(list(R, U, V, Y, r_eiou, U_eiou, U_feed, S_units),
         list(R_mat, U_mat, V_mat, Y_mat,
              r_eiou_mat, U_eiou_mat, U_feed_mat, S_units_mat),
         locations,
@@ -306,7 +302,12 @@ write_ecc_to_excel <- function(.psut_data = NULL,
           if (include_named_regions) {
             # Set the name of the region for this matrix.
             # Note that the name of a region can be at most 255 characters long.
-            mat_region_name <- this_mat_name
+            # Also, "R" is an illegal region name.
+            if (this_mat_name == "R") {
+              mat_region_name <- alt_R_region_name
+            } else {
+              mat_region_name <- this_mat_name
+            }
             # Check for malformed region names. Emit a warning if problem found.
             check_named_region_violations(mat_region_name)
             ecc_wb$add_named_region(sheet = sheet_name,
@@ -628,10 +629,14 @@ check_worksheet_name_violations <- function(candidate_worksheet_names) {
 #' into `matsindf` format.
 #' The named regions are assumed to be global
 #' to the workbook.
-#' The format for the region names is assumed to be
-#' `<<matrix symbol>><<sep>><<worksheet name>>`,
+#' Regions are named after their matrices.
+#' All region names are assumed to have worksheet scope
+#' to avoid name collisions in the rest of the workbook,
 #' as written by [write_ecc_to_excel()].
-#' For example, "R__4" for the **R** matrix on the sheet named "4".
+#' The exception is the **R** matrix,
+#' which has the region name "R_" by default
+#' due to Excel's (undocumented) prohibition on naming
+#' regions "R" (or "C").
 #'
 #' Named regions are assumed to include
 #' the rectangle of numerical values,
@@ -670,9 +675,11 @@ check_worksheet_name_violations <- function(candidate_worksheet_names) {
 #'                                             `path`.
 #'                                             Defaults are taken from
 #'                                             `Recca::row_col_types`.
-#' @param sep The separator between matrix name and worksheet name
-#'            for named regions.
-#'            Default is "__".
+#' @param alt_R_region_name An alternative name for R matrix regions to
+#'                          work around an undocumented behaviour of Excel
+#'                          in which the string "R" is rejected
+#'                          for region names.
+#'                          Default is "R_".
 #'
 #' @returns A data frame in `matsindf` format containing
 #'          the matrices from named regions in
@@ -717,7 +724,7 @@ read_ecc_from_excel <- function(path,
                                 industry_type = Recca::row_col_types$industry_type,
                                 product_type = Recca::row_col_types$product_type,
                                 unit_type = Recca::row_col_types$unit_type,
-                                sep = "__") {
+                                alt_R_region_name = "R_") {
 
   workbook <- openxlsx2::wb_load(path)
 
@@ -732,9 +739,11 @@ read_ecc_from_excel <- function(path,
   # Read all of the worksheets
   worksheets |>
     lapply(FUN = function(this_worksheet) {
-      # Set the region names: <<matrix symbol>><<sep>><<worksheet name>>
-      # region_names <- paste(matrix_names, this_worksheet, sep = sep)
       region_names <- matrix_names
+      # Replace "R" by "R_" for any region names.
+      # "R" is an illegal region name in Excel <<rolls eyes>>.
+      region_names[region_names == "R"] <- alt_R_region_name
+
       # Look at all regions
       result <- region_names |>
         sapply(simplify = FALSE,

@@ -11,7 +11,18 @@ Cite all releases of `Recca` with doi
 which always resolves to the latest release.
 
 
-## Recca 0.1.63 (2025-08-22)
+## Recca 0.1.64 (2025-08-24)
+
+* Working around a restriction in Excel where 
+  a region cannot be named "R".
+  New argument `alt_R_region_name` tells 
+  the region name for the **R** matrix.
+* No new tests.
+    - Still at 899 tests, all passing.
+    - Test coverage remains at 100%.
+
+
+## Recca 0.1.63 (2025-08-22) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16928058.svg)](https://doi.org/10.5281/zenodo.16928058)
 
 * Breaking change: 
   `write_ecc_to_excel()` and `read_ecc_from_excel()`
