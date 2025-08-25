@@ -20,11 +20,10 @@ write_ecc_to_excel(
   U_eiou = Recca::psut_cols$U_eiou,
   U_feed = Recca::psut_cols$U_feed,
   S_units = Recca::psut_cols$S_units,
-  .wrote_mats_colname = "Wrote mats",
+  .wrote_mats_colname = "WroteMats",
   UV_bg_color = openxlsx2::wb_color(hex = "FDF2D0"),
   RY_bg_color = openxlsx2::wb_color(hex = "D3712D"),
-  calculated_bg_color = openxlsx2::wb_color(hex = "D9D9D9"),
-  col_widths = 7
+  calculated_bg_color = openxlsx2::wb_color(hex = "D9D9D9")
 )
 }
 \arguments{
