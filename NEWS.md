@@ -30,7 +30,7 @@ which always resolves to the latest release.
   worksheet-scoped region names for matrices. 
   This change creates more robust 
   Excel workbooks where matrix names are now 
-  referred by worksheet name!matrix name.
+  referred by `worksheet name!matrix name`.
 * New tests for new features.
     - Now up to 899 tests, all passing.
     - Test coverage remains at 100%.
