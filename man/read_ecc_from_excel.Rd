@@ -58,9 +58,10 @@ read from the file at
 Defaults are taken from
 \code{Recca::row_col_types}.}
 
-\item{alt_R_name}{An alternative name for R matrix regions to
+\item{alt_R_region_name}{An alternative name for R matrix regions to
 work around an undocumented behaviour of Excel
-in which the string "R" is rejected for region names.
+in which the string "R" is rejected
+for region names.
 Default is "R_".}
 }
 \value{

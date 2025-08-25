@@ -83,10 +83,11 @@
 #'                    Default is a rust color.
 #' @param calculated_bg_color The color of cells containing calculated matrices.
 #'                            Default is gray.
-#' @param alt_R_name An alternative name for R matrix regions to
-#'                   work around an undocumented behaviour of Excel
-#'                   in which the string "R" is rejected for region names.
-#'                   Default is "R_".
+#' @param alt_R_region_name An alternative name for R matrix regions to
+#'                          work around an undocumented behaviour of Excel
+#'                          in which the string "R" is rejected
+#'                          for region names.
+#'                          Default is "R_".
 #'
 #' @return An unmodified version of `.psut_data` (if not `NULL`) or a list of
 #'         the incoming matrices.
@@ -674,10 +675,11 @@ check_worksheet_name_violations <- function(candidate_worksheet_names) {
 #'                                             `path`.
 #'                                             Defaults are taken from
 #'                                             `Recca::row_col_types`.
-#' @param alt_R_name An alternative name for R matrix regions to
-#'                   work around an undocumented behaviour of Excel
-#'                   in which the string "R" is rejected for region names.
-#'                   Default is "R_".
+#' @param alt_R_region_name An alternative name for R matrix regions to
+#'                          work around an undocumented behaviour of Excel
+#'                          in which the string "R" is rejected
+#'                          for region names.
+#'                          Default is "R_".
 #'
 #' @returns A data frame in `matsindf` format containing
 #'          the matrices from named regions in

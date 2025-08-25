@@ -75,9 +75,10 @@ Default is a rust color.}
 \item{calculated_bg_color}{The color of cells containing calculated matrices.
 Default is gray.}
 
-\item{alt_R_name}{An alternative name for R matrix regions to
+\item{alt_R_region_name}{An alternative name for R matrix regions to
 work around an undocumented behaviour of Excel
-in which the string "R" is rejected for region names.
+in which the string "R" is rejected
+for region names.
 Default is "R_".}
 }
 \value{
