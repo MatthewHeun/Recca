@@ -11,6 +11,8 @@ Cite all releases of `Recca` with doi
 which always resolves to the latest release.
 
 
+## Recca 0.1.64 (2025-08-24)
+
 * Working around a restriction in Excel where 
   a region cannot be named "R".
   New argument `alt_R_region_name` tells 
