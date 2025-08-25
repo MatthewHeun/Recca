@@ -83,8 +83,10 @@
 #'                    Default is a rust color.
 #' @param calculated_bg_color The color of cells containing calculated matrices.
 #'                            Default is gray.
-#' @param col_widths The widths of columns of matrices.
-#'                   Default is `7` to save space.
+#' @param alt_R_name An alternative name for R matrix regions to
+#'                   work around an undocumented behaviour of Excel
+#'                   in which the string "R" is rejected for region names.
+#'                   Default is "R_".
 #'
 #' @return An unmodified version of `.psut_data` (if not `NULL`) or a list of
 #'         the incoming matrices.
@@ -129,7 +131,8 @@ write_ecc_to_excel <- function(.psut_data = NULL,
                                # Brown
                                RY_bg_color = openxlsx2::wb_color(hex = "D3712D"),
                                # Gray
-                               calculated_bg_color = openxlsx2::wb_color(hex = "D9D9D9")) {
+                               calculated_bg_color = openxlsx2::wb_color(hex = "D9D9D9"),
+                               alt_R_name = "R_") {
 
   # Check if path exists. Throw an error if overwrite_file is FALSE.
   if (file.exists(path) & !overwrite_file) {
