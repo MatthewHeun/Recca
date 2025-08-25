@@ -16,7 +16,7 @@ test_that("write_ecc_to_excel() works as expected", {
   # Test that named matrix regions exist in the file
   regions <- openxlsx2::wb_get_named_regions(ecc_temp_path)
   expect_equal(regions$name,
-               c(rep("R", 4),
+               c(rep("R_", 4),
                  rep("S_units", 4),
                  rep("U", 4),
                  rep("U_EIOU", 4),

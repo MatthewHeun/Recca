@@ -20,7 +20,7 @@ read_ecc_from_excel(
   industry_type = Recca::row_col_types$industry_type,
   product_type = Recca::row_col_types$product_type,
   unit_type = Recca::row_col_types$unit_type,
-  sep = "__"
+  alt_R_region_name = "R_"
 )
 }
 \arguments{
@@ -58,9 +58,11 @@ read from the file at
 Defaults are taken from
 \code{Recca::row_col_types}.}
 
-\item{sep}{The separator between matrix name and worksheet name
-for named regions.
-Default is "__".}
+\item{alt_R_region_name}{An alternative name for R matrix regions to
+work around an undocumented behaviour of Excel
+in which the string "R" is rejected
+for region names.
+Default is "R_".}
 }
 \value{
 A data frame in \code{matsindf} format containing
@@ -72,10 +74,14 @@ Reads matrices from named regions in an Excel file
 into \code{matsindf} format.
 The named regions are assumed to be global
 to the workbook.
-The format for the region names is assumed to be
-\verb{<<matrix symbol>><<sep>><<worksheet name>>},
+Regions are named after their matrices.
+All region names are assumed to have worksheet scope
+to avoid name collisions in the rest of the workbook,
 as written by \code{\link[=write_ecc_to_excel]{write_ecc_to_excel()}}.
-For example, "R__4" for the \strong{R} matrix on the sheet named "4".
+The exception is the \strong{R} matrix,
+which has the region name "R_" by default
+due to Excel's (undocumented) prohibition on naming
+regions "R" (or "C").
 }
 \details{
 Named regions are assumed to include
