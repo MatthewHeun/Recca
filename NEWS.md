@@ -11,6 +11,11 @@ Cite all releases of `Recca` with doi
 which always resolves to the latest release.
 
 
+* New function `write_mats_to_excel()` outputs the 
+  matrices in a column of a `matsindf` data frame
+  to an Excel file, one matrix per tab.
+
+
 ## Recca 0.1.64 (2025-08-24) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16938397.svg)](https://doi.org/10.5281/zenodo.16938397)
 
 * Working around a restriction in Excel where 
