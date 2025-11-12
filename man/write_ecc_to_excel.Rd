@@ -64,7 +64,7 @@ See \code{Recca::psut_cols} for defaults.}
 
 \item{.wrote_mats_colname}{The name of the outgoing column
 that tells whether a worksheet was written successfully.
-Default is "Wrote mats".}
+Default is "WroteMats".}
 
 \item{UV_bg_color}{The color of cells containing U and V matrices.
 Default is a creamy yellow.}
@@ -82,8 +82,8 @@ for region names.
 Default is "R_".}
 }
 \value{
-An unmodified version of \code{.psut_data} (if not \code{NULL}) or a list of
-the incoming matrices.
+The wbWorkbook object that was saved (the result of \code{openxlsx2::wb_save()}),
+invisibly.
 }
 \description{
 It is often helpful to see energy conversion chain (ECC) matrices in Excel format,

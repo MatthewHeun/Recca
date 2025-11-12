@@ -302,3 +302,56 @@ testthat::test_that("write_ecc_to_excel() works with pre-existing file", {
   }
 })
 
+
+testthat::test_that("write_mat_to_excel() works as expected", {
+  # Create a simple matrix
+  mat <- matrix(1, dimnames = list("row", "col"))
+  # Create a matsindf data frame
+  df <- tibble::tibble(mat = list(mat, mat, mat),
+                       worksheet_name = c("A", "B", "C"))
+  # Define a temporary file
+  mat_temp_path <- tempfile(pattern = "write_mat_to_excel_test_file", fileext = ".xlsx")
+  # Write the file.
+  df |>
+    write_mats_to_excel(mat_colname = "mat",
+                        worksheet_names = "worksheet_name",
+                        path = mat_temp_path,
+                        overwrite_file = TRUE)
+
+  # Check that tabs are correct
+  mat_wb <- openxlsx2::wb_load(mat_temp_path)
+  worksheet_names <- openxlsx2::wb_get_sheet_names(mat_wb)
+  expect_equal(worksheet_names, c(A = "A", B = "B", C = "C"))
+
+  # Check the appearance
+  openxlsx2::wb_open(mat_wb)
+
+  if (file.exists(mat_temp_path)) {
+    file.remove(mat_temp_path)
+  }
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
