@@ -138,7 +138,7 @@ write_ecc_to_excel <- function(.psut_data = NULL,
   # Check if path exists. Throw an error if overwrite_file is FALSE.
   if (file.exists(path) & !overwrite_file) {
     stop(paste("File", path,
-               "already exists. Call `Recca::write_ecc_to_excel()` with `overwrite = TRUE`?"))
+               "already exists. Call `Recca::write_ecc_to_excel()` with `overwrite_file = TRUE`?"))
   }
   if (file.exists(path)) {
     # The file already exists, and
