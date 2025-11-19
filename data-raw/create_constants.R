@@ -92,6 +92,20 @@ usethis::use_data(efficiency_cols, overwrite = TRUE)
 
 
 #
+# Balance columns
+#
+balance_cols <- list(inter_industry_balance_colname = "SUTInterIndustryBalance",
+                     inter_industry_balanced_colname = "SUTInterIndustryBalanced",
+                     between_industry_balance_colname = "SUTInterIndustryBalance",
+                     between_industry_balanced_colname = "SUTInterIndustryBalanced",
+                     intra_industry_balance_colname = "SUTIntraIndustryBalance",
+                     intra_industry_balanced_colname = "SUTIntraIndustryBalanced",
+                     across_industry_balance_colname = "SUTAcrossIndustryBalance",
+                     across_industry_balanced_colname = "SUTAcrossIndustryBalanced")
+usethis::use_data(balance_cols, overwrite = TRUE)
+
+
+#
 # Allocation and efficiency columns
 #
 alloc_cols <- list(C_Y = "C_Y",

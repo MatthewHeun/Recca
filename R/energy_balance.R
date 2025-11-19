@@ -4,7 +4,142 @@
 #
 
 
-#' Confirm that an SUT-style data frame conserves energy.
+
+#' Calculate inter-industry energy balances for PSUT (**RUVY**) matrices.
+#'
+#' In a PSUT description of an economy, all of every flow
+#' leaving one industry must arrive at another industry.
+#' This function calculates those balances via
+#' (**R** + **V**) - (**U** + **Y**).
+#' The output of this function is named `balance_colname`.
+#'
+#' Often, balances are calculated on energy or exergy flows.
+#' Balances can be calculated for mass flows or monetary flows, too.
+#'
+#' Inter-industry balances are calculated for products (not industries),
+#' and the result is a column vector of product balances.
+#'
+#' @param .sutmats A named list of matrices or
+#'                 an SUT-style data frame with columns of matrices,
+#'                 including `R`, `U`, `V`, and `Y` columns.
+#' @param R resources (**R**) matrix or name of the column in `.sutmats`
+#'          that contains same. Default is "R".
+#' @param U use (**U**) matrix or name of the column in `.sutmats`
+#'          that contains same. Default is "U".
+#' @param V make (**V**) matrix or name of the column in `.sutmats`
+#'          that contains same. Default is "V".
+#' @param Y final demand (**Y**) matrix or name of the column in `.sutmats`
+#'          that contains same. Default is "Y".
+#' @param balance_colname The name of the column containing energy balance vectors.
+#'                        Default is `Recca::balance_cols$inter_industry_balance_colname`.
+#'
+#' @returns A list or data frame containing inter-industry balances.
+#'
+#' @export
+#'
+#' @seealso [verify_inter_industry_balance()]
+#'
+#' @examples
+#' calc_inter_industry_balance(UKEnergy2000mats |>
+#'                               dplyr::filter(LastStage %in% c("Final", "Useful")) |>
+#'                               tidyr::pivot_wider(names_from = matrix.name, values_from = matrix))
+calc_inter_industry_balance <- function(.sutmats = NULL,
+                                        # Input names
+                                        R = "R", U = "U", V = "V", Y = "Y",
+                                        # Output name
+                                        balance_colname = Recca::balance_cols$inter_industry_balance_colname) {
+  calc_bal_func <- function(R_mat = NULL, U_mat, V_mat, Y_mat) {
+    V_sums <- matsbyname::colsums_byname(V_mat)
+    # Allow for missing R matrix
+    if (is.null(R_mat)) {
+      RV_sums <- V_sums
+    } else {
+      R_sums <- matsbyname::colsums_byname(R_mat)
+      RV_sums <- matsbyname::sum_byname(R_sums, V_sums)
+    }
+    RV_sums <- matsbyname::transpose_byname(RV_sums)
+    U_sums <- matsbyname::rowsums_byname(U_mat)
+    Y_sums <- matsbyname::rowsums_byname(Y_mat)
+    UY_sums <- matsbyname::sum_byname(U_sums, Y_sums)
+    # (R + V) - (U + Y)
+    bal <- matsbyname::difference_byname(RV_sums, UY_sums)
+    list(bal) |>
+      magrittr::set_names(balance_colname)
+  }
+  matsindf::matsindf_apply(.sutmats, FUN = calc_bal_func, R_mat = R, U_mat = U, V_mat = V, Y_mat = Y)
+}
+
+#' Confirm that an SUT-style data frame conserves energy between industries
+#'
+#' Inter-industry energy balances are verified by Product
+#' (within \code{tol}) for every row in \code{.sutmats}.
+#'
+#' In a PSUT description of an economy, all of every flow
+#' leaving one industry must arrive at another industry.
+#'
+#' If energy is in balance for every row, \code{.sutmats} is returned with an additional column, and
+#' execution returns to the caller.
+#' If energy balance is not observed for one or more of the rows,
+#' a warning is emitted, and
+#' the additional column (\code{SUT_energy_blance})
+#' indicates where the problem occurred, with \code{FALSE}
+#' showing where energy is not in balance.
+#'
+#' Typically, one needs to call [calc_inter_industry_balance()]
+#' before calling [verify_inter_industry_balance()].
+#'
+#' @param .sutmats an SUT-style data frame with columns of matrices,
+#'                 including `R`, `U`, `V`, and `Y` columns.
+#' @param R Resource (**R**) matrix or name of the column in `.sutmats` that contains same. Default is "R".
+#' @param U Use (**U**) matrix or name of the column in `.sutmats` that contains same. Default is "U".
+#' @param V Make (**V**) matrix or name of the column in `.sutmats`that contains same. Default is "V".
+#' @param Y Final demand (**Y**) matrix or name of the column in `.sutmats` that contains same. Default is "Y".
+#' @param tol The maximum amount by which Supply and Consumption can be out of balance.
+#'            Default is `1e-6`.
+#' @param balanced_colname The name for booleans telling if balance is present.
+#'                         Default is `Recca::balance_cols$inter_industry_balanced_colname`.
+#'
+#' @return A list or data frame saying whether `.sutmats_with_balances` are in balance.
+#'
+#' @export
+#'
+#' @examples
+#' library(dplyr)
+#' library(tidyr)
+#' verify_SUT_energy_balance(UKEnergy2000mats %>%
+#'                             dplyr::filter(LastStage %in% c("Final", "Useful")) %>%
+#'                             tidyr::spread(key = matrix.name, value = matrix),
+#'                           tol = 1e-4)
+verify_inter_industry_balance <- function(.sutmats_with_balances = NULL,
+                                          # Input names
+                                          balances = Recca::balance_cols$inter_industry_balance_colname,
+                                          # Tolerance
+                                          tol = 1e-6,
+                                          # Output name
+                                          balanced_colname = Recca::balance_cols$inter_industry_balanced_colname) {
+  verify_func <- function(bal_vector) {
+    OK <- bal_vector |>
+      matsbyname::iszero_byname(tol) |>
+      as.logical()
+    if (!OK) {
+      return(list(FALSE) %>% magrittr::set_names(balanced_colname))
+    }
+    list(TRUE) %>% magrittr::set_names(balanced_colname)
+  }
+
+  out <- matsindf::matsindf_apply(.sutmats_with_balances, FUN = verify_func, bal_vector = balances)
+  if (!all(out[[balanced_colname]] %>% as.logical())) {
+    warning(paste0("Energy not conserved in verify_inter_industry_balance(). See column ", balanced_colname, "."))
+  }
+  return(out)
+}
+
+
+#' Verifies SUT inter-industry energy balances
+#'
+#' This function is deprecated in favor of the combination of
+#' [calc_inter_industry_balance()] and
+#' [verify_inter_industry_balance()].
 #'
 #' Energy balances are confirmed by Product (within \code{tol}) for every row in \code{.sutmats}.
 #'
@@ -17,14 +152,15 @@
 #' showing where energy is not in balance.
 #'
 #' @param .sutmats an SUT-style data frame with columns of matrices,
-#'        including `U`, `V`, and `Y` columns.
+#'                 including `U`, `V`, and `Y` columns.
 #' @param R resources (`R`) matrix or name of the column in `.sutmats` that contains same. Default is "R".
 #' @param U use (`U`) matrix or name of the column in `.sutmats` that contains same. Default is "U".
 #' @param V make (`V`) matrix or name of the column in `.sutmats`that contains same. Default is "V".
 #' @param Y final demand (`Y`) matrix or name of the column in `.sutmats` that contains same. Default is "Y".
-#' @param SUT_energy_balance the name for booleans telling if energy is in balance. Default is ".SUT_energy_balance".
 #' @param tol the maximum amount by which Supply and Consumption can be out of balance.
-#'        Default is `1e-6`.
+#'            Default is `1e-6`.
+#' @param SUT_energy_balance The name of the column in output containing logical
+#'                           values representing the balance status of that row.
 #'
 #' @return a list or data frame saying whether `.sutmats` are in balance.
 #'
@@ -44,35 +180,28 @@ verify_SUT_energy_balance <- function(.sutmats = NULL,
                                       tol = 1e-6,
                                       # Output name
                                       SUT_energy_balance = ".SUT_energy_balance"){
-  verify_func <- function(R_mat = NULL, U_mat, V_mat, Y_mat){
-    if (is.null(R_mat)) {
-      # No R matrix, just use the V matrix, assuming that resouces are included there.
-      R_plus_V_mat <- V_mat
-    } else {
-      # An R matrix is present. Sum R and V before proceeding.
-      R_plus_V_mat <- matsbyname::sum_byname(R_mat, V_mat)
-    }
-    RV_sums <- matsbyname::transpose_byname(R_plus_V_mat) %>% matsbyname::rowsums_byname()
-    U_sums <- matsbyname::rowsums_byname(U_mat)
-    Y_sums <- matsbyname::rowsums_byname(Y_mat)
-    # (R + V) - U - Y
-    err <- matsbyname::difference_byname(RV_sums, U_sums) %>% matsbyname::difference_byname(Y_sums)
-    OK <- err %>%
-      matsbyname::iszero_byname(tol) %>%
-      as.logical()
-    if (!OK) {
-      return(list(FALSE) %>% magrittr::set_names(SUT_energy_balance))
-    }
-    list(TRUE) %>% magrittr::set_names(SUT_energy_balance)
-  }
+  lifecycle::deprecate_soft(when = "0.1.65",
+                            what = "verify_SUT_energy_balance()",
+                            with = "verify_inter_industry_balance()")
 
-  Out <- matsindf::matsindf_apply(.sutmats, FUN = verify_func, R_mat = R, U_mat = U, V_mat = V, Y_mat = Y)
-  if (!all(Out[[SUT_energy_balance]] %>% as.logical())) {
-    warning(paste("Energy not conserved in verify_SUT_energy_balance. See", SUT_energy_balance))
+  out <- .sutmats |>
+    calc_inter_industry_balance(R = R, U = U, V = V, Y = Y,
+                                balance_colname = Recca::balance_cols$inter_industry_balance_colname) |>
+    verify_inter_industry_balance(tol = tol,
+                                  balances = Recca::balance_cols$inter_industry_balance_colname,
+                                  balanced_colname = SUT_energy_balance)
+  # Remove the balances item to mimic the behaviour of the deprecated function.
+  if (is.data.frame(out)) {
+    out <- out |>
+      dplyr::mutate(
+        "{Recca::balance_cols$inter_industry_balance_colname}" := NULL
+      )
+  } else {
+    # Assume out is a list
+    out[Recca::balance_cols$inter_industry_balance_colname] <- NULL
   }
-  return(Out)
+  return(out)
 }
-
 
 #' Confirm that an SUT-style data frame conserves energy.
 #'

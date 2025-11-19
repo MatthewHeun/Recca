@@ -107,6 +107,29 @@
 "efficiency_cols"
 
 
+#' Balance column names
+#'
+#' A string list containing named names of columns in balance data frames.
+#' Items in the list provide default values for column name function arguments
+#' to balance functions throughout the `Recca` package.
+#'
+#' @format A string list with `r length(balance_cols)` entries.
+#' \describe{
+#' \item{inter_industry_balance_colname}{The name of a column that contains inter-industry balance vectors.}
+#' \item{inter_industry_balanced_colname}{The name of a column that tells whether inter-industry balance vectors are all **0**.}
+#' \item{between_industry_balance_colname}{The name of a column that contains inter-industry balance vectors.}
+#' \item{between_industry_balanced_colname}{The name of a column that contains inter-industry balance vectors are all **0**.}
+#' \item{intra_industry_balance_colname}{The name of a column that contains intra-industry balance vectors.}
+#' \item{intra_industry_balanced_colname}{The name of a column that contains intra-industry balance vectors are all **0**.}
+#' \item{across_industry_balance_colname}{The name of a column that contains intra-industry balance vectors.}
+#' \item{across_industry_balanced_colname}{The name of a column that contains intra-industry balance vectors are all **0**.}
+#' }
+#'
+#' @examples
+#' balance_cols
+"balance_cols"
+
+
 
 #' Columns in a data frame that contains final-to-useful allocations
 #'

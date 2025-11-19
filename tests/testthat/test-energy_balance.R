@@ -1,22 +1,20 @@
 
 test_that("SUT matrix energy balance works with energy only", {
-  expect_silent(
-    UKEnergy2000mats %>%
-      tidyr::spread(key = matrix.name, value = matrix) %>%
-      dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
-      verify_SUT_energy_balance()
-  )
+  UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
+    verify_SUT_energy_balance() |>
+    expect_silent()
   # Try with missing R matrix
-  expect_silent(
-    UKEnergy2000mats %>%
-      tidyr::spread(key = matrix.name, value = matrix) %>%
-      dplyr::mutate(
-        V = matsbyname::sum_byname(R, V),
-        R = NULL
-      ) %>%
-      dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) |>
-      verify_SUT_energy_balance()
-  )
+  UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    dplyr::mutate(
+      V = matsbyname::sum_byname(R, V),
+      R = NULL
+    ) %>%
+    dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) |>
+    verify_SUT_energy_balance() |>
+    expect_silent()
 })
 
 
@@ -131,5 +129,17 @@ test_that("IEA energy balance works correctly", {
                  dplyr::group_by(Country, Year, EnergyType, LastStage) %>%
                  verify_IEATable_energy_balance(energy = IEATools::iea_cols$e_dot),
                  "Energy not balanced in verify_IEATable_energy_balance.")
+})
+
+
+test_that("calc_inter_industry_balance() works correctly", {
+  UKEnergy2000mats |>
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
+    dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in%
+                    c(IEATools::last_stages$final, IEATools::last_stages$useful)) |>
+    calc_inter_industry_balance() |>
+    verify_inter_industry_balance() |>
+    # Should not throw an error or warning
+    expect_silent()
 })
 
