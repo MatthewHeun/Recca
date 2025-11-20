@@ -12,8 +12,8 @@ verify_inter_industry_balance(
 )
 }
 \arguments{
-\item{.sutmats_with_balances}{An SUT-style data frame with columns of matrices,
-including \code{R}, \code{U}, \code{V}, and \code{Y} columns.}
+\item{.sutmats_with_balances}{An SUT-style data frame with a column
+named \code{balances}.}
 
 \item{balances}{The name of a column that contains balance vectors.
 Default is \link{balance_cols}\verb{$inter_industry_balance_colname}.}
@@ -23,18 +23,6 @@ Default is \code{1e-6}.}
 
 \item{balanced_colname}{The name for booleans telling if balance is present.
 Default is \link{balance_cols}\verb{$inter_industry_balanced_colname}.}
-
-\item{R}{Resource (\strong{R}) matrix or name of the column in \code{.sutmats_with_balances} that contains same.
-Default is "R".}
-
-\item{U}{Use (\strong{U}) matrix or name of the column in \code{.sutmats_with_balances} that contains same.
-Default is "U".}
-
-\item{V}{Make (\strong{V}) matrix or name of the column in \code{.sutmats_with_balances}that contains same.
-Default is "V".}
-
-\item{Y}{Final demand (\strong{Y}) matrix or name of the column in \code{.sutmats_with_balances} that contains same.
-Default is "Y".}
 }
 \value{
 A list or data frame saying whether \code{.sutmats_with_balances} are in balance.

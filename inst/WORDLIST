@@ -35,6 +35,7 @@ NG
 NGL
 PSUT
 README
+RUVY
 RoP
 SUT
 Sankey
@@ -45,6 +46,7 @@ Un
 WRLD
 WithRCTypes
 WorksheetNames
+WroteMats
 XYZ
 al
 behaviour
@@ -86,6 +88,7 @@ inds
 ing
 inhomogeneity
 inhomogeneous
+intra
 inv
 inversetranspose
 io
@@ -95,7 +98,6 @@ ktoe
 lifecycle
 linearities
 magrittr
-mal
 mathbf
 mathrm
 matsindf
@@ -122,5 +124,6 @@ underset
 unencoded
 unnest
 useX
+wbWorkbook
 widehat
 zenodo
