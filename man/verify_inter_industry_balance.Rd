@@ -2,7 +2,7 @@
 % Please edit documentation in R/energy_balance.R
 \name{verify_inter_industry_balance}
 \alias{verify_inter_industry_balance}
-\title{Confirm that an SUT-style data frame conserves energy between industries}
+\title{Confirm that an SUT-style data frame conserves products between industries}
 \usage{
 verify_inter_industry_balance(
   .sutmats_with_balances = NULL,
@@ -12,50 +12,67 @@ verify_inter_industry_balance(
 )
 }
 \arguments{
-\item{tol}{The maximum amount by which Supply and Consumption can be out of balance.
+\item{.sutmats_with_balances}{An SUT-style data frame with columns of matrices,
+including \code{R}, \code{U}, \code{V}, and \code{Y} columns.}
+
+\item{balances}{The name of a column that contains balance vectors.
+Default is \link{balance_cols}\verb{$inter_industry_balance_colname}.}
+
+\item{tol}{The maximum amount by which products can be out of balance.
 Default is \code{1e-6}.}
 
 \item{balanced_colname}{The name for booleans telling if balance is present.
-Default is \code{Recca::balance_cols$inter_industry_balanced_colname}.}
+Default is \link{balance_cols}\verb{$inter_industry_balanced_colname}.}
 
-\item{.sutmats}{an SUT-style data frame with columns of matrices,
-including \code{R}, \code{U}, \code{V}, and \code{Y} columns.}
+\item{R}{Resource (\strong{R}) matrix or name of the column in \code{.sutmats_with_balances} that contains same.
+Default is "R".}
 
-\item{R}{Resource (\strong{R}) matrix or name of the column in \code{.sutmats} that contains same. Default is "R".}
+\item{U}{Use (\strong{U}) matrix or name of the column in \code{.sutmats_with_balances} that contains same.
+Default is "U".}
 
-\item{U}{Use (\strong{U}) matrix or name of the column in \code{.sutmats} that contains same. Default is "U".}
+\item{V}{Make (\strong{V}) matrix or name of the column in \code{.sutmats_with_balances}that contains same.
+Default is "V".}
 
-\item{V}{Make (\strong{V}) matrix or name of the column in \code{.sutmats}that contains same. Default is "V".}
-
-\item{Y}{Final demand (\strong{Y}) matrix or name of the column in \code{.sutmats} that contains same. Default is "Y".}
+\item{Y}{Final demand (\strong{Y}) matrix or name of the column in \code{.sutmats_with_balances} that contains same.
+Default is "Y".}
 }
 \value{
 A list or data frame saying whether \code{.sutmats_with_balances} are in balance.
 }
 \description{
-Inter-industry energy balances are verified by Product
+Inter-industry energy balances are verified by product
 (within \code{tol}) for every row in \code{.sutmats}.
 }
 \details{
-In a PSUT description of an economy, all of every flow
+In a PSUT description of an economy, all of every product
 leaving one industry must arrive at another industry.
 
-If energy is in balance for every row, \code{.sutmats} is returned with an additional column, and
+If every row is balanced,
+\code{.sutmats} is returned with an additional column, and
 execution returns to the caller.
-If energy balance is not observed for one or more of the rows,
+If balance is not observed for one or more of the rows,
 a warning is emitted, and
-the additional column (\code{SUT_energy_blance})
+the additional column (\code{balanced_colname})
 indicates where the problem occurred, with \code{FALSE}
-showing where energy is not in balance.
+showing where products are not balanced
+to within \code{tol}.
 
-Typically, one needs to call \code{\link[=calc_inter_industry_balance]{calc_inter_industry_balance()}}
+Typically, one would call \code{\link[=calc_inter_industry_balance]{calc_inter_industry_balance()}}
 before calling \code{\link[=verify_inter_industry_balance]{verify_inter_industry_balance()}}.
+See the examples.
 }
 \examples{
 library(dplyr)
 library(tidyr)
-verify_SUT_energy_balance(UKEnergy2000mats \%>\%
-                            dplyr::filter(LastStage \%in\% c("Final", "Useful")) \%>\%
-                            tidyr::spread(key = matrix.name, value = matrix),
-                          tol = 1e-4)
+result <- UKEnergy2000mats |>
+  dplyr::filter(LastStage \%in\% c("Final", "Useful")) |>
+  tidyr::pivot_wider(names_from = matrix.name,
+                     values_from = matrix) |>
+  calc_inter_industry_balance() |>
+  verify_inter_industry_balance(tol = 1e-4)
+result
+result[[Recca::balance_cols$inter_industry_balanced_colname]]
+}
+\seealso{
+\code{\link[=calc_inter_industry_balance]{calc_inter_industry_balance()}}
 }

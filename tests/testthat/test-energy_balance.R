@@ -3,7 +3,9 @@ test_that("SUT matrix energy balance works with energy only", {
   UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
     dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
-    verify_SUT_energy_balance() |>
+    # verify_SUT_energy_balance() |>
+    calc_inter_industry_balance() |>
+    verify_inter_industry_balance() |>
     expect_silent()
   # Try with missing R matrix
   UKEnergy2000mats %>%
@@ -13,24 +15,36 @@ test_that("SUT matrix energy balance works with energy only", {
       R = NULL
     ) %>%
     dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) |>
-    verify_SUT_energy_balance() |>
+    # verify_SUT_energy_balance() |>
+    calc_inter_industry_balance() |>
+    verify_inter_industry_balance() |>
     expect_silent()
 })
 
 
 test_that("SUT matrix energy balance fails when a number has changed", {
-  mats <- UKEnergy2000mats %>%
-    tidyr::spread(key = matrix.name, value = matrix) %>%
+  mats <- UKEnergy2000mats |>
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
     dplyr::filter(.data[[IEATools::iea_cols$last_stage]] == IEATools::last_stages$final)
   R <- mats$R[[1]]
   U <- mats$U[[1]]
   V <- mats$V[[1]]
   Y <- mats$Y[[1]]
-  expect_equal(verify_SUT_energy_balance(R = R, U = U, V = V, Y = Y),
-               list(.SUT_energy_balance = TRUE))
+  # expect_equal(verify_SUT_energy_balance(R = R, U = U, V = V, Y = Y),
+  #              list(.SUT_energy_balance = TRUE))
+  calc_inter_industry_balance(R = R, U = U, V = V, Y = Y) |>
+    verify_inter_industry_balance() |>
+    magrittr::extract2(2) |>
+    expect_equal(TRUE)
+
   Y[2, 2] <- 42 # Replace a 0 with a value
-  expect_warning(verify_SUT_energy_balance(R = R, U = U, V = V, Y = Y),
-                 "Energy not conserved")
+  # expect_warning(verify_SUT_energy_balance(R = R, U = U, V = V, Y = Y),
+  #                "Energy not conserved")
+  calc_inter_industry_balance(R = R, U = U, V = V, Y = Y) |>
+    verify_inter_industry_balance() |>
+    magrittr::extract2(2) |>
+    expect_equal(FALSE) |>
+    expect_warning()
 })
 
 

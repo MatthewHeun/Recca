@@ -36,9 +36,10 @@ values representing the balance status of that row.}
 a list or data frame saying whether \code{.sutmats} are in balance.
 }
 \description{
-This function is deprecated in favor of the combination of
+\code{\link[=verify_SUT_energy_balance]{verify_SUT_energy_balance()}} is deprecated in favor of the combination of
 \code{\link[=calc_inter_industry_balance]{calc_inter_industry_balance()}} and
 \code{\link[=verify_inter_industry_balance]{verify_inter_industry_balance()}}.
+Pipe the first into the second.
 }
 \details{
 Energy balances are confirmed by Product (within \code{tol}) for every row in \code{.sutmats}.

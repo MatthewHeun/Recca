@@ -51,9 +51,12 @@ Inter-industry balances are calculated for products (not industries),
 and the result is a column vector of product balances.
 }
 \examples{
-calc_inter_industry_balance(UKEnergy2000mats |>
-                              dplyr::filter(LastStage \%in\% c("Final", "Useful")) |>
-                              tidyr::pivot_wider(names_from = matrix.name, values_from = matrix))
+result <- UKEnergy2000mats |>
+  dplyr::filter(LastStage \%in\% c("Final", "Useful")) |>
+  tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
+  calc_inter_industry_balance()
+result[[Recca::balance_cols$inter_industry_balance_colname]][[1]]
+result[[Recca::balance_cols$inter_industry_balance_colname]][[2]]
 }
 \seealso{
 \code{\link[=verify_inter_industry_balance]{verify_inter_industry_balance()}}
