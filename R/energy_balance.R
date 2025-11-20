@@ -64,7 +64,7 @@ calc_inter_industry_balance <- function(.sutmats = NULL,
     U_sums <- matsbyname::rowsums_byname(U_mat)
     Y_sums <- matsbyname::rowsums_byname(Y_mat)
     UY_sums <- matsbyname::sum_byname(U_sums, Y_sums)
-    # (R + V) - (U + Y)
+    # (R + V)^T - (U + Y)
     bal <- matsbyname::difference_byname(RV_sums, UY_sums)
     list(bal) |>
       magrittr::set_names(balance_colname)
