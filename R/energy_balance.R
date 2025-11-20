@@ -10,7 +10,7 @@
 #' In a PSUT description of an economy, all of every flow
 #' leaving one industry must arrive at another industry.
 #' This function calculates those balances via
-#' (**R** + **V**) - (**U** + **Y**).
+#' (**R** + **V**)^T - (**U** + **Y**).
 #' The output of this function is named `balance_colname`.
 #'
 #' Often, balances are calculated on energy or exergy flows.
