@@ -1,0 +1,65 @@
+---
+title: "Balances"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Balances}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, include=FALSE}
+library(Recca)
+```
+
+
+## Introduction
+
+When working with material and energy conversion chains 
+in the `Recca` package with `matsindf` data frames,
+it is helpful to calculate several types of balances.
+This vignette describes those balances and shows
+when you might want to use each of them.
+
+
+## Terminology
+
+`Recca` assists with matrix-based input-output calculations
+when the data are organized into the 
+$\mathbf{RUVY}$ matrices of the 
+physical supply-use table (PSUT) framework.
+A generic processing stage is called an "industry."
+The name for items that flow between industries is "product." 
+A "balance" is any calculation that compares inputs to outputs.
+Balances can be computed for all types of products, 
+in particular materials (quantified in mass or exergy units)
+and energy (quantified as energy or exergy).
+
+In the PSUT framework, 
+the $\mathbf{R}$ matrix is an industry-by-product resource matrix.
+The $\mathbf{U}$ matrix is an product-by-industry use matrix.
+The $\mathbf{V}$ matrix is an industry-by-product make matrix.
+The $\mathbf{Y}$ matrix is an product-by-industry final demand matrix.
+
+In this vignette, matrices are represented by boldface 
+capital letters, such as $\mathbf{R}$.
+Vectors are assumed to be column vectors and
+represented by boldface lowercase letters, 
+such as $\mathbf{i}$.
+
+
+## Inter-industry balances for consistency checks
+
+In any material or energy conversion chain, 
+products that leave one industry must be used by another industry.
+This balance is represented by the equation
+

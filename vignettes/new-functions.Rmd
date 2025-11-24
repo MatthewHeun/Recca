@@ -15,7 +15,7 @@ editor_options:
     wrap: 72
 ---
 
-```{r setup, include = FALSE}
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -28,18 +28,6 @@ library(matsindf)
 library(tidyr)
 ```
 
-<!-- Establish some helpful LaTeX shortcuts for equations -->
-
-```{=tex}
-\newcommand{\transpose}[1]{#1^\mathrm{T}}
-\newcommand{\inverse}[1]{#1^{\mathrm{-}1}}
-\newcommand{\mat}[1]{\mathbf{#1}}
-\newcommand{\colvec}[1]{\mathbf{#1}}
-\newcommand{\rowvec}[1]{\transpose{\colvec{#1}}}
-\newcommand{\inversetranspose}[1]{\transpose{\left( \inverse{\mat{#1}} \right)}}
-\newcommand{\transposeinverse}[1]{\inverse{\left( \transpose{\mat{#1}} \right)}}
-\newcommand{\hatinv}[1]{\inverse{\widehat{#1}}}
-```
 
 ## Introduction
 
