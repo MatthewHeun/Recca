@@ -141,7 +141,7 @@ verify_inter_industry_balance <- function(.sutmats_with_balances = NULL,
 
   out <- matsindf::matsindf_apply(.sutmats_with_balances, FUN = verify_func, bal_vector = balances)
   if (!all(out[[balanced_colname]] %>% as.logical())) {
-    warning(paste0("Energy not conserved in verify_inter_industry_balance(). See column ", balanced_colname, "."))
+    warning(paste0("Products are not conserved in verify_inter_industry_balance(). See column ", balanced_colname, "."))
   }
   return(out)
 }

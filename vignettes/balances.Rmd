@@ -31,9 +31,14 @@ in the `Recca` package with `matsindf` data frames,
 it is helpful to calculate several types of balances.
 This vignette describes those balances and shows
 when you might want to use each of them.
+Balances include
+
+* inter-industry balances,
+* intra-industry balances, and
+* the $\mathbf{W}$ matrix.
 
 
-## Terminology
+### Terminology
 
 `Recca` assists with matrix-based input-output calculations
 when the data are organized into the 
@@ -59,7 +64,7 @@ represented by boldface lowercase letters,
 such as the identity vector $\mathbf{i}$.
 
 
-## Data
+### Data
 
 In the examples that follow, 
 we use the energy conversion chain in `UKEnergy2000mats`.
@@ -74,7 +79,14 @@ dplyr::glimpse(ecc)
 ```
 
 
-## Inter-industry balances for consistency checks
+## Balances
+
+The following subsections explain
+each type of balance and how to calculate
+it with the `Recca` package.
+
+
+### Inter-industry balances for product consistency checks
 
 In any conversion chain, 
 products that leave one industry must enter another industry.
@@ -91,7 +103,8 @@ If the conversion chain is consistent,
 the result should be the $\mathbf{0}$ vector 
 with products in rows.
 
-To compute inter-industry balances within the PSUT framework, 
+To compute inter-industry balances within the PSUT framework
+using the `Recca` package, 
 use the following code.
 
 ```{r}
@@ -100,15 +113,42 @@ inter_industry_balances <- ecc |>
 ```
 
 The result is added as a new column,
-"SUTInterIndustryBalance" by default.
+named "SUTInterIndustryBalance" by default.
 
 ```{r}
 glimpse(inter_industry_balances)
 ```
 
-The vectors in SUTInterIndustryBalance are product vectors
+The vectors in SUTInterIndustryBalance are product vectors.
 
 ```{r}
 inter_industry_balances$SUTInterIndustryBalance[[1]]
 inter_industry_balances$SUTInterIndustryBalance[[2]]
 ```
+
+As expected, these are the $\mathbf{0}$ vector to within 
+reasonable precision.
+
+If you want to check the inter-industry balances for consistency, 
+use `verify_inter_industry_balance()`.
+
+```{r}
+inter_industry_balances |> 
+  verify_inter_industry_balance() |> 
+  glimpse()
+```
+
+If a product is out of balance 
+by more than `tol` (by default `1e-6`), 
+a warning will occur and 
+`FALSE` will appear in the new column, 
+"SUTInterIndustryBalanced".
+
+
+### Intra-industry balances to calculate losses
+
+
+
+
+### The value added matrix ($\mathbf{W}$)
+

@@ -40,7 +40,7 @@ A list or data frame containing inter-industry balances.
 In a PSUT description of an economy, all of every flow
 leaving one industry must arrive at another industry.
 This function calculates those balances via
-(\strong{R} + \strong{V}) - (\strong{U} + \strong{Y}).
+(\strong{R} + \strong{V})^T - (\strong{U} + \strong{Y}).
 The output of this function is named \code{balance_colname}.
 }
 \details{
