@@ -20,6 +20,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/Aggregation.html">Aggregation</a></li>
+    <li><a class="dropdown-item" href="../articles/balances.html">Balances</a></li>
     <li><a class="dropdown-item" href="../articles/new-function-interaction.html">new_* function interactions</a></li>
     <li><a class="dropdown-item" href="../articles/new-functions.html">new_* functions</a></li>
   </ul></li>
@@ -40,7 +41,8 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.64" id="recca-0164-2025-08-24">Recca 0.1.64 (2025-08-24)<a class="anchor" aria-label="anchor" href="#recca-0164-2025-08-24"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.64" id="recca-0164-2025-08-24-doi">Recca 0.1.64 (2025-08-24) <a href="https://doi.org/10.5281/zenodo.16938397" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.16938397.svg" alt="DOI"></a>
+<a class="anchor" aria-label="anchor" href="#recca-0164-2025-08-24-doi"></a></h2>
 <ul><li>Working around a restriction in Excel where a region cannot be named “R”. New argument <code>alt_R_region_name</code> tells the region name for the <strong>R</strong> matrix.</li>
 <li>No new tests.
 <ul><li>Still at 899 tests, all passing.</li>
@@ -50,7 +52,7 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.63" id="recca-0163-2025-08-22-doi">Recca 0.1.63 (2025-08-22) <a href="https://doi.org/10.5281/zenodo.16928058" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.16928058.svg" alt="DOI"></a>
 <a class="anchor" aria-label="anchor" href="#recca-0163-2025-08-22-doi"></a></h2>
-<ul><li>Breaking change: <code><a href="../reference/write_ecc_to_excel.html">write_ecc_to_excel()</a></code> and <code><a href="../reference/read_ecc_from_excel.html">read_ecc_from_excel()</a></code> now provide and read, respectively worksheet-scoped region names for matrices. This change creates more robust Excel workbooks where matrix names are now referred by &lt;<worksheet name>&gt;!&lt;<matrix name>&gt;.</matrix></worksheet></li>
+<ul><li>Breaking change: <code><a href="../reference/write_ecc_to_excel.html">write_ecc_to_excel()</a></code> and <code><a href="../reference/read_ecc_from_excel.html">read_ecc_from_excel()</a></code> now provide and read, respectively worksheet-scoped region names for matrices. This change creates more robust Excel workbooks where matrix names are now referred by <code>worksheet name!matrix name</code>.</li>
 <li>New tests for new features.
 <ul><li>Now up to 899 tests, all passing.</li>
 <li>Test coverage remains at 100%.</li>
@@ -645,7 +647,7 @@ See <a href="https://github.com/awalker89/openxlsx/issues/393" class="external-l
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

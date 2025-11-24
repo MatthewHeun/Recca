@@ -11,6 +11,9 @@ Cite all releases of `Recca` with doi
 which always resolves to the latest release.
 
 
+* New functions `calc_inter_industry_balance()` and 
+  `verify_inter_industry_balance()` 
+  compute and verify inter-industry balances.
 * Improved error message in `write_ecc_to_excel()`.
 
 

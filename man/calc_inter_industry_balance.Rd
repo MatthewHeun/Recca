@@ -15,19 +15,20 @@ calc_inter_industry_balance(
 }
 \arguments{
 \item{.sutmats}{A named list of matrices or
-an SUT-style data frame with columns of matrices,
-including \code{R}, \code{U}, \code{V}, and \code{Y} columns.}
+an SUT-style, wide-by-matrices data frame
+with columns of matrices,
+including \code{R}, \code{U}, \code{V}, and \code{Y}.}
 
-\item{R}{resources (\strong{R}) matrix or name of the column in \code{.sutmats}
+\item{R}{Resources (\strong{R}) matrix or name of the column in \code{.sutmats}
 that contains same. Default is "R".}
 
-\item{U}{use (\strong{U}) matrix or name of the column in \code{.sutmats}
+\item{U}{Use (\strong{U}) matrix or name of the column in \code{.sutmats}
 that contains same. Default is "U".}
 
-\item{V}{make (\strong{V}) matrix or name of the column in \code{.sutmats}
+\item{V}{Make (\strong{V}) matrix or name of the column in \code{.sutmats}
 that contains same. Default is "V".}
 
-\item{Y}{final demand (\strong{Y}) matrix or name of the column in \code{.sutmats}
+\item{Y}{Final demand (\strong{Y}) matrix or name of the column in \code{.sutmats}
 that contains same. Default is "Y".}
 
 \item{balance_colname}{The name of the column containing energy balance vectors.
@@ -40,7 +41,7 @@ A list or data frame containing inter-industry balances.
 In a PSUT description of an economy, all of every flow
 leaving one industry must arrive at another industry.
 This function calculates those balances via
-(\strong{R} + \strong{V})^T - (\strong{U} + \strong{Y}).
+(\strong{R} + \strong{V})^T^ - (\strong{U} + \strong{Y}).
 The output of this function is named \code{balance_colname}.
 }
 \details{

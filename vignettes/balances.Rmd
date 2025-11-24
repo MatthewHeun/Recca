@@ -93,7 +93,7 @@ products that leave one industry must enter another industry.
 These between industry (or inter-industry) balances
 should be verified for every conversion chain.
 
-The inter-industry balances are represented 
+The inter-industry balances are calculated 
 by the following matrix equation.
 
 $$[(\mathbf{R} + \mathbf{V})^\mathrm{T} 
@@ -147,8 +147,69 @@ a warning will occur and
 
 ### Intra-industry balances to calculate losses
 
+A second type of balance
+(the intra-industry balance)
+computes differences _across_ industries.
+Typically, the intra-industry balance computes 
+inputs less outputs, and 
+the result is losses (wastes) as a positive number.
 
+The matrix equation for intra-industry balances
+is given by the following equation.
+
+$$(\mathbf{U}^\mathrm{T} - \mathbf{V}) \, \mathbf{i}$$
+
+The result is a column vector with industries in rows.
+
+The meaning of intra-industry balances
+depends upon the construction
+of the matrices.
+The following table shows meanings.
+
+| Matrices contain              | Matrices include losses (wastes)  | Matrices exclude losses (wastes) |
+| :---------------------------: | :-------------------------------: | :------------------------------: |
+| Mass (MCC)                    | $\mathbf{0}$                      | $\mathbf{M}_L$                   |
+| Energy (ECC)                  | $\mathbf{0}$                      | $\mathbf{E}_L$                   |
+| Mass exergy (BCC)             | $\mathbf{B}_D$                    | $\mathbf{B}_D + \mathbf{B}_L$    |
+| Energy exergy (XCC)           | $\mathbf{X}_D$                    | $\mathbf{X}_D + \mathbf{X}_L$    |
+| Mass and energy exergy (BXCC) | $\mathbf{BX}_D$                   | $\mathbf{BX}_D + \mathbf{BX}_L$  |
 
 
 ### The value added matrix ($\mathbf{W}$)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

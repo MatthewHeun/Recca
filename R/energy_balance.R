@@ -10,7 +10,7 @@
 #' In a PSUT description of an economy, all of every flow
 #' leaving one industry must arrive at another industry.
 #' This function calculates those balances via
-#' (**R** + **V**)^T - (**U** + **Y**).
+#' (**R** + **V**)^T^ - (**U** + **Y**).
 #' The output of this function is named `balance_colname`.
 #'
 #' Often, balances are calculated on energy or exergy flows.
@@ -20,15 +20,16 @@
 #' and the result is a column vector of product balances.
 #'
 #' @param .sutmats A named list of matrices or
-#'                 an SUT-style data frame with columns of matrices,
-#'                 including `R`, `U`, `V`, and `Y` columns.
-#' @param R resources (**R**) matrix or name of the column in `.sutmats`
+#'                 an SUT-style, wide-by-matrices data frame
+#'                 with columns of matrices,
+#'                 including `R`, `U`, `V`, and `Y`.
+#' @param R Resources (**R**) matrix or name of the column in `.sutmats`
 #'          that contains same. Default is "R".
-#' @param U use (**U**) matrix or name of the column in `.sutmats`
+#' @param U Use (**U**) matrix or name of the column in `.sutmats`
 #'          that contains same. Default is "U".
-#' @param V make (**V**) matrix or name of the column in `.sutmats`
+#' @param V Make (**V**) matrix or name of the column in `.sutmats`
 #'          that contains same. Default is "V".
-#' @param Y final demand (**Y**) matrix or name of the column in `.sutmats`
+#' @param Y Final demand (**Y**) matrix or name of the column in `.sutmats`
 #'          that contains same. Default is "Y".
 #' @param balance_colname The name of the column containing energy balance vectors.
 #'                        Default is `Recca::balance_cols$inter_industry_balance_colname`.
