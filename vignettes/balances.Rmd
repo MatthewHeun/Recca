@@ -86,7 +86,7 @@ each type of balance and how to calculate
 it with the `Recca` package.
 
 
-### Inter-industry balances for product consistency checks
+### Inter-industry balances check for product consistency
 
 In any conversion chain, 
 products that leave one industry must enter another industry.
@@ -119,14 +119,14 @@ named "SUTInterIndustryBalance" by default.
 glimpse(inter_industry_balances)
 ```
 
-The vectors in SUTInterIndustryBalance are product vectors.
+The vectors in SUTInterIndustryBalance have products in rows.
 
 ```{r}
 inter_industry_balances$SUTInterIndustryBalance[[1]]
 inter_industry_balances$SUTInterIndustryBalance[[2]]
 ```
 
-As expected, these are the $\mathbf{0}$ vector to within 
+As expected, these vectors are the $\mathbf{0}$ vector to within 
 reasonable precision.
 
 If you want to check the inter-industry balances for consistency, 
@@ -140,12 +140,12 @@ inter_industry_balances |>
 
 If a product is out of balance 
 by more than `tol` (by default `1e-6`), 
-a warning will occur and 
-`FALSE` will appear in the new column, 
-"SUTInterIndustryBalanced".
+a warning occurs and 
+`FALSE` appears in the new column, 
+"SUTInterIndustryBalanced."
 
 
-### Intra-industry balances to calculate losses
+### Intra-industry balances calculate losses
 
 A second type of balance
 (the intra-industry balance)
@@ -164,15 +164,32 @@ The result is a column vector with industries in rows.
 The meaning of intra-industry balances
 depends upon the construction
 of the matrices.
+Key factors are whether or not the matrices include losses
+and the type of data in the matrices.
 The following table shows meanings.
+$\mathbf{0}$ indicates the result is the zero vector;
+$\mathbf{m}$ indicates the result is a mass vector;
+$\mathbf{e}$ indicates the result is an energy vector;
+$\mathbf{b}$ indicates the result is a mass exergy vector;
+$\mathbf{x}$ indicates the result is an energy exergy vector; and
+$\mathbf{bx}$ indicates the result is a the sum of mass and energy exergy vectors.
+Subscript $L$ indicates losses (or wastes), and 
+subscript $D$ indicates exergy destroyed by the industry.
+MCC indicates a material conversion chain.
+ECC indicates an energy conversion chain.
+BCC indicates a material exergy conversion chain.
+XCC indicates an energy exergy conversion chain.
+BXCC indicates a combined material and energy exergy conversion chain.
+
 
 | Matrices contain              | Matrices include losses (wastes)  | Matrices exclude losses (wastes) |
 | :---------------------------: | :-------------------------------: | :------------------------------: |
-| Mass (MCC)                    | $\mathbf{0}$                      | $\mathbf{M}_L$                   |
-| Energy (ECC)                  | $\mathbf{0}$                      | $\mathbf{E}_L$                   |
-| Mass exergy (BCC)             | $\mathbf{B}_D$                    | $\mathbf{B}_D + \mathbf{B}_L$    |
-| Energy exergy (XCC)           | $\mathbf{X}_D$                    | $\mathbf{X}_D + \mathbf{X}_L$    |
-| Mass and energy exergy (BXCC) | $\mathbf{BX}_D$                   | $\mathbf{BX}_D + \mathbf{BX}_L$  |
+| Mass (MCC)                    | $\mathbf{0}$                      | $\mathbf{m}_L$                   |
+| Energy (ECC)                  | $\mathbf{0}$                      | $\mathbf{e}_L$                   |
+| Mass exergy (BCC)             | $\mathbf{b}_D$                    | $\mathbf{b}_D + \mathbf{b}_L$    |
+| Energy exergy (XCC)           | $\mathbf{x}_D$                    | $\mathbf{x}_D + \mathbf{x}_L$    |
+| Mass and energy exergy (BXCC) | $\mathbf{bx}_D$                   | $\mathbf{bx}_D + \mathbf{bx}_L$  |
+
 
 
 ### The value added matrix ($\mathbf{W}$)
@@ -180,7 +197,16 @@ The following table shows meanings.
 
 
 
+### Deprecated functions
 
+#### `verify_SUT_energy_balance()`
+
+
+
+
+
+
+## Conclusiion
 
 
 
