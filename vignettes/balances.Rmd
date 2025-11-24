@@ -17,7 +17,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup, include=FALSE}
+```{r setup, message=FALSE}
+library(dplyr)
+library(IEATools)
 library(Recca)
 ```
 
@@ -54,12 +56,59 @@ In this vignette, matrices are represented by boldface
 capital letters, such as $\mathbf{R}$.
 Vectors are assumed to be column vectors and
 represented by boldface lowercase letters, 
-such as $\mathbf{i}$.
+such as the identity vector $\mathbf{i}$.
+
+
+## Data
+
+In the examples that follow, 
+we use the energy conversion chain in `UKEnergy2000mats`.
+
+```{r}
+ecc <- UKEnergy2000mats |> 
+  tidyr::pivot_wider(names_from = matrix.name, 
+                     values_from = matrix) |> 
+  dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in%
+                  c(IEATools::last_stages$final, IEATools::last_stages$useful))
+dplyr::glimpse(ecc)
+```
 
 
 ## Inter-industry balances for consistency checks
 
-In any material or energy conversion chain, 
-products that leave one industry must be used by another industry.
-This balance is represented by the equation
+In any conversion chain, 
+products that leave one industry must enter another industry.
+These between industry (or inter-industry) balances
+should be verified for every conversion chain.
 
+The inter-industry balances are represented 
+by the following matrix equation.
+
+$$[(\mathbf{R} + \mathbf{V})^\mathrm{T} 
+     - (\mathbf{U} + \mathbf{Y})] \, \mathbf{i}$$
+
+If the conversion chain is consistent, 
+the result should be the $\mathbf{0}$ vector 
+with products in rows.
+
+To compute inter-industry balances within the PSUT framework, 
+use the following code.
+
+```{r}
+inter_industry_balances <- ecc |> 
+  calc_inter_industry_balance()
+```
+
+The result is added as a new column,
+"SUTInterIndustryBalance" by default.
+
+```{r}
+glimpse(inter_industry_balances)
+```
+
+The vectors in SUTInterIndustryBalance are product vectors
+
+```{r}
+inter_industry_balances$SUTInterIndustryBalance[[1]]
+inter_industry_balances$SUTInterIndustryBalance[[2]]
+```
