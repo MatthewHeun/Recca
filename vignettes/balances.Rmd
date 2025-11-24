@@ -93,8 +93,8 @@ products that leave one industry must enter another industry.
 These between industry (or inter-industry) balances
 should be verified for every conversion chain.
 
-The inter-industry balances are calculated 
-by the following matrix equation.
+Inter-industry balances are obtained
+by the following computation.
 
 $$[(\mathbf{R} + \mathbf{V})^\mathrm{T} 
      - (\mathbf{U} + \mathbf{Y})] \, \mathbf{i}$$
@@ -154,8 +154,8 @@ Typically, the intra-industry balance computes
 inputs less outputs, and 
 the result is losses (wastes) as a positive number.
 
-The matrix equation for intra-industry balances
-is given by the following equation.
+Intra-industry balances
+are obtained by the following computation.
 
 $$(\mathbf{U}^\mathrm{T} - \mathbf{V}) \, \mathbf{i}$$
 
