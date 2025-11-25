@@ -5,19 +5,62 @@
 
 
 
-#' Calculate inter-industry energy balances for PSUT (**RUVY**) matrices.
+#' Calculate inter- and intra-industry balances for PSUT (**RUVY**) matrices.
 #'
-#' In a PSUT description of an economy, all of every flow
-#' leaving one industry must arrive at another industry.
-#' This function calculates those balances via
-#' (**R** + **V**)^T^ - (**U** + **Y**).
-#' The output of this function is named `balance_colname`.
-#'
+#' Balances are an important aspect of analyzing mass and energy conversion chains
+#' in the PSUT framework with the **RUVY** matrices.
 #' Often, balances are calculated on energy or exergy flows.
 #' Balances can be calculated for mass flows or monetary flows, too.
 #'
+#' ## Inter-industry balances
+#'
+#' In a PSUT description of a mass or energy conversion chain,
+#' all of every flow leaving one industry must arrive at another industry.
+#' `calc_inter_industry_balances()`
+#' calculates these between-industry balances via
+#' ((**R** + **V**)^T^ - (**U** + **Y**))**i**.
 #' Inter-industry balances are calculated for products (not industries),
 #' and the result is a column vector of product balances.
+#' The result should __always__ be the **0** vector.
+#'
+#' ## Intra-industry balances
+#'
+#' `calc_intra_industry_balances()` calculates these across-industry
+#' balances via
+#' (**U**^T^ - **V**)**i**.
+#' Inter-industry balances are calculated for industries (not products),
+#' and the result is a column vector of industry balances.
+#'
+#' In a PSUT description of a mass or energy conversion chain,
+#' the meaning of intra-industry (across industry) balances
+#' depends on the construction of the matrices.
+#' When all losses are accounted in the matrices themselves,
+#' the calculation of intra-industry balances for
+#' mass and energy conversion chains should give the **0** vector
+#' with industries in rows.
+#' When losses are __not__ accounted in the matrices,
+#' the calculation of intra-industry balances gives losses.
+#'
+#' For exergy conversion chains
+#' (mass, energy, or both),
+#' when losses are accounted in the matrices,
+#' the intra-industry balance gives exergy destruction.
+#' When losses are __not__ accounted in the matrices,
+#' the intra-industry balance gives the sum of
+#' exergy destruction and exergy losses.
+#'
+#' ## Outputs
+#'
+#' The argument `balance_colname` specifies the name of the
+#' result.
+#' By default, the output of [calc_inter_industry_balances()] is
+#' `Recca::balance_cols$inter_industry_balance_colname` or
+#' "`r Recca::balance_cols$inter_industry_balance_colname`".
+#' By default, the output of [calc_intra_industry_balances()] is
+#' `Recca::balance_cols$intra_industry_balance_colname` or
+#' "`r Recca::balance_cols$intra_industry_balance_colname`".
+#'
+#'
 #'
 #' @param .sutmats A named list of matrices or
 #'                 an SUT-style, wide-by-matrices data frame
@@ -36,9 +79,7 @@
 #'
 #' @returns A list or data frame containing inter-industry balances.
 #'
-#' @export
-#'
-#' @seealso [verify_inter_industry_balance()]
+#' @seealso [verify_inter_industry_balance()], [verify_intra_industry_balance()]
 #'
 #' @examples
 #' result <- UKEnergy2000mats |>
@@ -47,6 +88,13 @@
 #'   calc_inter_industry_balance()
 #' result[[Recca::balance_cols$inter_industry_balance_colname]][[1]]
 #' result[[Recca::balance_cols$inter_industry_balance_colname]][[2]]
+#' @name balances-doc
+NULL
+
+
+
+#' @export
+#' @rdname balances-doc
 calc_inter_industry_balance <- function(.sutmats = NULL,
                                         # Input names
                                         R = "R", U = "U", V = "V", Y = "Y",
@@ -72,6 +120,27 @@ calc_inter_industry_balance <- function(.sutmats = NULL,
   }
   matsindf::matsindf_apply(.sutmats, FUN = calc_bal_func, R_mat = R, U_mat = U, V_mat = V, Y_mat = Y)
 }
+
+
+
+#' @export
+#' @rdname balances-doc
+calc_intra_industry_balance <- function(.sutmats = NULL,
+                                        # Input names
+                                        U = "U", V = "V",
+                                        # Output name
+                                        balance_colname = Recca::balance_cols$intra_industry_balance_colname) {
+  calc_bal_func <- function(U_mat, V_mat) {
+    bal <- matsbyname::difference_byname(matsbyname::transpose_byname(U_mat),
+                                         V_mat) |>
+      matsbyname::rowsums_byname()
+    list(bal) |>
+      magrittr::set_names(balance_colname)
+  }
+  matsindf::matsindf_apply(.sutmats, FUN = calc_bal_func, U_mat = U, V_mat = V)
+}
+
+
 
 #' Confirm that an SUT-style data frame conserves products between industries
 #'
@@ -143,6 +212,33 @@ verify_inter_industry_balance <- function(.sutmats_with_balances = NULL,
   out <- matsindf::matsindf_apply(.sutmats_with_balances, FUN = verify_func, bal_vector = balances)
   if (!all(out[[balanced_colname]] %>% as.logical())) {
     warning(paste0("Products are not conserved in verify_inter_industry_balance(). See column ", balanced_colname, "."))
+  }
+  return(out)
+}
+
+
+verify_intra_industry_balance <- function(.sutmats_with_balances = NULL,
+                                          # Input names
+                                          balances = Recca::balance_cols$intra_industry_balance_colname,
+                                          # Tolerance
+                                          tol = 1e-6,
+                                          # Output name
+                                          balanced_colname = Recca::balance_cols$intra_industry_balanced_colname) {
+  verify_func <- function(bal_vector) {
+    OK <- bal_vector |>
+      matsbyname::iszero_byname(tol) |>
+      as.logical()
+    if (!OK) {
+      return(list(FALSE) |>
+               magrittr::set_names(balanced_colname))
+    }
+    list(TRUE) |>
+      magrittr::set_names(balanced_colname)
+  }
+
+  out <- matsindf::matsindf_apply(.sutmats_with_balances, FUN = verify_func, bal_vector = balances)
+  if (!all(out[[balanced_colname]] %>% as.logical())) {
+    warning(paste0("Products are not conserved in verify_intra_industry_balance(). See column ", balanced_colname, "."))
   }
   return(out)
 }

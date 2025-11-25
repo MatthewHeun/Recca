@@ -191,6 +191,16 @@ BXCC indicates a combined material and energy exergy conversion chain.
 | Mass and energy exergy (BXCC) | $\mathbf{bx}_D$                   | $\mathbf{bx}_D + \mathbf{bx}_L$  |
 
 
+To compute intra-industry (across industry) balances
+within the PSUT framework using the `Recca` package, 
+use the following code.
+
+```{r}
+intra_industry_balances <- ecc |> 
+  calc_intra_industry_balance()
+
+```
+
 
 ### The value added matrix ($\mathbf{W}$)
 
