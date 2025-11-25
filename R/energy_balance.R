@@ -33,10 +33,10 @@
 #'
 #' The argument `balance_colname` specifies the name of the
 #' result.
-#' By default, the output of [calc_inter_industry_balances()] is
+#' By default, the output of `calc_inter_industry_balances()` is
 #' `Recca::balance_cols$inter_industry_balance_colname` or
 #' "`r Recca::balance_cols$inter_industry_balance_colname`".
-#' By default, the output of [calc_intra_industry_balances()] is
+#' By default, the output of `calc_intra_industry_balances()` is
 #' `Recca::balance_cols$intra_industry_balance_colname` or
 #' "`r Recca::balance_cols$intra_industry_balance_colname`".
 #'
@@ -84,11 +84,13 @@
 #' @param balance_colname The name of the column containing energy balance vectors.
 #'                        Defaults are
 #'                        `Recca::balance_cols$inter_industry_balance_colname` or
-#'                        "`r Recca::balance_cols$inter_industry_balance_colname`" for
-#'                        [calc_inter_industry_balances()] and
+#'                        "`r Recca::balance_cols$inter_industry_balance_colname`"
+#'                        for
+#'                        `calc_inter_industry_balances()` and
 #'                        `Recca::balance_cols$intra_industry_balance_colname` or
-#'                        "`r Recca::balance_cols$intra_industry_balance_colname`" for
-#'                        [calc_intra_industry_balances()].
+#'                        "`r Recca::balance_cols$intra_industry_balance_colname`"
+#'                        for
+#'                        `calc_intra_industry_balances()`.
 #'
 #' @returns A list or data frame containing balances.
 #'
