@@ -19,9 +19,7 @@
 #' `calc_inter_industry_balances()`
 #' calculates these between-industry balances via
 #' ((**R** + **V**)^T^ - (**U** + **Y**))**i**.
-#' Inter-industry balances are calculated for products (not industries),
-#' and the result is a column vector of product balances.
-#' The result should __always__ be the **0** vector.
+#' Inter-industry balances are calculated for products (not industries).
 #'
 #' ## Intra-industry balances
 #'
@@ -30,24 +28,6 @@
 #' (**U**^T^ - **V**)**i**.
 #' Inter-industry balances are calculated for industries (not products),
 #' and the result is a column vector of industry balances.
-#'
-#' In a PSUT description of a mass or energy conversion chain,
-#' the meaning of intra-industry (across industry) balances
-#' depends on the construction of the matrices.
-#' When all losses are accounted in the matrices themselves,
-#' the calculation of intra-industry balances for
-#' mass and energy conversion chains should give the **0** vector
-#' with industries in rows.
-#' When losses are __not__ accounted in the matrices,
-#' the calculation of intra-industry balances gives losses.
-#'
-#' For exergy conversion chains
-#' (mass, energy, or both),
-#' when losses are accounted in the matrices,
-#' the intra-industry balance gives exergy destruction.
-#' When losses are __not__ accounted in the matrices,
-#' the intra-industry balance gives the sum of
-#' exergy destruction and exergy losses.
 #'
 #' ## Outputs
 #'
@@ -60,6 +40,29 @@
 #' `Recca::balance_cols$intra_industry_balance_colname` or
 #' "`r Recca::balance_cols$intra_industry_balance_colname`".
 #'
+#' For inter-industry (between-industry) balances,
+#' the result is a column vector of product balances.
+#' The result should __always__ be the **0** vector.
+#'
+#' In a PSUT description of a mass or energy conversion chain,
+#' the meaning of intra-industry (across-industry) balances
+#' depends on the construction of the matrices.
+#' When all losses are accounted in the matrices themselves,
+#' the calculation of intra-industry balances for
+#' mass and energy conversion chains should give the **0** vector
+#' with industries in rows,
+#' because mass and energy are conserved.
+#' When losses are __not__ accounted in the matrices,
+#' the calculation of intra-industry balances gives losses.
+#'
+#' For exergy conversion chains
+#' (mass, energy, or both),
+#' when losses are accounted in the matrices,
+#' the intra-industry balance gives exergy destruction.
+#' When losses are __not__ accounted in the matrices,
+#' the intra-industry balance gives the sum of
+#' exergy destruction and exergy losses.
+#'
 #'
 #'
 #' @param .sutmats A named list of matrices or
@@ -67,27 +70,45 @@
 #'                 with columns of matrices,
 #'                 including `R`, `U`, `V`, and `Y`.
 #' @param R Resources (**R**) matrix or name of the column in `.sutmats`
-#'          that contains same. Default is "R".
+#'          that contains same.
+#'          Default is "R".
 #' @param U Use (**U**) matrix or name of the column in `.sutmats`
-#'          that contains same. Default is "U".
+#'          that contains same.
+#'          Default is "U".
 #' @param V Make (**V**) matrix or name of the column in `.sutmats`
-#'          that contains same. Default is "V".
+#'          that contains same.
+#'          Default is "V".
 #' @param Y Final demand (**Y**) matrix or name of the column in `.sutmats`
-#'          that contains same. Default is "Y".
+#'          that contains same.
+#'          Default is "Y".
 #' @param balance_colname The name of the column containing energy balance vectors.
-#'                        Default is `Recca::balance_cols$inter_industry_balance_colname`.
+#'                        Defaults are
+#'                        `Recca::balance_cols$inter_industry_balance_colname` or
+#'                        "`r Recca::balance_cols$inter_industry_balance_colname`" for
+#'                        [calc_inter_industry_balances()] and
+#'                        `Recca::balance_cols$intra_industry_balance_colname` or
+#'                        "`r Recca::balance_cols$intra_industry_balance_colname`" for
+#'                        [calc_intra_industry_balances()].
 #'
-#' @returns A list or data frame containing inter-industry balances.
+#' @returns A list or data frame containing balances.
 #'
-#' @seealso [verify_inter_industry_balance()], [verify_intra_industry_balance()]
+#' @seealso [verify_inter_industry_balance()] and [verify_intra_industry_balance()]
 #'
 #' @examples
-#' result <- UKEnergy2000mats |>
+#' # Inter-industry balances
+#' inter <- UKEnergy2000mats |>
 #'   dplyr::filter(LastStage %in% c("Final", "Useful")) |>
 #'   tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
 #'   calc_inter_industry_balance()
-#' result[[Recca::balance_cols$inter_industry_balance_colname]][[1]]
-#' result[[Recca::balance_cols$inter_industry_balance_colname]][[2]]
+#' inter[[Recca::balance_cols$inter_industry_balance_colname]][[1]]
+#' inter[[Recca::balance_cols$inter_industry_balance_colname]][[2]]
+#' # Intra-industry balances
+#' intra <- UKEnergy2000mats |>
+#'   dplyr::filter(LastStage %in% c("Final", "Useful")) |>
+#'   tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
+#'   calc_intra_industry_balance()
+#' intra[[Recca::balance_cols$intra_industry_balance_colname]][[1]]
+#' intra[[Recca::balance_cols$intra_industry_balance_colname]][[2]]
 #' @name balances-doc
 NULL
 

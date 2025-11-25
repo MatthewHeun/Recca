@@ -29,22 +29,32 @@ with columns of matrices,
 including \code{R}, \code{U}, \code{V}, and \code{Y}.}
 
 \item{R}{Resources (\strong{R}) matrix or name of the column in \code{.sutmats}
-that contains same. Default is "R".}
+that contains same.
+Default is "R".}
 
 \item{U}{Use (\strong{U}) matrix or name of the column in \code{.sutmats}
-that contains same. Default is "U".}
+that contains same.
+Default is "U".}
 
 \item{V}{Make (\strong{V}) matrix or name of the column in \code{.sutmats}
-that contains same. Default is "V".}
+that contains same.
+Default is "V".}
 
 \item{Y}{Final demand (\strong{Y}) matrix or name of the column in \code{.sutmats}
-that contains same. Default is "Y".}
+that contains same.
+Default is "Y".}
 
 \item{balance_colname}{The name of the column containing energy balance vectors.
-Default is \code{Recca::balance_cols$inter_industry_balance_colname}.}
+Defaults are
+\code{Recca::balance_cols$inter_industry_balance_colname} or
+"SUTInterIndustryBalance" for
+\code{\link[=calc_inter_industry_balances]{calc_inter_industry_balances()}} and
+\code{Recca::balance_cols$intra_industry_balance_colname} or
+"SUTIntraIndustryBalance" for
+\code{\link[=calc_intra_industry_balances]{calc_intra_industry_balances()}}.}
 }
 \value{
-A list or data frame containing inter-industry balances.
+A list or data frame containing balances.
 }
 \description{
 Balances are an important aspect of analyzing mass and energy conversion chains
@@ -60,9 +70,7 @@ all of every flow leaving one industry must arrive at another industry.
 \code{calc_inter_industry_balances()}
 calculates these between-industry balances via
 ((\strong{R} + \strong{V})^T^ - (\strong{U} + \strong{Y}))\strong{i}.
-Inter-industry balances are calculated for products (not industries),
-and the result is a column vector of product balances.
-The result should \strong{always} be the \strong{0} vector.
+Inter-industry balances are calculated for products (not industries).
 }
 
 \subsection{Intra-industry balances}{
@@ -72,24 +80,6 @@ balances via
 (\strong{U}^T^ - \strong{V})\strong{i}.
 Inter-industry balances are calculated for industries (not products),
 and the result is a column vector of industry balances.
-
-In a PSUT description of a mass or energy conversion chain,
-the meaning of intra-industry (across industry) balances
-depends on the construction of the matrices.
-When all losses are accounted in the matrices themselves,
-the calculation of intra-industry balances for
-mass and energy conversion chains should give the \strong{0} vector
-with industries in rows.
-When losses are \strong{not} accounted in the matrices,
-the calculation of intra-industry balances gives losses.
-
-For exergy conversion chains
-(mass, energy, or both),
-when losses are accounted in the matrices,
-the intra-industry balance gives exergy destruction.
-When losses are \strong{not} accounted in the matrices,
-the intra-industry balance gives the sum of
-exergy destruction and exergy losses.
 }
 
 \subsection{Outputs}{
@@ -102,16 +92,47 @@ By default, the output of \code{\link[=calc_inter_industry_balances]{calc_inter_
 By default, the output of \code{\link[=calc_intra_industry_balances]{calc_intra_industry_balances()}} is
 \code{Recca::balance_cols$intra_industry_balance_colname} or
 "SUTIntraIndustryBalance".
+
+For inter-industry (between-industry) balances,
+the result is a column vector of product balances.
+The result should \strong{always} be the \strong{0} vector.
+
+In a PSUT description of a mass or energy conversion chain,
+the meaning of intra-industry (across-industry) balances
+depends on the construction of the matrices.
+When all losses are accounted in the matrices themselves,
+the calculation of intra-industry balances for
+mass and energy conversion chains should give the \strong{0} vector
+with industries in rows,
+because mass and energy are conserved.
+When losses are \strong{not} accounted in the matrices,
+the calculation of intra-industry balances gives losses.
+
+For exergy conversion chains
+(mass, energy, or both),
+when losses are accounted in the matrices,
+the intra-industry balance gives exergy destruction.
+When losses are \strong{not} accounted in the matrices,
+the intra-industry balance gives the sum of
+exergy destruction and exergy losses.
 }
 }
 \examples{
-result <- UKEnergy2000mats |>
+# Inter-industry balances
+inter <- UKEnergy2000mats |>
   dplyr::filter(LastStage \%in\% c("Final", "Useful")) |>
   tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
   calc_inter_industry_balance()
-result[[Recca::balance_cols$inter_industry_balance_colname]][[1]]
-result[[Recca::balance_cols$inter_industry_balance_colname]][[2]]
+inter[[Recca::balance_cols$inter_industry_balance_colname]][[1]]
+inter[[Recca::balance_cols$inter_industry_balance_colname]][[2]]
+# Intra-industry balances
+intra <- UKEnergy2000mats |>
+  dplyr::filter(LastStage \%in\% c("Final", "Useful")) |>
+  tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
+  calc_intra_industry_balance()
+intra[[Recca::balance_cols$intra_industry_balance_colname]][[1]]
+intra[[Recca::balance_cols$intra_industry_balance_colname]][[2]]
 }
 \seealso{
-\code{\link[=verify_inter_industry_balance]{verify_inter_industry_balance()}}, \code{\link[=verify_intra_industry_balance]{verify_intra_industry_balance()}}
+\code{\link[=verify_inter_industry_balance]{verify_inter_industry_balance()}} and \code{\link[=verify_intra_industry_balance]{verify_intra_industry_balance()}}
 }
