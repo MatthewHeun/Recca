@@ -63,8 +63,6 @@
 #' the intra-industry balance gives the sum of
 #' exergy destruction and exergy losses.
 #'
-#'
-#'
 #' @param .sutmats A named list of matrices or
 #'                 an SUT-style, wide-by-matrices data frame
 #'                 with columns of matrices,
@@ -116,6 +114,86 @@ NULL
 
 
 
+#' Confirm that conversion chains are balanced
+#'
+#' Balances can be verified in two ways,
+#' inter-industry and intra-industry.
+#'
+#' ## Inter-industry balances
+#'
+#' In a PSUT description of an economy, all of every product
+#' leaving one industry must arrive at another industry.
+#' Inter-industry (between-industry) balances are verified by product
+#' (within `tol`) for every row in `.sutmats`.
+#' Inter-industry balances should be calculated via
+#' `calc_inter_industry_balances()` before calling
+#' `verify_inter_industry_balances()`.
+#'
+#' ## Intra-industry balances
+#'
+#' Intra-industry (across-industry) balances are
+#' verified by industry (within `tol`) for every row in `.sutmats`.
+#' Intra-industry balances should be calculated via
+#' `calc_intra_industry_balances()` before calling
+#' `verify_intra_industry_balances()`.
+#' The calculation of inter-industry balances
+#' will give non-zero vectors for
+#' quantities that are not conserved (such as exergy)
+#' and for conversion chains that do not include wastes or losses.
+#'
+#' ## Output
+#'
+#' If every conversion chain is balanced,
+#' `.sutmats` is returned with an additional column
+#' (called `balanced_colname`), and
+#' execution returns to the caller.
+#' If balance is not observed for one or more of the rows,
+#' a warning is emitted, and
+#' the additional column (`balanced_colname`)
+#' indicates where the problem occurred, with `FALSE`
+#' showing where products are not balanced
+#' to within `tol`.
+#'
+#' Typically, one would call `calc_int*_industry_balance()`
+#' before calling `verify_int*_industry_balance()`.
+#' See the examples.
+#'
+#' @param .sutmats An SUT-style data frame with a column
+#'                 named `balances`.
+#' @param balances The name of a column that contains balance vectors.
+#'                 For `verify_inter_industry_balances()`,
+#'                 the default is [Recca::balance_cols]`$inter_industry_balance_colname`.
+#'                 For `verify_intra_industry_balances()`,
+#'                 the default is [Recca::balance_cols]`$intra_industry_balance_colname`.
+#' @param tol The maximum amount by which products can be out of balance
+#'            and still be considered balanced.
+#'            Default is `1e-6`.
+#' @param balanced_colname The name for booleans telling if balance is present.
+#'                         For `verify_inter_industry_balances()`,
+#'                         the default is [Recca::balance_cols]`$inter_industry_balanced_colname`.
+#'                         For `verify_intra_industry_balances()`,
+#'                         the default is [Recca::balance_cols]`$intra_industry_balanced_colname`.
+#'
+#' @return A list or data frame saying whether `.sutmats` are in balance.
+#'
+#' @seealso [calc_inter_industry_balance()], [calc_intra_industry_balance()]
+#'
+#' @examples
+#' library(dplyr)
+#' library(tidyr)
+#' result_inter <- UKEnergy2000mats |>
+#'   dplyr::filter(LastStage %in% c("Final", "Useful")) |>
+#'   tidyr::pivot_wider(names_from = matrix.name,
+#'                      values_from = matrix) |>
+#'   calc_inter_industry_balance() |>
+#'   verify_inter_industry_balance(tol = 1e-4)
+#' result_inter
+#' result_inter[[Recca::balance_cols$inter_industry_balanced_colname]]
+#' @name verify-balances-doc
+NULL
+
+
+
 #' @export
 #' @rdname balances-doc
 calc_inter_industry_balance <- function(.sutmats = NULL,
@@ -147,6 +225,35 @@ calc_inter_industry_balance <- function(.sutmats = NULL,
 
 
 #' @export
+#' @rdname verify-balances-doc
+verify_inter_industry_balance <- function(.sutmats = NULL,
+                                          # Input names
+                                          balances = Recca::balance_cols$inter_industry_balance_colname,
+                                          # Tolerance
+                                          tol = 1e-6,
+                                          # Output name
+                                          balanced_colname = Recca::balance_cols$inter_industry_balanced_colname) {
+  verify_func_inter <- function(bal_vector) {
+    OK <- bal_vector |>
+      matsbyname::iszero_byname(tol) |>
+      as.logical()
+    if (!OK) {
+      return(list(FALSE) |>
+               magrittr::set_names(balanced_colname))
+    }
+    list(TRUE) |>
+      magrittr::set_names(balanced_colname)
+  }
+
+  out <- matsindf::matsindf_apply(.sutmats_with_balances, FUN = verify_func_inter, bal_vector = balances)
+  if (!all(out[[balanced_colname]] %>% as.logical())) {
+    warning(paste0("Products are not conserved in verify_inter_industry_balance(). See column ", balanced_colname, "."))
+  }
+  return(out)
+}
+
+
+#' @export
 #' @rdname balances-doc
 calc_intra_industry_balance <- function(.sutmats = NULL,
                                         # Input names
@@ -165,89 +272,16 @@ calc_intra_industry_balance <- function(.sutmats = NULL,
 
 
 
-#' Confirm that an SUT-style data frame conserves products between industries
-#'
-#' Inter-industry energy balances are verified by product
-#' (within `tol`) for every row in `.sutmats`.
-#'
-#' In a PSUT description of an economy, all of every product
-#' leaving one industry must arrive at another industry.
-#'
-#' If every row is balanced,
-#' `.sutmats` is returned with an additional column, and
-#' execution returns to the caller.
-#' If balance is not observed for one or more of the rows,
-#' a warning is emitted, and
-#' the additional column (`balanced_colname`)
-#' indicates where the problem occurred, with `FALSE`
-#' showing where products are not balanced
-#' to within `tol`.
-#'
-#' Typically, one would call [calc_inter_industry_balance()]
-#' before calling [verify_inter_industry_balance()].
-#' See the examples.
-#'
-#' @param .sutmats_with_balances An SUT-style data frame with a column
-#'                               named `balances`.
-#' @param balances The name of a column that contains balance vectors.
-#'                 Default is [Recca::balance_cols]`$inter_industry_balance_colname`.
-#' @param tol The maximum amount by which products can be out of balance.
-#'            Default is `1e-6`.
-#' @param balanced_colname The name for booleans telling if balance is present.
-#'                         Default is [Recca::balance_cols]`$inter_industry_balanced_colname`.
-#'
-#' @return A list or data frame saying whether `.sutmats_with_balances` are in balance.
-#'
-#' @seealso [calc_inter_industry_balance()]
-#'
 #' @export
-#'
-#' @examples
-#' library(dplyr)
-#' library(tidyr)
-#' result <- UKEnergy2000mats |>
-#'   dplyr::filter(LastStage %in% c("Final", "Useful")) |>
-#'   tidyr::pivot_wider(names_from = matrix.name,
-#'                      values_from = matrix) |>
-#'   calc_inter_industry_balance() |>
-#'   verify_inter_industry_balance(tol = 1e-4)
-#' result
-#' result[[Recca::balance_cols$inter_industry_balanced_colname]]
-verify_inter_industry_balance <- function(.sutmats_with_balances = NULL,
-                                          # Input names
-                                          balances = Recca::balance_cols$inter_industry_balance_colname,
-                                          # Tolerance
-                                          tol = 1e-6,
-                                          # Output name
-                                          balanced_colname = Recca::balance_cols$inter_industry_balanced_colname) {
-  verify_func <- function(bal_vector) {
-    OK <- bal_vector |>
-      matsbyname::iszero_byname(tol) |>
-      as.logical()
-    if (!OK) {
-      return(list(FALSE) |>
-               magrittr::set_names(balanced_colname))
-    }
-    list(TRUE) |>
-      magrittr::set_names(balanced_colname)
-  }
-
-  out <- matsindf::matsindf_apply(.sutmats_with_balances, FUN = verify_func, bal_vector = balances)
-  if (!all(out[[balanced_colname]] %>% as.logical())) {
-    warning(paste0("Products are not conserved in verify_inter_industry_balance(). See column ", balanced_colname, "."))
-  }
-  return(out)
-}
-
-
-verify_intra_industry_balance <- function(.sutmats_with_balances = NULL,
+#' @rdname verify-balances-doc
+verify_intra_industry_balance <- function(.sutmats = NULL,
                                           # Input names
                                           balances = Recca::balance_cols$intra_industry_balance_colname,
                                           # Tolerance
                                           tol = 1e-6,
                                           # Output name
                                           balanced_colname = Recca::balance_cols$intra_industry_balanced_colname) {
-  verify_func <- function(bal_vector) {
+  verify_func_intra <- function(bal_vector) {
     OK <- bal_vector |>
       matsbyname::iszero_byname(tol) |>
       as.logical()
@@ -259,12 +293,20 @@ verify_intra_industry_balance <- function(.sutmats_with_balances = NULL,
       magrittr::set_names(balanced_colname)
   }
 
-  out <- matsindf::matsindf_apply(.sutmats_with_balances, FUN = verify_func, bal_vector = balances)
+  out <- matsindf::matsindf_apply(.sutmats_with_balances, FUN = verify_func_intra, bal_vector = balances)
   if (!all(out[[balanced_colname]] %>% as.logical())) {
     warning(paste0("Products are not conserved in verify_intra_industry_balance(). See column ", balanced_colname, "."))
   }
   return(out)
 }
+
+
+
+
+
+
+
+
 
 
 #' Verifies SUT inter-industry energy balances
@@ -319,7 +361,7 @@ verify_SUT_energy_balance <- function(.sutmats = NULL,
 
   out <- .sutmats |>
     calc_inter_industry_balance(R = R, U = U, V = V, Y = Y,
-                                balance_colname = Recca::balance_cols$inter_industry_balance_colname) |>
+                                balance_colname = SUT_energy_balance) |>
     verify_inter_industry_balance(tol = tol,
                                   balances = Recca::balance_cols$inter_industry_balance_colname,
                                   balanced_colname = SUT_energy_balance)
@@ -335,6 +377,14 @@ verify_SUT_energy_balance <- function(.sutmats = NULL,
   }
   return(out)
 }
+
+
+
+
+
+
+
+
 
 #' Confirm that an SUT-style data frame conserves energy.
 #'

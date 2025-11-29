@@ -79,9 +79,15 @@ test_that("SUT matrix energy balance fails as expected when out of balance", {
 })
 
 
-test_that("all SUT industries are producing energy", {
-  UKspread <- UKEnergy2000mats %>%
-    tidyr::spread(key = matrix.name, value = matrix)
+test_that("all industries are producing energy", {
+  UKspread <- UKEnergy2000mats |>
+    tidyr::pivot_wider(names_from = matrix.name,
+                       values_from = matrix)
+  UKspread |>
+    calc_inter_industry_balance() |>
+    verify_inter_industry_balance(tol = 1e-4) |>
+    expect_silent()
+
   expect_silent(verify_SUT_industry_production(UKspread))
   result <- verify_SUT_industry_production(UKspread)
   expect_true(all(result[[".industry_production_OK"]] %>% as.logical()))
@@ -110,7 +116,7 @@ test_that("all SUT industries are producing energy", {
 })
 
 
-test_that("SUT energy balance works with single matrices", {
+test_that("calc_inter_industry_balance() works with single matrices", {
   UKspread <- UKEnergy2000mats %>%
     tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
   R <- UKspread$R[[1]]
