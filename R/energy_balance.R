@@ -109,7 +109,7 @@
 #'   calc_intra_industry_balance()
 #' intra[[Recca::balance_cols$intra_industry_balance_colname]][[1]]
 #' intra[[Recca::balance_cols$intra_industry_balance_colname]][[2]]
-#' @name balances-doc
+#' @name balances
 NULL
 
 
@@ -118,8 +118,10 @@ NULL
 #'
 #' Balances can be verified in two ways,
 #' inter-industry and intra-industry.
+#' Inter-industry balances are between industries and performed by product.
+#' Intra-industry balances are across industries and performed per industry.
 #'
-#' ## Inter-industry balances
+#' ## Inter-industry balances (by product)
 #'
 #' In a PSUT description of an economy, all of every product
 #' leaving one industry must arrive at another industry.
@@ -128,14 +130,17 @@ NULL
 #' Inter-industry balances should be calculated via
 #' `calc_inter_industry_balances()` before calling
 #' `verify_inter_industry_balances()`.
+#' See examples.
 #'
-#' ## Intra-industry balances
+#' ## Intra-industry balances (by industry)
 #'
 #' Intra-industry (across-industry) balances are
 #' verified by industry (within `tol`) for every row in `.sutmats`.
 #' Intra-industry balances should be calculated via
 #' `calc_intra_industry_balances()` before calling
 #' `verify_intra_industry_balances()`.
+#' See examples.
+#'
 #' The calculation of inter-industry balances
 #' will give non-zero vectors for
 #' quantities that are not conserved (such as exergy)
@@ -147,7 +152,8 @@ NULL
 #' `.sutmats` is returned with an additional column
 #' (called `balanced_colname`), and
 #' execution returns to the caller.
-#' If balance is not observed for one or more of the rows,
+#' If balance is not observed for one or more of the rows
+#' in `.sutmats`,
 #' a warning is emitted, and
 #' the additional column (`balanced_colname`)
 #' indicates where the problem occurred, with `FALSE`
@@ -162,19 +168,24 @@ NULL
 #'                 named `balances`.
 #' @param balances The name of a column that contains balance vectors.
 #'                 For `verify_inter_industry_balances()`,
-#'                 the default is [Recca::balance_cols]`$inter_industry_balance_colname`.
+#'                 the default is [Recca::balance_cols]`$inter_industry_balance_colname`
+#'                 or "`r Recca::balance_cols$inter_industry_balance_colname`".
 #'                 For `verify_intra_industry_balances()`,
-#'                 the default is [Recca::balance_cols]`$intra_industry_balance_colname`.
+#'                 the default is [Recca::balance_cols]`$intra_industry_balance_colname`
+#'                 or "`r Recca::balance_cols$intra_industry_balance_colname`".
 #' @param tol The maximum amount by which products can be out of balance
 #'            and still be considered balanced.
 #'            Default is `1e-6`.
 #' @param balanced_colname The name for booleans telling if balance is present.
 #'                         For `verify_inter_industry_balances()`,
-#'                         the default is [Recca::balance_cols]`$inter_industry_balanced_colname`.
+#'                         the default is [Recca::balance_cols]`$inter_industry_balanced_colname`
+#'                         or "`r Recca::balance_cols$inter_industry_balanced_colname`".
 #'                         For `verify_intra_industry_balances()`,
-#'                         the default is [Recca::balance_cols]`$intra_industry_balanced_colname`.
+#'                         the default is [Recca::balance_cols]`$intra_industry_balanced_colname`
+#'                         or "`r Recca::balance_cols$intra_industry_balanced_colname`".
 #'
-#' @return A list or data frame saying whether `.sutmats` are in balance.
+#' @return A list or data frame with an additional value or column
+#'         saying whether `.sutmats` are in balance.
 #'
 #' @seealso [calc_inter_industry_balance()], [calc_intra_industry_balance()]
 #'
@@ -189,13 +200,13 @@ NULL
 #'   verify_inter_industry_balance(tol = 1e-4)
 #' result_inter
 #' result_inter[[Recca::balance_cols$inter_industry_balanced_colname]]
-#' @name verify-balances-doc
+#' @name verify-balances
 NULL
 
 
 
 #' @export
-#' @rdname balances-doc
+#' @rdname balances
 calc_inter_industry_balance <- function(.sutmats = NULL,
                                         # Input names
                                         R = "R", U = "U", V = "V", Y = "Y",
@@ -225,7 +236,7 @@ calc_inter_industry_balance <- function(.sutmats = NULL,
 
 
 #' @export
-#' @rdname verify-balances-doc
+#' @rdname verify-balances
 verify_inter_industry_balance <- function(.sutmats = NULL,
                                           # Input names
                                           balances = Recca::balance_cols$inter_industry_balance_colname,
@@ -254,7 +265,7 @@ verify_inter_industry_balance <- function(.sutmats = NULL,
 
 
 #' @export
-#' @rdname balances-doc
+#' @rdname balances
 calc_intra_industry_balance <- function(.sutmats = NULL,
                                         # Input names
                                         U = "U", V = "V",
@@ -273,7 +284,7 @@ calc_intra_industry_balance <- function(.sutmats = NULL,
 
 
 #' @export
-#' @rdname verify-balances-doc
+#' @rdname verify-balances
 verify_intra_industry_balance <- function(.sutmats = NULL,
                                           # Input names
                                           balances = Recca::balance_cols$intra_industry_balance_colname,
