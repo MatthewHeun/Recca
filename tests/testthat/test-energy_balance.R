@@ -167,6 +167,69 @@ test_that("calc_inter_industry_balance() works correctly", {
 })
 
 
+test_that("calc_intra_industry_balance() works correctly", {
+  res <- UKEnergy2000mats |>
+    dplyr::filter(LastStage %in% c("Final", "Useful")) |>
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
+    calc_intra_industry_balance()
+  expected_1 <- matrix(c(550,
+                         350,
+                         125,
+                         2075,
+                         50,
+                         2575,
+                         5075,
+                         750,
+                         9700),
+                       ncol = 1,
+                       dimnames = list(c("Crude dist.",
+                                         "Diesel dist.",
+                                         "Elect. grid",
+                                         "Gas wells & proc.",
+                                         "NG dist.",
+                                         "Oil fields",
+                                         "Oil refineries",
+                                         "Petrol dist.",
+                                         "Power plants"),
+                                       "Product")) |>
+    matsbyname::setrowtype("Industry") |>
+    matsbyname::setcoltype("Product")
+  expect_equal(res$SUTIntraIndustryBalance[[1]], expected_1)
+
+  expected_2 <- matrix(c(22999.6,
+                         545,
+                         367.9998,
+                         125,
+                         5000,
+                         2075,
+                         4800,
+                         45,
+                         2575,
+                         5075,
+                         526.9997,
+                         9700,
+                         13250.02),
+                       ncol = 1,
+                       dimnames = list(c("Car engines",
+                                         "Crude dist.",
+                                         "Diesel dist.",
+                                         "Elect. grid",
+                                         "Furnaces",
+                                         "Gas wells & proc.",
+                                         "Light fixtures",
+                                         "NG dist.",
+                                         "Oil fields",
+                                         "Oil refineries",
+                                         "Petrol dist.",
+                                         "Power plants",
+                                         "Truck engines"),
+                                       "Product")) |>
+    matsbyname::setrowtype("Industry") |>
+    matsbyname::setcoltype("Product")
+  expect_equal(res$SUTIntraIndustryBalance[[2]], expected_2)
+})
+
+
 test_that("endogenize_losses() works correctly", {
   UKEnergy2000mats |>
     tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
