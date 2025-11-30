@@ -4,7 +4,7 @@
 \alias{verify-balances}
 \alias{verify_inter_industry_balance}
 \alias{verify_intra_industry_balance}
-\title{Confirm that conversion chains are balanced}
+\title{Verify inter- and intra-industry balances for PSUT (\strong{RUVY}) matrices}
 \usage{
 verify_inter_industry_balance(
   .sutmats = NULL,
@@ -82,9 +82,9 @@ quantities that are not conserved (such as exergy)
 and for conversion chains that do not include wastes or losses.
 }
 
-\subsection{Output}{
+\subsection{Outputs}{
 
-If every conversion chain is balanced,
+If every conversion chain in \code{.sutmats} is balanced,
 \code{.sutmats} is returned with an additional column
 (called \code{balanced_colname}), and
 execution returns to the caller.

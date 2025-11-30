@@ -4,7 +4,7 @@
 \alias{balances}
 \alias{calc_inter_industry_balance}
 \alias{calc_intra_industry_balance}
-\title{Calculate inter- and intra-industry balances for PSUT (\strong{RUVY}) matrices.}
+\title{Calculate inter- and intra-industry balances for PSUT (\strong{RUVY}) matrices2}
 \usage{
 calc_inter_industry_balance(
   .sutmats = NULL,
@@ -68,7 +68,7 @@ Balances can be calculated for mass flows or monetary flows, too.
 \subsection{Inter-industry balances}{
 
 In a PSUT description of a mass or energy conversion chain,
-all of every flow leaving one industry must arrive at another industry.
+all of every product leaving one industry must arrive at another industry.
 \code{calc_inter_industry_balances()}
 calculates these between-industry balances via
 ((\strong{R} + \strong{V})^T^ - (\strong{U} + \strong{Y}))\strong{i}.
@@ -77,7 +77,7 @@ Inter-industry balances are calculated for products (not industries).
 
 \subsection{Intra-industry balances}{
 
-\code{calc_intra_industry_balances()} calculates these across-industry
+\code{calc_intra_industry_balances()} calculates across-industry
 balances via
 (\strong{U}^T^ - \strong{V})\strong{i}.
 Inter-industry balances are calculated for industries (not products),

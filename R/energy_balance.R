@@ -5,7 +5,7 @@
 
 
 
-#' Calculate inter- and intra-industry balances for PSUT (**RUVY**) matrices.
+#' Calculate inter- and intra-industry balances for PSUT (**RUVY**) matrices2
 #'
 #' Balances are an important aspect of analyzing mass and energy conversion chains
 #' in the PSUT framework with the **RUVY** matrices.
@@ -15,7 +15,7 @@
 #' ## Inter-industry balances
 #'
 #' In a PSUT description of a mass or energy conversion chain,
-#' all of every flow leaving one industry must arrive at another industry.
+#' all of every product leaving one industry must arrive at another industry.
 #' `calc_inter_industry_balances()`
 #' calculates these between-industry balances via
 #' ((**R** + **V**)^T^ - (**U** + **Y**))**i**.
@@ -23,7 +23,7 @@
 #'
 #' ## Intra-industry balances
 #'
-#' `calc_intra_industry_balances()` calculates these across-industry
+#' `calc_intra_industry_balances()` calculates across-industry
 #' balances via
 #' (**U**^T^ - **V**)**i**.
 #' Inter-industry balances are calculated for industries (not products),
@@ -114,7 +114,7 @@ NULL
 
 
 
-#' Confirm that conversion chains are balanced
+#' Verify inter- and intra-industry balances for PSUT (**RUVY**) matrices
 #'
 #' Balances can be verified in two ways,
 #' inter-industry and intra-industry.
@@ -146,9 +146,9 @@ NULL
 #' quantities that are not conserved (such as exergy)
 #' and for conversion chains that do not include wastes or losses.
 #'
-#' ## Output
+#' ## Outputs
 #'
-#' If every conversion chain is balanced,
+#' If every conversion chain in `.sutmats` is balanced,
 #' `.sutmats` is returned with an additional column
 #' (called `balanced_colname`), and
 #' execution returns to the caller.
