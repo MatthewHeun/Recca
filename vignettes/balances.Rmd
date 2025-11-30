@@ -1,0 +1,286 @@
+---
+title: "Balances"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Balances}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, message=FALSE}
+library(dplyr)
+library(IEATools)
+library(Recca)
+```
+
+
+## Introduction
+
+When working with material and energy conversion chains 
+in the `Recca` package with `matsindf` data frames,
+it is helpful to calculate several types of balances.
+This vignette describes those balances and shows
+when you might want to use each of them.
+Balances include
+
+* inter-industry balances,
+* intra-industry balances, and
+* the $\mathbf{W}$ matrix.
+
+
+### Terminology
+
+`Recca` assists with matrix-based input-output calculations
+when the data are organized into the 
+$\mathbf{RUVY}$ matrices of the 
+physical supply-use table (PSUT) framework.
+A generic processing stage is called an "industry."
+The name for items that flow between industries is "product." 
+A "balance" is any calculation that compares inputs to outputs.
+Balances can be computed for all types of products, 
+in particular materials (quantified in mass or exergy units)
+and energy (quantified as energy or exergy).
+
+In the PSUT framework, 
+the $\mathbf{R}$ matrix is an industry-by-product resource matrix.
+The $\mathbf{U}$ matrix is an product-by-industry use matrix.
+The $\mathbf{V}$ matrix is an industry-by-product make matrix.
+The $\mathbf{Y}$ matrix is an product-by-industry final demand matrix.
+
+In this vignette, matrices are represented by boldface 
+capital letters, such as $\mathbf{R}$.
+Vectors are assumed to be column vectors and
+represented by boldface lowercase letters, 
+such as the identity vector $\mathbf{i}$.
+
+
+### Data
+
+In the examples that follow, 
+we use the energy conversion chain in `UKEnergy2000mats`.
+
+```{r}
+ecc <- UKEnergy2000mats |> 
+  tidyr::pivot_wider(names_from = matrix.name, 
+                     values_from = matrix)
+dplyr::glimpse(ecc)
+```
+
+
+## Balances
+
+The following subsections explain
+each type of balance and how to calculate
+it with the `Recca` package.
+
+
+### Inter-industry (between-industry) balances check for product consistency
+
+In any conversion chain, 
+products that leave one industry must enter another industry.
+These between industry (or inter-industry) balances
+should be verified for every conversion chain.
+
+Inter-industry balances are obtained
+by the following computation.
+
+$$[(\mathbf{R} + \mathbf{V})^\mathrm{T} 
+     - (\mathbf{U} + \mathbf{Y})] \, \mathbf{i}$$
+
+If the conversion chain is consistent, 
+the result should be the $\mathbf{0}$ vector 
+with products in rows.
+
+To compute inter-industry balances within the PSUT framework
+using the `Recca` package, 
+use the following code.
+
+```{r}
+inter_industry_balances <- ecc |> 
+  calc_inter_industry_balance()
+```
+
+The result is added as a new column,
+named "SUTInterIndustryBalance" by default.
+
+```{r}
+glimpse(inter_industry_balances)
+```
+
+The vectors in SUTInterIndustryBalance column have products in rows.
+
+```{r}
+inter_industry_balances$SUTInterIndustryBalance[[1]]
+inter_industry_balances$SUTInterIndustryBalance[[2]]
+inter_industry_balances$SUTInterIndustryBalance[[3]]
+inter_industry_balances$SUTInterIndustryBalance[[4]]
+```
+
+As expected, these vectors are the $\mathbf{0}$ vector to within 
+reasonable precision.
+
+If you want to check the inter-industry balances for consistency, 
+use `verify_inter_industry_balance()`.
+The `tol` argument gives the tolerance for
+non-zero product balances.
+
+```{r}
+inter_industry_balances |> 
+  verify_inter_industry_balance(tol = 1e-4) |> 
+  glimpse()
+```
+
+If a product is out of balance 
+by more than `tol` (by default `1e-6`), 
+a warning occurs and 
+`FALSE` appears in the new column, 
+"SUTInterIndustryBalanced."
+
+
+### Intra-industry (across-industry) balances
+
+A second type of balance
+(the intra-industry balance)
+computes differences _across_ industries.
+Intra-industry balances
+are obtained by the following computation.
+
+$$(\mathbf{U}^\mathrm{T} - \mathbf{V}) \, \mathbf{i}$$
+
+The result is a column vector with industries in rows.
+
+The interpretation of the results depends upon 
+the construction of the matrices.
+
+In a PSUT description of conserved quantities
+(such as mass or energy),
+when all losses are accounted within the matrices themselves,
+the calculation of intra-industry balances should give
+the **0** vector.
+When losses _are not_ accounted in the matrices,
+the calculation of intra-industry balances gives losses.
+
+For PSUT matrices describing non-conserved quantities
+such as exergy
+(mass exergy, energy exergy, or both),
+when losses _are_ accounted in the matrices,
+the intra-industry balance gives exergy destruction.
+When losses _are not_ accounted in the matrices,
+the intra-industry balance gives the sum of
+exergy destruction and exergy losses.
+
+The following table summarizes.
+
+| Matrices contain              | Matrices include losses (wastes)  | Matrices exclude losses (wastes) |
+| :---------------------------: | :-------------------------------: | :------------------------------: |
+| Mass (MCC)                    | $\mathbf{0}$                      | $\mathbf{m}_L$                   |
+| Energy (ECC)                  | $\mathbf{0}$                      | $\mathbf{e}_L$                   |
+| Mass exergy (BCC)             | $\mathbf{b}_D$                    | $\mathbf{b}_D + \mathbf{b}_L$    |
+| Energy exergy (XCC)           | $\mathbf{x}_D$                    | $\mathbf{x}_D + \mathbf{x}_L$    |
+| Mass and energy exergy (BXCC) | $\mathbf{bx}_D$                   | $\mathbf{bx}_D + \mathbf{bx}_L$  |
+
+MCC indicates a material conversion chain.
+ECC indicates an energy conversion chain.
+BCC indicates a material exergy conversion chain.
+XCC indicates an energy exergy conversion chain.
+BXCC indicates a combined material and energy exergy conversion chain.
+$\mathbf{0}$ indicates the result is the zero vector;
+$\mathbf{m}$ indicates the result is a mass vector;
+$\mathbf{e}$ indicates the result is an energy vector;
+$\mathbf{b}$ indicates the result is a mass exergy vector;
+$\mathbf{x}$ indicates the result is an energy exergy vector; and
+$\mathbf{bx}$ indicates the result is a the sum of mass and energy exergy vectors.
+Subscript $L$ indicates losses (or wastes), and 
+subscript $D$ indicates exergy destroyed by the industry.
+
+
+To compute intra-industry (across industry) balances
+within the PSUT framework using the `Recca` package, 
+use the following code.
+
+```{r}
+intra_industry_balances <- ecc |> 
+  dplyr::filter(LastStage %in% c("Final", "Useful")) |> 
+  calc_intra_industry_balance()
+```
+
+The result is added as a new column,
+named "SUTIntraIndustryBalance" by default.
+
+```{r}
+glimpse(intra_industry_balances)
+```
+
+The vectors in the SUTIntraIndustryBalance column have industries in rows.
+
+```{r}
+intra_industry_balances$SUTIntraIndustryBalance[[1]]
+intra_industry_balances$SUTIntraIndustryBalance[[2]]
+```
+
+Because the matrices in the `ecc` do not contain losses, 
+`calc_intra_industry_balance()` calculates energy losses (wastes)
+($\mathbf{e}_L$ in the table above).
+
+
+### Adding losses to the **RUVY** matrices
+
+
+
+### The value added matrix ($\mathbf{W}$)
+
+
+
+
+### Deprecated functions
+
+#### `verify_SUT_energy_balance()`
+
+
+
+
+
+
+## Conclusion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

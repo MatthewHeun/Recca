@@ -30,6 +30,7 @@ Imports:
     assertthat,
     dplyr,
     IEATools,
+    lifecycle,
     magrittr,
     matsbyname,
     matsindf,
@@ -48,7 +49,8 @@ Suggests:
     Matrix,
     rmarkdown,
     testthat (>= 3.0.0),
-    spelling
+    spelling, 
+    withr
 Remotes:
     github::MatthewHeun/IEATools
 URL: https://github.com/MatthewHeun/Recca, https://matthewheun.github.io/Recca/

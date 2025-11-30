@@ -11,6 +11,24 @@ Cite all releases of `Recca` with doi
 which always resolves to the latest release.
 
 
+* New function `endogenize_losses()` moves losses
+  calculated by 
+  `calc_inter_industry_balance()`
+  into the **V** and **Y** matrices
+  so that conserved quantities will always 
+  give **0** with 
+  `calc_inter_industry_balance()`.
+* `verify_SUT_energy_balance()` is deprecated 
+  in favor of the combination of
+  `calc_inter_industry_balance()` and
+  `verify_inter_industry_balance()`, 
+  because it is helpful to see the calculated balances.
+* `verify_SUT_energy_balance_with_units()` is deprecated. 
+  It seemed like a good idea at the time, but we 
+  don't use it.
+* New functions `calc_inter_industry_balance()` and 
+  `verify_inter_industry_balance()` 
+  compute and verify inter-industry balances.
 * Improved error message in `write_ecc_to_excel()`.
 
 

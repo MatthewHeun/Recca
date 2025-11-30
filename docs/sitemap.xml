@@ -6,6 +6,7 @@
 <url><loc>https://matthewheun.github.io/Recca/LICENSE.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/articles/Aggregation.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/articles/Recca.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/articles/balances.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/articles/index.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/articles/new-function-interaction.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/articles/new-functions.html</loc></url>
@@ -26,6 +27,7 @@
 <url><loc>https://matthewheun.github.io/Recca/reference/all_stages.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/alloc_cols.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/any_start_with.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/balance_cols.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/calc_A.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/calc_E.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/calc_ERRs_gamma.html</loc></url>
@@ -43,6 +45,7 @@
 <url><loc>https://matthewheun.github.io/Recca/reference/calc_eta_fu_Y_eiou.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/calc_eta_i.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/calc_eta_pfd.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/calc_inter_industry_balance.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/calc_io_mats.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/calc_mats_locations_excel.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/calc_yqfgW.html</loc></url>
@@ -114,6 +117,7 @@
 <url><loc>https://matthewheun.github.io/Recca/reference/verify_SUT_energy_balance_with_units.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/verify_SUT_industry_production.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/verify_chop_energy_sum.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/verify_inter_industry_balance.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/waste_edges.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/write_ecc_to_excel.html</loc></url>
 </urlset>

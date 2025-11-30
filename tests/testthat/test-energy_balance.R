@@ -1,42 +1,79 @@
 
-test_that("SUT matrix energy balance works with energy only", {
-  expect_silent(
-    UKEnergy2000mats %>%
-      tidyr::spread(key = matrix.name, value = matrix) %>%
-      dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
-      verify_SUT_energy_balance()
-  )
+test_that("verify_SUT_energy_balance() works with energy only", {
+  # This test will need to be deleted after removing verify_SUT_energy_balance()
+  withr::local_options(lifecycle_verbosity = "quiet")
+  spread <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in% c(IEATools::last_stages$final, IEATools::last_stages$useful))
+   spread %>%
+    verify_SUT_energy_balance() |>
+    expect_silent()
   # Try with missing R matrix
-  expect_silent(
-    UKEnergy2000mats %>%
-      tidyr::spread(key = matrix.name, value = matrix) %>%
-      dplyr::mutate(
-        V = matsbyname::sum_byname(R, V),
-        R = NULL
-      ) %>%
-      dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) |>
-      verify_SUT_energy_balance()
-  )
+  UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    dplyr::mutate(
+      V = matsbyname::sum_byname(R, V),
+      R = NULL
+    ) %>%
+    dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) |>
+    verify_SUT_energy_balance() |>
+    expect_silent()
+
+  # Now test with single matrices
+  verify_SUT_energy_balance(R = spread$R[[1]],
+                            U = spread$U[[1]],
+                            V = spread$V[[1]],
+                            Y = spread$Y[[1]]) |>
+    unlist() |>
+    expect_true()
+})
+
+
+test_that("SUT matrix energy balance works with energy only", {
+  UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
+    calc_inter_industry_balance() |>
+    verify_inter_industry_balance() |>
+    expect_silent()
+  # Try with missing R matrix
+  UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    dplyr::mutate(
+      V = matsbyname::sum_byname(R, V),
+      R = NULL
+    ) %>%
+    dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) |>
+    calc_inter_industry_balance() |>
+    verify_inter_industry_balance() |>
+    expect_silent()
 })
 
 
 test_that("SUT matrix energy balance fails when a number has changed", {
-  mats <- UKEnergy2000mats %>%
-    tidyr::spread(key = matrix.name, value = matrix) %>%
+  mats <- UKEnergy2000mats |>
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
     dplyr::filter(.data[[IEATools::iea_cols$last_stage]] == IEATools::last_stages$final)
   R <- mats$R[[1]]
   U <- mats$U[[1]]
   V <- mats$V[[1]]
   Y <- mats$Y[[1]]
-  expect_equal(verify_SUT_energy_balance(R = R, U = U, V = V, Y = Y),
-               list(.SUT_energy_balance = TRUE))
+  calc_inter_industry_balance(R = R, U = U, V = V, Y = Y) |>
+    verify_inter_industry_balance() |>
+    magrittr::extract2(2) |>
+    expect_equal(TRUE)
+
   Y[2, 2] <- 42 # Replace a 0 with a value
-  expect_warning(verify_SUT_energy_balance(R = R, U = U, V = V, Y = Y),
-                 "Energy not conserved")
+  calc_inter_industry_balance(R = R, U = U, V = V, Y = Y) |>
+    verify_inter_industry_balance() |>
+    magrittr::extract2(2) |>
+    expect_equal(FALSE) |>
+    expect_warning()
 })
 
 
 test_that("SUT matrix energy balance with units works as expected", {
+  withr::local_options(lifecycle_verbosity = "quiet")
   result <- verify_SUT_energy_balance_with_units(
     UKEnergy2000mats %>%
       tidyr::spread(key = matrix.name, value = matrix),
@@ -59,6 +96,7 @@ test_that("SUT matrix energy balance with units works as expected", {
 
 
 test_that("SUT matrix energy balance fails as expected when out of balance", {
+  withr::local_options(lifecycle_verbosity = "quiet")
   UKEnergy2000mats |>
     tidyr::pivot_wider(names_from = "matrix.name",
                        values_from = "matrix") |>
@@ -67,9 +105,16 @@ test_that("SUT matrix energy balance fails as expected when out of balance", {
 })
 
 
-test_that("all SUT industries are producing energy", {
-  UKspread <- UKEnergy2000mats %>%
-    tidyr::spread(key = matrix.name, value = matrix)
+test_that("all industries are producing energy", {
+  withr::local_options(lifecycle_verbosity = "quiet")
+  UKspread <- UKEnergy2000mats |>
+    tidyr::pivot_wider(names_from = matrix.name,
+                       values_from = matrix)
+  UKspread |>
+    calc_inter_industry_balance() |>
+    verify_inter_industry_balance(tol = 1e-4) |>
+    expect_silent()
+
   expect_silent(verify_SUT_industry_production(UKspread))
   result <- verify_SUT_industry_production(UKspread)
   expect_true(all(result[[".industry_production_OK"]] %>% as.logical()))
@@ -98,14 +143,16 @@ test_that("all SUT industries are producing energy", {
 })
 
 
-test_that("SUT energy balance works with single matrices", {
+test_that("calc_inter_industry_balance() works with single matrices", {
   UKspread <- UKEnergy2000mats %>%
-    tidyr::spread(key = matrix.name, value = matrix)
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix)
   R <- UKspread$R[[1]]
   U <- UKspread$U[[1]]
   V <- UKspread$V[[1]]
   Y <- UKspread$Y[[1]]
-  expect_silent(verify_SUT_energy_balance(R = R, U = U, V = V, Y = Y))
+  calc_inter_industry_balance(R = R, U = U, V = V, Y = Y) |>
+    verify_inter_industry_balance() |>
+    expect_silent()
 })
 
 
@@ -131,5 +178,148 @@ test_that("IEA energy balance works correctly", {
                  dplyr::group_by(Country, Year, EnergyType, LastStage) %>%
                  verify_IEATable_energy_balance(energy = IEATools::iea_cols$e_dot),
                  "Energy not balanced in verify_IEATable_energy_balance.")
+})
+
+
+test_that("calc_inter_industry_balance() works correctly", {
+  UKEnergy2000mats |>
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
+    dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in%
+                    c(IEATools::last_stages$final, IEATools::last_stages$useful)) |>
+    calc_inter_industry_balance() |>
+    verify_inter_industry_balance() |>
+    # Should not throw an error or warning
+    expect_silent()
+})
+
+
+test_that("calc_intra_industry_balance() works correctly", {
+  res <- UKEnergy2000mats |>
+    dplyr::filter(LastStage %in% c("Final", "Useful")) |>
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
+    calc_intra_industry_balance()
+  expected_1 <- matrix(c(550,
+                         350,
+                         125,
+                         2075,
+                         50,
+                         2575,
+                         5075,
+                         750,
+                         9700),
+                       ncol = 1,
+                       dimnames = list(c("Crude dist.",
+                                         "Diesel dist.",
+                                         "Elect. grid",
+                                         "Gas wells & proc.",
+                                         "NG dist.",
+                                         "Oil fields",
+                                         "Oil refineries",
+                                         "Petrol dist.",
+                                         "Power plants"),
+                                       "Product")) |>
+    matsbyname::setrowtype("Industry") |>
+    matsbyname::setcoltype("Product")
+  expect_equal(res$SUTIntraIndustryBalance[[1]], expected_1)
+
+  expected_2 <- matrix(c(22999.6,
+                         545,
+                         367.9998,
+                         125,
+                         5000,
+                         2075,
+                         4800,
+                         45,
+                         2575,
+                         5075,
+                         526.9997,
+                         9700,
+                         13250.02),
+                       ncol = 1,
+                       dimnames = list(c("Car engines",
+                                         "Crude dist.",
+                                         "Diesel dist.",
+                                         "Elect. grid",
+                                         "Furnaces",
+                                         "Gas wells & proc.",
+                                         "Light fixtures",
+                                         "NG dist.",
+                                         "Oil fields",
+                                         "Oil refineries",
+                                         "Petrol dist.",
+                                         "Power plants",
+                                         "Truck engines"),
+                                       "Product")) |>
+    matsbyname::setrowtype("Industry") |>
+    matsbyname::setcoltype("Product")
+  expect_equal(res$SUTIntraIndustryBalance[[2]], expected_2)
+})
+
+
+test_that("verify_intra_industry_balance()", {
+  res <- UKEnergy2000mats |>
+    dplyr::filter(LastStage %in% c("Final", "Useful")) |>
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
+    calc_intra_industry_balance() |>
+    verify_intra_industry_balance() |>
+    expect_warning(regexp = "Industries are not balanced")
+
+
+  expect_warning(
+    res <- UKEnergy2000mats |>
+      dplyr::filter(LastStage %in% c("Final", "Useful")) |>
+      tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
+      calc_intra_industry_balance() |>
+      verify_intra_industry_balance(),
+    regexp = "Industries are not balanced"
+  )
+  expect_equal(res$SUTIntraIndustryBalanced, c(FALSE, FALSE))
+})
+
+
+test_that("endogenize_losses() works correctly", {
+  pivoted_E <- UKEnergy2000mats |>
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
+    dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in%
+                    c(IEATools::last_stages$final, IEATools::last_stages$useful))
+  # Verify initial balance situation.
+  pivoted_E |>
+    calc_inter_industry_balance() |>
+    verify_inter_industry_balance() |>
+    expect_silent()
+  pivoted_E |>
+    calc_intra_industry_balance() |>
+    verify_intra_industry_balance() |>
+    expect_warning(regexp = "Industries are not balanced")
+
+  # Endogenize the energy losses.
+  endogenized <- pivoted_E |>
+    calc_intra_industry_balance() |>
+    endogenize_losses() |>
+    dplyr::mutate(
+      V = V_prime,
+      Y = Y_prime,
+      V_prime = NULL,
+      Y_prime = NULL,
+      "{Recca::balance_cols$intra_industry_balance_colname}" := NULL
+    )
+  # Now test that everything remains balanced.
+  endogenized |>
+    calc_inter_industry_balance() |>
+    verify_inter_industry_balance() |>
+    expect_silent()
+  endogenized |>
+    calc_intra_industry_balance() |>
+    verify_intra_industry_balance() |>
+    expect_silent()
+  # Test that expected row and column names now exist in the matrices
+  for (i in 1:2) {
+    expect_true(Recca::balance_cols$waste_heat %in%
+                  matsbyname::getcolnames_byname(endogenized$V[[i]]))
+    expect_true(Recca::balance_cols$waste_heat %in%
+                  matsbyname::getrownames_byname(endogenized$Y[[i]]))
+    expect_true(Recca::balance_cols$losses_sector %in%
+                  matsbyname::getcolnames_byname(endogenized$Y[[i]]))
+  }
 })
 
