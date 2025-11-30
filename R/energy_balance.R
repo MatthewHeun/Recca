@@ -404,7 +404,10 @@ verify_SUT_energy_balance <- function(.sutmats = NULL,
 
 #' Confirm that an SUT-style data frame conserves energy.
 #'
-#' If energy is in balance for every row, `.sutmats` is returned with two additional columns, and
+#' `r lifecycle::badge('deprecated')`
+#'
+#' If energy is in balance for every row,
+#' `.sutmats` is returned with two additional columns, and
 #' execution returns to the caller.
 #' If energy balance is not observed for one or more rows,
 #' a warning is emitted, and
@@ -459,7 +462,12 @@ verify_SUT_energy_balance_with_units <- function(.sutmats = NULL,
                                                  SUT_prod_energy_balanced = ".SUT_prod_energy_balanced",
                                                  SUT_ind_energy_balanced = ".SUT_ind_energy_balanced",
                                                  ebal_error = "ebal_error",
-                                                 product = "Product"){
+                                                 product = "Product") {
+
+  lifecycle::deprecate_warn(when = "0.1.65",
+                            what = "verify_SUT_energy_balance_with_units()",
+                            details = "verify_SUT_energy_balance_with_units() seemed like a good idea at the time, but we never use it.")
+
   verify_func <- function(R = NULL, U, V, Y, S_units){
     y <- matsbyname::rowsums_byname(Y)
     if (is.null(R)) {

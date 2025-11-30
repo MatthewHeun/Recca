@@ -59,14 +59,17 @@ verify_SUT_energy_balance_with_units(
 \code{.sutmats} with additional columns.
 }
 \description{
-If energy is in balance for every row, \code{.sutmats} is returned with two additional columns, and
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+}
+\details{
+If energy is in balance for every row,
+\code{.sutmats} is returned with two additional columns, and
 execution returns to the caller.
 If energy balance is not observed for one or more rows,
 a warning is emitted, and
 columns named \code{SUT_prod_energy_blance} and \code{SUT_ind_energy_blance} are added to \code{.sutmats}.
 \code{FALSE} indicates energy is not in balance.
-}
-\details{
+
 This function should be called
 for its side-effect of testing whether energy is in balance in \code{.sutmats}.
 
