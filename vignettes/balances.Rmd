@@ -229,9 +229,11 @@ intra_industry_balances$SUTIntraIndustryBalance[[2]]
 ```
 
 Because the matrices in the `ecc` do not contain losses, 
-`calc_intra_industry_balance()` calculates energy losses
+`calc_intra_industry_balance()` calculates energy losses (wastes)
 ($\mathbf{e}_L$ in the table above).
 
+
+### Adding losses to the **RUVY** matrices
 
 
 
