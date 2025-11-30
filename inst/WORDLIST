@@ -12,6 +12,7 @@ EIOU
 EROI
 EROIs
 ERRs
+Endogenize
 EnergyType
 Excel's
 GBR
@@ -37,6 +38,7 @@ NER
 NEU
 NG
 NGL
+ORCID
 PSUT
 README
 RUVY
@@ -75,6 +77,9 @@ doi
 ecc
 ef
 eiou
+endogenization
+endogenize
+endogenized
 eroi
 et
 exergetic

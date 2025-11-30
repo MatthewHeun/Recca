@@ -41,7 +41,9 @@ Default is
 \link{balance_cols}\verb{$intra_industry_balance_colname} or
 "SUTIntraIndustryBalance".}
 
-\item{Y_prime}{}
+\item{V_prime}{The name of the \strong{V} matrix with endogenized losses.}
+
+\item{Y_prime}{The name of the \strong{Y} matrix with endogenized losses.}
 }
 \value{
 A version of \code{.sutmats} with losses endogenized.
@@ -54,6 +56,15 @@ This function performs the endogenization.
 }
 \details{
 Intra-industry balances need to be calculated
-(most easily vai \code{\link[=calc_intra_industry_balance]{calc_intra_industry_balance()}})
+(most easily via \code{\link[=calc_intra_industry_balance]{calc_intra_industry_balance()}})
 prior to calling this function.
+}
+\examples{
+UKEnergy2000mats |>
+  tidyr::pivot_wider(names_from = matrix.name,
+                     values_from = matrix) |>
+  dplyr::filter(.data[[IEATools::iea_cols$last_stage]] \%in\%
+                  c(IEATools::last_stages$final, IEATools::last_stages$useful)) |>
+  calc_intra_industry_balance() |>
+  endogenize_losses()
 }

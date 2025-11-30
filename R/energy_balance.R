@@ -735,7 +735,7 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 #' This function performs the endogenization.
 #'
 #' Intra-industry balances need to be calculated
-#' (most easily vai [calc_intra_industry_balance()])
+#' (most easily via [calc_intra_industry_balance()])
 #' prior to calling this function.
 #'
 #'
@@ -758,14 +758,21 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 #'                        Default is
 #'                        [Recca::balance_cols]`$intra_industry_balance_colname` or
 #'                        "`r Recca::balance_cols$intra_industry_balance_colname`".
-#' @param V_prime
-#' @param Y_prime
+#' @param V_prime The name of the **V** matrix with endogenized losses.
+#' @param Y_prime The name of the **Y** matrix with endogenized losses.
 #'
 #' @returns A version of `.sutmats` with losses endogenized.
 #'
 #' @export
 #'
 #' @examples
+#' UKEnergy2000mats |>
+#'   tidyr::pivot_wider(names_from = matrix.name,
+#'                      values_from = matrix) |>
+#'   dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in%
+#'                   c(IEATools::last_stages$final, IEATools::last_stages$useful)) |>
+#'   calc_intra_industry_balance() |>
+#'   endogenize_losses()
 endogenize_losses <- function(.sutmats = NULL,
                               loss_product = Recca::balance_cols$waste_heat,
                               loss_sector = Recca::balance_cols$losses_sector,
