@@ -72,9 +72,7 @@ we use the energy conversion chain in `UKEnergy2000mats`.
 ```{r}
 ecc <- UKEnergy2000mats |> 
   tidyr::pivot_wider(names_from = matrix.name, 
-                     values_from = matrix) |> 
-  dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in%
-                  c(IEATools::last_stages$final, IEATools::last_stages$useful))
+                     values_from = matrix)
 dplyr::glimpse(ecc)
 ```
 
@@ -86,7 +84,7 @@ each type of balance and how to calculate
 it with the `Recca` package.
 
 
-### Inter-industry balances check for product consistency
+### Inter-industry (between-industry) balances check for product consistency
 
 In any conversion chain, 
 products that leave one industry must enter another industry.
@@ -119,11 +117,13 @@ named "SUTInterIndustryBalance" by default.
 glimpse(inter_industry_balances)
 ```
 
-The vectors in SUTInterIndustryBalance have products in rows.
+The vectors in SUTInterIndustryBalance column have products in rows.
 
 ```{r}
 inter_industry_balances$SUTInterIndustryBalance[[1]]
 inter_industry_balances$SUTInterIndustryBalance[[2]]
+inter_industry_balances$SUTInterIndustryBalance[[3]]
+inter_industry_balances$SUTInterIndustryBalance[[4]]
 ```
 
 As expected, these vectors are the $\mathbf{0}$ vector to within 
@@ -131,10 +131,12 @@ reasonable precision.
 
 If you want to check the inter-industry balances for consistency, 
 use `verify_inter_industry_balance()`.
+The `tol` argument gives the tolerance for
+non-zero product balances.
 
 ```{r}
 inter_industry_balances |> 
-  verify_inter_industry_balance() |> 
+  verify_inter_industry_balance(tol = 1e-4) |> 
   glimpse()
 ```
 
@@ -145,15 +147,11 @@ a warning occurs and
 "SUTInterIndustryBalanced."
 
 
-### Intra-industry balances calculate losses
+### Intra-industry (across-industry) balances
 
 A second type of balance
 (the intra-industry balance)
 computes differences _across_ industries.
-Typically, the intra-industry balance computes 
-inputs less outputs, and 
-the result is losses (wastes) as a positive number.
-
 Intra-industry balances
 are obtained by the following computation.
 
@@ -161,26 +159,27 @@ $$(\mathbf{U}^\mathrm{T} - \mathbf{V}) \, \mathbf{i}$$
 
 The result is a column vector with industries in rows.
 
-The meaning of intra-industry balances
-depends upon the construction
-of the matrices.
-Key factors are whether or not the matrices include losses
-and the type of data in the matrices.
-The following table shows meanings.
-$\mathbf{0}$ indicates the result is the zero vector;
-$\mathbf{m}$ indicates the result is a mass vector;
-$\mathbf{e}$ indicates the result is an energy vector;
-$\mathbf{b}$ indicates the result is a mass exergy vector;
-$\mathbf{x}$ indicates the result is an energy exergy vector; and
-$\mathbf{bx}$ indicates the result is a the sum of mass and energy exergy vectors.
-Subscript $L$ indicates losses (or wastes), and 
-subscript $D$ indicates exergy destroyed by the industry.
-MCC indicates a material conversion chain.
-ECC indicates an energy conversion chain.
-BCC indicates a material exergy conversion chain.
-XCC indicates an energy exergy conversion chain.
-BXCC indicates a combined material and energy exergy conversion chain.
+The interpretation of the results depends upon 
+the construction of the matrices.
 
+In a PSUT description of conserved quantities
+(such as mass or energy),
+when all losses are accounted within the matrices themselves,
+the calculation of intra-industry balances should give
+the **0** vector.
+When losses _are not_ accounted in the matrices,
+the calculation of intra-industry balances gives losses.
+
+For PSUT matrices describing non-conserved quantities
+such as exergy
+(mass exergy, energy exergy, or both),
+when losses _are_ accounted in the matrices,
+the intra-industry balance gives exergy destruction.
+When losses _are not_ accounted in the matrices,
+the intra-industry balance gives the sum of
+exergy destruction and exergy losses.
+
+The following table summarizes.
 
 | Matrices contain              | Matrices include losses (wastes)  | Matrices exclude losses (wastes) |
 | :---------------------------: | :-------------------------------: | :------------------------------: |
@@ -190,6 +189,20 @@ BXCC indicates a combined material and energy exergy conversion chain.
 | Energy exergy (XCC)           | $\mathbf{x}_D$                    | $\mathbf{x}_D + \mathbf{x}_L$    |
 | Mass and energy exergy (BXCC) | $\mathbf{bx}_D$                   | $\mathbf{bx}_D + \mathbf{bx}_L$  |
 
+MCC indicates a material conversion chain.
+ECC indicates an energy conversion chain.
+BCC indicates a material exergy conversion chain.
+XCC indicates an energy exergy conversion chain.
+BXCC indicates a combined material and energy exergy conversion chain.
+$\mathbf{0}$ indicates the result is the zero vector;
+$\mathbf{m}$ indicates the result is a mass vector;
+$\mathbf{e}$ indicates the result is an energy vector;
+$\mathbf{b}$ indicates the result is a mass exergy vector;
+$\mathbf{x}$ indicates the result is an energy exergy vector; and
+$\mathbf{bx}$ indicates the result is a the sum of mass and energy exergy vectors.
+Subscript $L$ indicates losses (or wastes), and 
+subscript $D$ indicates exergy destroyed by the industry.
+
 
 To compute intra-industry (across industry) balances
 within the PSUT framework using the `Recca` package, 
@@ -197,9 +210,29 @@ use the following code.
 
 ```{r}
 intra_industry_balances <- ecc |> 
+  dplyr::filter(LastStage %in% c("Final", "Useful")) |> 
   calc_intra_industry_balance()
-
 ```
+
+The result is added as a new column,
+named "SUTIntraIndustryBalance" by default.
+
+```{r}
+glimpse(intra_industry_balances)
+```
+
+The vectors in the SUTIntraIndustryBalance column have industries in rows.
+
+```{r}
+intra_industry_balances$SUTIntraIndustryBalance[[1]]
+intra_industry_balances$SUTIntraIndustryBalance[[2]]
+```
+
+Because the matrices in the `ecc` do not contain losses, 
+`calc_intra_industry_balance()` calculates energy losses
+($\mathbf{e}_L$ in the table above).
+
+
 
 
 ### The value added matrix ($\mathbf{W}$)
