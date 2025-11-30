@@ -311,7 +311,7 @@ verify_intra_industry_balance <- function(.sutmats = NULL,
 
   out <- matsindf::matsindf_apply(.sutmats, FUN = verify_func_intra, bal_vector = balances)
   if (!all(out[[balanced_colname]] |> as.logical())) {
-    warning(paste0("Products are not conserved in verify_intra_industry_balance(). See column ", balanced_colname, "."))
+    warning(paste0("Industries are not balanced in verify_intra_industry_balance(). See column ", balanced_colname, "."))
   }
   return(out)
 }

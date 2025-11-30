@@ -1,9 +1,37 @@
 
+test_that("verify_SUT_energy_balance() works with energy only", {
+  # This test will need to be deleted after removing verify_SUT_energy_balance()
+  spread <- UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in% c(IEATools::last_stages$final, IEATools::last_stages$useful))
+   spread %>%
+    verify_SUT_energy_balance() |>
+    expect_silent()
+  # Try with missing R matrix
+  UKEnergy2000mats %>%
+    tidyr::spread(key = matrix.name, value = matrix) %>%
+    dplyr::mutate(
+      V = matsbyname::sum_byname(R, V),
+      R = NULL
+    ) %>%
+    dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) |>
+    verify_SUT_energy_balance() |>
+    expect_silent()
+
+  # Now test with single matrices
+  verify_SUT_energy_balance(R = spread$R[[1]],
+                            U = spread$U[[1]],
+                            V = spread$V[[1]],
+                            Y = spread$Y[[1]]) |>
+    unlist() |>
+    expect_true()
+})
+
+
 test_that("SUT matrix energy balance works with energy only", {
   UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
     dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
-    # verify_SUT_energy_balance() |>
     calc_inter_industry_balance() |>
     verify_inter_industry_balance() |>
     expect_silent()
@@ -15,7 +43,6 @@ test_that("SUT matrix energy balance works with energy only", {
       R = NULL
     ) %>%
     dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) |>
-    # verify_SUT_energy_balance() |>
     calc_inter_industry_balance() |>
     verify_inter_industry_balance() |>
     expect_silent()
@@ -227,6 +254,27 @@ test_that("calc_intra_industry_balance() works correctly", {
     matsbyname::setrowtype("Industry") |>
     matsbyname::setcoltype("Product")
   expect_equal(res$SUTIntraIndustryBalance[[2]], expected_2)
+})
+
+
+test_that("verify_intra_industry_balance()", {
+  res <- UKEnergy2000mats |>
+    dplyr::filter(LastStage %in% c("Final", "Useful")) |>
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
+    calc_intra_industry_balance() |>
+    verify_intra_industry_balance() |>
+    expect_warning(regexp = "Industries are not balanced")
+
+
+  expect_warning(
+    res <- UKEnergy2000mats |>
+      dplyr::filter(LastStage %in% c("Final", "Useful")) |>
+      tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
+      calc_intra_industry_balance() |>
+      verify_intra_industry_balance(),
+    regexp = "Industries are not balanced"
+  )
+  expect_equal(res$SUTIntraIndustryBalanced, c(FALSE, FALSE))
 })
 
 
