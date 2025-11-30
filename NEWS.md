@@ -13,11 +13,11 @@ which always resolves to the latest release.
 
 * New function `endogenize_losses()` moves losses
   calculated by 
-  `calc_inter_industry_balance()`
+  `calc_intra_industry_balance()`
   into the **V** and **Y** matrices
   so that conserved quantities will always 
   give **0** with 
-  `calc_inter_industry_balance()`.
+  `calc_intra_industry_balance()`.
 * `verify_SUT_energy_balance()` is deprecated 
   in favor of the combination of
   `calc_inter_industry_balance()` and
