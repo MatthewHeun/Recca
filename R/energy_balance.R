@@ -256,7 +256,7 @@ verify_inter_industry_balance <- function(.sutmats = NULL,
       magrittr::set_names(balanced_colname)
   }
 
-  out <- matsindf::matsindf_apply(.sutmats_with_balances, FUN = verify_func_inter, bal_vector = balances)
+  out <- matsindf::matsindf_apply(.sutmats, FUN = verify_func_inter, bal_vector = balances)
   if (!all(out[[balanced_colname]] %>% as.logical())) {
     warning(paste0("Products are not conserved in verify_inter_industry_balance(). See column ", balanced_colname, "."))
   }
@@ -304,7 +304,7 @@ verify_intra_industry_balance <- function(.sutmats = NULL,
       magrittr::set_names(balanced_colname)
   }
 
-  out <- matsindf::matsindf_apply(.sutmats_with_balances, FUN = verify_func_intra, bal_vector = balances)
+  out <- matsindf::matsindf_apply(.sutmats, FUN = verify_func_intra, bal_vector = balances)
   if (!all(out[[balanced_colname]] %>% as.logical())) {
     warning(paste0("Products are not conserved in verify_intra_industry_balance(). See column ", balanced_colname, "."))
   }
