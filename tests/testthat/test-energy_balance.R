@@ -1,6 +1,7 @@
 
 test_that("verify_SUT_energy_balance() works with energy only", {
   # This test will need to be deleted after removing verify_SUT_energy_balance()
+  withr::local_options(lifecycle_verbosity = "quiet")
   spread <- UKEnergy2000mats %>%
     tidyr::spread(key = matrix.name, value = matrix) %>%
     dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in% c(IEATools::last_stages$final, IEATools::last_stages$useful))
@@ -57,16 +58,12 @@ test_that("SUT matrix energy balance fails when a number has changed", {
   U <- mats$U[[1]]
   V <- mats$V[[1]]
   Y <- mats$Y[[1]]
-  # expect_equal(verify_SUT_energy_balance(R = R, U = U, V = V, Y = Y),
-  #              list(.SUT_energy_balance = TRUE))
   calc_inter_industry_balance(R = R, U = U, V = V, Y = Y) |>
     verify_inter_industry_balance() |>
     magrittr::extract2(2) |>
     expect_equal(TRUE)
 
   Y[2, 2] <- 42 # Replace a 0 with a value
-  # expect_warning(verify_SUT_energy_balance(R = R, U = U, V = V, Y = Y),
-  #                "Energy not conserved")
   calc_inter_industry_balance(R = R, U = U, V = V, Y = Y) |>
     verify_inter_industry_balance() |>
     magrittr::extract2(2) |>
@@ -76,6 +73,7 @@ test_that("SUT matrix energy balance fails when a number has changed", {
 
 
 test_that("SUT matrix energy balance with units works as expected", {
+  withr::local_options(lifecycle_verbosity = "quiet")
   result <- verify_SUT_energy_balance_with_units(
     UKEnergy2000mats %>%
       tidyr::spread(key = matrix.name, value = matrix),
@@ -98,6 +96,7 @@ test_that("SUT matrix energy balance with units works as expected", {
 
 
 test_that("SUT matrix energy balance fails as expected when out of balance", {
+  withr::local_options(lifecycle_verbosity = "quiet")
   UKEnergy2000mats |>
     tidyr::pivot_wider(names_from = "matrix.name",
                        values_from = "matrix") |>
@@ -107,6 +106,7 @@ test_that("SUT matrix energy balance fails as expected when out of balance", {
 
 
 test_that("all industries are producing energy", {
+  withr::local_options(lifecycle_verbosity = "quiet")
   UKspread <- UKEnergy2000mats |>
     tidyr::pivot_wider(names_from = matrix.name,
                        values_from = matrix)
@@ -150,7 +150,6 @@ test_that("calc_inter_industry_balance() works with single matrices", {
   U <- UKspread$U[[1]]
   V <- UKspread$V[[1]]
   Y <- UKspread$Y[[1]]
-  # expect_silent(verify_SUT_energy_balance(R = R, U = U, V = V, Y = Y))
   calc_inter_industry_balance(R = R, U = U, V = V, Y = Y) |>
     verify_inter_industry_balance() |>
     expect_silent()

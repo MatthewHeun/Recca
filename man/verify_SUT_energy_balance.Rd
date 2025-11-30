@@ -36,12 +36,14 @@ values representing the balance status of that row.}
 a list or data frame saying whether \code{.sutmats} are in balance.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+}
+\details{
 \code{\link[=verify_SUT_energy_balance]{verify_SUT_energy_balance()}} is deprecated in favor of the combination of
 \code{\link[=calc_inter_industry_balance]{calc_inter_industry_balance()}} and
 \code{\link[=verify_inter_industry_balance]{verify_inter_industry_balance()}}.
 Pipe the first into the second.
-}
-\details{
+
 Energy balances are confirmed by Product (within \code{tol}) for every row in \code{.sutmats}.
 
 If energy is in balance for every row, \code{.sutmats} is returned with an additional column, and
@@ -55,8 +57,16 @@ showing where energy is not in balance.
 \examples{
 library(dplyr)
 library(tidyr)
+# This function is deprecated.
+# Instead of this:
 UKEnergy2000mats |>
   dplyr::filter(LastStage \%in\% c("Final", "Useful")) |>
   tidyr::spread(key = matrix.name, value = matrix) |>
   verify_SUT_energy_balance(tol = 1e-4)
+# Do this:
+UKEnergy2000mats |>
+  dplyr::filter(LastStage \%in\% c("Final", "Useful")) |>
+  tidyr::spread(key = matrix.name, value = matrix) |>
+  calc_inter_industry_balance() |>
+  verify_inter_industry_balance(tol = 1e-4)
 }

@@ -327,6 +327,8 @@ verify_intra_industry_balance <- function(.sutmats = NULL,
 
 #' Verifies SUT inter-industry energy balances
 #'
+#' `r lifecycle::badge('deprecated')`
+#'
 #' [verify_SUT_energy_balance()] is deprecated in favor of the combination of
 #' [calc_inter_industry_balance()] and
 #' [verify_inter_industry_balance()].
@@ -357,13 +359,23 @@ verify_intra_industry_balance <- function(.sutmats = NULL,
 #'
 #' @export
 #'
+#' @keywords internal
+#'
 #' @examples
 #' library(dplyr)
 #' library(tidyr)
+#' # This function is deprecated.
+#' # Instead of this:
 #' UKEnergy2000mats |>
 #'   dplyr::filter(LastStage %in% c("Final", "Useful")) |>
 #'   tidyr::spread(key = matrix.name, value = matrix) |>
 #'   verify_SUT_energy_balance(tol = 1e-4)
+#' # Do this:
+#' UKEnergy2000mats |>
+#'   dplyr::filter(LastStage %in% c("Final", "Useful")) |>
+#'   tidyr::spread(key = matrix.name, value = matrix) |>
+#'   calc_inter_industry_balance() |>
+#'   verify_inter_industry_balance(tol = 1e-4)
 verify_SUT_energy_balance <- function(.sutmats = NULL,
                                       # Input names
                                       R = "R", U = "U", V = "V", Y = "Y",
@@ -437,6 +449,8 @@ verify_SUT_energy_balance <- function(.sutmats = NULL,
 #' @return `.sutmats` with additional columns.
 #'
 #' @export
+#'
+#' @keywords internal
 #'
 #' @examples
 #' library(tidyr)
