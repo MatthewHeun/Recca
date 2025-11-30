@@ -46,11 +46,11 @@ Default is "Y".}
 
 \item{balance_colname}{The name of the column containing energy balance vectors.
 Defaults are
-\code{Recca::balance_cols$inter_industry_balance_colname} or
+\link{balance_cols}\verb{$inter_industry_balance_colname} or
 "SUTInterIndustryBalance"
 for
 \code{calc_inter_industry_balances()} and
-\code{Recca::balance_cols$intra_industry_balance_colname} or
+\link{balance_cols}\verb{$intra_industry_balance_colname} or
 "SUTIntraIndustryBalance"
 for
 \code{calc_intra_industry_balances()}.}
@@ -89,10 +89,10 @@ and the result is a column vector of industry balances.
 The argument \code{balance_colname} specifies the name of the
 result.
 By default, the output of \code{calc_inter_industry_balances()} is
-\code{Recca::balance_cols$inter_industry_balance_colname} or
+\link{balance_cols}\verb{$inter_industry_balance_colname} or
 "SUTInterIndustryBalance".
 By default, the output of \code{calc_intra_industry_balances()} is
-\code{Recca::balance_cols$intra_industry_balance_colname} or
+\link{balance_cols}\verb{$intra_industry_balance_colname} or
 "SUTIntraIndustryBalance".
 
 For inter-industry (between-industry) balances,

@@ -166,3 +166,13 @@ test_that("calc_inter_industry_balance() works correctly", {
     expect_silent()
 })
 
+
+test_that("endogenize_losses() works correctly", {
+  UKEnergy2000mats |>
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
+    dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in%
+                    c(IEATools::last_stages$final, IEATools::last_stages$useful)) |>
+    endogenize_losses()
+
+})
+

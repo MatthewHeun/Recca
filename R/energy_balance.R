@@ -34,10 +34,10 @@
 #' The argument `balance_colname` specifies the name of the
 #' result.
 #' By default, the output of `calc_inter_industry_balances()` is
-#' `Recca::balance_cols$inter_industry_balance_colname` or
+#' [Recca::balance_cols]`$inter_industry_balance_colname` or
 #' "`r Recca::balance_cols$inter_industry_balance_colname`".
 #' By default, the output of `calc_intra_industry_balances()` is
-#' `Recca::balance_cols$intra_industry_balance_colname` or
+#' [Recca::balance_cols]`$intra_industry_balance_colname` or
 #' "`r Recca::balance_cols$intra_industry_balance_colname`".
 #'
 #' For inter-industry (between-industry) balances,
@@ -81,11 +81,11 @@
 #'          Default is "Y".
 #' @param balance_colname The name of the column containing energy balance vectors.
 #'                        Defaults are
-#'                        `Recca::balance_cols$inter_industry_balance_colname` or
+#'                        [Recca::balance_cols]`$inter_industry_balance_colname` or
 #'                        "`r Recca::balance_cols$inter_industry_balance_colname`"
 #'                        for
 #'                        `calc_inter_industry_balances()` and
-#'                        `Recca::balance_cols$intra_industry_balance_colname` or
+#'                        [Recca::balance_cols]`$intra_industry_balance_colname` or
 #'                        "`r Recca::balance_cols$intra_industry_balance_colname`"
 #'                        for
 #'                        `calc_intra_industry_balances()`.
@@ -209,7 +209,10 @@ NULL
 #' @rdname balances
 calc_inter_industry_balance <- function(.sutmats = NULL,
                                         # Input names
-                                        R = "R", U = "U", V = "V", Y = "Y",
+                                        R = "R",
+                                        U = "U",
+                                        V = "V",
+                                        Y = "Y",
                                         # Output name
                                         balance_colname = Recca::balance_cols$inter_industry_balance_colname) {
   calc_bal_func <- function(R_mat = NULL, U_mat, V_mat, Y_mat) {
@@ -269,7 +272,8 @@ verify_inter_industry_balance <- function(.sutmats = NULL,
 #' @rdname balances
 calc_intra_industry_balance <- function(.sutmats = NULL,
                                         # Input names
-                                        U = "U", V = "V",
+                                        U = "U",
+                                        V = "V",
                                         # Output name
                                         balance_colname = Recca::balance_cols$intra_industry_balance_colname) {
   calc_bal_func <- function(U_mat, V_mat) {
@@ -306,7 +310,7 @@ verify_intra_industry_balance <- function(.sutmats = NULL,
   }
 
   out <- matsindf::matsindf_apply(.sutmats, FUN = verify_func_intra, bal_vector = balances)
-  if (!all(out[[balanced_colname]] %>% as.logical())) {
+  if (!all(out[[balanced_colname]] |> as.logical())) {
     warning(paste0("Products are not conserved in verify_intra_industry_balance(). See column ", balanced_colname, "."))
   }
   return(out)
@@ -697,4 +701,50 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
                           msg = paste("Energy not balanced in verify_IEATable_energy_balance."))
 
   return(EnergyCheck)
+}
+
+
+
+#' Endogenize losses into PSUT matrices
+#'
+#' When a conversion chain does _not_ include losses in the
+#' **RUVY** matrices of the PSUT framework,
+#' it may be helpful to endogenize the losses.
+#' This function performs the endogenization.
+#'
+#' @param .sutmats A `matsindf` data frame, wide by matrices.
+#' @param V Make (**V**) matrix or name of the column in `.sutmats`
+#'          that contains same.
+#'          Default is "V".
+#' @param Y Final demand (**Y**) matrix or name
+#'          of the column in `.sutmats` that contains same.
+#'          Default is "Y".
+#' @param loss_product
+#' @param loss_sector
+#' @param balance_colname The name of the column containing
+#'                        energy balance vectors.
+#'                        Default is
+#'                        [Recca::balance_cols]`$intra_industry_balance_colname` or
+#'                        "`r Recca::balance_cols$intra_industry_balance_colname`".
+#'
+#' @returns A version of `.sutmats` with losses endogenized.
+#'
+#' @export
+#'
+#' @examples
+endogenize_losses <- function(.sutmats = NULL,
+                              loss_product = "Waste heat",
+                              loss_sector = "Losses",
+                              V = "V",
+                              Y = "Y",
+                              balance_colname = Recca::balance_cols$intra_industry_balance_colname) {
+
+  endogenize_func <- function(V_mat, Y_mat) {
+
+  }
+
+  matsindf::matsindf_apply(.sutmats,
+                           FUN = endogenize_func,
+                           V_mat = V,
+                           Y_mat = Y)
 }
