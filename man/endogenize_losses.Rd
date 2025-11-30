@@ -16,6 +16,12 @@ endogenize_losses(
 \arguments{
 \item{.sutmats}{A \code{matsindf} data frame, wide by matrices.}
 
+\item{loss_product}{The string name of the product for losses.
+Default is "Waste heat".}
+
+\item{loss_sector}{The string name of the sector that will absorb losses.
+Default is "Losses".}
+
 \item{V}{Make (\strong{V}) matrix or name of the column in \code{.sutmats}
 that contains same.
 Default is "V".}

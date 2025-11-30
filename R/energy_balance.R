@@ -719,8 +719,10 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 #' @param Y Final demand (**Y**) matrix or name
 #'          of the column in `.sutmats` that contains same.
 #'          Default is "Y".
-#' @param loss_product
-#' @param loss_sector
+#' @param loss_product The string name of the product for losses.
+#'                     Default is "Waste heat".
+#' @param loss_sector The string name of the sector that will absorb losses.
+#'                    Default is "Losses".
 #' @param balance_colname The name of the column containing
 #'                        energy balance vectors.
 #'                        Default is
