@@ -58,6 +58,7 @@ This function performs the endogenization.
 Intra-industry balances need to be calculated
 (most easily via \code{\link[=calc_intra_industry_balance]{calc_intra_industry_balance()}})
 prior to calling this function.
+See the example.
 }
 \examples{
 UKEnergy2000mats |>
@@ -66,5 +67,13 @@ UKEnergy2000mats |>
   dplyr::filter(.data[[IEATools::iea_cols$last_stage]] \%in\%
                   c(IEATools::last_stages$final, IEATools::last_stages$useful)) |>
   calc_intra_industry_balance() |>
-  endogenize_losses()
+  endogenize_losses() |>
+  # Use the endogenized matrices
+  dplyr::mutate(
+    V = V_prime,
+    Y = Y_prime,
+    V_prime = NULL,
+    Y_prime = NULL,
+    "{Recca::balance_cols$intra_industry_balance_colname}" := NULL
+  )
 }

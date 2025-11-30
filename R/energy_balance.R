@@ -737,7 +737,7 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 #' Intra-industry balances need to be calculated
 #' (most easily via [calc_intra_industry_balance()])
 #' prior to calling this function.
-#'
+#' See the example.
 #'
 #' @param .sutmats A `matsindf` data frame, wide by matrices.
 #' @param V Make (**V**) matrix or name of the column in `.sutmats`
@@ -772,7 +772,15 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 #'   dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in%
 #'                   c(IEATools::last_stages$final, IEATools::last_stages$useful)) |>
 #'   calc_intra_industry_balance() |>
-#'   endogenize_losses()
+#'   endogenize_losses() |>
+#'   # Use the endogenized matrices
+#'   dplyr::mutate(
+#'     V = V_prime,
+#'     Y = Y_prime,
+#'     V_prime = NULL,
+#'     Y_prime = NULL,
+#'     "{Recca::balance_cols$intra_industry_balance_colname}" := NULL
+#'   )
 endogenize_losses <- function(.sutmats = NULL,
                               loss_product = Recca::balance_cols$waste_heat,
                               loss_sector = Recca::balance_cols$losses_sector,
