@@ -101,7 +101,9 @@ balance_cols <- list(inter_industry_balance_colname = "SUTInterIndustryBalance",
                      intra_industry_balance_colname = "SUTIntraIndustryBalance",
                      intra_industry_balanced_colname = "SUTIntraIndustryBalanced",
                      across_industry_balance_colname = "SUTAcrossIndustryBalance",
-                     across_industry_balanced_colname = "SUTAcrossIndustryBalanced")
+                     across_industry_balanced_colname = "SUTAcrossIndustryBalanced",
+                     waste_heat = "Waste heat",
+                     losses_sector = "Losses")
 usethis::use_data(balance_cols, overwrite = TRUE)
 
 

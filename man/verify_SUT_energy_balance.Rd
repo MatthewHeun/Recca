@@ -70,3 +70,4 @@ UKEnergy2000mats |>
   calc_inter_industry_balance() |>
   verify_inter_industry_balance(tol = 1e-4)
 }
+\keyword{internal}

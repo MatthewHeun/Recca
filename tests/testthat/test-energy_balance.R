@@ -278,11 +278,38 @@ test_that("verify_intra_industry_balance()", {
 
 
 test_that("endogenize_losses() works correctly", {
-  UKEnergy2000mats |>
+  # Test endogenizing the losses for energy when last stage is
+  # Final and last stage is Useful.
+  endogenized <- UKEnergy2000mats |>
     tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
     dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in%
                     c(IEATools::last_stages$final, IEATools::last_stages$useful)) |>
-    endogenize_losses()
+    calc_intra_industry_balance() |>
+    endogenize_losses() |>
+    dplyr::mutate(
+      V = V_prime,
+      Y = Y_prime,
+      V_prime = NULL,
+      Y_prime = NULL,
+      "{Recca::balance_cols$intra_industry_balance_colname}" := NULL
+    )
+  # Now test that everything remains balanced.
+  endogenized |>
+    calc_inter_industry_balance() |>
+    verify_inter_industry_balance() |>
+    expect_silent()
+  endogenized |>
+    calc_intra_industry_balance() |>
+    verify_intra_industry_balance() |>
+    expect_silent()
 
+  for (i in 1:2) {
+    expect_true(Recca::balance_cols$waste_heat %in%
+                  matsbyname::getcolnames_byname(endogenized$V[[i]]))
+    expect_true(Recca::balance_cols$waste_heat %in%
+                  matsbyname::getrownames_byname(endogenized$Y[[i]]))
+    expect_true(Recca::balance_cols$losses_sector %in%
+                  matsbyname::getcolnames_byname(endogenized$Y[[i]]))
+  }
 })
 

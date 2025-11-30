@@ -123,6 +123,8 @@
 #' \item{intra_industry_balanced_colname}{The name of a column that contains intra-industry balance vectors are all **0**.}
 #' \item{across_industry_balance_colname}{The name of a column that contains intra-industry balance vectors.}
 #' \item{across_industry_balanced_colname}{The name of a column that contains intra-industry balance vectors are all **0**.}
+#' \item{waste_heat}{The name of a column in **V** and a row in **Y** that contains waste heat calculated from intra-industry balances.}
+#' \item{losses_sector}{The name of a column in **Y** that contains losses calculated from intra-industry balances.}
 #' }
 #'
 #' @examples

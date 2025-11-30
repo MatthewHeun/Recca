@@ -6,21 +6,26 @@
 \usage{
 endogenize_losses(
   .sutmats = NULL,
-  loss_product = "Waste heat",
-  loss_sector = "Losses",
+  loss_product = Recca::balance_cols$waste_heat,
+  loss_sector = Recca::balance_cols$losses_sector,
   V = "V",
   Y = "Y",
-  balance_colname = Recca::balance_cols$intra_industry_balance_colname
+  balance_colname = Recca::balance_cols$intra_industry_balance_colname,
+  V_prime = "V_prime",
+  Y_prime = "Y_prime"
 )
 }
 \arguments{
 \item{.sutmats}{A \code{matsindf} data frame, wide by matrices.}
 
-\item{loss_product}{The string name of the product for losses.
-Default is "Waste heat".}
+\item{loss_product}{The string name of the loss product.
+Default is \link{balance_cols}\verb{$waste_heat} or
+"Waste heat".}
 
-\item{loss_sector}{The string name of the sector that will absorb losses.
-Default is "Losses".}
+\item{loss_sector}{The string name of the sector
+that will absorb losses.
+Default is \link{balance_cols}\verb{$losses_sector} or
+"Losses".}
 
 \item{V}{Make (\strong{V}) matrix or name of the column in \code{.sutmats}
 that contains same.
@@ -35,6 +40,8 @@ energy balance vectors.
 Default is
 \link{balance_cols}\verb{$intra_industry_balance_colname} or
 "SUTIntraIndustryBalance".}
+
+\item{Y_prime}{}
 }
 \value{
 A version of \code{.sutmats} with losses endogenized.
@@ -44,4 +51,9 @@ When a conversion chain does \emph{not} include losses in the
 \strong{RUVY} matrices of the PSUT framework,
 it may be helpful to endogenize the losses.
 This function performs the endogenization.
+}
+\details{
+Intra-industry balances need to be calculated
+(most easily vai \code{\link[=calc_intra_industry_balance]{calc_intra_industry_balance()}})
+prior to calling this function.
 }

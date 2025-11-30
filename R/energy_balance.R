@@ -734,6 +734,11 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 #' it may be helpful to endogenize the losses.
 #' This function performs the endogenization.
 #'
+#' Intra-industry balances need to be calculated
+#' (most easily vai [calc_intra_industry_balance()])
+#' prior to calling this function.
+#'
+#'
 #' @param .sutmats A `matsindf` data frame, wide by matrices.
 #' @param V Make (**V**) matrix or name of the column in `.sutmats`
 #'          that contains same.
@@ -741,15 +746,20 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 #' @param Y Final demand (**Y**) matrix or name
 #'          of the column in `.sutmats` that contains same.
 #'          Default is "Y".
-#' @param loss_product The string name of the product for losses.
-#'                     Default is "Waste heat".
-#' @param loss_sector The string name of the sector that will absorb losses.
-#'                    Default is "Losses".
+#' @param loss_product The string name of the loss product.
+#'                     Default is [Recca::balance_cols]`$waste_heat` or
+#'                     "`r Recca::balance_cols$waste_heat`".
+#' @param loss_sector The string name of the sector
+#'                    that will absorb losses.
+#'                    Default is [Recca::balance_cols]`$losses_sector` or
+#'                    "`r Recca::balance_cols$losses_sector`".
 #' @param balance_colname The name of the column containing
 #'                        energy balance vectors.
 #'                        Default is
 #'                        [Recca::balance_cols]`$intra_industry_balance_colname` or
 #'                        "`r Recca::balance_cols$intra_industry_balance_colname`".
+#' @param V_prime
+#' @param Y_prime
 #'
 #' @returns A version of `.sutmats` with losses endogenized.
 #'
@@ -757,18 +767,31 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 #'
 #' @examples
 endogenize_losses <- function(.sutmats = NULL,
-                              loss_product = "Waste heat",
-                              loss_sector = "Losses",
+                              loss_product = Recca::balance_cols$waste_heat,
+                              loss_sector = Recca::balance_cols$losses_sector,
                               V = "V",
                               Y = "Y",
-                              balance_colname = Recca::balance_cols$intra_industry_balance_colname) {
+                              balance_colname = Recca::balance_cols$intra_industry_balance_colname,
+                              # Output columns
+                              V_prime = "V_prime",
+                              Y_prime = "Y_prime") {
 
-  endogenize_func <- function(V_mat, Y_mat) {
-
+  endogenize_func <- function(V_mat, Y_mat, balance_vec) {
+    add_to_V <- balance_vec |>
+      matsbyname::setcolnames_byname(loss_product)
+    V_prime_mat <- matsbyname::sum_byname(V_mat, add_to_V)
+    add_to_Y <- balance_vec |>
+      matsbyname::transpose_byname() |>
+      matsbyname::sumall_byname() |>
+      matsbyname::setrownames_byname(loss_product) |>
+      matsbyname::setcolnames_byname(loss_sector)
+    Y_prime_mat <- matsbyname::sum_byname(Y_mat, add_to_Y)
+    list(V_prime_mat, Y_prime_mat) |>
+      magrittr::set_names(c(V_prime, Y_prime))
   }
-
   matsindf::matsindf_apply(.sutmats,
                            FUN = endogenize_func,
                            V_mat = V,
-                           Y_mat = Y)
+                           Y_mat = Y,
+                           balance_vec = balance_colname)
 }

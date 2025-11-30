@@ -82,3 +82,4 @@ verify_SUT_energy_balance_with_units(UKEnergy2000mats \%>\%
                                        tidyr::spread(key = matrix.name, value = matrix),
                                        tol = 1e-3)
 }
+\keyword{internal}

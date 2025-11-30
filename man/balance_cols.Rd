@@ -5,7 +5,7 @@
 \alias{balance_cols}
 \title{Balance column names}
 \format{
-A string list with 8 entries.
+A string list with 10 entries.
 \describe{
 \item{inter_industry_balance_colname}{The name of a column that contains inter-industry balance vectors.}
 \item{inter_industry_balanced_colname}{The name of a column that tells whether inter-industry balance vectors are all \strong{0}.}
@@ -15,6 +15,8 @@ A string list with 8 entries.
 \item{intra_industry_balanced_colname}{The name of a column that contains intra-industry balance vectors are all \strong{0}.}
 \item{across_industry_balance_colname}{The name of a column that contains intra-industry balance vectors.}
 \item{across_industry_balanced_colname}{The name of a column that contains intra-industry balance vectors are all \strong{0}.}
+\item{waste_heat}{The name of a column in \strong{V} and a row in \strong{Y} that contains waste heat calculated from intra-industry balances.}
+\item{losses_sector}{The name of a column in \strong{Y} that contains losses calculated from intra-industry balances.}
 }
 }
 \usage{
