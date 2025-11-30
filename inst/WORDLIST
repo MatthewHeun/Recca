@@ -44,6 +44,8 @@ RoP
 SUT
 SUTInterIndustryBalance
 SUTInterIndustryBalanced
+SUTIntraIndustryBalance
+SUTIntraIndustryBalanced
 Sankey
 TPES
 UKEnergy

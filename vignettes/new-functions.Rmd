@@ -67,8 +67,8 @@ library(matsbyname)
 library(matsindf)
 library(Recca)
 library(tidyr)
-OurECC <- UKEnergy2000mats %>% 
-  dplyr::filter(LastStage == "Final") %>% 
+OurECC <- UKEnergy2000mats |> 
+  dplyr::filter(LastStage == "Final") |> 
   tidyr::spread(key = "matrix.name", value = "matrix")
 dplyr::glimpse(OurECC)
 ```
@@ -91,8 +91,8 @@ To look at the ECC, we can draw a Sankey diagram. A Sankey diagram for
 the first row of the `UKEnergyMatsWithR` data frame is given below.
 
 ```{r, fig.width = 7, fig.height = 4}
-make_sankey(OurECC) %>% 
-  magrittr::extract2("Sankey") %>% # Extracts the "Sankey" column
+make_sankey(OurECC) |> 
+  magrittr::extract2("Sankey") |> # Extracts the "Sankey" column
   magrittr::extract2(1) # Extracts the first row of the "Sankey" column
 ```
 
@@ -108,7 +108,7 @@ in our example. (The names of the additional columns are given by
 arguments to the `calc_io_mats()` function.)
 
 ```{r}
-IO_mats <- OurECC %>% 
+IO_mats <- OurECC |> 
   # Obtain the I-O structure of the ECCs
   calc_io_mats()
 # Note additional columns appended to the data frame.
@@ -134,7 +134,7 @@ double <- function(x) {
   2*x
 }
 
-DoubleRes <- IO_mats %>% 
+DoubleRes <- IO_mats |> 
   mutate(
     Y_prime = matsbyname::elementapply_byname(double, a = Y, row = "Elect [from Grid]", col = "Residential")
   )
@@ -147,18 +147,18 @@ larger final demand for residential electricity. The original Sankey
 diagram is:
 
 ```{r, fig.width = 7, fig.height = 4}
-make_sankey(OurECC) %>% 
-  extract2("Sankey") %>% # Extracts the "Sankey" column
+make_sankey(OurECC) |> 
+  extract2("Sankey") |> # Extracts the "Sankey" column
   extract2(1)            # Extracts the first row of the "Sankey" column
 ```
 
 The new Sankey diagram is:
 
 ```{r, fig.width = 7, fig.height = 4}
-DoubleRes <- DoubleRes %>% 
+DoubleRes <- DoubleRes |> 
   new_Y()
-make_sankey(DoubleRes, R = "R_prime", U = "U_prime", V = "V_prime", Y = "Y_prime") %>% 
-  extract2("Sankey") %>% 
+make_sankey(DoubleRes, R = "R_prime", U = "U_prime", V = "V_prime", Y = "Y_prime") |> 
+  extract2("Sankey") |> 
   extract2(1)
 ```
 
@@ -186,7 +186,7 @@ produced by that industry. (`clean_byname()` removes `0` rows and
 columns for clarity.)
 
 ```{r}
-OurECC$R[[1]] %>% 
+OurECC$R[[1]] |> 
   clean_byname()
 ```
 
@@ -194,10 +194,10 @@ The resource vector ($\mathbf{r}$) is a Product column vector containing
 Products that are resources.
 
 ```{r}
-rvecs <- OurECC %>% 
+rvecs <- OurECC |> 
   transmute(
-    r = clean_byname(R) %>% 
-      colsums_byname() %>% 
+    r = clean_byname(R) |> 
+      colsums_byname() |> 
       transpose_byname()
   )
 rvecs$r[[1]]
@@ -214,13 +214,14 @@ we'll use the `matsbyname::elementapply_byname()` function.
 half <- function(x){
   x/2
 }
-HalfCrude <- OurECC %>% 
+HalfCrude <- OurECC |> 
   # Obtain the I-O structure of the ECCs
-  calc_io_mats(direction = "downstream") %>% 
+  calc_io_mats(direction = "downstream") |> 
   mutate(
     R_prime = elementapply_byname(half, a = R, row = "Resources [of Crude]", col = "Crude")
   )
-HalfCrude$R_prime[[1]] %>% clean_byname()
+HalfCrude$R_prime[[1]] |> 
+  clean_byname()
 ```
 
 Now we use the `new_R()` function to estimate changes in the ECC. But
@@ -228,8 +229,8 @@ first, we need to calculate the efficiency of all sectors in the ECC
 using the `calc_eta_i()` function.
 
 ```{r}
-HalfCrude <- HalfCrude %>% 
-  calc_eta_i() %>% 
+HalfCrude <- HalfCrude |> 
+  calc_eta_i() |> 
   new_R_ps()
 glimpse(HalfCrude)
 ```
@@ -241,8 +242,8 @@ effect of lower crude oil availability with a modified Sankey diagram.
 First, we have the original Sankey diagram.
 
 ```{r, fig.width = 7, fig.height = 4}
-make_sankey(OurECC) %>% 
-  extract2("Sankey") %>% # Extracts the "Sankey" column
+make_sankey(OurECC) |> 
+  extract2("Sankey") |> # Extracts the "Sankey" column
   extract2(1) # Extracts the first row of the "Sankey" column
 ```
 
@@ -250,8 +251,8 @@ And here is the modified Sankey diagram showing the much smaller
 `Resources - Crude` extraction rate.
 
 ```{r, fig.width = 7, fig.height = 4}
-make_sankey(HalfCrude, R = "R_prime", U = "U_prime", V = "V_prime", Y = "Y_prime") %>% 
-  extract2("Sankey") %>% # Extracts the "Sankey" column
+make_sankey(HalfCrude, R = "R_prime", U = "U_prime", V = "V_prime", Y = "Y_prime") |> 
+  extract2("Sankey") |> # Extracts the "Sankey" column
   extract2(1) # Extracts the first row of the "Sankey" column
 ```
 
@@ -262,22 +263,22 @@ be satisfied.
 Note that both ECCs are in complete energy balance.
 
 ```{r}
-OurECC %>% 
-  verify_SUT_energy_balance_with_units() %>% 
+OurECC |> 
+  verify_SUT_energy_balance_with_units() |> 
   select(Country, Year, EnergyType, LastStage, 
-         .SUT_prod_energy_balanced, .SUT_ind_energy_balanced) %>% 
+         .SUT_prod_energy_balanced, .SUT_ind_energy_balanced) |> 
   glimpse()
 ```
 
 ```{r}
-HalfCrude %>% 
+HalfCrude |> 
   mutate(
     R_plus_V_prime = sum_byname(R_prime, V_prime)
-  ) %>% 
-  verify_SUT_energy_balance(R = "R_prime", U = "U_prime", V = "V_prime", 
-                            Y = "Y_prime") %>% 
+  ) |> 
+  calc_inter_industry_balance() |> 
+  verify_inter_industry_balance() |> 
   select(Country, Year, EnergyType, LastStage,
-         .SUT_energy_balance) %>% 
+         SUTInterIndustryBalanced) |> 
   glimpse()
 ```
 
@@ -308,8 +309,8 @@ U <- matrix(c(0, 0, 10,
               0, 0, 10,
               0, 0,  0),
             byrow = TRUE, nrow = 3, ncol = 3,
-            dimnames = list(c("R1p", "R2p", "Ip"), c("R1", "R2", "I"))) %>% 
-  setrowtype("Products") %>% setcoltype("Industries")
+            dimnames = list(c("R1p", "R2p", "Ip"), c("R1", "R2", "I"))) |>  
+  setrowtype("Products") |> setcoltype("Industries")
 
 # There is no EIOU, so U_feed is the same as U
 U_feed <- U
@@ -318,15 +319,15 @@ R_plus_V <- matrix(c(10,  0, 0,
                0, 10, 0, 
                0,  0, 4), 
             byrow = TRUE, nrow = 3, ncol = 3, 
-            dimnames = list(c("R1", "R2", "I"), c("R1p", "R2p", "Ip"))) %>% 
-  setrowtype("Industries") %>% setcoltype("Products")
+            dimnames = list(c("R1", "R2", "I"), c("R1p", "R2p", "Ip"))) |> 
+  setrowtype("Industries") |> setcoltype("Products")
 
 Y <- matrix(c(0, 0,
               0, 0, 
               2, 2),
             byrow = TRUE, nrow = 3, ncol = 2,
-            dimnames = list(c("R1p", "R2p", "Ip"), c("Y1", "Y2"))) %>% 
-  setrowtype("Products") %>% setcoltype("Industries")
+            dimnames = list(c("R1p", "R2p", "Ip"), c("Y1", "Y2"))) |> 
+  setrowtype("Products") |> setcoltype("Industries")
 
 RV <- separate_RV(U = U, R_plus_V = R_plus_V)
 R <- RV$R
@@ -336,14 +337,14 @@ S_units <- matrix(c(1,
                     1, 
                     1), 
                   byrow = TRUE, nrow = 3, ncol = 1,
-                  dimnames = list(c("R1p", "R2p", "Ip"), c("quad"))) %>% 
-  setrowtype("Products") %>% setcoltype("Units")
+                  dimnames = list(c("R1p", "R2p", "Ip"), c("quad"))) |> 
+  setrowtype("Products") |> setcoltype("Units")
 ```
 
 The Sankey diagram for this simple ECC is given below.
 
 ```{r, fig.width = 7, fig.height = 4}
-make_sankey(R = R, U = U, V = V, Y = Y) %>% 
+make_sankey(R = R, U = U, V = V, Y = Y) |> 
   extract2("Sankey")
 ```
 
@@ -358,8 +359,8 @@ simple_iomats <- calc_io_mats(R = R, U = U, U_feed = U_feed, V = V, Y = Y, S_uni
 k_prime <- matrix(c(0.75,
                     0.25), 
                   byrow = TRUE, nrow = 2, ncol = 1,
-                  dimnames = list(c("R1p", "R2p"), c("I"))) %>% 
-  setrowtype("Products") %>% setcoltype("Industries")
+                  dimnames = list(c("R1p", "R2p"), c("I"))) |> 
+  setrowtype("Products") |> setcoltype("Industries")
 change_input_proportions <- new_k_ps(c(simple_iomats, 
                                        list(R = R, U = U, V = V, Y = Y, 
                                             S_units = S_units, 
@@ -367,7 +368,7 @@ change_input_proportions <- new_k_ps(c(simple_iomats,
 make_sankey(R = change_input_proportions$R_prime, 
             U = change_input_proportions$U_prime, 
             V = change_input_proportions$V_prime, 
-            Y = Y) %>% 
+            Y = Y) |> 
   extract2("Sankey")
 ```
 

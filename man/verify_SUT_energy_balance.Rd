@@ -55,8 +55,8 @@ showing where energy is not in balance.
 \examples{
 library(dplyr)
 library(tidyr)
-verify_SUT_energy_balance(UKEnergy2000mats \%>\%
-                            dplyr::filter(LastStage \%in\% c("Final", "Useful")) \%>\%
-                            tidyr::spread(key = matrix.name, value = matrix),
-                          tol = 1e-4)
+UKEnergy2000mats |>
+  dplyr::filter(LastStage \%in\% c("Final", "Useful")) |>
+  tidyr::spread(key = matrix.name, value = matrix) |>
+  verify_SUT_energy_balance(tol = 1e-4)
 }

@@ -264,6 +264,7 @@ verify_inter_industry_balance <- function(.sutmats = NULL,
 }
 
 
+
 #' @export
 #' @rdname balances
 calc_intra_industry_balance <- function(.sutmats = NULL,
@@ -355,10 +356,10 @@ verify_intra_industry_balance <- function(.sutmats = NULL,
 #' @examples
 #' library(dplyr)
 #' library(tidyr)
-#' verify_SUT_energy_balance(UKEnergy2000mats %>%
-#'                             dplyr::filter(LastStage %in% c("Final", "Useful")) %>%
-#'                             tidyr::spread(key = matrix.name, value = matrix),
-#'                           tol = 1e-4)
+#' UKEnergy2000mats |>
+#'   dplyr::filter(LastStage %in% c("Final", "Useful")) |>
+#'   tidyr::spread(key = matrix.name, value = matrix) |>
+#'   verify_SUT_energy_balance(tol = 1e-4)
 verify_SUT_energy_balance <- function(.sutmats = NULL,
                                       # Input names
                                       R = "R", U = "U", V = "V", Y = "Y",
@@ -372,7 +373,7 @@ verify_SUT_energy_balance <- function(.sutmats = NULL,
 
   out <- .sutmats |>
     calc_inter_industry_balance(R = R, U = U, V = V, Y = Y,
-                                balance_colname = SUT_energy_balance) |>
+                                balance_colname = Recca::balance_cols$inter_industry_balance_colname) |>
     verify_inter_industry_balance(tol = tol,
                                   balances = Recca::balance_cols$inter_industry_balance_colname,
                                   balanced_colname = SUT_energy_balance)
