@@ -21,6 +21,7 @@ knitr::opts_chunk$set(
 library(dplyr)
 library(IEATools)
 library(Recca)
+library(tidyr)
 ```
 
 
@@ -45,7 +46,8 @@ when the data are organized into the
 $\mathbf{RUVY}$ matrices of the 
 physical supply-use table (PSUT) framework.
 A generic processing stage is called an "industry."
-The name for items that flow between industries is "product." 
+The stuff that flows between industries is generically
+called a "product." 
 A "balance" is any calculation that compares inputs to outputs.
 Balances can be computed for all types of products, 
 in particular materials (quantified in mass or exergy units)
@@ -67,7 +69,8 @@ such as the identity vector $\mathbf{i}$.
 ### Data
 
 In the examples that follow, 
-we use the energy conversion chain in `UKEnergy2000mats`.
+we use the energy conversion chain in `UKEnergy2000mats`
+from the `Recca` package.
 
 ```{r}
 ecc <- UKEnergy2000mats |> 
@@ -88,8 +91,9 @@ it with the `Recca` package.
 
 In any conversion chain, 
 products that leave one industry must enter another industry.
-These between industry (or inter-industry) balances
-should be verified for every conversion chain.
+These between-industry (or inter-industry) balances
+should be verified for every conversion chain
+to ensure consistency.
 
 Inter-industry balances are obtained
 by the following computation.
@@ -114,7 +118,7 @@ The result is added as a new column,
 named "SUTInterIndustryBalance" by default.
 
 ```{r}
-glimpse(inter_industry_balances)
+dplyr::glimpse(inter_industry_balances)
 ```
 
 The vectors in SUTInterIndustryBalance column have products in rows.
@@ -137,7 +141,7 @@ non-zero product balances.
 ```{r}
 inter_industry_balances |> 
   verify_inter_industry_balance(tol = 1e-4) |> 
-  glimpse()
+  dplyr::glimpse()
 ```
 
 If a product is out of balance 
@@ -166,7 +170,7 @@ In a PSUT description of conserved quantities
 (such as mass or energy),
 when all losses are accounted within the matrices themselves,
 the calculation of intra-industry balances should give
-the **0** vector.
+the $\mathbf{0}$ vector.
 When losses _are not_ accounted in the matrices,
 the calculation of intra-industry balances gives losses.
 
@@ -174,12 +178,13 @@ For PSUT matrices describing non-conserved quantities
 such as exergy
 (mass exergy, energy exergy, or both),
 when losses _are_ accounted in the matrices,
-the intra-industry balance gives exergy destruction.
+the intra-industry balance gives destruction
+of the non-conserved quantity.
 When losses _are not_ accounted in the matrices,
 the intra-industry balance gives the sum of
-exergy destruction and exergy losses.
+destruction and losses.
 
-The following table summarizes.
+The following table summarizes the above points.
 
 | Matrices contain              | Matrices include losses (wastes)  | Matrices exclude losses (wastes) |
 | :---------------------------: | :-------------------------------: | :------------------------------: |
@@ -204,7 +209,7 @@ Subscript $L$ indicates losses (or wastes), and
 subscript $D$ indicates exergy destroyed by the industry.
 
 
-To compute intra-industry (across industry) balances
+To compute intra-industry (across-industry) balances
 within the PSUT framework using the `Recca` package, 
 use the following code.
 
@@ -218,69 +223,167 @@ The result is added as a new column,
 named "SUTIntraIndustryBalance" by default.
 
 ```{r}
-glimpse(intra_industry_balances)
+dplyr::glimpse(intra_industry_balances)
 ```
 
-The vectors in the SUTIntraIndustryBalance column have industries in rows.
+The vectors in the "SUTIntraIndustryBalance" column have industries in rows.
 
 ```{r}
 intra_industry_balances$SUTIntraIndustryBalance[[1]]
 intra_industry_balances$SUTIntraIndustryBalance[[2]]
 ```
 
-Because the matrices in the `ecc` do not contain losses, 
-`calc_intra_industry_balance()` calculates energy losses (wastes)
+Because the matrices in `ecc` do not contain losses, 
+`calc_intra_industry_balance()` calculates energy losses (waste heat)
 ($\mathbf{e}_L$ in the table above).
 
 
-### Adding losses to the **RUVY** matrices
+### Endogenizing losses
 
+The losses can be endogenized, 
+i.e., added to the $\mathbf{RUVY}$ matrices of the PSUT framework.
+To do so, 
+use the function `endogenize_losses()`.
+
+```{r}
+endogenized <- intra_industry_balances |> 
+  endogenize_losses()
+```
+
+`endogenize_losses()` adds two new columns:
+by default `V_prime` and `Y_prime`.
+`V_prime` and `Y_prime` contain $\mathbf{V}$ and $\mathbf{Y}$ matrices
+with losses included directly in the matrices.
+The $\mathbf{V}$ matrices contain a new column
+(named "Waste heat" by default)
+that shows the heat losses from each industry.
+
+```{r}
+endogenized$V_prime[[1]]
+```
+
+The $\mathbf{Y}$ matrices also have a new column, 
+by default named "Losses."
+
+```{r}
+endogenized$Y_prime[[1]]
+```
+
+In addition, 
+the $\mathbf{Y}$ matrices contain a new row 
+(again named "Waste heat" by default)
+that shows the total heat loss in a 
+new "Losses" column. 
+
+To accept the endogenized matrices, 
+do the following:
+
+```{r}
+endogenized |> 
+  dplyr::mutate(
+    V = V_prime,
+    Y = Y_prime, 
+    V_prime = NULL, 
+    Y_prime = NULL, 
+    SUTIntraIndustryBalance = NULL
+  ) |> 
+  dplyr::glimpse()
+```
 
 
 ### The value added matrix ($\mathbf{W}$)
 
+The value added matrix ($\mathbf{W}$) 
+obtained from `calc_yqfgW()` is similar
+to but different from
+the balances obtained from
+`calc_inter_industry_balance()` and
+`calc_intra_industry_balance()`. 
+The following equations show the similarities and differences.
 
+The $\mathbf{W}$ matrix is 
+
+$$\mathbf{W} = \mathbf{V}^{\mathrm{T}} - \mathbf{U}$$
+
+Inter-industry balances are calculated by
+
+$$[(\mathbf{R} + \mathbf{V})^\mathrm{T}  - (\mathbf{U} + \mathbf{Y})] \mathbf{i}$$
+
+and the intra-industry balances are calculated by
+
+$$(\mathbf{U}^\mathrm{T} - \mathbf{V})  \mathbf{i} \, .$$
+
+The $\mathbf{W}$ matrix is closest to the intra-industry balances, 
+but with the opposite sense
+($\mathbf{W}$ has products in rows and 
+the intra-industry balances have industries in rows), 
+without the summation by the unit vector ($\mathbf{i}$),
+and 
+with the opposite sign.
+The following code shows the comparison
+between $\mathbf{W}$ and the intra-industry balances.
+
+```{r}
+compare <- ecc |> 
+  calc_yqfgW() |> 
+  calc_intra_industry_balance()
+compare$W[[1]] |> 
+  # Calculate column sums and 
+  # transpose to create a column vector 
+  # for easier comparison
+  matsbyname::colsums_byname() |> 
+  matsbyname::transpose_byname()
+compare$SUTIntraIndustryBalance[[1]]
+```
 
 
 ### Deprecated functions
 
+Two related functions in the `Recca` package
+have been deprecated and will soon be removed.
+
 #### `verify_SUT_energy_balance()`
 
+`verify_SUT_energy_balance()` has been deprecated for two reasons.
+
+* `verify_SUT_energy_balance()` unfortunately combined
+`calc_inter_industry_balance()` and
+`verify_inter_industry_balance()` in a single step.
+We often need to know the balances independently
+from whether products are balanced.
+The combination of 
+`calc_inter_industry_balance()` and
+`verify_inter_industry_balance()`
+provides the needed flexibility.
+* Using "energy" in the name of the function was an unfortunate choice,
+because we can use the same mathematics to balance masses
+or exergies.
+The new function names are independent of the type products
+in the $\mathbf{RUVY}$ matrices and are,
+therefore, an improvement.
+
+For now, `verify_SUT_energy_balance()`
+remains in the `Recca` package but will 
+likely be removed at a later date.
 
 
+#### `verify_SUT_energy_balance_with_units()`
 
+`verify_SUT_energy_balance_with_units()` seemed like a good 
+idea at the time, but we have never used it.
+For now, `verify_SUT_energy_balance_with_units()`
+remains in the `Recca` package but will 
+likely be removed at a later date.
 
 
 ## Conclusion
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+There are several types of balances that are of interest
+to energy and material conversion chain analysts.
+The functions
+`calc_inter_industry_balance()`, 
+`verify_inter_industry_balance()`, 
+`calc_intra_industry_balance()`, 
+`verify_intra_industry_balance()`, and
+`endogenize_losses()`
+assist with those analyses. 
