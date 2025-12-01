@@ -631,7 +631,7 @@ check_named_region_violations <- function(candidate_region_names) {
 #'   ecc_temp_path |>
 #'     read_ecc_from_excel()
 #'   if (file.exists(ecc_temp_path)) {
-#'     file.remove(ecc_temp_path)
+#'     res <- file.remove(ecc_temp_path)
 #'   }
 #' }
 read_ecc_from_excel <- function(path,

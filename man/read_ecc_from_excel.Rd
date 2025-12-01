@@ -110,7 +110,7 @@ This function is an inverse of \code{\link[=write_ecc_to_excel]{write_ecc_to_exc
   ecc_temp_path |>
     read_ecc_from_excel()
   if (file.exists(ecc_temp_path)) {
-    file.remove(ecc_temp_path)
+    res <- file.remove(ecc_temp_path)
   }
 }
 }

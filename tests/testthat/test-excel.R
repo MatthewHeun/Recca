@@ -28,7 +28,7 @@ test_that("write_ecc_to_excel() works as expected", {
                rep(c("E_Final", "E_Services", "E_Useful", "X_Services"), 8))
 
   if (file.exists(ecc_temp_path)) {
-    file.remove(ecc_temp_path)
+    res <- file.remove(ecc_temp_path)
   }
 })
 
@@ -46,9 +46,10 @@ test_that("write_ecc_to_excel() fails when the file already exists", {
   # especially windows, where backslash ("\") is the file separator
   # but also the regex escape character.
   # So eliminate that feature of the test.
-  # regexp = paste0("File ", ecc_temp_path, " already exists. Call write_ecc_to_excel with overwrite = TRUE to overwrite."))
+  # regexp = paste0("File ", ecc_temp_path, " already exists.
+  # Call write_ecc_to_excel with overwrite = TRUE to overwrite."))
   if (file.exists(ecc_temp_path)) {
-    file.remove(ecc_temp_path)
+    res <- file.remove(ecc_temp_path)
   }
 })
 
@@ -66,7 +67,7 @@ test_that("write_ecc_to_excel() works with Matrix objects", {
 
   expect_true(file.exists(ecc_temp_path))
   if (file.exists(ecc_temp_path)) {
-    file.remove(ecc_temp_path)
+    res <- file.remove(ecc_temp_path)
   }
 })
 
@@ -127,7 +128,7 @@ test_that("write_ecc_to_excel() sets sheet names", {
                    `X_Services` = "X_Services"))
 
   if (file.exists(ecc_temp_path)) {
-    file.remove(ecc_temp_path)
+    res <- file.remove(ecc_temp_path)
   }
 })
 
@@ -204,7 +205,7 @@ test_that("read_ecc_from_excel() works as expected", {
   }
 
   if (file.exists(ecc_temp_path)) {
-    file.remove(ecc_temp_path)
+    res <- file.remove(ecc_temp_path)
   }
 })
 
@@ -279,7 +280,7 @@ testthat::test_that("write_ecc_to_excel() works with pre-existing file", {
 
   # Clean up after ourselves
   if (file.exists(ecc_temp_path)) {
-    file.remove(ecc_temp_path)
+    res <- file.remove(ecc_temp_path)
   }
 })
 
