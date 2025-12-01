@@ -4,7 +4,7 @@ output: html_document
 ---
 
 
-## Recca: All releases
+## All releases
 
 Cite all releases of `Recca` with doi
 [10.5281/zenodo.5226085](https://doi.org/10.5281/zenodo.5226085), 
@@ -19,7 +19,7 @@ which always resolves to the latest release.
   `calc_intra_industry_balance()`
   into the **V** and **Y** matrices
   so that conserved quantities will always 
-  give **0** with 
+  give the **0** vector with 
   `calc_intra_industry_balance()`.
 * `verify_SUT_energy_balance()` is deprecated 
   in favor of the combination of
