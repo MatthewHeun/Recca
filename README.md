@@ -7,9 +7,12 @@
 
 <!-- *********** -->
 
+<!-- badges: start -->
+
 [![CRAN
-status](https://www.r-pkg.org/badges/version/Recca)](https://cran.r-project.org/package=Recca)
-[![lifecycle](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://www.tidyverse.org/lifecycle/#stable)
+status](https://www.r-pkg.org/badges/version/Recca)](https://CRAN.R-project.org/package=Recca)
+[![Lifecycle:
+stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
@@ -17,6 +20,7 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 [![Codecov test
 coverage](https://codecov.io/gh/MatthewHeun/Recca/graph/badge.svg)](https://app.codecov.io/gh/MatthewHeun/Recca)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5226085.svg)](https://doi.org/10.5281/zenodo.5226085)
+<!-- badges: end -->
 
 # Recca
 
