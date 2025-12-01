@@ -39,7 +39,7 @@ and sometimes to energy services
 (such as thermal comfort, transport, and illumination).
 Such analyses are significantly easier 
 when data are arranged in the 
-**R**, **U**, **V**, and **Y** matrices
+**RUVY** matrices
 of the PSUT framework described by 
 [Heun et al.
 [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
@@ -69,7 +69,7 @@ devtools::install_github("MatthewHeun/Recca", build_vignettes = TRUE)
 
 ## History
 
-The functions in this package were first used in the paper 
+The functions in this package were first used in
 [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
 
 
