@@ -4,7 +4,7 @@ bibliography: vignettes/recca.bib
 ---
 
 <!-- *********** -->
-<!-- Note: README.md is generated from README.Rmd.   -->
+<!-- Note: README.md is generated from README.Rmd. -->
 <!-- Be sure to edit README.Rmd and generate the README.md file by Cmd/Ctl-shift-K -->
 <!-- *********** -->
 
