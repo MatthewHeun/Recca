@@ -11,6 +11,9 @@ Cite all releases of `Recca` with doi
 which always resolves to the latest release.
 
 
+* New "Balances" vignette describes 
+  details about the new balance functions
+  and compares to previous similar functions.
 * New function `endogenize_losses()` moves losses
   calculated by 
   `calc_intra_industry_balance()`
@@ -26,10 +29,18 @@ which always resolves to the latest release.
 * `verify_SUT_energy_balance_with_units()` is deprecated. 
   It seemed like a good idea at the time, but we 
   don't use it.
+* New functions `calc_intra_industry_balance()` and 
+  `verify_intra_industry_balance()` 
+  compute and verify intra-industry
+  (across-industry) balances.
 * New functions `calc_inter_industry_balance()` and 
   `verify_inter_industry_balance()` 
-  compute and verify inter-industry balances.
+  compute and verify inter-industry
+  (between-industry) balances.
 * Improved error message in `write_ecc_to_excel()`.
+* New tests for new features.
+    - Now up to 915 tests, all passing.
+    - Test coverage remains at 100%.
 
 
 ## Recca 0.1.64 (2025-08-24) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16938397.svg)](https://doi.org/10.5281/zenodo.16938397)
