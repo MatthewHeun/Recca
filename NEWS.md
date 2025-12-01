@@ -11,6 +11,8 @@ Cite all releases of `Recca` with doi
 which always resolves to the latest release.
 
 
+## Recca 0.1.65 (2025-11-30)
+
 * New "Balances" vignette describes 
   details about the new balance functions
   and compares to previous similar functions.
