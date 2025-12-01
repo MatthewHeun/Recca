@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.64</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.65</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,6 +40,22 @@
       <small>Source: <a href="https://github.com/MatthewHeun/Recca/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.65" id="recca-0165-2025-11-30">Recca 0.1.65 (2025-11-30)<a class="anchor" aria-label="anchor" href="#recca-0165-2025-11-30"></a></h2>
+<ul><li>New “Balances” vignette describes details about the new balance functions and compares to previous similar functions.</li>
+<li>New function <code><a href="../reference/endogenize_losses.html">endogenize_losses()</a></code> moves losses calculated by <code><a href="../reference/balances.html">calc_intra_industry_balance()</a></code> into the <strong>V</strong> and <strong>Y</strong> matrices so that conserved quantities will always give the <strong>0</strong> vector with <code><a href="../reference/balances.html">calc_intra_industry_balance()</a></code>.</li>
+<li>
+<code><a href="../reference/verify_SUT_energy_balance.html">verify_SUT_energy_balance()</a></code> is deprecated in favor of the combination of <code><a href="../reference/balances.html">calc_inter_industry_balance()</a></code> and <code><a href="../reference/verify-balances.html">verify_inter_industry_balance()</a></code>, because it is helpful to see the calculated balances.</li>
+<li>
+<code><a href="../reference/verify_SUT_energy_balance_with_units.html">verify_SUT_energy_balance_with_units()</a></code> is deprecated. It seemed like a good idea at the time, but we don’t use it.</li>
+<li>New functions <code><a href="../reference/balances.html">calc_intra_industry_balance()</a></code> and <code><a href="../reference/verify-balances.html">verify_intra_industry_balance()</a></code> compute and verify intra-industry (across-industry) balances.</li>
+<li>New functions <code><a href="../reference/balances.html">calc_inter_industry_balance()</a></code> and <code><a href="../reference/verify-balances.html">verify_inter_industry_balance()</a></code> compute and verify inter-industry (between-industry) balances.</li>
+<li>Improved error message in <code><a href="../reference/write_ecc_to_excel.html">write_ecc_to_excel()</a></code>.</li>
+<li>New tests for new features.
+<ul><li>Now up to 915 tests, all passing.</li>
+<li>Test coverage remains at 100%.</li>
+</ul></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.64" id="recca-0164-2025-08-24-doi">Recca 0.1.64 (2025-08-24) <a href="https://doi.org/10.5281/zenodo.16938397" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.16938397.svg" alt="DOI"></a>
 <a class="anchor" aria-label="anchor" href="#recca-0164-2025-08-24-doi"></a></h2>
