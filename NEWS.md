@@ -11,7 +11,7 @@ Cite all releases of `Recca` with doi
 which always resolves to the latest release.
 
 
-## Recca 0.1.65 (2025-11-30)
+## Recca 0.1.65 (2025-11-30) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17772989.svg)](https://doi.org/10.5281/zenodo.17772989)
 
 * New "Balances" vignette describes 
   details about the new balance functions
