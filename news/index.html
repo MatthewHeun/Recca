@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.64</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.65</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,6 +20,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/Aggregation.html">Aggregation</a></li>
+    <li><a class="dropdown-item" href="../articles/balances.html">Balances</a></li>
     <li><a class="dropdown-item" href="../articles/new-function-interaction.html">new_* function interactions</a></li>
     <li><a class="dropdown-item" href="../articles/new-functions.html">new_* functions</a></li>
   </ul></li>
@@ -36,11 +37,28 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/MatthewHeun/Recca/blob/v0.1.64/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/MatthewHeun/Recca/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.64" id="recca-0164-2025-08-24">Recca 0.1.64 (2025-08-24)<a class="anchor" aria-label="anchor" href="#recca-0164-2025-08-24"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.65" id="recca-0165-2025-11-30">Recca 0.1.65 (2025-11-30)<a class="anchor" aria-label="anchor" href="#recca-0165-2025-11-30"></a></h2>
+<ul><li>New “Balances” vignette describes details about the new balance functions and compares to previous similar functions.</li>
+<li>New function <code><a href="../reference/endogenize_losses.html">endogenize_losses()</a></code> moves losses calculated by <code><a href="../reference/balances.html">calc_intra_industry_balance()</a></code> into the <strong>V</strong> and <strong>Y</strong> matrices so that conserved quantities will always give the <strong>0</strong> vector with <code><a href="../reference/balances.html">calc_intra_industry_balance()</a></code>.</li>
+<li>
+<code><a href="../reference/verify_SUT_energy_balance.html">verify_SUT_energy_balance()</a></code> is deprecated in favor of the combination of <code><a href="../reference/balances.html">calc_inter_industry_balance()</a></code> and <code><a href="../reference/verify-balances.html">verify_inter_industry_balance()</a></code>, because it is helpful to see the calculated balances.</li>
+<li>
+<code><a href="../reference/verify_SUT_energy_balance_with_units.html">verify_SUT_energy_balance_with_units()</a></code> is deprecated. It seemed like a good idea at the time, but we don’t use it.</li>
+<li>New functions <code><a href="../reference/balances.html">calc_intra_industry_balance()</a></code> and <code><a href="../reference/verify-balances.html">verify_intra_industry_balance()</a></code> compute and verify intra-industry (across-industry) balances.</li>
+<li>New functions <code><a href="../reference/balances.html">calc_inter_industry_balance()</a></code> and <code><a href="../reference/verify-balances.html">verify_inter_industry_balance()</a></code> compute and verify inter-industry (between-industry) balances.</li>
+<li>Improved error message in <code><a href="../reference/write_ecc_to_excel.html">write_ecc_to_excel()</a></code>.</li>
+<li>New tests for new features.
+<ul><li>Now up to 915 tests, all passing.</li>
+<li>Test coverage remains at 100%.</li>
+</ul></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.64" id="recca-0164-2025-08-24-doi">Recca 0.1.64 (2025-08-24) <a href="https://doi.org/10.5281/zenodo.16938397" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.16938397.svg" alt="DOI"></a>
+<a class="anchor" aria-label="anchor" href="#recca-0164-2025-08-24-doi"></a></h2>
 <ul><li>Working around a restriction in Excel where a region cannot be named “R”. New argument <code>alt_R_region_name</code> tells the region name for the <strong>R</strong> matrix.</li>
 <li>No new tests.
 <ul><li>Still at 899 tests, all passing.</li>
@@ -50,7 +68,7 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.63" id="recca-0163-2025-08-22-doi">Recca 0.1.63 (2025-08-22) <a href="https://doi.org/10.5281/zenodo.16928058" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.16928058.svg" alt="DOI"></a>
 <a class="anchor" aria-label="anchor" href="#recca-0163-2025-08-22-doi"></a></h2>
-<ul><li>Breaking change: <code><a href="../reference/write_ecc_to_excel.html">write_ecc_to_excel()</a></code> and <code><a href="../reference/read_ecc_from_excel.html">read_ecc_from_excel()</a></code> now provide and read, respectively worksheet-scoped region names for matrices. This change creates more robust Excel workbooks where matrix names are now referred by &lt;<worksheet name>&gt;!&lt;<matrix name>&gt;.</matrix></worksheet></li>
+<ul><li>Breaking change: <code><a href="../reference/write_ecc_to_excel.html">write_ecc_to_excel()</a></code> and <code><a href="../reference/read_ecc_from_excel.html">read_ecc_from_excel()</a></code> now provide and read, respectively worksheet-scoped region names for matrices. This change creates more robust Excel workbooks where matrix names are now referred by <code>worksheet name!matrix name</code>.</li>
 <li>New tests for new features.
 <ul><li>Now up to 899 tests, all passing.</li>
 <li>Test coverage remains at 100%.</li>
@@ -645,7 +663,7 @@ See <a href="https://github.com/awalker89/openxlsx/issues/393" class="external-l
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

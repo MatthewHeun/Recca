@@ -1,0 +1,229 @@
+# new\_\* function interactions
+
+### Introduction
+
+The `Recca` package provides several `new_*` functions that allow the
+user to estimate a new version of an energy conversion chain (ECC) based
+on localized changed to one portion of the ECC. The functions can have
+some interesting interactions, particularly if they are called
+sequentially. This vignette show how to understand and deal with those
+interactions. The functions
+[`new_k_ps()`](https://matthewheun.github.io/Recca/reference/new_k_ps.md)
+and [`new_Y()`](https://matthewheun.github.io/Recca/reference/new_Y.md)
+are used for this purpose.
+
+### Setup
+
+To investigate the interactions, we first make the simplest possible ECC
+that retains the features to be tested, a minimum working example (MWE).
+This example has two resource industries (R1 and R2), one intermediate
+industry (I), and two final demand sectors (Y1 and Y2). The R1 industry
+makes product R1p.  
+The R2 industry makes product R2p. Industry I makes product Ip. Product
+Ip is consumed by final demand sectors Y1 and Y2.
+
+The resources ($\mathbf{R}$), use ($\mathbf{U}$), make ($\mathbf{V}$),
+final demand ($\mathbf{Y}$), and unit summation ($\mathbf{S}_{units}$)
+matrices are given below.
+
+``` r
+library(magrittr)
+library(matsbyname)
+library(Recca)
+U <- matrix(c(0, 0, 10,
+              0, 0, 10,
+              0, 0,  0),
+            byrow = TRUE, nrow = 3, ncol = 3,
+            dimnames = list(c("R1p", "R2p", "Ip"), c("R1", "R2", "I"))) %>% 
+  setrowtype("Products") %>% setcoltype("Industries")
+
+# There is no EIOU, so U_feed and U are the same.
+U_feed <- U
+
+R_plus_V <- matrix(c(10,  0, 0,
+                     0, 10, 0, 
+                     0,  0, 4), 
+                   byrow = TRUE, nrow = 3, ncol = 3, 
+                   dimnames = list(c("R1", "R2", "I"), 
+                                   c("R1p", "R2p", "Ip"))) %>% 
+  setrowtype("Industries") %>% setcoltype("Products")
+
+RV_mats <- separate_RV(U = U, R_plus_V = R_plus_V)
+R <- RV_mats$R
+V <- RV_mats$V
+
+Y <- matrix(c(0, 0,
+              0, 0, 
+              2, 2),
+            byrow = TRUE, nrow = 3, ncol = 2,
+            dimnames = list(c("R1p", "R2p", "Ip"), c("Y1", "Y2"))) %>% 
+  setrowtype("Products") %>% setcoltype("Industries")
+
+S_units <- matrix(c(1, 
+                    1, 
+                    1), 
+                  byrow = TRUE, nrow = 3, ncol = 1,
+                  dimnames = list(c("R1p", "R2p", "Ip"), c("quad"))) %>% 
+  setrowtype("Products") %>% setcoltype("Units")
+```
+
+We’ll use Sankey diagrams to visualize several ECCs. The
+[`make_sankey()`](https://matthewheun.github.io/Recca/reference/make_sankey.md)
+function creates the diagrams. A Sankey diagram that shows the base
+energy conversion chain is shown below.
+[`make_sankey()`](https://matthewheun.github.io/Recca/reference/make_sankey.md)
+returns a list with a named item “Sankey” that we must extract to insert
+the diagram into this vignette.
+
+``` r
+make_sankey(R = R, U = U, V = V, Y = Y) %>% 
+  extract2("Sankey")
+```
+
+### Adjust inputs to industry I
+
+We can change the proportion of inputs to industry I using
+[`new_k_ps()`](https://matthewheun.github.io/Recca/reference/new_k_ps.md).
+To do so, we must first calculate the input-output structure of the ECC
+using the
+[`calc_io_mats()`](https://matthewheun.github.io/Recca/reference/calc_io_mats.md)
+function. Then, we call the
+[`new_k_ps()`](https://matthewheun.github.io/Recca/reference/new_k_ps.md)
+function with a new k vector that indicates industry I now uses 20 quads
+of `R1` instead of a 50/50 split between `R1` and `R2`.
+
+``` r
+library(Recca)
+iomats <- calc_io_mats(R = R, U = U, U_feed = U_feed, V = V, Y = Y, S_units = S_units)
+k_prime <- matrix(c(1,
+                    0), 
+                  byrow = TRUE, nrow = 2, ncol = 1,
+                  dimnames = list(c("R1p", "R2p"), c("I"))) %>% 
+  setrowtype("Products") %>% setcoltype("Industries")
+change_input_proportions <- new_k_ps(c(iomats, 
+                                       list(R = R, U = U, V = V, Y = Y,
+                                            S_units = S_units, 
+                                            k_prime = k_prime)))
+# There is no EIOU, so U and U_feed are same.
+change_input_proportions[["U_feed_prime"]] <- change_input_proportions[["U_prime"]]
+make_sankey(R = change_input_proportions$R_prime, 
+            U = change_input_proportions$U_prime, 
+            V = change_input_proportions$V_prime, 
+            Y = Y) %>% 
+  extract2("Sankey")
+```
+
+### Change final demand
+
+We can calculate the ECC that would be required to meet a new level of
+final demand with the
+[`new_Y()`](https://matthewheun.github.io/Recca/reference/new_Y.md)
+function. The
+[`new_k_ps()`](https://matthewheun.github.io/Recca/reference/new_k_ps.md)
+and [`new_Y()`](https://matthewheun.github.io/Recca/reference/new_Y.md)
+functions interact in ways that might be surprising to the user,
+depending on whether the input-output structure of the ECC is
+re-calculated between sequential function calls.
+
+#### Without recalculating the structure of the ECC
+
+Now let’s change final demand, saying that consumption by Y1 doubles.
+But we’ll call
+[`new_Y()`](https://matthewheun.github.io/Recca/reference/new_Y.md)
+*without* recalculating the structure of the ECC with the
+[`calc_io_mats()`](https://matthewheun.github.io/Recca/reference/calc_io_mats.md)
+function.
+
+``` r
+Y_prime <- matrix(c(0, 0,
+                    0, 0, 
+                    4, 2),
+                  byrow = TRUE, nrow = 3, ncol = 2,
+                  dimnames = list(c("R1p", "R2p", "Ip"), c("Y1", "Y2"))) %>% 
+  setrowtype("Products") %>% setcoltype("Industries")
+change_final_demand <- new_Y(c(iomats, list(Y_prime = Y_prime)))
+make_sankey(R = change_final_demand$R_prime, 
+            U = change_final_demand$U_prime, 
+            V = change_final_demand$V_prime, 
+            Y = change_final_demand$Y_prime) %>% 
+  extract2("Sankey")
+```
+
+Industry I is back to using both R1p and R2p in a 50/50 split to make
+its output. Both R1p and R2p now supply 15 quads to I to account for
+increased final demand.
+
+The [`new_Y()`](https://matthewheun.github.io/Recca/reference/new_Y.md)
+function is performing exactly as expected, given that `iomats` was
+supplied to
+[`new_Y()`](https://matthewheun.github.io/Recca/reference/new_Y.md).
+`iomats` contains information about an ECC in which industry I’s inputs
+are split 50/50 between R1p and R2p. So when
+[`new_Y()`](https://matthewheun.github.io/Recca/reference/new_Y.md)
+calculates a new ECC, it assumes that industry I’s needs are a 50/50
+split between R1p and R2p.
+
+In fact, it would be a mistake to think that
+[`new_Y()`](https://matthewheun.github.io/Recca/reference/new_Y.md)
+would give anything but a 50/50 split between R1p and R2p when using the
+`iomats` description of the ECC.
+
+#### After recalculating the structure of the ECC
+
+If you want
+[`new_Y()`](https://matthewheun.github.io/Recca/reference/new_Y.md) to
+start from the Sankey in which all energy supplied to industry I comes
+from R1p, you need to first recalculate the input-output structure of
+the ECC based on the ECC in which industry I uses only R1p. I.e., you
+need to re-calculate an `iomats` object after calling
+[`new_k_ps()`](https://matthewheun.github.io/Recca/reference/new_k_ps.md)
+and before calling
+[`new_Y()`](https://matthewheun.github.io/Recca/reference/new_Y.md).
+Then, you must submit that updated description of the input-output
+structure of the ECC to
+[`new_Y()`](https://matthewheun.github.io/Recca/reference/new_Y.md). The
+following code demonstrates the approach.
+
+``` r
+iomats2 <- calc_io_mats(R = change_input_proportions$R_prime, 
+                        U = change_input_proportions$U_prime, 
+                        U_feed = change_input_proportions$U_feed_prime,
+                        V = change_input_proportions$V_prime, 
+                        Y = Y, S_units = S_units)
+change_final_demand2 <- new_Y(c(iomats2, list(Y_prime = Y_prime)))
+make_sankey(R = change_final_demand2$R_prime, 
+            U = change_final_demand2$U_prime, 
+            V = change_final_demand2$V_prime, 
+            Y = change_final_demand2$Y_prime) %>% 
+  extract2("Sankey")
+```
+
+The Sankey diagram above shows that we have successfully increased the
+demand from `Y1` while ensuring that all inputs to industry I come from
+R1p. The “trick” is to recalculate the input-output structure of the ECC
+between the two steps.
+
+## Conclusion
+
+The `new_*` function of the `Recca` package can be called sequentially.
+But the interactions among the `new_*` functions can be surprising if
+their behavior is not fully understood. This vignette provides a
+detailed example using the
+[`new_k_ps()`](https://matthewheun.github.io/Recca/reference/new_k_ps.md)
+and [`new_Y()`](https://matthewheun.github.io/Recca/reference/new_Y.md)
+functions. If they are called sequentially *without* first recalculating
+the input-output structure of the ECC, the call to
+[`new_Y()`](https://matthewheun.github.io/Recca/reference/new_Y.md) will
+be based on the original input-output structure of the ECC (from before
+[`new_k_ps()`](https://matthewheun.github.io/Recca/reference/new_k_ps.md)
+was called). If
+[`calc_io_mats()`](https://matthewheun.github.io/Recca/reference/calc_io_mats.md)
+is called between the sequential calls to
+[`new_k_ps()`](https://matthewheun.github.io/Recca/reference/new_k_ps.md)
+and [`new_Y()`](https://matthewheun.github.io/Recca/reference/new_Y.md)
+and the results are fed to
+[`new_Y()`](https://matthewheun.github.io/Recca/reference/new_Y.md), the
+input-output structure of the ECC *after* calling
+[`new_k_ps()`](https://matthewheun.github.io/Recca/reference/new_k_ps.md)
+will be used for the calculations by
+[`new_Y()`](https://matthewheun.github.io/Recca/reference/new_Y.md).

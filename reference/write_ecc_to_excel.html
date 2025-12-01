@@ -11,7 +11,7 @@ This function takes ECC matrices and writes them to an Excel file."></head><body
 
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.64</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.65</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,6 +24,7 @@ This function takes ECC matrices and writes them to an Excel file."></head><body
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/Aggregation.html">Aggregation</a></li>
+    <li><a class="dropdown-item" href="../articles/balances.html">Balances</a></li>
     <li><a class="dropdown-item" href="../articles/new-function-interaction.html">new_* function interactions</a></li>
     <li><a class="dropdown-item" href="../articles/new-functions.html">new_* functions</a></li>
   </ul></li>
@@ -40,7 +41,7 @@ This function takes ECC matrices and writes them to an Excel file."></head><body
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Write energy conversion chain matrices to an Excel file</h1>
-      <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/v0.1.64/R/excel.R" class="external-link"><code>R/excel.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/master/R/excel.R" class="external-link"><code>R/excel.R</code></a></small>
       <div class="d-none name"><code>write_ecc_to_excel.Rd</code></div>
     </div>
 
@@ -133,7 +134,7 @@ See <code><a href="psut_cols.html">Recca::psut_cols</a></code> for defaults.</p>
 <dt id="arg--wrote-mats-colname">.wrote_mats_colname<a class="anchor" aria-label="anchor" href="#arg--wrote-mats-colname"></a></dt>
 <dd><p>The name of the outgoing column
 that tells whether a worksheet was written successfully.
-Default is "Wrote mats".</p></dd>
+Default is "WroteMats".</p></dd>
 
 
 <dt id="arg-uv-bg-color">UV_bg_color<a class="anchor" aria-label="anchor" href="#arg-uv-bg-color"></a></dt>
@@ -161,8 +162,8 @@ Default is "R_".</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>An unmodified version of <code>.psut_data</code> (if not <code>NULL</code>) or a list of
-the incoming matrices.</p>
+    <p>The wbWorkbook object that was saved (the result of <code><a href="https://janmarvin.github.io/openxlsx2/reference/wb_save.html" class="external-link">openxlsx2::wb_save()</a></code>),
+invisibly.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -241,7 +242,7 @@ worksheets will be deleted before writing the new worksheets.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
