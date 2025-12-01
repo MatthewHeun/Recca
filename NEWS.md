@@ -11,6 +11,7 @@ Cite all releases of `Recca` with doi
 which always resolves to the latest release.
 
 
+* Minor updates to the README file.
 * Fixed the lifecycle badge. 
   Previously, it pointed to the wrong page for "stable" status.
 * Fixed the R-CMD-check badge.
