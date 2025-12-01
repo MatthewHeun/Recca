@@ -76,7 +76,7 @@
 #'                                             See `Recca::psut_cols` for defaults.
 #' @param .wrote_mats_colname The name of the outgoing column
 #'                            that tells whether a worksheet was written successfully.
-#'                            Default is "Wrote mats".
+#'                            Default is "WroteMats".
 #' @param UV_bg_color The color of cells containing U and V matrices.
 #'                    Default is a creamy yellow.
 #' @param RY_bg_color The color of cells containing R and Y matrices.
@@ -89,8 +89,8 @@
 #'                          for region names.
 #'                          Default is "R_".
 #'
-#' @return An unmodified version of `.psut_data` (if not `NULL`) or a list of
-#'         the incoming matrices.
+#' @returns The wbWorkbook object that was saved (the result of `openxlsx2::wb_save()`),
+#'          invisibly.
 #'
 #' @export
 #'
@@ -138,7 +138,7 @@ write_ecc_to_excel <- function(.psut_data = NULL,
   # Check if path exists. Throw an error if overwrite_file is FALSE.
   if (file.exists(path) & !overwrite_file) {
     stop(paste("File", path,
-               "already exists. Call `Recca::write_ecc_to_excel()` with `overwrite = TRUE`?"))
+               "already exists. Call `Recca::write_ecc_to_excel()` with `overwrite_file = TRUE`?"))
   }
   if (file.exists(path)) {
     # The file already exists, and
@@ -172,7 +172,7 @@ write_ecc_to_excel <- function(.psut_data = NULL,
       }
     }
     # Check for malformed sheet names. Emit a warning if problem found.
-    check_worksheet_name_violations(sheet_name)
+    matsindf::check_worksheet_name_violations(sheet_name)
 
     # Get the worksheet names in the file we are building.
     # The existing_sheet_names can come
@@ -405,7 +405,7 @@ write_ecc_to_excel <- function(.psut_data = NULL,
 #' @param R,U,V,Y,r_eiou,U_eiou,U_feed,S_units Matrices to be arranged on an Excel worksheet.
 #' @param pad The number of blank rows or columns between matrices.
 #'
-#' @return A nested list of origins and extents.
+#' @returns A nested list of origins and extents.
 calc_mats_locations_excel <- function(R, U, V, Y, r_eiou, U_eiou, U_feed, S_units, pad = 2) {
   # At this point, each argument should be a single matrix.
   # Calculate horizontal sizes for matrices.
@@ -548,81 +548,6 @@ check_named_region_violations <- function(candidate_region_names) {
 }
 
 
-#' Develop a warning message for malformed Excel worksheet names
-#'
-#' `write_ecc_to_excel()` can include worksheet names, but
-#' it is important that they are legal names.
-#' This function emits a warning when `candidate_worksheet_names`
-#' is mal-formed.
-#'
-#' @param candidate_worksheet_names Worksheet names to be checked.
-#'
-#' @returns `NULL` invisibly and a warning if any problems are detected.
-#'
-#' @export
-#'
-#' @examples
-#' # No warning
-#' check_worksheet_name_violations(c("abc", "123"))
-#' \dontrun{
-#'   # Warnings
-#'   # Illegal characters
-#'   check_worksheet_name_violations(c("abc", "["))
-#'   # Empty name
-#'   check_worksheet_name_violations(c("", "abc"))
-#'   # Too long
-#'   check_worksheet_name_violations(strrep("x", 32))
-#'   # Duplicates
-#'   check_worksheet_name_violations(c("abc123", "abc123"))
-#' }
-check_worksheet_name_violations <- function(candidate_worksheet_names) {
-  seen <- character(0)
-
-  for (name in candidate_worksheet_names) {
-    problems <- character(0)
-
-    # 1. Check for illegal characters: \ / * ? [ ]
-    matches <- gregexpr("(\\\\|/|\\*|\\?|\\[|\\])", name)[[1]]
-    if (any(matches > 0)) {
-      illegal_chars <- substring(name, matches, matches)
-      problems <- c(problems,
-                    paste0("contains illegal character(s): ",
-                           paste(unique(illegal_chars), collapse = " "))
-      )
-    }
-
-    # 2. Check for empty names
-    if (nchar(name) == 0) {
-      problems <- c(problems, "is blank (worksheet names cannot be empty)")
-    }
-
-    # 3. Check for length
-    if (nchar(name) > 31) {
-      problems <- c(problems, "exceeds Excel's 31-character limit")
-    }
-
-    # 4. Check for duplicates
-    if (name %in% seen) {
-      problems <- c(problems, "is a duplicate (worksheet names must be unique)")
-    } else {
-      seen <- c(seen, name)
-    }
-
-    # Report problems
-    if (length(problems) > 0) {
-      warning(
-        sprintf("Invalid Excel worksheet name: '%s'\n  Problem(s): %s",
-                name, paste(problems, collapse = "; ")
-        ),
-        call. = FALSE
-      )
-    }
-  }
-
-  invisible(NULL)
-}
-
-
 #' Read an energy conversion chain from a Excel file
 #'
 #' Reads matrices from named regions in an Excel file
@@ -706,7 +631,7 @@ check_worksheet_name_violations <- function(candidate_worksheet_names) {
 #'   ecc_temp_path |>
 #'     read_ecc_from_excel()
 #'   if (file.exists(ecc_temp_path)) {
-#'     file.remove(ecc_temp_path)
+#'     res <- file.remove(ecc_temp_path)
 #'   }
 #' }
 read_ecc_from_excel <- function(path,
@@ -792,3 +717,5 @@ read_ecc_from_excel <- function(path,
     # Bind each row into a data frame
     dplyr::bind_rows()
 }
+
+

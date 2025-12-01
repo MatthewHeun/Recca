@@ -28,7 +28,7 @@ test_that("write_ecc_to_excel() works as expected", {
                rep(c("E_Final", "E_Services", "E_Useful", "X_Services"), 8))
 
   if (file.exists(ecc_temp_path)) {
-    file.remove(ecc_temp_path)
+    res <- file.remove(ecc_temp_path)
   }
 })
 
@@ -46,9 +46,10 @@ test_that("write_ecc_to_excel() fails when the file already exists", {
   # especially windows, where backslash ("\") is the file separator
   # but also the regex escape character.
   # So eliminate that feature of the test.
-  # regexp = paste0("File ", ecc_temp_path, " already exists. Call write_ecc_to_excel with overwrite = TRUE to overwrite."))
+  # regexp = paste0("File ", ecc_temp_path, " already exists.
+  # Call write_ecc_to_excel with overwrite = TRUE to overwrite."))
   if (file.exists(ecc_temp_path)) {
-    file.remove(ecc_temp_path)
+    res <- file.remove(ecc_temp_path)
   }
 })
 
@@ -66,7 +67,7 @@ test_that("write_ecc_to_excel() works with Matrix objects", {
 
   expect_true(file.exists(ecc_temp_path))
   if (file.exists(ecc_temp_path)) {
-    file.remove(ecc_temp_path)
+    res <- file.remove(ecc_temp_path)
   }
 })
 
@@ -127,7 +128,7 @@ test_that("write_ecc_to_excel() sets sheet names", {
                    `X_Services` = "X_Services"))
 
   if (file.exists(ecc_temp_path)) {
-    file.remove(ecc_temp_path)
+    res <- file.remove(ecc_temp_path)
   }
 })
 
@@ -154,25 +155,6 @@ test_that("check_named_region_violations() works as expected", {
     expect_warning()
   # Too long
   check_named_region_violations(strrep("x", 256)) |>
-    expect_warning()
-})
-
-
-test_that("check_worksheet_name_violations() works as expected", {
-  # Is OK
-  check_worksheet_name_violations(c("test1", "test2")) |>
-    expect_null()
-  # Illegal characters
-  check_worksheet_name_violations(c("abc", "[")) |>
-    expect_warning()
-  # Empty name
-  check_worksheet_name_violations(c("", "abc")) |>
-    expect_warning()
-  # Too long
-  check_worksheet_name_violations(strrep("x", 32)) |>
-    expect_warning()
-  # Duplicates
-  check_worksheet_name_violations(c("abc123", "abc123")) |>
     expect_warning()
 })
 
@@ -223,7 +205,7 @@ test_that("read_ecc_from_excel() works as expected", {
   }
 
   if (file.exists(ecc_temp_path)) {
-    file.remove(ecc_temp_path)
+    res <- file.remove(ecc_temp_path)
   }
 })
 
@@ -298,7 +280,8 @@ testthat::test_that("write_ecc_to_excel() works with pre-existing file", {
 
   # Clean up after ourselves
   if (file.exists(ecc_temp_path)) {
-    file.remove(ecc_temp_path)
+    res <- file.remove(ecc_temp_path)
   }
 })
+
 

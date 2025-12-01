@@ -11,7 +11,41 @@ Cite all releases of `Recca` with doi
 which always resolves to the latest release.
 
 
-## Recca 0.1.64 (2025-08-24)
+## Recca 0.1.65 (2025-11-30)
+
+* New "Balances" vignette describes 
+  details about the new balance functions
+  and compares to previous similar functions.
+* New function `endogenize_losses()` moves losses
+  calculated by 
+  `calc_intra_industry_balance()`
+  into the **V** and **Y** matrices
+  so that conserved quantities will always 
+  give the **0** vector with 
+  `calc_intra_industry_balance()`.
+* `verify_SUT_energy_balance()` is deprecated 
+  in favor of the combination of
+  `calc_inter_industry_balance()` and
+  `verify_inter_industry_balance()`, 
+  because it is helpful to see the calculated balances.
+* `verify_SUT_energy_balance_with_units()` is deprecated. 
+  It seemed like a good idea at the time, but we 
+  don't use it.
+* New functions `calc_intra_industry_balance()` and 
+  `verify_intra_industry_balance()` 
+  compute and verify intra-industry
+  (across-industry) balances.
+* New functions `calc_inter_industry_balance()` and 
+  `verify_inter_industry_balance()` 
+  compute and verify inter-industry
+  (between-industry) balances.
+* Improved error message in `write_ecc_to_excel()`.
+* New tests for new features.
+    - Now up to 915 tests, all passing.
+    - Test coverage remains at 100%.
+
+
+## Recca 0.1.64 (2025-08-24) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16938397.svg)](https://doi.org/10.5281/zenodo.16938397)
 
 * Working around a restriction in Excel where 
   a region cannot be named "R".
@@ -30,7 +64,7 @@ which always resolves to the latest release.
   worksheet-scoped region names for matrices. 
   This change creates more robust 
   Excel workbooks where matrix names are now 
-  referred by <<worksheet name>>!<<matrix name>>.
+  referred by `worksheet name!matrix name`.
 * New tests for new features.
     - Now up to 899 tests, all passing.
     - Test coverage remains at 100%.
