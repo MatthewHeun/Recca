@@ -11,9 +11,13 @@ Cite all releases of `Recca` with doi
 which always resolves to the latest release.
 
 
+* `endogenize_losses()` gains new boolean convenience argument
+  `replace_cols` that tells whether
+  new **V** and **Y** matrices should replace the old ones.
+  Default is `FALSE` to _not_ replace old with new matrices.
 * `verify_inter_industry_balance()` and 
   `verify_intra_industry_balance()` 
-  gain new argument `delete_balance_cols_if_verified`
+  gain new boolean convenience argument `delete_balance_cols_if_verified`
   that enables deletion of auxiliary columns
   if balances are verified.
   Default is `FALSE` to _not_ delete columns.
