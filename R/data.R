@@ -132,7 +132,6 @@
 "balance_cols"
 
 
-
 #' Columns in a data frame that contains final-to-useful allocations
 #'
 #' A string list containing named names of columns in PSUT data frames.
