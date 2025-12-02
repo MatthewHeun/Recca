@@ -185,7 +185,7 @@ NULL
 #'                         or "`r Recca::balance_cols$intra_industry_balanced_colname`".
 #' @param delete_balance_cols_if_verified A boolean that tells whether to delete
 #'                                        the `balances` and `balanced_colname` columns
-#'                                        if `.sutmats` is a data frame or a list and
+#'                                        if `.sutmats` is a data frame and
 #'                                        if balances are verified.
 #'                                        Default is `FALSE`.
 #'                                        If individual matrices are specified
@@ -314,7 +314,7 @@ verify_intra_industry_balance <- function(.sutmats = NULL,
                                           tol = 1e-6,
                                           # Output name
                                           balanced_colname = Recca::balance_cols$intra_industry_balanced_colname,
-                                          delete_cols_if_verified = FALSE) {
+                                          delete_balance_cols_if_verified = FALSE) {
   verify_func_intra <- function(bal_vector) {
     OK <- bal_vector |>
       matsbyname::iszero_byname(tol) |>
@@ -330,6 +330,11 @@ verify_intra_industry_balance <- function(.sutmats = NULL,
   out <- matsindf::matsindf_apply(.sutmats, FUN = verify_func_intra, bal_vector = balances)
   if (!all(out[[balanced_colname]] |> as.logical())) {
     warning(paste0("Industries are not balanced in verify_intra_industry_balance(). See column ", balanced_colname, "."))
+  } else {
+    if (is.data.frame(.sutmats) & delete_balance_cols_if_verified) {
+      out[balances] <- NULL
+      out[balanced_colname] <- NULL
+    }
   }
   return(out)
 }
@@ -771,6 +776,15 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 #'                    that will absorb losses.
 #'                    Default is [Recca::balance_cols]`$losses_sector` or
 #'                    "`r Recca::balance_cols$losses_sector`".
+#' @param replace_cols A boolean that tells whether to
+#'                     (a) replace
+#'                         the `V` and `Y` columns with
+#'                         `V_prime` and `Y_prime` columns, respectively and
+#'                     (b) delete the `V_prime` and `Y_prime`
+#'                         columns
+#'                     after endogenizing the losses
+#'                     when `.sutmats` is a data frame or a list.
+#'                     Default is `FALSE`.
 #' @param balance_colname The name of the column containing
 #'                        energy balance vectors.
 #'                        Default is
@@ -784,26 +798,25 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 #' @export
 #'
 #' @examples
-#' UKEnergy2000mats |>
+#' mats <- UKEnergy2000mats |>
 #'   tidyr::pivot_wider(names_from = matrix.name,
 #'                      values_from = matrix) |>
 #'   dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in%
 #'                   c(IEATools::last_stages$final, IEATools::last_stages$useful)) |>
-#'   calc_intra_industry_balance() |>
+#'   calc_intra_industry_balance()
+#' mats |>
 #'   endogenize_losses() |>
-#'   # Use the endogenized matrices
-#'   dplyr::mutate(
-#'     V = V_prime,
-#'     Y = Y_prime,
-#'     V_prime = NULL,
-#'     Y_prime = NULL,
-#'     "{Recca::balance_cols$intra_industry_balance_colname}" := NULL
-#'   )
+#'   dplyr::glimpse()
+#'   # Replace original matrices with endogenized matrices=
+#' mats |>
+#'   endogenize_losses(replace_cols = TRUE) |>
+#'   dplyr::glimpse()
 endogenize_losses <- function(.sutmats = NULL,
-                              loss_product = Recca::balance_cols$waste_heat,
-                              loss_sector = Recca::balance_cols$losses_sector,
                               V = "V",
                               Y = "Y",
+                              loss_product = Recca::balance_cols$waste_heat,
+                              loss_sector = Recca::balance_cols$losses_sector,
+                              replace_cols = FALSE,
                               balance_colname = Recca::balance_cols$intra_industry_balance_colname,
                               # Output columns
                               V_prime = "V_prime",
@@ -822,9 +835,20 @@ endogenize_losses <- function(.sutmats = NULL,
     list(V_prime_mat, Y_prime_mat) |>
       magrittr::set_names(c(V_prime, Y_prime))
   }
-  matsindf::matsindf_apply(.sutmats,
-                           FUN = endogenize_func,
-                           V_mat = V,
-                           Y_mat = Y,
-                           balance_vec = balance_colname)
+  out <- matsindf::matsindf_apply(.sutmats,
+                                  FUN = endogenize_func,
+                                  V_mat = V,
+                                  Y_mat = Y,
+                                  balance_vec = balance_colname)
+  if ((is.data.frame(.sutmats) | is.list(.sutmats)) & replace_cols) {
+    out <- out |>
+      dplyr::mutate(
+        "{V}" := .data[[V_prime]],
+        "{Y}" := .data[[Y_prime]],
+        "{V_prime}" := NULL,
+        "{Y_prime}" := NULL,
+        "{balance_colname}" := NULL
+      )
+  }
+  return(out)
 }

@@ -6,10 +6,11 @@
 \usage{
 endogenize_losses(
   .sutmats = NULL,
-  loss_product = Recca::balance_cols$waste_heat,
-  loss_sector = Recca::balance_cols$losses_sector,
   V = "V",
   Y = "Y",
+  loss_product = Recca::balance_cols$waste_heat,
+  loss_sector = Recca::balance_cols$losses_sector,
+  replace_cols = FALSE,
   balance_colname = Recca::balance_cols$intra_industry_balance_colname,
   V_prime = "V_prime",
   Y_prime = "Y_prime"
@@ -17,6 +18,14 @@ endogenize_losses(
 }
 \arguments{
 \item{.sutmats}{A \code{matsindf} data frame, wide by matrices.}
+
+\item{V}{Make (\strong{V}) matrix or name of the column in \code{.sutmats}
+that contains same.
+Default is "V".}
+
+\item{Y}{Final demand (\strong{Y}) matrix or name
+of the column in \code{.sutmats} that contains same.
+Default is "Y".}
 
 \item{loss_product}{The string name of the loss product.
 Default is \link{balance_cols}\verb{$waste_heat} or
@@ -27,13 +36,15 @@ that will absorb losses.
 Default is \link{balance_cols}\verb{$losses_sector} or
 "Losses".}
 
-\item{V}{Make (\strong{V}) matrix or name of the column in \code{.sutmats}
-that contains same.
-Default is "V".}
-
-\item{Y}{Final demand (\strong{Y}) matrix or name
-of the column in \code{.sutmats} that contains same.
-Default is "Y".}
+\item{replace_cols}{A boolean that tells whether to
+(a) replace
+the \code{V} and \code{Y} columns with
+\code{V_prime} and \code{Y_prime} columns, respectively and
+(b) delete the \code{V_prime} and \code{Y_prime}
+columns
+after endogenizing the losses
+when \code{.sutmats} is a data frame or a list.
+Default is \code{FALSE}.}
 
 \item{balance_colname}{The name of the column containing
 energy balance vectors.
@@ -61,19 +72,17 @@ prior to calling this function.
 See the example.
 }
 \examples{
-UKEnergy2000mats |>
+mats <- UKEnergy2000mats |>
   tidyr::pivot_wider(names_from = matrix.name,
                      values_from = matrix) |>
   dplyr::filter(.data[[IEATools::iea_cols$last_stage]] \%in\%
                   c(IEATools::last_stages$final, IEATools::last_stages$useful)) |>
-  calc_intra_industry_balance() |>
+  calc_intra_industry_balance()
+mats |>
   endogenize_losses() |>
-  # Use the endogenized matrices
-  dplyr::mutate(
-    V = V_prime,
-    Y = Y_prime,
-    V_prime = NULL,
-    Y_prime = NULL,
-    "{Recca::balance_cols$intra_industry_balance_colname}" := NULL
-  )
+  dplyr::glimpse()
+  # Replace original matrices with endogenized matrices=
+mats |>
+  endogenize_losses(replace_cols = TRUE) |>
+  dplyr::glimpse()
 }

@@ -19,7 +19,7 @@ verify_intra_industry_balance(
   balances = Recca::balance_cols$intra_industry_balance_colname,
   tol = 1e-06,
   balanced_colname = Recca::balance_cols$intra_industry_balanced_colname,
-  delete_cols_if_verified = FALSE
+  delete_balance_cols_if_verified = FALSE
 )
 }
 \arguments{
@@ -48,7 +48,7 @@ or "SUTIntraIndustryBalanced".}
 
 \item{delete_balance_cols_if_verified}{A boolean that tells whether to delete
 the \code{balances} and \code{balanced_colname} columns
-if \code{.sutmats} is a data frame or a list and
+if \code{.sutmats} is a data frame and
 if balances are verified.
 Default is \code{FALSE}.
 If individual matrices are specified

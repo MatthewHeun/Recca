@@ -11,6 +11,12 @@ Cite all releases of `Recca` with doi
 which always resolves to the latest release.
 
 
+* `verify_inter_industry_balance()` and 
+  `verify_intra_industry_balance()` 
+  gain new argument `delete_balance_cols_if_verified`
+  that enables deletion of auxiliary columns
+  if balances are verified.
+  Default is `FALSE` to _not_ delete columns.
 * Minor updates to the README file.
 * Fixed the lifecycle badge. 
   Previously, it pointed to the wrong page for "stable" status.
