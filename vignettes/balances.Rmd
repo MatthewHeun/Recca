@@ -144,6 +144,18 @@ inter_industry_balances |>
   dplyr::glimpse()
 ```
 
+To calculate and verify the balances 
+without adding any columns to the data frame, 
+set `delete_balance_cols_if_verified = TRUE`.
+
+```{r}
+inter_industry_balances |> 
+  verify_inter_industry_balance(tol = 1e-4, 
+                                delete_balance_cols_if_verified = TRUE) |> 
+  dplyr::glimpse()
+```
+
+
 If a product is out of balance 
 by more than `tol` (by default `1e-6`), 
 a warning occurs and 
@@ -276,18 +288,13 @@ that shows the total heat loss in a
 new "Losses" column. 
 
 To accept the endogenized matrices, 
-do the following:
+set `replace_cols = TRUE`.
 
 ```{r}
-endogenized |> 
-  dplyr::mutate(
-    V = V_prime,
-    Y = Y_prime, 
-    V_prime = NULL, 
-    Y_prime = NULL, 
-    SUTIntraIndustryBalance = NULL
-  ) |> 
-  dplyr::glimpse()
+endogenized2 <- intra_industry_balances |> 
+  endogenize_losses(replace_cols = TRUE) 
+dplyr::glimpse(endogenized2)
+endogenized2$Y[[1]] # Same as endogenized$Y_prime[[1]]
 ```
 
 
@@ -314,12 +321,15 @@ and the intra-industry balances are calculated by
 $$(\mathbf{U}^\mathrm{T} - \mathbf{V})  \mathbf{i} \, .$$
 
 The $\mathbf{W}$ matrix is closest to the intra-industry balances, 
-but with the opposite sense
-($\mathbf{W}$ has products in rows and 
+but 
+
+* with the opposite sense
+($\mathbf{W}$ has products in rows and industries in columns while 
 the intra-industry balances have industries in rows), 
-without the summation by the unit vector ($\mathbf{i}$),
+* without summation by the unit vector ($\mathbf{i}$),
 and 
-with the opposite sign.
+* with opposite sign.
+
 The following code shows the comparison
 between $\mathbf{W}$ and the intra-industry balances.
 
@@ -327,12 +337,13 @@ between $\mathbf{W}$ and the intra-industry balances.
 compare <- ecc |> 
   calc_yqfgW() |> 
   calc_intra_industry_balance()
+# Calculate column sums of W and 
+# transpose to create a column vector 
+# for easier comparison
 compare$W[[1]] |> 
-  # Calculate column sums and 
-  # transpose to create a column vector 
-  # for easier comparison
   matsbyname::colsums_byname() |> 
   matsbyname::transpose_byname()
+# Compare to the intra-industry balance
 compare$SUTIntraIndustryBalance[[1]]
 ```
 
