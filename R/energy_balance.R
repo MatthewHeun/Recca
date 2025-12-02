@@ -183,6 +183,15 @@ NULL
 #'                         For `verify_intra_industry_balances()`,
 #'                         the default is [Recca::balance_cols]`$intra_industry_balanced_colname`
 #'                         or "`r Recca::balance_cols$intra_industry_balanced_colname`".
+#' @param delete_balance_cols_if_verified A boolean that tells whether to delete
+#'                                        the `balances` and `balanced_colname` columns
+#'                                        if `.sutmats` is a data frame or a list and
+#'                                        if balances are verified.
+#'                                        Default is `FALSE`.
+#'                                        If individual matrices are specified
+#'                                        in the `R`, `U`, `V`, and `Y` arguments,
+#'                                        no deletion is performed.
+#'
 #'
 #' @return A list or data frame with an additional value or column
 #'         saying whether `.sutmats` are in balance.
@@ -246,7 +255,8 @@ verify_inter_industry_balance <- function(.sutmats = NULL,
                                           # Tolerance
                                           tol = 1e-6,
                                           # Output name
-                                          balanced_colname = Recca::balance_cols$inter_industry_balanced_colname) {
+                                          balanced_colname = Recca::balance_cols$inter_industry_balanced_colname,
+                                          delete_balance_cols_if_verified = FALSE) {
   verify_func_inter <- function(bal_vector) {
     OK <- bal_vector |>
       matsbyname::iszero_byname(tol) |>
@@ -260,8 +270,15 @@ verify_inter_industry_balance <- function(.sutmats = NULL,
   }
 
   out <- matsindf::matsindf_apply(.sutmats, FUN = verify_func_inter, bal_vector = balances)
-  if (!all(out[[balanced_colname]] %>% as.logical())) {
-    warning(paste0("Products are not conserved in verify_inter_industry_balance(). See column ", balanced_colname, "."))
+  if (!all(as.logical(out[[balanced_colname]]))) {
+    warning(paste0("Products are not conserved in verify_inter_industry_balance(). See column ",
+                   balanced_colname,
+                   "."))
+  } else {
+    if (is.data.frame(.sutmats) & delete_balance_cols_if_verified) {
+      out[balances] <- NULL
+      out[balanced_colname] <- NULL
+    }
   }
   return(out)
 }
@@ -296,7 +313,8 @@ verify_intra_industry_balance <- function(.sutmats = NULL,
                                           # Tolerance
                                           tol = 1e-6,
                                           # Output name
-                                          balanced_colname = Recca::balance_cols$intra_industry_balanced_colname) {
+                                          balanced_colname = Recca::balance_cols$intra_industry_balanced_colname,
+                                          delete_cols_if_verified = FALSE) {
   verify_func_intra <- function(bal_vector) {
     OK <- bal_vector |>
       matsbyname::iszero_byname(tol) |>

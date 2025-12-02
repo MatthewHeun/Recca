@@ -153,6 +153,13 @@ test_that("calc_inter_industry_balance() works with single matrices", {
   calc_inter_industry_balance(R = R, U = U, V = V, Y = Y) |>
     verify_inter_industry_balance() |>
     expect_silent()
+
+  # Test with deleting intermediate values.
+  res <- calc_inter_industry_balance(R = R, U = U, V = V, Y = Y) |>
+    verify_inter_industry_balance(delete_balance_cols_if_verified = TRUE)
+  # Should not affect anything
+  expect_equal(names(res), c(Recca::balance_cols$inter_industry_balance_colname,
+                             Recca::balance_cols$inter_industry_balanced_colname))
 })
 
 
@@ -182,14 +189,22 @@ test_that("IEA energy balance works correctly", {
 
 
 test_that("calc_inter_industry_balance() works correctly", {
-  UKEnergy2000mats |>
+  wide <- UKEnergy2000mats |>
     tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
     dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in%
-                    c(IEATools::last_stages$final, IEATools::last_stages$useful)) |>
+                    c(IEATools::last_stages$final, IEATools::last_stages$useful))
+  wide |>
     calc_inter_industry_balance() |>
     verify_inter_industry_balance() |>
     # Should not throw an error or warning
     expect_silent()
+
+  # Check that columns are deleted if desired.
+  res <- wide |>
+    calc_inter_industry_balance() |>
+    verify_inter_industry_balance(delete_balance_cols_if_verified = TRUE)
+  expect_false(Recca::balance_cols$inter_industry_balance_colname %in% names(res))
+  expect_false(Recca::balance_cols$inter_industry_balanced_colname %in% names(res))
 })
 
 
@@ -256,7 +271,7 @@ test_that("calc_intra_industry_balance() works correctly", {
 })
 
 
-test_that("verify_intra_industry_balance()", {
+test_that("verify_intra_industry_balance() warns of imbalance", {
   res <- UKEnergy2000mats |>
     dplyr::filter(LastStage %in% c("Final", "Useful")) |>
     tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
