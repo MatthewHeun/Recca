@@ -342,6 +342,7 @@ test_that("endogenize_losses() works correctly", {
     calc_intra_industry_balance() |>
     endogenize_losses()
   expect_true(Recca::balance_cols$intra_industry_balance_colname %in% names(res1))
+  expect_true(Recca::balance_cols$losses_alloc_colname %in% names(res1))
   expect_true("V_prime" %in% names(res1))
   expect_true("Y_prime" %in% names(res1))
   # Check that columns are deleted when requested
@@ -349,6 +350,7 @@ test_that("endogenize_losses() works correctly", {
     calc_intra_industry_balance() |>
     endogenize_losses(replace_cols = TRUE)
   expect_false(Recca::balance_cols$intra_industry_balance_colname %in% names(res2))
+  expect_false(Recca::balance_cols$losses_alloc_colname %in% names(res2))
   expect_false("V_prime" %in% names(res2))
   expect_false("Y_prime" %in% names(res2))
 })

@@ -586,8 +586,8 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 #'                     (a) replace
 #'                         the `V` and `Y` columns with
 #'                         `V_prime` and `Y_prime` columns, respectively and
-#'                     (b) delete the `V_prime` and `Y_prime`
-#'                         columns
+#'                     (b) delete the `V_prime`, `Y_prime`, `balance_colname`, and
+#'                         `losses_alloc_colname` columns
 #'                     after endogenizing the losses
 #'                     when `.sutmats` is a data frame or a list.
 #'                     Default is `FALSE`.
@@ -609,11 +609,20 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 #'                      values_from = matrix) |>
 #'   dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in%
 #'                   c(IEATools::last_stages$final, IEATools::last_stages$useful)) |>
+#'   dplyr::mutate(
+#'     # Add a matrix column of loss allocations.
+#'     # This bit of code adds a default loss allocation matrix
+#'     # to every row.
+#'     "{Recca::balance_cols$losses_alloc_colname}" :=
+#'       RCLabels::make_list(Recca::balance_cols$default_losses_alloc,
+#'                           n = dplyr::n(),
+#'                           lenx = 1)
+#'     ) |>
 #'   calc_intra_industry_balance()
 #' mats |>
 #'   endogenize_losses() |>
 #'   dplyr::glimpse()
-#'   # Replace original matrices with endogenized matrices=
+#'   # Replace original matrices with endogenized matrices
 #' mats |>
 #'   endogenize_losses(replace_cols = TRUE) |>
 #'   dplyr::glimpse()
@@ -690,7 +699,8 @@ endogenize_losses <- function(
         "{Y}" := .data[[Y_prime]],
         "{V_prime}" := NULL,
         "{Y_prime}" := NULL,
-        "{balance_colname}" := NULL
+        "{balance_colname}" := NULL,
+        "{losses_alloc_colname}" := NULL
       )
   }
   return(out)

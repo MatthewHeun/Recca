@@ -46,8 +46,8 @@ loss sector.}
 (a) replace
 the \code{V} and \code{Y} columns with
 \code{V_prime} and \code{Y_prime} columns, respectively and
-(b) delete the \code{V_prime} and \code{Y_prime}
-columns
+(b) delete the \code{V_prime}, \code{Y_prime}, \code{balance_colname}, and
+\code{losses_alloc_colname} columns
 after endogenizing the losses
 when \code{.sutmats} is a data frame or a list.
 Default is \code{FALSE}.}
@@ -128,11 +128,20 @@ mats <- UKEnergy2000mats |>
                      values_from = matrix) |>
   dplyr::filter(.data[[IEATools::iea_cols$last_stage]] \%in\%
                   c(IEATools::last_stages$final, IEATools::last_stages$useful)) |>
+  dplyr::mutate(
+    # Add a matrix column of loss allocations.
+    # This bit of code adds a default loss allocation matrix
+    # to every row.
+    "{Recca::balance_cols$losses_alloc_colname}" :=
+      RCLabels::make_list(Recca::balance_cols$default_losses_alloc,
+                          n = dplyr::n(),
+                          lenx = 1)
+    ) |>
   calc_intra_industry_balance()
 mats |>
   endogenize_losses() |>
   dplyr::glimpse()
-  # Replace original matrices with endogenized matrices=
+  # Replace original matrices with endogenized matrices
 mats |>
   endogenize_losses(replace_cols = TRUE) |>
   dplyr::glimpse()
