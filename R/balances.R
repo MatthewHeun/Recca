@@ -510,20 +510,76 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 #' prior to calling this function.
 #' See the example.
 #'
-#' @param .sutmats A `matsindf` data frame, wide by matrices.
+#' A losses allocation matrix tells how losses from
+#' each industry should be allocated to products.
+#' The matrix has industries in rows and products (losses)
+#' in rows.
+#' The values in the matrix are fractions
+#' of each industry's (in rows) losses that are allocated
+#' to loss products (in columns).
+#' Rows of this table must sum to `1`.
+#' The value of `losses_alloc` must resolve to a matrix
+#' of this form.
+#' Options include:
+#'
+#' * The default value, namely
+#'   [Recca::balance_cols]`$default_losses_alloc`,
+#'   a 1x1 matrix with
+#'   a row named "All industries",
+#'   a column named "Waste heat", and
+#'   a value of `1`.
+#'   This default matrix ascribes losses from all industries
+#'   in the **V** matrix
+#'   to a product called "Waste heat".
+#' * A matrix of the same sense
+#'   (industries in rows,
+#'   waste products in columns,
+#'   rows must sum to 1.0)
+#'   to be applied to all
+#'   rows in the wide-by-matrices data frame supplied
+#'   in `.sutmats`.
+#'   All industries in the **V** matrix must be present
+#'   in the rows of `losses_alloc_mat`.
+#'   If the matrix has a single row,
+#'   it is assumed to apply to all industries.
+#' * The string name of a column in `.sutmats`
+#'   that contains loss allocation matrices for every row
+#'   in `.sutmats`.
+#'   All industries in the **V** matrix must be present
+#'   in the rows of the matrices in the `losses_alloc_mat` column.
+#'   If any of the matrices has a single row,
+#'   it is assumed to apply to all industries.
+#'
+#' All losses are allocated to
+#' `loss_sector` in the **Y** matrix,
+#' by default named
+#' [Recca::balance_cols]`$losses_sector or
+#' "`r Recca::balance_cols$losses_sector`".
+
+#' @param .sutmats A `matsindf` data frame, wide by matrices, or
+#'                 a list of lists of matrices.
+#'                 Default is `NULL`.
 #' @param V Make (**V**) matrix or name of the column in `.sutmats`
 #'          that contains same.
 #'          Default is "V".
 #' @param Y Final demand (**Y**) matrix or name
 #'          of the column in `.sutmats` that contains same.
 #'          Default is "Y".
-#' @param loss_product The string name of the loss product.
-#'                     Default is [Recca::balance_cols]`$waste_heat` or
-#'                     "`r Recca::balance_cols$waste_heat`".
+#' @param losses_alloc The allocation matrix for losses
+#'                     from each industry.
+#'                     See details.
+#'                     Default is [Recca::balance_cols]`$default_losses_alloc_mat`.
 #' @param loss_sector The string name of the sector
 #'                    that will absorb losses.
-#'                    Default is [Recca::balance_cols]`$losses_sector` or
-#'                    "`r Recca::balance_cols$losses_sector`".
+#'                    Default is a list containing a single item,
+#'                    namely
+#'                    [Recca::balance_cols]`$losses_sector or
+#'                    "`r Recca::balance_cols$losses_sector`", which
+#'                    is duplicated for rows in `.sutmats`.
+#'                    Alternatively, the name of a column in
+#'                    `.sutmats` can be specified, in which case
+#'                    each row in `.sutmats` can have a different
+#'                    loss sector.
 #' @param replace_cols A boolean that tells whether to
 #'                     (a) replace
 #'                         the `V` and `Y` columns with
@@ -559,18 +615,43 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 #' mats |>
 #'   endogenize_losses(replace_cols = TRUE) |>
 #'   dplyr::glimpse()
-endogenize_losses <- function(.sutmats = NULL,
-                              V = "V",
-                              Y = "Y",
-                              loss_product = Recca::balance_cols$waste_heat,
-                              loss_sector = Recca::balance_cols$losses_sector,
-                              replace_cols = FALSE,
-                              balance_colname = Recca::balance_cols$intra_industry_balance_colname,
-                              # Output columns
-                              V_prime = "V_prime",
-                              Y_prime = "Y_prime") {
+endogenize_losses <- function(
+    .sutmats = NULL,
+    V = "V",
+    Y = "Y",
+    losses_alloc = Recca::balance_cols$default_losses_alloc,
+    loss_sector = list(Recca::balance_cols$losses_sector),
+    replace_cols = FALSE,
+    balance_colname = Recca::balance_cols$intra_industry_balance_colname,
+    # Output columns
+    V_prime = "V_prime",
+    Y_prime = "Y_prime") {
 
-  endogenize_func <- function(V_mat, Y_mat, balance_vec) {
+  endogenize_func <- function(V_mat,
+                              Y_mat,
+                              balance_vec,
+                              losses_alloc_mat,
+                              this_loss_sector) {
+    # Check for the case where losses_alloc_mat has only one row.
+    # Repeat that row for every industry in V_mat.
+
+    # Check that all industries in V_mat are represented
+    # in losses_alloc_mat.
+
+    # Hatize balance_vec
+
+    # Multiply balance_vec_hat into losses_alloc_mat
+    # to obtain the matrix to be added to V.
+
+    # Calculate V_prime
+
+    # Calculate colsums and transpose
+    # to obtain the matrix to be added to Y
+
+    # Calculate Y_prime
+
+    # Make a list and return
+
     add_to_V <- balance_vec |>
       matsbyname::setcolnames_byname(loss_product)
     V_prime_mat <- matsbyname::sum_byname(V_mat, add_to_V)
@@ -587,7 +668,9 @@ endogenize_losses <- function(.sutmats = NULL,
                                   FUN = endogenize_func,
                                   V_mat = V,
                                   Y_mat = Y,
-                                  balance_vec = balance_colname)
+                                  balance_vec = balance_colname,
+                                  losses_alloc_mat = losses_alloc,
+                                  this_loss_sector = loss_sector)
   if ((is.data.frame(.sutmats) | is.list(.sutmats)) & replace_cols) {
     out <- out |>
       dplyr::mutate(

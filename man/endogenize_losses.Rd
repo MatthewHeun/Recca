@@ -8,8 +8,8 @@ endogenize_losses(
   .sutmats = NULL,
   V = "V",
   Y = "Y",
-  loss_product = Recca::balance_cols$waste_heat,
-  loss_sector = Recca::balance_cols$losses_sector,
+  losses_alloc = Recca::balance_cols$default_losses_alloc,
+  loss_sector = list(Recca::balance_cols$losses_sector),
   replace_cols = FALSE,
   balance_colname = Recca::balance_cols$intra_industry_balance_colname,
   V_prime = "V_prime",
@@ -17,7 +17,9 @@ endogenize_losses(
 )
 }
 \arguments{
-\item{.sutmats}{A \code{matsindf} data frame, wide by matrices.}
+\item{.sutmats}{A \code{matsindf} data frame, wide by matrices, or
+a list of lists of matrices.
+Default is \code{NULL}.}
 
 \item{V}{Make (\strong{V}) matrix or name of the column in \code{.sutmats}
 that contains same.
@@ -27,14 +29,17 @@ Default is "V".}
 of the column in \code{.sutmats} that contains same.
 Default is "Y".}
 
-\item{loss_product}{The string name of the loss product.
-Default is \link{balance_cols}\verb{$waste_heat} or
-"Waste heat".}
+\item{losses_alloc}{The allocation matrix for losses
+from each industry.
+See details.
+Default is \link{balance_cols}\verb{$default_losses_alloc_mat}.}
 
 \item{loss_sector}{The string name of the sector
 that will absorb losses.
-Default is \link{balance_cols}\verb{$losses_sector} or
-"Losses".}
+Default is a list containing a single item,
+namely
+\link{balance_cols}\verb{$losses_sector or "}r Recca::balance_cols$losses_sector\verb{", which is duplicated for rows in }.sutmats\verb{. Alternatively, the name of a column in }.sutmats\verb{can be specified, in which case each row in}.sutmats` can have a different
+loss sector.}
 
 \item{replace_cols}{A boolean that tells whether to
 (a) replace
@@ -70,6 +75,52 @@ Intra-industry balances need to be calculated
 (most easily via \code{\link[=calc_intra_industry_balance]{calc_intra_industry_balance()}})
 prior to calling this function.
 See the example.
+
+A losses allocation matrix tells how losses from
+each industry should be allocated to products.
+The matrix has industries in rows and products (losses)
+in rows.
+The values in the matrix are fractions
+of each industry's (in rows) losses that are allocated
+to loss products (in columns).
+Rows of this table must sum to \code{1}.
+The value of \code{losses_alloc} must resolve to a matrix
+of this form.
+Options include:
+\itemize{
+\item The default value, namely
+\link{balance_cols}\verb{$default_losses_alloc},
+a 1x1 matrix with
+a row named "All industries",
+a column named "Waste heat", and
+a value of \code{1}.
+This default matrix ascribes losses from all industries
+in the \strong{V} matrix
+to a product called "Waste heat".
+\item A matrix of the same sense
+(industries in rows,
+waste products in columns,
+rows must sum to 1.0)
+to be applied to all
+rows in the wide-by-matrices data frame supplied
+in \code{.sutmats}.
+All industries in the \strong{V} matrix must be present
+in the rows of \code{losses_alloc_mat}.
+If the matrix has a single row,
+it is assumed to apply to all industries.
+\item The string name of a column in \code{.sutmats}
+that contains loss allocation matrices for every row
+in \code{.sutmats}.
+All industries in the \strong{V} matrix must be present
+in the rows of the matrices in the \code{losses_alloc_mat} column.
+If any of the matrices has a single row,
+it is assumed to apply to all industries.
+}
+
+All losses are allocated to
+\code{loss_sector} in the \strong{Y} matrix,
+by default named
+\link{balance_cols}\verb{$losses_sector or "}r Recca::balance_cols$losses_sector`".
 }
 \examples{
 mats <- UKEnergy2000mats |>

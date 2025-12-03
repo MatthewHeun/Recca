@@ -15,7 +15,7 @@ A string list with 10 entries.
 \item{intra_industry_balanced_colname}{The name of a column that contains intra-industry balance vectors are all \strong{0}.}
 \item{across_industry_balance_colname}{The name of a column that contains intra-industry balance vectors.}
 \item{across_industry_balanced_colname}{The name of a column that contains intra-industry balance vectors are all \strong{0}.}
-\item{waste_heat}{The name of a column in \strong{V} and a row in \strong{Y} that contains waste heat calculated from intra-industry balances.}
+\item{default_losses_alloc}{The default losses allocation matrix with 1x1 dimensions, a row named "All industries", a column named "Waste heat", and a value of \code{1}.}
 \item{losses_sector}{The name of a column in \strong{Y} that contains losses calculated from intra-industry balances.}
 }
 }

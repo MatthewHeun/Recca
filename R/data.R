@@ -123,7 +123,7 @@
 #' \item{intra_industry_balanced_colname}{The name of a column that contains intra-industry balance vectors are all **0**.}
 #' \item{across_industry_balance_colname}{The name of a column that contains intra-industry balance vectors.}
 #' \item{across_industry_balanced_colname}{The name of a column that contains intra-industry balance vectors are all **0**.}
-#' \item{waste_heat}{The name of a column in **V** and a row in **Y** that contains waste heat calculated from intra-industry balances.}
+#' \item{default_losses_alloc}{The default losses allocation matrix with 1x1 dimensions, a row named "All industries", a column named "Waste heat", and a value of `1`.}
 #' \item{losses_sector}{The name of a column in **Y** that contains losses calculated from intra-industry balances.}
 #' }
 #'
@@ -132,7 +132,7 @@
 "balance_cols"
 
 
-#' Columns in a data frame that contains final-to-useful allocations
+#' Columns in a data frame that contain final-to-useful allocations
 #'
 #' A string list containing named names of columns in PSUT data frames.
 #' Items in the list provide default values for column name function arguments
