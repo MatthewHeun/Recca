@@ -36,12 +36,16 @@ Default is
 \link{balance_cols}\verb{$intra_industry_balance_colname} or
 "SUTIntraIndustryBalance".}
 
+\item{losses_alloc_colname}{The name of the column containing
+loss allocation matrices.
+See details.
+Default is \link{balance_cols}\verb{$losses_alloc_colname} or
+"LossesAlloc".}
+
 \item{loss_sector}{The string name of the sector
 that will absorb losses.
-Default is a list containing a single item,
-namely
-\link{balance_cols}\verb{$losses_sector or "}r Recca::balance_cols$losses_sector\verb{", which is duplicated for rows in }.sutmats\verb{. Alternatively, the name of a column in }.sutmats\verb{can be specified, in which case each row in}.sutmats` can have a different
-loss sector.}
+Default is \link{balance_cols}\verb{$losses_sector}
+or "Losses".}
 
 \item{replace_cols}{A boolean that tells whether to
 (a) replace
@@ -57,10 +61,9 @@ Default is \code{FALSE}.}
 
 \item{Y_prime}{The name of the \strong{Y} matrix with endogenized losses.}
 
-\item{losses_alloc}{The allocation matrix for losses
-from each industry.
-See details.
-Default is \link{balance_cols}\verb{$default_losses_alloc_mat}.}
+\item{tol}{The maximum allowable difference from \code{1} for the rowsums of
+loss allocation matrices.
+Default is \code{1e-6}.}
 }
 \value{
 A version of \code{.sutmats} with losses endogenized.

@@ -31,6 +31,7 @@ LTH
 Leontief
 Leontief's
 Lifecycle
+LossesAlloc
 Lpp
 MCC
 MKH
@@ -129,6 +130,7 @@ pre
 ps
 pxp
 quantifications
+rowsums
 rowtypes
 rowvec
 substitutable

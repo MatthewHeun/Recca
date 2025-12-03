@@ -567,21 +567,20 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 #' @param Y Final demand (**Y**) matrix or name
 #'          of the column in `.sutmats` that contains same.
 #'          Default is "Y".
-#' @param losses_alloc The allocation matrix for losses
-#'                     from each industry.
-#'                     See details.
-#'                     Default is [Recca::balance_cols]`$default_losses_alloc_mat`.
+#' @param balance_colname The name of the column containing
+#'                        energy balance vectors.
+#'                        Default is
+#'                        [Recca::balance_cols]`$intra_industry_balance_colname` or
+#'                        "`r Recca::balance_cols$intra_industry_balance_colname`".
+#' @param losses_alloc_colname The name of the column containing
+#'                             loss allocation matrices.
+#'                             See details.
+#'                             Default is [Recca::balance_cols]`$losses_alloc_colname` or
+#'                             "`r Recca::balance_cols$losses_alloc_colname`".
 #' @param loss_sector The string name of the sector
 #'                    that will absorb losses.
-#'                    Default is a list containing a single item,
-#'                    namely
-#'                    [Recca::balance_cols]`$losses_sector or
-#'                    "`r Recca::balance_cols$losses_sector`", which
-#'                    is duplicated for rows in `.sutmats`.
-#'                    Alternatively, the name of a column in
-#'                    `.sutmats` can be specified, in which case
-#'                    each row in `.sutmats` can have a different
-#'                    loss sector.
+#'                    Default is [Recca::balance_cols]`$losses_sector`
+#'                    or "`r Recca::balance_cols$losses_sector`".
 #' @param replace_cols A boolean that tells whether to
 #'                     (a) replace
 #'                         the `V` and `Y` columns with
@@ -591,13 +590,11 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 #'                     after endogenizing the losses
 #'                     when `.sutmats` is a data frame or a list.
 #'                     Default is `FALSE`.
-#' @param balance_colname The name of the column containing
-#'                        energy balance vectors.
-#'                        Default is
-#'                        [Recca::balance_cols]`$intra_industry_balance_colname` or
-#'                        "`r Recca::balance_cols$intra_industry_balance_colname`".
 #' @param V_prime The name of the **V** matrix with endogenized losses.
 #' @param Y_prime The name of the **Y** matrix with endogenized losses.
+#' @param tol The maximum allowable difference from `1` for the rowsums of
+#'            loss allocation matrices.
+#'            Default is `1e-6`.
 #'
 #' @returns A version of `.sutmats` with losses endogenized.
 #'
