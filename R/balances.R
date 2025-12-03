@@ -636,7 +636,8 @@ endogenize_losses <- function(
     replace_cols = FALSE,
     # Output columns
     V_prime = "V_prime",
-    Y_prime = "Y_prime") {
+    Y_prime = "Y_prime",
+    tol = 1e-6) {
 
   endogenize_func <- function(V_mat,
                               Y_mat,
@@ -662,6 +663,13 @@ endogenize_losses <- function(
     assertthat::assert_that(setequal(rownames(V_mat),
                                      rownames(losses_alloc_mat)),
                             msg = "Industries not same in Recca::endogenize_losses()")
+
+    # Verify that all rows of the allocation matrix sum to 1
+    # to within tol.
+    rowsums_losses_alloc_mat <- matsbyname::rowsums_byname(losses_alloc_mat) - 1
+    assertthat::assert_that(matsbyname::iszero_byname(rowsums_losses_alloc_mat, tol = tol),
+                            msg = paste("Rows of the losses allocation matrix",
+                                        "do not sum to 1 in Recca::endogenize_losses()."))
 
     # Hatize balance_vec
     balance_vec_hat <- matsbyname::hatize_byname(balance_vec)

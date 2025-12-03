@@ -13,7 +13,8 @@ endogenize_losses(
   loss_sector = Recca::balance_cols$losses_sector,
   replace_cols = FALSE,
   V_prime = "V_prime",
-  Y_prime = "Y_prime"
+  Y_prime = "Y_prime",
+  tol = 1e-06
 )
 }
 \arguments{

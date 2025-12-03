@@ -256,9 +256,43 @@ The losses can be endogenized,
 i.e., added to the $\mathbf{RUVY}$ matrices of the PSUT framework.
 To do so, 
 use the function `endogenize_losses()`.
+But first, one needs to allocate the losses from each sector to a 
+particular type of product or set of products.
+The allocation of losses to products is accomplished by a matrix
+with industries in rows and loss products in columns.
+The rows of the loss allocation matrix must sum to 1.
+The `losses_alloc_colname` column 
+(by default `Recca::balance_cols$losses_alloc_colname`
+or "`r Recca::balance_cols$losses_alloc_colname`")
+contains those matrices.
+
+A default loss allocation matrix 
+(that allocates losses from every industry to "Waste heat")
+is given in `Recca::balance_cols$default_losses_alloc_mat`.
 
 ```{r}
-endogenized <- intra_industry_balances |> 
+Recca::balance_cols$default_losses_alloc_mat
+```
+
+To use a default losses allocation matrix, 
+add a matrix column of loss allocations
+as shown below.
+
+```{r}
+iibs_with_loss_allocs <- intra_industry_balances |> 
+  dplyr::mutate(
+    "{Recca::balance_cols$losses_alloc_colname}" :=
+      RCLabels::make_list(Recca::balance_cols$default_losses_alloc,
+                          n = dplyr::n(),
+                          lenx = 1)
+  )
+```
+
+Now, endogenizing the losses proceeds with a call to 
+`endogenize_losses()`.
+
+```{r}
+endogenized <- iibs_with_loss_allocs |> 
   endogenize_losses()
 ```
 
@@ -266,7 +300,7 @@ endogenized <- intra_industry_balances |>
 by default `V_prime` and `Y_prime`.
 `V_prime` and `Y_prime` contain $\mathbf{V}$ and $\mathbf{Y}$ matrices
 with losses included directly in the matrices.
-The $\mathbf{V}$ matrices contain a new column
+The $\mathbf{V}^{\prime}$ matrices contain a new column
 (named "Waste heat" by default)
 that shows the heat losses from each industry.
 
@@ -274,7 +308,7 @@ that shows the heat losses from each industry.
 endogenized$V_prime[[1]]
 ```
 
-The $\mathbf{Y}$ matrices also have a new column, 
+The $\mathbf{Y}^{\prime}$ matrices also have a new column, 
 by default named "Losses."
 
 ```{r}
@@ -282,7 +316,7 @@ endogenized$Y_prime[[1]]
 ```
 
 In addition, 
-the $\mathbf{Y}$ matrices contain a new row 
+the $\mathbf{Y}^{\prime}$ matrices contain a new row 
 (again named "Waste heat" by default)
 that shows the total heat loss in a 
 new "Losses" column. 
@@ -291,7 +325,7 @@ To accept the endogenized matrices,
 set `replace_cols = TRUE`.
 
 ```{r}
-endogenized2 <- intra_industry_balances |> 
+endogenized2 <- iibs_with_loss_allocs |> 
   endogenize_losses(replace_cols = TRUE) 
 dplyr::glimpse(endogenized2)
 endogenized2$Y[[1]] # Same as endogenized$Y_prime[[1]]
