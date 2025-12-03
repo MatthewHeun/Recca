@@ -211,10 +211,10 @@ NULL
 #' @rdname balances
 calc_inter_industry_balance <- function(.sutmats = NULL,
                                         # Input names
-                                        R = "R",
-                                        U = "U",
-                                        V = "V",
-                                        Y = "Y",
+                                        R = Recca::psut_cols$R,
+                                        U = Recca::psut_cols$U,
+                                        V = Recca::psut_cols$V,
+                                        Y = Recca::psut_cols$Y,
                                         # Output name
                                         balance_colname = Recca::balance_cols$inter_industry_balance_colname) {
   calc_bal_func <- function(R_mat = NULL, U_mat, V_mat, Y_mat) {
@@ -282,8 +282,8 @@ verify_inter_industry_balance <- function(.sutmats = NULL,
 #' @rdname balances
 calc_intra_industry_balance <- function(.sutmats = NULL,
                                         # Input names
-                                        U = "U",
-                                        V = "V",
+                                        U = Recca::psut_cols$U,
+                                        V = Recca::psut_cols$V,
                                         # Output name
                                         balance_colname = Recca::balance_cols$intra_industry_balance_colname) {
   calc_bal_func <- function(U_mat, V_mat) {
@@ -370,7 +370,9 @@ verify_intra_industry_balance <- function(.sutmats = NULL,
 #'                                  spread(key = matrix.name, value = matrix))
 verify_SUT_industry_production <- function(.sutmats = NULL,
                                            # Input column names
-                                           R = "R", U = "U", V = "V",
+                                           R = Recca::psut_cols$R,
+                                           U = Recca::psut_cols$U,
+                                           V = Recca::psut_cols$V,
                                            # Output column names
                                            industry_production_OK = ".industry_production_OK",
                                            problem_industries = ".problem_industries"){
@@ -617,12 +619,12 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 #'   dplyr::glimpse()
 endogenize_losses <- function(
     .sutmats = NULL,
-    V = "V",
-    Y = "Y",
-    losses_alloc = Recca::balance_cols$default_losses_alloc,
+    V = Recca::psut_cols$V,
+    Y = Recca::psut_cols$Y,
+    balance_colname = Recca::balance_cols$intra_industry_balance_colname,
+    losses_alloc_colname = Recca::balance_cols$losses_alloc_colname,
     loss_sector = list(Recca::balance_cols$losses_sector),
     replace_cols = FALSE,
-    balance_colname = Recca::balance_cols$intra_industry_balance_colname,
     # Output columns
     V_prime = "V_prime",
     Y_prime = "Y_prime") {
@@ -630,37 +632,48 @@ endogenize_losses <- function(
   endogenize_func <- function(V_mat,
                               Y_mat,
                               balance_vec,
-                              losses_alloc_mat,
-                              this_loss_sector) {
+                              losses_alloc_mat) {
     # Check for the case where losses_alloc_mat has only one row.
     # Repeat that row for every industry in V_mat.
+    if (nrow(losses_alloc_mat) == 1) {
+      # Repeat the row for every industry in V_mat
+      industries <- matsbyname::getrownames_byname(V_mat)
+      n_industries <- length(industries)
+      losses_alloc_mat <- matrix(rep(losses_alloc_mat, n_industries),
+                                 nrow = n_industries,
+                                 byrow = TRUE,
+                                 dimnames = list(industries,
+                                                 colnames(losses_alloc_mat))) |>
+        matsbyname::setrowtype(matsbyname::rowtype(losses_alloc_mat)) |>
+        matsbyname::setcoltype(matsbyname::coltype(losses_alloc_mat))
+    }
 
-    # Check that all industries in V_mat are represented
+    # Verify that all industries in V_mat are represented
     # in losses_alloc_mat.
+    assertthat::assert_that(setequal(rownames(V_mat),
+                                     rownames(losses_alloc_mat)),
+                            msg = "Industries not same in Recca::endogenize_losses()")
 
     # Hatize balance_vec
+    balance_vec_hat <- matsbyname::hatize_byname(balance_vec)
 
     # Multiply balance_vec_hat into losses_alloc_mat
     # to obtain the matrix to be added to V.
+    add_to_V <- matsbyname::matrixproduct_byname(balance_vec_hat, losses_alloc_mat)
 
     # Calculate V_prime
+    V_prime_mat <- matsbyname::sum_byname(V_mat, add_to_V)
 
     # Calculate colsums and transpose
     # to obtain the matrix to be added to Y
+    add_to_Y <- add_to_V |>
+      matsbyname::transpose_byname() |>
+      matsbyname::rowsums_byname(colname = loss_sector)
 
     # Calculate Y_prime
+    Y_prime_mat <- matsbyname::sum_byname(Y_mat, add_to_Y)
 
     # Make a list and return
-
-    # add_to_V <- balance_vec |>
-    #   matsbyname::setcolnames_byname(loss_product)
-    # V_prime_mat <- matsbyname::sum_byname(V_mat, add_to_V)
-    # add_to_Y <- balance_vec |>
-    #   matsbyname::transpose_byname() |>
-    #   matsbyname::sumall_byname() |>
-    #   matsbyname::setrownames_byname(loss_product) |>
-    #   matsbyname::setcolnames_byname(loss_sector)
-    # Y_prime_mat <- matsbyname::sum_byname(Y_mat, add_to_Y)
     list(V_prime_mat, Y_prime_mat) |>
       magrittr::set_names(c(V_prime, Y_prime))
   }
@@ -669,8 +682,7 @@ endogenize_losses <- function(
                                   V_mat = V,
                                   Y_mat = Y,
                                   balance_vec = balance_colname,
-                                  losses_alloc_mat = losses_alloc,
-                                  this_loss_sector = loss_sector)
+                                  losses_alloc_mat = losses_alloc_colname)
   if ((is.data.frame(.sutmats) | is.list(.sutmats)) & replace_cols) {
     out <- out |>
       dplyr::mutate(

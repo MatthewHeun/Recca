@@ -8,17 +8,17 @@
 \usage{
 calc_inter_industry_balance(
   .sutmats = NULL,
-  R = "R",
-  U = "U",
-  V = "V",
-  Y = "Y",
+  R = Recca::psut_cols$R,
+  U = Recca::psut_cols$U,
+  V = Recca::psut_cols$V,
+  Y = Recca::psut_cols$Y,
   balance_colname = Recca::balance_cols$inter_industry_balance_colname
 )
 
 calc_intra_industry_balance(
   .sutmats = NULL,
-  U = "U",
-  V = "V",
+  U = Recca::psut_cols$U,
+  V = Recca::psut_cols$V,
   balance_colname = Recca::balance_cols$intra_industry_balance_colname
 )
 }

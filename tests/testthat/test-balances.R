@@ -296,7 +296,13 @@ test_that("endogenize_losses() works correctly", {
   pivoted_E <- UKEnergy2000mats |>
     tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
     dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in%
-                    c(IEATools::last_stages$final, IEATools::last_stages$useful))
+                    c(IEATools::last_stages$final, IEATools::last_stages$useful)) |>
+    dplyr::mutate(
+      "{Recca::balance_cols$losses_alloc_colname}" :=
+        RCLabels::make_list(Recca::balance_cols$default_losses_alloc,
+                            n = dplyr::n(),
+                            lenx = 1)
+    )
   # Verify initial balance situation.
   pivoted_E |>
     calc_inter_industry_balance() |>
@@ -310,14 +316,8 @@ test_that("endogenize_losses() works correctly", {
   # Endogenize the energy losses.
   endogenized <- pivoted_E |>
     calc_intra_industry_balance() |>
-    endogenize_losses() |>
-    dplyr::mutate(
-      V = V_prime,
-      Y = Y_prime,
-      V_prime = NULL,
-      Y_prime = NULL,
-      "{Recca::balance_cols$intra_industry_balance_colname}" := NULL
-    )
+    endogenize_losses(replace_cols = FALSE)
+
   # Now test that everything remains balanced.
   endogenized |>
     calc_inter_industry_balance() |>

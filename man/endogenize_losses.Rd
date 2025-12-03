@@ -6,12 +6,12 @@
 \usage{
 endogenize_losses(
   .sutmats = NULL,
-  V = "V",
-  Y = "Y",
-  losses_alloc = Recca::balance_cols$default_losses_alloc,
+  V = Recca::psut_cols$V,
+  Y = Recca::psut_cols$Y,
+  balance_colname = Recca::balance_cols$intra_industry_balance_colname,
+  losses_alloc_colname = Recca::balance_cols$losses_alloc_colname,
   loss_sector = list(Recca::balance_cols$losses_sector),
   replace_cols = FALSE,
-  balance_colname = Recca::balance_cols$intra_industry_balance_colname,
   V_prime = "V_prime",
   Y_prime = "Y_prime"
 )
@@ -29,10 +29,11 @@ Default is "V".}
 of the column in \code{.sutmats} that contains same.
 Default is "Y".}
 
-\item{losses_alloc}{The allocation matrix for losses
-from each industry.
-See details.
-Default is \link{balance_cols}\verb{$default_losses_alloc_mat}.}
+\item{balance_colname}{The name of the column containing
+energy balance vectors.
+Default is
+\link{balance_cols}\verb{$intra_industry_balance_colname} or
+"SUTIntraIndustryBalance".}
 
 \item{loss_sector}{The string name of the sector
 that will absorb losses.
@@ -51,15 +52,14 @@ after endogenizing the losses
 when \code{.sutmats} is a data frame or a list.
 Default is \code{FALSE}.}
 
-\item{balance_colname}{The name of the column containing
-energy balance vectors.
-Default is
-\link{balance_cols}\verb{$intra_industry_balance_colname} or
-"SUTIntraIndustryBalance".}
-
 \item{V_prime}{The name of the \strong{V} matrix with endogenized losses.}
 
 \item{Y_prime}{The name of the \strong{Y} matrix with endogenized losses.}
+
+\item{losses_alloc}{The allocation matrix for losses
+from each industry.
+See details.
+Default is \link{balance_cols}\verb{$default_losses_alloc_mat}.}
 }
 \value{
 A version of \code{.sutmats} with losses endogenized.
