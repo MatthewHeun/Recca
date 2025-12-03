@@ -5,7 +5,7 @@
 \alias{balance_cols}
 \title{Balance column names}
 \format{
-A string list with 11 entries.
+A string list with 12 entries.
 \describe{
 \item{inter_industry_balance_colname}{The name of a column that contains inter-industry balance vectors.}
 \item{inter_industry_balanced_colname}{The name of a column that tells whether inter-industry balance vectors are all \strong{0}.}

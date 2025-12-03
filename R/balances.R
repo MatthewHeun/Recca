@@ -623,7 +623,7 @@ endogenize_losses <- function(
     Y = Recca::psut_cols$Y,
     balance_colname = Recca::balance_cols$intra_industry_balance_colname,
     losses_alloc_colname = Recca::balance_cols$losses_alloc_colname,
-    loss_sector = list(Recca::balance_cols$losses_sector),
+    loss_sector = Recca::balance_cols$losses_sector,
     replace_cols = FALSE,
     # Output columns
     V_prime = "V_prime",

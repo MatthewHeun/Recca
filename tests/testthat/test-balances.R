@@ -316,16 +316,16 @@ test_that("endogenize_losses() works correctly", {
   # Endogenize the energy losses.
   endogenized <- pivoted_E |>
     calc_intra_industry_balance() |>
-    endogenize_losses(replace_cols = FALSE)
+    endogenize_losses(replace_cols = TRUE)
 
   # Now test that everything remains balanced.
   endogenized |>
     calc_inter_industry_balance() |>
-    verify_inter_industry_balance() |>
+    verify_inter_industry_balance(delete_balance_cols_if_verified = TRUE) |>
     expect_silent()
   endogenized |>
     calc_intra_industry_balance() |>
-    verify_intra_industry_balance() |>
+    verify_intra_industry_balance(delete_balance_cols_if_verified = TRUE) |>
     expect_silent()
   # Test that expected row and column names now exist in the matrices
   for (i in 1:2) {
