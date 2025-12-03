@@ -652,15 +652,15 @@ endogenize_losses <- function(
 
     # Make a list and return
 
-    add_to_V <- balance_vec |>
-      matsbyname::setcolnames_byname(loss_product)
-    V_prime_mat <- matsbyname::sum_byname(V_mat, add_to_V)
-    add_to_Y <- balance_vec |>
-      matsbyname::transpose_byname() |>
-      matsbyname::sumall_byname() |>
-      matsbyname::setrownames_byname(loss_product) |>
-      matsbyname::setcolnames_byname(loss_sector)
-    Y_prime_mat <- matsbyname::sum_byname(Y_mat, add_to_Y)
+    # add_to_V <- balance_vec |>
+    #   matsbyname::setcolnames_byname(loss_product)
+    # V_prime_mat <- matsbyname::sum_byname(V_mat, add_to_V)
+    # add_to_Y <- balance_vec |>
+    #   matsbyname::transpose_byname() |>
+    #   matsbyname::sumall_byname() |>
+    #   matsbyname::setrownames_byname(loss_product) |>
+    #   matsbyname::setcolnames_byname(loss_sector)
+    # Y_prime_mat <- matsbyname::sum_byname(Y_mat, add_to_Y)
     list(V_prime_mat, Y_prime_mat) |>
       magrittr::set_names(c(V_prime, Y_prime))
   }
