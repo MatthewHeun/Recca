@@ -167,7 +167,8 @@ a warning occurs and
 
 A second type of balance
 (the intra-industry balance)
-computes differences _across_ industries.
+computes differences _across_ industries,
+inputs ($\mathbf{U}$) less outputs ($\mathbf{V}$).
 Intra-industry balances
 are obtained by the following computation.
 
@@ -177,7 +178,6 @@ The result is a column vector with industries in rows.
 
 The interpretation of the results depends upon 
 the construction of the matrices.
-
 In a PSUT description of conserved quantities
 (such as mass or energy),
 when all losses are accounted within the matrices themselves,
