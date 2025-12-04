@@ -179,7 +179,9 @@ are obtained by the following computation.
 
 $$(\mathbf{U}^\mathrm{T} - \mathbf{V}) \, \mathbf{i}$$
 
-The result is a column vector with industries in rows.
+The result is a column vector with 
+industries in rows.
+Positive loss values expected in the resultant vector.
 
 The interpretation of the results depends upon 
 the construction of the matrices.
@@ -364,11 +366,14 @@ The $\mathbf{W}$ matrix is closest to the intra-industry balances,
 but 
 
 * with the opposite sense
-($\mathbf{W}$ has products in rows and industries in columns while 
-the intra-industry balances have industries in rows), 
+  (in $\mathbf{W}$ products are in rows and industries in columns; 
+  in the intra-industry balances, industries are in rows), 
 * without summation by the unit vector ($\mathbf{i}$),
 and 
-* with opposite sign.
+* with opposite sign
+  (in $\mathbf{W}$, losses are negative; 
+  in the intra-industry balance, 
+  losses are positive).
 
 The following code shows the comparison
 between $\mathbf{W}$ and the intra-industry balances.
