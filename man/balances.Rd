@@ -136,5 +136,8 @@ intra[[Recca::balance_cols$intra_industry_balance_colname]][[1]]
 intra[[Recca::balance_cols$intra_industry_balance_colname]][[2]]
 }
 \seealso{
-\code{\link[=verify_inter_industry_balance]{verify_inter_industry_balance()}} and \code{\link[=verify_intra_industry_balance]{verify_intra_industry_balance()}}
+\code{\link[=verify_inter_industry_balance]{verify_inter_industry_balance()}},
+\code{\link[=verify_intra_industry_balance]{verify_intra_industry_balance()}}, and
+\code{\link[=calc_yqfgW]{calc_yqfgW()}} which calculates \strong{W},
+a matrix similar to the inter-industry balance vector.
 }

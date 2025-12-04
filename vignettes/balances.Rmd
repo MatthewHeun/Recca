@@ -91,11 +91,16 @@ it with the `Recca` package.
 
 In any conversion chain, 
 products that leave one industry must enter another industry.
-These between-industry (or inter-industry) balances
+Inter-industry balances are a product balance
+that ensures that the total supply of any product
+is equal to the total use of any product
+within the conversion chain.
+These inter-industry (or between-industry) balances
 should be verified for every conversion chain
 to ensure consistency.
 
-Inter-industry balances are obtained
+Inter-industry balances
+are obtained
 by the following computation.
 
 $$[(\mathbf{R} + \mathbf{V})^\mathrm{T} 
@@ -246,7 +251,8 @@ intra_industry_balances$SUTIntraIndustryBalance[[2]]
 ```
 
 Because the matrices in `ecc` do not contain losses, 
-`calc_intra_industry_balance()` calculates energy losses (waste heat)
+`calc_intra_industry_balance()` calculates energy losses 
+(waste heat and waste products)
 ($\mathbf{e}_L$ in the table above).
 
 

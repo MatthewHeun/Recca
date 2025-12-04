@@ -85,7 +85,10 @@
 #'
 #' @returns A list or data frame containing balances.
 #'
-#' @seealso [verify_inter_industry_balance()] and [verify_intra_industry_balance()]
+#' @seealso [verify_inter_industry_balance()],
+#'          [verify_intra_industry_balance()], and
+#'          [calc_yqfgW()] which calculates **W**,
+#'          a matrix similar to the inter-industry balance vector.
 #'
 #' @examples
 #' # Inter-industry balances
