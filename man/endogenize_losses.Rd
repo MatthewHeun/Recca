@@ -87,7 +87,7 @@ in rows.
 The values in the matrix are fractions
 of each industry's (in rows) losses that are allocated
 to loss products (in columns).
-Rows of this table must sum to \code{1}.
+Rows of this matrix must sum to \code{1}.
 The value of \code{losses_alloc} must resolve to a matrix
 of this form.
 Options include:
@@ -110,14 +110,16 @@ rows in the wide-by-matrices data frame supplied
 in \code{.sutmats}.
 All industries in the \strong{V} matrix must be present
 in the rows of \code{losses_alloc_mat}.
-If the matrix has a single row,
+If the matrix has a single row
+(as the default, \link{balance_cols}\verb{$default_losses_alloc}),
 it is assumed to apply to all industries.
 \item The string name of a column in \code{.sutmats}
 that contains loss allocation matrices for every row
 in \code{.sutmats}.
 All industries in the \strong{V} matrix must be present
 in the rows of the matrices in the \code{losses_alloc_mat} column.
-If any of the matrices has a single row,
+If any of the matrices in the string name
+has a single row,
 it is assumed to apply to all industries.
 }
 
@@ -135,18 +137,24 @@ mats <- UKEnergy2000mats |>
   dplyr::mutate(
     # Add a matrix column of loss allocations.
     # This bit of code adds a default loss allocation matrix
-    # to every row.
+    # to every row of the data frame.
     "{Recca::balance_cols$losses_alloc_colname}" :=
       RCLabels::make_list(Recca::balance_cols$default_losses_alloc,
                           n = dplyr::n(),
                           lenx = 1)
-    ) |>
-  calc_intra_industry_balance()
+    )
+dplyr::glimpse(mats)
 mats |>
+  calc_intra_industry_balance() |>
   endogenize_losses() |>
   dplyr::glimpse()
-  # Replace original matrices with endogenized matrices
+# Replace original matrices with endogenized matrices
 mats |>
+  calc_intra_industry_balance() |>
   endogenize_losses(replace_cols = TRUE) |>
+  # Check the intra-industry balance.
+  # Everything should be balanced now.
+  calc_intra_industry_balance() |>
+  verify_intra_industry_balance() |>
   dplyr::glimpse()
 }

@@ -527,7 +527,7 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 #' The values in the matrix are fractions
 #' of each industry's (in rows) losses that are allocated
 #' to loss products (in columns).
-#' Rows of this table must sum to `1`.
+#' Rows of this matrix must sum to `1`.
 #' The value of `losses_alloc` must resolve to a matrix
 #' of this form.
 #' Options include:
@@ -550,14 +550,16 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 #'   in `.sutmats`.
 #'   All industries in the **V** matrix must be present
 #'   in the rows of `losses_alloc_mat`.
-#'   If the matrix has a single row,
+#'   If the matrix has a single row
+#'   (as the default, [Recca::balance_cols]`$default_losses_alloc`),
 #'   it is assumed to apply to all industries.
 #' * The string name of a column in `.sutmats`
 #'   that contains loss allocation matrices for every row
 #'   in `.sutmats`.
 #'   All industries in the **V** matrix must be present
 #'   in the rows of the matrices in the `losses_alloc_mat` column.
-#'   If any of the matrices has a single row,
+#'   If any of the matrices in the string name
+#'   has a single row,
 #'   it is assumed to apply to all industries.
 #'
 #' All losses are allocated to
@@ -617,19 +619,25 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 #'   dplyr::mutate(
 #'     # Add a matrix column of loss allocations.
 #'     # This bit of code adds a default loss allocation matrix
-#'     # to every row.
+#'     # to every row of the data frame.
 #'     "{Recca::balance_cols$losses_alloc_colname}" :=
 #'       RCLabels::make_list(Recca::balance_cols$default_losses_alloc,
 #'                           n = dplyr::n(),
 #'                           lenx = 1)
-#'     ) |>
-#'   calc_intra_industry_balance()
+#'     )
+#' dplyr::glimpse(mats)
 #' mats |>
+#'   calc_intra_industry_balance() |>
 #'   endogenize_losses() |>
 #'   dplyr::glimpse()
-#'   # Replace original matrices with endogenized matrices
+#' # Replace original matrices with endogenized matrices
 #' mats |>
+#'   calc_intra_industry_balance() |>
 #'   endogenize_losses(replace_cols = TRUE) |>
+#'   # Check the intra-industry balance.
+#'   # Everything should be balanced now.
+#'   calc_intra_industry_balance() |>
+#'   verify_intra_industry_balance() |>
 #'   dplyr::glimpse()
 endogenize_losses <- function(
     .sutmats = NULL,
