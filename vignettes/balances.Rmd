@@ -138,7 +138,7 @@ inter_industry_balances$SUTInterIndustryBalance[[4]]
 As expected, these vectors are the $\mathbf{0}$ vector to within 
 reasonable precision.
 
-If you want to check the inter-industry balances for consistency, 
+To check the inter-industry balances for consistency, 
 use `verify_inter_industry_balance()`.
 The `tol` argument gives the tolerance for
 non-zero product balances.
@@ -181,7 +181,8 @@ $$(\mathbf{U}^\mathrm{T} - \mathbf{V}) \, \mathbf{i}$$
 
 The result is a column vector with 
 industries in rows.
-Positive loss values expected in the resultant vector.
+In the resultant column vector, 
+losses are positive values.
 
 The interpretation of the results depends upon 
 the construction of the matrices.
@@ -203,7 +204,10 @@ When losses _are not_ accounted in the matrices,
 the intra-industry balance gives the sum of
 destruction and losses.
 
-The following table summarizes the above points.
+The following table summarizes the above points,
+giving the result of intra-industry balances
+for various conversion chain types,
+depending on whether the matrices include losses.
 
 | Matrices contain              | Matrices include losses (wastes)  | Matrices exclude losses (wastes) |
 | :---------------------------: | :-------------------------------: | :------------------------------: |
@@ -211,7 +215,7 @@ The following table summarizes the above points.
 | Energy (ECC)                  | $\mathbf{0}$                      | $\mathbf{e}_L$                   |
 | Mass exergy (BCC)             | $\mathbf{b}_D$                    | $\mathbf{b}_D + \mathbf{b}_L$    |
 | Energy exergy (XCC)           | $\mathbf{x}_D$                    | $\mathbf{x}_D + \mathbf{x}_L$    |
-| Mass and energy exergy (BXCC) | $\mathbf{bx}_D$                   | $\mathbf{bx}_D + \mathbf{bx}_L$  |
+| Mass and energy exergy (BXCC) | $\mathbf{b}_D + \mathbf{x}_D$     | $\mathbf{b}_D + \mathbf{b}_L + \mathbf{x}_D + \mathbf{x}_L$  |
 
 MCC indicates a material conversion chain.
 ECC indicates an energy conversion chain.
@@ -221,9 +225,8 @@ BXCC indicates a combined material and energy exergy conversion chain.
 $\mathbf{0}$ indicates the result is the zero vector;
 $\mathbf{m}$ indicates the result is a mass vector;
 $\mathbf{e}$ indicates the result is an energy vector;
-$\mathbf{b}$ indicates the result is a mass exergy vector;
-$\mathbf{x}$ indicates the result is an energy exergy vector; and
-$\mathbf{bx}$ indicates the result is a the sum of mass and energy exergy vectors.
+$\mathbf{b}$ indicates the result is a mass exergy vector; and
+$\mathbf{x}$ indicates the result is an energy exergy vector.
 Subscript $L$ indicates losses (or wastes), and 
 subscript $D$ indicates exergy destroyed by the industry.
 
@@ -234,7 +237,7 @@ use the following code.
 
 ```{r}
 intra_industry_balances <- ecc |> 
-  dplyr::filter(LastStage %in% c("Final", "Useful")) |> 
+  dplyr::filter(EnergyType == "E" & (LastStage %in% c("Final", "Useful"))) |> 
   calc_intra_industry_balance()
 ```
 
@@ -243,6 +246,15 @@ named "SUTIntraIndustryBalance" by default.
 
 ```{r}
 dplyr::glimpse(intra_industry_balances)
+```
+
+Unsurprisingly, a warning is issued, because
+verification is unsuccessful.
+
+```{r}
+intra_industry_balances |> 
+  verify_intra_industry_balance() |> 
+  glimpse()
 ```
 
 The vectors in the "SUTIntraIndustryBalance" column have industries in rows.
@@ -263,7 +275,7 @@ Because the matrices in `ecc` do not contain losses,
 The losses can be endogenized, 
 i.e., added to the $\mathbf{RUVY}$ matrices of the PSUT framework.
 To do so, 
-use the function `endogenize_losses()`.
+use `endogenize_losses()`.
 But first, one needs to allocate the losses from each sector to a 
 particular type of product or set of products.
 The allocation of losses to products is accomplished by a matrix
@@ -308,7 +320,8 @@ endogenized <- iibs_with_loss_allocs |>
 by default `V_prime` and `Y_prime`.
 `V_prime` and `Y_prime` contain $\mathbf{V}$ and $\mathbf{Y}$ matrices
 with losses included directly in the matrices.
-The $\mathbf{V}^{\prime}$ matrices contain a new column
+In the example, 
+the $\mathbf{V}^{\prime}$ matrices contain a new column
 (named "Waste heat" by default)
 that shows the heat losses from each industry.
 
@@ -350,7 +363,7 @@ the balances obtained from
 `calc_intra_industry_balance()`. 
 The following equations show the similarities and differences.
 
-The $\mathbf{W}$ matrix is 
+The value added matrix ($\mathbf{W}$) is 
 
 $$\mathbf{W} = \mathbf{V}^{\mathrm{T}} - \mathbf{U}$$
 
@@ -362,11 +375,11 @@ and the intra-industry balances are calculated by
 
 $$(\mathbf{U}^\mathrm{T} - \mathbf{V})  \mathbf{i} \, .$$
 
-The $\mathbf{W}$ matrix is closest to the intra-industry balances, 
+The value added matrix ($\mathbf{W}$) is closest to the intra-industry balances, 
 but 
 
 * with the opposite sense
-  (in $\mathbf{W}$ products are in rows and industries in columns; 
+  (in $\mathbf{W}$ products are in rows; 
   in the intra-industry balances, industries are in rows), 
 * without summation by the unit vector ($\mathbf{i}$),
 and 
@@ -376,7 +389,7 @@ and
   losses are positive).
 
 The following code shows the comparison
-between $\mathbf{W}$ and the intra-industry balances.
+between $\mathbf{W}$ and intra-industry balances.
 
 ```{r}
 compare <- ecc |> 

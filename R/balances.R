@@ -1,24 +1,26 @@
 #' Calculate inter- and intra-industry balances for PSUT (**RUVY**) matrices2
 #'
-#' Balances are an important aspect of analyzing mass and energy conversion chains
+#' Balances are an important aspect of analyzing material and
+#' energy conversion chains
 #' in the PSUT framework with the **RUVY** matrices.
 #' Often, balances are calculated on energy or exergy flows.
 #' Balances can be calculated for mass flows or monetary flows, too.
 #'
-#' ## Inter-industry balances
+#' ## Inter-industry (between-industry) balances
 #'
-#' In a PSUT description of a mass or energy conversion chain,
+#' In a PSUT description of a material or energy conversion chain,
 #' all of every product leaving one industry must arrive at another industry.
 #' `calc_inter_industry_balances()`
 #' calculates these between-industry balances via
 #' ((**R** + **V**)^T^ - (**U** + **Y**))**i**.
 #' Inter-industry balances are calculated for products (not industries).
 #'
-#' ## Intra-industry balances
+#' ## Intra-industry (across-industry) balances
 #'
 #' `calc_intra_industry_balances()` calculates across-industry
 #' balances via
-#' (**U**^T^ - **V**)**i**.
+#' (**U**^T^ - **V**)**i**
+#' (inputs - outputs).
 #' Inter-industry balances are calculated for industries (not products),
 #' and the result is a column vector of industry balances.
 #'
@@ -35,26 +37,29 @@
 #'
 #' For inter-industry (between-industry) balances,
 #' the result is a column vector of product balances.
-#' The result should __always__ be the **0** vector.
+#' The result should _always_ be the **0** vector,
+#' regardless of the quantity represented by the matrices.
 #'
 #' In a PSUT description of a mass or energy conversion chain,
 #' the meaning of intra-industry (across-industry) balances
-#' depends on the construction of the matrices.
+#' depends on the construction of the matrices and the
+#' quantity represented by the matrices.
 #' When all losses are accounted in the matrices themselves,
 #' the calculation of intra-industry balances for
-#' mass and energy conversion chains should give the **0** vector
-#' with industries in rows,
-#' because mass and energy are conserved.
-#' When losses are __not__ accounted in the matrices,
+#' conversion chains of conserved quantities
+#' (e.g., mass, energy, money)
+#' should give the **0** vector
+#' with industries in rows.
+#' When losses are _not_ accounted in the matrices,
 #' the calculation of intra-industry balances gives losses.
 #'
-#' For exergy conversion chains
-#' (mass, energy, or both),
-#' when losses are accounted in the matrices,
-#' the intra-industry balance gives exergy destruction.
-#' When losses are __not__ accounted in the matrices,
+#' For conversion chains of unconserved quantities
+#' (e.g., entropy and exergy),
+#' when losses _are_ accounted in the matrices,
+#' the intra-industry balance gives generation or destruction.
+#' When losses _are not_ accounted in the matrices,
 #' the intra-industry balance gives the sum of
-#' exergy destruction and exergy losses.
+#' generation, destruction and losses.
 #'
 #' @param .sutmats A named list of matrices or
 #'                 an SUT-style, wide-by-matrices data frame
