@@ -673,9 +673,14 @@ endogenize_losses <- function(
 
     # Verify that all industries in V_mat are represented
     # in losses_alloc_mat.
-    assertthat::assert_that(setequal(rownames(V_mat),
-                                     rownames(losses_alloc_mat)),
-                            msg = "Industries not same in Recca::endogenize_losses()")
+    if (!setequal(rownames(V_mat), rownames(losses_alloc_mat))) {
+      unique_rows_V_mat <- setdiff(rownames(V_mat), rownames(losses_alloc_mat))
+      unique_row_alloc_mat <- setdiff(rownames(losses_alloc_mat), rownames(V_mat))
+      msg <- paste0("Industries not same in Recca::endogenize_losses():\n",
+                    "Rows unique to V: ", paste(unique_rows_V_mat, sep = ", "), ".\n",
+                    "Rows unique to allocation matrix: ", paste(unique_rows_V_mat, sep = ", "), ".\n")
+      stop(msg)
+    }
 
     # Verify that all rows of the allocation matrix sum to 1
     # to within tol.
