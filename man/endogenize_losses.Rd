@@ -6,11 +6,14 @@
 \usage{
 endogenize_losses(
   .sutmats = NULL,
+  R = Recca::psut_cols$R,
+  U = Recca::psut_cols$U,
   V = Recca::psut_cols$V,
   Y = Recca::psut_cols$Y,
   balance_colname = Recca::balance_cols$intra_industry_balance_colname,
   losses_alloc_colname = Recca::balance_cols$losses_alloc_colname,
   loss_sector = Recca::balance_cols$losses_sector,
+  loss_verification_colname = paste0(balance_colname, "Verify0"),
   replace_cols = FALSE,
   V_prime = "V_prime",
   Y_prime = "Y_prime",
@@ -22,6 +25,15 @@ endogenize_losses(
 a list of lists of matrices.
 Default is \code{NULL}.}
 
+\item{R}{Resources (\strong{R}) matrix or name of the column in \code{.sutmats}
+that contains same.
+Default is "R".}
+
+\item{U}{Use (\strong{U}) matrix or name of the column in \code{.sutmats}
+that contains same.
+Necessary for verifying calculating losses.
+Default is "U".}
+
 \item{V}{Make (\strong{V}) matrix or name of the column in \code{.sutmats}
 that contains same.
 Default is "V".}
@@ -32,6 +44,8 @@ Default is "Y".}
 
 \item{balance_colname}{The name of the column containing
 energy balance vectors.
+If not present, losses are calculated internally
+with \code{\link[=calc_intra_industry_balance]{calc_intra_industry_balance()}}.
 Default is
 \link{balance_cols}\verb{$intra_industry_balance_colname} or
 "SUTIntraIndustryBalance".}
@@ -43,7 +57,7 @@ Default is \link{balance_cols}\verb{$losses_alloc_colname} or
 "LossesAlloc".}
 
 \item{loss_sector}{The string name of the sector
-that will absorb losses.
+that will absorb losses in the \strong{Y} matrix.
 Default is \link{balance_cols}\verb{$losses_sector}
 or "Losses".}
 
@@ -64,6 +78,15 @@ Default is \code{FALSE}.}
 \item{tol}{The maximum allowable difference from \code{1} for the rowsums of
 loss allocation matrices.
 Default is \code{1e-6}.}
+
+\item{delete_balance_cols_if_verified}{A boolean that tells whether to delete
+the \code{balances} and \code{balanced_colname} columns
+if \code{.sutmats} is a data frame and
+if balances are verified.
+Default is \code{FALSE}.
+If individual matrices are specified
+in the \code{R}, \code{U}, \code{V}, and \code{Y} arguments,
+no deletion is performed.}
 }
 \value{
 A version of \code{.sutmats} with losses endogenized.
@@ -75,11 +98,6 @@ it may be helpful to endogenize the losses.
 This function performs the endogenization.
 }
 \details{
-Intra-industry balances need to be calculated
-(most easily via \code{\link[=calc_intra_industry_balance]{calc_intra_industry_balance()}})
-prior to calling this function.
-See the example.
-
 A losses allocation matrix tells how losses from
 each industry should be allocated to products.
 The matrix has industries in rows and products (losses)
@@ -127,6 +145,10 @@ All losses are allocated to
 \code{loss_sector} in the \strong{Y} matrix,
 by default named
 \link{balance_cols}\verb{$losses_sector or "}r Recca::balance_cols$losses_sector`".
+
+#' If \code{balance_colname} is not present,
+intra-industry balances are calculated internally via
+\code{\link[=calc_intra_industry_balance]{calc_intra_industry_balance()}}.
 }
 \examples{
 mats <- UKEnergy2000mats |>

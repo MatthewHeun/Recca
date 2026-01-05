@@ -515,11 +515,6 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 #' it may be helpful to endogenize the losses.
 #' This function performs the endogenization.
 #'
-#' Intra-industry balances need to be calculated
-#' (most easily via [calc_intra_industry_balance()])
-#' prior to calling this function.
-#' See the example.
-#'
 #' A losses allocation matrix tells how losses from
 #' each industry should be allocated to products.
 #' The matrix has industries in rows and products (losses)
@@ -567,10 +562,21 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 #' by default named
 #' [Recca::balance_cols]`$losses_sector or
 #' "`r Recca::balance_cols$losses_sector`".
-
+#'
+#' #' If `balance_colname` is not present,
+#' intra-industry balances are calculated internally via
+#' [calc_intra_industry_balance()].
+#'
 #' @param .sutmats A `matsindf` data frame, wide by matrices, or
 #'                 a list of lists of matrices.
 #'                 Default is `NULL`.
+#' @param R Resources (**R**) matrix or name of the column in `.sutmats`
+#'          that contains same.
+#'          Default is "R".
+#' @param U Use (**U**) matrix or name of the column in `.sutmats`
+#'          that contains same.
+#'          Necessary for verifying calculating losses.
+#'          Default is "U".
 #' @param V Make (**V**) matrix or name of the column in `.sutmats`
 #'          that contains same.
 #'          Default is "V".
@@ -579,6 +585,8 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 #'          Default is "Y".
 #' @param balance_colname The name of the column containing
 #'                        energy balance vectors.
+#'                        If not present, losses are calculated internally
+#'                        with [calc_intra_industry_balance()].
 #'                        Default is
 #'                        [Recca::balance_cols]`$intra_industry_balance_colname` or
 #'                        "`r Recca::balance_cols$intra_industry_balance_colname`".
@@ -588,7 +596,7 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 #'                             Default is [Recca::balance_cols]`$losses_alloc_colname` or
 #'                             "`r Recca::balance_cols$losses_alloc_colname`".
 #' @param loss_sector The string name of the sector
-#'                    that will absorb losses.
+#'                    that will absorb losses in the **Y** matrix.
 #'                    Default is [Recca::balance_cols]`$losses_sector`
 #'                    or "`r Recca::balance_cols$losses_sector`".
 #' @param replace_cols A boolean that tells whether to
@@ -602,6 +610,14 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 #'                     Default is `FALSE`.
 #' @param V_prime The name of the **V** matrix with endogenized losses.
 #' @param Y_prime The name of the **Y** matrix with endogenized losses.
+#' @param delete_balance_cols_if_verified A boolean that tells whether to delete
+#'                                        the `balances` and `balanced_colname` columns
+#'                                        if `.sutmats` is a data frame and
+#'                                        if balances are verified.
+#'                                        Default is `FALSE`.
+#'                                        If individual matrices are specified
+#'                                        in the `R`, `U`, `V`, and `Y` arguments,
+#'                                        no deletion is performed.
 #' @param tol The maximum allowable difference from `1` for the rowsums of
 #'            loss allocation matrices.
 #'            Default is `1e-6`.
@@ -641,21 +657,38 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 #'   dplyr::glimpse()
 endogenize_losses <- function(
     .sutmats = NULL,
+    R = Recca::psut_cols$R,
+    U = Recca::psut_cols$U,
     V = Recca::psut_cols$V,
     Y = Recca::psut_cols$Y,
     balance_colname = Recca::balance_cols$intra_industry_balance_colname,
     losses_alloc_colname = Recca::balance_cols$losses_alloc_colname,
     loss_sector = Recca::balance_cols$losses_sector,
+    loss_verification_colname = paste0(balance_colname, "Verify0"),
     replace_cols = FALSE,
     # Output columns
     V_prime = "V_prime",
     Y_prime = "Y_prime",
     tol = 1e-6) {
 
-  endogenize_func <- function(V_mat,
+  endogenize_func <- function(R_mat,
+                              U_mat,
+                              V_mat,
                               Y_mat,
-                              balance_vec,
+                              balance_vec = NULL, # optional
                               losses_alloc_mat) {
+
+    # Verify that inter-industry balane is present at the beginning
+    calc_inter_industry_balance(R = R_mat, U = U_mat, V = V_mat, Y = Y_mat) |>
+      verify_inter_industry_balance(tol = tol)
+
+    # If intra-industry balances are not available, calculate them
+    if (is.null(balance_vec)) {
+      # Calculate intra-industry balances
+      balance_vec <- calc_intra_industry_balance(U = U_mat, V = V_mat, balance_colname = balance_colname) |>
+        magrittr::extract2(balance_colname)
+    }
+
     # Check for the case where losses_alloc_mat has only one row.
     # Repeat that row for every industry in V_mat.
     if (nrow(losses_alloc_mat) == 1) {
@@ -673,17 +706,14 @@ endogenize_losses <- function(
 
     # Verify that all industries in V_mat are represented
     # in losses_alloc_mat.
-    if (!setequal(rownames(V_mat), rownames(losses_alloc_mat))) {
-      unique_rows_V_mat <- setdiff(rownames(V_mat), rownames(losses_alloc_mat))
-      unique_row_alloc_mat <- setdiff(rownames(losses_alloc_mat), rownames(V_mat))
+    unique_rows_V_mat <- setdiff(rownames(V_mat), rownames(losses_alloc_mat))
+    if (length(unique_rows_V_mat != 0)) {
       msg <- paste0("Industries not same in Recca::endogenize_losses():\n",
-                    "Rows unique to V: ", paste(unique_rows_V_mat, sep = ", "), ".\n",
-                    "Rows unique to allocation matrix: ", paste(unique_rows_V_mat, sep = ", "), ".\n")
+                    "Rows unique to V matrix: ", paste(unique_rows_V_mat, sep = ", "))
       stop(msg)
     }
 
-    # Verify that all rows of the allocation matrix sum to 1
-    # to within tol.
+    # Verify that all rows of the allocation matrix sum to 1 +/- tol
     rowsums_losses_alloc_mat <- matsbyname::rowsums_byname(losses_alloc_mat) - 1
     assertthat::assert_that(matsbyname::iszero_byname(rowsums_losses_alloc_mat, tol = tol),
                             msg = paste("Rows of the losses allocation matrix",
@@ -708,12 +738,21 @@ endogenize_losses <- function(
     # Calculate Y_prime
     Y_prime_mat <- matsbyname::sum_byname(Y_mat, add_to_Y)
 
+    # Verify that inter-industry balance is still observed
+    calc_inter_industry_balance(R = R_mat, U = U_mat, V = V_prime_mat, Y = Y_prime_mat) |>
+      verify_inter_industry_balance(tol = tol)
+    # Verify that endogenizing losses eliminates losses
+    calc_intra_industry_balance(U = U_mat, V = V_prime_mat) |>
+      verify_intra_industry_balance(tol = tol)
+
     # Make a list and return
     list(V_prime_mat, Y_prime_mat) |>
       magrittr::set_names(c(V_prime, Y_prime))
   }
   out <- matsindf::matsindf_apply(.sutmats,
                                   FUN = endogenize_func,
+                                  R_mat = R,
+                                  U_mat = U,
                                   V_mat = V,
                                   Y_mat = Y,
                                   balance_vec = balance_colname,
