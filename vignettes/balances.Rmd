@@ -160,7 +160,6 @@ inter_industry_balances |>
   dplyr::glimpse()
 ```
 
-
 If a product is out of balance 
 by more than `tol` (by default `1e-6`), 
 a warning occurs and 
@@ -270,18 +269,17 @@ Because the matrices in `ecc` do not contain losses,
 ($\mathbf{e}_L$ in the table above).
 
 
-### Endogenizing losses
+### Endogenizing intra-industry losses
 
-The losses can be endogenized, 
+The intra-industry losses can be endogenized, 
 i.e., added to the $\mathbf{RUVY}$ matrices of the PSUT framework.
-To do so, 
-use `endogenize_losses()`.
+with `endogenize_losses()`.
 But first, one needs to allocate the losses from each sector to a 
 particular type of product or set of products.
 The allocation of losses to products is accomplished by a matrix
 with industries in rows and loss products in columns.
 The rows of the loss allocation matrix must sum to 1.
-The `losses_alloc_colname` column 
+The `losses_alloc` column 
 (by default `Recca::balance_cols$losses_alloc_colname`
 or "`r Recca::balance_cols$losses_alloc_colname`")
 contains those matrices.

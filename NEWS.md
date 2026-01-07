@@ -11,6 +11,17 @@ Cite all releases of `Recca` with doi
 which always resolves to the latest release.
 
 
+* `endogenize_losses()` gains new argument `clean`.
+  When `TRUE` (default is `FALSE`), 
+  **0** rows and columns are deleted from the output.
+  This is helpful when a pre-endogenized 
+  (and fully balanced)
+  conversion chain is the input.
+  In that case, the output will be the unchanged input.
+* `verify_inter_industry_balance()` and 
+  `verify_intra_industry_balance()` now 
+  both calculate balances internally
+  if not supplied.
 * `endogenize_losses()` gains new boolean convenience argument
   `replace_cols` that tells whether
   new **V** and **Y** matrices should replace the old ones.

@@ -32,6 +32,22 @@ verify_intra_industry_balance(
 \item{.sutmats}{An SUT-style data frame with a column
 named \code{balances}.}
 
+\item{R}{Resources (\strong{R}) matrix or name of the column in \code{.sutmats}
+that contains same.
+Default is "R".}
+
+\item{U}{Use (\strong{U}) matrix or name of the column in \code{.sutmats}
+that contains same.
+Default is "U".}
+
+\item{V}{Make (\strong{V}) matrix or name of the column in \code{.sutmats}
+that contains same.
+Default is "V".}
+
+\item{Y}{Final demand (\strong{Y}) matrix or name of the column in \code{.sutmats}
+that contains same.
+Default is "Y".}
+
 \item{balances}{The name of a column that contains balance vectors.
 For \code{verify_inter_industry_balances()},
 the default is \link{balance_cols}\verb{$inter_industry_balance_colname}
@@ -44,6 +60,14 @@ or "SUTIntraIndustryBalance".}
 and still be considered balanced.
 Default is \code{1e-6}.}
 
+\item{balanced}{The name for booleans telling if balance is present.
+For \code{verify_inter_industry_balances()},
+the default is \link{balance_cols}\verb{$inter_industry_balanced_colname}
+or "SUTInterIndustryBalanced".
+For \code{verify_intra_industry_balances()},
+the default is \link{balance_cols}\verb{$intra_industry_balanced_colname}
+or "SUTIntraIndustryBalanced".}
+
 \item{delete_balance_if_verified}{A boolean that tells whether to delete
 the \code{balances} and \code{balanced_colname} columns
 if \code{.sutmats} is a data frame and
@@ -52,14 +76,6 @@ Default is \code{FALSE}.
 If individual matrices are specified
 in the \code{R}, \code{U}, \code{V}, and \code{Y} arguments,
 no deletion is performed.}
-
-\item{balanced_colname}{The name for booleans telling if balance is present.
-For \code{verify_inter_industry_balances()},
-the default is \link{balance_cols}\verb{$inter_industry_balanced_colname}
-or "SUTInterIndustryBalanced".
-For \code{verify_intra_industry_balances()},
-the default is \link{balance_cols}\verb{$intra_industry_balanced_colname}
-or "SUTIntraIndustryBalanced".}
 }
 \value{
 A list or data frame with an additional value or column
@@ -136,10 +152,12 @@ df |>
 df |>
   calc_intra_industry_balance() |>
   glimpse()
-dontrun{
-  df |>
-    verify_intra_industry_balance()
+# Not run, because it fails and emits a warning
+\dontrun{
+df |>
+  verify_intra_industry_balance()
 }
+
 }
 \seealso{
 \code{\link[=calc_inter_industry_balance]{calc_inter_industry_balance()}}, \code{\link[=calc_intra_industry_balance]{calc_intra_industry_balance()}}

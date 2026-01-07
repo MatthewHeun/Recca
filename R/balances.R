@@ -167,6 +167,18 @@ NULL
 #'
 #' @param .sutmats An SUT-style data frame with a column
 #'                 named `balances`.
+#' @param R Resources (**R**) matrix or name of the column in `.sutmats`
+#'          that contains same.
+#'          Default is "R".
+#' @param U Use (**U**) matrix or name of the column in `.sutmats`
+#'          that contains same.
+#'          Default is "U".
+#' @param V Make (**V**) matrix or name of the column in `.sutmats`
+#'          that contains same.
+#'          Default is "V".
+#' @param Y Final demand (**Y**) matrix or name of the column in `.sutmats`
+#'          that contains same.
+#'          Default is "Y".
 #' @param balances The name of a column that contains balance vectors.
 #'                 For `verify_inter_industry_balances()`,
 #'                 the default is [Recca::balance_cols]`$inter_industry_balance_colname`
@@ -177,13 +189,13 @@ NULL
 #' @param tol The maximum amount by which products can be out of balance
 #'            and still be considered balanced.
 #'            Default is `1e-6`.
-#' @param balanced_colname The name for booleans telling if balance is present.
-#'                         For `verify_inter_industry_balances()`,
-#'                         the default is [Recca::balance_cols]`$inter_industry_balanced_colname`
-#'                         or "`r Recca::balance_cols$inter_industry_balanced_colname`".
-#'                         For `verify_intra_industry_balances()`,
-#'                         the default is [Recca::balance_cols]`$intra_industry_balanced_colname`
-#'                         or "`r Recca::balance_cols$intra_industry_balanced_colname`".
+#' @param balanced The name for booleans telling if balance is present.
+#'                 For `verify_inter_industry_balances()`,
+#'                 the default is [Recca::balance_cols]`$inter_industry_balanced_colname`
+#'                 or "`r Recca::balance_cols$inter_industry_balanced_colname`".
+#'                 For `verify_intra_industry_balances()`,
+#'                 the default is [Recca::balance_cols]`$intra_industry_balanced_colname`
+#'                 or "`r Recca::balance_cols$intra_industry_balanced_colname`".
 #' @param delete_balance_if_verified A boolean that tells whether to delete
 #'                                   the `balances` and `balanced_colname` columns
 #'                                   if `.sutmats` is a data frame and
@@ -217,10 +229,12 @@ NULL
 #' df |>
 #'   calc_intra_industry_balance() |>
 #'   glimpse()
-#' dontrun{
-#'   df |>
-#'     verify_intra_industry_balance()
+#' # Not run, because it fails and emits a warning
+#' \dontrun{
+#' df |>
+#'   verify_intra_industry_balance()
 #' }
+#'
 #' @name verify-balances
 NULL
 
