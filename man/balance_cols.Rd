@@ -5,7 +5,7 @@
 \alias{balance_cols}
 \title{Balance column names}
 \format{
-A string list with 12 entries.
+A string list with 13 entries.
 \describe{
 \item{inter_industry_balance_colname}{The name of a column that contains inter-industry balance vectors.}
 \item{inter_industry_balanced_colname}{The name of a column that tells whether inter-industry balance vectors are all \strong{0}.}
@@ -17,6 +17,7 @@ A string list with 12 entries.
 \item{across_industry_balanced_colname}{The name of a column that contains intra-industry balance vectors are all \strong{0}.}
 \item{losses_alloc_colname}{The name of a column that contains loss allocation matrices.}
 \item{default_losses_alloc_mat}{The default losses allocation matrix with 1x1 dimensions, a row named "All industries", a column named "Waste heat", and a value of \code{1}.}
+\item{default_destruction_alloc_mat}{The default losses allocation matrix with 1x1 dimensions, a row named "All industries", a column named "Destroyed exergy", and a value of \code{1}.}
 \item{waste_heat}{The default name of a column in \strong{V} and row in \strong{Y} that contains losses calculated from intra-industry balances.}
 \item{losses_sector}{The name of a column in \strong{Y} that contains losses calculated from intra-industry balances.}
 }

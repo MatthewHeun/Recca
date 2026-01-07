@@ -109,6 +109,11 @@ balance_cols <- list(inter_industry_balance_colname = "SUTInterIndustryBalance",
                                                                        "Waste heat")) |>
                        matsbyname::setrowtype(Recca::row_col_types$industry_type) |>
                        matsbyname::setcoltype(Recca::row_col_types$product_type),
+                     default_destruction_alloc_mat = matrix(1,
+                                                            dimnames = list("All industries",
+                                                                            "Destroyed exergy")) |>
+                       matsbyname::setrowtype(Recca::row_col_types$industry_type) |>
+                       matsbyname::setcoltype(Recca::row_col_types$product_type),
                      waste_heat = "Waste heat",
                      losses_sector = "Losses")
 usethis::use_data(balance_cols, overwrite = TRUE)

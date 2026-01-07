@@ -678,7 +678,7 @@ endogenize_losses <- function(
                               balance_vec = NULL, # optional
                               losses_alloc_mat) {
 
-    # Verify that inter-industry balane is present at the beginning
+    # Verify that inter-industry balance is present at the beginning
     calc_inter_industry_balance(R = R_mat, U = U_mat, V = V_mat, Y = Y_mat) |>
       verify_inter_industry_balance(tol = tol)
 
