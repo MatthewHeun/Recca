@@ -4,12 +4,158 @@ output: html_document
 ---
 
 
-Cite all releases with doi [10.5281/zenodo.5226085](https://doi.org/10.5281/zenodo.5226085), 
+## All releases
+
+Cite all releases of `Recca` with doi
+[10.5281/zenodo.5226085](https://doi.org/10.5281/zenodo.5226085), 
 which always resolves to the latest release.
 
 
+## Recca 0.1.66 (2026-01-07)
 
-## Recca 0.1.59 (2025-06-27) 
+* `endogenize_losses()` gains new argument `clean`.
+  When `TRUE` (default is `FALSE`), 
+  **0** rows and columns are deleted from the output.
+  This is helpful when a pre-endogenized 
+  (and fully balanced)
+  conversion chain is the input.
+  In that case, the output will be the unchanged input.
+* `verify_inter_industry_balance()` and 
+  `verify_intra_industry_balance()` now 
+  both calculate balances internally
+  if not supplied.
+* `endogenize_losses()` gains new boolean convenience argument
+  `replace_cols` that tells whether
+  new **V** and **Y** matrices should replace the old ones.
+  Default is `FALSE` to _not_ replace old with new matrices.
+* `verify_inter_industry_balance()` and 
+  `verify_intra_industry_balance()` 
+  gain new boolean convenience argument `delete_balance_cols_if_verified`
+  that enables deletion of auxiliary columns
+  if balances are verified.
+  Default is `FALSE` to _not_ delete columns.
+* Minor updates to the README file.
+* Fixed the lifecycle badge. 
+  Previously, it pointed to the wrong page for "stable" status.
+* Fixed the R-CMD-check badge.
+  Previously, it indicated failure when all tests were passing.
+* New tests for new features.
+    - Now up to 935 tests, all passing.
+    - Test coverage remains at 100%.
+
+
+## Recca 0.1.65 (2025-11-30) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17772989.svg)](https://doi.org/10.5281/zenodo.17772989)
+
+* New "Balances" vignette describes 
+  details about the new balance functions
+  and compares to previous similar functions.
+* New function `endogenize_losses()` moves losses
+  calculated by 
+  `calc_intra_industry_balance()`
+  into the **V** and **Y** matrices
+  so that conserved quantities will always 
+  give the **0** vector with 
+  `calc_intra_industry_balance()`.
+* `verify_SUT_energy_balance()` is deprecated 
+  in favor of the combination of
+  `calc_inter_industry_balance()` and
+  `verify_inter_industry_balance()`, 
+  because it is helpful to see the calculated balances.
+* `verify_SUT_energy_balance_with_units()` is deprecated. 
+  It seemed like a good idea at the time, but we 
+  don't use it.
+* New functions `calc_intra_industry_balance()` and 
+  `verify_intra_industry_balance()` 
+  compute and verify intra-industry
+  (across-industry) balances.
+* New functions `calc_inter_industry_balance()` and 
+  `verify_inter_industry_balance()` 
+  compute and verify inter-industry
+  (between-industry) balances.
+* Improved error message in `write_ecc_to_excel()`.
+* New tests for new features.
+    - Now up to 915 tests, all passing.
+    - Test coverage remains at 100%.
+
+
+## Recca 0.1.64 (2025-08-24) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16938397.svg)](https://doi.org/10.5281/zenodo.16938397)
+
+* Working around a restriction in Excel where 
+  a region cannot be named "R".
+  New argument `alt_R_region_name` tells 
+  the region name for the **R** matrix.
+* No new tests.
+    - Still at 899 tests, all passing.
+    - Test coverage remains at 100%.
+
+
+## Recca 0.1.63 (2025-08-22) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16928058.svg)](https://doi.org/10.5281/zenodo.16928058)
+
+* Breaking change: 
+  `write_ecc_to_excel()` and `read_ecc_from_excel()`
+  now provide and read, respectively
+  worksheet-scoped region names for matrices. 
+  This change creates more robust 
+  Excel workbooks where matrix names are now 
+  referred by `worksheet name!matrix name`.
+* New tests for new features.
+    - Now up to 899 tests, all passing.
+    - Test coverage remains at 100%.
+
+
+## Recca 0.1.62 (2025-08-03) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16734290.svg)](https://doi.org/10.5281/zenodo.16734290)
+
+* `write_ecc_to_excel()` now allows writing worksheets 
+  into pre-existing files. 
+  New boolean argument `overwrite_worksheets` controls whether
+  existing worksheets can be overwritten.
+* New tests for new features.
+    - Now up to 898 tests, all passing.
+    - Test coverage remains at 100%.
+
+
+## Recca 0.1.61 (2025-07-25) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16429022.svg)](https://doi.org/10.5281/zenodo.16429022)
+
+* `reallocate_statistical_differences()` is now 
+  robust to ECCs with no Statistical differences, 
+  with Statistical differences in only **R**, and 
+  with Statistical differences in only **Y**.
+* Move `reallocate_statistical_differences()` and its tests
+  from `IEATools` to `Recca`. 
+  The purpose of `IEATools` is to move from the IEA format 
+  to the PSUT format. 
+  The purpose of `Recca` is to manipulate data already in the
+  PSUT format. 
+  `reallocate_statistical_differences()` requires
+  data in the PSUT format and therefore
+  `reallocate_statistical_differences()` is better suited to `Recca`.
+* `write_ecc_to_excel()` now completes the **U** and **V** 
+  matrices relative to each other on both margins,
+  thereby enabling easier energy balance checks
+  via (**iR**)^T^ + (**iV**)^T^ - **Ui** - **y** = **0**.
+* New tests for new features.
+    - Now up to 893 tests, all passing.
+    - Test coverage remains at 100%.
+
+
+## Recca 0.1.60 (2025-07-06) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15825137.svg)](https://doi.org/10.5281/zenodo.15825137)
+
+* New function `add_row_col_types()` 
+  adds row and column types to matrices
+  based on default matrix names and 
+  structure of the PSUT framework.
+  First use is inside `read_ecc_from_excel()`.
+* New function `read_ecc_from_excel()` serves
+  as the inverse of `write_ecc_to_excel()`, 
+  taking advantage of named regions in Excel spreadsheets.
+  Both functions now name regions as
+  `<<matrix name>>__<<worksheet name>>` by default.
+* New tests for new features.
+    - Now up to 852 tests, all passing.
+    - Test coverage remains at 100%.
+
+
+## Recca 0.1.59 (2025-06-27) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15756610.svg)](https://doi.org/10.5281/zenodo.15756610)
 
 * Now provides much better error reporting for 
   illegal named region and worksheet names in 

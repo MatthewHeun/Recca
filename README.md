@@ -1,22 +1,26 @@
 
 <!-- *********** -->
 
-<!-- Note: README.md is generated from README.Rmd.   -->
+<!-- Note: README.md is generated from README.Rmd. -->
 
 <!-- Be sure to edit README.Rmd and generate the README.md file by Cmd/Ctl-shift-K -->
 
 <!-- *********** -->
 
+<!-- badges: start -->
+
 [![CRAN
-status](https://www.r-pkg.org/badges/version/Recca)](https://cran.r-project.org/package=Recca)
-[![lifecycle](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://www.tidyverse.org/lifecycle/#stable)
+status](https://www.r-pkg.org/badges/version/Recca)](https://CRAN.R-project.org/package=Recca)
+[![Lifecycle:
+stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![R-CMD-check](https://github.com/MatthewHeun/Recca/workflows/R-CMD-check/badge.svg)](https://github.com/MatthewHeun/Recca/actions)
+[![R-CMD-check](https://github.com/MatthewHeun/Recca/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/MatthewHeun/Recca/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/MatthewHeun/Recca/graph/badge.svg)](https://app.codecov.io/gh/MatthewHeun/Recca)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5226085.svg)](https://doi.org/10.5281/zenodo.5226085)
+<!-- badges: end -->
 
 # Recca
 
@@ -30,9 +34,9 @@ to the final stage (energy purchased by consumers, such as refined
 petroleum and electricity), to the useful stage (energy desired by the
 end user, such as heat, motion, and light), and sometimes to energy
 services (such as thermal comfort, transport, and illumination). Such
-analyses are significantly easier when data are arranged in the **R**,
-**U**, **V**, and **Y** matrices of the PSUT framework described by
-[Heun et al. (2018)](https://doi.org/10.1016/j.apenergy.2018.05.109).
+analyses are significantly easier when data are arranged in the **RUVY**
+matrices of the PSUT framework described by [Heun et al.
+(2018)](https://doi.org/10.1016/j.apenergy.2018.05.109).
 
 To facilitate SEA with the PSUT framework, computational tools are
 needed. The computational tools should be amenable to use with
@@ -54,7 +58,7 @@ devtools::install_github("MatthewHeun/Recca", build_vignettes = TRUE)
 
 ## History
 
-The functions in this package were first used in the paper [Heun et al.
+The functions in this package were first used in [Heun et al.
 (2018)](https://doi.org/10.1016/j.apenergy.2018.05.109).
 
 ## More Information

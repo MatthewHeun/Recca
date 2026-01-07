@@ -6,6 +6,7 @@
 <url><loc>https://matthewheun.github.io/Recca/LICENSE.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/articles/Aggregation.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/articles/Recca.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/articles/balances.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/articles/index.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/articles/new-function-interaction.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/articles/new-functions.html</loc></url>
@@ -14,6 +15,7 @@
 <url><loc>https://matthewheun.github.io/Recca/news/index.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/PerfectSubmats.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/PerfectSubtidy.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/Recca-package.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/S_units_from_tidy.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/UKEnergy2000mats.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/UKEnergy2000tidy.html</loc></url>
@@ -21,10 +23,13 @@
 <url><loc>https://matthewheun.github.io/Recca/reference/add_matnames_iea.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/add_node_ids.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/add_row_col_meta.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/add_row_col_types.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/aggregate_cols.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/all_stages.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/alloc_cols.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/any_start_with.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/balance_cols.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/balances.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/calc_A.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/calc_E.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/calc_ERRs_gamma.html</loc></url>
@@ -55,6 +60,7 @@
 <url><loc>https://matthewheun.github.io/Recca/reference/despecified_aggregates.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/edge_list.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/efficiency_cols.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/endogenize_losses.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/energy_types.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/euproduct_aggregation_map.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/extend_fu_details_to_exergy.html</loc></url>
@@ -95,6 +101,8 @@
 <url><loc>https://matthewheun.github.io/Recca/reference/propulsion_eu.products.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/psut_cols.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/quasi-quote-assign.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/read_ecc_from_excel.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/reallocate_statistical_differences.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/region_aggregates.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/remove_neu.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/replace_html_codes.html</loc></url>
@@ -106,6 +114,7 @@
 <url><loc>https://matthewheun.github.io/Recca/reference/simplify_edge_list.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/startsWith_any_of.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/starts_with_any_of.html</loc></url>
+<url><loc>https://matthewheun.github.io/Recca/reference/verify-balances.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/verify_IEATable_energy_balance.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/verify_SUT_energy_balance.html</loc></url>
 <url><loc>https://matthewheun.github.io/Recca/reference/verify_SUT_energy_balance_with_units.html</loc></url>

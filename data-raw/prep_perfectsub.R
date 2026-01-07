@@ -20,7 +20,7 @@ library(matsindf)
 library(devtools)
 
 # Load the raw data from the .Excel file
-PerfectSubtidy <- openxlsx::read.xlsx(system.file("extdata", "PerfectSubstitutionraw", "UTEI_Sankey_Simple_ECC_Perfect_Sub.xlsx",
+PerfectSubtidy <- openxlsx2::read_xlsx(system.file("extdata", "PerfectSubstitutionraw", "UTEI_Sankey_Simple_ECC_Perfect_Sub.xlsx",
                                                     package = "Recca", mustWork = TRUE), sheet = "PerfectSubstitutionRaw")
 usethis::use_data(PerfectSubtidy, overwrite = TRUE)
 

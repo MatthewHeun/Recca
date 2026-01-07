@@ -92,6 +92,34 @@ usethis::use_data(efficiency_cols, overwrite = TRUE)
 
 
 #
+# Balance columns
+#
+
+balance_cols <- list(inter_industry_balance_colname = "SUTInterIndustryBalance",
+                     inter_industry_balanced_colname = "SUTInterIndustryBalanced",
+                     between_industry_balance_colname = "SUTInterIndustryBalance",
+                     between_industry_balanced_colname = "SUTInterIndustryBalanced",
+                     intra_industry_balance_colname = "SUTIntraIndustryBalance",
+                     intra_industry_balanced_colname = "SUTIntraIndustryBalanced",
+                     across_industry_balance_colname = "SUTAcrossIndustryBalance",
+                     across_industry_balanced_colname = "SUTAcrossIndustryBalanced",
+                     losses_alloc_colname = "LossesAlloc",
+                     default_losses_alloc_mat = matrix(1,
+                                                       dimnames = list("All industries",
+                                                                       "Waste")) |>
+                       matsbyname::setrowtype(Recca::row_col_types$industry_type) |>
+                       matsbyname::setcoltype(Recca::row_col_types$product_type),
+                     default_destruction_alloc_mat = matrix(1,
+                                                            dimnames = list("All industries",
+                                                                            "Destroyed exergy")) |>
+                       matsbyname::setrowtype(Recca::row_col_types$industry_type) |>
+                       matsbyname::setcoltype(Recca::row_col_types$product_type),
+                     waste = "Waste",
+                     losses_sector = "Transformation losses")
+usethis::use_data(balance_cols, overwrite = TRUE)
+
+
+#
 # Allocation and efficiency columns
 #
 alloc_cols <- list(C_Y = "C_Y",
@@ -244,7 +272,8 @@ usethis::use_data(prod_ind_names_colnames, overwrite = TRUE)
 #
 
 row_col_types <- list(product_type = "Product",
-                      industry_type = "Industry")
+                      industry_type = "Industry",
+                      unit_type = "Unit")
 usethis::use_data(row_col_types, overwrite = TRUE)
 
 

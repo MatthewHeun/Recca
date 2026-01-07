@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.59</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.66</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,6 +35,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/Aggregation.html">Aggregation</a></li>
+    <li><a class="dropdown-item" href="../articles/balances.html">Balances</a></li>
     <li><a class="dropdown-item" href="../articles/new-function-interaction.html">new_* function interactions</a></li>
     <li><a class="dropdown-item" href="../articles/new-functions.html">new_* functions</a></li>
   </ul>
@@ -63,7 +64,7 @@
                         <h4 data-toc-skip class="author">Matthew Kuperus
 Heun</h4>
             
-            <h4 data-toc-skip class="date">2025-06-27</h4>
+            <h4 data-toc-skip class="date">2026-01-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/HEAD/vignettes/Recca.Rmd" class="external-link"><code>vignettes/Recca.Rmd</code></a></small>
       <div class="d-none name"><code>Recca.Rmd</code></div>
@@ -160,19 +161,19 @@ matrices with the <code><a href="https://matthewheun.github.io/IEATools/referenc
 <span>  <span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">WithNames</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   Country Year EnergyType LastStage  Edot Unit matnames             rownames</span></span>
-<span><span class="co">#&gt; 1     GBR 2000          E     Final 50000 ktoe        R Resources [of Crude]</span></span>
-<span><span class="co">#&gt; 2     GBR 2000          E     Final 43000 ktoe        R    Resources [of NG]</span></span>
-<span><span class="co">#&gt; 3     GBR 2000          E     Final 43000 ktoe        V    Gas wells &amp; proc.</span></span>
-<span><span class="co">#&gt; 4     GBR 2000          E     Final 50000 ktoe        V           Oil fields</span></span>
-<span><span class="co">#&gt; 5     GBR 2000          E     Final 47500 ktoe        V          Crude dist.</span></span>
-<span><span class="co">#&gt; 6     GBR 2000          E     Final 41000 ktoe        V             NG dist.</span></span>
+<span><span class="co">#&gt; 2     GBR 2000          E     Final 50000 ktoe        R Resources [of Crude]</span></span>
+<span><span class="co">#&gt; 3     GBR 2000          E     Final 43000 ktoe        R    Resources [of NG]</span></span>
+<span><span class="co">#&gt; 4     GBR 2000          E     Final 43000 ktoe        V    Gas wells &amp; proc.</span></span>
+<span><span class="co">#&gt; 5     GBR 2000          E     Final 50000 ktoe        V           Oil fields</span></span>
+<span><span class="co">#&gt; 6     GBR 2000          E     Final 47500 ktoe        V          Crude dist.</span></span>
+<span><span class="co">#&gt; 7     GBR 2000          E     Final 41000 ktoe        V             NG dist.</span></span>
 <span><span class="co">#&gt;              colnames rowtypes coltypes</span></span>
-<span><span class="co">#&gt; 1               Crude Industry  Product</span></span>
-<span><span class="co">#&gt; 2                  NG Industry  Product</span></span>
-<span><span class="co">#&gt; 3     NG [from Wells] Industry  Product</span></span>
-<span><span class="co">#&gt; 4 Crude [from Fields] Industry  Product</span></span>
-<span><span class="co">#&gt; 5  Crude [from Dist.] Industry  Product</span></span>
-<span><span class="co">#&gt; 6     NG [from Dist.] Industry  Product</span></span></code></pre></div>
+<span><span class="co">#&gt; 2               Crude Industry  Product</span></span>
+<span><span class="co">#&gt; 3                  NG Industry  Product</span></span>
+<span><span class="co">#&gt; 4     NG [from Wells] Industry  Product</span></span>
+<span><span class="co">#&gt; 5 Crude [from Fields] Industry  Product</span></span>
+<span><span class="co">#&gt; 6  Crude [from Dist.] Industry  Product</span></span>
+<span><span class="co">#&gt; 7     NG [from Dist.] Industry  Product</span></span></code></pre></div>
 <p>After identifying the matrices, rownames, colnames, rowtypes, and
 coltypes, we can collapse all data to matrices and add a unit summation
 matrix (<code>S_units</code>).</p>
@@ -925,7 +926,7 @@ Conversion Chain.”</span> <em>Applied Energy</em> 226 (September):
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

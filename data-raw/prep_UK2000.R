@@ -20,8 +20,10 @@ library(matsindf)
 library(devtools)
 
 # Load the raw data from the Excel file
-UKEnergy2000tidy <- openxlsx::read.xlsx(system.file("extdata", "UKEnergy2000raw", "SuperSimpleEconomy_2018-11-13.xlsx",
-                                                    package = "Recca", mustWork = TRUE), sheet = "UKEnergy2000raw") %>%
+UKEnergy2000tidy <- openxlsx2::read_xlsx(system.file("extdata", "UKEnergy2000raw", "SuperSimpleEconomy_2018-11-13.xlsx",
+                                                    package = "Recca",
+                                                    mustWork = TRUE),
+                                        sheet = "UKEnergy2000raw") %>%
   dplyr::mutate(
     Flow = replace_html_codes(Flow)
   )

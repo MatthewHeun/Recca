@@ -107,8 +107,35 @@
 "efficiency_cols"
 
 
+#' Balance column names
+#'
+#' A string list containing named names of columns in balance data frames.
+#' Items in the list provide default values for column name function arguments
+#' to balance functions throughout the `Recca` package.
+#'
+#' @format A string list with `r length(balance_cols)` entries.
+#' \describe{
+#' \item{inter_industry_balance_colname}{The name of a column that contains inter-industry balance vectors.}
+#' \item{inter_industry_balanced_colname}{The name of a column that tells whether inter-industry balance vectors are all **0**.}
+#' \item{between_industry_balance_colname}{The name of a column that contains inter-industry balance vectors.}
+#' \item{between_industry_balanced_colname}{The name of a column that contains inter-industry balance vectors are all **0**.}
+#' \item{intra_industry_balance_colname}{The name of a column that contains intra-industry balance vectors.}
+#' \item{intra_industry_balanced_colname}{The name of a column that contains intra-industry balance vectors are all **0**.}
+#' \item{across_industry_balance_colname}{The name of a column that contains intra-industry balance vectors.}
+#' \item{across_industry_balanced_colname}{The name of a column that contains intra-industry balance vectors are all **0**.}
+#' \item{losses_alloc_colname}{The name of a column that contains loss allocation matrices.}
+#' \item{default_losses_alloc_mat}{The default losses allocation matrix with 1x1 dimensions, a row named "All industries", a column named "Waste heat", and a value of `1`.}
+#' \item{default_destruction_alloc_mat}{The default losses allocation matrix with 1x1 dimensions, a row named "All industries", a column named "Destroyed exergy", and a value of `1`.}
+#' \item{waste}{The default name of a column in **V** and row in **Y** that contains losses calculated from intra-industry balances.}
+#' \item{losses_sector}{The name of a column in **Y** that contains losses calculated from intra-industry balances.}
+#' }
+#'
+#' @examples
+#' balance_cols
+"balance_cols"
 
-#' Columns in a data frame that contains final-to-useful allocations
+
+#' Columns in a data frame that contain final-to-useful allocations
 #'
 #' A string list containing named names of columns in PSUT data frames.
 #' Items in the list provide default values for column name function arguments
@@ -465,6 +492,7 @@
 #' \describe{
 #'   \item{product_type}{The name of the product row and column type. Default is "Product".}
 #'   \item{industry_type}{The name of the industry row and column type. Default is "Industry".}
+#'   \item{unit_type}{The name of the unit row and column type. Default is "Unit".}
 #' }
 "row_col_types"
 

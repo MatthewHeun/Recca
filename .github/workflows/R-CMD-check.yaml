@@ -9,7 +9,7 @@ on:
     # Build main branch daily at 7 AM UTC, 2 AM EST, 3 AM EDT.
     - cron: "0 7 * * *"
 
-name: R-CMD-check.yaml
+name: R-CMD-check
 
 permissions: read-all
 
