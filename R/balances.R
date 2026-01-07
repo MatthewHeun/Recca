@@ -563,7 +563,7 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 #' [Recca::balance_cols]`$losses_sector or
 #' "`r Recca::balance_cols$losses_sector`".
 #'
-#' #' If `balance_colname` is not present,
+#' If `balance_colname` is not present,
 #' intra-industry balances are calculated internally via
 #' [calc_intra_industry_balance()].
 #'
@@ -585,8 +585,9 @@ verify_IEATable_energy_balance <- function(.ieatidydata,
 #'          Default is "Y".
 #' @param balance_colname The name of the column containing
 #'                        energy balance vectors.
-#'                        If not present, losses are calculated internally
-#'                        with [calc_intra_industry_balance()].
+#'                        If missing, losses are calculated internally
+#'                        with [calc_intra_industry_balance()]
+#'                        before reallocating.
 #'                        Default is
 #'                        [Recca::balance_cols]`$intra_industry_balance_colname` or
 #'                        "`r Recca::balance_cols$intra_industry_balance_colname`".
@@ -699,8 +700,11 @@ endogenize_losses <- function(
     # in losses_alloc_mat.
     unique_rows_V_mat <- setdiff(rownames(V_mat), rownames(losses_alloc_mat))
     if (length(unique_rows_V_mat != 0)) {
-      msg <- paste0("Industries not same in Recca::endogenize_losses():\n",
-                    "Rows unique to V matrix: ", paste(unique_rows_V_mat, sep = ", "))
+      msg <- paste0("Industries not same in Recca::endogenize_losses(). ",
+                    "These rows are unique to V matrix ",
+                    "and should be present (but are not) ",
+                    "in the losses allocation matrix: ",
+                    paste0(unique_rows_V_mat, collapse = ", "))
       stop(msg)
     }
 

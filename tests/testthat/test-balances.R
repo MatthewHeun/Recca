@@ -337,6 +337,15 @@ test_that("endogenize_losses() works correctly", {
                   matsbyname::getcolnames_byname(endogenized$Y[[i]]))
   }
 
+  # Try again without calculating the balances first.
+  # They will be calculated internally.
+  endogenized2 <- pivoted_E |>
+    endogenize_losses(replace_cols = TRUE)
+  endogenized2 |>
+    calc_intra_industry_balance() |>
+    verify_intra_industry_balance(delete_balance_cols_if_verified = TRUE) |>
+    expect_silent()
+
   # Check that columns are NOT deleted when NOT requested
   res1 <- pivoted_E |>
     calc_intra_industry_balance() |>
@@ -353,5 +362,46 @@ test_that("endogenize_losses() works correctly", {
   expect_false(Recca::balance_cols$losses_alloc_colname %in% names(res2))
   expect_false("V_prime" %in% names(res2))
   expect_false("Y_prime" %in% names(res2))
+})
+
+
+test_that("endogenize_losses() fails when not all industries are present in losses_alloc_mat", {
+  losses_alloc_mat <- matrix(c(1, 1),
+                             nrow = 2,
+                             ncol = 1,
+                             dimnames = list(c("foo", "bar"),
+                                             "Waste heat")) |>
+    matsbyname::setrowtype("Industry") |>
+    matsbyname::setcoltype("Product")
+  pivoted_E <- UKEnergy2000mats |>
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
+    dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in%
+                    c(IEATools::last_stages$final, IEATools::last_stages$useful)) |>
+    dplyr::mutate(
+      "{Recca::balance_cols$losses_alloc_colname}" :=
+        RCLabels::make_list(losses_alloc_mat,
+                            n = dplyr::n(),
+                            lenx = 1)
+    )
+  # This should fail, because the industry names
+  # (foo and bar) do not match anything in the
+  # V matrix.
+  pivoted_E |>
+    endogenize_losses() |>
+    expect_error(regexp = "Industries not same in ")
+
+  # Test when the losses allocation matrix rows
+  # do not sum to 1.
+  wrong_mat <- Recca::balance_cols$default_losses_alloc_mat
+  wrong_mat[1, 1] <- 42
+  pivoted_E |>
+    dplyr::mutate(
+      "{Recca::balance_cols$losses_alloc_colname}" :=
+        RCLabels::make_list(wrong_mat,
+                            n = dplyr::n(),
+                            lenx = 1)
+    ) |>
+    endogenize_losses() |>
+    expect_error("Rows of the losses allocation matrix do not sum to 1")
 })
 

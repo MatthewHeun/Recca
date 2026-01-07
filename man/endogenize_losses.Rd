@@ -43,8 +43,9 @@ Default is "Y".}
 
 \item{balance_colname}{The name of the column containing
 energy balance vectors.
-If not present, losses are calculated internally
-with \code{\link[=calc_intra_industry_balance]{calc_intra_industry_balance()}}.
+If missing, losses are calculated internally
+with \code{\link[=calc_intra_industry_balance]{calc_intra_industry_balance()}}
+before reallocating.
 Default is
 \link{balance_cols}\verb{$intra_industry_balance_colname} or
 "SUTIntraIndustryBalance".}
@@ -136,7 +137,7 @@ All losses are allocated to
 by default named
 \link{balance_cols}\verb{$losses_sector or "}r Recca::balance_cols$losses_sector`".
 
-#' If \code{balance_colname} is not present,
+If \code{balance_colname} is not present,
 intra-industry balances are calculated internally via
 \code{\link[=calc_intra_industry_balance]{calc_intra_industry_balance()}}.
 }
