@@ -156,7 +156,7 @@ test_that("calc_inter_industry_balance() works with single matrices", {
 
   # Test with deleting intermediate values.
   res <- calc_inter_industry_balance(R = R, U = U, V = V, Y = Y) |>
-    verify_inter_industry_balance(delete_balance_cols_if_verified = TRUE)
+    verify_inter_industry_balance(delete_balance_if_verified = TRUE)
   # Should not affect anything
   expect_equal(names(res), c(Recca::balance_cols$inter_industry_balance_colname,
                              Recca::balance_cols$inter_industry_balanced_colname))
@@ -202,7 +202,7 @@ test_that("calc_inter_industry_balance() works correctly", {
   # Check that columns are deleted if desired.
   res <- wide |>
     calc_inter_industry_balance() |>
-    verify_inter_industry_balance(delete_balance_cols_if_verified = TRUE)
+    verify_inter_industry_balance(delete_balance_if_verified = TRUE)
   expect_false(Recca::balance_cols$inter_industry_balance_colname %in% names(res))
   expect_false(Recca::balance_cols$inter_industry_balanced_colname %in% names(res))
 })

@@ -10,16 +10,16 @@ verify_inter_industry_balance(
   .sutmats = NULL,
   balances = Recca::balance_cols$inter_industry_balance_colname,
   tol = 1e-06,
-  balanced_colname = Recca::balance_cols$inter_industry_balanced_colname,
-  delete_balance_cols_if_verified = FALSE
+  balanced = Recca::balance_cols$inter_industry_balanced_colname,
+  delete_balance_if_verified = FALSE
 )
 
 verify_intra_industry_balance(
   .sutmats = NULL,
   balances = Recca::balance_cols$intra_industry_balance_colname,
   tol = 1e-06,
-  balanced_colname = Recca::balance_cols$intra_industry_balanced_colname,
-  delete_balance_cols_if_verified = FALSE
+  balanced = Recca::balance_cols$intra_industry_balanced_colname,
+  delete_balance_if_verified = FALSE
 )
 }
 \arguments{
@@ -38,15 +38,7 @@ or "SUTIntraIndustryBalance".}
 and still be considered balanced.
 Default is \code{1e-6}.}
 
-\item{balanced_colname}{The name for booleans telling if balance is present.
-For \code{verify_inter_industry_balances()},
-the default is \link{balance_cols}\verb{$inter_industry_balanced_colname}
-or "SUTInterIndustryBalanced".
-For \code{verify_intra_industry_balances()},
-the default is \link{balance_cols}\verb{$intra_industry_balanced_colname}
-or "SUTIntraIndustryBalanced".}
-
-\item{delete_balance_cols_if_verified}{A boolean that tells whether to delete
+\item{delete_balance_if_verified}{A boolean that tells whether to delete
 the \code{balances} and \code{balanced_colname} columns
 if \code{.sutmats} is a data frame and
 if balances are verified.
@@ -54,6 +46,14 @@ Default is \code{FALSE}.
 If individual matrices are specified
 in the \code{R}, \code{U}, \code{V}, and \code{Y} arguments,
 no deletion is performed.}
+
+\item{balanced_colname}{The name for booleans telling if balance is present.
+For \code{verify_inter_industry_balances()},
+the default is \link{balance_cols}\verb{$inter_industry_balanced_colname}
+or "SUTInterIndustryBalanced".
+For \code{verify_intra_industry_balances()},
+the default is \link{balance_cols}\verb{$intra_industry_balanced_colname}
+or "SUTIntraIndustryBalanced".}
 }
 \value{
 A list or data frame with an additional value or column

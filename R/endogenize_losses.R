@@ -230,7 +230,7 @@ endogenize_losses <- function(
     # If intra-industry balances are not available, calculate them
     if (is.null(balance_vec)) {
       # Calculate intra-industry balances
-      balance_vec <- calc_intra_industry_balance(U = U_mat, V = V_mat, balance_colname = intra_industry_balance) |>
+      balance_vec <- calc_intra_industry_balance(U = U_mat, V = V_mat, balance = intra_industry_balance) |>
         magrittr::extract2(intra_industry_balance)
     }
 

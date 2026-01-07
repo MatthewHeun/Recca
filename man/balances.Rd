@@ -12,14 +12,14 @@ calc_inter_industry_balance(
   U = Recca::psut_cols$U,
   V = Recca::psut_cols$V,
   Y = Recca::psut_cols$Y,
-  balance_colname = Recca::balance_cols$inter_industry_balance_colname
+  balance = Recca::balance_cols$inter_industry_balance_colname
 )
 
 calc_intra_industry_balance(
   .sutmats = NULL,
   U = Recca::psut_cols$U,
   V = Recca::psut_cols$V,
-  balance_colname = Recca::balance_cols$intra_industry_balance_colname
+  balance = Recca::balance_cols$intra_industry_balance_colname
 )
 }
 \arguments{
@@ -44,7 +44,7 @@ Default is "V".}
 that contains same.
 Default is "Y".}
 
-\item{balance_colname}{The name of the column containing energy balance vectors.
+\item{balance}{The name of the column containing energy balance vectors.
 Defaults are
 \link{balance_cols}\verb{$inter_industry_balance_colname} or
 "SUTInterIndustryBalance"
@@ -81,14 +81,14 @@ Inter-industry balances are calculated for products (not industries).
 \code{calc_intra_industry_balances()} calculates across-industry
 balances via
 (\strong{U}^T^ - \strong{V})\strong{i}
-(inputs - outputs).
+(i.e., inputs - outputs).
 Inter-industry balances are calculated for industries (not products),
 and the result is a column vector of industry balances.
 }
 
 \subsection{Outputs}{
 
-The argument \code{balance_colname} specifies the name of the
+The argument \code{balance} specifies the name of the
 result.
 By default, the output of \code{calc_inter_industry_balances()} is
 \link{balance_cols}\verb{$inter_industry_balance_colname} or

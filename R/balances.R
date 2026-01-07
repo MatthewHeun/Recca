@@ -20,13 +20,13 @@
 #' `calc_intra_industry_balances()` calculates across-industry
 #' balances via
 #' (**U**^T^ - **V**)**i**
-#' (inputs - outputs).
+#' (i.e., inputs - outputs).
 #' Inter-industry balances are calculated for industries (not products),
 #' and the result is a column vector of industry balances.
 #'
 #' ## Outputs
 #'
-#' The argument `balance_colname` specifies the name of the
+#' The argument `balance` specifies the name of the
 #' result.
 #' By default, the output of `calc_inter_industry_balances()` is
 #' [Recca::balance_cols]`$inter_industry_balance_colname` or
@@ -77,16 +77,16 @@
 #' @param Y Final demand (**Y**) matrix or name of the column in `.sutmats`
 #'          that contains same.
 #'          Default is "Y".
-#' @param balance_colname The name of the column containing energy balance vectors.
-#'                        Defaults are
-#'                        [Recca::balance_cols]`$inter_industry_balance_colname` or
-#'                        "`r Recca::balance_cols$inter_industry_balance_colname`"
-#'                        for
-#'                        `calc_inter_industry_balances()` and
-#'                        [Recca::balance_cols]`$intra_industry_balance_colname` or
-#'                        "`r Recca::balance_cols$intra_industry_balance_colname`"
-#'                        for
-#'                        `calc_intra_industry_balances()`.
+#' @param balance The name of the column containing energy balance vectors.
+#'                Defaults are
+#'                [Recca::balance_cols]`$inter_industry_balance_colname` or
+#'                "`r Recca::balance_cols$inter_industry_balance_colname`"
+#'                for
+#'                `calc_inter_industry_balances()` and
+#'                [Recca::balance_cols]`$intra_industry_balance_colname` or
+#'                "`r Recca::balance_cols$intra_industry_balance_colname`"
+#'                for
+#'                `calc_intra_industry_balances()`.
 #'
 #' @returns A list or data frame containing balances.
 #'
@@ -184,14 +184,14 @@ NULL
 #'                         For `verify_intra_industry_balances()`,
 #'                         the default is [Recca::balance_cols]`$intra_industry_balanced_colname`
 #'                         or "`r Recca::balance_cols$intra_industry_balanced_colname`".
-#' @param delete_balance_cols_if_verified A boolean that tells whether to delete
-#'                                        the `balances` and `balanced_colname` columns
-#'                                        if `.sutmats` is a data frame and
-#'                                        if balances are verified.
-#'                                        Default is `FALSE`.
-#'                                        If individual matrices are specified
-#'                                        in the `R`, `U`, `V`, and `Y` arguments,
-#'                                        no deletion is performed.
+#' @param delete_balance_if_verified A boolean that tells whether to delete
+#'                                   the `balances` and `balanced_colname` columns
+#'                                   if `.sutmats` is a data frame and
+#'                                   if balances are verified.
+#'                                   Default is `FALSE`.
+#'                                   If individual matrices are specified
+#'                                   in the `R`, `U`, `V`, and `Y` arguments,
+#'                                   no deletion is performed.
 #'
 #'
 #' @return A list or data frame with an additional value or column
@@ -224,7 +224,7 @@ calc_inter_industry_balance <- function(.sutmats = NULL,
                                         V = Recca::psut_cols$V,
                                         Y = Recca::psut_cols$Y,
                                         # Output name
-                                        balance_colname = Recca::balance_cols$inter_industry_balance_colname) {
+                                        balance = Recca::balance_cols$inter_industry_balance_colname) {
   calc_bal_func <- function(R_mat = NULL, U_mat, V_mat, Y_mat) {
     V_sums <- matsbyname::colsums_byname(V_mat)
     # Allow for missing R matrix
@@ -241,7 +241,7 @@ calc_inter_industry_balance <- function(.sutmats = NULL,
     # (R + V)^T - (U + Y)
     bal <- matsbyname::difference_byname(RV_sums, UY_sums)
     list(bal) |>
-      magrittr::set_names(balance_colname)
+      magrittr::set_names(balance)
   }
   matsindf::matsindf_apply(.sutmats, FUN = calc_bal_func, R_mat = R, U_mat = U, V_mat = V, Y_mat = Y)
 }
@@ -256,29 +256,29 @@ verify_inter_industry_balance <- function(.sutmats = NULL,
                                           # Tolerance
                                           tol = 1e-6,
                                           # Output name
-                                          balanced_colname = Recca::balance_cols$inter_industry_balanced_colname,
-                                          delete_balance_cols_if_verified = FALSE) {
+                                          balanced = Recca::balance_cols$inter_industry_balanced_colname,
+                                          delete_balance_if_verified = FALSE) {
   verify_func_inter <- function(bal_vector) {
     OK <- bal_vector |>
       matsbyname::iszero_byname(tol) |>
       as.logical()
     if (!OK) {
       return(list(FALSE) |>
-               magrittr::set_names(balanced_colname))
+               magrittr::set_names(balanced))
     }
     list(TRUE) |>
-      magrittr::set_names(balanced_colname)
+      magrittr::set_names(balanced)
   }
 
   out <- matsindf::matsindf_apply(.sutmats, FUN = verify_func_inter, bal_vector = balances)
-  if (!all(as.logical(out[[balanced_colname]]))) {
+  if (!all(as.logical(out[[balanced]]))) {
     warning(paste0("Products are not conserved in verify_inter_industry_balance(). See column ",
-                   balanced_colname,
+                   balanced,
                    "."))
   } else {
-    if (is.data.frame(.sutmats) & delete_balance_cols_if_verified) {
+    if (is.data.frame(.sutmats) & delete_balance_if_verified) {
       out[balances] <- NULL
-      out[balanced_colname] <- NULL
+      out[balanced] <- NULL
     }
   }
   return(out)
@@ -293,13 +293,13 @@ calc_intra_industry_balance <- function(.sutmats = NULL,
                                         U = Recca::psut_cols$U,
                                         V = Recca::psut_cols$V,
                                         # Output name
-                                        balance_colname = Recca::balance_cols$intra_industry_balance_colname) {
+                                        balance = Recca::balance_cols$intra_industry_balance_colname) {
   calc_bal_func <- function(U_mat, V_mat) {
     bal <- matsbyname::difference_byname(matsbyname::transpose_byname(U_mat),
                                          V_mat) |>
       matsbyname::rowsums_byname()
     list(bal) |>
-      magrittr::set_names(balance_colname)
+      magrittr::set_names(balance)
   }
   matsindf::matsindf_apply(.sutmats, FUN = calc_bal_func, U_mat = U, V_mat = V)
 }
@@ -314,27 +314,27 @@ verify_intra_industry_balance <- function(.sutmats = NULL,
                                           # Tolerance
                                           tol = 1e-6,
                                           # Output name
-                                          balanced_colname = Recca::balance_cols$intra_industry_balanced_colname,
-                                          delete_balance_cols_if_verified = FALSE) {
+                                          balanced = Recca::balance_cols$intra_industry_balanced_colname,
+                                          delete_balance_if_verified = FALSE) {
   verify_func_intra <- function(bal_vector) {
     OK <- bal_vector |>
       matsbyname::iszero_byname(tol) |>
       as.logical()
     if (!OK) {
       return(list(FALSE) |>
-               magrittr::set_names(balanced_colname))
+               magrittr::set_names(balanced))
     }
     list(TRUE) |>
-      magrittr::set_names(balanced_colname)
+      magrittr::set_names(balanced)
   }
 
   out <- matsindf::matsindf_apply(.sutmats, FUN = verify_func_intra, bal_vector = balances)
-  if (!all(out[[balanced_colname]] |> as.logical())) {
-    warning(paste0("Industries are not balanced in verify_intra_industry_balance(). See column ", balanced_colname, "."))
+  if (!all(out[[balanced]] |> as.logical())) {
+    warning(paste0("Industries are not balanced in verify_intra_industry_balance(). See column ", balanced, "."))
   } else {
-    if (is.data.frame(.sutmats) & delete_balance_cols_if_verified) {
+    if (is.data.frame(.sutmats) & delete_balance_if_verified) {
       out[balances] <- NULL
-      out[balanced_colname] <- NULL
+      out[balanced] <- NULL
     }
   }
   return(out)

@@ -27,11 +27,11 @@ test_that("endogenize_losses() works correctly", {
   # Now test that everything remains balanced.
   endogenized |>
     calc_inter_industry_balance() |>
-    verify_inter_industry_balance(delete_balance_cols_if_verified = TRUE) |>
+    verify_inter_industry_balance(delete_balance_if_verified = TRUE) |>
     expect_silent()
   endogenized |>
     calc_intra_industry_balance() |>
-    verify_intra_industry_balance(delete_balance_cols_if_verified = TRUE) |>
+    verify_intra_industry_balance(delete_balance_if_verified = TRUE) |>
     expect_silent()
   # Test that expected row and column names now exist in the matrices
   for (i in 1:2) {
@@ -49,7 +49,7 @@ test_that("endogenize_losses() works correctly", {
     endogenize_losses(replace_cols = TRUE)
   endogenized2 |>
     calc_intra_industry_balance() |>
-    verify_intra_industry_balance(delete_balance_cols_if_verified = TRUE) |>
+    verify_intra_industry_balance(delete_balance_if_verified = TRUE) |>
     expect_silent()
 
   # Check that columns are NOT deleted when NOT requested
