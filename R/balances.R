@@ -205,7 +205,6 @@ NULL
 #'                                   in the `R`, `U`, `V`, and `Y` arguments,
 #'                                   no deletion is performed.
 #'
-#'
 #' @return A list or data frame with an additional value or column
 #'         saying whether `.sutmats` are in balance.
 #'

@@ -126,7 +126,7 @@
 #' \item{losses_alloc_colname}{The name of a column that contains loss allocation matrices.}
 #' \item{default_losses_alloc_mat}{The default losses allocation matrix with 1x1 dimensions, a row named "All industries", a column named "Waste heat", and a value of `1`.}
 #' \item{default_destruction_alloc_mat}{The default losses allocation matrix with 1x1 dimensions, a row named "All industries", a column named "Destroyed exergy", and a value of `1`.}
-#' \item{waste_heat}{The default name of a column in **V** and row in **Y** that contains losses calculated from intra-industry balances.}
+#' \item{waste}{The default name of a column in **V** and row in **Y** that contains losses calculated from intra-industry balances.}
 #' \item{losses_sector}{The name of a column in **Y** that contains losses calculated from intra-industry balances.}
 #' }
 #'

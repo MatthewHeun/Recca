@@ -35,9 +35,9 @@ test_that("endogenize_losses() works correctly", {
     expect_silent()
   # Test that expected row and column names now exist in the matrices
   for (i in 1:2) {
-    expect_true(Recca::balance_cols$waste_heat %in%
+    expect_true(Recca::balance_cols$waste %in%
                   matsbyname::getcolnames_byname(endogenized$V[[i]]))
-    expect_true(Recca::balance_cols$waste_heat %in%
+    expect_true(Recca::balance_cols$waste %in%
                   matsbyname::getrownames_byname(endogenized$Y[[i]]))
     expect_true(Recca::balance_cols$losses_sector %in%
                   matsbyname::getcolnames_byname(endogenized$Y[[i]]))

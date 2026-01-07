@@ -60,7 +60,7 @@ Default is \link{balance_cols}\verb{$losses_alloc_colname} or
 \item{loss_sector}{The string name of the sector
 that will absorb losses in the \strong{Y} matrix.
 Default is \link{balance_cols}\verb{$losses_sector}
-or "Losses".}
+or "Transformation losses".}
 
 \item{replace_cols}{A boolean that tells whether to
 (a) replace
