@@ -8,6 +8,10 @@
 \usage{
 verify_inter_industry_balance(
   .sutmats = NULL,
+  R = Recca::psut_cols$R,
+  U = Recca::psut_cols$U,
+  V = Recca::psut_cols$V,
+  Y = Recca::psut_cols$Y,
   balances = Recca::balance_cols$inter_industry_balance_colname,
   tol = 1e-06,
   balanced = Recca::balance_cols$inter_industry_balanced_colname,
@@ -16,6 +20,8 @@ verify_inter_industry_balance(
 
 verify_intra_industry_balance(
   .sutmats = NULL,
+  U = Recca::psut_cols$U,
+  V = Recca::psut_cols$V,
   balances = Recca::balance_cols$intra_industry_balance_colname,
   tol = 1e-06,
   balanced = Recca::balance_cols$intra_industry_balanced_colname,
@@ -72,7 +78,7 @@ In a PSUT description of an economy, all of every product
 leaving one industry must arrive at another industry.
 Inter-industry (between-industry) balances are verified by product
 (within \code{tol}) for every row in \code{.sutmats}.
-Inter-industry balances should be calculated via
+Inter-industry balances can be calculated via
 \code{calc_inter_industry_balances()} before calling
 \code{verify_inter_industry_balances()}.
 See examples.
@@ -115,14 +121,25 @@ See the examples.
 \examples{
 library(dplyr)
 library(tidyr)
-result_inter <- UKEnergy2000mats |>
+df <- UKEnergy2000mats |>
   dplyr::filter(LastStage \%in\% c("Final", "Useful")) |>
   tidyr::pivot_wider(names_from = matrix.name,
-                     values_from = matrix) |>
+                     values_from = matrix)
+df |>
   calc_inter_industry_balance() |>
-  verify_inter_industry_balance(tol = 1e-4)
-result_inter
-result_inter[[Recca::balance_cols$inter_industry_balanced_colname]]
+  verify_inter_industry_balance(tol = 1e-4) |>
+  dplyr::glimpse()
+# Also works without first calculating the balances
+df |>
+  verify_inter_industry_balance(tol = 1e-4) |>
+  glimpse()
+df |>
+  calc_intra_industry_balance() |>
+  glimpse()
+dontrun{
+  df |>
+    verify_intra_industry_balance()
+}
 }
 \seealso{
 \code{\link[=calc_inter_industry_balance]{calc_inter_industry_balance()}}, \code{\link[=calc_intra_industry_balance]{calc_intra_industry_balance()}}

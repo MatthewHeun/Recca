@@ -199,6 +199,12 @@ test_that("calc_inter_industry_balance() works correctly", {
     # Should not throw an error or warning
     expect_silent()
 
+  # Try without calculating the balances first.
+  wide |>
+    verify_inter_industry_balance() |>
+    # Should not throw an error or warning
+    expect_silent()
+
   # Check that columns are deleted if desired.
   res <- wide |>
     calc_inter_industry_balance() |>
@@ -289,4 +295,11 @@ test_that("verify_intra_industry_balance() warns of imbalance", {
     regexp = "Industries are not balanced"
   )
   expect_equal(res$SUTIntraIndustryBalanced, c(FALSE, FALSE))
+
+  # Check that it also works if balances are not pre-calculated
+  UKEnergy2000mats |>
+    dplyr::filter(LastStage %in% c("Final", "Useful")) |>
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
+    verify_intra_industry_balance() |>
+    expect_warning(regexp = "Industries are not balanced")
 })

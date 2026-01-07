@@ -151,12 +151,12 @@ inter_industry_balances |>
 
 To calculate and verify the balances 
 without adding any columns to the data frame, 
-set `delete_balance_cols_if_verified = TRUE`.
+set `delete_balance_if_verified = TRUE`.
 
 ```{r}
 inter_industry_balances |> 
   verify_inter_industry_balance(tol = 1e-4, 
-                                delete_balance_cols_if_verified = TRUE) |> 
+                                delete_balance_if_verified = TRUE) |> 
   dplyr::glimpse()
 ```
 
