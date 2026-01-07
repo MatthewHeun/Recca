@@ -11,6 +11,8 @@ Cite all releases of `Recca` with doi
 which always resolves to the latest release.
 
 
+## Recca 0.1.66 (2026-01-07)
+
 * `endogenize_losses()` gains new argument `clean`.
   When `TRUE` (default is `FALSE`), 
   **0** rows and columns are deleted from the output.
@@ -37,6 +39,9 @@ which always resolves to the latest release.
   Previously, it pointed to the wrong page for "stable" status.
 * Fixed the R-CMD-check badge.
   Previously, it indicated failure when all tests were passing.
+* New tests for new features.
+    - Now up to 935 tests, all passing.
+    - Test coverage remains at 100%.
 
 
 ## Recca 0.1.65 (2025-11-30) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17772989.svg)](https://doi.org/10.5281/zenodo.17772989)
