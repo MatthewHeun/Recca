@@ -3,7 +3,7 @@
 \docType{data}
 \name{alloc_cols}
 \alias{alloc_cols}
-\title{Columns in a data frame that contains final-to-useful allocations}
+\title{Columns in a data frame that contain final-to-useful allocations}
 \format{
 A string list with 2 entries.
 \describe{

@@ -156,7 +156,7 @@ test_that("calc_inter_industry_balance() works with single matrices", {
 
   # Test with deleting intermediate values.
   res <- calc_inter_industry_balance(R = R, U = U, V = V, Y = Y) |>
-    verify_inter_industry_balance(delete_balance_cols_if_verified = TRUE)
+    verify_inter_industry_balance(delete_balance_if_verified = TRUE)
   # Should not affect anything
   expect_equal(names(res), c(Recca::balance_cols$inter_industry_balance_colname,
                              Recca::balance_cols$inter_industry_balanced_colname))
@@ -199,10 +199,16 @@ test_that("calc_inter_industry_balance() works correctly", {
     # Should not throw an error or warning
     expect_silent()
 
+  # Try without calculating the balances first.
+  wide |>
+    verify_inter_industry_balance() |>
+    # Should not throw an error or warning
+    expect_silent()
+
   # Check that columns are deleted if desired.
   res <- wide |>
     calc_inter_industry_balance() |>
-    verify_inter_industry_balance(delete_balance_cols_if_verified = TRUE)
+    verify_inter_industry_balance(delete_balance_if_verified = TRUE)
   expect_false(Recca::balance_cols$inter_industry_balance_colname %in% names(res))
   expect_false(Recca::balance_cols$inter_industry_balanced_colname %in% names(res))
 })
@@ -289,67 +295,11 @@ test_that("verify_intra_industry_balance() warns of imbalance", {
     regexp = "Industries are not balanced"
   )
   expect_equal(res$SUTIntraIndustryBalanced, c(FALSE, FALSE))
-})
 
-
-test_that("endogenize_losses() works correctly", {
-  pivoted_E <- UKEnergy2000mats |>
+  # Check that it also works if balances are not pre-calculated
+  UKEnergy2000mats |>
+    dplyr::filter(LastStage %in% c("Final", "Useful")) |>
     tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
-    dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in%
-                    c(IEATools::last_stages$final, IEATools::last_stages$useful))
-  # Verify initial balance situation.
-  pivoted_E |>
-    calc_inter_industry_balance() |>
-    verify_inter_industry_balance() |>
-    expect_silent()
-  pivoted_E |>
-    calc_intra_industry_balance() |>
     verify_intra_industry_balance() |>
     expect_warning(regexp = "Industries are not balanced")
-
-  # Endogenize the energy losses.
-  endogenized <- pivoted_E |>
-    calc_intra_industry_balance() |>
-    endogenize_losses() |>
-    dplyr::mutate(
-      V = V_prime,
-      Y = Y_prime,
-      V_prime = NULL,
-      Y_prime = NULL,
-      "{Recca::balance_cols$intra_industry_balance_colname}" := NULL
-    )
-  # Now test that everything remains balanced.
-  endogenized |>
-    calc_inter_industry_balance() |>
-    verify_inter_industry_balance() |>
-    expect_silent()
-  endogenized |>
-    calc_intra_industry_balance() |>
-    verify_intra_industry_balance() |>
-    expect_silent()
-  # Test that expected row and column names now exist in the matrices
-  for (i in 1:2) {
-    expect_true(Recca::balance_cols$waste_heat %in%
-                  matsbyname::getcolnames_byname(endogenized$V[[i]]))
-    expect_true(Recca::balance_cols$waste_heat %in%
-                  matsbyname::getrownames_byname(endogenized$Y[[i]]))
-    expect_true(Recca::balance_cols$losses_sector %in%
-                  matsbyname::getcolnames_byname(endogenized$Y[[i]]))
-  }
-
-  # Check that columns are NOT deleted when NOT requested
-  res1 <- pivoted_E |>
-    calc_intra_industry_balance() |>
-    endogenize_losses()
-  expect_true(Recca::balance_cols$intra_industry_balance_colname %in% names(res1))
-  expect_true("V_prime" %in% names(res1))
-  expect_true("Y_prime" %in% names(res1))
-  # Check that columns are deleted when requested
-  res2 <- pivoted_E |>
-    calc_intra_industry_balance() |>
-    endogenize_losses(replace_cols = TRUE)
-  expect_false(Recca::balance_cols$intra_industry_balance_colname %in% names(res2))
-  expect_false("V_prime" %in% names(res2))
-  expect_false("Y_prime" %in% names(res2))
 })
-

@@ -91,11 +91,16 @@ it with the `Recca` package.
 
 In any conversion chain, 
 products that leave one industry must enter another industry.
-These between-industry (or inter-industry) balances
+Inter-industry balances are a product balance
+that ensures that the total supply of any product
+is equal to the total use of any product
+within the conversion chain.
+These inter-industry (or between-industry) balances
 should be verified for every conversion chain
 to ensure consistency.
 
-Inter-industry balances are obtained
+Inter-industry balances
+are obtained
 by the following computation.
 
 $$[(\mathbf{R} + \mathbf{V})^\mathrm{T} 
@@ -133,7 +138,7 @@ inter_industry_balances$SUTInterIndustryBalance[[4]]
 As expected, these vectors are the $\mathbf{0}$ vector to within 
 reasonable precision.
 
-If you want to check the inter-industry balances for consistency, 
+To check the inter-industry balances for consistency, 
 use `verify_inter_industry_balance()`.
 The `tol` argument gives the tolerance for
 non-zero product balances.
@@ -146,15 +151,14 @@ inter_industry_balances |>
 
 To calculate and verify the balances 
 without adding any columns to the data frame, 
-set `delete_balance_cols_if_verified = TRUE`.
+set `delete_balance_if_verified = TRUE`.
 
 ```{r}
 inter_industry_balances |> 
   verify_inter_industry_balance(tol = 1e-4, 
-                                delete_balance_cols_if_verified = TRUE) |> 
+                                delete_balance_if_verified = TRUE) |> 
   dplyr::glimpse()
 ```
-
 
 If a product is out of balance 
 by more than `tol` (by default `1e-6`), 
@@ -174,7 +178,10 @@ are obtained by the following computation.
 
 $$(\mathbf{U}^\mathrm{T} - \mathbf{V}) \, \mathbf{i}$$
 
-The result is a column vector with industries in rows.
+The result is a column vector with 
+industries in rows.
+In the resultant column vector, 
+losses are positive values.
 
 The interpretation of the results depends upon 
 the construction of the matrices.
@@ -196,7 +203,10 @@ When losses _are not_ accounted in the matrices,
 the intra-industry balance gives the sum of
 destruction and losses.
 
-The following table summarizes the above points.
+The following table summarizes the above points,
+giving the result of intra-industry balances
+for various conversion chain types,
+depending on whether the matrices include losses.
 
 | Matrices contain              | Matrices include losses (wastes)  | Matrices exclude losses (wastes) |
 | :---------------------------: | :-------------------------------: | :------------------------------: |
@@ -204,7 +214,7 @@ The following table summarizes the above points.
 | Energy (ECC)                  | $\mathbf{0}$                      | $\mathbf{e}_L$                   |
 | Mass exergy (BCC)             | $\mathbf{b}_D$                    | $\mathbf{b}_D + \mathbf{b}_L$    |
 | Energy exergy (XCC)           | $\mathbf{x}_D$                    | $\mathbf{x}_D + \mathbf{x}_L$    |
-| Mass and energy exergy (BXCC) | $\mathbf{bx}_D$                   | $\mathbf{bx}_D + \mathbf{bx}_L$  |
+| Mass and energy exergy (BXCC) | $\mathbf{b}_D + \mathbf{x}_D$     | $\mathbf{b}_D + \mathbf{b}_L + \mathbf{x}_D + \mathbf{x}_L$  |
 
 MCC indicates a material conversion chain.
 ECC indicates an energy conversion chain.
@@ -214,9 +224,8 @@ BXCC indicates a combined material and energy exergy conversion chain.
 $\mathbf{0}$ indicates the result is the zero vector;
 $\mathbf{m}$ indicates the result is a mass vector;
 $\mathbf{e}$ indicates the result is an energy vector;
-$\mathbf{b}$ indicates the result is a mass exergy vector;
-$\mathbf{x}$ indicates the result is an energy exergy vector; and
-$\mathbf{bx}$ indicates the result is a the sum of mass and energy exergy vectors.
+$\mathbf{b}$ indicates the result is a mass exergy vector; and
+$\mathbf{x}$ indicates the result is an energy exergy vector.
 Subscript $L$ indicates losses (or wastes), and 
 subscript $D$ indicates exergy destroyed by the industry.
 
@@ -227,7 +236,7 @@ use the following code.
 
 ```{r}
 intra_industry_balances <- ecc |> 
-  dplyr::filter(LastStage %in% c("Final", "Useful")) |> 
+  dplyr::filter(EnergyType == "E" & (LastStage %in% c("Final", "Useful"))) |> 
   calc_intra_industry_balance()
 ```
 
@@ -238,6 +247,15 @@ named "SUTIntraIndustryBalance" by default.
 dplyr::glimpse(intra_industry_balances)
 ```
 
+Unsurprisingly, a warning is issued, because
+verification is unsuccessful.
+
+```{r}
+intra_industry_balances |> 
+  verify_intra_industry_balance() |> 
+  glimpse()
+```
+
 The vectors in the "SUTIntraIndustryBalance" column have industries in rows.
 
 ```{r}
@@ -246,19 +264,53 @@ intra_industry_balances$SUTIntraIndustryBalance[[2]]
 ```
 
 Because the matrices in `ecc` do not contain losses, 
-`calc_intra_industry_balance()` calculates energy losses (waste heat)
+`calc_intra_industry_balance()` calculates energy losses 
+(waste heat and waste products)
 ($\mathbf{e}_L$ in the table above).
 
 
-### Endogenizing losses
+### Endogenizing intra-industry losses
 
-The losses can be endogenized, 
+The intra-industry losses can be endogenized, 
 i.e., added to the $\mathbf{RUVY}$ matrices of the PSUT framework.
-To do so, 
-use the function `endogenize_losses()`.
+with `endogenize_losses()`.
+But first, one needs to allocate the losses from each sector to a 
+particular type of product or set of products.
+The allocation of losses to products is accomplished by a matrix
+with industries in rows and loss products in columns.
+The rows of the loss allocation matrix must sum to 1.
+The `losses_alloc` column 
+(by default `Recca::balance_cols$losses_alloc_colname`
+or "`r Recca::balance_cols$losses_alloc_colname`")
+contains those matrices.
+
+A default loss allocation matrix 
+(that allocates losses from every industry to "Waste heat")
+is given in `Recca::balance_cols$default_losses_alloc_mat`.
 
 ```{r}
-endogenized <- intra_industry_balances |> 
+Recca::balance_cols$default_losses_alloc_mat
+```
+
+To use a default losses allocation matrix, 
+add a matrix column of loss allocations
+as shown below.
+
+```{r}
+iibs_with_loss_allocs <- intra_industry_balances |> 
+  dplyr::mutate(
+    "{Recca::balance_cols$losses_alloc_colname}" :=
+      RCLabels::make_list(Recca::balance_cols$default_losses_alloc,
+                          n = dplyr::n(),
+                          lenx = 1)
+  )
+```
+
+Now, endogenizing the losses proceeds with a call to 
+`endogenize_losses()`.
+
+```{r}
+endogenized <- iibs_with_loss_allocs |> 
   endogenize_losses()
 ```
 
@@ -266,7 +318,8 @@ endogenized <- intra_industry_balances |>
 by default `V_prime` and `Y_prime`.
 `V_prime` and `Y_prime` contain $\mathbf{V}$ and $\mathbf{Y}$ matrices
 with losses included directly in the matrices.
-The $\mathbf{V}$ matrices contain a new column
+In the example, 
+the $\mathbf{V}^{\prime}$ matrices contain a new column
 (named "Waste heat" by default)
 that shows the heat losses from each industry.
 
@@ -274,7 +327,7 @@ that shows the heat losses from each industry.
 endogenized$V_prime[[1]]
 ```
 
-The $\mathbf{Y}$ matrices also have a new column, 
+The $\mathbf{Y}^{\prime}$ matrices also have a new column, 
 by default named "Losses."
 
 ```{r}
@@ -282,7 +335,7 @@ endogenized$Y_prime[[1]]
 ```
 
 In addition, 
-the $\mathbf{Y}$ matrices contain a new row 
+the $\mathbf{Y}^{\prime}$ matrices contain a new row 
 (again named "Waste heat" by default)
 that shows the total heat loss in a 
 new "Losses" column. 
@@ -291,7 +344,7 @@ To accept the endogenized matrices,
 set `replace_cols = TRUE`.
 
 ```{r}
-endogenized2 <- intra_industry_balances |> 
+endogenized2 <- iibs_with_loss_allocs |> 
   endogenize_losses(replace_cols = TRUE) 
 dplyr::glimpse(endogenized2)
 endogenized2$Y[[1]] # Same as endogenized$Y_prime[[1]]
@@ -308,7 +361,7 @@ the balances obtained from
 `calc_intra_industry_balance()`. 
 The following equations show the similarities and differences.
 
-The $\mathbf{W}$ matrix is 
+The value added matrix ($\mathbf{W}$) is 
 
 $$\mathbf{W} = \mathbf{V}^{\mathrm{T}} - \mathbf{U}$$
 
@@ -320,18 +373,21 @@ and the intra-industry balances are calculated by
 
 $$(\mathbf{U}^\mathrm{T} - \mathbf{V})  \mathbf{i} \, .$$
 
-The $\mathbf{W}$ matrix is closest to the intra-industry balances, 
+The value added matrix ($\mathbf{W}$) is closest to the intra-industry balances, 
 but 
 
 * with the opposite sense
-($\mathbf{W}$ has products in rows and industries in columns while 
-the intra-industry balances have industries in rows), 
+  (in $\mathbf{W}$ products are in rows; 
+  in the intra-industry balances, industries are in rows), 
 * without summation by the unit vector ($\mathbf{i}$),
 and 
-* with opposite sign.
+* with opposite sign
+  (in $\mathbf{W}$, losses are negative; 
+  in the intra-industry balance, 
+  losses are positive).
 
 The following code shows the comparison
-between $\mathbf{W}$ and the intra-industry balances.
+between $\mathbf{W}$ and intra-industry balances.
 
 ```{r}
 compare <- ecc |> 

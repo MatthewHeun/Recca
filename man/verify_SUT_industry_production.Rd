@@ -6,9 +6,9 @@
 \usage{
 verify_SUT_industry_production(
   .sutmats = NULL,
-  R = "R",
-  U = "U",
-  V = "V",
+  R = Recca::psut_cols$R,
+  U = Recca::psut_cols$U,
+  V = Recca::psut_cols$V,
   industry_production_OK = ".industry_production_OK",
   problem_industries = ".problem_industries"
 )

@@ -21,6 +21,7 @@ Ghosh
 HPL
 HPM
 HTH
+Hatize
 IEA
 Intra
 Ip
@@ -31,6 +32,7 @@ LTH
 Leontief
 Leontief's
 Lifecycle
+LossesAlloc
 Lpp
 MCC
 MKH
@@ -82,6 +84,7 @@ eiou
 endogenization
 endogenize
 endogenized
+endogenizes
 endogenizing
 eroi
 et
@@ -129,6 +132,7 @@ pre
 ps
 pxp
 quantifications
+rowsums
 rowtypes
 rowvec
 substitutable
@@ -138,6 +142,7 @@ sutdata
 sutmats
 transposeinverse
 un
+unconserved
 underset
 unencoded
 unnest

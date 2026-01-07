@@ -8,18 +8,18 @@
 \usage{
 calc_inter_industry_balance(
   .sutmats = NULL,
-  R = "R",
-  U = "U",
-  V = "V",
-  Y = "Y",
-  balance_colname = Recca::balance_cols$inter_industry_balance_colname
+  R = Recca::psut_cols$R,
+  U = Recca::psut_cols$U,
+  V = Recca::psut_cols$V,
+  Y = Recca::psut_cols$Y,
+  balance = Recca::balance_cols$inter_industry_balance_colname
 )
 
 calc_intra_industry_balance(
   .sutmats = NULL,
-  U = "U",
-  V = "V",
-  balance_colname = Recca::balance_cols$intra_industry_balance_colname
+  U = Recca::psut_cols$U,
+  V = Recca::psut_cols$V,
+  balance = Recca::balance_cols$intra_industry_balance_colname
 )
 }
 \arguments{
@@ -44,7 +44,7 @@ Default is "V".}
 that contains same.
 Default is "Y".}
 
-\item{balance_colname}{The name of the column containing energy balance vectors.
+\item{balance}{The name of the column containing energy balance vectors.
 Defaults are
 \link{balance_cols}\verb{$inter_industry_balance_colname} or
 "SUTInterIndustryBalance"
@@ -59,15 +59,16 @@ for
 A list or data frame containing balances.
 }
 \description{
-Balances are an important aspect of analyzing mass and energy conversion chains
+Balances are an important aspect of analyzing material and
+energy conversion chains
 in the PSUT framework with the \strong{RUVY} matrices.
 Often, balances are calculated on energy or exergy flows.
 Balances can be calculated for mass flows or monetary flows, too.
 }
 \details{
-\subsection{Inter-industry balances}{
+\subsection{Inter-industry (between-industry) balances}{
 
-In a PSUT description of a mass or energy conversion chain,
+In a PSUT description of a material or energy conversion chain,
 all of every product leaving one industry must arrive at another industry.
 \code{calc_inter_industry_balances()}
 calculates these between-industry balances via
@@ -75,18 +76,19 @@ calculates these between-industry balances via
 Inter-industry balances are calculated for products (not industries).
 }
 
-\subsection{Intra-industry balances}{
+\subsection{Intra-industry (across-industry) balances}{
 
 \code{calc_intra_industry_balances()} calculates across-industry
 balances via
-(\strong{U}^T^ - \strong{V})\strong{i}.
+(\strong{U}^T^ - \strong{V})\strong{i}
+(i.e., inputs - outputs).
 Inter-industry balances are calculated for industries (not products),
 and the result is a column vector of industry balances.
 }
 
 \subsection{Outputs}{
 
-The argument \code{balance_colname} specifies the name of the
+The argument \code{balance} specifies the name of the
 result.
 By default, the output of \code{calc_inter_industry_balances()} is
 \link{balance_cols}\verb{$inter_industry_balance_colname} or
@@ -97,26 +99,29 @@ By default, the output of \code{calc_intra_industry_balances()} is
 
 For inter-industry (between-industry) balances,
 the result is a column vector of product balances.
-The result should \strong{always} be the \strong{0} vector.
+The result should \emph{always} be the \strong{0} vector,
+regardless of the quantity represented by the matrices.
 
 In a PSUT description of a mass or energy conversion chain,
 the meaning of intra-industry (across-industry) balances
-depends on the construction of the matrices.
+depends on the construction of the matrices and the
+quantity represented by the matrices.
 When all losses are accounted in the matrices themselves,
 the calculation of intra-industry balances for
-mass and energy conversion chains should give the \strong{0} vector
-with industries in rows,
-because mass and energy are conserved.
-When losses are \strong{not} accounted in the matrices,
+conversion chains of conserved quantities
+(e.g., mass, energy, money)
+should give the \strong{0} vector
+with industries in rows.
+When losses are \emph{not} accounted in the matrices,
 the calculation of intra-industry balances gives losses.
 
-For exergy conversion chains
-(mass, energy, or both),
-when losses are accounted in the matrices,
-the intra-industry balance gives exergy destruction.
-When losses are \strong{not} accounted in the matrices,
+For conversion chains of unconserved quantities
+(e.g., entropy and exergy),
+when losses \emph{are} accounted in the matrices,
+the intra-industry balance gives generation or destruction.
+When losses \emph{are not} accounted in the matrices,
 the intra-industry balance gives the sum of
-exergy destruction and exergy losses.
+generation, destruction and losses.
 }
 }
 \examples{
@@ -136,5 +141,8 @@ intra[[Recca::balance_cols$intra_industry_balance_colname]][[1]]
 intra[[Recca::balance_cols$intra_industry_balance_colname]][[2]]
 }
 \seealso{
-\code{\link[=verify_inter_industry_balance]{verify_inter_industry_balance()}} and \code{\link[=verify_intra_industry_balance]{verify_intra_industry_balance()}}
+\code{\link[=verify_inter_industry_balance]{verify_inter_industry_balance()}},
+\code{\link[=verify_intra_industry_balance]{verify_intra_industry_balance()}}, and
+\code{\link[=calc_yqfgW]{calc_yqfgW()}} which calculates \strong{W},
+a matrix similar to the inter-industry balance vector.
 }

@@ -62,10 +62,10 @@ verify_SUT_energy_balance <- function(.sutmats = NULL,
 
   out <- .sutmats |>
     calc_inter_industry_balance(R = R, U = U, V = V, Y = Y,
-                                balance_colname = Recca::balance_cols$inter_industry_balance_colname) |>
+                                balance = Recca::balance_cols$inter_industry_balance_colname) |>
     verify_inter_industry_balance(tol = tol,
                                   balances = Recca::balance_cols$inter_industry_balance_colname,
-                                  balanced_colname = SUT_energy_balance)
+                                  balanced = SUT_energy_balance)
   # Remove the balances item to mimic the behaviour of the deprecated function.
   if (is.data.frame(out)) {
     out <- out |>
