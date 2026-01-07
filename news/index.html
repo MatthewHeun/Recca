@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.65</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.66</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,11 +37,30 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/MatthewHeun/Recca/blob/v0.1.65/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/MatthewHeun/Recca/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.65" id="recca-0165-2025-11-30">Recca 0.1.65 (2025-11-30)<a class="anchor" aria-label="anchor" href="#recca-0165-2025-11-30"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.66" id="recca-0166-2026-01-07">Recca 0.1.66 (2026-01-07)<a class="anchor" aria-label="anchor" href="#recca-0166-2026-01-07"></a></h2>
+<ul><li>
+<code><a href="../reference/endogenize_losses.html">endogenize_losses()</a></code> gains new argument <code>clean</code>. When <code>TRUE</code> (default is <code>FALSE</code>), <strong>0</strong> rows and columns are deleted from the output. This is helpful when a pre-endogenized (and fully balanced) conversion chain is the input. In that case, the output will be the unchanged input.</li>
+<li>
+<code><a href="../reference/verify-balances.html">verify_inter_industry_balance()</a></code> and <code><a href="../reference/verify-balances.html">verify_intra_industry_balance()</a></code> now both calculate balances internally if not supplied.</li>
+<li>
+<code><a href="../reference/endogenize_losses.html">endogenize_losses()</a></code> gains new boolean convenience argument <code>replace_cols</code> that tells whether new <strong>V</strong> and <strong>Y</strong> matrices should replace the old ones. Default is <code>FALSE</code> to <em>not</em> replace old with new matrices.</li>
+<li>
+<code><a href="../reference/verify-balances.html">verify_inter_industry_balance()</a></code> and <code><a href="../reference/verify-balances.html">verify_intra_industry_balance()</a></code> gain new boolean convenience argument <code>delete_balance_cols_if_verified</code> that enables deletion of auxiliary columns if balances are verified. Default is <code>FALSE</code> to <em>not</em> delete columns.</li>
+<li>Minor updates to the README file.</li>
+<li>Fixed the lifecycle badge. Previously, it pointed to the wrong page for “stable” status.</li>
+<li>Fixed the R-CMD-check badge. Previously, it indicated failure when all tests were passing.</li>
+<li>New tests for new features.
+<ul><li>Now up to 935 tests, all passing.</li>
+<li>Test coverage remains at 100%.</li>
+</ul></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.65" id="recca-0165-2025-11-30-doi">Recca 0.1.65 (2025-11-30) <a href="https://doi.org/10.5281/zenodo.17772989" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.17772989.svg" alt="DOI"></a>
+<a class="anchor" aria-label="anchor" href="#recca-0165-2025-11-30-doi"></a></h2>
 <ul><li>New “Balances” vignette describes details about the new balance functions and compares to previous similar functions.</li>
 <li>New function <code><a href="../reference/endogenize_losses.html">endogenize_losses()</a></code> moves losses calculated by <code><a href="../reference/balances.html">calc_intra_industry_balance()</a></code> into the <strong>V</strong> and <strong>Y</strong> matrices so that conserved quantities will always give the <strong>0</strong> vector with <code><a href="../reference/balances.html">calc_intra_industry_balance()</a></code>.</li>
 <li>

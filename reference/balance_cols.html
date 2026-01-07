@@ -11,7 +11,7 @@ to balance functions throughout the Recca package."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.65</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.66</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,7 +41,7 @@ to balance functions throughout the Recca package."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Balance column names</h1>
-      <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/v0.1.65/R/data.R" class="external-link"><code>R/data.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/master/R/data.R" class="external-link"><code>R/data.R</code></a></small>
       <div class="d-none name"><code>balance_cols.Rd</code></div>
     </div>
 
@@ -58,7 +58,7 @@ to balance functions throughout the <code>Recca</code> package.</p>
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>A string list with 10 entries.</p><dl><dt>inter_industry_balance_colname</dt>
+    <p>A string list with 13 entries.</p><dl><dt>inter_industry_balance_colname</dt>
 <dd><p>The name of a column that contains inter-industry balance vectors.</p></dd>
 
 <dt>inter_industry_balanced_colname</dt>
@@ -82,8 +82,17 @@ to balance functions throughout the <code>Recca</code> package.</p>
 <dt>across_industry_balanced_colname</dt>
 <dd><p>The name of a column that contains intra-industry balance vectors are all <strong>0</strong>.</p></dd>
 
-<dt>waste_heat</dt>
-<dd><p>The name of a column in <strong>V</strong> and a row in <strong>Y</strong> that contains waste heat calculated from intra-industry balances.</p></dd>
+<dt>losses_alloc_colname</dt>
+<dd><p>The name of a column that contains loss allocation matrices.</p></dd>
+
+<dt>default_losses_alloc_mat</dt>
+<dd><p>The default losses allocation matrix with 1x1 dimensions, a row named "All industries", a column named "Waste heat", and a value of <code>1</code>.</p></dd>
+
+<dt>default_destruction_alloc_mat</dt>
+<dd><p>The default losses allocation matrix with 1x1 dimensions, a row named "All industries", a column named "Destroyed exergy", and a value of <code>1</code>.</p></dd>
+
+<dt>waste</dt>
+<dd><p>The default name of a column in <strong>V</strong> and row in <strong>Y</strong> that contains losses calculated from intra-industry balances.</p></dd>
 
 <dt>losses_sector</dt>
 <dd><p>The name of a column in <strong>Y</strong> that contains losses calculated from intra-industry balances.</p></dd>
@@ -118,11 +127,30 @@ to balance functions throughout the <code>Recca</code> package.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $across_industry_balanced_colname</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "SUTAcrossIndustryBalanced"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $waste_heat</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Waste heat"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $losses_alloc_colname</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LossesAlloc"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $default_losses_alloc_mat</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                Waste</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> All industries     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"rowtype")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Industry"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"coltype")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Product"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $default_destruction_alloc_mat</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                Destroyed exergy</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> All industries                1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"rowtype")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Industry"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"coltype")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Product"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $waste</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Waste"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $losses_sector</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Losses"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Transformation losses"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>

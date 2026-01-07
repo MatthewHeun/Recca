@@ -10,16 +10,24 @@ industry.
 ``` r
 verify_inter_industry_balance(
   .sutmats = NULL,
+  R = Recca::psut_cols$R,
+  U = Recca::psut_cols$U,
+  V = Recca::psut_cols$V,
+  Y = Recca::psut_cols$Y,
   balances = Recca::balance_cols$inter_industry_balance_colname,
   tol = 1e-06,
-  balanced_colname = Recca::balance_cols$inter_industry_balanced_colname
+  balanced = Recca::balance_cols$inter_industry_balanced_colname,
+  delete_balance_if_verified = FALSE
 )
 
 verify_intra_industry_balance(
   .sutmats = NULL,
+  U = Recca::psut_cols$U,
+  V = Recca::psut_cols$V,
   balances = Recca::balance_cols$intra_industry_balance_colname,
   tol = 1e-06,
-  balanced_colname = Recca::balance_cols$intra_industry_balanced_colname
+  balanced = Recca::balance_cols$intra_industry_balanced_colname,
+  delete_balance_if_verified = FALSE
 )
 ```
 
@@ -28,6 +36,26 @@ verify_intra_industry_balance(
 - .sutmats:
 
   An SUT-style data frame with a column named `balances`.
+
+- R:
+
+  Resources (**R**) matrix or name of the column in `.sutmats` that
+  contains same. Default is "R".
+
+- U:
+
+  Use (**U**) matrix or name of the column in `.sutmats` that contains
+  same. Default is "U".
+
+- V:
+
+  Make (**V**) matrix or name of the column in `.sutmats` that contains
+  same. Default is "V".
+
+- Y:
+
+  Final demand (**Y**) matrix or name of the column in `.sutmats` that
+  contains same. Default is "Y".
 
 - balances:
 
@@ -44,7 +72,7 @@ verify_intra_industry_balance(
   The maximum amount by which products can be out of balance and still
   be considered balanced. Default is `1e-6`.
 
-- balanced_colname:
+- balanced:
 
   The name for booleans telling if balance is present. For
   `verify_inter_industry_balances()`, the default is
@@ -53,6 +81,14 @@ verify_intra_industry_balance(
   the default is
   [balance_cols](https://matthewheun.github.io/Recca/reference/balance_cols.md)`$intra_industry_balanced_colname`
   or "SUTIntraIndustryBalanced".
+
+- delete_balance_if_verified:
+
+  A boolean that tells whether to delete the `balances` and
+  `balanced_colname` columns if `.sutmats` is a data frame and if
+  balances are verified. Default is `FALSE`. If individual matrices are
+  specified in the `R`, `U`, `V`, and `Y` arguments, no deletion is
+  performed.
 
 ## Value
 
@@ -66,8 +102,8 @@ A list or data frame with an additional value or column saying whether
 In a PSUT description of an economy, all of every product leaving one
 industry must arrive at another industry. Inter-industry
 (between-industry) balances are verified by product (within `tol`) for
-every row in `.sutmats`. Inter-industry balances should be calculated
-via `calc_inter_industry_balances()` before calling
+every row in `.sutmats`. Inter-industry balances can be calculated via
+`calc_inter_industry_balances()` before calling
 `verify_inter_industry_balances()`. See examples.
 
 ### Intra-industry balances (by industry)
@@ -103,20 +139,70 @@ Typically, one would call `calc_int*_industry_balance()` before calling
 ``` r
 library(dplyr)
 library(tidyr)
-result_inter <- UKEnergy2000mats |>
+df <- UKEnergy2000mats |>
   dplyr::filter(LastStage %in% c("Final", "Useful")) |>
   tidyr::pivot_wider(names_from = matrix.name,
-                     values_from = matrix) |>
+                     values_from = matrix)
+df |>
   calc_inter_industry_balance() |>
-  verify_inter_industry_balance(tol = 1e-4)
-result_inter
-#> # A tibble: 2 × 14
-#>   Country  Year EnergyType LastStage R             U        U_EIOU   U_feed  
-#>   <chr>   <dbl> <chr>      <chr>     <list>        <list>   <list>   <list>  
-#> 1 GBR      2000 E          Final     <dbl [2 × 2]> <dbl[…]> <dbl[…]> <dbl[…]>
-#> 2 GBR      2000 E          Useful    <dbl [2 × 2]> <dbl[…]> <dbl[…]> <dbl[…]>
-#> # ℹ 6 more variables: V <list>, Y <list>, r_EIOU <list>, S_units <list>,
-#> #   SUTInterIndustryBalance <list>, SUTInterIndustryBalanced <lgl>
-result_inter[[Recca::balance_cols$inter_industry_balanced_colname]]
-#> [1] TRUE TRUE
+  verify_inter_industry_balance(tol = 1e-4) |>
+  dplyr::glimpse()
+#> Rows: 2
+#> Columns: 14
+#> $ Country                  <chr> "GBR", "GBR"
+#> $ Year                     <dbl> 2000, 2000
+#> $ EnergyType               <chr> "E", "E"
+#> $ LastStage                <chr> "Final", "Useful"
+#> $ R                        <list> <<matrix[2 x 2]>>, <<matrix[2 x 2]>>
+#> $ U                        <list> <<matrix[12 x 9]>>, <<matrix[13 x 13]>>
+#> $ U_EIOU                   <list> <<matrix[7 x 8]>>, <<matrix[3 x 8]>>
+#> $ U_feed                   <list> <<matrix[9 x 9]>>, <<matrix[12 x 13]>>
+#> $ V                        <list> <<matrix[9 x 10]>>, <<matrix[13 x 14]>>
+#> $ Y                        <list> <<matrix[4 x 2]>>, <<matrix[4 x 2]>>
+#> $ r_EIOU                   <list> <<matrix[12 x 9]>>, <<matrix[13 x 13]>>
+#> $ S_units                  <list> <<matrix[12 x 1]>>, <<matrix[16 x 1]>>
+#> $ SUTInterIndustryBalance  <list> <<matrix[12 x 1]>>, <<matrix[16 x 1]>>
+#> $ SUTInterIndustryBalanced <lgl> TRUE, TRUE
+# Also works without first calculating the balances
+df |>
+  verify_inter_industry_balance(tol = 1e-4) |>
+  glimpse()
+#> Rows: 2
+#> Columns: 13
+#> $ Country                  <chr> "GBR", "GBR"
+#> $ Year                     <dbl> 2000, 2000
+#> $ EnergyType               <chr> "E", "E"
+#> $ LastStage                <chr> "Final", "Useful"
+#> $ R                        <list> <<matrix[2 x 2]>>, <<matrix[2 x 2]>>
+#> $ U                        <list> <<matrix[12 x 9]>>, <<matrix[13 x 13]>>
+#> $ U_EIOU                   <list> <<matrix[7 x 8]>>, <<matrix[3 x 8]>>
+#> $ U_feed                   <list> <<matrix[9 x 9]>>, <<matrix[12 x 13]>>
+#> $ V                        <list> <<matrix[9 x 10]>>, <<matrix[13 x 14]>>
+#> $ Y                        <list> <<matrix[4 x 2]>>, <<matrix[4 x 2]>>
+#> $ r_EIOU                   <list> <<matrix[12 x 9]>>, <<matrix[13 x 13]>>
+#> $ S_units                  <list> <<matrix[12 x 1]>>, <<matrix[16 x 1]>>
+#> $ SUTInterIndustryBalanced <lgl> TRUE, TRUE
+df |>
+  calc_intra_industry_balance() |>
+  glimpse()
+#> Rows: 2
+#> Columns: 13
+#> $ Country                 <chr> "GBR", "GBR"
+#> $ Year                    <dbl> 2000, 2000
+#> $ EnergyType              <chr> "E", "E"
+#> $ LastStage               <chr> "Final", "Useful"
+#> $ R                       <list> <<matrix[2 x 2]>>, <<matrix[2 x 2]>>
+#> $ U                       <list> <<matrix[12 x 9]>>, <<matrix[13 x 13]>>
+#> $ U_EIOU                  <list> <<matrix[7 x 8]>>, <<matrix[3 x 8]>>
+#> $ U_feed                  <list> <<matrix[9 x 9]>>, <<matrix[12 x 13]>>
+#> $ V                       <list> <<matrix[9 x 10]>>, <<matrix[13 x 14]>>
+#> $ Y                       <list> <<matrix[4 x 2]>>, <<matrix[4 x 2]>>
+#> $ r_EIOU                  <list> <<matrix[12 x 9]>>, <<matrix[13 x 13]>>
+#> $ S_units                 <list> <<matrix[12 x 1]>>, <<matrix[16 x 1]>>
+#> $ SUTIntraIndustryBalance <list> <<matrix[9 x 1]>>, <<matrix[13 x 1]>>
+# Not run, because it fails and emits a warning
+if (FALSE) { # \dontrun{
+df |>
+  verify_intra_industry_balance()
+} # }
 ```

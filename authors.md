@@ -11,16 +11,16 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/MatthewHeun/Recca/blob/v0.1.65/inst/CITATION)
+[`inst/CITATION`](https://github.com/MatthewHeun/Recca/blob/master/inst/CITATION)
 
-Matthew Kuperus Heun, Emmanuel Aramendia (2025). Recca: R Energy
-Conversion Chain Analysis. R package version 0.1.65.
+Matthew Kuperus Heun, Emmanuel Aramendia (2026). Recca: R Energy
+Conversion Chain Analysis. R package version 0.1.66.
 https://doi.org/10.5281/zenodo.5226085
 
     @Manual{,
       title = {Recca: R Energy Conversion Chain Analysis},
       author = {Matthew Kuperus Heun and Emmanuel Aramendia},
-      year = {2025},
-      note = {R package version 0.1.65},
+      year = {2026},
+      note = {R package version 0.1.66},
       url = {https://doi.org/10.5281/zenodo.5226085},
     }

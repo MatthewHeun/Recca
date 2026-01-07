@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.65</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.66</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,7 +63,7 @@
       <h1>Balances</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/v0.1.65/vignettes/balances.Rmd" class="external-link"><code>vignettes/balances.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/master/vignettes/balances.Rmd" class="external-link"><code>vignettes/balances.Rmd</code></a></small>
       <div class="d-none name"><code>balances.Rmd</code></div>
     </div>
 
@@ -153,8 +153,11 @@ calculate it with the <code>Recca</code> package.</p>
 consistency<a class="anchor" aria-label="anchor" href="#inter-industry-between-industry-balances-check-for-product-consistency"></a>
 </h3>
 <p>In any conversion chain, products that leave one industry must enter
-another industry. These between-industry (or inter-industry) balances
-should be verified for every conversion chain to ensure consistency.</p>
+another industry. Inter-industry balances are a product balance that
+ensures that the total supply of any product is equal to the total use
+of any product within the conversion chain. These inter-industry (or
+between-industry) balances should be verified for every conversion chain
+to ensure consistency.</p>
 <p>Inter-industry balances are obtained by the following
 computation.</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">[</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>𝐑</mi><mo>+</mo><mi>𝐕</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi mathvariant="normal">T</mi></msup><mo>−</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>𝐔</mi><mo>+</mo><mi>𝐘</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow><mspace width="0.167em"></mspace><mi>𝐢</mi></mrow><annotation encoding="application/x-tex">[(\mathbf{R} + \mathbf{V})^\mathrm{T} 
@@ -284,7 +287,7 @@ rows.</p>
 <p>As expected, these vectors are the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>𝟎</mn><annotation encoding="application/x-tex">\mathbf{0}</annotation></semantics></math>
 vector to within reasonable precision.</p>
-<p>If you want to check the inter-industry balances for consistency, use
+<p>To check the inter-industry balances for consistency, use
 <code><a href="../reference/verify-balances.html">verify_inter_industry_balance()</a></code>. The <code>tol</code>
 argument gives the tolerance for non-zero product balances.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -307,6 +310,27 @@ argument gives the tolerance for non-zero product balances.</p>
 <span><span class="co">#&gt; $ S_units                  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 1]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[20 x 5]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;ma…</span></span>
 <span><span class="co">#&gt; $ SUTInterIndustryBalance  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 1]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[20 x 1]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;ma…</span></span>
 <span><span class="co">#&gt; $ SUTInterIndustryBalanced <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> TRUE<span style="color: #949494;">, </span>TRUE<span style="color: #949494;">, </span>TRUE<span style="color: #949494;">, </span>TRUE</span></span></code></pre></div>
+<p>To calculate and verify the balances without adding any columns to
+the data frame, set <code>delete_balance_if_verified = TRUE</code>.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">inter_industry_balances</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/verify-balances.html">verify_inter_industry_balance</a></span><span class="op">(</span>tol <span class="op">=</span> <span class="fl">1e-4</span>, </span>
+<span>                                delete_balance_if_verified <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Rows: 4</span></span>
+<span><span class="co">#&gt; Columns: 12</span></span>
+<span><span class="co">#&gt; $ Country    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "GBR"<span style="color: #949494;">, </span>"GBR"<span style="color: #949494;">, </span>"GBR"<span style="color: #949494;">, </span>"GBR"</span></span>
+<span><span class="co">#&gt; $ Year       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2000<span style="color: #949494;">, </span>2000<span style="color: #949494;">, </span>2000<span style="color: #949494;">, </span>2000</span></span>
+<span><span class="co">#&gt; $ EnergyType <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E"<span style="color: #949494;">, </span>"E"<span style="color: #949494;">, </span>"E"<span style="color: #949494;">, </span>"X"</span></span>
+<span><span class="co">#&gt; $ LastStage  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final"<span style="color: #949494;">, </span>"Services"<span style="color: #949494;">, </span>"Useful"<span style="color: #949494;">, </span>"Services"</span></span>
+<span><span class="co">#&gt; $ R          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[2 x 2]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[2 x 2]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[2 x 2]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;…</span></span>
+<span><span class="co">#&gt; $ U          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 9]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[17 x 17]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[13 x 13]&gt;…</span></span>
+<span><span class="co">#&gt; $ U_EIOU     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[7 x 8]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[3 x 8]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[3 x 8]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;…</span></span>
+<span><span class="co">#&gt; $ U_feed     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 9]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[16 x 17]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[12 x 13]&gt;&gt;…</span></span>
+<span><span class="co">#&gt; $ V          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 10]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[17 x 18]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[13 x 14]…</span></span>
+<span><span class="co">#&gt; $ Y          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[4 x 2]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[4 x 2]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[4 x 2]&gt;&gt;<span style="color: #949494;">, </span>&lt;…</span></span>
+<span><span class="co">#&gt; $ r_EIOU     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 9]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[17 x 17]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[13 x 13]…</span></span>
+<span><span class="co">#&gt; $ S_units    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 1]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[20 x 5]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[16 x 1]&gt;&gt;…</span></span></code></pre></div>
 <p>If a product is out of balance by more than <code>tol</code> (by
 default <code>1e-6</code>), a warning occurs and <code>FALSE</code>
 appears in the new column, “SUTInterIndustryBalanced.”</p>
@@ -315,15 +339,18 @@ appears in the new column, “SUTInterIndustryBalanced.”</p>
 <h3 id="intra-industry-across-industry-balances">Intra-industry (across-industry) balances<a class="anchor" aria-label="anchor" href="#intra-industry-across-industry-balances"></a>
 </h3>
 <p>A second type of balance (the intra-industry balance) computes
-differences <em>across</em> industries. Intra-industry balances are
-obtained by the following computation.</p>
+differences <em>across</em> industries, inputs
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐔</mi><annotation encoding="application/x-tex">\mathbf{U}</annotation></semantics></math>)
+less outputs
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐕</mi><annotation encoding="application/x-tex">\mathbf{V}</annotation></semantics></math>).
+Intra-industry balances are obtained by the following computation.</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>𝐔</mi><mi mathvariant="normal">T</mi></msup><mo>−</mo><mi>𝐕</mi><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.167em"></mspace><mi>𝐢</mi></mrow><annotation encoding="application/x-tex">(\mathbf{U}^\mathrm{T} - \mathbf{V}) \, \mathbf{i}</annotation></semantics></math></p>
-<p>The result is a column vector with industries in rows.</p>
+<p>The result is a column vector with industries in rows. In the
+resultant column vector, losses are positive values.</p>
 <p>The interpretation of the results depends upon the construction of
-the matrices.</p>
-<p>In a PSUT description of conserved quantities (such as mass or
-energy), when all losses are accounted within the matrices themselves,
-the calculation of intra-industry balances should give the
+the matrices. In a PSUT description of conserved quantities (such as
+mass or energy), when all losses are accounted within the matrices
+themselves, the calculation of intra-industry balances should give the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>𝟎</mn><annotation encoding="application/x-tex">\mathbf{0}</annotation></semantics></math>
 vector. When losses <em>are not</em> accounted in the matrices, the
 calculation of intra-industry balances gives losses.</p>
@@ -333,7 +360,9 @@ accounted in the matrices, the intra-industry balance gives destruction
 of the non-conserved quantity. When losses <em>are not</em> accounted in
 the matrices, the intra-industry balance gives the sum of destruction
 and losses.</p>
-<p>The following table summarizes the above points.</p>
+<p>The following table summarizes the above points, giving the result of
+intra-industry balances for various conversion chain types, depending on
+whether the matrices include losses.</p>
 <table class="table">
 <colgroup>
 <col width="30%">
@@ -368,8 +397,8 @@ and losses.</p>
 </tr>
 <tr class="odd">
 <td align="center">Mass and energy exergy (BXCC)</td>
-<td align="center"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mrow><mi>𝐛</mi><mi>𝐱</mi></mrow><mi>D</mi></msub><annotation encoding="application/x-tex">\mathbf{bx}_D</annotation></semantics></math></td>
-<td align="center"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mi>𝐛</mi><mi>𝐱</mi></mrow><mi>D</mi></msub><mo>+</mo><msub><mrow><mi>𝐛</mi><mi>𝐱</mi></mrow><mi>L</mi></msub></mrow><annotation encoding="application/x-tex">\mathbf{bx}_D + \mathbf{bx}_L</annotation></semantics></math></td>
+<td align="center"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐛</mi><mi>D</mi></msub><mo>+</mo><msub><mi>𝐱</mi><mi>D</mi></msub></mrow><annotation encoding="application/x-tex">\mathbf{b}_D + \mathbf{x}_D</annotation></semantics></math></td>
+<td align="center"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐛</mi><mi>D</mi></msub><mo>+</mo><msub><mi>𝐛</mi><mi>L</mi></msub><mo>+</mo><msub><mi>𝐱</mi><mi>D</mi></msub><mo>+</mo><msub><mi>𝐱</mi><mi>L</mi></msub></mrow><annotation encoding="application/x-tex">\mathbf{b}_D + \mathbf{b}_L + \mathbf{x}_D + \mathbf{x}_L</annotation></semantics></math></td>
 </tr>
 </tbody>
 </table>
@@ -384,12 +413,9 @@ indicates the result is a mass vector;
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐞</mi><annotation encoding="application/x-tex">\mathbf{e}</annotation></semantics></math>
 indicates the result is an energy vector;
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐛</mi><annotation encoding="application/x-tex">\mathbf{b}</annotation></semantics></math>
-indicates the result is a mass exergy vector;
+indicates the result is a mass exergy vector; and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐱</mi><annotation encoding="application/x-tex">\mathbf{x}</annotation></semantics></math>
-indicates the result is an energy exergy vector; and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐛</mi><mi>𝐱</mi></mrow><annotation encoding="application/x-tex">\mathbf{bx}</annotation></semantics></math>
-indicates the result is a the sum of mass and energy exergy vectors.
-Subscript
+indicates the result is an energy exergy vector. Subscript
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math>
 indicates losses (or wastes), and subscript
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>D</mi><annotation encoding="application/x-tex">D</annotation></semantics></math>
@@ -397,13 +423,13 @@ indicates exergy destroyed by the industry.</p>
 <p>To compute intra-industry (across-industry) balances within the PSUT
 framework using the <code>Recca</code> package, use the following
 code.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">intra_industry_balances</span> <span class="op">&lt;-</span> <span class="va">ecc</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">LastStage</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Final"</span>, <span class="st">"Useful"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">EnergyType</span> <span class="op">==</span> <span class="st">"E"</span> <span class="op">&amp;</span> <span class="op">(</span><span class="va">LastStage</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Final"</span>, <span class="st">"Useful"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/balances.html">calc_intra_industry_balance</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>The result is added as a new column, named “SUTIntraIndustryBalance”
 by default.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">intra_industry_balances</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 2</span></span>
 <span><span class="co">#&gt; Columns: 13</span></span>
@@ -420,9 +446,34 @@ by default.</p>
 <span><span class="co">#&gt; $ r_EIOU                  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 9]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[13 x 13]&gt;&gt;</span></span>
 <span><span class="co">#&gt; $ S_units                 <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 1]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[16 x 1]&gt;&gt;</span></span>
 <span><span class="co">#&gt; $ SUTIntraIndustryBalance <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 1]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[13 x 1]&gt;&gt;</span></span></code></pre></div>
+<p>Unsurprisingly, a warning is issued, because verification is
+unsuccessful.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">intra_industry_balances</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/verify-balances.html">verify_intra_industry_balance</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in verify_intra_industry_balance(intra_industry_balances): Industries</span></span>
+<span><span class="co">#&gt; are not balanced in verify_intra_industry_balance(). See column</span></span>
+<span><span class="co">#&gt; SUTIntraIndustryBalanced.</span></span>
+<span><span class="co">#&gt; Rows: 2</span></span>
+<span><span class="co">#&gt; Columns: 14</span></span>
+<span><span class="co">#&gt; $ Country                  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "GBR"<span style="color: #949494;">, </span>"GBR"</span></span>
+<span><span class="co">#&gt; $ Year                     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2000<span style="color: #949494;">, </span>2000</span></span>
+<span><span class="co">#&gt; $ EnergyType               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E"<span style="color: #949494;">, </span>"E"</span></span>
+<span><span class="co">#&gt; $ LastStage                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final"<span style="color: #949494;">, </span>"Useful"</span></span>
+<span><span class="co">#&gt; $ R                        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[2 x 2]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[2 x 2]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ U                        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 9]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[13 x 13]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ U_EIOU                   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[7 x 8]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[3 x 8]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ U_feed                   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 9]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[12 x 13]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ V                        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 10]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[13 x 14]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ Y                        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[4 x 2]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[4 x 2]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ r_EIOU                   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 9]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[13 x 13]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ S_units                  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 1]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[16 x 1]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ SUTIntraIndustryBalance  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 1]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[13 x 1]&gt;&gt;</span></span>
+<span><span class="co">#&gt; $ SUTIntraIndustryBalanced <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> FALSE<span style="color: #949494;">, </span>FALSE</span></span></code></pre></div>
 <p>The vectors in the “SUTIntraIndustryBalance” column have industries
 in rows.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">intra_industry_balances</span><span class="op">$</span><span class="va">SUTIntraIndustryBalance</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="co">#&gt;                   Product</span></span>
 <span><span class="co">#&gt; Crude dist.           550</span></span>
@@ -459,19 +510,48 @@ in rows.</p>
 <span><span class="co">#&gt; [1] "Product"</span></span></code></pre></div>
 <p>Because the matrices in <code>ecc</code> do not contain losses,
 <code><a href="../reference/balances.html">calc_intra_industry_balance()</a></code> calculates energy losses
-(waste heat)
+(waste heat and waste products)
 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐞</mi><mi>L</mi></msub><annotation encoding="application/x-tex">\mathbf{e}_L</annotation></semantics></math>
 in the table above).</p>
 </div>
 <div class="section level3">
-<h3 id="endogenizing-losses">Endogenizing losses<a class="anchor" aria-label="anchor" href="#endogenizing-losses"></a>
+<h3 id="endogenizing-intra-industry-losses">Endogenizing intra-industry losses<a class="anchor" aria-label="anchor" href="#endogenizing-intra-industry-losses"></a>
 </h3>
-<p>The losses can be endogenized, i.e., added to the
+<p>The intra-industry losses can be endogenized, i.e., added to the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐑</mi><mi>𝐔</mi><mi>𝐕</mi><mi>𝐘</mi></mrow><annotation encoding="application/x-tex">\mathbf{RUVY}</annotation></semantics></math>
-matrices of the PSUT framework. To do so, use the function
+matrices of the PSUT framework. with <code><a href="../reference/endogenize_losses.html">endogenize_losses()</a></code>.
+But first, one needs to allocate the losses from each sector to a
+particular type of product or set of products. The allocation of losses
+to products is accomplished by a matrix with industries in rows and loss
+products in columns. The rows of the loss allocation matrix must sum to
+1. The <code>losses_alloc</code> column (by default
+<code>Recca::balance_cols$losses_alloc_colname</code> or “LossesAlloc”)
+contains those matrices.</p>
+<p>A default loss allocation matrix (that allocates losses from every
+industry to “Waste heat”) is given in
+<code>Recca::balance_cols$default_losses_alloc_mat</code>.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="../reference/balance_cols.html">balance_cols</a></span><span class="op">$</span><span class="va">default_losses_alloc_mat</span></span>
+<span><span class="co">#&gt;                Waste</span></span>
+<span><span class="co">#&gt; All industries     1</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "Industry"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "Product"</span></span></code></pre></div>
+<p>To use a default losses allocation matrix, add a matrix column of
+loss allocations as shown below.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">iibs_with_loss_allocs</span> <span class="op">&lt;-</span> <span class="va">intra_industry_balances</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    <span class="st">"{Recca::balance_cols$losses_alloc_colname}"</span> <span class="op">:=</span></span>
+<span>      <span class="fu">RCLabels</span><span class="fu">::</span><span class="fu"><a href="https://matthewheun.github.io/RCLabels/reference/make_list.html" class="external-link">make_list</a></span><span class="op">(</span><span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="../reference/balance_cols.html">balance_cols</a></span><span class="op">$</span><span class="va">default_losses_alloc</span>,</span>
+<span>                          n <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>                          lenx <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<p>Now, endogenizing the losses proceeds with a call to
 <code><a href="../reference/endogenize_losses.html">endogenize_losses()</a></code>.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">endogenized</span> <span class="op">&lt;-</span> <span class="va">intra_industry_balances</span> <span class="op">|&gt;</span> </span>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">endogenized</span> <span class="op">&lt;-</span> <span class="va">iibs_with_loss_allocs</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/endogenize_losses.html">endogenize_losses</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><code><a href="../reference/endogenize_losses.html">endogenize_losses()</a></code> adds two new columns: by default
 <code>V_prime</code> and <code>Y_prime</code>. <code>V_prime</code> and
@@ -479,11 +559,12 @@ matrices of the PSUT framework. To do so, use the function
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐕</mi><annotation encoding="application/x-tex">\mathbf{V}</annotation></semantics></math>
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐘</mi><annotation encoding="application/x-tex">\mathbf{Y}</annotation></semantics></math>
-matrices with losses included directly in the matrices. The
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐕</mi><annotation encoding="application/x-tex">\mathbf{V}</annotation></semantics></math>
+matrices with losses included directly in the matrices. In the example,
+the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>𝐕</mi><mi>′</mi></msup><annotation encoding="application/x-tex">\mathbf{V}^{\prime}</annotation></semantics></math>
 matrices contain a new column (named “Waste heat” by default) that shows
 the heat losses from each industry.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">endogenized</span><span class="op">$</span><span class="va">V_prime</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="co">#&gt;                   Crude [from Dist.] Crude [from Fields] Diesel</span></span>
 <span><span class="co">#&gt; Crude dist.                    47500                   0      0</span></span>
@@ -505,50 +586,45 @@ the heat losses from each industry.</p>
 <span><span class="co">#&gt; Oil refineries                      0     0                 0               0</span></span>
 <span><span class="co">#&gt; Petrol dist.                        0     0                 0               0</span></span>
 <span><span class="co">#&gt; Power plants                        0  6400                 0               0</span></span>
-<span><span class="co">#&gt;                   NG [from Wells] Petrol Petrol [from Dist.] Waste heat</span></span>
-<span><span class="co">#&gt; Crude dist.                     0      0                   0        550</span></span>
-<span><span class="co">#&gt; Diesel dist.                    0      0                   0        350</span></span>
-<span><span class="co">#&gt; Elect. grid                     0      0                   0        125</span></span>
-<span><span class="co">#&gt; Gas wells &amp; proc.           43000      0                   0       2075</span></span>
-<span><span class="co">#&gt; NG dist.                        0      0                   0         50</span></span>
-<span><span class="co">#&gt; Oil fields                      0      0                   0       2575</span></span>
-<span><span class="co">#&gt; Oil refineries                  0  26500                   0       5075</span></span>
-<span><span class="co">#&gt; Petrol dist.                    0      0               26500        750</span></span>
-<span><span class="co">#&gt; Power plants                    0      0                   0       9700</span></span>
+<span><span class="co">#&gt;                   NG [from Wells] Petrol Petrol [from Dist.] Waste</span></span>
+<span><span class="co">#&gt; Crude dist.                     0      0                   0   550</span></span>
+<span><span class="co">#&gt; Diesel dist.                    0      0                   0   350</span></span>
+<span><span class="co">#&gt; Elect. grid                     0      0                   0   125</span></span>
+<span><span class="co">#&gt; Gas wells &amp; proc.           43000      0                   0  2075</span></span>
+<span><span class="co">#&gt; NG dist.                        0      0                   0    50</span></span>
+<span><span class="co">#&gt; Oil fields                      0      0                   0  2575</span></span>
+<span><span class="co">#&gt; Oil refineries                  0  26500                   0  5075</span></span>
+<span><span class="co">#&gt; Petrol dist.                    0      0               26500   750</span></span>
+<span><span class="co">#&gt; Power plants                    0      0                   0  9700</span></span>
 <span><span class="co">#&gt; attr(,"rowtype")</span></span>
 <span><span class="co">#&gt; [1] "Industry"</span></span>
 <span><span class="co">#&gt; attr(,"coltype")</span></span>
 <span><span class="co">#&gt; [1] "Product"</span></span></code></pre></div>
 <p>The
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐘</mi><annotation encoding="application/x-tex">\mathbf{Y}</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>𝐘</mi><mi>′</mi></msup><annotation encoding="application/x-tex">\mathbf{Y}^{\prime}</annotation></semantics></math>
 matrices also have a new column, by default named “Losses.”</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">endogenized</span><span class="op">$</span><span class="va">Y_prime</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="co">#&gt;                     Losses Residential Transport</span></span>
-<span><span class="co">#&gt; Diesel [from Dist.]      0           0     14750</span></span>
-<span><span class="co">#&gt; Elect [from Grid]        0        6000         0</span></span>
-<span><span class="co">#&gt; NG [from Dist.]          0       25000         0</span></span>
-<span><span class="co">#&gt; Petrol [from Dist.]      0           0     26000</span></span>
-<span><span class="co">#&gt; Waste heat           21250           0         0</span></span>
+<span><span class="co">#&gt;                     Residential Transformation losses Transport</span></span>
+<span><span class="co">#&gt; Diesel [from Dist.]           0                     0     14750</span></span>
+<span><span class="co">#&gt; Elect [from Grid]          6000                     0         0</span></span>
+<span><span class="co">#&gt; NG [from Dist.]           25000                     0         0</span></span>
+<span><span class="co">#&gt; Petrol [from Dist.]           0                     0     26000</span></span>
+<span><span class="co">#&gt; Waste                         0                 21250         0</span></span>
 <span><span class="co">#&gt; attr(,"rowtype")</span></span>
 <span><span class="co">#&gt; [1] "Product"</span></span>
 <span><span class="co">#&gt; attr(,"coltype")</span></span>
 <span><span class="co">#&gt; [1] "Industry"</span></span></code></pre></div>
 <p>In addition, the
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐘</mi><annotation encoding="application/x-tex">\mathbf{Y}</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>𝐘</mi><mi>′</mi></msup><annotation encoding="application/x-tex">\mathbf{Y}^{\prime}</annotation></semantics></math>
 matrices contain a new row (again named “Waste heat” by default) that
 shows the total heat loss in a new “Losses” column.</p>
-<p>To accept the endogenized matrices, do the following:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">endogenized</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>    V <span class="op">=</span> <span class="va">V_prime</span>,</span>
-<span>    Y <span class="op">=</span> <span class="va">Y_prime</span>, </span>
-<span>    V_prime <span class="op">=</span> <span class="cn">NULL</span>, </span>
-<span>    Y_prime <span class="op">=</span> <span class="cn">NULL</span>, </span>
-<span>    SUTIntraIndustryBalance <span class="op">=</span> <span class="cn">NULL</span></span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></span>
+<p>To accept the endogenized matrices, set
+<code>replace_cols = TRUE</code>.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">endogenized2</span> <span class="op">&lt;-</span> <span class="va">iibs_with_loss_allocs</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/endogenize_losses.html">endogenize_losses</a></span><span class="op">(</span>replace_cols <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> </span>
+<span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">endogenized2</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 2</span></span>
 <span><span class="co">#&gt; Columns: 12</span></span>
 <span><span class="co">#&gt; $ Country    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "GBR"<span style="color: #949494;">, </span>"GBR"</span></span>
@@ -562,7 +638,18 @@ shows the total heat loss in a new “Losses” column.</p>
 <span><span class="co">#&gt; $ V          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 11]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[13 x 15]&gt;&gt;</span></span>
 <span><span class="co">#&gt; $ Y          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[5 x 3]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[5 x 3]&gt;&gt;</span></span>
 <span><span class="co">#&gt; $ r_EIOU     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 9]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[13 x 13]&gt;&gt;</span></span>
-<span><span class="co">#&gt; $ S_units    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 1]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[16 x 1]&gt;&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt; $ S_units    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 1]&gt;&gt;<span style="color: #949494;">, </span>&lt;&lt;matrix[16 x 1]&gt;&gt;</span></span>
+<span><span class="va">endogenized2</span><span class="op">$</span><span class="va">Y</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="co"># Same as endogenized$Y_prime[[1]]</span></span>
+<span><span class="co">#&gt;                     Residential Transformation losses Transport</span></span>
+<span><span class="co">#&gt; Diesel [from Dist.]           0                     0     14750</span></span>
+<span><span class="co">#&gt; Elect [from Grid]          6000                     0         0</span></span>
+<span><span class="co">#&gt; NG [from Dist.]           25000                     0         0</span></span>
+<span><span class="co">#&gt; Petrol [from Dist.]           0                     0     26000</span></span>
+<span><span class="co">#&gt; Waste                         0                 21250         0</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "Product"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "Industry"</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="the-value-added-matrix-mathbfw">The value added matrix
@@ -574,34 +661,41 @@ obtained from <code><a href="../reference/calc_yqfgW.html">calc_yqfgW()</a></cod
 the balances obtained from <code><a href="../reference/balances.html">calc_inter_industry_balance()</a></code>
 and <code><a href="../reference/balances.html">calc_intra_industry_balance()</a></code>. The following equations
 show the similarities and differences.</p>
-<p>The
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐖</mi><annotation encoding="application/x-tex">\mathbf{W}</annotation></semantics></math>
-matrix is</p>
+<p>The value added matrix
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐖</mi><annotation encoding="application/x-tex">\mathbf{W}</annotation></semantics></math>)
+is</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐖</mi><mo>=</mo><msup><mi>𝐕</mi><mi mathvariant="normal">T</mi></msup><mo>−</mo><mi>𝐔</mi></mrow><annotation encoding="application/x-tex">\mathbf{W} = \mathbf{V}^{\mathrm{T}} - \mathbf{U}</annotation></semantics></math></p>
 <p>Inter-industry balances are calculated by</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">[</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>𝐑</mi><mo>+</mo><mi>𝐕</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi mathvariant="normal">T</mi></msup><mo>−</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>𝐔</mi><mo>+</mo><mi>𝐘</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow><mi>𝐢</mi></mrow><annotation encoding="application/x-tex">[(\mathbf{R} + \mathbf{V})^\mathrm{T}  - (\mathbf{U} + \mathbf{Y})] \mathbf{i}</annotation></semantics></math></p>
 <p>and the intra-industry balances are calculated by</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>𝐔</mi><mi mathvariant="normal">T</mi></msup><mo>−</mo><mi>𝐕</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>𝐢</mi><mspace width="0.167em"></mspace><mi>.</mi></mrow><annotation encoding="application/x-tex">(\mathbf{U}^\mathrm{T} - \mathbf{V})  \mathbf{i} \, .</annotation></semantics></math></p>
-<p>The
+<p>The value added matrix
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐖</mi><annotation encoding="application/x-tex">\mathbf{W}</annotation></semantics></math>)
+is closest to the intra-industry balances, but</p>
+<ul>
+<li>with the opposite sense (in
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐖</mi><annotation encoding="application/x-tex">\mathbf{W}</annotation></semantics></math>
-matrix is closest to the intra-industry balances, but with the opposite
-sense
-(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐖</mi><annotation encoding="application/x-tex">\mathbf{W}</annotation></semantics></math>
-has products in rows and the intra-industry balances have industries in
-rows), without the summation by the unit vector
+products are in rows; in the intra-industry balances, industries are in
+rows),</li>
+<li>without summation by the unit vector
 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐢</mi><annotation encoding="application/x-tex">\mathbf{i}</annotation></semantics></math>),
-and with the opposite sign. The following code shows the comparison
-between
+and</li>
+<li>with opposite sign (in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐖</mi><annotation encoding="application/x-tex">\mathbf{W}</annotation></semantics></math>,
+losses are negative; in the intra-industry balance, losses are
+positive).</li>
+</ul>
+<p>The following code shows the comparison between
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐖</mi><annotation encoding="application/x-tex">\mathbf{W}</annotation></semantics></math>
-and the intra-industry balances.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+and intra-industry balances.</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">compare</span> <span class="op">&lt;-</span> <span class="va">ecc</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/calc_yqfgW.html">calc_yqfgW</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/balances.html">calc_intra_industry_balance</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co"># Calculate column sums of W and </span></span>
+<span><span class="co"># transpose to create a column vector </span></span>
+<span><span class="co"># for easier comparison</span></span>
 <span><span class="va">compare</span><span class="op">$</span><span class="va">W</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="co"># Calculate column sums and </span></span>
-<span>  <span class="co"># transpose to create a column vector </span></span>
-<span>  <span class="co"># for easier comparison</span></span>
 <span>  <span class="fu">matsbyname</span><span class="fu">::</span><span class="fu"><a href="https://matthewheun.github.io/matsbyname/reference/colsums_byname.html" class="external-link">colsums_byname</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">matsbyname</span><span class="fu">::</span><span class="fu"><a href="https://matthewheun.github.io/matsbyname/reference/transpose_byname.html" class="external-link">transpose_byname</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                   Product</span></span>
@@ -618,6 +712,7 @@ and the intra-industry balances.</p>
 <span><span class="co">#&gt; [1] "Industry"</span></span>
 <span><span class="co">#&gt; attr(,"coltype")</span></span>
 <span><span class="co">#&gt; [1] "Product"</span></span>
+<span><span class="co"># Compare to the intra-industry balance</span></span>
 <span><span class="va">compare</span><span class="op">$</span><span class="va">SUTIntraIndustryBalance</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="co">#&gt;                   Product</span></span>
 <span><span class="co">#&gt; Crude dist.           550</span></span>

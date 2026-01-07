@@ -35,7 +35,7 @@
   : All energy conversion chain stages
 
 - [`alloc_cols`](https://matthewheun.github.io/Recca/reference/alloc_cols.md)
-  : Columns in a data frame that contains final-to-useful allocations
+  : Columns in a data frame that contain final-to-useful allocations
 
 - [`any_start_with()`](https://matthewheun.github.io/Recca/reference/any_start_with.md)
   : Tell if any of a vector of strings starts with another string

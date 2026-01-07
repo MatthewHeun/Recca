@@ -1,4 +1,4 @@
-# Columns in a data frame that contains final-to-useful allocations
+# Columns in a data frame that contain final-to-useful allocations
 
 A string list containing named names of columns in PSUT data frames.
 Items in the list provide default values for column name function

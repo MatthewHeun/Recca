@@ -1,6 +1,37 @@
 # Changelog
 
-## Recca 0.1.65 (2025-11-30)
+## Recca 0.1.66 (2026-01-07)
+
+- [`endogenize_losses()`](https://matthewheun.github.io/Recca/reference/endogenize_losses.md)
+  gains new argument `clean`. When `TRUE` (default is `FALSE`), **0**
+  rows and columns are deleted from the output. This is helpful when a
+  pre-endogenized (and fully balanced) conversion chain is the input. In
+  that case, the output will be the unchanged input.
+- [`verify_inter_industry_balance()`](https://matthewheun.github.io/Recca/reference/verify-balances.md)
+  and
+  [`verify_intra_industry_balance()`](https://matthewheun.github.io/Recca/reference/verify-balances.md)
+  now both calculate balances internally if not supplied.
+- [`endogenize_losses()`](https://matthewheun.github.io/Recca/reference/endogenize_losses.md)
+  gains new boolean convenience argument `replace_cols` that tells
+  whether new **V** and **Y** matrices should replace the old ones.
+  Default is `FALSE` to *not* replace old with new matrices.
+- [`verify_inter_industry_balance()`](https://matthewheun.github.io/Recca/reference/verify-balances.md)
+  and
+  [`verify_intra_industry_balance()`](https://matthewheun.github.io/Recca/reference/verify-balances.md)
+  gain new boolean convenience argument
+  `delete_balance_cols_if_verified` that enables deletion of auxiliary
+  columns if balances are verified. Default is `FALSE` to *not* delete
+  columns.
+- Minor updates to the README file.
+- Fixed the lifecycle badge. Previously, it pointed to the wrong page
+  for “stable” status.
+- Fixed the R-CMD-check badge. Previously, it indicated failure when all
+  tests were passing.
+- New tests for new features.
+  - Now up to 935 tests, all passing.
+  - Test coverage remains at 100%.
+
+## Recca 0.1.65 (2025-11-30) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17772989.svg)](https://doi.org/10.5281/zenodo.17772989)
 
 - New “Balances” vignette describes details about the new balance
   functions and compares to previous similar functions.

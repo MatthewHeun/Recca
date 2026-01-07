@@ -12,7 +12,7 @@ balance_cols
 
 ## Format
 
-A string list with 10 entries.
+A string list with 13 entries.
 
 - inter_industry_balance_colname:
 
@@ -50,10 +50,25 @@ A string list with 10 entries.
   The name of a column that contains intra-industry balance vectors are
   all **0**.
 
-- waste_heat:
+- losses_alloc_colname:
 
-  The name of a column in **V** and a row in **Y** that contains waste
-  heat calculated from intra-industry balances.
+  The name of a column that contains loss allocation matrices.
+
+- default_losses_alloc_mat:
+
+  The default losses allocation matrix with 1x1 dimensions, a row named
+  "All industries", a column named "Waste heat", and a value of `1`.
+
+- default_destruction_alloc_mat:
+
+  The default losses allocation matrix with 1x1 dimensions, a row named
+  "All industries", a column named "Destroyed exergy", and a value of
+  `1`.
+
+- waste:
+
+  The default name of a column in **V** and row in **Y** that contains
+  losses calculated from intra-industry balances.
 
 - losses_sector:
 
@@ -88,10 +103,29 @@ balance_cols
 #> $across_industry_balanced_colname
 #> [1] "SUTAcrossIndustryBalanced"
 #> 
-#> $waste_heat
-#> [1] "Waste heat"
+#> $losses_alloc_colname
+#> [1] "LossesAlloc"
+#> 
+#> $default_losses_alloc_mat
+#>                Waste
+#> All industries     1
+#> attr(,"rowtype")
+#> [1] "Industry"
+#> attr(,"coltype")
+#> [1] "Product"
+#> 
+#> $default_destruction_alloc_mat
+#>                Destroyed exergy
+#> All industries                1
+#> attr(,"rowtype")
+#> [1] "Industry"
+#> attr(,"coltype")
+#> [1] "Product"
+#> 
+#> $waste
+#> [1] "Waste"
 #> 
 #> $losses_sector
-#> [1] "Losses"
+#> [1] "Transformation losses"
 #> 
 ```

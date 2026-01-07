@@ -10,9 +10,9 @@ to the final stage (energy purchased by consumers, such as refined
 petroleum and electricity), to the useful stage (energy desired by the
 end user, such as heat, motion, and light), and sometimes to energy
 services (such as thermal comfort, transport, and illumination). Such
-analyses are significantly easier when data are arranged in the **R**,
-**U**, **V**, and **Y** matrices of the PSUT framework described by
-[Heun et al. (2018)](https://doi.org/10.1016/j.apenergy.2018.05.109).
+analyses are significantly easier when data are arranged in the **RUVY**
+matrices of the PSUT framework described by [Heun et al.
+(2018)](https://doi.org/10.1016/j.apenergy.2018.05.109).
 
 To facilitate SEA with the PSUT framework, computational tools are
 needed. The computational tools should be amenable to use with
@@ -34,7 +34,7 @@ devtools::install_github("MatthewHeun/Recca", build_vignettes = TRUE)
 
 ## History
 
-The functions in this package were first used in the paper [Heun et al.
+The functions in this package were first used in [Heun et al.
 (2018)](https://doi.org/10.1016/j.apenergy.2018.05.109).
 
 ## More Information
