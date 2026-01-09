@@ -148,3 +148,4 @@ test_that("endogenize_losses() fails when not all industries are present in loss
     expect_error("Rows of the losses allocation matrix do not sum to 1")
 })
 
+
