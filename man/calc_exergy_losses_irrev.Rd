@@ -10,9 +10,6 @@ calc_exergy_losses_irrev(
   U = Recca::psut_cols$U,
   V = Recca::psut_cols$V,
   Y = Recca::psut_cols$Y,
-  U_feed = Recca::psut_cols$U_feed,
-  U_eiou = Recca::psut_cols$U_eiou,
-  r_eiou = Recca::psut_cols$r_eiou,
   intra_industry_balance = Recca::balance_cols$intra_industry_balance_colname,
   losses_alloc = Recca::balance_cols$losses_alloc_colname,
   loss_sector = Recca::balance_cols$losses_sector,
@@ -20,17 +17,20 @@ calc_exergy_losses_irrev(
   replace_cols = FALSE,
   clean = FALSE,
   tol = 1e-06,
-  R_prime = "R_prime",
-  U_prime = "U_prime",
-  V_prime = "V_prime",
-  Y_prime = "Y_prime",
-  U_feed_prime = "U_feed_prime",
-  U_eiou_prime = "U_EIOU_prime",
-  r_eiou_prime = "r_EIOU_prime"
+  exergy_loss = Recca::psut_cols$exergy_loss,
+  irreversibility = Recca::psut_cols$irreversibility
 )
 }
 \arguments{
-\item{r_eiou_prime}{}
+\item{.sutmats}{An optional wide-by-matrices data frame
+containing conversion chains quantified
+in conserved quantities (such as mass or energy).
+Losses may be included in the matrices,
+but that is not required.}
+
+\item{R, U, V, Y}{PSUT matrices that describe the conversion chain.}
+
+\item{irreversibility}{}
 }
 \description{
 Given a conversion chain quantified in conserved quantities,

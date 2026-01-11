@@ -35,7 +35,9 @@ psut_cols <- list(resources = "R",
                   year = "Year",
                   method = "Method",
                   energy_type = "EnergyType",
-                  last_stage = "LastStage")
+                  last_stage = "LastStage",
+                  exergy_loss = "ExergyLoss",
+                  irreversibility = "Irreversibility")
 usethis::use_data(psut_cols, overwrite = TRUE)
 
 

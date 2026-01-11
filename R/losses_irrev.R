@@ -4,28 +4,26 @@
 #' such as mass or energy,
 #' calculate exergy losses and irreversibility
 #' (exergy destruction).
-#' 
-#' 
+#'
+#'
 #' Additional inputs are the losses allocation matrix
 #' (`losses_alloc`) and
 #' the phi vector (`phi_vec`).
-#' Internally, this function uses 
-#' [endogenize_losses()] and 
+#' Internally, this function uses
+#' [endogenize_losses()] and
 #' [extend_to_exergy()].
 #' The algorithm for performing these calculations is:
-#' 
+#'
 #' - step 1
 #' - step 2
 #' - step 3
 #'
-#' @param .sutmats
-#' @param R
-#' @param U
-#' @param V
-#' @param Y
-#' @param U_feed
-#' @param U_eiou
-#' @param r_eiou
+#' @param .sutmats An optional wide-by-matrices data frame
+#'                 containing conversion chains quantified
+#'                 in conserved quantities (such as mass or energy).
+#'                 Losses may be included in the matrices,
+#'                 but that is not required.
+#' @param R,U,V,Y PSUT matrices that describe the conversion chain.
 #' @param intra_industry_balance
 #' @param losses_alloc
 #' @param loss_sector
@@ -33,13 +31,8 @@
 #' @param replace_cols
 #' @param clean
 #' @param tol
-#' @param R_prime
-#' @param U_prime
-#' @param V_prime
-#' @param Y_prime
-#' @param U_feed_prime
-#' @param U_eiou_prime
-#' @param r_eiou_prime
+#' @param exergy_loss
+#' @param irreversibility
 #'
 #' @returns
 #' @export
@@ -51,9 +44,6 @@ calc_exergy_losses_irrev <- function (
   U = Recca::psut_cols$U,
   V = Recca::psut_cols$V,
   Y = Recca::psut_cols$Y,
-  U_feed = Recca::psut_cols$U_feed,
-  U_eiou = Recca::psut_cols$U_eiou,
-  r_eiou = Recca::psut_cols$r_eiou,
   intra_industry_balance = Recca::balance_cols$intra_industry_balance_colname,
   losses_alloc = Recca::balance_cols$losses_alloc_colname,
   loss_sector = Recca::balance_cols$losses_sector,
@@ -62,24 +52,58 @@ calc_exergy_losses_irrev <- function (
   clean = FALSE,
   tol = 1e-6,
   # Output columns
-  R_prime = "R_prime",
-  U_prime = "U_prime",
-  V_prime = "V_prime",
-  Y_prime = "Y_prime",
-  U_feed_prime = "U_feed_prime",
-  U_eiou_prime = "U_EIOU_prime",
-  r_eiou_prime = "r_EIOU_prime") {
+  exergy_loss = Recca::psut_cols$exergy_loss,
+  irreversibility = Recca::psut_cols$irreversibility
+  ) {
 
-  # Calculate losses of the conserved quantity
+  irrev_func <- function(R_mat, U_mat, V_mat, Y_mat,
+                         intra_industry_balance_vec = NULL,
+                         losses_alloc_mat = NULL,
+                         phi_vector) {
+
+    # Verify that everything is balanced before doing any calculations
+    inter_balanced <- verify_inter_industry_balance(
+      R = R_mat, U = U_mat, V = V_mat, Y = Y_mat,
+      balances = Recca::balance_cols$inter_industry_balance_colname,
+      balanced = Recca::balance_cols$inter_industry_balanced_colname,
+      tol = tol)
+    inter_balanced[[Recca::balance_cols$inter_industry_balanced_colname]] |>
+      assertthat::assert_that(msg = paste0("Inter-industry balance not observed in ",
+                                           "calc_exergy_losses_irrev(). ",
+                                           "No sense calculating exergy losses and ",
+                                           "irreversibilities."))
+
+    # Calculate losses of the conserved quantity
+    # Maybe set names to be V_losses, Y_losses
+
+    Recca::endogenize_losses(R = R_mat, U = U_mat, V = V_mat, Y = Y_mat,
+                             losses_alloc = losses_alloc_mat,
+                             loss_sector = loss_sector,
+                             clean = FALSE,
+                             tol = tol,
+                             replace_cols = FALSE,
+                             intra_industry_balance = Recca::balance_cols$intra_industry_balance_colname)
 
 
-  # Convert everything to exergy
+    # Convert everything to exergy
 
 
-  # Calculate exergy losses based on the losses column
+    # Calculate exergy losses based on the losses column
 
 
-  # Calculated destruction of exergy
+    # Calculated destruction of exergy
+    # Maybe set names to be V_irreversibility, Y_irreversibility
 
 
+  }
+
+
+  out <- matsindf::matsindf_apply(.sutmats,
+                                  FUN = irrev_func,
+                                  R_mat = R,
+                                  U_mat = U,
+                                  V_mat = V,
+                                  Y_mat = Y,
+                                  losses_alloc_mat = losses_alloc,
+                                  phi_vector = phi_vec)
 }

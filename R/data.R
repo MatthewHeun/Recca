@@ -29,7 +29,9 @@
 #' \item{year}{The name of a column in a tidy data frame containing years.}
 #' \item{method}{The name of a column in a tidy data frame containing the method for accounting for the primary equivalent of renewable electricity.}
 #' \item{energy_type}{The name of a column in a tidy data frame containing names of energy types.}
-#' \item{last_stage}{The name of a column in a tidy data frame last stages of the energy conversion chain.}
+#' \item{last_stage}{The name of a column in a tidy data frame identifying the last stage of the energy conversion chain.}
+#' \item{exergy_loss}{The name of a column in a tidy data frame for vectors of exergy losses, i.e., the exergy associated with waste mass or energy.}
+#' \item{irreversibility}{The name of a column in a tidy data frame for vectors of irreversibility, i.e., the exergy destroyed by thermodynamic inefficiencies in industries of a conversion chain.}
 #' }
 #'
 #' @examples
