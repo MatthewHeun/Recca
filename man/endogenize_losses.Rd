@@ -27,20 +27,24 @@ Default is \code{NULL}.}
 
 \item{R}{Resources (\strong{R}) matrix or name of the column in \code{.sutmats}
 that contains same.
-Default is "R".}
+Default is \link{psut_cols}\verb{$R} or
+"R".}
 
 \item{U}{Use (\strong{U}) matrix or name of the column in \code{.sutmats}
 that contains same.
 Necessary for verifying calculating losses.
-Default is "U".}
+Default is \link{psut_cols}\verb{$U} or
+"U".}
 
 \item{V}{Make (\strong{V}) matrix or name of the column in \code{.sutmats}
 that contains same.
-Default is "V".}
+Default is \link{psut_cols}\verb{$V} or
+"V".}
 
 \item{Y}{Final demand (\strong{Y}) matrix or name
 of the column in \code{.sutmats} that contains same.
-Default is "Y".}
+Default is \link{psut_cols}\verb{$Y} or
+"Y".}
 
 \item{intra_industry_balance}{A vector or the name of the column containing
 intra-industry balance vectors.

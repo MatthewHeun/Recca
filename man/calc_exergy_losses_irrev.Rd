@@ -15,7 +15,9 @@ calc_exergy_losses_irrev(
   r_eiou = Recca::psut_cols$r_eiou,
   intra_industry_balance = Recca::balance_cols$intra_industry_balance_colname,
   losses_alloc = Recca::balance_cols$losses_alloc_colname,
+  irrev_alloc = Recca::balance_cols$irrev_alloc_colname,
   loss_sector = Recca::balance_cols$losses_sector,
+  irrev_sector = Recca::balance_cols$irrev_sector,
   phi_vec = Recca::psut_cols$phi,
   replace_cols = FALSE,
   clean = FALSE,
@@ -31,7 +33,97 @@ in conserved quantities (such as mass or energy).
 Losses may be included in the matrices,
 but that is not required.}
 
-\item{R, U, V, Y, U_feed, U_eiou, r_eiou}{PSUT matrices that describe the conversion chain.}
+\item{R}{Resources (\strong{R}) matrix or name of the column in \code{.sutmats}
+that contains same.
+Default is \link{psut_cols}\verb{$R} or
+"R".}
+
+\item{U}{Use (\strong{U}) matrix or name of the column in \code{.sutmats}
+that contains same.
+Necessary for verifying calculating losses.
+Default is \link{psut_cols}\verb{$U} or
+"U".}
+
+\item{V}{Make (\strong{V}) matrix or name of the column in \code{.sutmats}
+that contains same.
+Default is \link{psut_cols}\verb{$V} or
+"V".}
+
+\item{Y}{Final demand (\strong{Y}) matrix or name
+of the column in \code{.sutmats} that contains same.
+Default is \link{psut_cols}\verb{$Y} or
+"Y".}
+
+\item{U_feed}{The feedstock portion of the use (\strong{U}) matrix
+or name of the column in \code{.sutmats} that contains same.
+Default is \link{psut_cols}\verb{$U_feed} or
+"U_feed".}
+
+\item{U_eiou}{The energy industry own use portion of the use (\strong{U}) matrix
+or name of the column in \code{.sutmats} that contains same.
+Default is \link{psut_cols}\verb{$U_eiou} or
+"U_EIOU".}
+
+\item{r_eiou}{A matrix of the ratio of energy industry own use
+to total use for the use (\strong{U}) matrix
+or name of the column in \code{.sutmats} that contains same.
+Default is \link{psut_cols}\verb{$r_eiou} or
+"r_EIOU".}
+
+\item{intra_industry_balance}{A vector or the name of the column containing
+intra-industry balance vectors for the conserved quantity.
+If missing, losses are calculated internally
+with \code{\link[=calc_intra_industry_balance]{calc_intra_industry_balance()}}
+before endogenizing.
+Default is
+\link{balance_cols}\verb{$intra_industry_balance_colname} or
+"SUTIntraIndustryBalance".}
+
+\item{losses_alloc}{A matrix or the name of the column containing
+loss allocation matrices.
+See details for structure of this matrix.
+Default is \link{balance_cols}\verb{$losses_alloc_colname} or
+"LossesAlloc".}
+
+\item{irrev_alloc}{An irreversibility allocation matrix or the name of a column in
+\code{.sutmats} containing same.
+Default is \link{balance_cols}\verb{$irrev_alloc_colname} or
+"IrrevAlloc".}
+
+\item{loss_sector}{The string name of the sector
+that will absorb losses in the \strong{Y} matrix for the conserved quantity.
+Default is \link{balance_cols}\verb{$losses_sector}
+or "Transformation losses".}
+
+\item{irrev_sector}{The string name of the sector that will absorb irreversibilities
+(exergy destruction)
+in the \strong{Y} matrix.
+Default is \link{balance_cols}\verb{$irrev_sector}
+or "Destruction".}
+
+\item{phi_vec}{A vector of exergy-to-energy ratios (phi)
+or the string name of a column in \code{.sutmats} containing same.
+Default is \link{psut_cols}\verb{$phi} or
+"\link{psut_cols$phi}".}
+
+\item{replace_cols}{A boolean that tells whether to
+(a) replace
+the \code{V} and \code{Y} columns with
+\code{V_prime} and \code{Y_prime} columns, respectively and
+(b) delete the \code{V_prime}, \code{Y_prime}, \code{balance_colname}, and
+\code{losses_alloc_colname} columns
+after endogenizing the losses
+when \code{.sutmats} is a data frame or a list.
+Default is \code{FALSE}.}
+
+\item{clean}{A boolean that tells whether the outgoing
+\code{V_prime} and \code{Y_prime} matrices should have
+\code{0} rows and columns removed.
+Default is \code{FALSE}.}
+
+\item{tol}{The maximum allowable difference from \code{1} for the rowsums of
+loss allocation matrices.
+Default is \code{1e-6}.}
 
 \item{irreversibility}{}
 }

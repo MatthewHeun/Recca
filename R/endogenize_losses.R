@@ -120,21 +120,25 @@
 #'                 Default is `NULL`.
 #' @param R Resources (**R**) matrix or name of the column in `.sutmats`
 #'          that contains same.
-#'          Default is "R".
+#'          Default is [Recca::psut_cols]`$R` or
+#'          "`r Recca::psut_cols$R`".
 #' @param U Use (**U**) matrix or name of the column in `.sutmats`
 #'          that contains same.
 #'          Necessary for verifying calculating losses.
-#'          Default is "U".
+#'          Default is [Recca::psut_cols]`$U` or
+#'          "`r Recca::psut_cols$U`".
 #' @param V Make (**V**) matrix or name of the column in `.sutmats`
 #'          that contains same.
-#'          Default is "V".
+#'          Default is [Recca::psut_cols]`$V` or
+#'          "`r Recca::psut_cols$V`".
 #' @param Y Final demand (**Y**) matrix or name
 #'          of the column in `.sutmats` that contains same.
-#'          Default is "Y".
+#'          Default is [Recca::psut_cols]`$Y` or
+#'          "`r Recca::psut_cols$Y`".
 #' @param intra_industry_balance A vector or the name of the column containing
 #'                               intra-industry balance vectors.
 #'                               If missing, losses are calculated internally
-#'                               with [calc_intra_industry_balance()]
+#'                               with [Recca::calc_intra_industry_balance()]
 #'                               before endogenizing.
 #'                               Default is
 #'                               [Recca::balance_cols]`$intra_industry_balance_colname` or
@@ -154,8 +158,8 @@
 #'                         `V_prime` and `Y_prime` columns, respectively and
 #'                     (b) delete the `V_prime`, `Y_prime`, `balance_colname`, and
 #'                         `losses_alloc_colname` columns
-#'                     after endogenizing the losses
-#'                     when `.sutmats` is a data frame or a list.
+#'                         after endogenizing the losses
+#'                         when `.sutmats` is a data frame or a list.
 #'                     Default is `FALSE`.
 #' @param clean A boolean that tells whether the outgoing
 #'              `V_prime` and `Y_prime` matrices should have
@@ -232,8 +236,11 @@ endogenize_losses <- function(
     # If intra-industry balances are not available, calculate them
     if (is.null(balance_vec)) {
       # Calculate intra-industry balances
-      balance_vec <- calc_intra_industry_balance(U = U_mat, V = V_mat, balance = intra_industry_balance) |>
-        magrittr::extract2(intra_industry_balance)
+      balance_vec_name <- Recca::balance_cols$intra_industry_balance_colname
+      balance_vec <- calc_intra_industry_balance(U = U_mat,
+                                                 V = V_mat,
+                                                 balance = balance_vec_name) |>
+        magrittr::extract2(balance_vec_name)
     }
 
     # Check for the case where losses_alloc_mat has only one row.

@@ -1,5 +1,5 @@
 test_that("calc_exergy_losses_irrev() works as expected", {
-  # Get the losses allocation matrix
+  # Create the losses allocation matrix
   losses_alloc_mat <- matrix(1, dimnames = list("All industries",
                                                 "MTH.200.C -> Transformation losses")) |>
     matsbyname::setrowtype("Industry") |>
@@ -23,10 +23,11 @@ test_that("calc_exergy_losses_irrev() works as expected", {
 
   UKEnergy2000mats |>
     tidyr::pivot_wider(names_from = "matrix.name", values_from = "matrix") |>
-    dplyr::filter(.data[[IEATools::iea_cols$last_stage]] %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) |>
+    dplyr::filter(.data[[IEATools::iea_cols$last_stage]] != IEATools::last_stages$services) |>
     dplyr::mutate(
       "{Recca::balance_cols$losses_alloc_colname}" := RCLabels::make_list(x = losses_alloc_mat, n = 2,lenx = 1),
-      "{Recca::psut_cols$phi}" := RCLabels::make_list(x = phi_vec, n = 2, lenx = 1)
+      "{Recca::psut_cols$phi}" := RCLabels::make_list(x = phi_vec, n = 2, lenx = 1),
+      "{Recca::balance_cols$irrev_alloc_colname}" := RCLabels::make_list(x = Recca::balance_cols$default_destruction_alloc_mat, n = 2, lenx = 1)
     ) |>
     calc_exergy_losses_irrev()
 })
