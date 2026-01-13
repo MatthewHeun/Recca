@@ -81,9 +81,11 @@ Default is \code{FALSE}.}
 loss allocation matrices.
 Default is \code{1e-6}.}
 
-\item{V_prime}{The name of the \strong{V} matrix with endogenized losses.}
+\item{V_prime}{The name of the \strong{V} matrix with endogenized losses.
+Default is "V_prime".}
 
-\item{Y_prime}{The name of the \strong{Y} matrix with endogenized losses.}
+\item{Y_prime}{The name of the \strong{Y} matrix with endogenized losses.
+Default is "Y_prime".}
 }
 \value{
 A version of the conversion chain with losses endogenized.

@@ -3,7 +3,7 @@
 #' Given a conversion chain quantified in conserved quantities,
 #' such as mass or energy,
 #' calculate exergy losses and irreversibility
-#' (exergy destruction).
+#' (exergy destruction)
 #'
 #'
 #' Additional inputs are the losses allocation matrix
@@ -23,7 +23,7 @@
 #'                 in conserved quantities (such as mass or energy).
 #'                 Losses may be included in the matrices,
 #'                 but that is not required.
-#' @param R,U,V,Y PSUT matrices that describe the conversion chain.
+#' @param R,U,V,Y,U_feed,U_eiou,r_eiou PSUT matrices that describe the conversion chain.
 #' @param intra_industry_balance
 #' @param losses_alloc
 #' @param loss_sector
@@ -44,6 +44,9 @@ calc_exergy_losses_irrev <- function (
   U = Recca::psut_cols$U,
   V = Recca::psut_cols$V,
   Y = Recca::psut_cols$Y,
+  U_feed = Recca::psut_cols$U_feed,
+  U_eiou = Recca::psut_cols$U_eiou,
+  r_eiou = Recca::psut_cols$r_eiou,
   intra_industry_balance = Recca::balance_cols$intra_industry_balance_colname,
   losses_alloc = Recca::balance_cols$losses_alloc_colname,
   loss_sector = Recca::balance_cols$losses_sector,
@@ -57,11 +60,13 @@ calc_exergy_losses_irrev <- function (
   ) {
 
   irrev_func <- function(R_mat, U_mat, V_mat, Y_mat,
+                         U_feed_mat, U_eiou_mat, r_eiou_mat,
                          intra_industry_balance_vec = NULL,
                          losses_alloc_mat = NULL,
                          phi_vector) {
 
-    # Verify that everything is balanced before doing any calculations
+    # Verify that everything is balanced between industries
+    # before performing any calculations
     inter_balanced <- verify_inter_industry_balance(
       R = R_mat, U = U_mat, V = V_mat, Y = Y_mat,
       balances = Recca::balance_cols$inter_industry_balance_colname,
@@ -74,18 +79,46 @@ calc_exergy_losses_irrev <- function (
                                            "irreversibilities."))
 
     # Calculate losses of the conserved quantity
-    # Maybe set names to be V_losses, Y_losses
+    V_losses <- "V_losses"
+    Y_losses <- "Y_losses"
+    heat_losses <- Recca::endogenize_losses(R = R_mat, U = U_mat, V = V_mat, Y = Y_mat,
+                                            losses_alloc = losses_alloc_mat,
+                                            loss_sector = loss_sector,
+                                            clean = FALSE,
+                                            tol = tol,
+                                            intra_industry_balance = Recca::balance_cols$intra_industry_balance_colname,
+                                            V_prime = V_losses,
+                                            Y_prime = Y_losses)
+    V_losses_mat <- heat_losses[[V_losses]]
+    Y_losses_mat <- heat_losses[[Y_losses]]
 
-    Recca::endogenize_losses(R = R_mat, U = U_mat, V = V_mat, Y = Y_mat,
-                             losses_alloc = losses_alloc_mat,
-                             loss_sector = loss_sector,
-                             clean = FALSE,
-                             tol = tol,
-                             replace_cols = FALSE,
-                             intra_industry_balance = Recca::balance_cols$intra_industry_balance_colname)
+    # Verify that inter-industry balances are preserved
+    Recca::verify_inter_industry_balance(R = R_mat, U = U_mat, V = V_losses_mat, Y = Y_losses_mat)
 
+    # Verify all industries are now balanced
+    Recca::verify_intra_industry_balance(U = U_mat, V = V_losses_mat)
 
     # Convert everything to exergy
+    exergy_suffix <- "_exergy"
+    R_exergy <- "R_exergy"
+    U_exergy <- "U_exergy"
+    V_exergy <- "V_exergy"
+    Y_exergy <- "Y_exergy"
+    U_feed_exergy <- "U_feed_exergy"
+    U_eiou_exergy <- "U_eiou_exergy"
+    r_eiou_exergy <- "r_eiou_exergy"
+    exergy_versions <- Recca::extend_to_exergy(R = R_mat, U = U_mat,
+                                               V = V_losses_mat, Y = Y_losses_mat,
+                                               U_feed = U_feed_mat, U_eiou = U_eiou_mat, r_eiou = r_eiou_mat,
+                                               phi = phi_vector,
+                                               mat_piece = "noun",
+                                               notation = list(RCLabels::from_notation,
+                                                               RCLabels::arrow_notation),
+                                               .exergy_suffix = exergy_suffix)
+
+    # Verify that inter-industry balances remain
+    verify_inter_industry_balance(R = exergy_versions[[R_exergy]], U = exergy_versions[[U_exergy]],
+                                  V = exergy_versions[[V_exergy]], Y = exergy_versions[[Y_exergy]])
 
 
     # Calculate exergy losses based on the losses column
@@ -104,6 +137,9 @@ calc_exergy_losses_irrev <- function (
                                   U_mat = U,
                                   V_mat = V,
                                   Y_mat = Y,
+                                  U_feed_mat = U_feed,
+                                  U_eiou_mat = U_eiou,
+                                  r_eiou_mat = r_eiou,
                                   losses_alloc_mat = losses_alloc,
                                   phi_vector = phi_vec)
 }

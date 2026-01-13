@@ -10,6 +10,9 @@ calc_exergy_losses_irrev(
   U = Recca::psut_cols$U,
   V = Recca::psut_cols$V,
   Y = Recca::psut_cols$Y,
+  U_feed = Recca::psut_cols$U_feed,
+  U_eiou = Recca::psut_cols$U_eiou,
+  r_eiou = Recca::psut_cols$r_eiou,
   intra_industry_balance = Recca::balance_cols$intra_industry_balance_colname,
   losses_alloc = Recca::balance_cols$losses_alloc_colname,
   loss_sector = Recca::balance_cols$losses_sector,
@@ -28,7 +31,7 @@ in conserved quantities (such as mass or energy).
 Losses may be included in the matrices,
 but that is not required.}
 
-\item{R, U, V, Y}{PSUT matrices that describe the conversion chain.}
+\item{R, U, V, Y, U_feed, U_eiou, r_eiou}{PSUT matrices that describe the conversion chain.}
 
 \item{irreversibility}{}
 }
@@ -36,7 +39,7 @@ but that is not required.}
 Given a conversion chain quantified in conserved quantities,
 such as mass or energy,
 calculate exergy losses and irreversibility
-(exergy destruction).
+(exergy destruction)
 }
 \details{
 Additional inputs are the losses allocation matrix

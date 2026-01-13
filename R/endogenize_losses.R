@@ -165,7 +165,9 @@
 #'            loss allocation matrices.
 #'            Default is `1e-6`.
 #' @param V_prime The name of the **V** matrix with endogenized losses.
+#'                Default is "V_prime".
 #' @param Y_prime The name of the **Y** matrix with endogenized losses.
+#'                Default is "Y_prime".
 #'
 #' @returns A version of the conversion chain with losses endogenized.
 #'
@@ -212,7 +214,7 @@ endogenize_losses <- function(
     replace_cols = FALSE,
     clean = FALSE,
     tol = 1e-6,
-    # Output columns
+    # Output matrix names
     V_prime = "V_prime",
     Y_prime = "Y_prime") {
 
