@@ -17,7 +17,7 @@
 #' respectively.
 #'
 #' All losses are allocated to the
-#' `loss_sector` column in the **Y** matrix,
+#' `losses_sector` column in the **Y** matrix,
 #' by default named
 #' [Recca::balance_cols]`$losses_sector or
 #' "`r Recca::balance_cols$losses_sector`".
@@ -36,7 +36,7 @@
 #'   to obtain a matrix to be added to **V**.
 #' - Transpose the matrix to be added to **V**,
 #'   calculate rowsums, and
-#'   set the column name to `loss_sector`
+#'   set the column name to `losses_sector`
 #'   to obtain a matrix to be added to **Y**.
 #' - Add the matrices to **V** and **Y**, respectively.
 #'
@@ -148,10 +148,10 @@
 #'                     See details for structure of this matrix.
 #'                     Default is [Recca::balance_cols]`$losses_alloc_colname` or
 #'                     "`r Recca::balance_cols$losses_alloc_colname`".
-#' @param loss_sector The string name of the sector
-#'                    that will absorb losses in the **Y** matrix.
-#'                    Default is [Recca::balance_cols]`$losses_sector`
-#'                    or "`r Recca::balance_cols$losses_sector`".
+#' @param losses_sector The string name of the sector
+#'                      that will absorb losses in the **Y** matrix.
+#'                      Default is [Recca::balance_cols]`$losses_sector`
+#'                      or "`r Recca::balance_cols$losses_sector`".
 #' @param replace_cols A boolean that tells whether to
 #'                     (a) replace
 #'                         the `V` and `Y` columns with
@@ -214,7 +214,7 @@ endogenize_losses <- function(
     Y = Recca::psut_cols$Y,
     intra_industry_balance = Recca::balance_cols$intra_industry_balance_colname,
     losses_alloc = Recca::balance_cols$losses_alloc_colname,
-    loss_sector = Recca::balance_cols$losses_sector,
+    losses_sector = Recca::balance_cols$losses_sector,
     replace_cols = FALSE,
     clean = FALSE,
     tol = 1e-6,
@@ -290,7 +290,7 @@ endogenize_losses <- function(
     # to obtain the matrix to be added to Y
     add_to_Y <- add_to_V |>
       matsbyname::transpose_byname() |>
-      matsbyname::rowsums_byname(colname = loss_sector)
+      matsbyname::rowsums_byname(colname = losses_sector)
 
     # Calculate Y_prime
     Y_prime_mat <- matsbyname::sum_byname(Y_mat, add_to_Y)

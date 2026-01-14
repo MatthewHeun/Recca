@@ -25,7 +25,7 @@ extend_to_exergy_with_losses_irrev(
   tol = 1e-06,
   .exergy_suffix = "_exergy",
   energy_type = Recca::psut_cols$energy_type,
-  energy_type_value = Recca::energy_types$x,
+  exergy = Recca::energy_types$x,
   R_exergy = paste0(Recca::psut_cols$R, .exergy_suffix),
   U_exergy = paste0(Recca::psut_cols$U, .exergy_suffix),
   V_exergy = paste0(Recca::psut_cols$V, .exergy_suffix),
@@ -180,6 +180,13 @@ The \code{irrev_alloc} and \code{irrev_sector} arguments are apassed
 to \code{\link[=endogenize_losses]{endogenize_losses()}}.
 }
 
+Throughout the function,
+inter-industry balances are verified via
+\code{\link[=verify_inter_industry_balance]{verify_inter_industry_balance()}}.
+After Steps 1. and 3.,
+across-industry balances are verfied via
+\code{\link[=verify_intra_industry_balance]{verify_intra_industry_balance()}}.
+
 The new version of the conversion chain is contained in named arguments
 (or columns if \code{.sutmats} is a data frame) named with the suffix
 \code{.exergy_suffix}, by default "_exergy".
@@ -192,10 +199,10 @@ The \code{energy_type} column is filled with
 
 To extend to exergy without
 calculation of losses and irreversibility,
-use \code{\link[=extend_to_exergy]{extend_to_exergy()}}
+use \code{\link[=extend_to_exergy]{extend_to_exergy()}}.
 }
 \seealso{
 \code{\link[=extend_to_exergy]{extend_to_exergy()}} for a version of this function that
 does not endogenize losses of the conserved quantity and
-does not calculate exergy destruction.
+does not calculate exergy destruction (irreversibility).
 }

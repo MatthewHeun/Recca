@@ -12,7 +12,7 @@ endogenize_losses(
   Y = Recca::psut_cols$Y,
   intra_industry_balance = Recca::balance_cols$intra_industry_balance_colname,
   losses_alloc = Recca::balance_cols$losses_alloc_colname,
-  loss_sector = Recca::balance_cols$losses_sector,
+  losses_sector = Recca::balance_cols$losses_sector,
   replace_cols = FALSE,
   clean = FALSE,
   tol = 1e-06,
@@ -61,7 +61,7 @@ See details for structure of this matrix.
 Default is \link{balance_cols}\verb{$losses_alloc_colname} or
 "LossesAlloc".}
 
-\item{loss_sector}{The string name of the sector
+\item{losses_sector}{The string name of the sector
 that will absorb losses in the \strong{Y} matrix.
 Default is \link{balance_cols}\verb{$losses_sector}
 or "Transformation losses".}
@@ -113,7 +113,7 @@ replaces the existing
 respectively.
 
 All losses are allocated to the
-\code{loss_sector} column in the \strong{Y} matrix,
+\code{losses_sector} column in the \strong{Y} matrix,
 by default named
 \link{balance_cols}\verb{$losses_sector or "}r Recca::balance_cols$losses_sector`".
 \subsection{Endogenizing algorithm}{
@@ -130,7 +130,7 @@ the losses_allocation matrix (\code{losses_alloc})
 to obtain a matrix to be added to \strong{V}.
 \item Transpose the matrix to be added to \strong{V},
 calculate rowsums, and
-set the column name to \code{loss_sector}
+set the column name to \code{losses_sector}
 to obtain a matrix to be added to \strong{Y}.
 \item Add the matrices to \strong{V} and \strong{Y}, respectively.
 }

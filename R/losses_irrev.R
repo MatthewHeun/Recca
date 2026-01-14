@@ -41,6 +41,13 @@
 #'    The `irrev_alloc` and `irrev_sector` arguments are apassed
 #'    to [Recca::endogenize_losses()].
 #'
+#' Throughout the function,
+#' inter-industry balances are verified via
+#' [Recca::verify_inter_industry_balance()].
+#' After Steps 1. and 3.,
+#' across-industry balances are verfied via
+#' [Recca::verify_intra_industry_balance()].
+#'
 #' The new version of the conversion chain is contained in named arguments
 #' (or columns if `.sutmats` is a data frame) named with the suffix
 #' `.exergy_suffix`, by default "_exergy".
@@ -53,7 +60,7 @@
 #'
 #' To extend to exergy without
 #' calculation of losses and irreversibility,
-#' use [Recca::extend_to_exergy()]
+#' use [Recca::extend_to_exergy()].
 #'
 #' @param .sutmats An optional wide-by-matrices data frame
 #'                 containing conversion chains quantified
@@ -170,7 +177,7 @@ extend_to_exergy_with_losses_irrev <- function(
   tol = 1e-6,
   .exergy_suffix = "_exergy",
   energy_type = Recca::psut_cols$energy_type,
-  energy_type_value = Recca::energy_types$x,
+  exergy = Recca::energy_types$x,
   # Output columns
   R_exergy = paste0(Recca::psut_cols$R, .exergy_suffix),
   U_exergy = paste0(Recca::psut_cols$U, .exergy_suffix),
@@ -205,7 +212,7 @@ extend_to_exergy_with_losses_irrev <- function(
     Y_losses <- "Y_losses"
     heat_losses <- Recca::endogenize_losses(R = R_mat, U = U_mat, V = V_mat, Y = Y_mat,
                                             losses_alloc = losses_alloc_mat,
-                                            loss_sector = loss_sector,
+                                            losses_sector = losses_sector,
                                             clean = FALSE,
                                             tol = tol,
                                             intra_industry_balance = intra_industry_balance_vec,
@@ -221,40 +228,50 @@ extend_to_exergy_with_losses_irrev <- function(
     Recca::verify_intra_industry_balance(U = U_mat, V = V_losses_mat)
 
     # Convert everything to exergy
-    exergy_suffix <- "_exergy"
-    R_exergy <- "R_exergy"
-    U_exergy <- "U_exergy"
-    V_exergy <- "V_exergy"
-    Y_exergy <- "Y_exergy"
-    U_feed_exergy <- "U_feed_exergy"
-    U_eiou_exergy <- "U_eiou_exergy"
-    r_eiou_exergy <- "r_eiou_exergy"
     exergy_versions <- Recca::extend_to_exergy(R = R_mat, U = U_mat,
                                                V = V_losses_mat, Y = Y_losses_mat,
                                                U_feed = U_feed_mat, U_eiou = U_eiou_mat, r_eiou = r_eiou_mat,
-                                               phi = phi_vector,
+                                               phi = phi_vec,
+                                               # Move the next two arguments to be input to this function.
                                                mat_piece = "noun",
                                                notation = list(RCLabels::from_notation,
                                                                RCLabels::arrow_notation),
-                                               .exergy_suffix = exergy_suffix)
+                                               .exergy_suffix = .exergy_suffix)
+
+    R_exergy_mat <- exergy_versions[[R_exergy]]
+    U_exergy_mat <- exergy_versions[[U_exergy]]
+    V_exergy_mat <- exergy_versions[[V_exergy]]
+    Y_exergy_mat <- exergy_versions[[Y_exergy]]
+    U_feed_exergy_mat <- exergy_versions[[U_feed_exergy]]
+    U_eiou_exergy_mat <- exergy_versions[[U_eiou_exergy]]
+    r_eiou_exergy_mat <- matsbyname::quotient_byname(U_eiou_exergy_mat, U_exergy_mat) |>
+      matsbyname::replaceNaN_byname()
 
     # Verify that inter-industry balances remain
-    Recca::verify_inter_industry_balance(R = exergy_versions[[R_exergy]], U = exergy_versions[[U_exergy]],
-                                         V = exergy_versions[[V_exergy]], Y = exergy_versions[[Y_exergy]])
+    Recca::verify_inter_industry_balance(R = R_exergy_mat,
+                                         U = U_exergy_mat,
+                                         V = V_exergy_mat,
+                                         Y = Y_exergy_mat)
 
-    # Calculate exergy losses, which are actually exergy destruction (irreversibility)
-    irreversibility <- Recca::endogenize_losses(R = exergy_versions[[R_exergy]],
-                                                U = exergy_versions[[U_exergy]],
-                                                V = exergy_versions[[V_exergy]],
-                                                Y = exergy_versions[[Y_exergy]],
+    # Calculate exergy losses, which are now exergy destruction (irreversibility)
+    V_destruction <- "V_destruction"
+    Y_destruction <- "Y_destruction"
+    irreversibility <- Recca::endogenize_losses(R = R_exergy_mat,
+                                                U = U_exergy_mat,
+                                                V = V_exergy_mat,
+                                                Y = Y_exergy_mat,
                                                 losses_alloc = irrev_alloc_mat,
-                                                loss_sector = irrev_sector)
+                                                losses_sector = irrev_sector,
+                                                V_prime = V_destruction,
+                                                Y_prime = Y_destruction)
+    V_exergy_mat <- irreversibility[[V_destruction]]
+    Y_exergy_mat <- irreversibility[[Y_destruction]]
 
-
-    # Calculated destruction of exergy
-    # Maybe set names to be V_irreversibility, Y_irreversibility
-
-
+    # Bundle everything and return
+    list(R_exergy_mat, U_exergy_mat, V_exergy_mat, Y_exergy_mat,
+         U_feed_exergy_mat, U_eiou_exergy_mat, r_eiou_exergy_mat) |>
+      magrittr::set_names(c(R_exergy, U_exergy, V_exergy, Y_exergy,
+                          U_feed_exergy, U_eiou_exergy, r_eiou_exergy))
   }
 
 
@@ -270,4 +287,33 @@ extend_to_exergy_with_losses_irrev <- function(
                                   losses_alloc_mat = losses_alloc,
                                   irrev_alloc_mat = irrev_alloc,
                                   phi_vec = phi)
+
+  if (is.data.frame(out) & clean_up_df) {
+    exergy_cols_to_keep <- out |>
+      matsindf::everything_except(R, U, U_feed, U_eiou,
+                                  V, Y, r_eiou, phi,
+                                  losses_alloc, irrev_alloc,
+                                  .symbols = FALSE)
+    # We'll need to strip suffixes off column names.
+    exergy_df <- out |>
+      dplyr::select(dplyr::any_of(exergy_cols_to_keep)) %>%
+      # Change the EnergyType column to Exergy
+      dplyr::mutate(
+        "{energy_type}" := exergy
+      ) |>
+      # Strip sep_useful from end of any column names.
+      # Hint obtained from https://stackoverflow.com/questions/45960269/removing-suffix-from-column-names-using-rename-all
+      dplyr::rename_with(~ gsub(paste0(.exergy_suffix, "$"), "", .x))
+    # Bind the energy and exergy data frames together.
+    out <- dplyr::bind_rows(.sutmats, exergy_df) %>%
+      dplyr::mutate(
+        # Eliminate the phi and allocation columns that
+        # are still present in the energy rows.
+        "{phi}" := NULL,
+        "{losses_alloc}" := NULL,
+        "{irrev_alloc}" := NULL
+      )
+  }
+
+  return(out)
 }
