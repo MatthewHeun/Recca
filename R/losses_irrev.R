@@ -2,21 +2,58 @@
 #'
 #' Given a conversion chain quantified in conserved quantities,
 #' such as mass or energy,
-#' calculate exergy losses and irreversibility
+#' calculate an exergy version of the conversion chain with
+#' endogenized losses and irreversibility
 #' (exergy destruction)
 #'
+#' The input should be a conversion chain
+#' that contains conserved quantities (probably mass or energy).
+#' Optionally, the conversion chain may already
+#' have endogenized transformation losses (wastes).
+#' The output contains a new version of the input conversion chain
+#' in exergy terms with all transformation losses endogenized and
+#' exergy destruction (irreversibility) calculated.
 #'
-#' Additional inputs are the losses allocation matrix
-#' (`losses_alloc`) and
-#' the phi vector (`phi_vec`).
-#' Internally, this function uses
-#' [endogenize_losses()] and
-#' [extend_to_exergy()].
-#' The algorithm for performing these calculations is:
+#' Between input and output, the following steps are taken:
 #'
-#' - step 1
-#' - step 2
-#' - step 3
+#' 1. Transformation losses of the conserved quantity
+#'    are calculated and endogenized into the **V** and **Y** matrices
+#'    via a call to [Recca::endogenize_losses()].
+#'    If `intra_industry_balance` is `NULL`,
+#'    losses of the conserved quantity are calculated
+#'    within [Recca::endogenize_losses()]
+#'    via a call to [Recca::calc_intra_industry_balance()].
+#'    If the input already has endogenized losses,
+#'    there will be no change to the incoming conversion chain.
+#'    The `losses_alloc` and `losses_sector` arguments are passed
+#'    to [Recca::endogenize_losses()].
+#' 2. All matrices of the conversion chain are extended to exergy
+#'    via a call to [Recca::extend_to_exergy()].
+#'    The `phi` argument is passed to [Recca::extend_to_exergy()].
+#'    Transformation losses calculated previously (in Step 1.)
+#'    are now exergy losses,
+#'    i.e., the exergy of transformation losses.
+#' 3. Transformation losses of the (un-conserved) exergy flows are
+#'    endogenized into the **V** and **Y** matrices
+#'    via another call to [Recca::endogenize_losses()].
+#'    These transformation losses are interpreted as
+#'    exergy destruction (irreversibility).
+#'    The `irrev_alloc` and `irrev_sector` arguments are apassed
+#'    to [Recca::endogenize_losses()].
+#'
+#' The new version of the conversion chain is contained in named arguments
+#' (or columns if `.sutmats` is a data frame) named with the suffix
+#' `.exergy_suffix`, by default "_exergy".
+#' If `.sutmats` is a data frame,
+#' a tidy data frame can be output with an `energy_type` column
+#' by setting `clean_up_df = TRUE` (the default).
+#' The `energy_type` column is filled with
+#' `energy_type_value`, by default
+#' [Recca::energy_types]`$x` or "`r Recca::energy_types$x`".
+#'
+#' To extend to exergy without
+#' calculation of losses and irreversibility,
+#' use [Recca::extend_to_exergy()]
 #'
 #' @param .sutmats An optional wide-by-matrices data frame
 #'                 containing conversion chains quantified
@@ -66,14 +103,14 @@
 #'                     See details for structure of this matrix.
 #'                     Default is [Recca::balance_cols]`$losses_alloc_colname` or
 #'                     "`r Recca::balance_cols$losses_alloc_colname`".
+#' @param losses_sector The string name of the sector
+#'                      that will absorb losses in the **Y** matrix for the conserved quantity.
+#'                      Default is [Recca::balance_cols]`$losses_sector`
+#'                      or "`r Recca::balance_cols$losses_sector`".
 #' @param irrev_alloc An irreversibility allocation matrix or the name of a column in
 #'                    `.sutmats` containing same.
 #'                    Default is [Recca::balance_cols]`$irrev_alloc_colname` or
 #'                    "`r Recca::balance_cols$irrev_alloc_colname`".
-#' @param loss_sector The string name of the sector
-#'                    that will absorb losses in the **Y** matrix for the conserved quantity.
-#'                    Default is [Recca::balance_cols]`$losses_sector`
-#'                    or "`r Recca::balance_cols$losses_sector`".
 #' @param irrev_sector The string name of the sector that will absorb irreversibilities
 #'                     (exergy destruction)
 #'                     in the **Y** matrix.
@@ -82,7 +119,7 @@
 #' @param phi_vec A vector of exergy-to-energy ratios (phi)
 #'                or the string name of a column in `.sutmats` containing same.
 #'                Default is [Recca::psut_cols]`$phi` or
-#'                "[Recca::psut_cols$phi]".
+#'                "`r Recca::psut_cols$phi`".
 #' @param replace_cols A boolean that tells whether to
 #'                     (a) replace
 #'                         the `V` and `Y` columns with
@@ -103,11 +140,18 @@
 #' @param irreversibility
 #'
 #' @returns
+#'
 #' @export
 #'
+#' @seealso [extend_to_exergy()] for a version of this function that
+#'          does not endogenize losses of the conserved quantity and
+#'          does not calculate exergy destruction (irreversibility).
+#'
 #' @examples
-calc_exergy_losses_irrev <- function (
+#'
+extend_to_exergy_with_losses_irrev <- function(
   .sutmats = NULL,
+  clean_up_df = TRUE,
   R = Recca::psut_cols$R,
   U = Recca::psut_cols$U,
   V = Recca::psut_cols$V,
@@ -117,23 +161,31 @@ calc_exergy_losses_irrev <- function (
   r_eiou = Recca::psut_cols$r_eiou,
   intra_industry_balance = Recca::balance_cols$intra_industry_balance_colname,
   losses_alloc = Recca::balance_cols$losses_alloc_colname,
+  losses_sector = Recca::balance_cols$losses_sector,
+  phi = Recca::psut_cols$phi,
   irrev_alloc = Recca::balance_cols$irrev_alloc_colname,
-  loss_sector = Recca::balance_cols$losses_sector,
   irrev_sector = Recca::balance_cols$irrev_sector,
-  phi_vec = Recca::psut_cols$phi,
   replace_cols = FALSE,
   clean = FALSE,
   tol = 1e-6,
+  .exergy_suffix = "_exergy",
+  energy_type = Recca::psut_cols$energy_type,
+  energy_type_value = Recca::energy_types$x,
   # Output columns
-  exergy_loss = Recca::psut_cols$exergy_loss,
-  irreversibility = Recca::psut_cols$irreversibility) {
+  R_exergy = paste0(Recca::psut_cols$R, .exergy_suffix),
+  U_exergy = paste0(Recca::psut_cols$U, .exergy_suffix),
+  V_exergy = paste0(Recca::psut_cols$V, .exergy_suffix),
+  Y_exergy = paste0(Recca::psut_cols$Y, .exergy_suffix),
+  U_feed_exergy = paste0(Recca::psut_cols$U_feed, .exergy_suffix),
+  U_eiou_exergy = paste0(Recca::psut_cols$U_eiou, .exergy_suffix),
+  r_eiou_exergy = paste0(Recca::psut_cols$r_eiou, .exergy_suffix)) {
 
   irrev_func <- function(R_mat, U_mat, V_mat, Y_mat,
                          U_feed_mat, U_eiou_mat, r_eiou_mat,
                          intra_industry_balance_vec = NULL,
                          losses_alloc_mat,
                          irrev_alloc_mat,
-                         phi_vector) {
+                         phi_vec) {
 
     # Verify that everything is balanced between industries
     # before performing any calculations
@@ -217,5 +269,5 @@ calc_exergy_losses_irrev <- function (
                                   r_eiou_mat = r_eiou,
                                   losses_alloc_mat = losses_alloc,
                                   irrev_alloc_mat = irrev_alloc,
-                                  phi_vector = phi_vec)
+                                  phi_vec = phi)
 }
