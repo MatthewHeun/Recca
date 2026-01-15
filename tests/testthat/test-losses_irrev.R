@@ -105,7 +105,7 @@ test_that("calc_exergy_losses_irrev() works as expected", {
   # Now run the tests
   for (this_res in list(res_losses_not_accounted, res_losses_accounted)) {
 
-    # Ensure that correct columns are obtained
+    # Ensure that correct columns are obtained in the data frame
     expect_equal(colnames(this_res),
                  c(Recca::psut_cols$country,
                    Recca::psut_cols$year,
@@ -135,8 +135,10 @@ test_that("calc_exergy_losses_irrev() works as expected", {
                     .data[[Recca::psut_cols$last_stage]] == "Final") |>
       magrittr::extract2("V") |>
       magrittr::extract2(1)
+
     # Transformation losses column
     expect_equal(V[, "MTH.200.C -> Transformation losses"], V_trans_losses_col_expected)
+
     # Destroyed exergy column
     expect_equal(V[, "Destroyed exergy"], V_destroyed_exergy_col_expected)
 
