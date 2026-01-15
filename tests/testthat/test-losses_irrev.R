@@ -31,13 +31,38 @@ test_that("calc_exergy_losses_irrev() works as expected", {
     ) |>
     extend_to_exergy_with_losses_irrev()
 
+  # Ensure that correct columns are obtained
+  expect_equal(colnames(res),
+               c(Recca::psut_cols$country,
+                 Recca::psut_cols$year,
+                 Recca::psut_cols$energy_type,
+                 Recca::psut_cols$last_stage,
+                 Recca::psut_cols$R,
+                 Recca::psut_cols$U,
+                 Recca::psut_cols$U_eiou,
+                 Recca::psut_cols$U_feed,
+                 Recca::psut_cols$V,
+                 Recca::psut_cols$Y,
+                 Recca::psut_cols$r_eiou,
+                 Recca::psut_cols$S_units))
 
+  # Spot check values with tests.
+  # R matrix with exergy values
   res |>
-    dplyr::mutate(
-      WorksheetNames = paste(EnergyType, LastStage, Year, sep = "_")
-    ) |>
-    Recca::write_ecc_to_excel(path = "~/Desktop/endogenized.xlsx",
-                              worksheet_names = "WorksheetNames",
-                              overwrite_file = TRUE)
+    dplyr::filter(.data[[Recca::psut_cols$energy_type]] == "X",
+                  .data[[Recca::psut_cols$last_stage]] == "Final") |>
+    magrittr::extract2("R") |>
+    magrittr::extract2(1) |>
+    expect_equal(matrix(c(53000, 0,
+                          0, 44720), byrow = TRUE, nrow = 2,
+                        dimnames = list(c("Resources [of Crude]", "Resources [of NG]"),
+                                        c("Crude", "NG"))) |>
+                   matsbyname::setrowtype("Industry") |>
+                   matsbyname::setcoltype("Product"))
+
+
 })
+
+
+
 
