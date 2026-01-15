@@ -107,19 +107,20 @@ test_that("calc_exergy_losses_irrev() works as expected", {
                                        "Petrol dist.",
                                        "Power plants")))
 
+  # Y matrix with transformation losses and exergy destruction
   Y <- res |>
     dplyr::filter(.data[[Recca::psut_cols$energy_type]] == "X",
                   .data[[Recca::psut_cols$last_stage]] == "Final") |>
     magrittr::extract2("Y") |>
     magrittr::extract2(1)
 
-  # Y matrix transformation losses
+  # Transformation losses row
   expect_equal(Y["MTH.200.C -> Transformation losses", ],
                c(0, 0, 7859.558363, 0) |>
                  magrittr::set_names(c("Irreversibilities", "Residential",
                                        "Transformation losses", "Transport")))
 
-  # Y matrix exergy destruction
+  # Destroyed exergy row
   expect_equal(Y["Destroyed exergy", ],
                c(14665.44164, 0, 0, 0) |>
                  magrittr::set_names(c("Irreversibilities", "Residential",

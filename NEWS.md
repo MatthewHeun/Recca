@@ -11,6 +11,8 @@ Cite all releases of `Recca` with doi
 which always resolves to the latest release.
 
 
+* New function `extend_to_exergy_with_losses_irrev()`
+  calculates losses and irreversibilities.
 * `write_ecc_to_excel()` now sorts rows of **R** and columns of **Y**.
 
 
