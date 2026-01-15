@@ -11,6 +11,9 @@ Cite all releases of `Recca` with doi
 which always resolves to the latest release.
 
 
+* `write_ecc_to_excel()` now sorts rows of **R** and columns of **Y**.
+
+
 ## Recca 0.1.66 (2026-01-07) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18176684.svg)](https://doi.org/10.5281/zenodo.18176684)
 
 * `endogenize_losses()` gains new argument `clean`.
