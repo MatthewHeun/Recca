@@ -82,7 +82,7 @@ test_that("endogenize_losses() works correctly", {
                             n = dplyr::n(),
                             lenx = 1)
     ) |>
-    endogenize_losses(loss_sector = "bogus loss sector",
+    endogenize_losses(losses_sector = "bogus loss sector",
                       replace_cols = TRUE)
   V3 <- endogenized3$V[[1]]
   expect_true("bogus loss product" %in% colnames(V3))
@@ -101,7 +101,7 @@ test_that("endogenize_losses() works correctly", {
                             n = dplyr::n(),
                             lenx = 1)
     ) |>
-    endogenize_losses(loss_sector = "bogus loss sector",
+    endogenize_losses(losses_sector = "bogus loss sector",
                       replace_cols = TRUE,
                       clean = TRUE)
   expect_equal(endogenized4, endogenized)
