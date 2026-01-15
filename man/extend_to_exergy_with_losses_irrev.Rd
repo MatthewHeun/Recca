@@ -108,7 +108,7 @@ Default is \link{balance_cols}\verb{$irrev_alloc_colname} or
 (exergy destruction)
 in the \strong{Y} matrix.
 Default is \link{balance_cols}\verb{$irrev_sector}
-or "Destruction".}
+or "Irreversibilities".}
 
 \item{replace_cols}{A boolean that tells whether to
 (a) replace

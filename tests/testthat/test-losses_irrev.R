@@ -32,5 +32,12 @@ test_that("calc_exergy_losses_irrev() works as expected", {
     extend_to_exergy_with_losses_irrev()
 
 
+  res |>
+    dplyr::mutate(
+      WorksheetNames = paste(EnergyType, LastStage, Year, sep = "_")
+    ) |>
+    Recca::write_ecc_to_excel(path = "~/Desktop/endogenized.xlsx",
+                              worksheet_names = "WorksheetNames",
+                              overwrite_file = TRUE)
 })
 

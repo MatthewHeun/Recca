@@ -119,7 +119,7 @@ balance_cols <- list(inter_industry_balance_colname = "SUTInterIndustryBalance",
                        matsbyname::setcoltype(Recca::row_col_types$product_type),
                      waste = "Waste",
                      losses_sector = "Transformation losses",
-                     irrev_sector = "Destruction")
+                     irrev_sector = "Irreversibilities")
 usethis::use_data(balance_cols, overwrite = TRUE)
 
 
