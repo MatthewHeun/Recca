@@ -90,7 +90,7 @@ test_that("extend_to_exergy() works correctly with specified products", {
 
   # Create an example U matrices
   U <- matrix(c(250.129, 0,
-                0, 2087.519), byrow = TRUE, nrow = 2, ncol = 2,
+                0, 2087.513), byrow = TRUE, nrow = 2, ncol = 2,
               dimnames = list(c("Hydro [from Resources]",
                                 "Primary solid biofuels [from Resources]"),
                               c("Manufacture [of Hydro]", "Manufacture [of Primary solid biofuels]"))) %>%
@@ -315,9 +315,9 @@ test_that("extend_to_exergy() works with NULL U_EIOU_mat" , {
     # Eliminate services ECCs.
     dplyr::filter(LastStage %in% c("Final", "Useful")) %>%
     dplyr::mutate(
-      phi = RCLabels::make_list(Recca::phi_vec, n = nrow(.), lenx = 1),
+      phi = RCLabels::make_list(Recca::phi_vec, n = dplyr::n(), lenx = 1),
       "{IEATools::psut_cols$U_eiou}" := list(NULL, NULL),
-      "{IEATools::psut_cols$U}" := .data[[IEATools::psut_cols$U_feed]]
+      "{IEATools::psut_cols$U_feed}" := .data[[IEATools::psut_cols$U]]
     )
   expect_equal(sutmats_with_null_U_EIOU[[IEATools::psut_cols$U]],
                sutmats_with_null_U_EIOU[[IEATools::psut_cols$U_feed]])

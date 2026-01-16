@@ -22,6 +22,7 @@ extend_to_exergy(
   prepositions = RCLabels::prepositions_list,
   energy_type = Recca::psut_cols$energy_type,
   exergy = Recca::energy_types$x,
+  tol = 1e-06,
   .exergy_suffix = "_exergy",
   R_exergy = paste0(Recca::psut_cols$R, .exergy_suffix),
   U_exergy = paste0(Recca::psut_cols$U, .exergy_suffix),

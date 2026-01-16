@@ -83,6 +83,7 @@ extend_to_exergy <- function(.sutmats = NULL,
                              prepositions = RCLabels::prepositions_list,
                              energy_type = Recca::psut_cols$energy_type,
                              exergy = Recca::energy_types$x,
+                             tol = 1e-6,
                              # Output names
                              .exergy_suffix = "_exergy",
                              R_exergy = paste0(Recca::psut_cols$R, .exergy_suffix),
@@ -110,7 +111,16 @@ extend_to_exergy <- function(.sutmats = NULL,
 
     # Verify that everything is balanced between industries
     # before performing any calculations
-
+    inter_balanced <- verify_inter_industry_balance(
+      R = R_mat, U = U_mat, V = V_mat, Y = Y_mat,
+      balances = Recca::balance_cols$inter_industry_balance_colname,
+      balanced = Recca::balance_cols$inter_industry_balanced_colname,
+      tol = tol)
+    inter_balanced[[Recca::balance_cols$inter_industry_balanced_colname]] |>
+      assertthat::assert_that(msg = paste0("Inter-industry balance not observed in ",
+                                           "calc_exergy_losses_irrev(). ",
+                                           "No sense calculating exergy losses and ",
+                                           "irreversibilities."))
 
     if (endogenize_losses_irrev) {
 
