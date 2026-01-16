@@ -7,6 +7,7 @@
 extend_to_exergy(
   .sutmats = NULL,
   clean_up_df = TRUE,
+  endogenize_losses_irrev = FALSE,
   R = Recca::psut_cols$R,
   U = Recca::psut_cols$U,
   V = Recca::psut_cols$V,
@@ -14,7 +15,6 @@ extend_to_exergy(
   U_feed = Recca::psut_cols$U_feed,
   U_eiou = Recca::psut_cols$U_eiou,
   r_eiou = Recca::psut_cols$r_eiou,
-  S_units = Recca::psut_cols$S_units,
   phi = Recca::psut_cols$phi,
   mat_piece = "all",
   phi_piece = "all",
@@ -60,7 +60,7 @@ Default is \code{RCLabels::prepositions_list}.}
 
 \item{.exergy_suffix}{The string suffix to be appended to exergy versions of ECC matrices.}
 
-\item{R_name, U_name, U_feed_name, U_eiou_name, r_eiou_name, V_name, Y_name, phi_name, energy_type, S_units}{Names of output matrices}
+\item{R_name, U_name, U_feed_name, U_eiou_name, r_eiou_name, V_name, Y_name, phi_name, energy_type}{Names of output matrices}
 
 \item{energy, exergy}{See \code{Recca::energy_types}.}
 }
@@ -99,13 +99,13 @@ The inputs to this function should all be conserved quantities
 that can be converted to exergy via \code{phi} vectors.
 }
 \examples{
-sutmats <- UKEnergy2000mats \%>\%
+sutmats <- UKEnergy2000mats |>
   # Put in wide-by-matrix format.
-  tidyr::spread(key = matrix.name, value = matrix) \%>\%
+  tidyr::spread(key = matrix.name, value = matrix) |>
   # Eliminate services ECCs.
-  dplyr::filter(LastStage \%in\% c("Final", "Useful")) \%>\%
+  dplyr::filter(LastStage \%in\% c("Final", "Useful"))  |>
   dplyr::mutate(
-    phi = RCLabels::make_list(Recca::phi_vec, n = nrow(.), lenx = 1)
+    phi = RCLabels::make_list(Recca::phi_vec, n = dplyr::n(), lenx = 1)
   )
 extend_to_exergy(sutmats)
 }

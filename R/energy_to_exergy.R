@@ -48,7 +48,7 @@
 #' @param notation The nomenclature for the row and column labels. Default is `RCLabels::bracket_notation`.
 #' @param prepositions The prepositions to be used row and column notation.
 #'                     Default is `RCLabels::prepositions_list`.
-#' @param R_name,U_name,U_feed_name,U_eiou_name,r_eiou_name,V_name,Y_name,phi_name,energy_type,S_units Names of output matrices
+#' @param R_name,U_name,U_feed_name,U_eiou_name,r_eiou_name,V_name,Y_name,phi_name,energy_type Names of output matrices
 #' @param energy,exergy See `Recca::energy_types`.
 #'
 #' @return A data frame or list of matrices that represents the exergy version of the ECC.
@@ -56,17 +56,18 @@
 #' @export
 #'
 #' @examples
-#' sutmats <- UKEnergy2000mats %>%
+#' sutmats <- UKEnergy2000mats |>
 #'   # Put in wide-by-matrix format.
-#'   tidyr::spread(key = matrix.name, value = matrix) %>%
+#'   tidyr::spread(key = matrix.name, value = matrix) |>
 #'   # Eliminate services ECCs.
-#'   dplyr::filter(LastStage %in% c("Final", "Useful")) %>%
+#'   dplyr::filter(LastStage %in% c("Final", "Useful"))  |>
 #'   dplyr::mutate(
-#'     phi = RCLabels::make_list(Recca::phi_vec, n = nrow(.), lenx = 1)
+#'     phi = RCLabels::make_list(Recca::phi_vec, n = dplyr::n(), lenx = 1)
 #'   )
 #' extend_to_exergy(sutmats)
 extend_to_exergy <- function(.sutmats = NULL,
                              clean_up_df = TRUE,
+                             endogenize_losses_irrev = FALSE,
                              # Input matrices
                              R = Recca::psut_cols$R,
                              U = Recca::psut_cols$U,
@@ -75,7 +76,6 @@ extend_to_exergy <- function(.sutmats = NULL,
                              U_feed = Recca::psut_cols$U_feed,
                              U_eiou = Recca::psut_cols$U_eiou,
                              r_eiou = Recca::psut_cols$r_eiou,
-                             S_units = Recca::psut_cols$S_units,
                              phi = Recca::psut_cols$phi,
                              mat_piece = "all",
                              phi_piece = "all",
@@ -107,6 +107,27 @@ extend_to_exergy <- function(.sutmats = NULL,
     }
 
     # When we get here, we should have single matrices
+
+    # Verify that everything is balanced between industries
+    # before performing any calculations
+
+
+    if (endogenize_losses_irrev) {
+
+      # Endogenize losses of the incoming conserved quantities
+      # using the intra_industry_balance (if it exists)
+      # or calculating it (if it does not).
+
+
+
+      # Verify that inter-industry balances are preserved
+
+
+      # Verify that intra-industry balance is now observed
+
+    }
+
+
     # For each of these multiplications, we first trim phi_vec to contain only
     # the energy products needed for converting to exergy.
     # Doing this avoids expanding the R, U, V, and Y matrices to all energy products,
@@ -181,6 +202,21 @@ extend_to_exergy <- function(.sutmats = NULL,
     # r_eiou_X = U_eiou_X / U_eiou_X
     r_eiou_X_mat <- matsbyname::quotient_byname(U_eiou_X_mat, U_X_mat) %>%
       matsbyname::replaceNaN_byname()
+
+
+
+
+
+    if (endogenize_losses_irrev) {
+
+      # Calculate exergy losses, which are now exergy destruction (irreversibility)
+
+
+    }
+
+
+    # Verify that inter-industry balances remain
+
 
     # Create the list of items to return
     list(R_X_mat,
