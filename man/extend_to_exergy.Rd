@@ -43,6 +43,14 @@ remove no-longer-needed input column \code{phi}, and
 fill the \code{energy_type} column with "X" for the exergy versions of the ECC matrices.
 Default is \code{TRUE}.}
 
+\item{endogenize_losses_irrev}{A boolean that tells whether to endogenize
+losses of the conserved quantity and
+calculate irreversibility
+(exergy destruction) of the industries
+in the exergy version of the
+conversion chain.
+Default is \code{FALSE}.}
+
 \item{R, U, U_feed, U_eiou, r_eiou, V, Y, phi}{Names of columns in \code{.sutmats} or single matrices. See \code{Recca::psut_cols}.}
 
 \item{mat_piece}{The piece of matrix row and column names for \code{R}, \code{U}, \code{U_feed}, \code{U_EIOU}, \code{V}, and \code{Y} matrices
@@ -59,11 +67,20 @@ Default is "all", meaning that entire names are to be matched.}
 \item{prepositions}{The prepositions to be used row and column notation.
 Default is \code{RCLabels::prepositions_list}.}
 
+\item{exergy}{A string type to be given for the results.
+See \link{energy_types}.
+Default is \link{energy_types}\verb{$x} or
+"X".}
+
+\item{tol}{The maximum allowable difference from \code{1} for the rowsums of
+loss allocation matrices.
+Also the maximum allowable different from \code{0} for the
+inter-industry balances and intra-industry balances.
+Default is \code{1e-6}.}
+
 \item{.exergy_suffix}{The string suffix to be appended to exergy versions of ECC matrices.}
 
-\item{R_name, U_name, U_feed_name, U_eiou_name, r_eiou_name, V_name, Y_name, phi_name, energy_type}{Names of output matrices}
-
-\item{energy, exergy}{See \code{Recca::energy_types}.}
+\item{R_exergy, U_exergy, U_feed_exergy, U_eiou_exergy, r_eiou_exergy, V_exergy, Y_exergy, energy_type}{Names of output matrices}
 }
 \value{
 A data frame or list of matrices that represents the exergy version of the ECC.

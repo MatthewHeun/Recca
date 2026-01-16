@@ -36,6 +36,13 @@
 #'                    remove no-longer-needed input column `phi`, and
 #'                    fill the `energy_type` column with "X" for the exergy versions of the ECC matrices.
 #'                    Default is `TRUE`.
+#' @param endogenize_losses_irrev A boolean that tells whether to endogenize
+#'                                losses of the conserved quantity and
+#'                                calculate irreversibility
+#'                                (exergy destruction) of the industries
+#'                                in the exergy version of the
+#'                                conversion chain.
+#'                                Default is `FALSE`.
 #' @param R,U,U_feed,U_eiou,r_eiou,V,Y,phi Names of columns in `.sutmats` or single matrices. See `Recca::psut_cols`.
 #' @param .exergy_suffix The string suffix to be appended to exergy versions of ECC matrices.
 #' @param mat_piece The piece of matrix row and column names for `R`, `U`, `U_feed`, `U_EIOU`, `V`, and `Y` matrices
@@ -48,8 +55,16 @@
 #' @param notation The nomenclature for the row and column labels. Default is `RCLabels::bracket_notation`.
 #' @param prepositions The prepositions to be used row and column notation.
 #'                     Default is `RCLabels::prepositions_list`.
-#' @param R_name,U_name,U_feed_name,U_eiou_name,r_eiou_name,V_name,Y_name,phi_name,energy_type Names of output matrices
-#' @param energy,exergy See `Recca::energy_types`.
+#' @param R_exergy,U_exergy,U_feed_exergy,U_eiou_exergy,r_eiou_exergy,V_exergy,Y_exergy,energy_type Names of output matrices
+#' @param exergy A string type to be given for the results.
+#'               See [Recca::energy_types].
+#'               Default is [Recca::energy_types]`$x` or
+#'               "`r Recca::energy_types$x`".
+#' @param tol The maximum allowable difference from `1` for the rowsums of
+#'            loss allocation matrices.
+#'            Also the maximum allowable different from `0` for the
+#'            inter-industry balances and intra-industry balances.
+#'            Default is `1e-6`.
 #'
 #' @return A data frame or list of matrices that represents the exergy version of the ECC.
 #'
