@@ -4,13 +4,13 @@ test_that("extend_to_exergy() works as expected", {
   # Use the UKEnergy2000mats data frame for the tests.
   # Get the list of final energy carriers from the matrices in UKEnergy2000mats.
 
-  sutmats <- UKEnergy2000mats %>%
+  sutmats <- UKEnergy2000mats |>
     # Put in wide-by-matrix format.
-    tidyr::spread(key = matrix.name, value = matrix) %>%
+    tidyr::spread(key = matrix.name, value = matrix) |>
     # Eliminate services ECCs.
-    dplyr::filter(LastStage %in% c("Final", "Useful")) %>%
+    dplyr::filter(LastStage %in% c("Final", "Useful")) |>
     dplyr::mutate(
-      phi = RCLabels::make_list(Recca::phi_vec, n = nrow(.), lenx = 1)
+      phi = RCLabels::make_list(Recca::phi_vec, n = dplyr::n(), lenx = 1)
     )
   res <- extend_to_exergy(sutmats)
   expect_true(Recca::energy_types$x %in% res[[Recca::energy_types$energy_type]] %>% unique())
@@ -76,14 +76,6 @@ test_that("extend_to_exergy() works as expected", {
 
   expect_true((res[[Recca::psut_cols$Y]] %>% matsbyname::rowtype() == "Product") %>% all())
   expect_true((res[[Recca::psut_cols$Y]] %>% matsbyname::coltype() == "Industry") %>% all())
-
-  # Try an erroneous case, when the EnergyType column has something other than E
-  sutmats %>%
-    dplyr::mutate(
-      "{Recca::energy_types$energy_type}" := c("W", "X")
-    ) %>%
-    extend_to_exergy() %>%
-    expect_error("non-energy rows were found:")
 })
 
 
@@ -335,3 +327,4 @@ test_that("extend_to_exergy() works with NULL U_EIOU_mat" , {
   expect_equal(matsbyname::iszero_byname(with_exergy[[IEATools::psut_cols$U_eiou]]),
                list(TRUE, TRUE))
 })
+

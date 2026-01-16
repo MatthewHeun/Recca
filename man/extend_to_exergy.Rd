@@ -15,27 +15,28 @@ extend_to_exergy(
   U_eiou = Recca::psut_cols$U_eiou,
   r_eiou = Recca::psut_cols$r_eiou,
   phi = Recca::psut_cols$phi,
-  .exergy_suffix = "_exergy",
   mat_piece = "all",
   phi_piece = "all",
   notation = RCLabels::bracket_notation,
   prepositions = RCLabels::prepositions_list,
-  R_name = Recca::psut_cols$R,
-  U_name = Recca::psut_cols$U,
-  U_feed_name = Recca::psut_cols$U_feed,
-  U_eiou_name = Recca::psut_cols$U_eiou,
-  r_eiou_name = Recca::psut_cols$r_eiou,
-  V_name = Recca::psut_cols$V,
-  Y_name = Recca::psut_cols$Y,
-  phi_name = Recca::psut_cols$phi,
   energy_type = Recca::psut_cols$energy_type,
   S_units = Recca::psut_cols$S_units,
   energy = Recca::energy_types$e,
-  exergy = Recca::energy_types$x
+  exergy = Recca::energy_types$x,
+  .exergy_suffix = "_exergy",
+  R_exergy = paste0(Recca::psut_cols$R, .exergy_suffix),
+  U_exergy = paste0(Recca::psut_cols$U, .exergy_suffix),
+  V_exergy = paste0(Recca::psut_cols$V, .exergy_suffix),
+  Y_exergy = paste0(Recca::psut_cols$Y, .exergy_suffix),
+  U_feed_exergy = paste0(Recca::psut_cols$U_feed, .exergy_suffix),
+  U_eiou_exergy = paste0(Recca::psut_cols$U_eiou, .exergy_suffix),
+  r_eiou_exergy = paste0(Recca::psut_cols$r_eiou, .exergy_suffix)
 )
 }
 \arguments{
-\item{.sutmats}{An optional data frame of energy conversion chain matrices.}
+\item{.sutmats}{An optional data frame of mass or energy
+(conserved quantities)
+conversion chains in wide-by-matrix format.}
 
 \item{clean_up_df}{When \code{.sutmats} is a data frame, tells whether to \code{tidyr::pivot_longer()} the result,
 remove no-longer-needed input column \code{phi}, and
@@ -43,8 +44,6 @@ fill the \code{energy_type} column with "X" for the exergy versions of the ECC m
 Default is \code{TRUE}.}
 
 \item{R, U, U_feed, U_eiou, r_eiou, V, Y, phi}{Names of columns in \code{.sutmats} or single matrices. See \code{Recca::psut_cols}.}
-
-\item{.exergy_suffix}{The string suffix to be appended to exergy versions of ECC matrices.}
 
 \item{mat_piece}{The piece of matrix row and column names for \code{R}, \code{U}, \code{U_feed}, \code{U_EIOU}, \code{V}, and \code{Y} matrices
 which are to be matched against names in the \code{phi} vector.
@@ -60,34 +59,44 @@ Default is "all", meaning that entire names are to be matched.}
 \item{prepositions}{The prepositions to be used row and column notation.
 Default is \code{RCLabels::prepositions_list}.}
 
-\item{R_name, U_name, U_feed_name, U_eiou_name, r_eiou_name, V_name, Y_name, phi_name, energy_type, S_units}{Names of output matrices}
-
 \item{energy, exergy}{See \code{Recca::energy_types}.}
+
+\item{.exergy_suffix}{The string suffix to be appended to exergy versions of ECC matrices.}
+
+\item{R_name, U_name, U_feed_name, U_eiou_name, r_eiou_name, V_name, Y_name, phi_name, energy_type, S_units}{Names of output matrices}
 }
 \value{
 A data frame or list of matrices that represents the exergy version of the ECC.
 }
 \description{
-An energy conversion chain can be represented in energy or exergy quantifications of energy.
-This function moves from an energy quantification to an exergy quantification,
-given the matrices for the energy quantification and
+A conversion chain can be represented in energy or mass terms (conserved quantities)
+or in exergy terms (a non-conserved quantity).
+This function moves from an energy or mass quantification to an exergy quantification,
+given the matrices for the mass/energy quantification and
 phi (exergy-to-energy ratio) vectors.
 }
 \details{
 Internally, this function uses \code{matsindf::apply()}, so
 the ECC matrices can be provided
 as individual matrices,
-in a named list, or
-or in a data frame
-(in which case the arguments should
-given the string names of columns in the \code{.sutmats} data frame, the default).
+in a named list (passed in \code{.sutmats}), or
+or in a data frame (also passed to \code{.sutmats}),
+in which case the arguments should
+give the string names in the list or
+of columns in the \code{.sutmats} data frame.
+The default is strings for most arguments,
+thereby assuming \code{.sutmats} will be supplied
+with a list or data frame.
 
 The vector \code{phi} is considered to be a store of values
 to be applied to each type of energy carrier.
 To determine which entry in the \code{phi} vector  is matched against which energy carrier,
 \code{mat_piece} and \code{phi_piece} are consulted.
 \code{mat_piece} and \code{phi_piece} can be any of
-"all", "pref", "suff", "noun", or one of many prepositions given in \code{suffixes}
+"all", "pref", "suff", "noun", or one of many prepositions.
+Consult the \code{RCLabels} package for details.
+
+The inputs to this function should all be non-exergy inputs.
 }
 \examples{
 sutmats <- UKEnergy2000mats \%>\%

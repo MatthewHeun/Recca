@@ -1,27 +1,37 @@
 #' Extend an ECC in PSUT format from energy to exergy
 #'
-#' An energy conversion chain can be represented in energy or exergy quantifications of energy.
-#' This function moves from an energy quantification to an exergy quantification,
-#' given the matrices for the energy quantification and
+#' A conversion chain can be represented in energy or mass terms (conserved quantities)
+#' or in exergy terms (a non-conserved quantity).
+#' This function moves from an energy or mass quantification to an exergy quantification,
+#' given the matrices for the mass/energy quantification and
 #' phi (exergy-to-energy ratio) vectors.
 #'
 #' Internally, this function uses `matsindf::apply()`, so
 #' the ECC matrices can be provided
 #' as individual matrices,
-#' in a named list, or
-#' or in a data frame
-#' (in which case the arguments should
-#' given the string names of columns in the `.sutmats` data frame, the default).
+#' in a named list (passed in `.sutmats`), or
+#' or in a data frame (also passed to `.sutmats`),
+#' in which case the arguments should
+#' give the string names in the list or
+#' of columns in the `.sutmats` data frame.
+#' The default is strings for most arguments,
+#' thereby assuming `.sutmats` will be supplied
+#' with a list or data frame.
 #'
 #' The vector `phi` is considered to be a store of values
 #' to be applied to each type of energy carrier.
 #' To determine which entry in the `phi` vector  is matched against which energy carrier,
 #' `mat_piece` and `phi_piece` are consulted.
 #' `mat_piece` and `phi_piece` can be any of
-#' "all", "pref", "suff", "noun", or one of many prepositions given in `suffixes`
+#' "all", "pref", "suff", "noun", or one of many prepositions.
+#' Consult the `RCLabels` package for details.
 #'
+#' The inputs to this function should all be conserved quantities
+#' that can be converted to exergy via `phi` vectors.
 #'
-#' @param .sutmats An optional data frame of energy conversion chain matrices.
+#' @param .sutmats An optional data frame of mass or energy
+#'                 (conserved quantities)
+#'                 conversion chains in wide-by-matrix format.
 #' @param clean_up_df When `.sutmats` is a data frame, tells whether to `tidyr::pivot_longer()` the result,
 #'                    remove no-longer-needed input column `phi`, and
 #'                    fill the `energy_type` column with "X" for the exergy versions of the ECC matrices.
@@ -66,60 +76,23 @@ extend_to_exergy <- function(.sutmats = NULL,
                              U_eiou = Recca::psut_cols$U_eiou,
                              r_eiou = Recca::psut_cols$r_eiou,
                              phi = Recca::psut_cols$phi,
-                             .exergy_suffix = "_exergy",
                              mat_piece = "all",
                              phi_piece = "all",
                              notation = RCLabels::bracket_notation,
                              prepositions = RCLabels::prepositions_list,
-                             # Column names
-                             R_name = Recca::psut_cols$R,
-                             U_name = Recca::psut_cols$U,
-                             U_feed_name = Recca::psut_cols$U_feed,
-                             U_eiou_name = Recca::psut_cols$U_eiou,
-                             r_eiou_name = Recca::psut_cols$r_eiou,
-                             V_name = Recca::psut_cols$V,
-                             Y_name = Recca::psut_cols$Y,
-                             phi_name = Recca::psut_cols$phi,
                              energy_type = Recca::psut_cols$energy_type,
                              S_units = Recca::psut_cols$S_units,
                              energy = Recca::energy_types$e,
-                             exergy = Recca::energy_types$x) {
-
-  # Exergy names
-  R_X_name <- paste0(R_name, .exergy_suffix)
-  U_X_name <- paste0(U_name, .exergy_suffix)
-  U_feed_X_name <- paste0(U_feed_name, .exergy_suffix)
-  U_eiou_X_name <- paste0(U_eiou_name, .exergy_suffix)
-  V_X_name <- paste0(V_name, .exergy_suffix)
-  Y_X_name <- paste0(Y_name, .exergy_suffix)
-  r_eiou_X_name <- paste0(r_eiou_name, .exergy_suffix)
-
-  # Check that all columns in .sutmats contain "E" for EnergyType, if the column exists.
-  if (is.data.frame(.sutmats)) {
-    if (energy_type %in% names(.sutmats)) {
-      # Check that all energy types are "E".
-      bad_rows <- .sutmats %>%
-        dplyr::filter(.data[[energy_type]] != energy) %>%
-        dplyr::mutate(
-          # Remove matrix columns to leave only metadata columns
-          # in preparation for creating an error message.
-          "{R_name}" := NULL,
-          "{U_name}" := NULL,
-          "{U_feed_name}" := NULL,
-          "{U_eiou_name}" := NULL,
-          "{r_eiou_name}" := NULL,
-          "{V_name}" := NULL,
-          "{Y_name}" := NULL,
-          "{phi_name}" := NULL,
-          "{S_units}" := NULL
-        )
-      if (nrow(bad_rows) > 0) {
-        err_msg <- paste0("In Recca::extend_to_exergy(), non-energy rows were found: ",
-                          matsindf::df_to_msg(bad_rows))
-        stop(err_msg)
-      }
-    }
-  }
+                             exergy = Recca::energy_types$x,
+                             # Output names
+                             .exergy_suffix = "_exergy",
+                             R_exergy = paste0(Recca::psut_cols$R, .exergy_suffix),
+                             U_exergy = paste0(Recca::psut_cols$U, .exergy_suffix),
+                             V_exergy = paste0(Recca::psut_cols$V, .exergy_suffix),
+                             Y_exergy = paste0(Recca::psut_cols$Y, .exergy_suffix),
+                             U_feed_exergy = paste0(Recca::psut_cols$U_feed, .exergy_suffix),
+                             U_eiou_exergy = paste0(Recca::psut_cols$U_eiou, .exergy_suffix),
+                             r_eiou_exergy = paste0(Recca::psut_cols$r_eiou, .exergy_suffix)) {
 
   extend_func <- function(R_mat, U_mat, U_feed_mat, U_eiou_mat = NULL, V_mat, Y_mat, phi_vec) {
 
@@ -217,13 +190,13 @@ extend_to_exergy <- function(.sutmats = NULL,
          V_X_mat,
          Y_X_mat,
          r_eiou_X_mat) %>%
-      magrittr::set_names(c(R_X_name,
-                            U_X_name,
-                            U_feed_X_name,
-                            U_eiou_X_name,
-                            V_X_name,
-                            Y_X_name,
-                            r_eiou_X_name))
+      magrittr::set_names(c(R_exergy,
+                            U_exergy,
+                            U_feed_exergy,
+                            U_eiou_exergy,
+                            V_exergy,
+                            Y_exergy,
+                            r_eiou_exergy))
   }
 
   out <- matsindf::matsindf_apply(.sutmats, FUN = extend_func,
@@ -236,25 +209,25 @@ extend_to_exergy <- function(.sutmats = NULL,
                                   phi_vec = phi)
 
   if (is.data.frame(out) & clean_up_df) {
-    cols_to_keep <- out %>%
-      matsindf::everything_except(R_name, U_name, U_feed_name, U_eiou_name,
-                                  V_name, Y_name, r_eiou_name, phi_name,
+    exergy_cols_to_keep <- out %>%
+      matsindf::everything_except(R, U, U_feed, U_eiou,
+                                  V, Y, r_eiou, phi,
                                   .symbols = FALSE)
     # We'll need to strip suffixes off column names.
-    exergy_df <- out %>%
-      dplyr::select(dplyr::any_of(cols_to_keep)) %>%
+    exergy_df <- out |>
+      dplyr::select(dplyr::any_of(exergy_cols_to_keep)) |>
       # Change the EnergyType column to Exergy
       dplyr::mutate(
         "{energy_type}" := exergy
-      ) %>%
+      ) |>
       # Strip sep_useful from end of any column names.
       # Hint obtained from https://stackoverflow.com/questions/45960269/removing-suffix-from-column-names-using-rename-all
       dplyr::rename_with(~ gsub(paste0(.exergy_suffix, "$"), "", .x))
     # Bind the energy and exergy data frames together.
-    out <- dplyr::bind_rows(.sutmats, exergy_df) %>%
+    out <- dplyr::bind_rows(.sutmats, exergy_df) |>
       dplyr::mutate(
         # Eliminate the phi column that is still present in the energy rows
-        "{phi_name}" := NULL
+        "{phi}" := NULL
       )
   }
 
