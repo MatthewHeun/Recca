@@ -14,14 +14,13 @@ extend_to_exergy(
   U_feed = Recca::psut_cols$U_feed,
   U_eiou = Recca::psut_cols$U_eiou,
   r_eiou = Recca::psut_cols$r_eiou,
+  S_units = Recca::psut_cols$S_units,
   phi = Recca::psut_cols$phi,
   mat_piece = "all",
   phi_piece = "all",
   notation = RCLabels::bracket_notation,
   prepositions = RCLabels::prepositions_list,
   energy_type = Recca::psut_cols$energy_type,
-  S_units = Recca::psut_cols$S_units,
-  energy = Recca::energy_types$e,
   exergy = Recca::energy_types$x,
   .exergy_suffix = "_exergy",
   R_exergy = paste0(Recca::psut_cols$R, .exergy_suffix),
@@ -59,11 +58,11 @@ Default is "all", meaning that entire names are to be matched.}
 \item{prepositions}{The prepositions to be used row and column notation.
 Default is \code{RCLabels::prepositions_list}.}
 
-\item{energy, exergy}{See \code{Recca::energy_types}.}
-
 \item{.exergy_suffix}{The string suffix to be appended to exergy versions of ECC matrices.}
 
 \item{R_name, U_name, U_feed_name, U_eiou_name, r_eiou_name, V_name, Y_name, phi_name, energy_type, S_units}{Names of output matrices}
+
+\item{energy, exergy}{See \code{Recca::energy_types}.}
 }
 \value{
 A data frame or list of matrices that represents the exergy version of the ECC.
@@ -96,7 +95,8 @@ To determine which entry in the \code{phi} vector  is matched against which ener
 "all", "pref", "suff", "noun", or one of many prepositions.
 Consult the \code{RCLabels} package for details.
 
-The inputs to this function should all be non-exergy inputs.
+The inputs to this function should all be conserved quantities
+that can be converted to exergy via \code{phi} vectors.
 }
 \examples{
 sutmats <- UKEnergy2000mats \%>\%
