@@ -12,7 +12,7 @@ which always resolves to the latest release.
 
 
 * `verify_*_industry_balance()` gain argument `error_on_imbalance`
-  (default is `FALSE`) which, if `TRUE`, cause errors on imbalance
+  (default is `FALSE`) which, if `TRUE`, causes an error on imbalance
   instead of a warning.
 * New function `extend_to_exergy_with_losses_irrev()`
   calculates losses and irreversibilities.

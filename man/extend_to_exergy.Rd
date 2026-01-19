@@ -15,7 +15,13 @@ extend_to_exergy(
   U_feed = Recca::psut_cols$U_feed,
   U_eiou = Recca::psut_cols$U_eiou,
   r_eiou = Recca::psut_cols$r_eiou,
+  intra_industry_balance = Recca::balance_cols$intra_industry_balance_colname,
+  losses_alloc = Recca::balance_cols$losses_alloc_colname,
+  losses_sector = Recca::balance_cols$losses_sector,
   phi = Recca::psut_cols$phi,
+  irrev_alloc = Recca::balance_cols$irrev_alloc_colname,
+  irrev_sector = Recca::balance_cols$irrev_sector,
+  clean = FALSE,
   mat_piece = "all",
   phi_piece = "all",
   notation = RCLabels::bracket_notation,
@@ -51,18 +57,104 @@ in the exergy version of the
 conversion chain.
 Default is \code{FALSE}.}
 
-\item{R, U, U_feed, U_eiou, r_eiou, V, Y, phi}{Names of columns in \code{.sutmats} or single matrices. See \code{Recca::psut_cols}.}
+\item{R}{Resources (\strong{R}) matrix or name of the column in \code{.sutmats}
+that contains same.
+Default is \link{psut_cols}\verb{$R} or
+"R".}
 
-\item{mat_piece}{The piece of matrix row and column names for \code{R}, \code{U}, \code{U_feed}, \code{U_EIOU}, \code{V}, and \code{Y} matrices
-which are to be matched against names in the \code{phi} vector.
+\item{U}{Use (\strong{U}) matrix or name of the column in \code{.sutmats}
+that contains same.
+Necessary for verifying calculating losses.
+Default is \link{psut_cols}\verb{$U} or
+"U".}
+
+\item{V}{Make (\strong{V}) matrix or name of the column in \code{.sutmats}
+that contains same.
+Default is \link{psut_cols}\verb{$V} or
+"V".}
+
+\item{Y}{Final demand (\strong{Y}) matrix or name
+of the column in \code{.sutmats} that contains same.
+Default is \link{psut_cols}\verb{$Y} or
+"Y".}
+
+\item{U_feed}{Feedstock use (\strong{U_feed}) matrix or name of the column in \code{.sutmats}
+that contains same.
+Default is \link{psut_cols}\verb{$U_feed} or
+"U_feed".}
+
+\item{U_eiou}{Energy industry own use (\strong{U_EIOU}) matrix or name of the column in \code{.sutmats}
+that contains same.
+Default is \link{psut_cols}\verb{$U_eiou} or
+"U_EIOU".}
+
+\item{r_eiou}{A matrix of the ratio of energy industry own use
+to total use for the use (\strong{U}) matrix
+or name of the column in \code{.sutmats} that contains same.
+Default is \link{psut_cols}\verb{$r_eiou} or
+"r_EIOU".}
+
+\item{intra_industry_balance}{A vector or the name of the column containing
+intra-industry balance vectors for the conserved quantity.
+If missing, losses are calculated internally
+with \code{\link[=calc_intra_industry_balance]{calc_intra_industry_balance()}}
+before endogenizing.
+Required only if \code{endogenize_losses_irrev} is \code{TRUE}.
+Default is
+\link{balance_cols}\verb{$intra_industry_balance_colname} or
+"SUTIntraIndustryBalance".}
+
+\item{losses_alloc}{A matrix or the name of the column containing
+loss allocation matrices.
+See details for structure of this matrix.
+Required only if \code{endogenize_losses_irrev} is \code{TRUE}.
+Default is \link{balance_cols}\verb{$losses_alloc_colname} or
+"LossesAlloc".}
+
+\item{losses_sector}{The string name of the sector
+that will absorb losses in the \strong{Y} matrix for the conserved quantity.
+Required only if \code{endogenize_losses_irrev} is \code{TRUE}.
+Default is \link{balance_cols}\verb{$losses_sector}
+or "Transformation losses".}
+
+\item{phi}{A vector of exergy-to-energy ratios (phi)
+or the string name of a column in \code{.sutmats} containing same.
+Default is \link{psut_cols}\verb{$phi} or
+"phi".}
+
+\item{irrev_alloc}{An irreversibility allocation matrix or the name of a column in
+\code{.sutmats} containing same.
+Required only if \code{endogenize_losses_irrev} is \code{TRUE}.
+Default is \link{balance_cols}\verb{$irrev_alloc_colname} or
+"IrrevAlloc".}
+
+\item{irrev_sector}{The string name of the sector that will absorb irreversibilities
+(exergy destruction)
+in the \strong{Y} matrix.
+Required only if \code{endogenize_losses_irrev} is \code{TRUE}.
+Default is \link{balance_cols}\verb{$irrev_sector}
+or "Irreversibilities".}
+
+\item{clean}{A boolean that tells whether the outgoing
+\strong{V} and \strong{Y} matrices with endogenized losses and
+irreversibilities should have
+\code{0} rows and columns removed.
+Affects results only when \code{endogenize_irrev_losses} is \code{TRUE}.
+Default is \code{FALSE}.}
+
+\item{mat_piece}{The piece of row and column names for matrices
+\code{R}, \code{U}, \code{V}, \code{Y}, \code{U_feed}, and \code{U_EIOU}
+against which row names of the \code{phi} vector is to be matched.
 Default is "all", meaning that entire names are to be matched.}
 
-\item{phi_piece}{The piece of names in the \code{phi} vector against which
-row and column names for matrices \code{R}, \code{U}, \code{U_feed}, \code{U_EIOU}, \code{V}, and \code{Y} matrices
+\item{phi_piece}{The piece of row names in the \code{phi} vector against which
+row and column names for matrices
+\code{R}, \code{U}, \code{V}, \code{Y}, \code{U_feed}, and \code{U_EIOU}
 is to be matched.
 Default is "all", meaning that entire names are to be matched.}
 
-\item{notation}{The nomenclature for the row and column labels. Default is \code{RCLabels::bracket_notation}.}
+\item{notation}{The nomenclature for the row and column labels.
+Default is \code{RCLabels::bracket_notation}.}
 
 \item{prepositions}{The prepositions to be used row and column notation.
 Default is \code{RCLabels::prepositions_list}.}
