@@ -13,6 +13,7 @@ verify_inter_industry_balance(
   V = Recca::psut_cols$V,
   Y = Recca::psut_cols$Y,
   balances = Recca::balance_cols$inter_industry_balance_colname,
+  error_on_imbalance = FALSE,
   tol = 1e-06,
   balanced = Recca::balance_cols$inter_industry_balanced_colname,
   delete_balance_if_verified = FALSE
@@ -23,6 +24,7 @@ verify_intra_industry_balance(
   U = Recca::psut_cols$U,
   V = Recca::psut_cols$V,
   balances = Recca::balance_cols$intra_industry_balance_colname,
+  error_on_imbalance = FALSE,
   tol = 1e-06,
   balanced = Recca::balance_cols$intra_industry_balanced_colname,
   delete_balance_if_verified = FALSE
@@ -55,6 +57,11 @@ or "SUTInterIndustryBalance".
 For \code{verify_intra_industry_balances()},
 the default is \link{balance_cols}\verb{$intra_industry_balance_colname}
 or "SUTIntraIndustryBalance".}
+
+\item{error_on_imbalance}{A boolean that tells whether to stop execution
+if an imbalance is found (within \code{tol}).
+Default is \code{FALSE}, meaning a warning will be generated
+when an imbalance is found.}
 
 \item{tol}{The maximum amount by which products can be out of balance
 and still be considered balanced.
@@ -123,11 +130,13 @@ If every conversion chain in \code{.sutmats} is balanced,
 execution returns to the caller.
 If balance is not observed for one or more of the rows
 in \code{.sutmats},
-a warning is emitted, and
+a warning is emitted (by default), and
 the additional column (\code{balanced_colname})
 indicates where the problem occurred, with \code{FALSE}
 showing where products are not balanced
 to within \code{tol}.
+If \code{error_on_imbalance} is set \code{TRUE}, an error is emitted, and
+execution stops.
 
 Typically, one would call \verb{calc_int*_industry_balance()}
 before calling \verb{verify_int*_industry_balance()}.

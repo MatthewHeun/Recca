@@ -1,62 +1,269 @@
 #' Extend an ECC in PSUT format from energy to exergy
 #'
-#' An energy conversion chain can be represented in energy or exergy quantifications of energy.
-#' This function moves from an energy quantification to an exergy quantification,
-#' given the matrices for the energy quantification and
-#' phi (exergy-to-energy ratio) vectors.
+#' A conversion chain can be represented in energy or mass terms (conserved quantities)
+#' or in exergy terms (a non-conserved quantity).
+#' This function moves from an energy or mass quantification to an exergy quantification,
+#' given the matrices for the mass/energy quantification and
+#' `phi` (exergy-to-energy ratio) vectors.
+#' Optionally, this function calculates and endogenizes
+#' losses of the conserved quantity and
+#' irreversibility (exergy destruction)
+#' using the arguments `losses_alloc`, `losses_sector`,
+#' `irrev_alloc`, and `irrev_sector`.
 #'
 #' Internally, this function uses `matsindf::apply()`, so
-#' the ECC matrices can be provided
+#' the PSUT matrices can be provided
 #' as individual matrices,
-#' in a named list, or
-#' or in a data frame
-#' (in which case the arguments should
-#' given the string names of columns in the `.sutmats` data frame, the default).
+#' in a named list (passed in `.sutmats`), or
+#' or in a data frame (also passed to `.sutmats`),
+#' in which case the arguments should
+#' give the string names in the list or
+#' of columns in the `.sutmats` data frame.
+#' The default is strings for most arguments,
+#' thereby assuming `.sutmats` will be supplied
+#' with a list or data frame.
 #'
 #' The vector `phi` is considered to be a store of values
 #' to be applied to each type of energy carrier.
-#' To determine which entry in the `phi` vector  is matched against which energy carrier,
+#' To determine which entry in the `phi` vector
+#' is matched against which energy carrier,
 #' `mat_piece` and `phi_piece` are consulted.
 #' `mat_piece` and `phi_piece` can be any of
-#' "all", "pref", "suff", "noun", or one of many prepositions given in `suffixes`
+#' "all", "pref", "suff", "noun", or
+#' one of many prepositions.
+#' Consult the `RCLabels` package for details.
 #'
+#' The input should be a conversion chain
+#' that contains conserved quantities (probably mass or energy).
+#' Optionally, the conversion chain may already
+#' have endogenized transformation losses (wastes).
+#' The output contains a new version of the conversion chain
+#' in exergy terms with (optionally)
+#' all transformation losses endogenized and
+#' exergy destruction (irreversibility) calculated.
 #'
-#' @param .sutmats An optional data frame of energy conversion chain matrices.
-#' @param clean_up_df When `.sutmats` is a data frame, tells whether to `tidyr::pivot_longer()` the result,
-#'                    remove no-longer-needed input column `phi`, and
-#'                    fill the `energy_type` column with "X" for the exergy versions of the ECC matrices.
+#' Between input and output, the following steps are taken:
+#'
+#' 1. Optionally, if `endogenize_losses_irrev` is `TRUE`,
+#'    transformation losses of the conserved quantity
+#'    are calculated and endogenized into the **V** and **Y** matrices
+#'    via a call to [Recca::endogenize_losses()].
+#'    If `intra_industry_balance` is `NULL`,
+#'    losses of the conserved quantity are calculated
+#'    within [Recca::endogenize_losses()]
+#'    via a call to [Recca::calc_intra_industry_balance()].
+#'    If the input already has endogenized losses,
+#'    there will be no change to the incoming conversion chain.
+#'    Set `clean_mats` to `TRUE` to eliminate new `0` balance columns.
+#'    The `losses_alloc` and `losses_sector` arguments are passed
+#'    to [Recca::endogenize_losses()].
+#' 2. All matrices of the conversion chain are extended to exergy
+#'    by pre- or post-multiplying the diagonalized `phi` vector
+#'    into the PSUT matrices.
+#'    Transformation losses calculated previously (in Step 1.)
+#'    become exergy losses,
+#'    i.e., the exergy of transformation losses.
+#' 3. Optionally, if `endogenize_losses_irrev` is `TRUE`,
+#'    transformation losses of the (non-conserved) exergy flows are
+#'    endogenized into the **V** and **Y** matrices
+#'    via another call to [Recca::endogenize_losses()].
+#'    These transformation losses are interpreted as
+#'    exergy destruction (irreversibility).
+#'    The `irrev_alloc` and `irrev_sector` arguments are passed
+#'    to [Recca::endogenize_losses()].
+#'
+#' Throughout the function,
+#' inter-industry balances are verified via
+#' [Recca::verify_inter_industry_balance()].
+#' After Step 1.,
+#' across-industry balances are verified via
+#' [Recca::verify_intra_industry_balance()].
+#'
+#' The new version of the conversion chain is contained in named arguments
+#' (or columns if `.sutmats` is a data frame) named with the suffix
+#' `.exergy_suffix`, by default "_exergy".
+#' If `.sutmats` is a data frame,
+#' a tidy data frame can be output with an `energy_type` column
+#' by setting `clean_up_df = TRUE` (the default).
+#' The `energy_type` column is filled with
+#' `exergy`, by default
+#' [Recca::energy_types]`$x` or "`r Recca::energy_types$x`".
+#'
+#' @param .sutmats An optional data frame of mass or energy
+#'                 (conserved quantities)
+#'                 conversion chains in wide-by-matrix format.
+#' @param clean_up_df When `.sutmats` is a data frame,
+#'                    tells whether to [tidyr::pivot_longer()] the result,
+#'                    remove no-longer-needed input columns
+#'                    `phi`, `losses_alloc`, and `irrev_alloc`, and
+#'                    fill the `energy_type` column with
+#'                    the value of the `exergy` argument
+#'                    for the exergy versions of the ECC matrices.
 #'                    Default is `TRUE`.
-#' @param R,U,U_feed,U_eiou,r_eiou,V,Y,phi Names of columns in `.sutmats` or single matrices. See `Recca::psut_cols`.
+#' @param endogenize_losses_irrev A boolean that tells whether to endogenize
+#'                                losses of the conserved quantity and
+#'                                calculate irreversibility
+#'                                (exergy destruction) of the industries
+#'                                in the exergy version of the
+#'                                conversion chain.
+#'                                Default is `FALSE`.
+#' @param R Resources (**R**) matrix or name of the column in `.sutmats`
+#'          that contains same.
+#'          Default is [Recca::psut_cols]`$R` or
+#'          "`r Recca::psut_cols$R`".
+#' @param U Use (**U**) matrix or name of the column in `.sutmats`
+#'          that contains same.
+#'          Necessary for verifying calculating losses.
+#'          Default is [Recca::psut_cols]`$U` or
+#'          "`r Recca::psut_cols$U`".
+#' @param V Make (**V**) matrix or name of the column in `.sutmats`
+#'          that contains same.
+#'          Default is [Recca::psut_cols]`$V` or
+#'          "`r Recca::psut_cols$V`".
+#' @param Y Final demand (**Y**) matrix or name
+#'          of the column in `.sutmats` that contains same.
+#'          Default is [Recca::psut_cols]`$Y` or
+#'          "`r Recca::psut_cols$Y`".
+#' @param U_feed Feedstock use (**U_feed**) matrix or name of the column in `.sutmats`
+#'               that contains same.
+#'               Default is [Recca::psut_cols]`$U_feed` or
+#'               "`r Recca::psut_cols$U_feed`".
+#' @param U_eiou Energy industry own use (**U_EIOU**) matrix or name of the column in `.sutmats`
+#'               that contains same.
+#'               Default is [Recca::psut_cols]`$U_eiou` or
+#'               "`r Recca::psut_cols$U_eiou`".
+#' @param r_eiou A matrix of the ratio of energy industry own use
+#'               to total use for the use (**U**) matrix
+#'               or name of the column in `.sutmats` that contains same.
+#'               Default is [Recca::psut_cols]`$r_eiou` or
+#'               "`r Recca::psut_cols$r_eiou`".
+#' @param intra_industry_balance A vector or the name of the column containing
+#'                               intra-industry balance vectors for the conserved quantity.
+#'                               If missing, losses are calculated internally
+#'                               with [calc_intra_industry_balance()]
+#'                               before endogenizing.
+#'                               Required only if `endogenize_losses_irrev` is `TRUE`.
+#'                               Default is
+#'                               [Recca::balance_cols]`$intra_industry_balance_colname` or
+#'                               "`r Recca::balance_cols$intra_industry_balance_colname`".
+#' @param losses_alloc A matrix or the name of the column containing
+#'                     loss allocation matrices.
+#'                     See details for structure of this matrix.
+#'                     Required only if `endogenize_losses_irrev` is `TRUE`.
+#'                     Default is [Recca::balance_cols]`$losses_alloc_colname` or
+#'                     "`r Recca::balance_cols$losses_alloc_colname`".
+#' @param losses_sector The string name of the sector
+#'                      that will absorb losses in the **Y** matrix for the conserved quantity.
+#'                      Required only if `endogenize_losses_irrev` is `TRUE`.
+#'                      Default is [Recca::balance_cols]`$losses_sector`
+#'                      or "`r Recca::balance_cols$losses_sector`".
+#' @param phi A vector of exergy-to-energy ratios (phi)
+#'            or the string name of a column in `.sutmats` containing same.
+#'            Default is [Recca::psut_cols]`$phi` or
+#'            "`r Recca::psut_cols$phi`".
+#' @param irrev_alloc An irreversibility allocation matrix or the name of a column in
+#'                    `.sutmats` containing same.
+#'                    Required only if `endogenize_losses_irrev` is `TRUE`.
+#'                    Default is [Recca::balance_cols]`$irrev_alloc_colname` or
+#'                    "`r Recca::balance_cols$irrev_alloc_colname`".
+#' @param irrev_sector The string name of the sector that will absorb irreversibilities
+#'                     (exergy destruction)
+#'                     in the **Y** matrix.
+#'                     Required only if `endogenize_losses_irrev` is `TRUE`.
+#'                     Default is [Recca::balance_cols]`$irrev_sector`
+#'                     or "`r Recca::balance_cols$irrev_sector`".
+#' @param clean_mats A boolean that tells whether the outgoing
+#'                   **V** and **Y** matrices with endogenized losses and
+#'                   irreversibilities should have
+#'                   `0` rows and columns removed.
+#'                   Affects results only when `endogenize_irrev_losses` is `TRUE`.
+#'                   Default is `FALSE`.
 #' @param .exergy_suffix The string suffix to be appended to exergy versions of ECC matrices.
-#' @param mat_piece The piece of matrix row and column names for `R`, `U`, `U_feed`, `U_EIOU`, `V`, and `Y` matrices
-#'                  which are to be matched against names in the `phi` vector.
+#' @param mat_piece The piece of row and column names for matrices
+#'                  `R`, `U`, `V`, `Y`, `U_feed`, and `U_EIOU`
+#'                  against which row names of the `phi` vector is to be matched.
 #'                  Default is "all", meaning that entire names are to be matched.
-#' @param phi_piece The piece of names in the `phi` vector against which
-#'                  row and column names for matrices `R`, `U`, `U_feed`, `U_EIOU`, `V`, and `Y` matrices
+#' @param phi_piece The piece of row names in the `phi` vector against which
+#'                  row and column names for matrices
+#'                  `R`, `U`, `V`, `Y`, `U_feed`, and `U_EIOU`
 #'                  is to be matched.
 #'                  Default is "all", meaning that entire names are to be matched.
-#' @param notation The nomenclature for the row and column labels. Default is `RCLabels::bracket_notation`.
+#' @param notation The nomenclature for the row and column labels.
+#'                 Default is `RCLabels::bracket_notation`.
 #' @param prepositions The prepositions to be used row and column notation.
 #'                     Default is `RCLabels::prepositions_list`.
-#' @param R_name,U_name,U_feed_name,U_eiou_name,r_eiou_name,V_name,Y_name,phi_name,energy_type,S_units Names of output matrices
-#' @param energy,exergy See `Recca::energy_types`.
+#' @param R_exergy,U_exergy,U_feed_exergy,U_eiou_exergy,r_eiou_exergy,V_exergy,Y_exergy,energy_type
+#'                  Names of output matrices.
+#'                  Defaults are matrix names with `.exergy_suffix` appended.
+#' @param exergy A string flow type to be given for the results.
+#'               See [Recca::energy_types].
+#'               Default is [Recca::energy_types]`$x` or
+#'               "`r Recca::energy_types$x`".
+#' @param tol The maximum allowable difference from `1` for the rowsums of
+#'            loss allocation matrices.
+#'            Also the maximum allowable different from `0` for the
+#'            inter-industry balances and intra-industry balances.
+#'            Default is `1e-6`.
 #'
 #' @return A data frame or list of matrices that represents the exergy version of the ECC.
 #'
 #' @export
 #'
 #' @examples
-#' sutmats <- UKEnergy2000mats %>%
+#' sutmats <- UKEnergy2000mats |>
 #'   # Put in wide-by-matrix format.
-#'   tidyr::spread(key = matrix.name, value = matrix) %>%
+#'   tidyr::pivot_wider(names_from = matrix.name,
+#'                      values_from = matrix) |>
 #'   # Eliminate services ECCs.
-#'   dplyr::filter(LastStage %in% c("Final", "Useful")) %>%
+#'   dplyr::filter(LastStage %in% c("Final", "Useful"))
+#' # Do not calculate losses or irreversibilities (exergy destruction)
+#' sutmats |>
 #'   dplyr::mutate(
-#'     phi = RCLabels::make_list(Recca::phi_vec, n = nrow(.), lenx = 1)
-#'   )
-#' extend_to_exergy(sutmats)
+#'     phi = RCLabels::make_list(Recca::phi_vec, n = dplyr::n(), lenx = 1)
+#'   ) |>
+#'   extend_to_exergy()
+#' # Repeat, this time calculating losses and irreversibilities
+#' # Create the losses allocation matrix
+#' losses_alloc_mat <- matrix(1,
+#'   dimnames = list("All industries",
+#'                   "MTH.200.C -> Transformation losses")) |>
+#'   matsbyname::setrowtype("Industry") |>
+#'   matsbyname::setcoltype("Product")
+#' losses_alloc_mat
+#' # Create a phi vector
+#' phi_vec <- matrix(c(1.06, 1.04,    # Crude, NG
+#'                     1.06, 1, 1.06, # Diesel, Elect, Petrol
+#'                     1,             # MD
+#'                     0.143616257,   # LTH (assumed 50 C)
+#'                     0.956,         # Light
+#'                     0.36986157),   # MTH.200.C
+#'                   dimnames = list(c("Crude", "NG",
+#'                                     "Diesel", "Elect", "Petrol",
+#'                                     "MD",
+#'                                     "LTH",
+#'                                     "Light",
+#'                                     "MTH.200.C"),
+#'                                   "phi")) |>
+#'   matsbyname::setrowtype("Product") |>
+#'   matsbyname::setcoltype("phi")
+#' phi_vec
+#' sutmats |>
+#'   dplyr::mutate(
+#'     "{Recca::balance_cols$losses_alloc_colname}" :=
+#'       RCLabels::make_list(x = losses_alloc_mat, n = 2,lenx = 1),
+#'     "{Recca::psut_cols$phi}" :=
+#'       RCLabels::make_list(x = phi_vec, n = 2, lenx = 1),
+#'     "{Recca::balance_cols$irrev_alloc_colname}" :=
+#'       RCLabels::make_list(x = Recca::balance_cols$default_destruction_alloc_mat,
+#'                           n = 2, lenx = 1)) |>
+#'   extend_to_exergy(endogenize_losses_irrev = TRUE,
+#'                    clean_mats = TRUE,
+#'                    mat_piece = "noun",
+#'                    notation = list(RCLabels::from_notation,
+#'                                    RCLabels::arrow_notation))
 extend_to_exergy <- function(.sutmats = NULL,
                              clean_up_df = TRUE,
+                             endogenize_losses_irrev = FALSE,
                              # Input matrices
                              R = Recca::psut_cols$R,
                              U = Recca::psut_cols$U,
@@ -65,63 +272,35 @@ extend_to_exergy <- function(.sutmats = NULL,
                              U_feed = Recca::psut_cols$U_feed,
                              U_eiou = Recca::psut_cols$U_eiou,
                              r_eiou = Recca::psut_cols$r_eiou,
+                             losses_alloc = Recca::balance_cols$losses_alloc_colname,
+                             losses_sector = Recca::balance_cols$losses_sector,
+                             # Input vectors
+                             intra_industry_balance = Recca::balance_cols$intra_industry_balance_colname,
                              phi = Recca::psut_cols$phi,
-                             .exergy_suffix = "_exergy",
+                             irrev_alloc = Recca::balance_cols$irrev_alloc_colname,
+                             irrev_sector = Recca::balance_cols$irrev_sector,
+                             clean_mats = FALSE,
                              mat_piece = "all",
                              phi_piece = "all",
                              notation = RCLabels::bracket_notation,
                              prepositions = RCLabels::prepositions_list,
-                             # Column names
-                             R_name = Recca::psut_cols$R,
-                             U_name = Recca::psut_cols$U,
-                             U_feed_name = Recca::psut_cols$U_feed,
-                             U_eiou_name = Recca::psut_cols$U_eiou,
-                             r_eiou_name = Recca::psut_cols$r_eiou,
-                             V_name = Recca::psut_cols$V,
-                             Y_name = Recca::psut_cols$Y,
-                             phi_name = Recca::psut_cols$phi,
                              energy_type = Recca::psut_cols$energy_type,
-                             S_units = Recca::psut_cols$S_units,
-                             energy = Recca::energy_types$e,
-                             exergy = Recca::energy_types$x) {
+                             exergy = Recca::energy_types$x,
+                             tol = 1e-6,
+                             # Output names
+                             .exergy_suffix = "_exergy",
+                             R_exergy = paste0(Recca::psut_cols$R, .exergy_suffix),
+                             U_exergy = paste0(Recca::psut_cols$U, .exergy_suffix),
+                             V_exergy = paste0(Recca::psut_cols$V, .exergy_suffix),
+                             Y_exergy = paste0(Recca::psut_cols$Y, .exergy_suffix),
+                             U_feed_exergy = paste0(Recca::psut_cols$U_feed, .exergy_suffix),
+                             U_eiou_exergy = paste0(Recca::psut_cols$U_eiou, .exergy_suffix),
+                             r_eiou_exergy = paste0(Recca::psut_cols$r_eiou, .exergy_suffix)) {
 
-  # Exergy names
-  R_X_name <- paste0(R_name, .exergy_suffix)
-  U_X_name <- paste0(U_name, .exergy_suffix)
-  U_feed_X_name <- paste0(U_feed_name, .exergy_suffix)
-  U_eiou_X_name <- paste0(U_eiou_name, .exergy_suffix)
-  V_X_name <- paste0(V_name, .exergy_suffix)
-  Y_X_name <- paste0(Y_name, .exergy_suffix)
-  r_eiou_X_name <- paste0(r_eiou_name, .exergy_suffix)
-
-  # Check that all columns in .sutmats contain "E" for EnergyType, if the column exists.
-  if (is.data.frame(.sutmats)) {
-    if (energy_type %in% names(.sutmats)) {
-      # Check that all energy types are "E".
-      bad_rows <- .sutmats %>%
-        dplyr::filter(.data[[energy_type]] != energy) %>%
-        dplyr::mutate(
-          # Remove matrix columns to leave only metadata columns
-          # in preparation for creating an error message.
-          "{R_name}" := NULL,
-          "{U_name}" := NULL,
-          "{U_feed_name}" := NULL,
-          "{U_eiou_name}" := NULL,
-          "{r_eiou_name}" := NULL,
-          "{V_name}" := NULL,
-          "{Y_name}" := NULL,
-          "{phi_name}" := NULL,
-          "{S_units}" := NULL
-        )
-      if (nrow(bad_rows) > 0) {
-        err_msg <- paste0("In Recca::extend_to_exergy(), non-energy rows were found: ",
-                          matsindf::df_to_msg(bad_rows))
-        stop(err_msg)
-      }
-    }
-  }
-
-  extend_func <- function(R_mat, U_mat, U_feed_mat, U_eiou_mat = NULL, V_mat, Y_mat, phi_vec) {
+  extend_func <- function(R_mat, U_mat, U_feed_mat, U_eiou_mat = NULL, V_mat, Y_mat, phi_vec,
+                          intra_industry_balance_vec = NULL,
+                          losses_alloc_mat = NULL,
+                          irrev_alloc_mat = NULL) {
 
     if (is.null(U_eiou_mat)) {
       # There are some country, year combinations that do not
@@ -135,37 +314,86 @@ extend_to_exergy <- function(.sutmats = NULL,
     }
 
     # When we get here, we should have single matrices
+
+    # Verify that everything is balanced between industries
+    # before performing any calculations
+    inter_balanced <- verify_inter_industry_balance(
+      R = R_mat, U = U_mat, V = V_mat, Y = Y_mat,
+      balances = Recca::balance_cols$inter_industry_balance_colname,
+      balanced = Recca::balance_cols$inter_industry_balanced_colname,
+      error_on_imbalance = TRUE,
+      tol = tol)
+
+    if (endogenize_losses_irrev) {
+
+      # Endogenize losses of the incoming conserved quantities
+      # using the intra_industry_balance (if it exists)
+      # or calculating it (if it does not).
+      # Calculate losses of the conserved quantity
+      V_losses <- "V_losses"
+      Y_losses <- "Y_losses"
+      heat_losses <- Recca::endogenize_losses(R = R_mat, U = U_mat, V = V_mat, Y = Y_mat,
+                                              losses_alloc = losses_alloc_mat,
+                                              losses_sector = losses_sector,
+                                              clean = clean_mats,
+                                              tol = tol,
+                                              intra_industry_balance = intra_industry_balance_vec,
+                                              V_prime = V_losses,
+                                              Y_prime = Y_losses)
+      V_losses_mat <- heat_losses[[V_losses]]
+      Y_losses_mat <- heat_losses[[Y_losses]]
+      if (clean_mats) {
+        V_losses_mat <- matsbyname::clean_byname(V_losses_mat)
+        Y_losses_mat <- matsbyname::clean_byname(Y_losses_mat)
+      }
+      # Verify that inter-industry balances are preserved
+      Recca::verify_inter_industry_balance(R = R_mat, U = U_mat,
+                                           V = V_losses_mat, Y = Y_losses_mat,
+                                           tol = tol,
+                                           error_on_imbalance = TRUE)
+      # Verify that intra-industry balance is now observed
+      Recca::verify_intra_industry_balance(U = U_mat, V = V_losses_mat,
+                                           tol = tol,
+                                           error_on_imbalance = TRUE)
+      # Everything is OK. Reassign V_mat and Y_mat
+      # to the versions with losses endogenized
+      # for further calculations
+      V_mat <- V_losses_mat
+      Y_mat <- Y_losses_mat
+    }
+
     # For each of these multiplications, we first trim phi_vec to contain only
     # the energy products needed for converting to exergy.
     # Doing this avoids expanding the R, U, V, and Y matrices to all energy products,
     # thereby reducing computational complexity and memory consumption.
 
     # R_X = R_E * phi_hat
-    R_X_mat <- matsbyname::matrixproduct_byname(R_mat,
-                                                matsbyname::vec_from_store_byname(a = R_mat,
-                                                                                  v = matsbyname::transpose_byname(phi_vec),
-                                                                                  a_piece = mat_piece, v_piece = phi_piece,
-                                                                                  notation = notation, prepositions = prepositions,
-                                                                                  margin = 2) %>%
-                                                  matsbyname::hatize_byname(keep = "rownames"))
+    phi_hat_R <- matsbyname::vec_from_store_byname(
+      a = R_mat,
+      v = matsbyname::transpose_byname(phi_vec),
+      a_piece = mat_piece, v_piece = phi_piece,
+      notation = notation, prepositions = prepositions,
+      margin = 2) |>
+      matsbyname::hatize_byname(keep = "rownames")
+    R_X_mat <- matsbyname::matrixproduct_byname(R_mat, phi_hat_R)
 
     # U_X = phi_hat * U_E
-    U_X_mat <- matsbyname::matrixproduct_byname(matsbyname::vec_from_store_byname(a = U_mat,
-                                                                                  v = phi_vec,
-                                                                                  a_piece = mat_piece, v_piece = phi_piece,
-                                                                                  notation = notation, prepositions = prepositions,
-                                                                                  margin = 1) %>%
-                                                  matsbyname::hatize_byname(keep = "rownames"),
-                                                U_mat)
+    phi_hat_U <- matsbyname::vec_from_store_byname(a = U_mat,
+                                                   v = phi_vec,
+                                                   a_piece = mat_piece, v_piece = phi_piece,
+                                                   notation = notation, prepositions = prepositions,
+                                                   margin = 1) %>%
+      matsbyname::hatize_byname(keep = "rownames")
+    U_X_mat <- matsbyname::matrixproduct_byname(phi_hat_U, U_mat)
 
     # U_feed_X = phi_hat * U_feed_E
-    U_feed_X_mat <- matsbyname::matrixproduct_byname(matsbyname::vec_from_store_byname(a = U_feed_mat,
-                                                                                       v = phi_vec,
-                                                                                       a_piece = mat_piece, v_piece = phi_piece,
-                                                                                       notation = notation, prepositions = prepositions,
-                                                                                       margin = 1) %>%
-                                                       matsbyname::hatize_byname(keep = "rownames"),
-                                                     U_feed_mat)
+    phi_hat_U_feed <- matsbyname::vec_from_store_byname(a = U_feed_mat,
+                                                        v = phi_vec,
+                                                        a_piece = mat_piece, v_piece = phi_piece,
+                                                        notation = notation, prepositions = prepositions,
+                                                        margin = 1) %>%
+      matsbyname::hatize_byname(keep = "rownames")
+    U_feed_X_mat <- matsbyname::matrixproduct_byname(phi_hat_U_feed, U_feed_mat)
 
     if (matsbyname::iszero_byname(U_eiou_mat)) {
       # Some countries have no EIOU, so we get a zero matrix here
@@ -177,37 +405,66 @@ extend_to_exergy <- function(.sutmats = NULL,
       U_eiou_X_mat <- U_eiou_mat
     } else {
       # U_eiou_X = phi_hat * U_eiou_E
-      U_eiou_X_mat <- matsbyname::matrixproduct_byname(matsbyname::vec_from_store_byname(a = U_eiou_mat,
-                                                                                         v = phi_vec,
-                                                                                         a_piece = mat_piece, v_piece = phi_piece,
-                                                                                         notation = notation, prepositions = prepositions,
-                                                                                         margin = 1) %>%
-                                                         matsbyname::hatize_byname(keep = "rownames"),
-                                                       U_eiou_mat)
+      phi_hat_U_eiou <- matsbyname::vec_from_store_byname(a = U_eiou_mat,
+                                                          v = phi_vec,
+                                                          a_piece = mat_piece, v_piece = phi_piece,
+                                                          notation = notation, prepositions = prepositions,
+                                                          margin = 1) %>%
+        matsbyname::hatize_byname(keep = "rownames")
+      U_eiou_X_mat <- matsbyname::matrixproduct_byname(phi_hat_U_eiou, U_eiou_mat)
     }
 
     # V_X = V_E * phi_hat
-    V_X_mat <- matsbyname::matrixproduct_byname(V_mat,
-                                                matsbyname::vec_from_store_byname(a = V_mat,
-                                                                                  v = matsbyname::transpose_byname(phi_vec),
-                                                                                  a_piece = mat_piece, v_piece = phi_piece,
-                                                                                  notation = notation, prepositions = prepositions,
-                                                                                  margin = 2) %>%
-                                                  matsbyname::hatize_byname(keep = "rownames"))
+    phi_hat_V <- matsbyname::vec_from_store_byname(a = V_mat,
+                                                   v = matsbyname::transpose_byname(phi_vec),
+                                                   a_piece = mat_piece, v_piece = phi_piece,
+                                                   notation = notation, prepositions = prepositions,
+                                                   margin = 2) %>%
+      matsbyname::hatize_byname(keep = "rownames")
+    V_X_mat <- matsbyname::matrixproduct_byname(V_mat, phi_hat_V)
 
 
     # Y_X = phi_hat * Y_E
-    Y_X_mat <- matsbyname::matrixproduct_byname(matsbyname::vec_from_store_byname(a = Y_mat,
-                                                                                  v = phi_vec,
-                                                                                  a_piece = mat_piece, v_piece = phi_piece,
-                                                                                  notation = notation, prepositions = prepositions,
-                                                                                  margin = 1) %>%
-                                                  matsbyname::hatize_byname(keep = "rownames"),
-                                                Y_mat)
+    phi_hat_Y <- matsbyname::vec_from_store_byname(a = Y_mat,
+                                                   v = phi_vec,
+                                                   a_piece = mat_piece, v_piece = phi_piece,
+                                                   notation = notation, prepositions = prepositions,
+                                                   margin = 1) %>%
+      matsbyname::hatize_byname(keep = "rownames")
+    Y_X_mat <- matsbyname::matrixproduct_byname(phi_hat_Y, Y_mat)
 
     # r_eiou_X = U_eiou_X / U_eiou_X
     r_eiou_X_mat <- matsbyname::quotient_byname(U_eiou_X_mat, U_X_mat) %>%
       matsbyname::replaceNaN_byname()
+
+    if (endogenize_losses_irrev) {
+
+      # Calculate exergy losses, which are now exergy destruction (irreversibility)
+      V_destruction <- "V_destruction"
+      Y_destruction <- "Y_destruction"
+      irreversibility <- Recca::endogenize_losses(R = R_X_mat,
+                                                  U = U_X_mat,
+                                                  V = V_X_mat,
+                                                  Y = Y_X_mat,
+                                                  losses_alloc = irrev_alloc_mat,
+                                                  losses_sector = irrev_sector,
+                                                  clean = clean_mats,
+                                                  tol = tol,
+                                                  V_prime = V_destruction,
+                                                  Y_prime = Y_destruction)
+      V_X_mat <- irreversibility[[V_destruction]]
+      Y_X_mat <- irreversibility[[Y_destruction]]
+      if (clean_mats) {
+        V_X_mat <- matsbyname::clean_byname(V_X_mat)
+        Y_X_mat <- matsbyname::clean_byname(Y_X_mat)
+      }
+    }
+
+    # Verify that inter-industry balances remain
+    Recca::verify_inter_industry_balance(R = R_X_mat, U = U_X_mat,
+                                         V = V_X_mat, Y = Y_X_mat,
+                                         tol = tol,
+                                         error_on_imbalance = TRUE)
 
     # Create the list of items to return
     list(R_X_mat,
@@ -217,13 +474,13 @@ extend_to_exergy <- function(.sutmats = NULL,
          V_X_mat,
          Y_X_mat,
          r_eiou_X_mat) %>%
-      magrittr::set_names(c(R_X_name,
-                            U_X_name,
-                            U_feed_X_name,
-                            U_eiou_X_name,
-                            V_X_name,
-                            Y_X_name,
-                            r_eiou_X_name))
+      magrittr::set_names(c(R_exergy,
+                            U_exergy,
+                            U_feed_exergy,
+                            U_eiou_exergy,
+                            V_exergy,
+                            Y_exergy,
+                            r_eiou_exergy))
   }
 
   out <- matsindf::matsindf_apply(.sutmats, FUN = extend_func,
@@ -233,33 +490,36 @@ extend_to_exergy <- function(.sutmats = NULL,
                                   U_eiou_mat = U_eiou,
                                   V_mat = V,
                                   Y_mat = Y,
-                                  phi_vec = phi)
+                                  phi_vec = phi,
+                                  losses_alloc_mat = losses_alloc,
+                                  irrev_alloc_mat = irrev_alloc)
 
   if (is.data.frame(out) & clean_up_df) {
-    cols_to_keep <- out %>%
-      matsindf::everything_except(R_name, U_name, U_feed_name, U_eiou_name,
-                                  V_name, Y_name, r_eiou_name, phi_name,
+    exergy_cols_to_keep <- out %>%
+      matsindf::everything_except(R, U, U_feed, U_eiou,
+                                  V, Y, r_eiou, phi,
                                   .symbols = FALSE)
     # We'll need to strip suffixes off column names.
-    exergy_df <- out %>%
-      dplyr::select(dplyr::any_of(cols_to_keep)) %>%
+    exergy_df <- out |>
+      dplyr::select(dplyr::any_of(exergy_cols_to_keep)) |>
       # Change the EnergyType column to Exergy
       dplyr::mutate(
         "{energy_type}" := exergy
-      ) %>%
-      # Strip sep_useful from end of any column names.
+      ) |>
+      # Strip .exergy_suffix from end of any column names.
       # Hint obtained from https://stackoverflow.com/questions/45960269/removing-suffix-from-column-names-using-rename-all
       dplyr::rename_with(~ gsub(paste0(.exergy_suffix, "$"), "", .x))
     # Bind the energy and exergy data frames together.
-    out <- dplyr::bind_rows(.sutmats, exergy_df) %>%
+    out <- dplyr::bind_rows(.sutmats, exergy_df) |>
       dplyr::mutate(
-        # Eliminate the phi column that is still present in the energy rows
-        "{phi_name}" := NULL
+        # Eliminate columns that remain
+        # from the original input
+        "{losses_alloc}" := NULL,
+        "{phi}" := NULL,
+        "{irrev_alloc}" := NULL
       )
   }
-
   return(out)
-
 }
 
 
