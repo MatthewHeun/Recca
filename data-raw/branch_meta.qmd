@@ -40,21 +40,4 @@ Use this template to describe feature branches.
 * Date:
 
 
-#### irrev
-
-* Purpose: Calculate losses and irreversibilities
-* Branched from: develop
-* Next step: Merge extend_to_exergy_with_losses_irrev() with extend_to_exergy()
-* Author: MKH
-* Date: 13 Jan 2026
-
-
-#### merge_irrev
-
-* Purpose: Move the functionality of extend_to_exergy_with_losses_irrev() into extend_to_exergy()
-           with a boolean flag
-* Branched from: irrev
-* Next step:
-* Author: MKH
-* Date: 15 Jan 2026
 
