@@ -420,7 +420,7 @@ test_that("extend_to_exergy() works when endogenizing losses and calculating irr
   # in the incoming data frame
   res_losses_not_accounted <- psut |>
     extend_to_exergy(endogenize_losses_irrev = TRUE,
-                     clean = TRUE,
+                     clean_mats = TRUE,
                      mat_piece = "noun",
                      notation = list(RCLabels::from_notation,
                                      RCLabels::arrow_notation))
@@ -437,7 +437,7 @@ test_that("extend_to_exergy() works when endogenizing losses and calculating irr
     ) |>
     verify_intra_industry_balance() |>
     extend_to_exergy(endogenize_losses_irrev = TRUE,
-                     clean = TRUE,
+                     clean_mats = TRUE,
                      mat_piece = "noun",
                      notation = list(RCLabels::from_notation,
                                      RCLabels::arrow_notation)) |>

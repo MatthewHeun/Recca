@@ -15,13 +15,13 @@ extend_to_exergy(
   U_feed = Recca::psut_cols$U_feed,
   U_eiou = Recca::psut_cols$U_eiou,
   r_eiou = Recca::psut_cols$r_eiou,
-  intra_industry_balance = Recca::balance_cols$intra_industry_balance_colname,
   losses_alloc = Recca::balance_cols$losses_alloc_colname,
   losses_sector = Recca::balance_cols$losses_sector,
+  intra_industry_balance = Recca::balance_cols$intra_industry_balance_colname,
   phi = Recca::psut_cols$phi,
   irrev_alloc = Recca::balance_cols$irrev_alloc_colname,
   irrev_sector = Recca::balance_cols$irrev_sector,
-  clean = FALSE,
+  clean_mats = FALSE,
   mat_piece = "all",
   phi_piece = "all",
   notation = RCLabels::bracket_notation,
@@ -44,9 +44,13 @@ extend_to_exergy(
 (conserved quantities)
 conversion chains in wide-by-matrix format.}
 
-\item{clean_up_df}{When \code{.sutmats} is a data frame, tells whether to \code{tidyr::pivot_longer()} the result,
-remove no-longer-needed input column \code{phi}, and
-fill the \code{energy_type} column with "X" for the exergy versions of the ECC matrices.
+\item{clean_up_df}{When \code{.sutmats} is a data frame,
+tells whether to \code{\link[tidyr:pivot_longer]{tidyr::pivot_longer()}} the result,
+remove no-longer-needed input columns
+\code{phi}, \code{losses_alloc}, and \code{irrev_alloc}, and
+fill the \code{energy_type} column with
+the value of the \code{exergy} argument
+for the exergy versions of the ECC matrices.
 Default is \code{TRUE}.}
 
 \item{endogenize_losses_irrev}{A boolean that tells whether to endogenize
@@ -94,16 +98,6 @@ or name of the column in \code{.sutmats} that contains same.
 Default is \link{psut_cols}\verb{$r_eiou} or
 "r_EIOU".}
 
-\item{intra_industry_balance}{A vector or the name of the column containing
-intra-industry balance vectors for the conserved quantity.
-If missing, losses are calculated internally
-with \code{\link[=calc_intra_industry_balance]{calc_intra_industry_balance()}}
-before endogenizing.
-Required only if \code{endogenize_losses_irrev} is \code{TRUE}.
-Default is
-\link{balance_cols}\verb{$intra_industry_balance_colname} or
-"SUTIntraIndustryBalance".}
-
 \item{losses_alloc}{A matrix or the name of the column containing
 loss allocation matrices.
 See details for structure of this matrix.
@@ -116,6 +110,16 @@ that will absorb losses in the \strong{Y} matrix for the conserved quantity.
 Required only if \code{endogenize_losses_irrev} is \code{TRUE}.
 Default is \link{balance_cols}\verb{$losses_sector}
 or "Transformation losses".}
+
+\item{intra_industry_balance}{A vector or the name of the column containing
+intra-industry balance vectors for the conserved quantity.
+If missing, losses are calculated internally
+with \code{\link[=calc_intra_industry_balance]{calc_intra_industry_balance()}}
+before endogenizing.
+Required only if \code{endogenize_losses_irrev} is \code{TRUE}.
+Default is
+\link{balance_cols}\verb{$intra_industry_balance_colname} or
+"SUTIntraIndustryBalance".}
 
 \item{phi}{A vector of exergy-to-energy ratios (phi)
 or the string name of a column in \code{.sutmats} containing same.
@@ -135,7 +139,7 @@ Required only if \code{endogenize_losses_irrev} is \code{TRUE}.
 Default is \link{balance_cols}\verb{$irrev_sector}
 or "Irreversibilities".}
 
-\item{clean}{A boolean that tells whether the outgoing
+\item{clean_mats}{A boolean that tells whether the outgoing
 \strong{V} and \strong{Y} matrices with endogenized losses and
 irreversibilities should have
 \code{0} rows and columns removed.
@@ -159,7 +163,7 @@ Default is \code{RCLabels::bracket_notation}.}
 \item{prepositions}{The prepositions to be used row and column notation.
 Default is \code{RCLabels::prepositions_list}.}
 
-\item{exergy}{A string type to be given for the results.
+\item{exergy}{A string flow type to be given for the results.
 See \link{energy_types}.
 Default is \link{energy_types}\verb{$x} or
 "X".}
@@ -172,7 +176,8 @@ Default is \code{1e-6}.}
 
 \item{.exergy_suffix}{The string suffix to be appended to exergy versions of ECC matrices.}
 
-\item{R_exergy, U_exergy, U_feed_exergy, U_eiou_exergy, r_eiou_exergy, V_exergy, Y_exergy, energy_type}{Names of output matrices}
+\item{R_exergy, U_exergy, U_feed_exergy, U_eiou_exergy, r_eiou_exergy, V_exergy, Y_exergy, energy_type}{Names of output matrices.
+Defaults are matrix names with \code{.exergy_suffix} appended.}
 }
 \value{
 A data frame or list of matrices that represents the exergy version of the ECC.
@@ -182,11 +187,16 @@ A conversion chain can be represented in energy or mass terms (conserved quantit
 or in exergy terms (a non-conserved quantity).
 This function moves from an energy or mass quantification to an exergy quantification,
 given the matrices for the mass/energy quantification and
-phi (exergy-to-energy ratio) vectors.
+\code{phi} (exergy-to-energy ratio) vectors.
+Optionally, this function calculates and endogenizes
+losses of the conserved quantity and
+irreversibility (exergy destruction)
+using the arguments \code{losses_alloc}, \code{losses_sector},
+\code{irrev_alloc}, and \code{irrev_sector}.
 }
 \details{
 Internally, this function uses \code{matsindf::apply()}, so
-the ECC matrices can be provided
+the PSUT matrices can be provided
 as individual matrices,
 in a named list (passed in \code{.sutmats}), or
 or in a data frame (also passed to \code{.sutmats}),
@@ -199,14 +209,70 @@ with a list or data frame.
 
 The vector \code{phi} is considered to be a store of values
 to be applied to each type of energy carrier.
-To determine which entry in the \code{phi} vector  is matched against which energy carrier,
+To determine which entry in the \code{phi} vector
+is matched against which energy carrier,
 \code{mat_piece} and \code{phi_piece} are consulted.
 \code{mat_piece} and \code{phi_piece} can be any of
-"all", "pref", "suff", "noun", or one of many prepositions.
+"all", "pref", "suff", "noun", or
+one of many prepositions.
 Consult the \code{RCLabels} package for details.
 
-The inputs to this function should all be conserved quantities
-that can be converted to exergy via \code{phi} vectors.
+The input should be a conversion chain
+that contains conserved quantities (probably mass or energy).
+Optionally, the conversion chain may already
+have endogenized transformation losses (wastes).
+The output contains a new version of the conversion chain
+in exergy terms with (optionally)
+all transformation losses endogenized and
+exergy destruction (irreversibility) calculated.
+
+Between input and output, the following steps are taken:
+\enumerate{
+\item Optionally, if \code{endogenize_losses_irrev} is \code{TRUE},
+transformation losses of the conserved quantity
+are calculated and endogenized into the \strong{V} and \strong{Y} matrices
+via a call to \code{\link[=endogenize_losses]{endogenize_losses()}}.
+If \code{intra_industry_balance} is \code{NULL},
+losses of the conserved quantity are calculated
+within \code{\link[=endogenize_losses]{endogenize_losses()}}
+via a call to \code{\link[=calc_intra_industry_balance]{calc_intra_industry_balance()}}.
+If the input already has endogenized losses,
+there will be no change to the incoming conversion chain.
+Set \code{clean_mats} to \code{TRUE} to eliminate new \code{0} balance columns.
+The \code{losses_alloc} and \code{losses_sector} arguments are passed
+to \code{\link[=endogenize_losses]{endogenize_losses()}}.
+\item All matrices of the conversion chain are extended to exergy
+by pre- or post-multiplying the diagonalized \code{phi} vector
+into the PSUT matrices.
+Transformation losses calculated previously (in Step 1.)
+become exergy losses,
+i.e., the exergy of transformation losses.
+\item Optionally, if \code{endogenize_losses_irrev} is \code{TRUE},
+transformation losses of the (non-conserved) exergy flows are
+endogenized into the \strong{V} and \strong{Y} matrices
+via another call to \code{\link[=endogenize_losses]{endogenize_losses()}}.
+These transformation losses are interpreted as
+exergy destruction (irreversibility).
+The \code{irrev_alloc} and \code{irrev_sector} arguments are passed
+to \code{\link[=endogenize_losses]{endogenize_losses()}}.
+}
+
+Throughout the function,
+inter-industry balances are verified via
+\code{\link[=verify_inter_industry_balance]{verify_inter_industry_balance()}}.
+After Step 1.,
+across-industry balances are verified via
+\code{\link[=verify_intra_industry_balance]{verify_intra_industry_balance()}}.
+
+The new version of the conversion chain is contained in named arguments
+(or columns if \code{.sutmats} is a data frame) named with the suffix
+\code{.exergy_suffix}, by default "_exergy".
+If \code{.sutmats} is a data frame,
+a tidy data frame can be output with an \code{energy_type} column
+by setting \code{clean_up_df = TRUE} (the default).
+The \code{energy_type} column is filled with
+\code{exergy}, by default
+\link{energy_types}\verb{$x} or "X".
 }
 \examples{
 sutmats <- UKEnergy2000mats |>

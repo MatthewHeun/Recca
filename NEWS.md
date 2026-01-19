@@ -14,8 +14,11 @@ which always resolves to the latest release.
 * `verify_*_industry_balance()` gain argument `error_on_imbalance`
   (default is `FALSE`) which, if `TRUE`, causes an error on imbalance
   instead of a warning.
-* New function `extend_to_exergy_with_losses_irrev()`
-  calculates losses and irreversibilities.
+* `extend_to_exergy()` gains new argument `endogenize_losses_irrev`
+  which (when `TRUE`) makes the function
+  endogenize losses of conserved quantities and 
+  calculate irreversibilities.
+  Default is `FALSE`.
 * `write_ecc_to_excel()` now sorts rows of **R** and columns of **Y**.
 
 

@@ -4,10 +4,15 @@
 #' or in exergy terms (a non-conserved quantity).
 #' This function moves from an energy or mass quantification to an exergy quantification,
 #' given the matrices for the mass/energy quantification and
-#' phi (exergy-to-energy ratio) vectors.
+#' `phi` (exergy-to-energy ratio) vectors.
+#' Optionally, this function calculates and endogenizes
+#' losses of the conserved quantity and
+#' irreversibility (exergy destruction)
+#' using the arguments `losses_alloc`, `losses_sector`,
+#' `irrev_alloc`, and `irrev_sector`.
 #'
 #' Internally, this function uses `matsindf::apply()`, so
-#' the ECC matrices can be provided
+#' the PSUT matrices can be provided
 #' as individual matrices,
 #' in a named list (passed in `.sutmats`), or
 #' or in a data frame (also passed to `.sutmats`),
@@ -20,21 +25,80 @@
 #'
 #' The vector `phi` is considered to be a store of values
 #' to be applied to each type of energy carrier.
-#' To determine which entry in the `phi` vector  is matched against which energy carrier,
+#' To determine which entry in the `phi` vector
+#' is matched against which energy carrier,
 #' `mat_piece` and `phi_piece` are consulted.
 #' `mat_piece` and `phi_piece` can be any of
-#' "all", "pref", "suff", "noun", or one of many prepositions.
+#' "all", "pref", "suff", "noun", or
+#' one of many prepositions.
 #' Consult the `RCLabels` package for details.
 #'
-#' The inputs to this function should all be conserved quantities
-#' that can be converted to exergy via `phi` vectors.
+#' The input should be a conversion chain
+#' that contains conserved quantities (probably mass or energy).
+#' Optionally, the conversion chain may already
+#' have endogenized transformation losses (wastes).
+#' The output contains a new version of the conversion chain
+#' in exergy terms with (optionally)
+#' all transformation losses endogenized and
+#' exergy destruction (irreversibility) calculated.
+#'
+#' Between input and output, the following steps are taken:
+#'
+#' 1. Optionally, if `endogenize_losses_irrev` is `TRUE`,
+#'    transformation losses of the conserved quantity
+#'    are calculated and endogenized into the **V** and **Y** matrices
+#'    via a call to [Recca::endogenize_losses()].
+#'    If `intra_industry_balance` is `NULL`,
+#'    losses of the conserved quantity are calculated
+#'    within [Recca::endogenize_losses()]
+#'    via a call to [Recca::calc_intra_industry_balance()].
+#'    If the input already has endogenized losses,
+#'    there will be no change to the incoming conversion chain.
+#'    Set `clean_mats` to `TRUE` to eliminate new `0` balance columns.
+#'    The `losses_alloc` and `losses_sector` arguments are passed
+#'    to [Recca::endogenize_losses()].
+#' 2. All matrices of the conversion chain are extended to exergy
+#'    by pre- or post-multiplying the diagonalized `phi` vector
+#'    into the PSUT matrices.
+#'    Transformation losses calculated previously (in Step 1.)
+#'    become exergy losses,
+#'    i.e., the exergy of transformation losses.
+#' 3. Optionally, if `endogenize_losses_irrev` is `TRUE`,
+#'    transformation losses of the (non-conserved) exergy flows are
+#'    endogenized into the **V** and **Y** matrices
+#'    via another call to [Recca::endogenize_losses()].
+#'    These transformation losses are interpreted as
+#'    exergy destruction (irreversibility).
+#'    The `irrev_alloc` and `irrev_sector` arguments are passed
+#'    to [Recca::endogenize_losses()].
+#'
+#' Throughout the function,
+#' inter-industry balances are verified via
+#' [Recca::verify_inter_industry_balance()].
+#' After Step 1.,
+#' across-industry balances are verified via
+#' [Recca::verify_intra_industry_balance()].
+#'
+#' The new version of the conversion chain is contained in named arguments
+#' (or columns if `.sutmats` is a data frame) named with the suffix
+#' `.exergy_suffix`, by default "_exergy".
+#' If `.sutmats` is a data frame,
+#' a tidy data frame can be output with an `energy_type` column
+#' by setting `clean_up_df = TRUE` (the default).
+#' The `energy_type` column is filled with
+#' `exergy`, by default
+#' [Recca::energy_types]`$x` or "`r Recca::energy_types$x`".
 #'
 #' @param .sutmats An optional data frame of mass or energy
 #'                 (conserved quantities)
 #'                 conversion chains in wide-by-matrix format.
-#' @param clean_up_df When `.sutmats` is a data frame, tells whether to `tidyr::pivot_longer()` the result,
-#'                    remove no-longer-needed input column `phi`, and
-#'                    fill the `energy_type` column with "X" for the exergy versions of the ECC matrices.
+#' @param clean_up_df When `.sutmats` is a data frame,
+#'                    tells whether to [tidyr::pivot_longer()] the result,
+#'                    remove no-longer-needed input columns
+#'                    `phi`, `losses_alloc`, and `irrev_alloc`, and
+#'                    fill the `energy_type` column with
+#'                    the value of the `exergy` argument
+#'                    for the exergy versions of the ECC matrices.
 #'                    Default is `TRUE`.
 #' @param endogenize_losses_irrev A boolean that tells whether to endogenize
 #'                                losses of the conserved quantity and
@@ -108,12 +172,12 @@
 #'                     Required only if `endogenize_losses_irrev` is `TRUE`.
 #'                     Default is [Recca::balance_cols]`$irrev_sector`
 #'                     or "`r Recca::balance_cols$irrev_sector`".
-#' @param clean A boolean that tells whether the outgoing
-#'              **V** and **Y** matrices with endogenized losses and
-#'              irreversibilities should have
-#'              `0` rows and columns removed.
-#'              Affects results only when `endogenize_irrev_losses` is `TRUE`.
-#'              Default is `FALSE`.
+#' @param clean_mats A boolean that tells whether the outgoing
+#'                   **V** and **Y** matrices with endogenized losses and
+#'                   irreversibilities should have
+#'                   `0` rows and columns removed.
+#'                   Affects results only when `endogenize_irrev_losses` is `TRUE`.
+#'                   Default is `FALSE`.
 #' @param .exergy_suffix The string suffix to be appended to exergy versions of ECC matrices.
 #' @param mat_piece The piece of row and column names for matrices
 #'                  `R`, `U`, `V`, `Y`, `U_feed`, and `U_EIOU`
@@ -128,8 +192,10 @@
 #'                 Default is `RCLabels::bracket_notation`.
 #' @param prepositions The prepositions to be used row and column notation.
 #'                     Default is `RCLabels::prepositions_list`.
-#' @param R_exergy,U_exergy,U_feed_exergy,U_eiou_exergy,r_eiou_exergy,V_exergy,Y_exergy,energy_type Names of output matrices
-#' @param exergy A string type to be given for the results.
+#' @param R_exergy,U_exergy,U_feed_exergy,U_eiou_exergy,r_eiou_exergy,V_exergy,Y_exergy,energy_type
+#'                  Names of output matrices.
+#'                  Defaults are matrix names with `.exergy_suffix` appended.
+#' @param exergy A string flow type to be given for the results.
 #'               See [Recca::energy_types].
 #'               Default is [Recca::energy_types]`$x` or
 #'               "`r Recca::energy_types$x`".
@@ -164,13 +230,14 @@ extend_to_exergy <- function(.sutmats = NULL,
                              U_feed = Recca::psut_cols$U_feed,
                              U_eiou = Recca::psut_cols$U_eiou,
                              r_eiou = Recca::psut_cols$r_eiou,
-                             intra_industry_balance = Recca::balance_cols$intra_industry_balance_colname,
                              losses_alloc = Recca::balance_cols$losses_alloc_colname,
                              losses_sector = Recca::balance_cols$losses_sector,
+                             # Input vectors
+                             intra_industry_balance = Recca::balance_cols$intra_industry_balance_colname,
                              phi = Recca::psut_cols$phi,
                              irrev_alloc = Recca::balance_cols$irrev_alloc_colname,
                              irrev_sector = Recca::balance_cols$irrev_sector,
-                             clean = FALSE,
+                             clean_mats = FALSE,
                              mat_piece = "all",
                              phi_piece = "all",
                              notation = RCLabels::bracket_notation,
@@ -226,14 +293,14 @@ extend_to_exergy <- function(.sutmats = NULL,
       heat_losses <- Recca::endogenize_losses(R = R_mat, U = U_mat, V = V_mat, Y = Y_mat,
                                               losses_alloc = losses_alloc_mat,
                                               losses_sector = losses_sector,
-                                              clean = FALSE,
+                                              clean = clean_mats,
                                               tol = tol,
                                               intra_industry_balance = intra_industry_balance_vec,
                                               V_prime = V_losses,
                                               Y_prime = Y_losses)
       V_losses_mat <- heat_losses[[V_losses]]
       Y_losses_mat <- heat_losses[[Y_losses]]
-      if (clean) {
+      if (clean_mats) {
         V_losses_mat <- matsbyname::clean_byname(V_losses_mat)
         Y_losses_mat <- matsbyname::clean_byname(Y_losses_mat)
       }
@@ -339,10 +406,16 @@ extend_to_exergy <- function(.sutmats = NULL,
                                                   Y = Y_X_mat,
                                                   losses_alloc = irrev_alloc_mat,
                                                   losses_sector = irrev_sector,
+                                                  clean = clean_mats,
+                                                  tol = tol,
                                                   V_prime = V_destruction,
                                                   Y_prime = Y_destruction)
       V_X_mat <- irreversibility[[V_destruction]]
       Y_X_mat <- irreversibility[[Y_destruction]]
+      if (clean_mats) {
+        V_X_mat <- matsbyname::clean_byname(V_X_mat)
+        Y_X_mat <- matsbyname::clean_byname(Y_X_mat)
+      }
     }
 
     # Verify that inter-industry balances remain

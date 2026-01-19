@@ -16,6 +16,7 @@ Endogenize
 Endogenizing
 EnergyType
 Excel's
+Feedstock
 GBR
 Ghosh
 HPL
@@ -25,6 +26,8 @@ Hatize
 IEA
 Intra
 Ip
+IrrevAlloc
+Irreversibilities
 Javascript
 Kuperus
 LTC
@@ -76,6 +79,7 @@ colvecwithdims
 csv
 despecified
 despecify
+diagonalized
 directionality
 doi
 ecc
@@ -113,6 +117,8 @@ intra
 inv
 inversetranspose
 io
+irreversibilities
+irreversibility
 ixp
 javascript
 ktoe
@@ -131,7 +137,6 @@ pps
 pre
 ps
 pxp
-quantifications
 rowsums
 rowtypes
 rowvec
