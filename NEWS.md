@@ -11,9 +11,10 @@ Cite all releases of `Recca` with doi
 which always resolves to the latest release.
 
 
-* `verify_*_industry_balance()` gain argument `error_on_imbalance`
-  (default is `FALSE`) which, if `TRUE`, causes an error on imbalance
+* `verify_*_industry_balance()` functions gain argument `error_on_imbalance`
+  which, if `TRUE`, causes an error on imbalance
   instead of a warning.
+  Default is `FALSE`.
 * `extend_to_exergy()` gains new argument `endogenize_losses_irrev`
   which (when `TRUE`) makes the function
   endogenize losses of conserved quantities and 
