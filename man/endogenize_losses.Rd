@@ -12,7 +12,7 @@ endogenize_losses(
   Y = Recca::psut_cols$Y,
   intra_industry_balance = Recca::balance_cols$intra_industry_balance_colname,
   losses_alloc = Recca::balance_cols$losses_alloc_colname,
-  loss_sector = Recca::balance_cols$losses_sector,
+  losses_sector = Recca::balance_cols$losses_sector,
   replace_cols = FALSE,
   clean = FALSE,
   tol = 1e-06,
@@ -27,20 +27,24 @@ Default is \code{NULL}.}
 
 \item{R}{Resources (\strong{R}) matrix or name of the column in \code{.sutmats}
 that contains same.
-Default is "R".}
+Default is \link{psut_cols}\verb{$R} or
+"R".}
 
 \item{U}{Use (\strong{U}) matrix or name of the column in \code{.sutmats}
 that contains same.
 Necessary for verifying calculating losses.
-Default is "U".}
+Default is \link{psut_cols}\verb{$U} or
+"U".}
 
 \item{V}{Make (\strong{V}) matrix or name of the column in \code{.sutmats}
 that contains same.
-Default is "V".}
+Default is \link{psut_cols}\verb{$V} or
+"V".}
 
 \item{Y}{Final demand (\strong{Y}) matrix or name
 of the column in \code{.sutmats} that contains same.
-Default is "Y".}
+Default is \link{psut_cols}\verb{$Y} or
+"Y".}
 
 \item{intra_industry_balance}{A vector or the name of the column containing
 intra-industry balance vectors.
@@ -57,7 +61,7 @@ See details for structure of this matrix.
 Default is \link{balance_cols}\verb{$losses_alloc_colname} or
 "LossesAlloc".}
 
-\item{loss_sector}{The string name of the sector
+\item{losses_sector}{The string name of the sector
 that will absorb losses in the \strong{Y} matrix.
 Default is \link{balance_cols}\verb{$losses_sector}
 or "Transformation losses".}
@@ -81,9 +85,11 @@ Default is \code{FALSE}.}
 loss allocation matrices.
 Default is \code{1e-6}.}
 
-\item{V_prime}{The name of the \strong{V} matrix with endogenized losses.}
+\item{V_prime}{The name of the \strong{V} matrix with endogenized losses.
+Default is "V_prime".}
 
-\item{Y_prime}{The name of the \strong{Y} matrix with endogenized losses.}
+\item{Y_prime}{The name of the \strong{Y} matrix with endogenized losses.
+Default is "Y_prime".}
 }
 \value{
 A version of the conversion chain with losses endogenized.
@@ -107,7 +113,7 @@ replaces the existing
 respectively.
 
 All losses are allocated to the
-\code{loss_sector} column in the \strong{Y} matrix,
+\code{losses_sector} column in the \strong{Y} matrix,
 by default named
 \link{balance_cols}\verb{$losses_sector or "}r Recca::balance_cols$losses_sector`".
 \subsection{Endogenizing algorithm}{
@@ -124,7 +130,7 @@ the losses_allocation matrix (\code{losses_alloc})
 to obtain a matrix to be added to \strong{V}.
 \item Transpose the matrix to be added to \strong{V},
 calculate rowsums, and
-set the column name to \code{loss_sector}
+set the column name to \code{losses_sector}
 to obtain a matrix to be added to \strong{Y}.
 \item Add the matrices to \strong{V} and \strong{Y}, respectively.
 }
