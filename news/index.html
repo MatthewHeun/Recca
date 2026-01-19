@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.66</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.67</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,11 +37,25 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/MatthewHeun/Recca/blob/v0.1.66/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/MatthewHeun/Recca/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.66" id="recca-0166-2026-01-07">Recca 0.1.66 (2026-01-07)<a class="anchor" aria-label="anchor" href="#recca-0166-2026-01-07"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.67" id="recca-0167-2026-01-19">Recca 0.1.67 (2026-01-19)<a class="anchor" aria-label="anchor" href="#recca-0167-2026-01-19"></a></h2>
+<ul><li>
+<code>verify_*_industry_balance()</code> functions gain argument <code>error_on_imbalance</code> which, if <code>TRUE</code>, causes an error on imbalance instead of a warning. Default is <code>FALSE</code>.</li>
+<li>
+<code><a href="../reference/extend_to_exergy.html">extend_to_exergy()</a></code> gains new argument <code>endogenize_losses_irrev</code> which (when <code>TRUE</code>) makes the function endogenize losses of conserved quantities and calculate irreversibilities. Default is <code>FALSE</code>.</li>
+<li>
+<code><a href="../reference/write_ecc_to_excel.html">write_ecc_to_excel()</a></code> now sorts rows of <strong>R</strong> and columns of <strong>Y</strong>.</li>
+<li>New tests for new features.
+<ul><li>Now up to 948 tests, all passing.</li>
+<li>Test coverage remains at 100%.</li>
+</ul></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.66" id="recca-0166-2026-01-07-doi">Recca 0.1.66 (2026-01-07) <a href="https://doi.org/10.5281/zenodo.18176684" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.18176684.svg" alt="DOI"></a>
+<a class="anchor" aria-label="anchor" href="#recca-0166-2026-01-07-doi"></a></h2>
 <ul><li>
 <code><a href="../reference/endogenize_losses.html">endogenize_losses()</a></code> gains new argument <code>clean</code>. When <code>TRUE</code> (default is <code>FALSE</code>), <strong>0</strong> rows and columns are deleted from the output. This is helpful when a pre-endogenized (and fully balanced) conversion chain is the input. In that case, the output will be the unchanged input.</li>
 <li>

@@ -12,7 +12,7 @@ psut_cols
 
 ## Format
 
-A string list with 26 entries.
+A string list with 28 entries.
 
 - resources,R:
 
@@ -108,8 +108,19 @@ A string list with 26 entries.
 
 - last_stage:
 
-  The name of a column in a tidy data frame last stages of the energy
-  conversion chain.
+  The name of a column in a tidy data frame identifying the last stage
+  of the energy conversion chain.
+
+- exergy_loss:
+
+  The name of a column in a tidy data frame for vectors of exergy
+  losses, i.e., the exergy associated with waste mass or energy.
+
+- irreversibility:
+
+  The name of a column in a tidy data frame for vectors of
+  irreversibility, i.e., the exergy destroyed by thermodynamic
+  inefficiencies in industries of a conversion chain.
 
 ## Details
 

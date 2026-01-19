@@ -385,7 +385,7 @@ OurECC |>
 #> Warning: `verify_SUT_energy_balance_with_units()` was deprecated in Recca 0.1.65.
 #> ℹ verify_SUT_energy_balance_with_units() seemed like a good idea at the time,
 #>   but we never use it.
-#> This warning is displayed once every 8 hours.
+#> This warning is displayed once per session.
 #> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
 #> generated.
 #> Rows: 1

@@ -13,7 +13,7 @@ This function performs the endogenization."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.66</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.67</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,7 +43,7 @@ This function performs the endogenization."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Endogenize losses into PSUT matrices</h1>
-      <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/v0.1.66/R/endogenize_losses.R" class="external-link"><code>R/endogenize_losses.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/master/R/endogenize_losses.R" class="external-link"><code>R/endogenize_losses.R</code></a></small>
       <div class="d-none name"><code>endogenize_losses.Rd</code></div>
     </div>
 
@@ -64,7 +64,7 @@ This function performs the endogenization.</p>
 <span>  Y <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">Y</span>,</span>
 <span>  intra_industry_balance <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="balance_cols.html">balance_cols</a></span><span class="op">$</span><span class="va">intra_industry_balance_colname</span>,</span>
 <span>  losses_alloc <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="balance_cols.html">balance_cols</a></span><span class="op">$</span><span class="va">losses_alloc_colname</span>,</span>
-<span>  loss_sector <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="balance_cols.html">balance_cols</a></span><span class="op">$</span><span class="va">losses_sector</span>,</span>
+<span>  losses_sector <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="balance_cols.html">balance_cols</a></span><span class="op">$</span><span class="va">losses_sector</span>,</span>
 <span>  replace_cols <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  clean <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  tol <span class="op">=</span> <span class="fl">1e-06</span>,</span>
@@ -86,26 +86,30 @@ Default is <code>NULL</code>.</p></dd>
 <dt id="arg-r">R<a class="anchor" aria-label="anchor" href="#arg-r"></a></dt>
 <dd><p>Resources (<strong>R</strong>) matrix or name of the column in <code>.sutmats</code>
 that contains same.
-Default is "R".</p></dd>
+Default is <a href="psut_cols.html">psut_cols</a><code>$R</code> or
+"R".</p></dd>
 
 
 <dt id="arg-u">U<a class="anchor" aria-label="anchor" href="#arg-u"></a></dt>
 <dd><p>Use (<strong>U</strong>) matrix or name of the column in <code>.sutmats</code>
 that contains same.
 Necessary for verifying calculating losses.
-Default is "U".</p></dd>
+Default is <a href="psut_cols.html">psut_cols</a><code>$U</code> or
+"U".</p></dd>
 
 
 <dt id="arg-v">V<a class="anchor" aria-label="anchor" href="#arg-v"></a></dt>
 <dd><p>Make (<strong>V</strong>) matrix or name of the column in <code>.sutmats</code>
 that contains same.
-Default is "V".</p></dd>
+Default is <a href="psut_cols.html">psut_cols</a><code>$V</code> or
+"V".</p></dd>
 
 
 <dt id="arg-y">Y<a class="anchor" aria-label="anchor" href="#arg-y"></a></dt>
 <dd><p>Final demand (<strong>Y</strong>) matrix or name
 of the column in <code>.sutmats</code> that contains same.
-Default is "Y".</p></dd>
+Default is <a href="psut_cols.html">psut_cols</a><code>$Y</code> or
+"Y".</p></dd>
 
 
 <dt id="arg-intra-industry-balance">intra_industry_balance<a class="anchor" aria-label="anchor" href="#arg-intra-industry-balance"></a></dt>
@@ -127,7 +131,7 @@ Default is <a href="balance_cols.html">balance_cols</a><code>$losses_alloc_colna
 "LossesAlloc".</p></dd>
 
 
-<dt id="arg-loss-sector">loss_sector<a class="anchor" aria-label="anchor" href="#arg-loss-sector"></a></dt>
+<dt id="arg-losses-sector">losses_sector<a class="anchor" aria-label="anchor" href="#arg-losses-sector"></a></dt>
 <dd><p>The string name of the sector
 that will absorb losses in the <strong>Y</strong> matrix.
 Default is <a href="balance_cols.html">balance_cols</a><code>$losses_sector</code>
@@ -160,11 +164,13 @@ Default is <code>1e-6</code>.</p></dd>
 
 
 <dt id="arg-v-prime">V_prime<a class="anchor" aria-label="anchor" href="#arg-v-prime"></a></dt>
-<dd><p>The name of the <strong>V</strong> matrix with endogenized losses.</p></dd>
+<dd><p>The name of the <strong>V</strong> matrix with endogenized losses.
+Default is "V_prime".</p></dd>
 
 
 <dt id="arg-y-prime">Y_prime<a class="anchor" aria-label="anchor" href="#arg-y-prime"></a></dt>
-<dd><p>The name of the <strong>Y</strong> matrix with endogenized losses.</p></dd>
+<dd><p>The name of the <strong>Y</strong> matrix with endogenized losses.
+Default is "Y_prime".</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -184,7 +190,7 @@ replaces the existing
 <code>V</code> and <code>Y</code> matrices with <code>V_prime</code> and <code>Y_prime</code>,
 respectively.</p>
 <p>All losses are allocated to the
-<code>loss_sector</code> column in the <strong>Y</strong> matrix,
+<code>losses_sector</code> column in the <strong>Y</strong> matrix,
 by default named
 <a href="balance_cols.html">balance_cols</a><code>$losses_sector or "</code>r Recca::balance_cols$losses_sector`".</p><div class="section">
 <h3 id="endogenizing-algorithm">Endogenizing algorithm<a class="anchor" aria-label="anchor" href="#endogenizing-algorithm"></a></h3>
@@ -200,7 +206,7 @@ the losses_allocation matrix (<code>losses_alloc</code>)
 to obtain a matrix to be added to <strong>V</strong>.</p></li>
 <li><p>Transpose the matrix to be added to <strong>V</strong>,
 calculate rowsums, and
-set the column name to <code>loss_sector</code>
+set the column name to <code>losses_sector</code>
 to obtain a matrix to be added to <strong>Y</strong>.</p></li>
 <li><p>Add the matrices to <strong>V</strong> and <strong>Y</strong>, respectively.</p></li>
 </ul></div>

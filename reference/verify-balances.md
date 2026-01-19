@@ -15,6 +15,7 @@ verify_inter_industry_balance(
   V = Recca::psut_cols$V,
   Y = Recca::psut_cols$Y,
   balances = Recca::balance_cols$inter_industry_balance_colname,
+  error_on_imbalance = FALSE,
   tol = 1e-06,
   balanced = Recca::balance_cols$inter_industry_balanced_colname,
   delete_balance_if_verified = FALSE
@@ -25,6 +26,7 @@ verify_intra_industry_balance(
   U = Recca::psut_cols$U,
   V = Recca::psut_cols$V,
   balances = Recca::balance_cols$intra_industry_balance_colname,
+  error_on_imbalance = FALSE,
   tol = 1e-06,
   balanced = Recca::balance_cols$intra_industry_balanced_colname,
   delete_balance_if_verified = FALSE
@@ -66,6 +68,12 @@ verify_intra_industry_balance(
   the default is
   [balance_cols](https://matthewheun.github.io/Recca/reference/balance_cols.md)`$intra_industry_balance_colname`
   or "SUTIntraIndustryBalance".
+
+- error_on_imbalance:
+
+  A boolean that tells whether to stop execution if an imbalance is
+  found (within `tol`). Default is `FALSE`, meaning a warning will be
+  generated when an imbalance is found.
 
 - tol:
 
@@ -122,9 +130,11 @@ conversion chains that do not include wastes or losses.
 If every conversion chain in `.sutmats` is balanced, `.sutmats` is
 returned with an additional column (called `balanced_colname`), and
 execution returns to the caller. If balance is not observed for one or
-more of the rows in `.sutmats`, a warning is emitted, and the additional
-column (`balanced_colname`) indicates where the problem occurred, with
-`FALSE` showing where products are not balanced to within `tol`.
+more of the rows in `.sutmats`, a warning is emitted (by default), and
+the additional column (`balanced_colname`) indicates where the problem
+occurred, with `FALSE` showing where products are not balanced to within
+`tol`. If `error_on_imbalance` is set `TRUE`, an error is emitted, and
+execution stops.
 
 Typically, one would call `calc_int*_industry_balance()` before calling
 `verify_int*_industry_balance()`. See the examples.

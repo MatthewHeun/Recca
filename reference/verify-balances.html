@@ -13,7 +13,7 @@ Intra-industry balances are across industries and performed per industry."></hea
 
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.66</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.67</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,7 +43,7 @@ Intra-industry balances are across industries and performed per industry."></hea
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Verify inter- and intra-industry balances for PSUT (<strong>RUVY</strong>) matrices</h1>
-      <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/v0.1.66/R/balances.R" class="external-link"><code>R/balances.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/master/R/balances.R" class="external-link"><code>R/balances.R</code></a></small>
       <div class="d-none name"><code>verify-balances.Rd</code></div>
     </div>
 
@@ -63,6 +63,7 @@ Intra-industry balances are across industries and performed per industry.</p>
 <span>  V <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">V</span>,</span>
 <span>  Y <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">Y</span>,</span>
 <span>  balances <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="balance_cols.html">balance_cols</a></span><span class="op">$</span><span class="va">inter_industry_balance_colname</span>,</span>
+<span>  error_on_imbalance <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  tol <span class="op">=</span> <span class="fl">1e-06</span>,</span>
 <span>  balanced <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="balance_cols.html">balance_cols</a></span><span class="op">$</span><span class="va">inter_industry_balanced_colname</span>,</span>
 <span>  delete_balance_if_verified <span class="op">=</span> <span class="cn">FALSE</span></span>
@@ -73,6 +74,7 @@ Intra-industry balances are across industries and performed per industry.</p>
 <span>  U <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">U</span>,</span>
 <span>  V <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">V</span>,</span>
 <span>  balances <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="balance_cols.html">balance_cols</a></span><span class="op">$</span><span class="va">intra_industry_balance_colname</span>,</span>
+<span>  error_on_imbalance <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  tol <span class="op">=</span> <span class="fl">1e-06</span>,</span>
 <span>  balanced <span class="op">=</span> <span class="fu">Recca</span><span class="fu">::</span><span class="va"><a href="balance_cols.html">balance_cols</a></span><span class="op">$</span><span class="va">intra_industry_balanced_colname</span>,</span>
 <span>  delete_balance_if_verified <span class="op">=</span> <span class="cn">FALSE</span></span>
@@ -120,6 +122,13 @@ or "SUTInterIndustryBalance".
 For <code>verify_intra_industry_balances()</code>,
 the default is <a href="balance_cols.html">balance_cols</a><code>$intra_industry_balance_colname</code>
 or "SUTIntraIndustryBalance".</p></dd>
+
+
+<dt id="arg-error-on-imbalance">error_on_imbalance<a class="anchor" aria-label="anchor" href="#arg-error-on-imbalance"></a></dt>
+<dd><p>A boolean that tells whether to stop execution
+if an imbalance is found (within <code>tol</code>).
+Default is <code>FALSE</code>, meaning a warning will be generated
+when an imbalance is found.</p></dd>
 
 
 <dt id="arg-tol">tol<a class="anchor" aria-label="anchor" href="#arg-tol"></a></dt>
@@ -197,11 +206,13 @@ and for conversion chains that do not include wastes or losses.</p>
 execution returns to the caller.
 If balance is not observed for one or more of the rows
 in <code>.sutmats</code>,
-a warning is emitted, and
+a warning is emitted (by default), and
 the additional column (<code>balanced_colname</code>)
 indicates where the problem occurred, with <code>FALSE</code>
 showing where products are not balanced
-to within <code>tol</code>.</p>
+to within <code>tol</code>.
+If <code>error_on_imbalance</code> is set <code>TRUE</code>, an error is emitted, and
+execution stops.</p>
 <p>Typically, one would call <code>calc_int*_industry_balance()</code>
 before calling <code>verify_int*_industry_balance()</code>.
 See the examples.</p>

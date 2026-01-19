@@ -11,7 +11,7 @@ to balance functions throughout the Recca package."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.66</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.67</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,7 +41,7 @@ to balance functions throughout the Recca package."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Balance column names</h1>
-      <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/v0.1.66/R/data.R" class="external-link"><code>R/data.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/master/R/data.R" class="external-link"><code>R/data.R</code></a></small>
       <div class="d-none name"><code>balance_cols.Rd</code></div>
     </div>
 
@@ -58,7 +58,7 @@ to balance functions throughout the <code>Recca</code> package.</p>
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>A string list with 13 entries.</p><dl><dt>inter_industry_balance_colname</dt>
+    <p>A string list with 15 entries.</p><dl><dt>inter_industry_balance_colname</dt>
 <dd><p>The name of a column that contains inter-industry balance vectors.</p></dd>
 
 <dt>inter_industry_balanced_colname</dt>
@@ -85,6 +85,9 @@ to balance functions throughout the <code>Recca</code> package.</p>
 <dt>losses_alloc_colname</dt>
 <dd><p>The name of a column that contains loss allocation matrices.</p></dd>
 
+<dt>irrev_alloc_colname</dt>
+<dd><p>The name of a column that contains loss allocation matrices.</p></dd>
+
 <dt>default_losses_alloc_mat</dt>
 <dd><p>The default losses allocation matrix with 1x1 dimensions, a row named "All industries", a column named "Waste heat", and a value of <code>1</code>.</p></dd>
 
@@ -96,6 +99,9 @@ to balance functions throughout the <code>Recca</code> package.</p>
 
 <dt>losses_sector</dt>
 <dd><p>The name of a column in <strong>Y</strong> that contains losses calculated from intra-industry balances.</p></dd>
+
+<dt>irrev_sector</dt>
+<dd><p>The name of a column in <strong>Y</strong> that contains irreversibilities (exergy destruction) calculated from intra-industry balances.</p></dd>
 
 
 </dl></div>
@@ -130,6 +136,9 @@ to balance functions throughout the <code>Recca</code> package.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $losses_alloc_colname</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LossesAlloc"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $irrev_alloc_colname</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "IrrevAlloc"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $default_losses_alloc_mat</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                Waste</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> All industries     1</span>
@@ -151,6 +160,9 @@ to balance functions throughout the <code>Recca</code> package.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $losses_sector</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Transformation losses"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $irrev_sector</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Irreversibilities"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>

@@ -15,7 +15,7 @@ endogenize_losses(
   Y = Recca::psut_cols$Y,
   intra_industry_balance = Recca::balance_cols$intra_industry_balance_colname,
   losses_alloc = Recca::balance_cols$losses_alloc_colname,
-  loss_sector = Recca::balance_cols$losses_sector,
+  losses_sector = Recca::balance_cols$losses_sector,
   replace_cols = FALSE,
   clean = FALSE,
   tol = 1e-06,
@@ -34,22 +34,30 @@ endogenize_losses(
 - R:
 
   Resources (**R**) matrix or name of the column in `.sutmats` that
-  contains same. Default is "R".
+  contains same. Default is
+  [psut_cols](https://matthewheun.github.io/Recca/reference/psut_cols.md)`$R`
+  or "R".
 
 - U:
 
   Use (**U**) matrix or name of the column in `.sutmats` that contains
-  same. Necessary for verifying calculating losses. Default is "U".
+  same. Necessary for verifying calculating losses. Default is
+  [psut_cols](https://matthewheun.github.io/Recca/reference/psut_cols.md)`$U`
+  or "U".
 
 - V:
 
   Make (**V**) matrix or name of the column in `.sutmats` that contains
-  same. Default is "V".
+  same. Default is
+  [psut_cols](https://matthewheun.github.io/Recca/reference/psut_cols.md)`$V`
+  or "V".
 
 - Y:
 
   Final demand (**Y**) matrix or name of the column in `.sutmats` that
-  contains same. Default is "Y".
+  contains same. Default is
+  [psut_cols](https://matthewheun.github.io/Recca/reference/psut_cols.md)`$Y`
+  or "Y".
 
 - intra_industry_balance:
 
@@ -67,7 +75,7 @@ endogenize_losses(
   [balance_cols](https://matthewheun.github.io/Recca/reference/balance_cols.md)`$losses_alloc_colname`
   or "LossesAlloc".
 
-- loss_sector:
+- losses_sector:
 
   The string name of the sector that will absorb losses in the **Y**
   matrix. Default is
@@ -94,11 +102,13 @@ endogenize_losses(
 
 - V_prime:
 
-  The name of the **V** matrix with endogenized losses.
+  The name of the **V** matrix with endogenized losses. Default is
+  "V_prime".
 
 - Y_prime:
 
-  The name of the **Y** matrix with endogenized losses.
+  The name of the **Y** matrix with endogenized losses. Default is
+  "Y_prime".
 
 ## Value
 
@@ -113,7 +123,7 @@ demand (**Y**). By default, this function creates new `V_prime` and
 replaces the existing `V` and `Y` matrices with `V_prime` and `Y_prime`,
 respectively.
 
-All losses are allocated to the `loss_sector` column in the **Y**
+All losses are allocated to the `losses_sector` column in the **Y**
 matrix, by default named
 [balance_cols](https://matthewheun.github.io/Recca/reference/balance_cols.md)`$losses_sector or "`r
 Recca::balance_cols\$losses_sector\`".
@@ -132,7 +142,7 @@ The endogenizing algorithm is this:
   matrix (`losses_alloc`) to obtain a matrix to be added to **V**.
 
 - Transpose the matrix to be added to **V**, calculate rowsums, and set
-  the column name to `loss_sector` to obtain a matrix to be added to
+  the column name to `losses_sector` to obtain a matrix to be added to
   **Y**.
 
 - Add the matrices to **V** and **Y**, respectively.

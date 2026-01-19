@@ -11,7 +11,7 @@ throughout the Recca package."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">Recca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.66</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.67</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,7 +41,7 @@ throughout the Recca package."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Physical Supply-Use Table (PSUT) data frame column names</h1>
-      <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/v0.1.66/R/data.R" class="external-link"><code>R/data.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/Recca/blob/master/R/data.R" class="external-link"><code>R/data.R</code></a></small>
       <div class="d-none name"><code>psut_cols.Rd</code></div>
     </div>
 
@@ -58,7 +58,7 @@ throughout the <code>Recca</code> package.</p>
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>A string list with 26 entries.</p><dl><dt>resources,R</dt>
+    <p>A string list with 28 entries.</p><dl><dt>resources,R</dt>
 <dd><p>The name of a column in a wide-by-matrices data frame containing resource (<code>R</code>) matrices.</p></dd>
 
 <dt>U_feed</dt>
@@ -116,7 +116,13 @@ throughout the <code>Recca</code> package.</p>
 <dd><p>The name of a column in a tidy data frame containing names of energy types.</p></dd>
 
 <dt>last_stage</dt>
-<dd><p>The name of a column in a tidy data frame last stages of the energy conversion chain.</p></dd>
+<dd><p>The name of a column in a tidy data frame identifying the last stage of the energy conversion chain.</p></dd>
+
+<dt>exergy_loss</dt>
+<dd><p>The name of a column in a tidy data frame for vectors of exergy losses, i.e., the exergy associated with waste mass or energy.</p></dd>
+
+<dt>irreversibility</dt>
+<dd><p>The name of a column in a tidy data frame for vectors of irreversibility, i.e., the exergy destroyed by thermodynamic inefficiencies in industries of a conversion chain.</p></dd>
 
 
 </dl></div>

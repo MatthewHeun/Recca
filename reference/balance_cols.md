@@ -12,7 +12,7 @@ balance_cols
 
 ## Format
 
-A string list with 13 entries.
+A string list with 15 entries.
 
 - inter_industry_balance_colname:
 
@@ -54,6 +54,10 @@ A string list with 13 entries.
 
   The name of a column that contains loss allocation matrices.
 
+- irrev_alloc_colname:
+
+  The name of a column that contains loss allocation matrices.
+
 - default_losses_alloc_mat:
 
   The default losses allocation matrix with 1x1 dimensions, a row named
@@ -74,6 +78,11 @@ A string list with 13 entries.
 
   The name of a column in **Y** that contains losses calculated from
   intra-industry balances.
+
+- irrev_sector:
+
+  The name of a column in **Y** that contains irreversibilities (exergy
+  destruction) calculated from intra-industry balances.
 
 ## Examples
 
@@ -106,6 +115,9 @@ balance_cols
 #> $losses_alloc_colname
 #> [1] "LossesAlloc"
 #> 
+#> $irrev_alloc_colname
+#> [1] "IrrevAlloc"
+#> 
 #> $default_losses_alloc_mat
 #>                Waste
 #> All industries     1
@@ -127,5 +139,8 @@ balance_cols
 #> 
 #> $losses_sector
 #> [1] "Transformation losses"
+#> 
+#> $irrev_sector
+#> [1] "Irreversibilities"
 #> 
 ```
