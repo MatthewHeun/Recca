@@ -17,7 +17,7 @@
 #' respectively.
 #'
 #' All losses are allocated to the
-#' `loss_sector` column in the **Y** matrix,
+#' `losses_sector` column in the **Y** matrix,
 #' by default named
 #' [Recca::balance_cols]`$losses_sector or
 #' "`r Recca::balance_cols$losses_sector`".
@@ -36,7 +36,7 @@
 #'   to obtain a matrix to be added to **V**.
 #' - Transpose the matrix to be added to **V**,
 #'   calculate rowsums, and
-#'   set the column name to `loss_sector`
+#'   set the column name to `losses_sector`
 #'   to obtain a matrix to be added to **Y**.
 #' - Add the matrices to **V** and **Y**, respectively.
 #'
@@ -120,21 +120,25 @@
 #'                 Default is `NULL`.
 #' @param R Resources (**R**) matrix or name of the column in `.sutmats`
 #'          that contains same.
-#'          Default is "R".
+#'          Default is [Recca::psut_cols]`$R` or
+#'          "`r Recca::psut_cols$R`".
 #' @param U Use (**U**) matrix or name of the column in `.sutmats`
 #'          that contains same.
 #'          Necessary for verifying calculating losses.
-#'          Default is "U".
+#'          Default is [Recca::psut_cols]`$U` or
+#'          "`r Recca::psut_cols$U`".
 #' @param V Make (**V**) matrix or name of the column in `.sutmats`
 #'          that contains same.
-#'          Default is "V".
+#'          Default is [Recca::psut_cols]`$V` or
+#'          "`r Recca::psut_cols$V`".
 #' @param Y Final demand (**Y**) matrix or name
 #'          of the column in `.sutmats` that contains same.
-#'          Default is "Y".
+#'          Default is [Recca::psut_cols]`$Y` or
+#'          "`r Recca::psut_cols$Y`".
 #' @param intra_industry_balance A vector or the name of the column containing
 #'                               intra-industry balance vectors.
 #'                               If missing, losses are calculated internally
-#'                               with [calc_intra_industry_balance()]
+#'                               with [Recca::calc_intra_industry_balance()]
 #'                               before endogenizing.
 #'                               Default is
 #'                               [Recca::balance_cols]`$intra_industry_balance_colname` or
@@ -144,18 +148,18 @@
 #'                     See details for structure of this matrix.
 #'                     Default is [Recca::balance_cols]`$losses_alloc_colname` or
 #'                     "`r Recca::balance_cols$losses_alloc_colname`".
-#' @param loss_sector The string name of the sector
-#'                    that will absorb losses in the **Y** matrix.
-#'                    Default is [Recca::balance_cols]`$losses_sector`
-#'                    or "`r Recca::balance_cols$losses_sector`".
+#' @param losses_sector The string name of the sector
+#'                      that will absorb losses in the **Y** matrix.
+#'                      Default is [Recca::balance_cols]`$losses_sector`
+#'                      or "`r Recca::balance_cols$losses_sector`".
 #' @param replace_cols A boolean that tells whether to
 #'                     (a) replace
 #'                         the `V` and `Y` columns with
 #'                         `V_prime` and `Y_prime` columns, respectively and
 #'                     (b) delete the `V_prime`, `Y_prime`, `balance_colname`, and
 #'                         `losses_alloc_colname` columns
-#'                     after endogenizing the losses
-#'                     when `.sutmats` is a data frame or a list.
+#'                         after endogenizing the losses
+#'                         when `.sutmats` is a data frame or a list.
 #'                     Default is `FALSE`.
 #' @param clean A boolean that tells whether the outgoing
 #'              `V_prime` and `Y_prime` matrices should have
@@ -165,7 +169,9 @@
 #'            loss allocation matrices.
 #'            Default is `1e-6`.
 #' @param V_prime The name of the **V** matrix with endogenized losses.
+#'                Default is "V_prime".
 #' @param Y_prime The name of the **Y** matrix with endogenized losses.
+#'                Default is "Y_prime".
 #'
 #' @returns A version of the conversion chain with losses endogenized.
 #'
@@ -208,11 +214,11 @@ endogenize_losses <- function(
     Y = Recca::psut_cols$Y,
     intra_industry_balance = Recca::balance_cols$intra_industry_balance_colname,
     losses_alloc = Recca::balance_cols$losses_alloc_colname,
-    loss_sector = Recca::balance_cols$losses_sector,
+    losses_sector = Recca::balance_cols$losses_sector,
     replace_cols = FALSE,
     clean = FALSE,
     tol = 1e-6,
-    # Output columns
+    # Output matrix names
     V_prime = "V_prime",
     Y_prime = "Y_prime") {
 
@@ -230,8 +236,11 @@ endogenize_losses <- function(
     # If intra-industry balances are not available, calculate them
     if (is.null(balance_vec)) {
       # Calculate intra-industry balances
-      balance_vec <- calc_intra_industry_balance(U = U_mat, V = V_mat, balance = intra_industry_balance) |>
-        magrittr::extract2(intra_industry_balance)
+      balance_vec_name <- Recca::balance_cols$intra_industry_balance_colname
+      balance_vec <- calc_intra_industry_balance(U = U_mat,
+                                                 V = V_mat,
+                                                 balance = balance_vec_name) |>
+        magrittr::extract2(balance_vec_name)
     }
 
     # Check for the case where losses_alloc_mat has only one row.
@@ -281,7 +290,7 @@ endogenize_losses <- function(
     # to obtain the matrix to be added to Y
     add_to_Y <- add_to_V |>
       matsbyname::transpose_byname() |>
-      matsbyname::rowsums_byname(colname = loss_sector)
+      matsbyname::rowsums_byname(colname = losses_sector)
 
     # Calculate Y_prime
     Y_prime_mat <- matsbyname::sum_byname(Y_mat, add_to_Y)
@@ -323,3 +332,5 @@ endogenize_losses <- function(
   }
   return(out)
 }
+
+

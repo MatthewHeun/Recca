@@ -155,11 +155,13 @@ NULL
 #' execution returns to the caller.
 #' If balance is not observed for one or more of the rows
 #' in `.sutmats`,
-#' a warning is emitted, and
+#' a warning is emitted (by default), and
 #' the additional column (`balanced_colname`)
 #' indicates where the problem occurred, with `FALSE`
 #' showing where products are not balanced
 #' to within `tol`.
+#' If `error_on_imbalance` is set `TRUE`, an error is emitted, and
+#' execution stops.
 #'
 #' Typically, one would call `calc_int*_industry_balance()`
 #' before calling `verify_int*_industry_balance()`.
@@ -186,6 +188,10 @@ NULL
 #'                 For `verify_intra_industry_balances()`,
 #'                 the default is [Recca::balance_cols]`$intra_industry_balance_colname`
 #'                 or "`r Recca::balance_cols$intra_industry_balance_colname`".
+#' @param error_on_imbalance A boolean that tells whether to stop execution
+#'                           if an imbalance is found (within `tol`).
+#'                           Default is `FALSE`, meaning a warning will be generated
+#'                           when an imbalance is found.
 #' @param tol The maximum amount by which products can be out of balance
 #'            and still be considered balanced.
 #'            Default is `1e-6`.
@@ -281,6 +287,7 @@ verify_inter_industry_balance <- function(.sutmats = NULL,
                                           V = Recca::psut_cols$V,
                                           Y = Recca::psut_cols$Y,
                                           balances = Recca::balance_cols$inter_industry_balance_colname,
+                                          error_on_imbalance = FALSE,
                                           # Tolerance
                                           tol = 1e-6,
                                           # Output name
@@ -307,9 +314,14 @@ verify_inter_industry_balance <- function(.sutmats = NULL,
   out <- matsindf::matsindf_apply(.sutmats, FUN = verify_func_inter, R_mat = R, U_mat = U, V_mat = V, Y_mat = Y,
                                   bal_vector = balances)
   if (!all(as.logical(out[[balanced]]))) {
-    warning(paste0("Products are not conserved in verify_inter_industry_balance(). See column ",
-                   balanced,
-                   "."))
+    msg <- paste0("Products are not conserved in Recca::verify_inter_industry_balance(). See column ",
+                  balanced,
+                  ".")
+    if (error_on_imbalance) {
+      stop(msg)
+    } else {
+      warning(msg)
+    }
   } else {
     if (is.data.frame(.sutmats) & delete_balance_if_verified) {
       out[balances] <- NULL
@@ -348,6 +360,7 @@ verify_intra_industry_balance <- function(.sutmats = NULL,
                                           U = Recca::psut_cols$U,
                                           V = Recca::psut_cols$V,
                                           balances = Recca::balance_cols$intra_industry_balance_colname,
+                                          error_on_imbalance = FALSE,
                                           # Tolerance
                                           tol = 1e-6,
                                           # Output name
@@ -371,8 +384,13 @@ verify_intra_industry_balance <- function(.sutmats = NULL,
 
   out <- matsindf::matsindf_apply(.sutmats, FUN = verify_func_intra, U_mat = U, V_mat = V,
                                   bal_vector = balances)
-  if (!all(out[[balanced]] |> as.logical())) {
-    warning(paste0("Industries are not balanced in verify_intra_industry_balance(). See column ", balanced, "."))
+  if (!all(as.logical(out[[balanced]]))) {
+    msg <- paste0("Industries are not balanced in verify_intra_industry_balance(). See column ", balanced, ".")
+    if (error_on_imbalance) {
+      stop(msg)
+    } else {
+      warning(msg)
+    }
   } else {
     if (is.data.frame(.sutmats) & delete_balance_if_verified) {
       out[balances] <- NULL

@@ -11,7 +11,24 @@ Cite all releases of `Recca` with doi
 which always resolves to the latest release.
 
 
-## Recca 0.1.66 (2026-01-07)
+## Recca 0.1.67 (2026-01-19) 
+
+* `verify_*_industry_balance()` functions gain argument `error_on_imbalance`
+  which, if `TRUE`, causes an error on imbalance
+  instead of a warning.
+  Default is `FALSE`.
+* `extend_to_exergy()` gains new argument `endogenize_losses_irrev`
+  which (when `TRUE`) makes the function
+  endogenize losses of conserved quantities and 
+  calculate irreversibilities.
+  Default is `FALSE`.
+* `write_ecc_to_excel()` now sorts rows of **R** and columns of **Y**.
+* New tests for new features.
+    - Now up to 948 tests, all passing.
+    - Test coverage remains at 100%.
+
+
+## Recca 0.1.66 (2026-01-07) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18176684.svg)](https://doi.org/10.5281/zenodo.18176684)
 
 * `endogenize_losses()` gains new argument `clean`.
   When `TRUE` (default is `FALSE`), 

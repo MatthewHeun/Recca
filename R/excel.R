@@ -216,12 +216,16 @@ write_ecc_to_excel <- function(.psut_data = NULL,
     V_mat <- completedUV[[2]]
     # Ensure same columns for R and V
     completedRV <- matsbyname::complete_and_sort(R_mat, V_mat, margin = 2)
-    R_mat <- completedRV[[1]]
+    R_mat <- completedRV[[1]] |>
+      # Sort rows for consistency
+      matsbyname::sort_rows_cols(margin = 1)
     V_mat <- completedRV[[2]]
     # Ensure same rows for U and Y
     completedUY <- matsbyname::complete_and_sort(U_mat, Y_mat, margin = 1)
     U_mat <- completedUY[[1]]
-    Y_mat <- completedUY[[2]]
+    Y_mat <- completedUY[[2]] |>
+      # Sort columns for consistency
+      matsbyname::sort_rows_cols(margin = 2)
     # Ensure same rows and cols for U_EIOU and U
     completedU_eiou <- matsbyname::complete_and_sort(U_eiou_mat, U_mat, margin = c(1, 2))
     U_eiou_mat <- completedU_eiou[[1]]

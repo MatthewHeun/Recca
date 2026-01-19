@@ -41,13 +41,3 @@ Use this template to describe feature branches.
 
 
 
-#### extend2X
-
-* Purpose: Extend the useful details matrix from energy to exergy
-* Branched from: develop
-* Next step: Complete the function `extend_useful_details_to_exergy`
-* Author: MKH
-* Date: 23 Jan 2023
-
-
-

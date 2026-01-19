@@ -35,7 +35,9 @@ psut_cols <- list(resources = "R",
                   year = "Year",
                   method = "Method",
                   energy_type = "EnergyType",
-                  last_stage = "LastStage")
+                  last_stage = "LastStage",
+                  exergy_loss = "ExergyLoss",
+                  irreversibility = "Irreversibility")
 usethis::use_data(psut_cols, overwrite = TRUE)
 
 
@@ -104,6 +106,7 @@ balance_cols <- list(inter_industry_balance_colname = "SUTInterIndustryBalance",
                      across_industry_balance_colname = "SUTAcrossIndustryBalance",
                      across_industry_balanced_colname = "SUTAcrossIndustryBalanced",
                      losses_alloc_colname = "LossesAlloc",
+                     irrev_alloc_colname = "IrrevAlloc",
                      default_losses_alloc_mat = matrix(1,
                                                        dimnames = list("All industries",
                                                                        "Waste")) |>
@@ -115,7 +118,8 @@ balance_cols <- list(inter_industry_balance_colname = "SUTInterIndustryBalance",
                        matsbyname::setrowtype(Recca::row_col_types$industry_type) |>
                        matsbyname::setcoltype(Recca::row_col_types$product_type),
                      waste = "Waste",
-                     losses_sector = "Transformation losses")
+                     losses_sector = "Transformation losses",
+                     irrev_sector = "Irreversibilities")
 usethis::use_data(balance_cols, overwrite = TRUE)
 
 

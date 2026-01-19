@@ -29,7 +29,9 @@
 #' \item{year}{The name of a column in a tidy data frame containing years.}
 #' \item{method}{The name of a column in a tidy data frame containing the method for accounting for the primary equivalent of renewable electricity.}
 #' \item{energy_type}{The name of a column in a tidy data frame containing names of energy types.}
-#' \item{last_stage}{The name of a column in a tidy data frame last stages of the energy conversion chain.}
+#' \item{last_stage}{The name of a column in a tidy data frame identifying the last stage of the energy conversion chain.}
+#' \item{exergy_loss}{The name of a column in a tidy data frame for vectors of exergy losses, i.e., the exergy associated with waste mass or energy.}
+#' \item{irreversibility}{The name of a column in a tidy data frame for vectors of irreversibility, i.e., the exergy destroyed by thermodynamic inefficiencies in industries of a conversion chain.}
 #' }
 #'
 #' @examples
@@ -124,10 +126,12 @@
 #' \item{across_industry_balance_colname}{The name of a column that contains intra-industry balance vectors.}
 #' \item{across_industry_balanced_colname}{The name of a column that contains intra-industry balance vectors are all **0**.}
 #' \item{losses_alloc_colname}{The name of a column that contains loss allocation matrices.}
+#' \item{irrev_alloc_colname}{The name of a column that contains loss allocation matrices.}
 #' \item{default_losses_alloc_mat}{The default losses allocation matrix with 1x1 dimensions, a row named "All industries", a column named "Waste heat", and a value of `1`.}
 #' \item{default_destruction_alloc_mat}{The default losses allocation matrix with 1x1 dimensions, a row named "All industries", a column named "Destroyed exergy", and a value of `1`.}
 #' \item{waste}{The default name of a column in **V** and row in **Y** that contains losses calculated from intra-industry balances.}
 #' \item{losses_sector}{The name of a column in **Y** that contains losses calculated from intra-industry balances.}
+#' \item{irrev_sector}{The name of a column in **Y** that contains irreversibilities (exergy destruction) calculated from intra-industry balances.}
 #' }
 #'
 #' @examples
