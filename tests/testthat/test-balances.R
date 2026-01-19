@@ -69,6 +69,11 @@ test_that("SUT matrix energy balance fails when a number has changed", {
     magrittr::extract2(2) |>
     expect_equal(FALSE) |>
     expect_warning()
+
+  # Make sure we get an error when requested
+  calc_inter_industry_balance(R = R, U = U, V = V, Y = Y) |>
+    verify_inter_industry_balance(error_on_imbalance = TRUE) |>
+    expect_error()
 })
 
 
@@ -285,7 +290,6 @@ test_that("verify_intra_industry_balance() warns of imbalance", {
     verify_intra_industry_balance() |>
     expect_warning(regexp = "Industries are not balanced")
 
-
   expect_warning(
     res <- UKEnergy2000mats |>
       dplyr::filter(LastStage %in% c("Final", "Useful")) |>
@@ -302,4 +306,11 @@ test_that("verify_intra_industry_balance() warns of imbalance", {
     tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
     verify_intra_industry_balance() |>
     expect_warning(regexp = "Industries are not balanced")
+
+  # Check that an error is given if requested
+  UKEnergy2000mats |>
+    dplyr::filter(LastStage %in% c("Final", "Useful")) |>
+    tidyr::pivot_wider(names_from = matrix.name, values_from = matrix) |>
+    verify_intra_industry_balance(error_on_imbalance = TRUE) |>
+    expect_error(regexp = "Industries are not balanced")
 })

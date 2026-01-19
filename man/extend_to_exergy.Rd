@@ -277,11 +277,53 @@ The \code{energy_type} column is filled with
 \examples{
 sutmats <- UKEnergy2000mats |>
   # Put in wide-by-matrix format.
-  tidyr::spread(key = matrix.name, value = matrix) |>
+  tidyr::pivot_wider(names_from = matrix.name,
+                     values_from = matrix) |>
   # Eliminate services ECCs.
-  dplyr::filter(LastStage \%in\% c("Final", "Useful"))  |>
+  dplyr::filter(LastStage \%in\% c("Final", "Useful"))
+# Do not calculate losses or irreversibilities (exergy destruction)
+sutmats |>
   dplyr::mutate(
     phi = RCLabels::make_list(Recca::phi_vec, n = dplyr::n(), lenx = 1)
-  )
-extend_to_exergy(sutmats)
+  ) |>
+  extend_to_exergy()
+# Repeat, this time calculating losses and irreversibilities
+# Create the losses allocation matrix
+losses_alloc_mat <- matrix(1,
+  dimnames = list("All industries",
+                  "MTH.200.C -> Transformation losses")) |>
+  matsbyname::setrowtype("Industry") |>
+  matsbyname::setcoltype("Product")
+losses_alloc_mat
+# Create a phi vector
+phi_vec <- matrix(c(1.06, 1.04,    # Crude, NG
+                    1.06, 1, 1.06, # Diesel, Elect, Petrol
+                    1,             # MD
+                    0.143616257,   # LTH (assumed 50 C)
+                    0.956,         # Light
+                    0.36986157),   # MTH.200.C
+                  dimnames = list(c("Crude", "NG",
+                                    "Diesel", "Elect", "Petrol",
+                                    "MD",
+                                    "LTH",
+                                    "Light",
+                                    "MTH.200.C"),
+                                  "phi")) |>
+  matsbyname::setrowtype("Product") |>
+  matsbyname::setcoltype("phi")
+phi_vec
+sutmats |>
+  dplyr::mutate(
+    "{Recca::balance_cols$losses_alloc_colname}" :=
+      RCLabels::make_list(x = losses_alloc_mat, n = 2,lenx = 1),
+    "{Recca::psut_cols$phi}" :=
+      RCLabels::make_list(x = phi_vec, n = 2, lenx = 1),
+    "{Recca::balance_cols$irrev_alloc_colname}" :=
+      RCLabels::make_list(x = Recca::balance_cols$default_destruction_alloc_mat,
+                          n = 2, lenx = 1)) |>
+  extend_to_exergy(endogenize_losses_irrev = TRUE,
+                   clean_mats = TRUE,
+                   mat_piece = "noun",
+                   notation = list(RCLabels::from_notation,
+                                   RCLabels::arrow_notation))
 }
