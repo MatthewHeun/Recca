@@ -11,7 +11,7 @@ Cite all releases of `Recca` with doi
 which always resolves to the latest release.
 
 
-## Recca 0.1.67 (2026-01-19) 
+## Recca 0.1.67 (2026-01-19) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18305654.svg)](https://doi.org/10.5281/zenodo.18305654)
 
 * `verify_*_industry_balance()` functions gain argument `error_on_imbalance`
   which, if `TRUE`, causes an error on imbalance

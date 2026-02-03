@@ -317,7 +317,7 @@ extend_to_exergy <- function(.sutmats = NULL,
 
     # Verify that everything is balanced between industries
     # before performing any calculations
-    inter_balanced <- verify_inter_industry_balance(
+    verify_inter_industry_balance(
       R = R_mat, U = U_mat, V = V_mat, Y = Y_mat,
       balances = Recca::balance_cols$inter_industry_balance_colname,
       balanced = Recca::balance_cols$inter_industry_balanced_colname,
