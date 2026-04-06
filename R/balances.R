@@ -304,11 +304,9 @@ verify_inter_industry_balance <- function(.sutmats = NULL,
       matsbyname::iszero_byname(tol) |>
       as.logical()
     if (!OK) {
-      return(list(FALSE) |>
-               magrittr::set_names(balanced))
+      return(list(FALSE) |> magrittr::set_names(balanced))
     }
-    list(TRUE) |>
-      magrittr::set_names(balanced)
+    return(list(TRUE) |> magrittr::set_names(balanced))
   }
 
   out <- matsindf::matsindf_apply(.sutmats, FUN = verify_func_inter, R_mat = R, U_mat = U, V_mat = V, Y_mat = Y,
