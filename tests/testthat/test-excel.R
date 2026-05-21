@@ -204,10 +204,16 @@ test_that("read_ecc_from_excel() works as expected", {
     }
   }
 
+  # Check that we get a good error message when the region is not found
+  ecc_temp_path |>
+    read_ecc_from_excel(R = "bogusR") |>
+    expect_error(regexp = "Unable to find region 'bogusR' in worksheet 'E_Final' of file")
+
   if (file.exists(ecc_temp_path)) {
     res <- file.remove(ecc_temp_path)
   }
 })
+
 
 
 testthat::test_that("write_ecc_to_excel() works with pre-existing file", {

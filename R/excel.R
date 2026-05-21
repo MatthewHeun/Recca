@@ -679,10 +679,21 @@ read_ecc_from_excel <- function(path,
                USE.NAMES = FALSE,
                FUN = function(this_region) {
                  # Read the region as a data frame
-                 df <- openxlsx2::wb_to_df(workbook,
-                                           sheet = this_worksheet,
-                                           named_region = this_region,
-                                           row_names = TRUE)
+                 tryCatch({
+                   df <- openxlsx2::wb_to_df(workbook,
+                                             sheet = this_worksheet,
+                                             named_region = this_region,
+                                             row_names = TRUE)},
+                   error = function(e) {
+                     msg <- paste0("Unable to find region '",
+                                   this_region,
+                                   "' in worksheet '",
+                                   this_worksheet,
+                                   "' of file ",
+                                   path)
+                     stop(msg)
+                   }
+                 )
                  # Convert all NA values (blanks) to 0s
                  df[is.na(df)] <- 0
                  this_matrix <- df |>
