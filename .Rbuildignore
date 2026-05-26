@@ -16,3 +16,5 @@ recca_workflow.blg
 ^LICENSE\.md$
 CITATION.cff
 ^pkgdown$
+^\.positai$
+^\.claude$
