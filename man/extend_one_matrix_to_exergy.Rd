@@ -5,29 +5,38 @@
 \title{Convert one matrix from energy to exergy}
 \usage{
 extend_one_matrix_to_exergy(
-  .m,
+  .df = NULL,
+  m,
   phi_vec,
   product_margin,
   mat_piece = "all",
   phi_piece = "all",
   notation = RCLabels::bracket_notation,
-  prepositions = RCLabels::prepositions_list
+  prepositions = RCLabels::prepositions_list,
+  out_colname = "m_exergy"
 )
 }
 \arguments{
-\item{.m}{An energy matrix to be converted to exergy.}
+\item{.df}{An optional \code{matsindf} data frame.}
 
-\item{phi_vec}{A vector of exergy-to-energy ratios (phi).}
+\item{m}{An energy matrix to be converted to exergy or
+the name of a column in \code{.df} with the same.}
 
-\item{product_margin}{The margin of \code{.m} containing products,
+\item{phi_vec}{A vector of exergy-to-energy ratios (phi) or
+the name of a column in \code{.df} with the same.}
+
+\item{product_margin}{An integer of length \code{1},
+the margin of \code{m} containing products,
 \code{1} means rows, \code{2} means columns.}
 
-\item{mat_piece}{The piece of row and column names for \code{.m}
+\item{mat_piece}{A character vector of length \code{1},
+the piece of row and column names of \code{m}
 against which row names of the \code{phi} vector is to be matched.
 Default is "all", meaning that entire names are to be matched.}
 
-\item{phi_piece}{The piece of row names in the \code{phi} vector against which
-row and column names for \code{.m}
+\item{phi_piece}{A character vector of length \code{1},
+the piece of row names in the \code{phi} vector against which
+row and column names for \code{m}
 is to be matched.
 Default is "all", meaning that entire names are to be matched.}
 
@@ -36,14 +45,19 @@ Default is \code{RCLabels::bracket_notation}.}
 
 \item{prepositions}{The prepositions to be used row and column notation.
 Default is \code{RCLabels::prepositions_list}.}
+
+\item{out_colname}{The name of the output column to be added to the right of \code{.df}.
+Default is "m_exergy".}
 }
 \value{
-A matrix with same size as \code{.m} but converted from energy to exergy.
+A matrix with same size as \code{m} but converted from energy to exergy
+or when \code{.df} is not \code{NULL},
+\code{.df} with a column of matrices appended at the right.
 }
 \description{
 A helper function for
 \code{\link[=extend_to_exergy]{extend_to_exergy()}}
 and
 \code{\link[=extend_fu_details_to_exergy]{extend_fu_details_to_exergy()}}
-that is helpful in other circumstances, too.
+that is beneficial in other circumstances, too.
 }

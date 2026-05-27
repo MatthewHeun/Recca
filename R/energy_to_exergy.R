@@ -363,33 +363,33 @@ extend_to_exergy <- function(.sutmats = NULL,
     }
 
     # R_X = R_E * phi_hat
-    R_X_mat <- R_mat |>
-      extend_one_matrix_to_exergy(phi_vec = phi_vec,
-                                  product_margin = 2,
-                                  mat_piece = mat_piece,
-                                  phi_piece = phi_piece,
-                                  notation = notation,
-                                  prepositions = prepositions)
+    R_X_mat <- extend_one_matrix_to_exergy(m = R_mat, phi_vec = phi_vec,
+                                           product_margin = 2,
+                                           mat_piece = mat_piece,
+                                           phi_piece = phi_piece,
+                                           notation = notation,
+                                           prepositions = prepositions) |>
+      purrr::pluck(1)
 
     # U_X = phi_hat * U_E
-    U_X_mat <- U_mat |>
-      extend_one_matrix_to_exergy(phi_vec = phi_vec,
-                                  product_margin = 1,
-                                  mat_piece = mat_piece,
-                                  phi_piece = phi_piece,
-                                  notation = notation,
-                                  prepositions = prepositions)
+    U_X_mat <- extend_one_matrix_to_exergy(m = U_mat,
+                                           phi_vec = phi_vec,
+                                           product_margin = 1,
+                                           mat_piece = mat_piece,
+                                           phi_piece = phi_piece,
+                                           notation = notation,
+                                           prepositions = prepositions) |>
+      purrr::pluck(1)
 
     # U_feed_X = phi_hat * U_feed_E
-    U_feed_X_mat <- U_feed_mat |>
-      extend_one_matrix_to_exergy(phi_vec = phi_vec,
-                                  product_margin = 1,
-                                  mat_piece = mat_piece,
-                                  phi_piece = phi_piece,
-                                  notation = notation,
-                                  prepositions = prepositions)
-
-
+    U_feed_X_mat <- extend_one_matrix_to_exergy(m = U_feed_mat,
+                                                phi_vec = phi_vec,
+                                                product_margin = 1,
+                                                mat_piece = mat_piece,
+                                                phi_piece = phi_piece,
+                                                notation = notation,
+                                                prepositions = prepositions) |>
+      purrr::pluck(1)
 
     if (matsbyname::iszero_byname(U_eiou_mat)) {
       # Some countries have no EIOU, so we get a zero matrix here
@@ -401,32 +401,35 @@ extend_to_exergy <- function(.sutmats = NULL,
       U_eiou_X_mat <- U_eiou_mat
     } else {
       # U_eiou_X = phi_hat * U_eiou_E
-      U_eiou_X_mat <- U_eiou_mat |>
-        extend_one_matrix_to_exergy(phi_vec = phi_vec,
-                                    product_margin = 1,
-                                    mat_piece = mat_piece,
-                                    phi_piece = phi_piece,
-                                    notation = notation,
-                                    prepositions = prepositions)
+      U_eiou_X_mat <- extend_one_matrix_to_exergy(m = U_eiou_mat,
+                                                  phi_vec = phi_vec,
+                                                  product_margin = 1,
+                                                  mat_piece = mat_piece,
+                                                  phi_piece = phi_piece,
+                                                  notation = notation,
+                                                  prepositions = prepositions) |>
+        purrr::pluck(1)
     }
 
     # V_X = V_E * phi_hat
-    V_X_mat <- V_mat |>
-      extend_one_matrix_to_exergy(phi_vec = phi_vec,
-                                  product_margin = 2,
-                                  mat_piece = mat_piece,
-                                  phi_piece = phi_piece,
-                                  notation = notation,
-                                  prepositions = prepositions)
+    V_X_mat <- extend_one_matrix_to_exergy(m = V_mat,
+                                           phi_vec = phi_vec,
+                                           product_margin = 2,
+                                           mat_piece = mat_piece,
+                                           phi_piece = phi_piece,
+                                           notation = notation,
+                                           prepositions = prepositions) |>
+      purrr::pluck(1)
 
     # Y_X = phi_hat * Y_E
-    Y_X_mat <- Y_mat |>
-      extend_one_matrix_to_exergy(phi_vec = phi_vec,
-                                  product_margin = 1,
-                                  mat_piece = mat_piece,
-                                  phi_piece = phi_piece,
-                                  notation = notation,
-                                  prepositions = prepositions)
+    Y_X_mat <- extend_one_matrix_to_exergy(m = Y_mat,
+                                           phi_vec = phi_vec,
+                                           product_margin = 1,
+                                           mat_piece = mat_piece,
+                                           phi_piece = phi_piece,
+                                           notation = notation,
+                                           prepositions = prepositions) |>
+      purrr::pluck(1)
 
     # r_eiou_X = U_eiou_X / U_eiou_X
     r_eiou_X_mat <- matsbyname::quotient_byname(U_eiou_X_mat, U_X_mat) %>%
@@ -726,13 +729,14 @@ extend_fu_details_to_exergy <- function(.fu_details_mats = NULL,
           phi_vec_Y <- matsbyname::setrowtype(phi_vec_Y, expected_coltype_YU)
         }
       }
-      Y_fu_details_X_mat <- Y_fu_details_mat |>
-        extend_one_matrix_to_exergy(phi_vec = phi_vec_Y,
-                                    product_margin = 2,
-                                    mat_piece = mat_piece,
-                                    phi_piece = phi_piece,
-                                    notation = mat_col_notation,
-                                    prepositions = mat_colname_preposition)
+      Y_fu_details_X_mat <- extend_one_matrix_to_exergy(m = Y_fu_details_mat,
+                                                        phi_vec = phi_vec_Y,
+                                                        product_margin = 2,
+                                                        mat_piece = mat_piece,
+                                                        phi_piece = phi_piece,
+                                                        notation = mat_col_notation,
+                                                        prepositions = mat_colname_preposition) |>
+        purrr::pluck(1)
     }
 
     # U_eiou_fu_details * phi_hat
@@ -750,13 +754,14 @@ extend_fu_details_to_exergy <- function(.fu_details_mats = NULL,
           phi_vec_U <- matsbyname::setrowtype(phi_vec_U, expected_coltype_YU)
         }
       }
-      U_EIOU_fu_details_X_mat <- U_eiou_fu_details_mat |>
-        extend_one_matrix_to_exergy(phi_vec = phi_vec_U,
-                                    product_margin = 2,
-                                    mat_piece = mat_piece,
-                                    phi_piece = phi_piece,
-                                    notation = mat_col_notation,
-                                    prepositions = mat_colname_preposition)
+      U_EIOU_fu_details_X_mat <- extend_one_matrix_to_exergy(m = U_eiou_fu_details_mat,
+                                                             phi_vec = phi_vec_U,
+                                                             product_margin = 2,
+                                                             mat_piece = mat_piece,
+                                                             phi_piece = phi_piece,
+                                                             notation = mat_col_notation,
+                                                             prepositions = mat_colname_preposition) |>
+        purrr::pluck(1)
     }
 
     # Create the list of items to return
@@ -808,65 +813,88 @@ extend_fu_details_to_exergy <- function(.fu_details_mats = NULL,
 #' [extend_fu_details_to_exergy()]
 #' that is beneficial in other circumstances, too.
 #'
-#' @param .m An energy matrix to be converted to exergy.
-#' @param phi_vec A vector of exergy-to-energy ratios (phi).
-#' @param product_margin The margin of `.m` containing products,
+#' @param .df An optional `matsindf` data frame.
+#' @param m An energy matrix to be converted to exergy or
+#'          the name of a column in `.df` with the same.
+#' @param phi_vec A vector of exergy-to-energy ratios (phi) or
+#'                the name of a column in `.df` with the same.
+#' @param product_margin An integer of length `1`,
+#'                       the margin of `m` containing products,
 #'                       `1` means rows, `2` means columns.
-#' @param mat_piece The piece of row and column names for `.m`
+#' @param mat_piece A character vector of length `1`,
+#'                  the piece of row and column names of `m`
 #'                  against which row names of the `phi` vector is to be matched.
 #'                  Default is "all", meaning that entire names are to be matched.
-#' @param phi_piece The piece of row names in the `phi` vector against which
-#'                  row and column names for `.m`
+#' @param phi_piece A character vector of length `1`,
+#'                  the piece of row names in the `phi` vector against which
+#'                  row and column names for `m`
 #'                  is to be matched.
 #'                  Default is "all", meaning that entire names are to be matched.
 #' @param notation The nomenclature for the row and column labels.
 #'                 Default is `RCLabels::bracket_notation`.
 #' @param prepositions The prepositions to be used row and column notation.
 #'                     Default is `RCLabels::prepositions_list`.
+#' @param out_colname The name of the output column to be added to the right of `.df`.
+#'                    Default is "m_exergy".
 #'
-#' @returns A matrix with same size as `.m` but converted from energy to exergy.
+#' @returns A matrix with same size as `m` but converted from energy to exergy
+#'          or when `.df` is not `NULL`,
+#'          `.df` with a column of matrices appended at the right.
 #'
 #' @export
-extend_one_matrix_to_exergy <- function(.m,
+extend_one_matrix_to_exergy <- function(.df = NULL,
+                                        m,
                                         phi_vec,
                                         product_margin,
                                         mat_piece = "all",
                                         phi_piece = "all",
                                         notation = RCLabels::bracket_notation,
-                                        prepositions = RCLabels::prepositions_list) {
+                                        prepositions = RCLabels::prepositions_list,
+                                        # Output name
+                                        out_colname = "m_exergy") {
+
   # Ensure that we have a valid value for product_margin
   assertthat::assert_that(length(product_margin) == 1)
   assertthat::assert_that(product_margin %in% c(1,2))
-  # Verify that we have a column vector for phi_vec
-  assertthat::assert_that(ncol(phi_vec) == 1)
 
-  # When the product is on the columns (margin == 2),
-  # we need phi_vec to be a row vector.
-  if (product_margin == 2) {
-    phi_vec <- matsbyname::transpose_byname(phi_vec)
+  exergy_func <- function(this_m, this_phi) {
+    # Verify that we have a column vector for phi_vec
+    assertthat::assert_that(ncol(this_phi) == 1)
+
+    # When the product is on the columns (margin == 2),
+    # we need phi_vec to be a row vector.
+    if (product_margin == 2) {
+      this_phi <- matsbyname::transpose_byname(this_phi)
+    }
+
+    # For this multiplication, we first trim phi_vec to contain only
+    # the energy products needed for converting to exergy.
+    # Doing this avoids expanding .m rows or columns,
+    # thereby reducing computational complexity and memory consumption.
+    this_phi_hat <- matsbyname::vec_from_store_byname(a = this_m,
+                                                      v = this_phi,
+                                                      a_piece = mat_piece,
+                                                      v_piece = phi_piece,
+                                                      notation = notation,
+                                                      prepositions = prepositions,
+                                                      margin = product_margin) |>
+      matsbyname::hatize_byname(keep = "rownames")
+
+    if (product_margin == 1) {
+      # Products in m are in rows. Pre-multiply by phi_hat.
+      mx <- matsbyname::matrixproduct_byname(this_phi_hat, this_m)
+    } else {
+      # Products in m are in columns. Post-multiply by phi_hat.
+      mx <- matsbyname::matrixproduct_byname(this_m, this_phi_hat)
+    }
+    # Create the list and return.
+    list(mx) |>
+      magrittr::set_names(out_colname)
   }
 
-  # For this multiplication, we first trim phi_vec to contain only
-  # the energy products needed for converting to exergy.
-  # Doing this avoids expanding .m rows or columns,
-  # thereby reducing computational complexity and memory consumption.
-  phi_hat <- matsbyname::vec_from_store_byname(a = .m,
-                                               v = phi_vec,
-                                               a_piece = mat_piece,
-                                               v_piece = phi_piece,
-                                               notation = notation,
-                                               prepositions = prepositions,
-                                               margin = product_margin) |>
-    matsbyname::hatize_byname(keep = "rownames")
-
-  if (product_margin == 1) {
-    # Products in .m are in rows. Pre-multiply by phi_hat.
-    mx <- matsbyname::matrixproduct_byname(phi_hat, .m)
-  } else {
-    # Products in .m are in columns. Post-multiply by phi_hat.
-    mx <- matsbyname::matrixproduct_byname(.m, phi_hat)
-  }
-  return(mx)
+  out <- matsindf::matsindf_apply(.df, FUN = exergy_func,
+                                  this_m = m,
+                                  this_phi = phi_vec)
 }
 
 
