@@ -362,38 +362,34 @@ extend_to_exergy <- function(.sutmats = NULL,
       Y_mat <- Y_losses_mat
     }
 
-    # For each of these multiplications, we first trim phi_vec to contain only
-    # the energy products needed for converting to exergy.
-    # Doing this avoids expanding the R, U, V, and Y matrices to all energy products,
-    # thereby reducing computational complexity and memory consumption.
-
     # R_X = R_E * phi_hat
-    phi_hat_R <- matsbyname::vec_from_store_byname(
-      a = R_mat,
-      v = matsbyname::transpose_byname(phi_vec),
-      a_piece = mat_piece, v_piece = phi_piece,
-      notation = notation, prepositions = prepositions,
-      margin = 2) |>
-      matsbyname::hatize_byname(keep = "rownames")
-    R_X_mat <- matsbyname::matrixproduct_byname(R_mat, phi_hat_R)
+    R_X_mat <- R_mat |>
+      extend_one_matrix_to_exergy(phi_vec = phi_vec,
+                                  product_margin = 2,
+                                  mat_piece = mat_piece,
+                                  phi_piece = phi_piece,
+                                  notation = notation,
+                                  prepositions = prepositions)
 
     # U_X = phi_hat * U_E
-    phi_hat_U <- matsbyname::vec_from_store_byname(a = U_mat,
-                                                   v = phi_vec,
-                                                   a_piece = mat_piece, v_piece = phi_piece,
-                                                   notation = notation, prepositions = prepositions,
-                                                   margin = 1) %>%
-      matsbyname::hatize_byname(keep = "rownames")
-    U_X_mat <- matsbyname::matrixproduct_byname(phi_hat_U, U_mat)
+    U_X_mat <- U_mat |>
+      extend_one_matrix_to_exergy(phi_vec = phi_vec,
+                                  product_margin = 1,
+                                  mat_piece = mat_piece,
+                                  phi_piece = phi_piece,
+                                  notation = notation,
+                                  prepositions = prepositions)
 
     # U_feed_X = phi_hat * U_feed_E
-    phi_hat_U_feed <- matsbyname::vec_from_store_byname(a = U_feed_mat,
-                                                        v = phi_vec,
-                                                        a_piece = mat_piece, v_piece = phi_piece,
-                                                        notation = notation, prepositions = prepositions,
-                                                        margin = 1) %>%
-      matsbyname::hatize_byname(keep = "rownames")
-    U_feed_X_mat <- matsbyname::matrixproduct_byname(phi_hat_U_feed, U_feed_mat)
+    U_feed_X_mat <- U_feed_mat |>
+      extend_one_matrix_to_exergy(phi_vec = phi_vec,
+                                  product_margin = 1,
+                                  mat_piece = mat_piece,
+                                  phi_piece = phi_piece,
+                                  notation = notation,
+                                  prepositions = prepositions)
+
+
 
     if (matsbyname::iszero_byname(U_eiou_mat)) {
       # Some countries have no EIOU, so we get a zero matrix here
@@ -405,33 +401,32 @@ extend_to_exergy <- function(.sutmats = NULL,
       U_eiou_X_mat <- U_eiou_mat
     } else {
       # U_eiou_X = phi_hat * U_eiou_E
-      phi_hat_U_eiou <- matsbyname::vec_from_store_byname(a = U_eiou_mat,
-                                                          v = phi_vec,
-                                                          a_piece = mat_piece, v_piece = phi_piece,
-                                                          notation = notation, prepositions = prepositions,
-                                                          margin = 1) %>%
-        matsbyname::hatize_byname(keep = "rownames")
-      U_eiou_X_mat <- matsbyname::matrixproduct_byname(phi_hat_U_eiou, U_eiou_mat)
+      U_eiou_X_mat <- U_eiou_mat |>
+        extend_one_matrix_to_exergy(phi_vec = phi_vec,
+                                    product_margin = 1,
+                                    mat_piece = mat_piece,
+                                    phi_piece = phi_piece,
+                                    notation = notation,
+                                    prepositions = prepositions)
     }
 
     # V_X = V_E * phi_hat
-    phi_hat_V <- matsbyname::vec_from_store_byname(a = V_mat,
-                                                   v = matsbyname::transpose_byname(phi_vec),
-                                                   a_piece = mat_piece, v_piece = phi_piece,
-                                                   notation = notation, prepositions = prepositions,
-                                                   margin = 2) %>%
-      matsbyname::hatize_byname(keep = "rownames")
-    V_X_mat <- matsbyname::matrixproduct_byname(V_mat, phi_hat_V)
-
+    V_X_mat <- V_mat |>
+      extend_one_matrix_to_exergy(phi_vec = phi_vec,
+                                  product_margin = 2,
+                                  mat_piece = mat_piece,
+                                  phi_piece = phi_piece,
+                                  notation = notation,
+                                  prepositions = prepositions)
 
     # Y_X = phi_hat * Y_E
-    phi_hat_Y <- matsbyname::vec_from_store_byname(a = Y_mat,
-                                                   v = phi_vec,
-                                                   a_piece = mat_piece, v_piece = phi_piece,
-                                                   notation = notation, prepositions = prepositions,
-                                                   margin = 1) %>%
-      matsbyname::hatize_byname(keep = "rownames")
-    Y_X_mat <- matsbyname::matrixproduct_byname(phi_hat_Y, Y_mat)
+    Y_X_mat <- Y_mat |>
+      extend_one_matrix_to_exergy(phi_vec = phi_vec,
+                                  product_margin = 1,
+                                  mat_piece = mat_piece,
+                                  phi_piece = phi_piece,
+                                  notation = notation,
+                                  prepositions = prepositions)
 
     # r_eiou_X = U_eiou_X / U_eiou_X
     r_eiou_X_mat <- matsbyname::quotient_byname(U_eiou_X_mat, U_X_mat) %>%
@@ -731,14 +726,13 @@ extend_fu_details_to_exergy <- function(.fu_details_mats = NULL,
           phi_vec_Y <- matsbyname::setrowtype(phi_vec_Y, expected_coltype_YU)
         }
       }
-      Y_fu_details_X_mat <- matsbyname::matrixproduct_byname(Y_fu_details_mat,
-                                                             matsbyname::vec_from_store_byname(a = Y_fu_details_mat,
-                                                                                               v = phi_vec_Y,
-                                                                                               a_piece = mat_piece, v_piece = phi_piece,
-                                                                                               notation = mat_col_notation,
-                                                                                               prepositions = mat_colname_preposition,
-                                                                                               margin = 2) |>
-                                                               matsbyname::hatize_byname(keep = "rownames"))
+      Y_fu_details_X_mat <- Y_fu_details_mat |>
+        extend_one_matrix_to_exergy(phi_vec = phi_vec_Y,
+                                    product_margin = 2,
+                                    mat_piece = mat_piece,
+                                    phi_piece = phi_piece,
+                                    notation = mat_col_notation,
+                                    prepositions = mat_colname_preposition)
     }
 
     # U_eiou_fu_details * phi_hat
@@ -756,14 +750,13 @@ extend_fu_details_to_exergy <- function(.fu_details_mats = NULL,
           phi_vec_U <- matsbyname::setrowtype(phi_vec_U, expected_coltype_YU)
         }
       }
-      U_EIOU_fu_details_X_mat <- matsbyname::matrixproduct_byname(U_eiou_fu_details_mat,
-                                                                  matsbyname::vec_from_store_byname(a = U_eiou_fu_details_mat,
-                                                                                                    v = phi_vec_U,
-                                                                                                    a_piece = mat_piece, v_piece = phi_piece,
-                                                                                                    notation = mat_col_notation,
-                                                                                                    prepositions = mat_colname_preposition,
-                                                                                                    margin = 2) |>
-                                                                    matsbyname::hatize_byname(keep = "rownames"))
+      U_EIOU_fu_details_X_mat <- U_eiou_fu_details_mat |>
+        extend_one_matrix_to_exergy(phi_vec = phi_vec_U,
+                                    product_margin = 2,
+                                    mat_piece = mat_piece,
+                                    phi_piece = phi_piece,
+                                    notation = mat_col_notation,
+                                    prepositions = mat_colname_preposition)
     }
 
     # Create the list of items to return
@@ -805,3 +798,76 @@ extend_fu_details_to_exergy <- function(.fu_details_mats = NULL,
 
   return(out)
 }
+
+
+#' Convert one matrix from energy to exergy
+#'
+#' A helper function for
+#' [extend_to_exergy()]
+#' and
+#' [extend_fu_details_to_exergy()]
+#' that is beneficial in other circumstances, too.
+#'
+#' @param .m An energy matrix to be converted to exergy.
+#' @param phi_vec A vector of exergy-to-energy ratios (phi).
+#' @param product_margin The margin of `.m` containing products,
+#'                       `1` means rows, `2` means columns.
+#' @param mat_piece The piece of row and column names for `.m`
+#'                  against which row names of the `phi` vector is to be matched.
+#'                  Default is "all", meaning that entire names are to be matched.
+#' @param phi_piece The piece of row names in the `phi` vector against which
+#'                  row and column names for `.m`
+#'                  is to be matched.
+#'                  Default is "all", meaning that entire names are to be matched.
+#' @param notation The nomenclature for the row and column labels.
+#'                 Default is `RCLabels::bracket_notation`.
+#' @param prepositions The prepositions to be used row and column notation.
+#'                     Default is `RCLabels::prepositions_list`.
+#'
+#' @returns A matrix with same size as `.m` but converted from energy to exergy.
+#'
+#' @export
+extend_one_matrix_to_exergy <- function(.m,
+                                        phi_vec,
+                                        product_margin,
+                                        mat_piece = "all",
+                                        phi_piece = "all",
+                                        notation = RCLabels::bracket_notation,
+                                        prepositions = RCLabels::prepositions_list) {
+  # Ensure that we have a valid value for product_margin
+  assertthat::assert_that(length(product_margin) == 1)
+  assertthat::assert_that(product_margin %in% c(1,2))
+  # Verify that we have a column vector for phi_vec
+  assertthat::assert_that(ncol(phi_vec) == 1)
+
+  # When the product is on the columns (margin == 2),
+  # we need phi_vec to be a row vector.
+  if (product_margin == 2) {
+    phi_vec <- matsbyname::transpose_byname(phi_vec)
+  }
+
+  # For this multiplication, we first trim phi_vec to contain only
+  # the energy products needed for converting to exergy.
+  # Doing this avoids expanding .m rows or columns,
+  # thereby reducing computational complexity and memory consumption.
+  phi_hat <- matsbyname::vec_from_store_byname(a = .m,
+                                               v = phi_vec,
+                                               a_piece = mat_piece,
+                                               v_piece = phi_piece,
+                                               notation = notation,
+                                               prepositions = prepositions,
+                                               margin = product_margin) |>
+    matsbyname::hatize_byname(keep = "rownames")
+
+  if (product_margin == 1) {
+    # Products in .m are in rows. Pre-multiply by phi_hat.
+    mx <- matsbyname::matrixproduct_byname(phi_hat, .m)
+  } else {
+    # Products in .m are in columns. Post-multiply by phi_hat.
+    mx <- matsbyname::matrixproduct_byname(.m, phi_hat)
+  }
+  return(mx)
+}
+
+
+

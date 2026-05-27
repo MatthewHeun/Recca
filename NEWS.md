@@ -11,6 +11,12 @@ Cite all releases of `Recca` with doi
 which always resolves to the latest release.
 
 
+
+* Refactored `extend_to_exergy()` and `extend_fu_details_to_exergy()`
+  to use new function `extend_one_matrix_to_exergy()`.
+  The new function will be useful in other contexts, too.
+
+
 ## Recca 0.1.67 (2026-01-19) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18305654.svg)](https://doi.org/10.5281/zenodo.18305654)
 
 * `verify_*_industry_balance()` functions gain argument `error_on_imbalance`
