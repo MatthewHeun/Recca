@@ -842,6 +842,22 @@ extend_fu_details_to_exergy <- function(.fu_details_mats = NULL,
 #'          `.df` with a column of matrices appended at the right.
 #'
 #' @export
+#'
+#' @examples
+#' sutmats <- UKEnergy2000mats |>
+#'   # Put in wide-by-matrix format.
+#'   tidyr::spread(key = matrix.name, value = matrix) |>
+#'   # Eliminate services ECCs.
+#'   dplyr::filter(LastStage %in% c("Final", "Useful")) |>
+#'   dplyr::mutate(
+#'     phi = RCLabels::make_list(Recca::phi_vec, n = dplyr::n(), lenx = 1)
+#'   )
+#' res <- sutmats |>
+#'   extend_one_matrix_to_exergy(sutmats,
+#'                               m = "R",
+#'                               phi_vec = "phi",
+#'                               product_margin = 2)
+#' colnames(res)
 extend_one_matrix_to_exergy <- function(.df = NULL,
                                         m,
                                         phi_vec,
@@ -862,7 +878,7 @@ extend_one_matrix_to_exergy <- function(.df = NULL,
     assertthat::assert_that(ncol(this_phi) == 1)
 
     # When the product is on the columns (margin == 2),
-    # we need phi_vec to be a row vector.
+    # we need this_phi to be a row vector.
     if (product_margin == 2) {
       this_phi <- matsbyname::transpose_byname(this_phi)
     }

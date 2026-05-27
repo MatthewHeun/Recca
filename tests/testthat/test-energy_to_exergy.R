@@ -499,3 +499,34 @@ test_that("extend_to_exergy() works when endogenizing losses and calculating irr
     expect_equal(Y["Destroyed exergy", ], Y_destoyed_exergy_row_expected)
   }
 })
+
+
+test_that("extend_one_matrix_to_exergy() works as expected", {
+  sutmats <- UKEnergy2000mats |>
+    # Put in wide-by-matrix format.
+    tidyr::spread(key = matrix.name, value = matrix) |>
+    # Eliminate services ECCs.
+    dplyr::filter(LastStage %in% c("Final", "Useful")) |>
+    dplyr::mutate(
+      phi = RCLabels::make_list(Recca::phi_vec, n = dplyr::n(), lenx = 1)
+    )
+  res <- sutmats |>
+    extend_one_matrix_to_exergy(m = "R",
+                                phi_vec = "phi",
+                                product_margin = 2)
+  expect_true("m_exergy" %in% colnames(res))
+  # R matrix
+  energy_val <- res[[Recca::psut_cols$R]][[1]]["Resources [of Crude]", "Crude"]
+  exergy_val <- res[["m_exergy"]][[1]]["Resources [of Crude]", "Crude"]
+  phi <- Recca::phi_vec["Crude", ]
+  expect_equal(energy_val*phi, exergy_val)
+
+  # Now try with single matrices
+  res2 <- extend_one_matrix_to_exergy(m = sutmats[[Recca::psut_cols$R]][[2]],
+                                      phi_vec = sutmats[[Recca::psut_cols$phi]][[2]],
+                                      product_margin = 2) |>
+    purrr::pluck(1)
+  exergy_val2 <- res[["m_exergy"]][[1]]["Resources [of Crude]", "Crude"]
+  phi2 <- Recca::phi_vec["Crude", ]
+  expect_equal(energy_val*phi, exergy_val2)
+})

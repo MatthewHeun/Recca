@@ -61,3 +61,19 @@ and
 \code{\link[=extend_fu_details_to_exergy]{extend_fu_details_to_exergy()}}
 that is beneficial in other circumstances, too.
 }
+\examples{
+sutmats <- UKEnergy2000mats |>
+  # Put in wide-by-matrix format.
+  tidyr::spread(key = matrix.name, value = matrix) |>
+  # Eliminate services ECCs.
+  dplyr::filter(LastStage \%in\% c("Final", "Useful")) |>
+  dplyr::mutate(
+    phi = RCLabels::make_list(Recca::phi_vec, n = dplyr::n(), lenx = 1)
+  )
+res <- sutmats |>
+  extend_one_matrix_to_exergy(sutmats,
+                              m = "R",
+                              phi_vec = "phi",
+                              product_margin = 2)
+colnames(res)
+}
