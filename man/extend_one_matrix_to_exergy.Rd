@@ -71,8 +71,7 @@ sutmats <- UKEnergy2000mats |>
     phi = RCLabels::make_list(Recca::phi_vec, n = dplyr::n(), lenx = 1)
   )
 res <- sutmats |>
-  extend_one_matrix_to_exergy(sutmats,
-                              m = "R",
+  extend_one_matrix_to_exergy(m = "R",
                               phi_vec = "phi",
                               product_margin = 2)
 colnames(res)

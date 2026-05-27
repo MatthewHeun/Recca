@@ -853,8 +853,7 @@ extend_fu_details_to_exergy <- function(.fu_details_mats = NULL,
 #'     phi = RCLabels::make_list(Recca::phi_vec, n = dplyr::n(), lenx = 1)
 #'   )
 #' res <- sutmats |>
-#'   extend_one_matrix_to_exergy(sutmats,
-#'                               m = "R",
+#'   extend_one_matrix_to_exergy(m = "R",
 #'                               phi_vec = "phi",
 #'                               product_margin = 2)
 #' colnames(res)
