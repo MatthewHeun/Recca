@@ -9,7 +9,7 @@ extend_one_matrix_to_exergy(
   m,
   phi_vec,
   product_margin,
-  mat_piece = "all",
+  m_piece = "all",
   phi_piece = "all",
   notation = RCLabels::bracket_notation,
   prepositions = RCLabels::prepositions_list,
@@ -29,7 +29,7 @@ the name of a column in \code{.df} with the same.}
 the margin of \code{m} containing products,
 \code{1} means rows, \code{2} means columns.}
 
-\item{mat_piece}{A character vector of length \code{1},
+\item{m_piece}{A character vector of length \code{1},
 the piece of row and column names of \code{m}
 against which row names of the \code{phi} vector is to be matched.
 Default is "all", meaning that entire names are to be matched.}
