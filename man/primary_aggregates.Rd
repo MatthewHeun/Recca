@@ -39,7 +39,8 @@ primary industry names if they can be identified by prefixes.}
 Default is \code{FALSE}.}
 
 \item{piece, notation, pattern_type, prepositions}{Arguments that control the way row and column matching
-is accomplished when selecting parts of the \strong{R}, \strong{V}, and \strong{Y}
+is accomplished when selecting parts of the
+\strong{R}, \strong{V}, and \strong{Y}
 matrices for primary aggregation.
 These arguments are passed to
 \code{matsbyname::select_rowcol_piece_byname()} and eventually

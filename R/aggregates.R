@@ -27,7 +27,8 @@
 #' @param add_net_gross_cols A boolean that tells whether to add net and gross columns (`TRUE`) or not (`FALSE`).
 #'                           Default is `FALSE`.
 #' @param piece,notation,pattern_type,prepositions Arguments that control the way row and column matching
-#'                                                 is accomplished when selecting parts of the **R**, **V**, and **Y**
+#'                                                 is accomplished when selecting parts of the
+#'                                                 **R**, **V**, and **Y**
 #'                                                 matrices for primary aggregation.
 #'                                                 These arguments are passed to
 #'                                                 `matsbyname::select_rowcol_piece_byname()` and eventually

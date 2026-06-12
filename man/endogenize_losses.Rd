@@ -151,7 +151,18 @@ The value of \code{losses_alloc} must resolve to a matrix
 of this form.
 Options include:
 \itemize{
-\item The default value, namely
+\item The string name of a column in \code{.sutmats}
+that contains loss allocation matrices for every row
+in \code{.sutmats}.
+The default value is
+\link{balance_cols}\verb{$losses_alloc_colname},
+the string "LossesAlloc".
+All industries in the \strong{V} matrix must be present
+in the rows of the matrices in the \code{losses_alloc} column.
+If any of the matrices in the column names \code{losses_alloc}
+has a single row,
+the row is assumed to apply to all industries.
+\item A reasonable value, such as
 \link{balance_cols}\verb{$default_losses_alloc},
 a 1x1 matrix with
 a row named "All industries",
@@ -170,16 +181,8 @@ in \code{.sutmats}.
 All industries in the \strong{V} matrix must be present
 in the rows of \code{losses_alloc}.
 If the matrix has a single row
-(as the default, \link{balance_cols}\verb{$default_losses_alloc}),
+(as \link{balance_cols}\verb{$default_losses_alloc}),
 it is assumed to apply to all industries.
-\item The string name of a column in \code{.sutmats}
-that contains loss allocation matrices for every row
-in \code{.sutmats}.
-All industries in the \strong{V} matrix must be present
-in the rows of the matrices in the \code{losses_alloc} column.
-If any of the matrices in the column names \code{losses_alloc}
-has a single row,
-the row is assumed to apply to all industries.
 }
 }
 

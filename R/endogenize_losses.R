@@ -55,7 +55,18 @@
 #' of this form.
 #' Options include:
 #'
-#' * The default value, namely
+#' * The string name of a column in `.sutmats`
+#'   that contains loss allocation matrices for every row
+#'   in `.sutmats`.
+#'   The default value is
+#'   [Recca::balance_cols]`$losses_alloc_colname`,
+#'   the string "`r Recca::balance_cols$losses_alloc_colname`".
+#'   All industries in the **V** matrix must be present
+#'   in the rows of the matrices in the `losses_alloc` column.
+#'   If any of the matrices in the column names `losses_alloc`
+#'   has a single row,
+#'   the row is assumed to apply to all industries.
+#' * A reasonable value, such as
 #'   [Recca::balance_cols]`$default_losses_alloc`,
 #'   a 1x1 matrix with
 #'   a row named "All industries",
@@ -74,16 +85,8 @@
 #'   All industries in the **V** matrix must be present
 #'   in the rows of `losses_alloc`.
 #'   If the matrix has a single row
-#'   (as the default, [Recca::balance_cols]`$default_losses_alloc`),
+#'   (as [Recca::balance_cols]`$default_losses_alloc`),
 #'   it is assumed to apply to all industries.
-#' * The string name of a column in `.sutmats`
-#'   that contains loss allocation matrices for every row
-#'   in `.sutmats`.
-#'   All industries in the **V** matrix must be present
-#'   in the rows of the matrices in the `losses_alloc` column.
-#'   If any of the matrices in the column names `losses_alloc`
-#'   has a single row,
-#'   the row is assumed to apply to all industries.
 #'
 #' ## Intra-industry balances
 #'
