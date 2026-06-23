@@ -298,7 +298,7 @@ endogenize_losses <- function(
     # Calculate Y_prime
     Y_prime_mat <- matsbyname::sum_byname(Y_mat, add_to_Y)
 
-    # Verify that inter-industry balance is still observed
+    # Verify that inter-industry balance is preserved
     calc_inter_industry_balance(R = R_mat, U = U_mat, V = V_prime_mat, Y = Y_prime_mat) |>
       verify_inter_industry_balance(tol = tol)
     # Verify that endogenizing losses eliminates losses
