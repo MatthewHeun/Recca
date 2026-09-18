@@ -22,6 +22,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Matthew Heun \email{matthew.heun@me.com} (\href{https://orcid.org/0000-0002-7438-214X}{ORCID})
   \item Emmanuel Aramendia \email{e.aramendia@leeds.ac.uk} (\href{https://orcid.org/0000-0002-5964-6776}{ORCID})
 }
 
