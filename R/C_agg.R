@@ -1,70 +1,105 @@
 #' Calculate allocation matrices for aggregate regions
 #'
-#' In the CL-PFU database, allocation matrices (**C_Y** and **C_EIOU**)
-#' at the country level are used to calculate useful energy and exergy
-#' for each country.
+#' In the CL-PFU database, allocation matrices (**C**_Y and **C**_U_EIOU)
+#' at the country level are used to calculate useful energy
+#' in the final demand (**Y**) and energy industry own use (**U**_EIOU)
+#' matrices for each individual country.
 #' The countries are subsequently aggregated to regions.
 #' Thus, regions do not have allocation matrices.
 #' This function calculates allocation matrices
 #' for any region from its
-#' **U** and **Y** matrices.
+#' **Y**_f, **Y**_fu_details,
+#' **U**_EIOU_f, **U**_EIOU_fu_details, and
+#' **eta**_i matrices.
 #' As such, this function can calculate
-#' **C_Y** and **C_EIOU**
+#' **C**_Y and **C**_EIOU matrices
 #' that did not formerly exist
 #' for aggregated regions.
 #'
-#' Internally, this function calls [calc_eta_i()] to
-#' calculate industry efficiencies.
-#' Further,
+#' These calculations are the reverse of the
+#' calculation that provided the useful version of the
+#' final demand (**Y**_u) and
+#' energy industry own use matrices (**U**_EIOU_u).
+#' The original calculations were
+#'
+#' - Y_fu_details = Yf_vec_hat x C_Y x eta_i_hat
+#' - U_EIOU_fu_details = U_EIOU_f_vec_hat x C_EIOU x eta_i_hat
+#'
+#' where "x" indicates matrix multiplication.
+#'
+#' So the calculations for the C matrices are
+#'
+#' - C_Y = Yf_vec_hat_inv x Yfu_details x eta_i_hat_inv
+#' - C_EIOU = U_EIOU_f_vec_inv x U_EIOU_fu_details x eta_i_hat_inv
 #'
 #' @param .sutmats An optional data frame of mass or energy
 #'                 (conserved quantities)
 #'                 conversion chains in wide-by-matrix format.
-#' @param U_feed The **U_feed** matrix or name of the column in `.sutmats`
-#'               that contains the same.
-#'               Default is "`r Recca::psut_cols$U_feed`".
-#' @param U_eiou The **U_eiou** matrix or name of the column in `.sutmats`
-#'               that contains the same.
-#'               Default is "`r Recca::psut_cols$U_eiou`".
-#' @param Y Final demand (**Y**) matrix or name of the column in `.sutmats`
-#'          that contains same.
-#'          Default is "`r Recca::psut_cols$Y`".
-#' @param C_Y_colname
-#' @param C_eiou_colname
+#' @param Y_f The **Y**_f matrix or the name of a column in `.sutmats`
+#'            that contains the same.
+#'            This matrix is the final demand matrix when
+#'            the last stage is final energy.
+#'            Rows should contain names of final energy carriers, and
+#'            columns should contain sectors.
+#'            Default is "Yf".
+#' @param Y_fu_details The **Y**_fu_details matrix or the name of a column in `.sutmats`
+#'                     that contains the same.
+#'                     This is a "details" matrix that has
+#'                     final energy carriers and sectors in rows (with arrow notation) and
+#'                     fu machines and useful energy carriers in columns (with from notation).
+#'                     Default is "Yfudetails".
+#' @param U_eiou_f The **U**_eiou_f matrix or name of the column in `.sutmats`
+#'                 that contains the same.
+#'                 This matrix is the energy industry own use matrix
+#'                 when the last stage is final energy.
+#'                 Rows should contain names of final energy carriers, and
+#'                 columns should contain EIOU machines.
+#'                 Default is "UEIOUf".
+#' @param U_eiou_fu_details The **U**_eiou_fu_details matrix or the name of a column in `.sutmats`
+#'                          that contains the same.
+#'                          This is a "details" matrix that has
+#'                          final energy carriers and energy industry own use
+#'                          machines in rows (with arrow notation) and
+#'                          final-to-useful machines and useful energy carriers
+#'                          in columns (with from notation).
+#'                          Default is "Ueioufudetails".
+#' @param eta_i The **eta**_i vector or the name of a column in `.sutmats`
+#'              that contains the same.
+#'              This vector gives the energy efficiency of all final-to-useful machines.
+#'              Rows should contain machine names and useful energy carriers
+#'              (with arrow notation).
+#'              Default is "Etai".
+#' @param C_Y_colname The name of the output column that contains calculated
+#'                    allocation matrices for final demand (**C**_Y).
+#'                    Default is "`r Recca::alloc_cols$C_Y`".
+#' @param C_eiou_colname The name of the output column that contains calculated
+#'                         allocation matrices for energy industry own use
+#'                         (**C**_EIOU).
+#'                         Default is "`r Recca::alloc_cols$C_eiou`".
 #'
-#' @returns A data frame with metadata and two columns,
+#' @returns A data frame with pre-existing metadata and two new columns,
 #'          `C_Y_colname` and `C_eiou_colname`.
 #'
 #' @export
 #'
 #' @examples
 C_agg <- function(.sutmats = NULL,
-                  U_feed = Recca::psut_cols$U_feed,
-                  U_eiou = Recca::psut_cols$U_eiou,
-                  Y = Recca::psut_cols$Y,
-                  separator = "___",
-                  last_stage = Recca::psut_cols$last_stage,
-                  final = Recca::all_stages$final,
-                  useful = Recca::all_stages$useful,
-                  U_feed_final = paste0(U_feed, separator, final),
-                  U_feed_useful = paste0(U_feed, separator, useful),
-                  U_eiou_final = paste0(U_eiou, separator, final),
-                  U_eiou_useful = paste0(U_eiou, separator, useful),
-                  Y_final = paste0(Y, separator, final),
-                  Y_useful = paste0(Y, separator, useful),
+                  Y_f = paste0(Recca::psut_cols$Y, "f"),
+                  Y_fu_details = "Yfudetails",
+                  U_eiou_f = "UEIOUf",
+                  U_eiou_fu_details = "Ueioufudetails",
+                  eta_i = "Etai",
                   # Output column names
                   C_Y_colname = Recca::alloc_cols$C_Y,
                   C_eiou_colname = Recca::alloc_cols$C_eiou) {
 
-  if(!is.null(.sutmats)) {
-    if (U_final %notin% colnames(.sutmats) & U_useful %notin% colnames(.sutmats) &
-        Y_final %notin% colnames(.sutmats) & Y_useful %notin% colnames(.sutmats)) {
-      # Pivot the data frame
-      .sutmats <- .sutmats |>
-        tidyr::pivot_wider(cols = c(U_feed))
-    }
+
+  C_func <- function(Y_f_mat, Y_fu_details_mat,
+                     U_eiou_f_mat, U_eiou_fu_details_mat,
+                     eta_i_vec) {
+
   }
 
-  C_func <- function(U_feed_mat, U_eiou_mat, Y_mat)
+  matsindf::matisindf_apply(.sutdata, FUN = C_func, Y_f_mat = Y_f, Y_fu_details_mat = Y_fu_details, U_eiou_f_mat = U_eiou_f, U_eiou_fu_details_mat = U_eiou_fu_details, eta_i_vec = eta_i)
 
 }
