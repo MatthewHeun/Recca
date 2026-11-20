@@ -1,4 +1,4 @@
-test_that("C_agg() works as expected with simple countries", {
+test_that("C_calc() works as expected with simple countries", {
 
   # This example is in the file called "2countries2sectors simple example v2.xlsx"
   # Country A information
@@ -29,9 +29,9 @@ test_that("C_agg() works as expected with simple countries", {
   U_EIOU_f_A <- Yf_A
   U_EIOU_fu_details_A <- Yfudetails_A
 
-  res_A <- C_agg(Y_f = Yf_A, Y_fu_details = Yfudetails_A,
-                 U_eiou_f = U_EIOU_f_A, U_eiou_fu_details = U_EIOU_fu_details_A,
-                 eta_i = etai_vec_A)
+  res_A <- C_calc(Y_f = Yf_A, Y_fu_details = Yfudetails_A,
+                  U_eiou_f = U_EIOU_f_A, U_eiou_fu_details = U_EIOU_fu_details_A,
+                  eta_i = etai_vec_A)
   expected_C_Y_A <- matrix(c(0.465116279, 0.534883721, 0,
                              0, 0, 0,
                              0, 0, 0,
@@ -78,9 +78,9 @@ test_that("C_agg() works as expected with simple countries", {
   U_EIOU_f_B <- Yf_B
   U_EIOU_fu_details_B <- Yfudetails_B
 
-  res_B <- C_agg(Y_f = Yf_B, Y_fu_details = Yfudetails_B,
-                 U_eiou_f = U_EIOU_f_B, U_eiou_fu_details = U_EIOU_fu_details_B,
-                 eta_i = etai_vec_B)
+  res_B <- C_calc(Y_f = Yf_B, Y_fu_details = Yfudetails_B,
+                  U_eiou_f = U_EIOU_f_B, U_eiou_fu_details = U_EIOU_fu_details_B,
+                  eta_i = etai_vec_B)
   expected_C_Y_B <- matrix(c(2/3, 1/3, 0,
                              0, 0, 0,
                              0, 0, 0,
@@ -113,9 +113,9 @@ test_that("C_agg() works as expected with simple countries", {
                                           "M3 -> Eu3"), "col")) |>
     matsbyname::setcoltype("Industry -> Product")
 
-  res_AB <- C_agg(Y_f = Yf_AB, Y_fu_details = Yfudetails_AB,
-                  U_eiou_f = U_EIOU_f_AB, U_eiou_fu_details = U_EIOU_fu_details_AB,
-                  eta_i = etai_vec_AB)
+  res_AB <- C_calc(Y_f = Yf_AB, Y_fu_details = Yfudetails_AB,
+                   U_eiou_f = U_EIOU_f_AB, U_eiou_fu_details = U_EIOU_fu_details_AB,
+                   eta_i = etai_vec_AB)
 
   expected_C_Y_AB <- matrix(c(0.582524272, 0.417475728, 0,
                               0, 0, 0,
@@ -149,7 +149,7 @@ test_that("C_agg() works as expected with simple countries", {
     expectedC_EIOU = list(expected_C_Y_A, expected_C_Y_B, expected_C_Y_AB)
   )
   res_df <- df |>
-    C_agg() |>
+    C_calc() |>
     dplyr::mutate(
       EqualC_Y = matsbyname::difference_byname(C_Y, expectedC_Y) |>
         matsbyname::iszero_byname(),

@@ -1,4 +1,4 @@
-#' Calculate allocation matrices for aggregated regions
+#' Calculate allocation matrices
 #'
 #' In the CL-PFU database, allocation matrices (**C**_Y and **C**_U_EIOU)
 #' at the country level are used to calculate useful energy
@@ -92,7 +92,7 @@
 #' @export
 #'
 #' @examples
-C_agg <- function(.sutmats = NULL,
+C_calc <- function(.sutmats = NULL,
                   Y_f = paste0(Recca::psut_cols$Y, "___", all_stages$final),
                   Y_fu_details = Recca::psut_cols$Y_fu_details,
                   U_eiou_f = paste0(Recca::psut_cols$U_eiou,  "___", all_stages$final),
