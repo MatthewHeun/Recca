@@ -3,6 +3,7 @@
 export("%>%")
 export(":=")
 export(.data)
+export(C_calc)
 export(S_units_from_tidy)
 export(add_edge_ids)
 export(add_node_ids)

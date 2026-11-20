@@ -11,7 +11,10 @@ Cite all releases of `Recca` with doi
 which always resolves to the latest release.
 
 
-
+* New function `C_calc()` calculates allocation matrices
+  for any region. This is particularly helpful
+  for aggregated regions that do not have a-priori allocation
+  matrices.s
 * Refactored `extend_to_exergy()` and `extend_fu_details_to_exergy()`
   to use new function `extend_one_matrix_to_exergy()`.
   The new function will be useful in other contexts, too.
