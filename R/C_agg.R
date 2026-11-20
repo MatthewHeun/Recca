@@ -111,10 +111,10 @@ C_agg <- function(.sutmats = NULL,
     Yf_vec_hat_inv <- Y_f_mat |>
       matsbyname::vectorize_byname(notation = vectorized_notation) |>
       matsbyname::hatinv_byname(keep = "rownames")
-    UEIOUf_vec_hat_inv <- U_eiou_f |>
+    UEIOUf_vec_hat_inv <- U_eiou_f_mat |>
       matsbyname::vectorize_byname(notation = vectorized_notation) |>
       matsbyname::hatinv_byname(keep = "rownames")
-    etai_hat_inv <- eta_i |>
+    etai_hat_inv <- eta_i_vec |>
       matsbyname::hatinv_byname(keep = "rownames")
 
     # Change notation on details matrices.

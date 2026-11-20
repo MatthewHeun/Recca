@@ -139,8 +139,23 @@ test_that("C_agg() works as expected with simple countries", {
 
   # Now try in a data frame
   df <- tibble::tibble(
-    Y_f = list(Yf_A, Yf_B, Yf_AB)
-
+    Country = c("A", "B", "AB"),
+    Y___Final = list(Yf_A, Yf_B, Yf_AB),
+    Y_fu_details = list(Yfudetails_A, Yfudetails_B, Yfudetails_AB),
+    U_EIOU___Final = list(U_EIOU_f_A, U_EIOU_f_B, U_EIOU_f_AB),
+    U_EIOU_fu_details = list(U_EIOU_fu_details_A, U_EIOU_fu_details_B, U_EIOU_fu_details_AB),
+    eta_i = list(etai_vec_A, etai_vec_B, etai_vec_AB),
+    expectedC_Y = list(expected_C_Y_A, expected_C_Y_B, expected_C_Y_AB),
+    expectedC_EIOU = list(expected_C_Y_A, expected_C_Y_B, expected_C_Y_AB)
   )
-
+  res_df <- df |>
+    C_agg() |>
+    dplyr::mutate(
+      EqualC_Y = matsbyname::difference_byname(C_Y, expectedC_Y) |>
+        matsbyname::iszero_byname(),
+      EqualC_EIOU = matsbyname::difference_byname(C_EIOU, expectedC_EIOU) |>
+        matsbyname::iszero_byname()
+    )
+  expect_true(all(unlist(res_df$EqualC_Y)))
+  expect_true(all(unlist(res_df$EqualC_EIOU)))
 })
