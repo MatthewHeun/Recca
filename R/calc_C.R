@@ -117,7 +117,9 @@
 #'                      dimnames = list(c("Ef1 -> S1", "Ef1 -> S2",
 #'                                        "Ef2 -> S1", "Ef2 -> S2"),
 #'                                      c("Eu1 [from M1]", "Eu2 [from M2]",
-#'                                        "Eu3 [from M3]")))
+#'                                        "Eu3 [from M3]"))) |>
+#'   matsbyname::setrowtype("Product -> Industry") |>
+#'   matsbyname::setcoltype("Product [from Industry]")
 #' etai_vec <- matrix(c(0.2,
 #'                      0.3,
 #'                      0.5),
@@ -125,7 +127,7 @@
 #'                                       "M2 -> Eu2",
 #'                                       "M3 -> Eu3"),
 #'                                     "col")) |>
-#'   matsbyname::setcoltype("Industry -> Product")
+#'   matsbyname::setcoltype("Industry")
 #' # For simplicity, assume that Y_EIOU_f is the same as Yf.
 #' U_EIOU_f <- Yf
 #' U_EIOU_fu_details <- Yfudetails
