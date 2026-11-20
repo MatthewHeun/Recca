@@ -72,9 +72,9 @@
 #'              Rows should contain machine names and useful energy carriers
 #'              (with arrow notation).
 #'              Default is "`r Recca::efficiency_cols$eta_i`".
-#' @param vectorize_notation The notation used internally when a matrix
-#'                           is vectorized.
-#'                           Default is `RCLabels::arrow_notation`.
+#' @param vectorized_notation The notation used internally when a matrix
+#'                            is vectorized.
+#'                            Default is `RCLabels::arrow_notation`.
 #' @param details_col_notation The notation for the column names of the
 #'                             details matrices.
 #'                             Default is `RCLabels::from_notation`.
@@ -92,17 +92,50 @@
 #' @export
 #'
 #' @examples
-C_calc <- function(.sutmats = NULL,
-                  Y_f = paste0(Recca::psut_cols$Y, "___", all_stages$final),
-                  Y_fu_details = Recca::psut_cols$Y_fu_details,
-                  U_eiou_f = paste0(Recca::psut_cols$U_eiou,  "___", all_stages$final),
-                  U_eiou_fu_details = Recca::psut_cols$U_eiou_fu_details,
-                  eta_i = Recca::efficiency_cols$eta_i,
-                  vectorized_notation = RCLabels::arrow_notation,
-                  details_col_notation = RCLabels::from_notation,
-                  # Output column names
-                  C_Y_colname = Recca::alloc_cols$C_Y,
-                  C_eiou_colname = Recca::alloc_cols$C_eiou) {
+#' Yf <- matrix(c(215, 0,
+#'                0, 45),
+#'              byrow = TRUE,
+#'              nrow = 2, ncol = 2,
+#'              dimnames = list(c("Ef1", "Ef2"),
+#'                              c("S1", "S2"))) |>
+#'   matsbyname::setrowtype("Product") |>
+#'   matsbyname::setcoltype("Industry")
+#' Yfudetails <- matrix(c(20, 34.5, 0,
+#'                        0, 0, 0,
+#'                        0, 0, 0,
+#'                        0, 0, 22.5),
+#'                      byrow = TRUE,
+#'                      nrow = 4, ncol = 3,
+#'                      dimnames = list(c("Ef1 -> S1", "Ef1 -> S2",
+#'                                        "Ef2 -> S1", "Ef2 -> S2"),
+#'                                      c("Eu1 [from M1]", "Eu2 [from M2]",
+#'                                        "Eu3 [from M3]")))
+#' etai_vec <- matrix(c(0.2,
+#'                      0.3,
+#'                      0.5),
+#'                     dimnames = list(c("M1 -> Eu1",
+#'                                       "M2 -> Eu2",
+#'                                       "M3 -> Eu3"),
+#'                                     "col")) |>
+#'   matsbyname::setcoltype("Industry -> Product")
+#' # For simplicity, assume that Y_EIOU_f is the same as Yf.
+#' U_EIOU_f <- Yf
+#' U_EIOU_fu_details <- Yfudetails
+#'
+#' calc_C_Y_C_EIOU(Y_f = Yf, Y_fu_details = Yfudetails,
+#'                 U_eiou_f = U_EIOU_f, U_eiou_fu_details = U_EIOU_fu_details,
+#'                 eta_i = etai_vec)
+calc_C_Y_C_EIOU <- function(.sutmats = NULL,
+                            Y_f = paste0(Recca::psut_cols$Y, "___", Recca::all_stages$final),
+                            Y_fu_details = Recca::psut_cols$Y_fu_details,
+                            U_eiou_f = paste0(Recca::psut_cols$U_eiou,  "___", Recca::all_stages$final),
+                            U_eiou_fu_details = Recca::psut_cols$U_eiou_fu_details,
+                            eta_i = Recca::efficiency_cols$eta_i,
+                            vectorized_notation = RCLabels::arrow_notation,
+                            details_col_notation = RCLabels::from_notation,
+                            # Output column names
+                            C_Y_colname = Recca::alloc_cols$C_Y,
+                            C_eiou_colname = Recca::alloc_cols$C_eiou) {
 
 
   C_func <- function(Y_f_mat, Y_fu_details_mat,
