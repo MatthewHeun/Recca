@@ -17,14 +17,17 @@ test_that("calc_C_Y_C_EIOU() works as expected with simple countries", {
                          byrow = TRUE,
                          nrow = 4, ncol = 3,
                          dimnames = list(c("Ef1 -> S1", "Ef1 -> S2", "Ef2 -> S1", "Ef2 -> S2"),
-                                         c("Eu1 [from M1]", "Eu2 [from M2]", "Eu3 [from M3]")))
+                                         c("Eu1 [from M1]", "Eu2 [from M2]", "Eu3 [from M3]"))) |>
+    matsbyname::setrowtype("Product -> Industry") |>
+    matsbyname::setcoltype("Product [from Industry]")
   etai_vec_A <- matrix(c(0.2,
                          0.3,
                          0.5),
                        dimnames = list(c("M1 -> Eu1",
                                          "M2 -> Eu2",
                                          "M3 -> Eu3"), "col")) |>
-    matsbyname::setcoltype("Industry -> Product")
+    matsbyname::setrowtype("Industry") |>
+    matsbyname::setcoltype("eta_i")
   # For simplicity, assume that Y_EIOU_f is the same as Yf.
   U_EIOU_f_A <- Yf_A
   U_EIOU_fu_details_A <- Yfudetails_A
@@ -66,14 +69,17 @@ test_that("calc_C_Y_C_EIOU() works as expected with simple countries", {
                          byrow = TRUE,
                          nrow = 4, ncol = 3,
                          dimnames = list(c("Ef1 -> S1", "Ef1 -> S2", "Ef2 -> S1", "Ef2 -> S2"),
-                                         c("Eu1 [from M1]", "Eu2 [from M2]", "Eu3 [from M3]")))
+                                         c("Eu1 [from M1]", "Eu2 [from M2]", "Eu3 [from M3]"))) |>
+    matsbyname::setrowtype("Product -> Industry") |>
+    matsbyname::setcoltype("Product [from Industry]")
   etai_vec_B <- matrix(c(0.25,
                          0.2,
                          0.4),
                        dimnames = list(c("M1 -> Eu1",
                                          "M2 -> Eu2",
                                          "M3 -> Eu3"), "col")) |>
-    matsbyname::setcoltype("Industry -> Product")
+    matsbyname::setrowtype("Industry") |>
+    matsbyname::setcoltype("eta_i")
   # For simplicity, assume that Y_EIOU_f is the same as Yf.
   U_EIOU_f_B <- Yf_B
   U_EIOU_fu_details_B <- Yfudetails_B

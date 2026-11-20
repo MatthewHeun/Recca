@@ -78,6 +78,14 @@
 #' @param details_col_notation The notation for the column names of the
 #'                             details matrices.
 #'                             Default is `RCLabels::from_notation`.
+#' @param eta_i_rowtype The rowtype for the `eta_i` vector to be used internally.
+#'                      Typically, the `eta_i` vector has a row type of "Product".
+#'                      However, `U_eiou_fu_details` typically has
+#'                      column type of "Industry -> Product",
+#'                      which won't match when post-multiplying
+#'                      `U_eiou_fu_details` by `eta_i_hat_inv` internally.
+#'                      The default is "Industry -> Product" to enable matching
+#'                      column and row types.
 #' @param C_Y_colname The name of the output column that contains calculated
 #'                    allocation matrices for final demand (**C**_Y).
 #'                    Default is "`r Recca::alloc_cols$C_Y`".
@@ -133,6 +141,7 @@ calc_C_Y_C_EIOU <- function(.sutmats = NULL,
                             eta_i = Recca::efficiency_cols$eta_i,
                             vectorized_notation = RCLabels::arrow_notation,
                             details_col_notation = RCLabels::from_notation,
+                            eta_i_rowtype = "Industry -> Product",
                             # Output column names
                             C_Y_colname = Recca::alloc_cols$C_Y,
                             C_eiou_colname = Recca::alloc_cols$C_eiou) {
@@ -148,6 +157,8 @@ calc_C_Y_C_EIOU <- function(.sutmats = NULL,
       matsbyname::vectorize_byname(notation = vectorized_notation) |>
       matsbyname::hatinv_byname(keep = "rownames")
     etai_hat_inv <- eta_i_vec |>
+      # To get correct row and column types.
+      matsbyname::setrowtype(eta_i_rowtype) |>
       matsbyname::hatinv_byname(keep = "rownames")
 
     # Change notation on details matrices.
